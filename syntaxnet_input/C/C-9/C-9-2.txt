@@ -1,0 +1,37 @@
+ INTRODUCTION 
+Infrastructures for grid computing aim at virtualizing a group of computers, servers, and storage as one large computing system .
+Resource management is a key issue in such systems, needed for an efficient and automated distribution of tasks on the grid .
+Such grid infrastructures are often deployed at enterprise level, but projects like SETI@home [] have demonstrated the feasibility of more decentralized grids as well .
+Current grid computing infrastructures don"t provide sufficient support for the execution of distributed, useraccessed, long term services as they are designed to solve compute or data intensive tasks with a more or less fixed set of parameters .
+The common three phase approach of resource discovery, system selection and job execution fails for services that change their resource demand over time due to interactive user access and run for a long period of time .
+Instead an infrastructure for long term services has to place services based on their current demand and their estimated future requirements .
+If the distribution turns out to be wrong (e.g .
+a node gets overloaded) the service has to be migrated within the grid (e.g .
+to a more powerful and less loaded node) .
+Migration however is expensive as the whole state of a service has to be transfered .
+Additionally a non replicated service is not accessible during migration .
+Therefore the resource management has to avoid migration if possible .
+Furthermore a service concept has to be provided that evades overload in the first place, and secondly inhibits service unavailability if migration can"t be avoided .
+EDAS [] aims at providing a grid like infrastructure for user accessed, long term services that allows the dynamic adaptation at run time, provides a management infrastructure, and offers system level support for scalability and fault tolerance .
+Nodes can dynamically join and leave the infrastructure, and all management tasks, especially the resource management, are decentralized .
+The environment is built upon our AspectIX [] middleware infrastructure, which directly supports QoS based, dynamic reconfiguration of services .
+The resource management focuses on the execution of services that have a long, potentially infinite, operating time .
+Theses services are organized in projects .
+Each project has a distributed execution scope called a service environment .
+Such an environment possibly spans multiple institutions .
+Each institution represents an administrative domain that can support a project with a fixed set of resources .
+Our approach supports the adaptive resource management of all projects in scope of an institution based on an algorithm inspired by the diffusive algorithms for decentralized loadbalancing [] .
+It is not known how to optimally subdivide these resources for the services as the resource demand of services can change over time or even frequently fluctuate .
+To provide resources as needed, our approach automatically rededicates evenly free or not needed resources between service instances across projects and nodes .
+The whole process Article  of rededication is scalable as it is decentralized and respects certain limits like the physically available resources of a node and the amount of resources dedicated to a project .
+In cases where rededication is not possible, the migration of the demanding service is initiated .
+EDAS further supports flexible service models, including a fully centralized client server structure, completely peer topeer based systems, and various configurations in between that allow a controlled use of peer resources based on the fragmented object model [] .
+The overall goal is to provide a generic service architecture that allows to implement the service functionality once, and then, ideally, run this service with different service models and adapt it at run time, thereby scaling from a single user local instance to a multidomain spanning scalable service .
+To reduce the implementation effort of such services a framework has been developed that supports the run time evolution from a traditional client server scenario to an active replicated server with clients interacting in a hybrid peer to peer architecture as known from Napster .
+In a longterm service grid infrastructure, active replication has various benefits Replicas can join and leave the object group and therefore replicas can be migrated without service unavailability .
+Load of non modifying requests can be evenly distributed across the replicas making overload situations less likely .
+Finally a certain amount of node crashes can be tolerated .
+The following section describes the used features of AspectIX followed by a brief overview of the core components and concepts of EDAS .
+Section  explains the self managing and rededication concepts of distributed adaptive resource management .
+Section  describes the framework for decentralized adaptive services .
+Section  describes related work and finally Section  concludes the paper. .

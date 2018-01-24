@@ -1,0 +1,35 @@
+Personalization is the future of the Web, and it has achieved great success in industrial applications .
+For example, online stores, such as Amazon and Netflix, provide customized recommendations for additional products or services based on a user"s history .
+Recent offerings such as My MSN, My Yahoo!, My Google, and Google News have attracted much attention due to their potential ability to infer a user"s interests from his her history .
+One major personalization topic studied in the information retrieval community is content based personal recommendation systems1 .
+These systems learn user specific profiles from user feedback so that they can recommend information tailored to each individual user"s interest without requiring the user to make an explicit query .
+Learning the user profiles is the core problem for these systems .
+A user profile is usually a classifier that can identify whether a document is relevant to the user or not, or a regression model that tells how relevant a document is to the user .
+One major challenge of building a recommendation or personalization system is that the profile learned for a particular user is usually of low quality when the amount of data from that particular user is small .
+This is known as the cold start problem .
+This means that any new user must endure poor initial performance until sufficient feedback from that user is provided to learn a reliable user profile .
+There has been much research on improving classification accuracy when the amount of labeled training data is small .
+The semi supervised learning approach combines unlabeled and labeled data together to achieve this goal [26] .
+Another approach is using domain knowledge .
+Researchers have modified different learning algorithms, such as Na??veBayes [17], logistic regression [7], and SVMs [22], to integrate domain knowledge into a text classifier .
+The third approach is borrowing training data from other resources [5][7] .
+The effectiveness of these different approaches is mixed, due to how well the underlying model assumption fits the data .
+One well received approach to improve recommendation system performance for a particular user is borrowing information from other users through a Bayesian hierarchical modeling approach .
+Several researchers have demonstrated that this approach effectively trades off between shared and user specific information, thus alleviating poor initial performance for each user[27][25] .
+In order to learn a Bayesian hierarchical model, the system usually tries to find the most likely model parameters for the given data .
+A mature recommendation system usually works for millions of users .
+It is well known that learning the optimal parameters of a Bayesian hierarchical model is computationally expensive when there are thousands or millions of users .
+The EM algorithm is a commonly used technique for parameter learning due to its simplicity and convergence guarantee .
+However, a content based recommendation system often handles documents in a very high dimensional space, in which each document is represented by a very sparse vector .
+With careful analysis of the EM algorithm in this scenario (Section 4), we find that the EM tering, or item based collaborative filtering .
+In this paper, the words filtering and recommendation are used interchangeably .
+algorithm converges very slowly due to the sparseness of the input variables .
+We also find that updating the model parameter at each EM iteration is also expensive with computational complexity of O(MK), where M is the number of users and K is the number of dimensions .
+This paper modifies the standard EM algorithm to create an improved learning algorithm, which we call the Modified EM algorithm .
+The basic idea is that instead of calculating the numerical solution for all the user profile parameters, we derive the analytical solution of the parameters for some feature dimensions, and at the M step use the analytical solution instead of the numerical solution estimated at E step for those parameters .
+This greatly reduces the computation at a single EM iteration, and also has the benefit of increasing the convergence speed of the learning algorithm .
+The proposed technique is not only well supported by theory, but also by experimental results .
+The organization of the remaining parts of this paper is as follows
+Section 4 describes how to learn the model parameters using the standard EM algorithm, along with using the new technique proposed in this paper .
+The experimental setting and results used to validate the proposed learning technique are reported in Sections 5 and 6 .
+Section 7 summarizes and offers concluding remarks. .

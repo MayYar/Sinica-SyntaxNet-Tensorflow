@@ -1,0 +1,299 @@
+EDAS: Providing an Environment for Decentralized 
+content:
+1 ABSTRACT :
+1-1:As the idea of virtualisation of compute power, storage and bandwidth becomes more and more important, grid computing evolves and is applied to a rising number of applications .
+1-2:The environment for decentralized adaptive services provides a grid like infrastructure for user accessed, longterm services (e.g .
+1-3:webserver, source code repository etc.) .
+1-4:It aims at supporting the autonomous execution and evolution of services in terms of scalability and resource aware distribution .
+1-5:EDAS offers flexible service models based on distributed mobile objects ranging from a traditional clientserver scenario to a fully peer to peer based approach .
+1-6:Automatic, dynamic resource management allows optimized use of available resources while minimizing the administrative complexity .
+1-7:C.2.4 [Computer Communication Networks]: Distributed .
+2 INTRODUCTION :
+2-1:Infrastructures for grid computing aim at virtualizing a group of computers, servers, and storage as one large computing system .
+2-2:Resource management is a key issue in such systems, needed for an efficient and automated distribution of tasks on the grid .
+2-3:Such grid infrastructures are often deployed at enterprise level, but projects like SETI@home [1] have demonstrated the feasibility of more decentralized grids as well .
+2-4:Current grid computing infrastructures don"t provide sufficient support for the execution of distributed, useraccessed, long term services as they are designed to solve compute or data intensive tasks with a more or less fixed set of parameters .
+2-5:The common three phase approach of resource discovery, system selection and job execution fails for services that change their resource demand over time due to interactive user access and run for a long period of time .
+2-6:Instead an infrastructure for long term services has to place services based on their current demand and their estimated future requirements .
+2-7:If the distribution turns out to be wrong (e.g .
+2-8:a node gets overloaded) the service has to be migrated within the grid (e.g .
+2-9:to a more powerful and less loaded node) .
+2-10:Migration however is expensive as the whole state of a service has to be transfered .
+2-11:Additionally a non replicated service is not accessible during migration .
+2-12:Therefore the resource management has to avoid migration if possible .
+2-13:Furthermore a service concept has to be provided that evades overload in the first place, and secondly inhibits service unavailability if migration can"t be avoided .
+2-14:EDAS [2] aims at providing a grid like infrastructure for user accessed, long term services that allows the dynamic adaptation at run time, provides a management infrastructure, and offers system level support for scalability and fault tolerance .
+2-15:Nodes can dynamically join and leave the infrastructure, and all management tasks, especially the resource management, are decentralized .
+2-16:The environment is built upon our AspectIX [3] middleware infrastructure, which directly supports QoS based, dynamic reconfiguration of services .
+2-17:The resource management focuses on the execution of services that have a long, potentially infinite, operating time .
+2-18:Theses services are organized in projects .
+2-19:Each project has a distributed execution scope called a service environment .
+2-20:Such an environment possibly spans multiple institutions .
+2-21:Each institution represents an administrative domain that can support a project with a fixed set of resources .
+2-22:Our approach supports the adaptive resource management of all projects in scope of an institution based on an algorithm inspired by the diffusive algorithms for decentralized loadbalancing [4] .
+2-23:It is not known how to optimally subdivide these resources for the services as the resource demand of services can change over time or even frequently fluctuate .
+2-24:To provide resources as needed, our approach automatically rededicates evenly free or not needed resources between service instances across projects and nodes .
+2-25:The whole process Article 5 of rededication is scalable as it is decentralized and respects certain limits like the physically available resources of a node and the amount of resources dedicated to a project .
+2-26:In cases where rededication is not possible, the migration of the demanding service is initiated .
+2-27:EDAS further supports flexible service models, including a fully centralized client server structure, completely peer topeer based systems, and various configurations in between that allow a controlled use of peer resources based on the fragmented object model [5] .
+2-28:The overall goal is to provide a generic service architecture that allows to implement the service functionality once, and then, ideally, run this service with different service models and adapt it at run time, thereby scaling from a single user local instance to a multidomain spanning scalable service .
+2-29:To reduce the implementation effort of such services a framework has been developed that supports the run time evolution from a traditional client server scenario to an active replicated server with clients interacting in a hybrid peer to peer architecture as known from Napster .
+2-30:In a longterm service grid infrastructure, active replication has various benefits: Replicas can join and leave the object group and therefore replicas can be migrated without service unavailability .
+2-31:Load of non modifying requests can be evenly distributed across the replicas making overload situations less likely .
+2-32:Finally a certain amount of node crashes can be tolerated .
+2-33:The following section describes the used features of AspectIX followed by a brief overview of the core components and concepts of EDAS .
+2-34:Section 4 explains the self managing and rededication concepts of distributed adaptive resource management .
+2-35:Section 5 describes the framework for decentralized adaptive services .
+2-36:Section 6 describes related work and finally Section 7 concludes the paper. .
+3 BASIC MIDDLEWARE :
+3-1:The EDAS environment is based on the AspectIX middleware .
+3-2:At its core, it provides a CORBA compliant ORB and, as such, supports heterogeneous distributed systems .
+3-3:Furthermore AspectIX supports the fragmented object model [5] that is used to implement and provide decentralized adaptive services .
+3-4:In the fragmented object model, the distinction between client stubs and the server object is no longer present (Fig .
+3-5:1) .
+3-6:From an abstract point of view, a fragmented object is a unit with unique identity, interface, behavior, and state, like in classic object oriented design .
+3-7:The implementation of these properties however is not bound to a specific location, but may be distributed arbitrarily on various fragments .
+3-8:Any client that wants to access the fragmented object needs a local fragment, which provides an interface identical to that of a traditional stub .
+3-9:However internal distribution and interaction is not only transparent on the outer interface of the distributed object, but may even change dynamically at runtime .
+3-10:This allows the fragmented object model to adapt to changing environment conditions or quality of service requirements .
+3-11:It offers to change the service model on demand from traditional client server to a peer to peer based approach and all kind of intermediate stages by migration and exchanging of fragments. .
+4 EDAS CORE COMPONENTS :
+4-1:Figure 1: Fragmented object on three nodes EDAS has three major components: Every node that actively supports decentralized adaptive services provides a home environment .
+4-2:The home environment basically manages resources of one or more nodes belonging to the same administrative domain or institution .
+4-3:The service environment is spread over a set of domains that support a certain project and relies on basic services from the corresponding home environments .
+4-4:The service environment supports the execution of services belonging to the same project .
+4-5:Finally, the decentralized adaptive service is dynamically distributed within the scope of an associated service environment .
+4-6:The home environment has the role of a mediator between the nodes of an institution and one or more service environments, each running a set of services .
+4-7:Fig .
+4-8:2 shows three domains each running a home environment that spans all nodes of the respective domains .
+4-9:Every node provides a set of resources .
+4-10:Each domain has a manager who can use that home environment to assign resources to service environments and to revoke them .
+4-11:Apart from providing system load and all kinds of resource usage information to the service environment, the home environment also notifies about all important system events like a node shutdown or crash .
+4-12:A service environment represents a scope of distribution for one or more services .
+4-13:Usually, a service environment is owned by one organization or community and dedicated to one project .
+4-14:A service manager can start, stop, and configure services through the interface of the service environment and decides which resources provided by home environments are accepted .
+4-15:In most cases a service environment is spread over more than one administrative domain as shown in Fig .
+4-16:2 .
+4-17:One of the main tasks of the service environment is to support the migration of services or service components especially between different home environments .
+4-18:The service environment thereby takes available resources, the requirements of the services, and the policies provided by the service manager into account .
+4-19:The migration of service components can be necessary for various reasons, like node shutdown, resource constraints, and the growth or shrinkage of a service environment. .
+5 DECENTRALIZED  RESOURCEMANAGEMENT :
+5-1:RESOURCEMANAGEMENT Resource management for long term services has other requirements than resource management in common grid computing environments .
+5-2:For instance even in the context of traditional grid systems it is very difficult to determine or even only estimate the resource requirements of a task [6] .
+5-3:For long term services this is even harder, and it is likely that the resource demand frequently changes .
+5-4:This turns Article 5 Host FHost D Host E Host A Host C Service Environment Service B Service A Home Env .
+5-5:Home Environment Home Environment Boundary of the fragmented object Service Manager Domain Manager Domain Manager Figure 2: EDAS Scenario the optimal distribution of services over a set of nodes into a difficult problem .
+5-6:In general the migration of services is a prerequisite of EDAS as it offers a solution if the initial distribution decision was wrong (e.g .
+5-7:initial start of previously unknown service) or the demand of services has changed substantially .
+5-8:But migration is costly, since the whole state of a service possibly including program code has to be transfered .
+5-9:If the service is not replicated it will be unavailable during migration .
+5-10:Taking this into account a resource management should place services and adaptively rededicate resources between services and nodes as needed to prevent migration .
+5-11:As EDAS aims at providing a grid like infrastructure for a large set of nodes that can join and leave the system all resource management tasks have to be decentralized to be scalable and should not require global knowledge .
+5-12:The resource management can be structured into the following different tasks: • Adding and changing the assigned resources of a service environment • Automatic placement of service at startup time and during migration due to overload • Keeping all kind of resource limits, especially the limits of service environments • Compensate leaving and crashed nodes In the next sections we will describe what kind of resource limits there are and how to do resource management based on these basic conditions .
+5-13:4.1 Resource Limits Our approach manages resources on two stages, the node level and the service environment level .
+5-14:At the node level we monitor usage of all kind of physical resources like disk space, memory, CPU and network bandwidth but also logical ones like open files, sockets and threads .
+5-15:The entity of monitoring is a service or a service component in case of a decentralized adaptive service .
+5-16:Every service has so called local limits that restrict the resource usage in context of the current node .
+5-17:If a service runs the risk of exceeding such a local limit the home environment tries to extend the limits or notifies the responsible service environment if rededication is not possible .
+5-18:Reaching a local limit can be caused by two reasons: an overloaded node or an overloaded service environment .
+5-19:In the first case service migration might help, in the second case migration to another administrative domain might be an option, or simply reducing resource demand by stopping the service .
+5-20:Of course there could be more than one service of the same service environment at a node .
+5-21:Therefore the assigned resources of a service environment at a node can be easily computed by summing up all local limits of its services .
+5-22:Furthermore each node has node limits that restrict the overall usage of certain resources .
+5-23:A node limit must never exceed the physical resource (e.g .
+5-24:disk space) of a node and might be much smaller, e.g., for supporting local users .
+5-25:The sum of all local limits at a node must never exceed the node limit of a resource .
+5-26:Therefore observing and controlling the local limits will keep the node limits and preventing overload .
+5-27:NodeLimitNode ≥ numberOfLocalLimitsNodeX i=1 LocalLimiti At the institution level the resource usage of a service environment and its associated services is also restricted by so called global limits .
+5-28:These limits determine the maximum resource usage of a project in scope of a home environment .
+5-29:The sum of all local limits on all nodes of the institution for a certain project therefore never exceeds its global limit .
+5-30:GlobaleLimitSE ≥ numberOfLocalLimitsSEX i=1 LocalLimiti 4.2 Adaptive Resource Rededication We start with a straight forward implementation to describe the principal workflow .
+5-31:Then we propose an approach for a more efficient solution and discuss its problems .
+5-32:If a new project should be supported by a home environment it is first necessary to identify the nodes that offer sufficient unassigned resources to start a service .
+5-33:This can be achieved in a naive implementation by using a flooding approach like it is done by the Gnutella protocol assuming the nodes are connected in a random graph .
+5-34:These resources then can be assigned to the service environment of the new project which further on can start services on these nodes .
+5-35:Of course a home environment supports usually numerous projects .
+5-36:Each of these projects has resource shares on various nodes, some of them occupied by services, other free and unused .
+5-37:As the resource demand of a service changes it might be possible that a service reaches its local limit if the service is under high demand .
+5-38:What happens next depends on the overall resource usage of the service environment and the resource consumption at the local node .
+5-39:If the service environment has not reached its global limit and the node is not overloaded the dependent local limit of the service should be extended simply by reducing a local limit at another node of the same service environment .
+5-40:When all resources of the node are assigned to other service environments there are two possibilities .
+5-41:All resources are used by services, so we have to migrate a service, or the resources are assigned but not used .
+5-42:In the later case we shall rededicate resources and assign them to the demanding service environment .
+5-43:Finally the service environment might have reached its global limit .
+5-44:In this case the resource consumption has to be reduced either by migrating the service to another domain and its depended home environment or simply by bounding resource usage and if this is not possible, stopping the service .
+5-45:In contrary to the setup of a new service environment which is not time critical and a less frequent task the adaptation of local limits occurs frequently and needs to be done Article 5 almost immediately .
+5-46:Thus it is not an option to use broadcast searches for rededication .
+5-47:Instead a more efficient approach with a bounded complexity is necessary .
+5-48:The same applies for detecting if a global limit is reached by a service environment .
+5-49:Currently we investigate if this can be achieved by using a diffusive algorithm[4] like it is used for decentralized load balancing .
+5-50:Thereby all nodes of a system are partitioned in groups that overlap partially .
+5-51:The union of all groups achieves a full coverage .
+5-52:Group members frequently exchange load information and balance the load by migration .
+5-53:In our case we aim not at balancing the load but the amount of available free resources of a service environment .
+5-54:Each node that supports a certain service environment is at least connected to another node that supports the same project .
+5-55:This way it always should be known if a service environment has still enough resources and therefore if a service can grow .
+5-56:There still remain open issues like if the diffusively balanced free resources should be tightly connected to the real resources, comparable to reservations .
+5-57:In this case there might be problems if a node supports several service environments which all have services running at the node and a node limit is exceeded which would require service migration .
+5-58:In fact it can be needless as the services might not use all the assigned resources but the diffusive algorithm caused the limit overrun by equally balancing the free resources of all supported service environments .
+5-59:If we remove the mapping between free resources and real resources of a node we can evade these situations .
+5-60:However it gets more complicated to determine the free and unassigned resources of a home environment .
+5-61:4.3 Placement of Services Independent of the mapping of free resources the placement of a service is, as already stated, a difficult problem .
+5-62:Distributing the services equally over all nodes would surely prevent migration in the average case even if resource demand of services changes .
+5-63:However if the resource demand of services varies highly and the grid is clogged by many projects it might be that a service can"t be placed because the free resources are too scattered .
+5-64:A different approach would be to consider it as an variant of the bin packing problem that aims at packing items in bins by optimizing the number of used bins .
+5-65:In our case we need an online approach as the items are not known in advance and we have a multi dimensional problem since a service has various resource requirements .
+5-66:The number of bins is bounded as we have a finite number of nodes in our grid .
+5-67:An algorithm for this problem has recently been proposed by Epstein and van Stee in [7] .
+5-68:On the downside this algorithm needs to know all nodes and their actual usage .
+5-69:As the placement of a service is not a time critical problem again a flooding based approach might offer a solution .
+5-70:To reduce the number of answers only nodes that provide sufficient resources need to reply .
+5-71:It has also to be considered to transform the algorithm to a distributed one .
+5-72:Another problem might be that the algorithm optimizes the occupancy too strong .
+5-73:Therefore demand changes of service can lead to overloaded nodes and causing migration .
+5-74:We believe this can be prevented by not only considering the actual resource consumption to determine the resource demand of a service but taking the previous demand into account. .
+6 DECENTRALIZED ADAPTIVE SERVICE MODEL :
+6-1:MODEL In EDAS a decentralized, adaptive service normally matches a traditional service accessed by users like a web server, an instant messaging server or a source code repository .
+6-2:Such a service is represented by a fragmented object .
+6-3:This object expands or shrinks in the scope spanned by the associated service environment depending on the service demands and for fault tolerance reasons .
+6-4:Usually every part of the object is mobile and can be migrated if necessary .
+6-5:Each service has at least two interfaces: one for management tasks and another service specific for the end user .
+6-6:The management interface offers methods to start, stop, and configure service instances .
+6-7:As this set of features requires an enormous implementation effort to do it anew for each service implementation we support the development of decentralized adaptive services through a framework and an extended version of IDL in combination with a special IDL compiler [8] .
+6-8:The core idea is to develop a service in usual client server fashion as it is done in plain CORBA .
+6-9:This service then can be started and executed on the grid as a common servant .
+6-10:Additionally it should be possible to migrate the service .
+6-11:This can be achieved by using value type based approach to describe the service state as done in [9] or using the language supplied serialization mechanisms .
+6-12:As we would like to tolerate node crashes and the service should be available during migration we support the active replication of the service .
+6-13:This is achieved by generating special client side stubs that communicate with one of the replicas .
+6-14:To keep the connection between clients and the replicated object we use time bounded references [10] that restrict the migration but make the usage of location services (to cope with outdate references) obsolete .
+6-15:The replicas are synchronized via a group communication framework .
+6-16:The IDL extension consists of additional modifiers that affect code generation for client and server side .
+6-17:These are retain to mark non modifying operations which allows faster responses and load balancing of those requests .
+6-18:Furthermore one can mark methods as local which indicates that they can be locally processed .
+6-19:In this case the IDLcompiler creates placeholder for local execution .
+6-20:Apart form methods that are usual static this is useful to implement client side contribution and interaction .
+6-21:For example if a client stub offers a method which results in a file transfer it is possible to integrate a custom protocol that forwards a modified request to the replicated object which returns not the file as in the common case but URLs that point to clients that previously requested the file .
+6-22:Now the clientstub fetches the data from the offered location and responds as if it was supplied by the server object .
+6-23:This peer to peer based behavior as known from Napster is transparent to the client and can be switched on and off depending on environment conditions like load and community as needed .
+6-24:Finally we provide another modifier to mark administrative operations .
+6-25:If a method is marked with admin an authentication is necessary .
+6-26:The method to authenticate is pluggable and might be by pass phrase, internet address or any other authentication scheme .
+6-27:This modifier facilitates the creation of service management methods .
+6-28:Article 5 .
+7 RELATED WORK :
+7-1:Grid infrastructures like the Globus Toolkit [11] provide services and mechanisms for distributed heterogeneous environments to combine resources on demand to solve resource consuming and compute intensive tasks .
+7-2:Due to this orientation they focus on different service models, provide no support for object mobility if even supporting a distributed object approach at all .
+7-3:But most important they follow a different resource management approach as they target the parallel execution of a large number of short and midterm tasks .
+7-4:JavaSymphony [12] and Ibis [13] provide object mobility but are limited to the Java programming language and focus on object oriented high performance computing .
+7-5:Actively replicated objects are provided by Jgroup [14] based on RMI .
+7-6:On top of this basic middleware a replication management layer has been implemented called ARM [15] .
+7-7:JGroup focus on the active replication of objects but lacks support for more flexible services like EDAS does .
+7-8:ARM can be compared to EDAS but supports no resource aware distribution .
+7-9:Fog [16] and Globe [17] are basic middleware environments that support the fragmented object approach .
+7-10:Globe considers replication and caching .
+7-11:Both systems lack support for resource aware distribution. .
+8-1:Based on the fragmented object model and the architecture of the EDAS environment, decentralized adaptive services can be easily designed, implemented and executed
+8-2:As described the resource management can be decomposed in two main problems that have to be solved
+8-3:Controlling and managing of resource limits including ensuring that the assigned resources are available (even in the context of node crashes) and the autonomous placement of services
+8-4:For both problems we offer a solution, a currently implemented simulation environment will verify their feasibility
+8-5:In a next step the resource management will be integrate in an already implemented prototype of the EDAS architecture
+8-6:As described we have already an early implementation of the framework for the decentralized adaptive services
+8-7:This framework has to be extended to smoothly interact with the resource management and the EDAS architecture
+8-8:In a final step we need to implement some services that verify the usability of the whole EDAS project.
+9-1:D
+9-2:Werthimer S
+9-3:Bowyer J
+9-4:Cobb D
+9-5:Gedye D
+9-6:Anderson W
+9-7:T
+9-8:Sullivan, III
+9-9:A new major seti project based on project serendip data and 100,000 personal computers
+9-10:In Proc
+9-11:of the Fifth Intl
+9-12:Conf
+9-13:on Bioastronomy, 1997
+9-14:Hans Reiser R¨udiger Kapitza, Franz J
+9-15:Hauck
+9-16:Decentralized, Adaptive Services: The AspectIX Approach for a Flexible and Secure Grid Environment
+9-17:In Grid Services Engineering and Management (GSEM 2004), Erfurt, Germany, 2004
+9-18:Springer
+9-19:Hans P
+9-20:Reiser, Franz J
+9-21:Hauck, R¨udiger Kapitza, and Andreas I
+9-22:Schmied
+9-23:Integrating fragmented objects into a CORBA environment
+9-24:In Proc
+9-25:of the Net.ObjectDays, 2003
+9-26:Tiberiu Rotaru and Hans Heinrich N¨ageli
+9-27:Dynamic load balancing by diffusion in heterogeneous systems
+9-28:J
+9-29:Parallel Distrib
+9-30:Comput., 64(4):481 497, 2004
+9-31:M
+9-32:Makpangou, Y
+9-33:Gourhant, J. P
+9-34:Narzul, and M
+9-35:Shapiro
+9-36:Fragmented objects for distributed abstractions
+9-37:Jennifer M
+9-38:Schopf
+9-39:Ten actions when grid scheduling: the user as a grid scheduler
+9-40:pages 15 23, 2004
+9-41:Leah Epstein and Rob van Stee
+9-42:Optimal online bounded space multidimensional packing
+9-43:In SODA "04: Proceedings of the fifteenth annual ACM SIAM symposium on Discrete algorithms, pages 214 223, Philadelphia, PA, USA, 2004
+9-44:Society for Industrial and Applied Mathematics
+9-45:Hans P
+9-46:Reiser, Martin Steckermeier, and Franz J
+9-47:Hauck
+9-48:IDLflex: a flexible and generic compiler for CORBA IDL
+9-49:In Proc
+9-50:of the Net.ObjectDays (Erfurt, Germany, Sep
+9-51:10 13, 2001), 2001
+9-52:R¨udiger Kapitza, Holger Schmidt, and Franz J
+9-53:Hauck
+9-54:Platform independent object migration in CORBA
+9-55:In Proc
+9-56:of the OTM"05 Conferences (DOA, Agia Napa, Cyprus, Oct 31 Nov
+9-57:04, 2005), 2005
+9-58:R¨udiger Kapitza, Hans P
+9-59:Reiser, and Franz J
+9-60:Hauck
+9-61:Stable, time bound references in context of dynamically changing environments
+9-62:In MDC"05: Proc
+9-63:of the 25th IEEE Int
+9-64:Conf
+9-65:on Distributed Computing Systems  Workshops (ICDCS 2005 Workshops), 2005
+9-66:Ian Foster, Carl Kesselman, and Steven Tuecke
+9-67:The anatomy of the Grid: Enabling scalable virtual organizations
+9-68:Lecture Notes in Computer Science, 2150, 2001
+9-69:Thomas Fahringer and Alexandru Jugravu
+9-70:Javasymphony: new directives to control and synchronize locality, parallelism, and load balancing for cluster and grid computing
+9-71:In JGI "02: Proceedings of the 2002 joint ACM ISCOPE conference on Java Grande, pages 8 17, New York, NY, USA, 2002
+9-72:ACM Press
+9-73:Rob V
+9-74:van Nieuwpoort, Jason Maassen, Rutger Hofman, Thilo Kielmann, and Henri E
+9-75:Bal
+9-76:Ibis: an efficient java based grid programming environment
+9-77:In JGI "02: Proceedings of the 2002 joint ACM ISCOPE conference on Java Grande, pages 18 27, New York, NY, USA, 2002
+9-78:ACM Press
+9-79:Alberto Montresor, Renzo Davoli, and Ozalp Babaoglu
+9-80:Middleware for dependable network services in partitionable distributed systems
+9-81:SIGOPS Oper
+9-82:Syst
+9-83:Rev., 35(1):73 96, 2001
+9-84:H
+9-85:Meling and B
+9-86:Helvik
+9-87:Arm: Autonomous replication management in jgroup, 2001
+9-88:Mesaac Makpangou, Yvon Gourhant, Jean Pierre Le Narzul, and Marc Shapiro
+9-89:Fragmented objects for distributed abstractions
+9-90:In Readings in Distributed Computing Systems
+9-91:Philip Homburg, Leendert van Doorn, Maarten van Steen, Andrew S
+9-92:Tanenbaum, and Wiebren de Jonge
+9-93:An object model for flexible distributed systems
+9-94:In Proceedings of the 1st Annual ASCI Conference, pages 69 78, 1995
+9-95:Article 5
+picture:

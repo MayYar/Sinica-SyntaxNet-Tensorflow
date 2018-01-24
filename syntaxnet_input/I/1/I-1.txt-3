@@ -1,0 +1,27 @@
+Alice is a knowledge worker assisted by a learning, personal assistive agent such as CALO [11] .
+Alice plans to attend the IJCAI conference later in the year, and her CALO agent adopts the task of Support Meeting Submission to assist her .
+CALO"s plan for an SMS task in the case of a conference submission consists of the following sub tasks
+in preparing an abstract .
+manager based on the abstract and conference details .
+writing the paper .
+procedures for submitting a paper to a conference .
+These steps must be performed in order, with the exception of steps 3 and 4 (TWP), which may be performed in parallel .
+Similarly, CALO can perform the task Apply For Clearance by a plan consisting of
+Alice will no longer be able to attend IJCAI .
+She therefore instructs her CALO agent to abort the SMS task .
+Aborting the task implies aborting both the SMS plan and the AFC subplan .
+Aborting the first plan requires CALO to notify the paper number registry that the allocated paper number is obsolete, which it can achieve by the Cancel Paper Number task.2 Aborting the second plan requires CALO to notify Alice"s manager that Alice no longer requires clearance for publication, which CALO can achieve by invoking the Cancel Clearance Request task .
+We note a number of important observations from the example .
+First, the decision to abort a particular course of action can come from the internal deliberations of the agent (such as reasoning about priorities in a conflict over resources), or from external sources (such as another agent cancelling a commitment), as in this example .
+In this paper we only touch on the problem of determining whether a task or plan should be aborted, instead concentrating on determining the appropriate actions once this decision is made .
+Hence, our objective is to determine how to incorporate aborting mechanisms into the standard execution cycle rather than determine what should be aborted and when .
+Second, once the decision is made to abort the attempt to submit a paper, there are some actions the agent should take, such as cancelling the clearance request .
+In other words, aborting a task is not simply a matter of dropping the task and associated active plans
+This is similar to the case for failure, in that there may also be actions to take when a task or plan fails .
+In both cases, note that it is not simply a matter of the agent undo ing its actions to date; indeed, this may be neither possible (since the agent acts in a situated world and its actions change world state) nor desirable (depending on the semantics of the task) .
+Rather, cleaning up involves compensation via forward recovery actions [3] .
+Third, there is a distinction between aborting a task and aborting a plan .
+In the former case, it is clear that all plans being executed to perform the task should be aborted; in the latter case, it may be that there are better alternatives to the current plan and one of these should be attempted .
+Hence, plan aborting or failure does not necessarily lead to task aborting or failure .
+Fourth, given that tasks may contain sub tasks, which may contain further sub tasks, it is necessary for a parent task to wait until its children have finished their abort methods .
+This is the source of one of the technical challenges that we address

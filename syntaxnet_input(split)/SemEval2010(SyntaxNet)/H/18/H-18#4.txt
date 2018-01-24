@@ -1,0 +1,332 @@
+
+1
+Input: Our goal is to segment documents and align the segments across documents -LRB- Figure 1 -RRB- .
+Parse:
+is VBZ ROOT
+ +-- goal NN nsubj
+ |   +-- Our PRP$ poss
+ +-- segment VB xcomp
+ |   +-- to TO aux
+ |   +-- documents NNS dobj
+ |   +-- and CC cc
+ |   +-- align VB conj
+ |       +-- segments NNS dobj
+ |       |   +-- the DT det
+ |       +-- across IN prep
+ |           +-- documents NNS pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- Figure NN dep
+ |               |   +-- 1 CD num
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+
+2
+Input: Let T be the set of terms -LRB- t1 , t2 , ... , tl -RRB- , which appear in the unlabelled set of documents D = -LRB- d1 , d2 , ... , dm -RRB- .
+Parse:
+Let VB ROOT
+ +-- set NN ccomp
+ |   +-- T PRP nsubj
+ |   +-- be VB cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- terms NNS pobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- t1 CD dep
+ |           |   +-- , , punct
+ |           |   +-- t2 CD amod
+ |           |   +-- ... : punct
+ |           |   +-- tl NFP appos
+ |           +-- -RRB- -RRB- punct
+ |           +-- , , punct
+ |           +-- appear VBP rcmod
+ |               +-- which WDT nsubj
+ |               +-- in IN prep
+ |                   +-- set NN pobj
+ |                       +-- the DT det
+ |                       +-- unlabelled JJ amod
+ |                       +-- of IN prep
+ |                           +-- documents NNS pobj
+ |                               +-- D NNP dep
+ |                                   +-- = , punct
+ |                                   +-- -LRB- -LRB- punct
+ |                                   +-- d1 CD dep
+ |                                   |   +-- , , punct
+ |                                   |   +-- d2 CD appos
+ |                                   |   +-- ... : punct
+ |                                   |   +-- dm NN appos
+ |                                   +-- -RRB- -RRB- punct
+ +-- . . punct
+
+3
+Input: Let Sd be the set of sentences for document d ? D , i.e. -LRB- s1 , s2 , ... , snd -RRB- .
+Parse:
+Let VB ROOT
+ +-- set NN ccomp
+ |   +-- Sd PRP nsubj
+ |   +-- be VB cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |   |   +-- sentences NNS pobj
+ |   |       +-- for IN prep
+ |   |           +-- d NN pobj
+ |   |               +-- document NN nn
+ |   +-- ? , punct
+ |   +-- D NNP dep
+ |   +-- , , punct
+ |   +-- i.e. FW advmod
+ |       +-- s1 CD pobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- , , punct
+ |           +-- s2 CD appos
+ |           +-- ... : punct
+ |           +-- snd NN appos
+ |           +-- -RRB- -RRB- punct
+ +-- . . punct
+
+4
+Input: We have a 3D matrix of term frequency , in which the three dimensions are random variables of D , Sd , and T .
+Parse:
+have VBP ROOT
+ +-- We PRP nsubj
+ +-- matrix NN dobj
+ |   +-- a DT det
+ |   +-- 3D NN nn
+ |   +-- of IN prep
+ |       +-- frequency NN pobj
+ |           +-- term NN nn
+ |           +-- , , punct
+ |           +-- variables NNS rcmod
+ |               +-- in IN prep
+ |               |   +-- which WDT pobj
+ |               +-- dimensions NNS nsubj
+ |               |   +-- the DT det
+ |               |   +-- three CD num
+ |               +-- are VBP cop
+ |               +-- random JJ amod
+ |               +-- of IN prep
+ |                   +-- D NNP pobj
+ |                       +-- , , punct
+ |                       +-- Sd NNP conj
+ |                       +-- and CC cc
+ |                       +-- T NNP conj
+ +-- . . punct
+
+5
+Input: Sd actually is a random vector including a random variable for each d ? D .
+Parse:
+vector NN ROOT
+ +-- Sd NNP nsubj
+ +-- actually RB advmod
+ +-- is VBZ cop
+ +-- a DT det
+ +-- random JJ amod
+ +-- including VBG prep
+ |   +-- variable NN pobj
+ |       +-- a DT det
+ |       +-- random JJ amod
+ |       +-- for IN prep
+ |       |   +-- d NN pobj
+ |       |       +-- each DT det
+ |       +-- ? . punct
+ |       +-- D NNP dep
+ +-- . . punct
+
+6
+Input: The term frequency can be used to estimate the joint probability distribution P -LRB- D , Sd , T -RRB- , which is p -LRB- t , d , s -RRB- = T -LRB- t , d , s -RRB- ND , where T -LRB- t , d , s -RRB- is the number of t in d '' s sentence s and ND is the total number of terms in D .
+Parse:
+used VBN ROOT
+ +-- frequency NN nsubjpass
+ |   +-- The DT det
+ |   +-- term NN nn
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- estimate VB xcomp
+ |   +-- to TO aux
+ |   +-- P NN dobj
+ |       +-- the DT det
+ |       +-- probability NN nn
+ |       |   +-- joint JJ amod
+ |       +-- distribution NN nn
+ |       +-- -LRB- -LRB- punct
+ |       +-- D NNP dep
+ |       |   +-- , , punct
+ |       |   +-- Sd NNP appos
+ |       |       +-- , , punct
+ |       |       +-- T NNP appos
+ |       +-- -RRB- -RRB- punct
+ |       +-- , , punct
+ |       +-- p NN rcmod
+ |           +-- which WDT nsubj
+ |           +-- is VBZ cop
+ |           +-- -LRB- -LRB- punct
+ |           +-- t NN dep
+ |           +-- , , punct
+ |           +-- d NNP dep
+ |           +-- s VBZ dep
+ |           +-- -RRB- -RRB- punct
+ |           +-- = SYM dep
+ |           +-- T NNP dep
+ |           |   +-- sentence NN dep
+ |           |       +-- -LRB- -LRB- punct
+ |           |       +-- t NNP discourse
+ |           |       +-- , , punct
+ |           |       +-- d NNP nsubj
+ |           |       +-- s VBZ cop
+ |           |       +-- -RRB- -RRB- punct
+ |           |       +-- ND NNP nsubj
+ |           |       |   +-- , , punct
+ |           |       |   +-- number NN rcmod
+ |           |       |       +-- where WRB advmod
+ |           |       |       +-- T NNP nsubj
+ |           |       |       |   +-- -LRB- -LRB- punct
+ |           |       |       |   +-- s VBZ dep
+ |           |       |       |   |   +-- t NN dep
+ |           |       |       |   |   +-- , , punct
+ |           |       |       |   |   +-- d NNP dep
+ |           |       |       |   +-- -RRB- -RRB- punct
+ |           |       |       +-- is VBZ cop
+ |           |       |       +-- the DT det
+ |           |       |       +-- of IN prep
+ |           |       |       |   +-- t NN pobj
+ |           |       |       +-- in IN prep
+ |           |       |           +-- d NN pobj
+ |           |       +-- '' '' punct
+ |           |       +-- s POS punct
+ |           +-- and CC cc
+ |           +-- number NN conj
+ |               +-- ND NNP nsubj
+ |               +-- is VBZ cop
+ |               +-- the DT det
+ |               +-- total JJ amod
+ |               +-- of IN prep
+ |                   +-- terms NNS pobj
+ |                       +-- in IN prep
+ |                           +-- D NNP pobj
+ +-- . . punct
+
+7
+Input: ? S represents the set of segments -LRB- ? s1 , ? s2 , ... , ? sp -RRB- after segmentation and alignment among multiple documents , where the number of segments | ? S| = p .
+Parse:
+represents VBZ ROOT
+ +-- ? , punct
+ +-- S NNP nsubj
+ +-- set NN dobj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- segments NNS pobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- ? . prep
+ |           |   +-- s1 CD pobj
+ |           +-- , , punct
+ |           +-- ? . punct
+ |           +-- s2 CD dep
+ |           +-- ... : punct
+ |           +-- sp NN dep
+ +-- -RRB- -RRB- punct
+ +-- after IN prep
+ |   +-- segmentation NN pobj
+ |       +-- and CC cc
+ |       +-- alignment JJ conj
+ |       +-- among IN prep
+ |       |   +-- documents NNS pobj
+ |       |       +-- multiple JJ amod
+ |       +-- , , punct
+ |       +-- | NNP rcmod
+ |           +-- where WRB advmod
+ |           +-- number NN nsubj
+ |           |   +-- the DT det
+ |           |   +-- of IN prep
+ |           |       +-- segments NNS pobj
+ |           +-- ? . punct
+ |           +-- p NN dobj
+ |               +-- S| UH nn
+ |               +-- = SYM nn
+ +-- . . punct
+
+8
+Input: A segment ? si of document d is a sequence of adjacent sentences in d .
+Parse:
+sequence NN ROOT
+ +-- segment NN nsubj
+ |   +-- A DT det
+ |   +-- ? . punct
+ |   +-- si NNS dep
+ |   +-- of IN prep
+ |       +-- d NN pobj
+ |           +-- document NN nn
+ +-- is VBZ cop
+ +-- a DT det
+ +-- of IN prep
+ |   +-- sentences NNS pobj
+ |       +-- adjacent JJ amod
+ |       +-- in IN prep
+ |           +-- d NN pobj
+ +-- . . punct
+
+9
+Input: Since for different documents si may discuss different sub topics , our goal is to cluster adjacent sentences in each document into segments , and align similar segments among documents , so that for different documents ? si is about the same sub topic .
+Parse:
+is VBZ ROOT
+ +-- discuss VB advcl
+ |   +-- Since IN mark
+ |   +-- for IN prep
+ |   |   +-- documents NNS pobj
+ |   |       +-- different JJ amod
+ |   +-- si NNS nsubj
+ |   +-- may MD aux
+ |   +-- topics NNS dobj
+ |       +-- different JJ amod
+ |       +-- sub NN nn
+ +-- , , punct
+ +-- goal NN nsubj
+ |   +-- our PRP$ poss
+ +-- cluster VB xcomp
+ |   +-- to TO aux
+ |   +-- sentences NNS dobj
+ |   |   +-- adjacent JJ amod
+ |   |   +-- in IN prep
+ |   |       +-- document NN pobj
+ |   |           +-- each DT det
+ |   +-- into IN prep
+ |   |   +-- segments NNS pobj
+ |   +-- , , punct
+ |   +-- and CC cc
+ |   +-- align VB conj
+ |   |   +-- segments NNS dobj
+ |   |       +-- similar JJ amod
+ |   |       +-- among IN prep
+ |   |           +-- documents NNS pobj
+ |   +-- is VBZ advcl
+ |       +-- so IN mark
+ |       +-- that IN mark
+ |       +-- for IN prep
+ |       |   +-- documents NNS pobj
+ |       |       +-- different JJ amod
+ |       +-- ? . punct
+ |       +-- si FW nsubj
+ |       +-- about IN prep
+ |           +-- topic NN pobj
+ |               +-- the DT det
+ |               +-- same JJ amod
+ |               +-- sub NN nn
+ +-- . . punct
+
+10
+Input: The goal is to find the optimal topic segmentation and alignment mapping Segd -LRB- si -RRB-
+Parse:
+is VBZ ROOT
+ +-- goal NN nsubj
+ |   +-- The DT det
+ +-- find VB xcomp
+     +-- to TO aux
+     +-- segmentation NN dobj
+         +-- the DT det
+         +-- optimal JJ amod
+         +-- topic NN nn
+         +-- and CC cc
+         +-- Segd NNP conj
+             +-- mapping NN nn
+             |   +-- alignment NN nn
+             +-- si NNP appos
+                 +-- -LRB- -LRB- punct
+                 +-- -RRB- -RRB- punct

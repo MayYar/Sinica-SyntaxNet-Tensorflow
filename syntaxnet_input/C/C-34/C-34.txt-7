@@ -1,0 +1,56 @@
+7.1 Practical Analyses According to the former description and analyses, it is easy to know that the above newly proposed algorithm has the following properties
+Proof
+Obviously, in the logical hypercube formed by the nodes in the same cluster of node A, there are n(v 1) nodes, which 58 have direct pairwise key with node A .
+And in the logical hypercube formed by the nodes in different clusters from that of node A, there are m(u 1) nodes, which have direct pairwise key with node A .
+Therefore, there are totally m(u 1)+n(v 1) nodes, which have direct pairwise key with node A .
+So, the probability of pairwise key establishment between any two nodes can be estimated as P=(m(u 1)+n(v 1)) (N 1), since the whole sensor network has N sensor nodes in all .
+Figure.4 presents the comparision between the probability of direct pairwise key establishment between any two nodes and the dimension n, when the sensor network has different total nodes, and use the new pairwise key predistribution scheme based on H(8,2,3,v,n) model .
+2 3 4 5 6 7 8 9 10 0 0.002 0.004 0.006 0.008 0.01 Number of Dimension ProbabilitytoEstablishDirectKey N = 8000 N=10000 N=20000 N=30000 Figure.4 Comparision between the probability of direct pairwise key establishment between any two nodes and the dimension n, when the sensor network has different total nodes, and use the new pairwise key predistribution scheme based on H(8,2,3,v,n) model .
+From Figure.4, it is easy to know that by using new pairwise key predistribution scheme based on H(k,u,m,v,n) model, the probability of direct pairwise key establishment between any two nodes decreases with the increasing of the scale of the sensor networks, and in addition, the probability of direct pairwise key establishment between any two nodes decreases with the increasing of the dimension n, when the scale of the sensor network is fixed .
+Theorem 4
+Proof
+Since the total number of nodes in H(v,p) is vp =N, the total number of nodes in H(k,u,m,v,n) is um * vn =N .
+Let p=x+n, then there is um *vn = vx * vn ? um =vx ? x=tm .
+From the property 3, it is easy to know that the probability of direct pairwise key establishment between any two nodes can be estimated as P=(m(u 1)+n(v 1)) (N 1) .
+According to the description in [7], it is well know that the probability of direct pairwise key establishment between any two nodes can be estimated as P"= p(v 1) (N 1)= (x(v 1)+n(v 1)) (N 1) .
+Next, we will prove that m(u 1) ? x(v 1)
+Construct a function as f(t)= vt 1 t(v 1), where t ? 2 .
+When t=2, it is obvious that there is f(t)= vt 2v+1=( v 1)2 ? 0 and f"(t)=t vt 1 v+1 ? 2v v+1= v+1>0 .
+So, there is f(t) ? 0 ? vt 1 ? t(v 1) ? m(vt 1) ? tm(v 1) ? m(u1) ? x(v 1) .
+Therefore, the conclusion of the theorem stands .
+As for the conclusion of theorem 4, we give an example to illustrate .
+Supposing that the total number of nodes in the sensor network is N=214 , and H(k,u,m,v,n)=H(16,4,2,2,10), H(v,p)= H(10,14), then the probability of direct pairwise key establishment between any two nodes based on the H(k,u,m,v,n) model is P= (m(u 1)+n(v1)) (N 1)= (2(4 1)+10(2 1)) (214 1)=16 (214 1), but the probability of direct pairwise key establishment between any two nodes based on the H(v,p) model is P"= p(v 1) (N 1)=14(2 1) (214 1)= 14 (214 1) .
+Supposing that the total number of nodes in the sensor network is N, Figure.5 illustrates the comparison between the probability of direct pairwise key establishment between any two nodes based on the H(k,u,m,v,n) model and the probability of direct pairwise key establishment between any two nodes based on the H(v,p) model, when u=4 and v=2 .
+1 2 3 4 5 6 7 8 9 10 0 0.5 1 1.5 x 10 3 scaleofthesensornetwork ProbabilitytoEstablishDirectKey H(k,u,m,v,n)model based H(v,p)model based Figure.5 Comparison between the probability of direct pairwise key establishment between H(v,n) and H(k,u,m,v,n) models .
+From Figure.5, it is easy to know that the theorem 5 stands .
+Theorem 5
+Proof
+Then obviously, the H(k,u,m,v,n) model will degrade into the H(v,n) model .
+According to the former anayses in this paper and the definition of the pairwise key distribution scheme based on the hypercube model H(v,p) in [7], it is easy to know that the conclusion of the theorem stands .
+59 7.2 Security Analyses By using the pairwise key establishment algorithm based on the H(k,u,m,v,n) model, the intruders can launch two kinds of attacks
+2) The attackers may attack against the whole sensor network, inorder to decrease the probability of the pairwise key establishment, or increase the cost of the pairwise key establishment .
+Attacks against a Pair of sensor nodes nodes u,v, where u,v are all not compromised nodes, but the intruders want to compromise the pairwise key between them .
+1) If u,v can establish direct pairwise key, then the only way to compromise the key is to compromise the common bivariate polynomial f(x,y) between u,v .
+Since the degree of the bivariate polynomial f(x,y) is t, so the intruders need to compromise at least t+1 sensor nodes that have a share of the bivariate polynomial f(x,y) .
+2) If u,v can establish indirect pairwise key through intermediate nodes, then the intruders need to compromise at least one intermediate node, or compromise the common bivariate polynomial f(x,y) between two neighboring intermediate nodes .
+But even if the intruders succeed to do that, node u and v can still reestablish indirect pairwise key through alternative intermediate nodes .
+nodes u,v, where u,v are all not compromised nodes, but the intruders want to prevent them to establish the pairwise key .
+Then, the intruders need to compromise all of the m+n bivariate polynomials of node u or v .
+Since the degree of the bivariate polynomial f(x,y) is t, so for bivariate polynomial, the intruders need to compromise at least t+1 sensor nodes that have a share of the given bivariate polynomial .
+Therefore, the intruders need to compromise (m+n)(t+1) sensor nodes altogether to prevent u,v to establish the pairwise key .
+Attacks against the sensor network Supposing that the Attackers know the distribution of the polynomials over sensor nodes, it may systematically attack the network by compromising the polynomials in F one by one in order to compromise the entire network .
+Assume the fraction of the compromised polynomials is pc, then there are up to N"=pc กั { vn v N umv n n mn กักั+กักั ][ }= pc กักัN (m+n) Sensor nodes that have at least one compromised polynomial share .
+Among all of the remaining N N" sensor nodes, none of them includes a compromised polynomial share .
+So, the remaining N N" sensor nodes can establish direct pairwise key by using any one of their polynomial shares .
+However, the indirect pairwise keys in the remaining N N" sensor nodes may be affected .
+And they may need to re establish a new indirect pairwise key between them by select alternative intermediate nodes that do not belong to the N" compromised nodes .
+Supposing that the scale of the sensor network is N=10000, Figure.6 presents the comparison between pc and the number of sensor nodes with at least one compromised polynomial share in sensor networks based on different H(k,u,m,v,n) distribution models .
+From Figure.6, it is easy to know that, when the scale of the sensor network is fixed, the number of the affected sensor nodes in the sensor network increases with the increasing of the number of compromised nodes .
+0 0.02 0.04 0.06 0.08 0.1 0.12 0.14 0.16 0 1000 2000 3000 4000 5000 6000 7000 8000 F rac tion of C om prom is ed B ivariate P oly nom ialsSensorNodeswithatleastoneCompromisedPolynomialShare H (1,0,0,100,2) H (2,2,1,71,2) H (4,2,2,50,2) H (8,2,3,36,2) Figure.6 the comparison between pc and the number of sensor nodes with at least one compromised polynomial share in sensor networks based on different H(k,u,m,v,n) distribution models .
+Theorem 6
+Proof
+Let p=x+n, then there is um * vn = vx * vn ? um =vx .
+Since u>v ? x>m ? pc กักัN (m+n)< pc กักัN (x+n)= pc กักัN p .
+Supposing that the scale of the sensor network is N=10000, Figure.7 presents the comparison between pc and the number of sensor nodes with at least one compromised polynomial share in sensor networks based on H(9,3,2,2,n) and H(2,p) distribution models .
+From Figure.7, it is easy to know that the conclusion of theorem 9 is correct, and the number of the affected sensor nodes in the sensor network increases with the increasing of the number of compromised nodes, when the scale of the sensor network is fixed .
+60 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 Fraction of Compromised Bivariate Polynomials SensorNodeswithatleastoneCompromisedPolynomialShare H(9,3,2,34,2) H(16,4,2,25,2) H(225,15,2,7,2) H(1296,36,2,3,2) H(2,14) Figure.7 the comparison between pc and the number of sensor nodes with at least one compromised polynomial share in sensor networks based on H(9,3,2,2,n) and H(2,p) distribution models. .

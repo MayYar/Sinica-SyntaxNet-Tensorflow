@@ -1,0 +1,65 @@
+To validate the proposed approach we have built a prototype that simulates large networks .
+To test the scalability of our approach The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 251 we have run several experiments with various types of networks .
+Here we present results from 3 network types with | |=100, | |=500 and | |=1000 that provide representative cases .
+Networks are constructed by distributing randomly | | agents in an area, each with a visibility ratio equal to The acquaintances of an agent are those that are visible to the agent and those from which the agent is visible (since edges in the network are bidirectional) .
+Details about networks are given in Table 1 .
+The column avg(|N(A)|) shows the average number of acquaintances per agent in the network and the column |T| shows the number of queries per network type .
+It must be noticed that the TypeA network is more dense than the others, which are much larger than this .
+Each experiment ran 40 times .
+In each run the network is provided with a new set of randomly generated queries that are originated from randomly chosen agents .
+The agents search and gather knowledge that they further use and enrich, tuning the network gradually, run by run .
+Each run lasts a number of rounds that depends on the of queries and on the parameters that determine the dynamics of the network
+100% of the information items requested must have been found), or they must have been unfulfilled (i.e .
+have exceeded their ) .
+It must be noticed that in case of a dynamic setting, this ending criterion causes some of the queries to be lost .
+This is the case when some queries are the only active remained and the agents to whom they have been propagated left the network without their acquaintances to be aware of it .
+Table1
+For the category in its expertise each agent holds at most 1000 information pieces, the exact number of which is determined randomly .
+At each run a constant number of queries are being generated, depending on the type of network used (last column in Table 1) .
+At each run, each query is randomly assigned to an originator agent and is set to request a random number of information items, classified in a sub category of the query originator agent"s expertise .
+This sub category is chosen in a random way and the requested items are less than 6000 .
+The for any query is set to be equal to 6 .
+In such a setting, the demand for information items is much higher than the agents" information provision abilities, given the of queries
+Given that agents are initially not aware of acquaintances" local repository ( case), we have run several evaluation experiments for each network type depending on the percentage of acquaintances to which a query can be propagated by an agent .
+These types of experiments are denoted by TypeX Y, where X denotes the type of network and Y the percentage of acquaintances
+For instance, TypeA 10 denotes a setting with a 0 50 100 150 200 250 300 TypeA 10 Type B 20 (no initialization) TypeB 20 (initialization) Type C 50 4000 14000 24000 34000 44000 54000 40 42 44 46 48 50 52 54 56 58 0 0.0005 0.001 0.0015 0.002 0.0025 0.003 0.0035 0.004 0.0045 TypeA 10 TypeB 20 (no initialization) Type B 20 (initialization) TypeC 50 TypeB 20 without RIs Figure 4 .
+Results for static networks as agents gather information about acquaintances" abilities and interests network of TypeA where each query is being propagated to at most 10% of an agent"s acquaintances .
+The exact number of acquaintances is randomly chosen per agent and queries are being propagated only to those acquaintances that are likely to best i messages per run q messages per run benefit per run message gain per run 252 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) serve the request .
+Figures 4 and 5 show experiments for static and dynamic networks of TypeA 10 (dense network with a low percentage of acquaintances), TypeB 20 (quite dense network with a low percentage of acquaintances), with initialization and without initialization, and TypeC 50 (not a so dense network with a quite high percentage of acquaintances) .
+To demonstrate the advantages of our method we have considered networks without 0 200 400 600 800 1000 1200 1400 1600 1800 2000 0 10000 20000 30000 40000 50000 60000 70000 80000 42 43 44 45 46 47 48 49 50 0 0.0005 0.001 0.0015 0.002 0.0025 0.003 0.0035 TypeB 20 TypeB 20 without RIs TypeC 50 TypeC 50 without RIs TypeC 50 (static) Figure 5 .
+Results for dynamic networks as agents gather information about acquaintances" abilities and interests routing indices for TypeC 50 and TypeB 20 networks
+Results computed in each experiment show the number of querypropagation messages ( ), the number of messages for the update of indices ( ), the of the system, i.e .
+the average ratio of information pieces provided to the number of pieces requested per query, and the i.e .
+the ratio of benefit to the total number of messages .
+The horizontal axis in each diagram corresponds to the runs .
+As it is shown in Figure 4, as agents search and share information from run 1 to run 40, they manage to increase the benefit of the system, by drastically reducing the number of messages .
+Also (not shown here due to space reasons) the number of unfulfilled queries decrease, while the served queries increase gradually .
+Experiments show
+(b) That ¡¥tuning" can greatly facilitate the scalability of the information searching and sharing tasks in networks .
+To show whether initial knowledge about acquaintances local repository (the case) affects the effective tuning of the network, we provide representative results from the TypeB 20 network .
+As it is shown in Figure 4, the tuning task in this case does not manage to achieve the benefit of the system reported for the case .
+On the contrary, while the tuning affects the drastically; the are not affected in the same way
+This is further shown in a more clear way in the message gain of both approaches
+Therefore, initial knowledge concerning local information of acquaintances can be used for guiding searching and tuning at the initial stages of the tuning task, only if we need to gain efficiency (i.e .
+decrease the number of required messages) to the cost of loosing effectiveness (i.e .
+have lower benefit)
+However, initial information about acquaintances" local repositories may mislead the searching process, resulting in low benefit .
+In case we need to gain effectiveness to the cost of reducing efficiency, this type of local knowledge does not suffice .
+Considering also the information sharing method without routing indices ( cases), we can see that for static networks it requires more without managing to tune the system, while the benefit is nearly the same to the one reported by our method .
+This is shown clearly in the message gain diagrams in Figure 4 .
+Figure 5 provides results for dynamic networks .
+These are results from a particular representative case of our experiments where more than 25% of (randomly chosen) nodes leave the network in each run during the experiment .
+After a random number of i messages per run q messages per run benefit per run message gain per run The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 253 rounds, a new node may replace the one left .
+This newcomer has no information about the network .
+Approximately 25% of the nodes that leave the network are not replaced for 50% of the experiment, and approximately 50% are not replaced for more than 35% of the experiment .
+In such a highly dynamic setting with very scarce information resources distributed in the network, as Figure 5 shows, the tuning approach has managed to keep the benefit to acceptable levels, while still reducing drastically the number of i messages .
+However, as it can be expected, this reduction is not so drastic as it was in the corresponding static cases .
+Figure 5 shows that the message gain for the dynamic case is comparable to the message gain for the corresponding (TypeC50) static case, which proves the value of this approach for dynamic settings .
+The comparison to the case where no routing indices are exploited reveals the same results as in the static case, to the cost of a large number of messages .
+Finally it must be pointed that the maximum number of messages per query required by the proposed method is nearly 12, which is less than that that reported by other efforts. .

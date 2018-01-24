@@ -1,0 +1,39 @@
+Query classification is an important information retrieval task
+Accurate classification of search queries is likely to benefit a number of higher level tasks such as Web search and ad matching
+Since search queries are usually short, by themselves they usually carry insufficient information for adequate classification accuracy
+To address this problem, we proposed a methodology for using search results as a source of external knowledge
+To this end, we send the query to a search engine, and assume that a plurality of the highestranking search results are relevant to the query
+Classifying these results then allows us to classify the original query with substantially higher accuracy
+The results of our empirical evaluation definitively confirmed that using the Web as a repository of world knowledge contributes valuable information about the query, and aids in its correct classification
+Notably, our method exhibits significantly higher accuracy than methods described in prior studies3 Compared to prior studies, our approach does not require any auxiliary taxonomy, and we produce a query classifier directly for the target taxonomy
+Furthermore, the taxonomy used in this study is approximately 2 orders of magnitude larger than that used in prior works
+We also experimented with different values of parameters that characterize our method
+When using search results, one can either use only summaries of the results provided by 3 Since the field of query classification does not yet have established and agreed upon benchmarks, direct comparison of results is admittedly tricky
+the search engine, or actually crawl the results pages for even deeper knowledge
+Overall, query classification performance was the best when using the full crawled pages (Table 1)
+These results are consistent with prior studies [5], which found that using full crawled pages is superior for document classification than using only brief summaries
+Our findings, however, are different from those reported by Shen et al
+[19], who found summaries to yield better results
+We attribute our observations to using a more elaborate voting scheme among the classifications of individual search results, as well as to using a more difficult set of rare queries
+In this study we used two major search engines, A and B
+Interestingly, we found notable distinctions in the quality of their output
+Notably, for engine A the overall results were better when using the full crawled pages of the search results, while for engine B it seems to be more beneficial to use the summaries of results
+This implies that while the quality of search results returned by engine A is apparently better, engine B does a better work in summarizing the pages
+We also found that the best results were obtained by using full crawled pages and performing voting among their individual classifications
+For a classifier that is external to the search engine, retrieving full pages may be prohibitively costly, in which case one might prefer to use summaries to gain computational efficiency
+On the other hand, for the owners of a search engine, full page classification is much more efficient, since it is easy to preprocess all indexed pages by classifying them once onto the (fixed) taxonomy
+Then, page classifications are obtained as part of the meta data associated with each search result, and query classification can be nearly instantaneous
+When using summaries it appears that better results are obtained by first concatenating individual summaries into a meta document, and then using its classification as a whole
+We believe the reason for this observation is that summaries are short and inherently noisier, and hence their aggregation helps to correctly identify the main theme
+Consistent with our intuition, using too few search results yields useful but insufficient knowledge, and using too many search results leads to inclusion of marginally relevant Web pages
+The best results were obtained when using 40 top search hits
+In this work, we first classify search results, and then use their classifications directly to classify the original query
+Alternatively, one can use the classifications of search results as features in order to learn a second level classifier
+In Section 3.6, we did some preliminary experiments in this direction, and found that learning such a secondary classifier did not yield considerably advantages
+We plan to further investigate this direction in our future work
+It is also essential to note that implementing our methodology incurs little overhead
+If the search engine classifies crawled pages during indexing, then at query time we only need to fetch these classifications and do the voting
+To conclude, we believe our methodology for using Web search results holds considerable promise for substantially improving the accuracy of Web search queries
+This is particularly important for rare queries, for which little perquery learning can be done, and in this study we proved that such scarceness of information could be addressed by leveraging the knowledge found on the Web
+We believe our findings will have immediate applications to improving the handling of rare queries, both for improving the search results as well as yielding better matched advertisements
+In our further research we also plan to make use of session information in order to leverage knowledge about previous queries to better classify subsequent ones.

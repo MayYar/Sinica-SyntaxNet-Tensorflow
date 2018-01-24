@@ -1,0 +1,343 @@
+Remote Access to Large Spatial Databases ∗ 
+content:
+1 ABSTRACT :
+1-1:Enterprises in the public and private sectors have been making their large spatial data archives available over the Internet .
+1-2:However, interactive work with such large volumes of online spatial data is a challenging task .
+1-3:We propose two efficient approaches to remote access to large spatial data .
+1-4:First, we introduce a client server architecture where the work is distributed between the server and the individual clients for spatial query evaluation, data visualization, and data management .
+1-5:We enable the minimization of the requirements for system resources on the client side while maximizing system responsiveness as well as the number of connections one server can handle concurrently .
+1-6:Second, for prolonged periods of access to large online data, we introduce APPOINT (an Approach for Peer to Peer Oﬄoading the INTernet) .
+1-7:This is a centralized peer to peer approach that helps Internet users transfer large volumes of online data efficiently .
+1-8:In APPOINT, active clients of the clientserver architecture act on the server"s behalf and communicate with each other to decrease network latency, improve service bandwidth, and resolve server congestions .
+1-9:C.2.4 [Computer Communication Networks]: .
+2 INTRODUCTION :
+2-1:In recent years, enterprises in the public and private sectors have provided access to large volumes of spatial data over the Internet .
+2-2:Interactive work with such large volumes of online spatial data is a challenging task .
+2-3:We have been developing an interactive browser for accessing spatial online databases: the SAND (Spatial and Non spatial Data) Internet Browser .
+2-4:Users of this browser can interactively and visually manipulate spatial data remotely .
+2-5:Unfortunately, interactive remote access to spatial data slows to a crawl without proper data access mechanisms .
+2-6:We developed two separate methods for improving the system performance, together, form a dynamic network infrastructure that is highly scalable and provides a satisfactory user experience for interactions with large volumes of online spatial data .
+2-7:The core functionality responsible for the actual database operations is performed by the server based SAND system .
+2-8:SAND is a spatial database system developed at the University of Maryland [12] .
+2-9:The client side SAND Internet Browser provides a graphical user interface to the facilities of SAND over the Internet .
+2-10:Users specify queries by choosing the desired selection conditions from a variety of menus and dialog boxes .
+2-11:SAND Internet Browser is Java based, which makes it deployable across many platforms .
+2-12:In addition, since Java has often been installed on target computers beforehand, our clients can be deployed on these systems with little or no need for any additional software installation or customization .
+2-13:The system can start being utilized immediately without any prior setup which can be extremely beneficial in time sensitive usage scenarios such as emergencies .
+2-14:There are two ways to deploy SAND .
+2-15:First, any standard Web browser can be used to retrieve and run the client piece (SAND Internet Browser) as a Java application or an applet .
+2-16:This way, users across various platforms can continuously access large spatial data on a remote location with little or 15 no need for any preceding software installation .
+2-17:The second option is to use a stand alone SAND Internet Browser along with a locally installed Internet enabled database management system (server piece) .
+2-18:In this case, the SAND Internet Browser can still be utilized to view data from remote locations .
+2-19:However, frequently accessed data can be downloaded to the local database on demand, and subsequently accessed locally .
+2-20:Power users can also upload large volumes of spatial data back to the remote server using this enhanced client .
+2-21:We focused our efforts in two directions .
+2-22:We first aimed at developing a client server architecture with efficient caching methods to balance local resources on one side and the significant latency of the network connection on the other .
+2-23:The low bandwidth of this connection is the primary concern in both cases .
+2-24:The outcome of this research primarily addresses the issues of our first type of usage (i.e., as a remote browser application or an applet) for our browser and other similar applications .
+2-25:The second direction aims at helping users that wish to manipulate large volumes of online data for prolonged periods .
+2-26:We have developed a centralized peerto peer approach to provide the users with the ability to transfer large volumes of data (i.e., whole data sets to the local database) more efficiently by better utilizing the distributed network resources among active clients of a clientserver architecture .
+2-27:We call this architecture APPOINTApproach for Peer to Peer Oﬄoading the INTernet .
+2-28:The results of this research addresses primarily the issues of the second type of usage for our SAND Internet Browser (i.e., as a stand alone application) .
+2-29:The rest of this paper is organized as follows .
+2-30:Section 2 describes our client server approach in more detail .
+2-31:Section 3 focuses on APPOINT, our peer to peer approach .
+2-32:Section 4 discusses our work in relation to existing work .
+2-33:Section 5 outlines a sample SAND Internet Browser scenario for both of our remote access approaches .
+2-34:Section 6 contains concluding remarks as well as future research directions. .
+3 THE CLIENT SERVER APPROACH :
+3-1:Traditionally, Geographic Information Systems such as ArcInfo from ESRI [2] and many spatial databases are designed to be stand alone products .
+3-2:The spatial database is kept on the same computer or local area network from where it is visualized and queried .
+3-3:This architecture allows for instantaneous transfer of large amounts of data between the spatial database and the visualization module so that it is perfectly reasonable to use large bandwidth protocols for communication between them .
+3-4:There are however many applications where a more distributed approach is desirable .
+3-5:In these cases, the database is maintained in one location while users need to work with it from possibly distant sites over the network (e.g., the Internet) .
+3-6:These connections can be far slower and less reliable than local area networks and thus it is desirable to limit the data flow between the database (server) and the visualization unit (client) in order to get a timely response from the system .
+3-7:Our client server approach (Figure 1) allows the actual database engine to be run in a central location maintained by spatial database experts, while end users acquire a Javabased client component that provides them with a gateway into the SAND spatial database engine .
+3-8:Our client is more than a simple image viewer .
+3-9:Instead, it operates on vector data allowing the client to execute many operations such as zooming or locational queries locally .
+3-10:In Figure 1: SAND Internet Browser Client Server architecture .
+3-11:essence, a simple spatial database engine is run on the client .
+3-12:This database keeps a copy of a subset of the whole database whose full version is maintained on the server .
+3-13:This is a concept similar to ‘caching" .
+3-14:In our case, the client acts as a lightweight server in that given data, it evaluates queries and provides the visualization module with objects to be displayed .
+3-15:It initiates communication with the server only in cases where it does not have enough data stored locally .
+3-16:Since the locally run database is only updated when additional or newer data is needed, our architecture allows the system to minimize the network traffic between the client and the server when executing the most common user side operations such as zooming and panning .
+3-17:In fact, as long as the user explores one region at a time (i.e., he or she is not panning all over the database), no additional data needs to be retrieved after the initial population of the client side database .
+3-18:This makes the system much more responsive than the Web mapping services .
+3-19:Due to the complexity of evaluating arbitrary queries (i.e., more complex queries than window queries that are needed for database visualization), we do not perform user specified queries on the client .
+3-20:All user queries are still evaluated on the server side and the results are downloaded onto the client for display .
+3-21:However, assuming that the queries are selective enough (i.e., there are far fewer elements returned from the query than the number of elements in the database), the response delay is usually within reasonable limits .
+3-22:2.1 Client Server Communication As mentioned above, the SAND Internet Browser is a client piece of the remotely accessible spatial database server built around the SAND kernel .
+3-23:In order to communicate with the server, whose application programming interface is a Tcl based scripting language, a servlet specifically designed to interface the SAND Internet Browser with the SAND kernel is required on the server side .
+3-24:This servlet listens on a given port of the server for incoming requests from the client .
+3-25:It translates these requests into the SAND Tcl language .
+3-26:Next, it transmits these SAND Tcl commands or scripts to the SAND kernel .
+3-27:After results are provided by the kernel, the servlet fetches and processes them, and then sends those results back to the originating client .
+3-28:Once the Java servlet is launched, it waits for a client to initiate a connection .
+3-29:It handles both requests for the actual client Java code (needed when the client is run as an applet) and the SAND traffic .
+3-30:When the client piece is launched, it connects back to the SAND servlet, the communication is driven by the client piece; the server only responds to the client"s queries .
+3-31:The client initiates a transaction by 6 sending a query .
+3-32:The Java servlet parses the query and creates a corresponding SAND Tcl expression or script in the SAND kernel"s native format .
+3-33:It is then sent to the kernel for evaluation or execution .
+3-34:The kernel"s response naturally depends on the query and can be a boolean value, a number or a string representing a value (e.g., a default color) or, a whole tuple (e.g., in response to a nearest tuple query) .
+3-35:If a script was sent to the kernel (e.g., requesting all the tuples matching some criteria), then an arbitrary amount of data can be returned by the SAND server .
+3-36:In this case, the data is first compressed before it is sent over the network to the client .
+3-37:The data stream gets decompressed at the client before the results are parsed .
+3-38:Notice, that if another spatial database was to be used instead of the SAND kernel, then only a simple modification to the servlet would need to be made in order for the SAND Internet Browser to function properly .
+3-39:In particular, the queries sent by the client would need to be recoded into another query language which is native to this different spatial database .
+3-40:The format of the protocol used for communication between the servlet and the client is unaffected. .
+4 THE PEER TO PEER APPROACH :
+4-1:Many users may want to work on a complete spatial data set for a prolonged period of time .
+4-2:In this case, making an initial investment of downloading the whole data set may be needed to guarantee a satisfactory session .
+4-3:Unfortunately, spatial data tends to be large .
+4-4:A few download requests to a large data set from a set of idle clients waiting to be served can slow the server to a crawl .
+4-5:This is due to the fact that the common client server approach to transferring data between the two ends of a connection assumes a designated role for each one of the ends (i.e, some clients and a server) .
+4-6:We built APPOINT as a centralized peer to peer system to demonstrate our approach for improving the common client server systems .
+4-7:A server still exists .
+4-8:There is a central source for the data and a decision mechanism for the service .
+4-9:The environment still functions as a client server environment under many circumstances .
+4-10:Yet, unlike many common client server environments, APPOINT maintains more information about the clients .
+4-11:This includes, inventories of what each client downloads, their availabilities, etc .
+4-12:When the client server service starts to perform poorly or a request for a data item comes from a client with a poor connection to the server, APPOINT can start appointing appropriate active clients of the system to serve on behalf of the server, i.e., clients who have already volunteered their services and can take on the role of peers (hence, moving from a client server scheme to a peer to peer scheme) .
+4-13:The directory service for the active clients is still performed by the server but the server no longer serves all of the requests .
+4-14:In this scheme, clients are used mainly for the purpose of sharing their networking resources rather than introducing new content and hence they help oﬄoad the server and scale up the service .
+4-15:The existence of a server is simpler in terms of management of dynamic peers in comparison to pure peerto peer approaches where a flood of messages to discover who is still active in the system should be used by each peer that needs to make a decision .
+4-16:The server is also the main source of data and under regular circumstances it may not forward the service .
+4-17:Data is assumed to be formed of files .
+4-18:A single file forms the atomic means of communication .
+4-19:APPOINT optimizes requests with respect to these atomic requests .
+4-20:Frequently accessed data sets are replicated as a byproduct of having been requested by a large number of users .
+4-21:This opens up the potential for bypassing the server in future downloads for the data by other users as there are now many new points of access to it .
+4-22:Bypassing the server is useful when the server"s bandwidth is limited .
+4-23:Existence of a server assures that unpopular data is also available at all times .
+4-24:The service depends on the availability of the server .
+4-25:The server is now more resilient to congestion as the service is more scalable .
+4-26:Backups and other maintenance activities are already being performed on the server and hence no extra administrative effort is needed for the dynamic peers .
+4-27:If a peer goes down, no extra precautions are taken .
+4-28:In fact, APPOINT does not require any additional resources from an already existing client server environment but, instead, expands its capability .
+4-29:The peers simply get on to or get off from a table on the server .
+4-30:Uploading data is achieved in a similar manner as downloading data .
+4-31:For uploads, the active clients can again be utilized .
+4-32:Users can upload their data to a set of peers other than the server if the server is busy or resides in a distant location .
+4-33:Eventually the data is propagated to the server .
+4-34:All of the operations are performed in a transparent fashion to the clients .
+4-35:Upon initial connection to the server, they can be queried as to whether or not they want to share their idle networking time and disk space .
+4-36:The rest of the operations follow transparently after the initial contact .
+4-37:APPOINT works on the application layer but not on lower layers .
+4-38:This achieves platform independence and easy deployment of the system .
+4-39:APPOINT is not a replacement but an addition to the current client server architectures .
+4-40:We developed a library of function calls that when placed in a client server architecture starts the service .
+4-41:We are developing advanced peer selection schemes that incorporate the location of active clients, bandwidth among active clients, data size to be transferred, load on active clients, and availability of active clients to form a complete means of selecting the best clients that can become efficient alternatives to the server .
+4-42:With APPOINT we are defining a very simple API that could be used within an existing client server system easily .
+4-43:Instead of denial of service or a slow connection, this API can be utilized to forward the service appropriately .
+4-44:The API for the server side is: start(serverPortNo) makeFileAvailable(file,location,boolean) callback receivedFile(file,location) callback errorReceivingFile(file,location,error) stop() Similarly the API for the client side is: start(clientPortNo,serverPortNo,serverAddress) makeFileAvailable(file,location,boolean) receiveFile(file,location) sendFile(file,location) stop() The server, after starting the APPOINT service, can make all of the data files available to the clients by using the makeFileAvailable method .
+4-45:This will enable APPOINT to treat the server as one of the peers .
+4-46:The two callback methods of the server are invoked when a file is received from a client, or when an error is encountered while receiving a file from a client .
+4-47:APPOINT guar7 Figure 2: The localization operation in APPOINT .
+4-48:antees that at least one of the callbacks will be called so that the user (who may not be online anymore) can always be notified (i.e., via email) .
+4-49:Clients localizing large data files can make these files available to the public by using the makeFileAvailable method on the client side .
+4-50:For example, in our SAND Internet Browser, we have the localization of spatial data as a function that can be chosen from our menus .
+4-51:This functionality enables users to download data sets completely to their local disks before starting their queries or analysis .
+4-52:In our implementation, we have calls to the APPOINT service both on the client and the server sides as mentioned above .
+4-53:Hence, when a localization request comes to the SAND Internet Browser, the browser leaves the decisions to optimally find and localize a data set to the APPOINT service .
+4-54:Our server also makes its data files available over APPOINT .
+4-55:The mechanism for the localization operation is shown with more details from the APPOINT protocols in Figure 2 .
+4-56:The upload operation is performed in a similar fashion. .
+5 RELATED WORK :
+5-1:There has been a substantial amount of research on remote access to spatial data .
+5-2:One specific approach has been adopted by numerous Web based mapping services (MapQuest [5], MapsOnUs [6], etc.) .
+5-3:The goal in this approach is to enable remote users, typically only equipped with standard Web browsers, to access the company"s spatial database server and retrieve information in the form of pictorial maps from them .
+5-4:The solution presented by most of these vendors is based on performing all the calculations on the server side and transferring only bitmaps that represent results of user queries and commands .
+5-5:Although the advantage of this solution is the minimization of both hardware and software resources on the client site, the resulting product has severe limitations in terms of available functionality and response time (each user action results in a new bitmap being transferred to the client) .
+5-6:Work described in [9] examines a client server architecture for viewing large images that operates over a lowbandwidth network connection .
+5-7:It presents a technique based on wavelet transformations that allows the minimization of the amount of data needed to be transferred over the network between the server and the client .
+5-8:In this case, while the server holds the full representation of the large image, only a limited amount of data needs to be transferred to the client to enable it to display a currently requested view into the image .
+5-9:On the client side, the image is reconstructed into a pyramid representation to speed up zooming and panning operations .
+5-10:Both the client and the server keep a common mask that indicates what parts of the image are available on the client and what needs to be requested .
+5-11:This also allows dropping unnecessary parts of the image from the main memory on the server .
+5-12:Other related work has been reported in [16] where a client server architecture is described that is designed to provide end users with access to a server .
+5-13:It is assumed that this data server manages vast databases that are impractical to be stored on individual clients .
+5-14:This work blends raster data management (stored in pyramids [22]) with vector data stored in quadtrees [19, 20] .
+5-15:For our peer to peer transfer approach (APPOINT), Napster is the forefather where a directory service is centralized on a server and users exchange music files that they have stored on their local disks .
+5-16:Our application domain, where the data is already freely available to the public, forms a prime candidate for such a peer to peer approach .
+5-17:Gnutella is a pure (decentralized) peer to peer file exchange system .
+5-18:Unfortunately, it suffers from scalability issues, i.e., floods of messages between peers in order to map connectivity in the system are required .
+5-19:Other systems followed these popular systems, each addressing a different flavor of sharing over the Internet .
+5-20:Many peer to peer storage systems have also recently emerged .
+5-21:PAST [18], Eternity Service [7], CFS [10], and OceanStore [15] are some peer to peer storage systems .
+5-22:Some of these systems have focused on anonymity while others have focused on persistence of storage .
+5-23:Also, other approaches, like SETI@Home [21], made other resources, such as idle CPUs, work together over the Internet to solve large scale computational problems .
+5-24:Our goal is different than these approaches .
+5-25:With APPOINT, we want to improve existing client server systems in terms of performance by using idle networking resources among active clients .
+5-26:Hence, other issues like anonymity, decentralization, and persistence of storage were less important in our decisions .
+5-27:Confirming the authenticity of the indirectly delivered data sets is not yet addressed with APPOINT .
+5-28:We want to expand our research, in the future, to address this issue .
+5-29:From our perspective, although APPOINT employs some of the techniques used in peer to peer systems, it is also closely related to current Web caching architectures .
+5-30:Squirrel [13] forms the middle ground .
+5-31:It creates a pure peer topeer collaborative Web cache among the Web browser caches of the machines in a local area network .
+5-32:Except for this recent peer to peer approach, Web caching is mostly a wellstudied topic in the realm of server proxy level caching [8, 11, 14, 17] .
+5-33:Collaborative Web caching systems, the most relevant of these for our research, focus on creating either a hierarchical, hash based, central directory based, or multicast based caching schemes .
+5-34:We do not compete with these approaches .
+5-35:In fact, APPOINT can work in tandem with collaborative Web caching if they are deployed together .
+5-36:We try to address the situation where a request arrives at a server, meaning all the caches report a miss .
+5-37:Hence, the point where the server is reached can be used to take a central decision but then the actual service request can be forwarded to a set of active clients, i.e., the down8 load and upload operations .
+5-38:Cache misses are especially common in the type of large data based services on which we are working .
+5-39:Most of the Web caching schemes that are in use today employ a replacement policy that gives a priority to replacing the largest sized items over smaller sized ones .
+5-40:Hence, these policies would lead to the immediate replacement of our relatively large data files even though they may be used frequently .
+5-41:In addition, in our case, the user community that accesses a certain data file may also be very dispersed from a network point of view and thus cannot take advantage of any of the caching schemes .
+5-42:Finally, none of the Web caching methods address the symmetric issue of large data uploads. .
+6 A SAMPLE APPLICATION :
+6-1:FedStats [1] is an online source that enables ordinary citizens access to official statistics of numerous federal agencies without knowing in advance which agency produced them .
+6-2:We are using a FedStats data set as a testbed for our work .
+6-3:Our goal is to provide more power to the users of FedStats by utilizing the SAND Internet Browser .
+6-4:As an example, we looked at two data files corresponding to Environmental Protection Agency regulated facilities that have chlorine and arsenic, respectively .
+6-5:For each file, we had the following information available: EPA ID, name, street, city, state, zip code, latitude, longitude, followed by flags to indicate if that facility is in the following EPA programs: Hazardous Waste, Wastewater Discharge, Air Emissions, Abandoned Toxic Waste Dump, and Active Toxic Release .
+6-6:We put this data into a SAND relation where the spatial attribute ‘location" corresponds to the latitude and longitude .
+6-7:Some queries that can be handled with our system on this data include: participate in the Air Emissions program, and: (a) Lie in Georgia to Illinois, alphabetically .
+6-8:(b) Lie within Arkansas or 30 miles within its border .
+6-9:(c) Lie within 30 miles of the border of Arkansas (i.e., both sides of the border) .
+6-10:all EPA regulated facilities that have chlorine and: (a) That are closer to it than to any other EPAregulated facility that has arsenic .
+6-11:(b) That participate in the Air Emissions program and are closer to it than to any other EPAregulated facility which has arsenic .
+6-12:In order to avoid reporting a particular facility more than once, we use our ‘group by EPA ID" mechanism .
+6-13:Figure 3 illustrates the output of an example query that finds all arsenic sites within a given distance of the border of Arkansas .
+6-14:The sites are obtained in an incremental manner with respect to a given point .
+6-15:This ordering is shown by using different color shades .
+6-16:With this example data, it is possible to work with the SAND Internet Browser online as an applet (connecting to a remote server) or after localizing the data and then opening it locally .
+6-17:In the first case, for each action taken, the client server architecture will decide what to ask for from the server .
+6-18:In the latter case, the browser will use the peerto peer APPOINT architecture for first localizing the data. .
+7-1:An overview of our efforts in providing remote access to large spatial data has been given
+7-2:We have outlined our approaches and introduced their individual elements
+7-3:Our client server approach improves the system performance by using efficient caching methods when a remote server is accessed from thin clients
+7-4:APPOINT forms an alternative approach that improves performance under an existing clientserver system by using idle client resources when individual users want work on a data set for longer periods of time using their client computers
+7-5:For the future, we envision development of new efficient algorithms that will support large online data transfers within our peer to peer approach using multiple peers simultaneously
+7-6:We assume that a peer (client) can become unavailable at any anytime and hence provisions need to be in place to handle such a situation
+7-7:To address this, we will augment our methods to include efficient dynamic updates
+7-8:Upon completion of this step of our work, we also plan to run comprehensive performance studies on our methods
+7-9:Another issue is how to access data from different sources in different formats
+7-10:In order to access multiple data sources in real time, it is desirable to look for a mechanism that would support data exchange by design
+7-11:The XML protocol [3] has emerged to become virtually a standard for describing and communicating arbitrary data
+7-12:GML [4] is an XML variant that is becoming increasingly popular for exchange of geographical data
+7-13:We are currently working on making SAND XML compatible so that the user can instantly retrieve spatial data provided by various agencies in the GML format via their Web services and then explore, query, or process this data further within the SAND framework
+7-14:This will turn the SAND system into a universal tool for accessing any spatial data set as it will be deployable on most platforms, work efficiently given large amounts of data, be able to tap any GML enabled data source, and provide an easy to use graphical user interface
+7-15:This will also convert the SAND system from a research oriented prototype into a product that could be used by end users for accessing, viewing, and analyzing their data efficiently and with minimum effort.
+8-1:Fedstats: The gateway to statistics from over 100 U.S
+8-2:federal agencies
+8-3:http:  www.fedstats.gov , 2001
+8-4:Arcinfo: Scalable system of software for geographic data creation, management, integration, analysis, and dissemination
+8-5:http:  www.esri.com software  arcgis arcinfo index.html, 2002
+8-6:Extensible markup language (xml)
+8-7:http:  www.w3.org XML , 2002
+8-8:Geography markup language (gml) 2.0
+8-9:http:  opengis.net gml 01 029 GML2.html, 2002
+8-10:Mapquest: Consumer focused interactive mapping site on the web
+8-11:http:  www.mapquest.com, 2002
+8-12:Mapsonus: Suite of online geographic services
+8-13:http:  www.mapsonus.com, 2002
+8-14:R
+8-15:Anderson
+8-16:The Eternity Service
+8-17:In Proceedings of the PRAGOCRYPT"96, pages 242 252, Prague, Czech Republic, September 1996
+8-18:L
+8-19:Breslau, P
+8-20:Cao, L
+8-21:Fan, G
+8-22:Phillips, and S
+8-23:Shenker
+8-24:Web caching and Zipf like distributions: 9 Figure 3: Sample output from the SAND Internet Browser  Large dark dots indicate the result of a query that looks for all arsenic sites within a given distance from Arkansas
+8-25:Different color shades are used to indicate ranking order by the distance from a given point
+8-26:Evidence and implications
+8-27:In Proceedings of the IEEE Infocom"99, pages 126 134, New York, NY, March 1999
+8-28:E
+8-29:Chang, C
+8-30:Yap, and T
+8-31:Yen
+8-32:Realtime visualization of large images over a thinwire
+8-33:In R
+8-34:Yagel and H
+8-35:Hagen, editors, Proceedings IEEE Visualization"97 (Late Breaking Hot Topics), pages 45 48, Phoenix, AZ, October 1997
+8-36:F
+8-37:Dabek, M
+8-38:F
+8-39:Kaashoek, D
+8-40:Karger, R
+8-41:Morris, and I
+8-42:Stoica
+8-43:Wide area cooperative storage with CFS
+8-44:In Proceedings of the ACM SOSP"01, pages 202 215, Banff, AL, October 2001
+8-45:A
+8-46:Dingle and T
+8-47:Partl
+8-48:Web cache coherence
+8-49:Computer Networks and ISDN Systems, 28(7 11):907 920, May 1996
+8-50:C
+8-51:Esperan¸ca and H
+8-52:Samet
+8-53:Experience with SAND Tcl: a scripting tool for spatial databases
+8-54:Journal of Visual Languages and Computing, 13(2):229 255, April 2002
+8-55:S
+8-56:Iyer, A
+8-57:Rowstron, and P
+8-58:Druschel
+8-59:Squirrel: A decentralized peer to peer Web cache
+8-60:Rice University Microsoft Research, submitted for publication, 2002
+8-61:D
+8-62:Karger, A
+8-63:Sherman, A
+8-64:Berkheimer, B
+8-65:Bogstad, R
+8-66:Dhanidina, K
+8-67:Iwamoto, B
+8-68:Kim, L
+8-69:Matkins, and Y
+8-70:Yerushalmi
+8-71:Web caching with consistent hashing
+8-72:Computer Networks, 31(11 16):1203 1213, May 1999
+8-73:J
+8-74:Kubiatowicz, D
+8-75:Bindel, Y
+8-76:Chen, S
+8-77:Czerwinski, P
+8-78:Eaton, D
+8-79:Geels, R
+8-80:Gummadi, S
+8-81:Rhea, H
+8-82:Weatherspoon, W
+8-83:Weimer, C
+8-84:Wells, and B
+8-85:Zhao
+8-86:OceanStore: An architecture for global scale persistent store
+8-87:In Proceedings of the ACM ASPLOS"00, pages 190 201, Cambridge, MA, November 2000
+8-88:M
+8-89:Potmesil
+8-90:Maps alive: viewing geospatial information on the WWW
+8-91:Computer Networks and ISDN Systems, 29(8 13):1327 1342, September 1997
+8-92:Also Hyper Proceedings of the 6th International World Wide Web Conference, Santa Clara, CA, April 1997
+8-93:M
+8-94:Rabinovich, J
+8-95:Chase, and S
+8-96:Gadde
+8-97:Not all hits are created equal: Cooperative proxy caching over a wide area network
+8-98:Computer Networks and ISDN Systems, 30(22 23):2253 2259, November 1998
+8-99:A
+8-100:Rowstron and P
+8-101:Druschel
+8-102:Storage management and caching in PAST, a large scale, persistent peer to peer storage utility
+8-103:In Proceedings of the ACM SOSP"01, pages 160 173, Banff, AL, October 2001
+8-104:H
+8-105:Samet
+8-106:Applications of Spatial Data Structures: Computer Graphics, Image Processing, and GIS
+8-107:Addison Wesley, Reading, MA, 1990
+8-108:H
+8-109:Samet
+8-110:The Design and Analysis of Spatial Data Structures
+8-111:Addison Wesley, Reading, MA, 1990
+8-112:SETI@Home
+8-113:http:  setiathome.ssl.berkeley.edu , 2001
+8-114:L
+8-115:J
+8-116:Williams
+8-117:Pyramidal parametrics
+8-118:Computer Graphics, 17(3):1 11, July 1983
+8-119:Also Proceedings of the SIGGRAPH"83 Conference, Detroit, July 1983
+8-120:10
+picture:

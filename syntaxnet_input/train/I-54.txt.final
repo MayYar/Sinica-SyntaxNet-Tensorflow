@@ -1,0 +1,466 @@
+Approximate and Online Multi-Issue Negotiation 
+content:
+1 ABSTRACT :
+1-1:This paper analyzes bilateral multi issue negotiation between selfinterested autonomous agents .
+1-2:The agents have time constraints in the form of both deadlines and discount factors .
+1-3:There are m > 1 issues for negotiation where each issue is viewed as a pie of size one .
+1-4:The issues are indivisible (i.e., individual issues cannot be split between the parties; each issue must be allocated in its entirety to either agent) .
+1-5:Here different agents value different issues differently .
+1-6:Thus, the problem is for the agents to decide how to allocate the issues between themselves so as to maximize their individual utilities .
+1-7:For such negotiations, we first obtain the equilibrium strategies for the case where the issues for negotiation are known a priori to the parties .
+1-8:Then, we analyse their time complexity and show that finding the equilibrium offers is an NP hard problem, even in a complete information setting .
+1-9:In order to overcome this computational complexity, we then present negotiation strategies that are approximately optimal but computationally efficient, and show that they form an equilibrium .
+1-10:We also analyze the relative error (i.e., the difference between the true optimum and the approximate) .
+1-11:The time complexity of the approximate equilibrium strategies is O(nm 2 ) where n is the negotiation deadline and the relative error .
+1-12:Finally, we extend the analysis to online negotiation where different issues become available at different time points and the agents are uncertain about their valuations for these issues .
+1-13:Specifically, we show that an approximate equilibrium exists for online negotiation and show that the expected difference between the optimum and the approximate is O( √ m) .
+1-14:These approximate strategies also have polynomial time complexity .
+1-15:I.2.11 [Distributed Artificial Intelligence]: Multiagent Systems .
+2 INTRODUCTION :
+2-1:Negotiation is a key form of interaction in multiagent systems .
+2-2:It is a process in which disputing agents decide how to divide the gains from cooperation .
+2-3:Since this decision is made jointly by the agents themselves [20, 19, 13, 15], each party can only obtain what the other is prepared to allow them .
+2-4:Now, the simplest form of negotiation involves two agents and a single issue .
+2-5:For example, consider a scenario in which a buyer and a seller negotiate on the price of a good .
+2-6:To begin, the two agents are likely to differ on the price at which they believe the trade should take place, but through a process of joint decision making they either arrive at a price that is mutually acceptable or they fail to reach an agreement .
+2-7:Since agents are likely to begin with different prices, one or both of them must move toward the other, through a series of offers and counter offers, in order to obtain a mutually acceptable outcome .
+2-8:However, before the agents can actually perform such negotiations, they must decide the rules for making offers and counter offers .
+2-9:That is, they must set the negotiation protocol [20] .
+2-10:On the basis of this protocol, each agent chooses its strategy (i.e., what offers it should make during the course of negotiation) .
+2-11:Given this context, this work focuses on competitive scenarios with self interested agents .
+2-12:For such cases, each participant defines its strategy so as to maximise its individual utility .
+2-13:However, in most bilateral negotiations, the parties involved need to settle more than one issue .
+2-14:For this case, the issues may be divisible or indivisible [4] .
+2-15:For the former, the problem for the agents is to decide how to split each issue between themselves [21] .
+2-16:For the latter, the individual issues cannot be divided .
+2-17:An issue, in its entirety, must be allocated to either of the two agents .
+2-18:Since the agents value different issues differently, they must come to terms about who will take which issue .
+2-19:To date, most of the existing work on multi issue negotiation has focussed on the former case [7, 2, 5, 23, 11, 6] .
+2-20:However, in many real world settings, the issues are indivisible .
+2-21:Hence, our focus here is on negotiation for indivisible issues .
+2-22:Such negotiations are very common in multiagent systems .
+2-23:For example, consider the case of task allocation between two agents .
+2-24:There is a set of tasks to be carried out and different agents have different preferences for the tasks .
+2-25:The tasks cannot be partitioned; a task must be carried out by one agent .
+2-26:The problem then is for the agents to negotiate about who will carry out which task .
+2-27:A key problem in the study of multi issue negotiation is to determine the equilibrium strategies .
+2-28:An equally important problem, especially in the context of software agents, is to find the time complexity of computing the equilibrium offers .
+2-29:However, such computational issues have so far received little attention .
+2-30:As we will show, this is mainly due to the fact that existing work (describe in Section 5) has mostly focused on negotiation for divisible issues 951 978 81 904262 7 5 c 2007 IFAAMAS and finding the equilibrium for this case is computationally easier than that for the case of indivisible issues .
+2-31:Our primary objective is, therefore, to answer the computational questions for the latter case for the types of situations that are commonly faced by agents in real world contexts .
+2-32:Thus, we consider negotiations in which there is incomplete information and time constraints .
+2-33:Incompleteness of information on the part of negotiators is a common feature of most practical negotiations .
+2-34:Also, agents typically have time constraints in the form of both deadlines and discount factors .
+2-35:Deadlines are an essential element since negotiation cannot go on indefinitely, rather it must end within a reasonable time limit .
+2-36:Likewise, discount factors are essential since the goods may be perishable or their value may decline due to inflation .
+2-37:Moreover, the strategic behaviour of agents with deadlines and discount factors differs from those without (see [21] for single issue bargaining without deadlines and [23, 13] for bargaining with deadlines and discount factors in the context of divisible issues) .
+2-38:Given this, we consider indivisible issues and first analyze the strategic behaviour of agents to obtain the equilibrium strategies for the case where all the issues for negotiation are known a priori to both agents .
+2-39:For this case, we show that the problem of finding the equilibrium offers is NP hard, even in a complete information setting .
+2-40:Then, in order to overcome the problem of time complexity, we present strategies that are approximately optimal but computationally efficient, and show that they form an equilibrium .
+2-41:We also analyze the relative error (i.e., the difference between the true optimum and the approximate) .
+2-42:The time complexity of the approximate equilibrium strategies is O(nm 2 ) where n is the negotiation deadline and the relative error .
+2-43:Finally, we extend the analysis to online negotiation where different issues become available at different time points and the agents are uncertain about their valuations for these issues .
+2-44:Specifically, we show that an approximate equilibrium exists for online negotiation and show that the expected difference between the optimum and the approximate is O( √ m) .
+2-45:These approximate strategies also have polynomial time complexity .
+2-46:In so doing, our contribution lies in analyzing the computational complexity of the above multi issue negotiation problem, and finding the approximate and online equilibria .
+2-47:No previous work has determined these equilibria .
+2-48:Since software agents have limited computational resources, our results are especially relevant to such resource bounded agents .
+2-49:The remainder of the paper is organised as follows .
+2-50:We begin by giving a brief overview of single issue negotiation in Section 2 .
+2-51:In Section 3, we obtain the equilibrium for multi issue negotiation and show that finding equilibrium offers is an NP hard problem .
+2-52:We then present an approximate equilibrium and evaluate its approximation error .
+2-53:Section 4 analyzes online multi issue negotiation .
+2-54:Section 5 discusses the related literature and Section 6 concludes. .
+3 SINGLE ISSUE NEGOTIATION :
+3-1:We adopt the single issue model of [27] because this is a model where, during negotiation, the parties are allowed to make offers from a set of discrete offers .
+3-2:Since our focus is on indivisible issues (i.e., parties are allowed to make one of two possible offers: zero or one), our scenario fits in well with [27] .
+3-3:Hence we use this basic single issue model and extend it to multiple issues .
+3-4:Before doing so, we give an overview of this model and its equilibrium strategies .
+3-5:There are two strategic agents: a and b .
+3-6:Each agent has time constraints in the form of deadlines and discount factors .
+3-7:The two agents negotiate over a single indivisible issue (i) .
+3-8:This issue is a ‘pie" of size 1 and the agents want to determine who gets the pie .
+3-9:There is a deadline (i.e., a number of rounds by which negotiation must end) .
+3-10:Let n ∈ N+ denote this deadline .
+3-11:The agents use an alternating offers protocol (as the one of Rubinstein [18]), which proceeds through a series of time periods .
+3-12:One of the agents, say a, starts negotiation in the first time period (i.e., t = 1) by making an offer (xi = 0 or 1) to b .
+3-13:Agent b can either accept or reject the offer .
+3-14:If it accepts, negotiation ends in an agreement with a getting xi and b getting yi = 1 − xi .
+3-15:Otherwise, negotiation proceeds to the next time period, in which agent b makes a counter offer .
+3-16:This process of making offers continues until one of the agents either accepts an offer or quits negotiation (resulting in a conflict) .
+3-17:Thus, there are three possible actions an agent can take during any time period: accept the last offer, make a new counter offer, or quit the negotiation .
+3-18:An essential feature of negotiations involving alternating offers is that the agents" utilities decrease with time [21] .
+3-19:Specifically, the decrease occurs at each step of offer and counteroffer .
+3-20:This decrease is represented with a discount factor denoted 0 < δi ≤ 1 for both1 agents .
+3-21:Let [xt i, yt i ] denote the offer made at time period t where xt i and yt i denote the share for agent a and b respectively .
+3-22:Then, for a given pie, the set of possible offers is: {[xt i, yt i ] : xt i = 0 or 1, yt i = 0 or 1, and xt i + yt i = 1} At time t, if a and b receive a share of xt i and yt i respectively, then their utilities are: ua i (xt i, t) = j xt i × δt−1 if t ≤ n 0 otherwise ub i (yt i , t) = j yt i × δt−1 if t ≤ n 0 otherwise The conflict utility (i.e., the utility received in the event that no deal is struck) is zero for both agents .
+3-23:For the above setting, the agents reason as follows in order to determine what to offer at t = 1 .
+3-24:We let A(1) (B(1)) denote a"s (b"s) equilibrium offer for the first time period .
+3-25:Let agent a denote the first mover (i.e., at t = 1, a proposes to b who should get the pie) .
+3-26:To begin, consider the case where the deadline for both agents is n = 1 .
+3-27:If b accepts, the division occurs as agreed; if not, neither agent gets anything (since n = 1 is the deadline) .
+3-28:Here, a is in a powerful position and is able to propose to keep 100 percent of the pie and give nothing to b 2 .
+3-29:Since the deadline is n = 1, b accepts this offer and agreement takes place in the first time period .
+3-30:Now, consider the case where the deadline is n = 2 .
+3-31:In order to decide what to offer in the first round, a looks ahead to t = 2 and reasons backwards .
+3-32:Agent a reasons that if negotiation proceeds to the second round, b will take 100 percent of the pie by offering [0, 1] and leave nothing for a .
+3-33:Thus, in the first time period, if a offers b anything less than the whole pie, b will reject the offer .
+3-34:Hence, during the first time period, agent a offers [0, 1] .
+3-35:Agent b accepts this and an agreement occurs in the first time period .
+3-36:In general, if the deadline is n, negotiation proceeds as follows .
+3-37:As before, agent a decides what to offer in the first round by looking ahead as far as t = n and then reasoning backwards .
+3-38:Agent a"s 1 Having a different discount factor for different agents only makes the presentation more involved without leading to any changes in the analysis of the strategic behaviour of the agents or the time complexity of finding the equilibrium offers .
+3-39:Hence we have a single discount factor for both agents .
+3-40:2 It is possible that b may reject such a proposal .
+3-41:However, irrespective of whether b accepts or rejects the proposal, it gets zero utility (because the deadline is n = 1) .
+3-42:Thus, we assume that b accepts a"s offer .
+3-43:952 The Sixth Intl .
+3-44:Joint Conf .
+3-45:on Autonomous Agents and Multi Agent Systems (AAMAS 07) offer for t = 1 depends on who the offering agent is for the last time period .
+3-46:This, in turn, depends on whether n is odd or even .
+3-47:Since a makes an offer at t = 1 and the agents use the alternating offers protocol, the offering agent for the last time period is b if n is even and it is a if n is odd .
+3-48:Thus, depending on whether n is odd or even, a makes the following offer at t = 1: A(1) = j OFFER [1, 0] IF ODD n ACCEPT IF b"s TURN B(1) = j OFFER [0, 1] IF EVEN n ACCEPT IF a"s TURN Agent b accepts this offer and negotiation ends in the first time period .
+3-49:Note that the equilibrium outcome depends on who makes the first move .
+3-50:Since we have two agents and either of them could move first, we get two possible equilibrium outcomes .
+3-51:On the basis of the above equilibrium for single issue negotiation with complete information, we first obtain the equilibrium for multiple issues and then show that computing these offers is a hard problem .
+3-52:We then present a time efficient approximate equilibrium. .
+4 MULTI ISSUE NEGOTIATION :
+4-1:We first analyse the complete information setting .
+4-2:This section forms the base which we extend to the case of information uncertainty in Section 4 .
+4-3:Here a and b negotiate over m > 1 indivisible issues .
+4-4:These issues are m distinct pies and the agents want to determine how to distribute the pies between themselves .
+4-5:Let S = {1, 2, .
+4-6:.
+4-7:.
+4-8:, m} denote the set of m pies .
+4-9:As before, each pie is of size 1 .
+4-10:Let the discount factor for issue c, where 1 ≤ c ≤ m, be 0 < δc ≤ 1 .
+4-11:For each issue, let n denote each agent"s deadline .
+4-12:In the offer for time period t (where 1 ≤ t ≤ n), agent a"s (b"s) share for each of the m issues is now represented as an m element vector xt ∈ Bm (yt ∈ Bm ) where B denotes the set {0, 1} .
+4-13:Thus, if agent a"s share for issue c at time t is xt c, then agent b"s share is yt c = (1−xt c) .
+4-14:The shares for a and b are together represented as the package [xt , yt ] .
+4-15:As is traditional in multi issue utility theory, we define an agent"s cumulative utility using the standard additive form [12] .
+4-16:The functions Ua : Bm × Bm × N+ → R and Ub : Bm × Bm × N+ → R give the cumulative utilities for a and b respectively at time t .
+4-17:These are defined as follows: Ua ([xt , yt ], t) = ( Σm c=1ka c ua c (xt c, t) if t ≤ n 0 otherwise (1) Ub ([xt , yt ], t) = ( Σm c=1kb cub c(yt c, t) if t ≤ n 0 otherwise (2) where ka ∈ Nm + denotes an m element vector of constants for agent a and kb ∈ Nm + that for b .
+4-18:Here N+ denotes the set of positive integers .
+4-19:These vectors indicate how the agents value different issues .
+4-20:For example, if ka c > ka c+1, then agent a values issue c more than issue c + 1 .
+4-21:Likewise for agent b .
+4-22:In other words, the m issues are perfect substitutes (i.e., all that matters to an agent is its total utility for all the m issues and not that for any subset of them) .
+4-23:In all the settings we study, the issues will be perfect substitutes .
+4-24:To begin each agent has complete information about all negotiation parameters (i.e., n, m, ka c , kb c, and δc for 1 ≤ c ≤ m) .
+4-25:Now, multi issue negotiation can be done using different procedures .
+4-26:Broadly speaking, there are three key procedures for negotiating multiple issues [19]: together as a bundle, after another, and parallel .
+4-27:Between these three procedures, the package deal is known to generate Pareto optimal outcomes [19, 6] .
+4-28:Hence we adopt it here .
+4-29:We first give a brief description of the procedure and then determine the equilibrium strategies for it .
+4-30:3.1 The package deal procedure In this procedure, the agents use the same protocol as for singleissue negotiation (described in Section 2) .
+4-31:However, an offer for the package deal includes a proposal for each issue under negotiation .
+4-32:Thus, for m issues, an offer includes m divisions, one for each issue .
+4-33:Agents are allowed to either accept a complete offer (i.e., all m issues) or reject a complete offer .
+4-34:An agreement can therefore take place either on all m issues or on none of them .
+4-35:As per the single issue negotiation, an agent decides what to offer by looking ahead and reasoning backwards .
+4-36:However, since an offer for the package deal includes a share for all the m issues, the agents can now make tradeoffs across the issues in order to maximise their cumulative utilities .
+4-37:For 1 ≤ c ≤ m, the equilibrium offer for issue c at time t is denoted as [at c, bt c] where at c and bt c denote the shares for agent a and b respectively .
+4-38:We denote the equilibrium package at time t as [at , bt ] where at ∈ Bm (bt ∈ Bm ) is an m element vector that denotes a"s (b"s) share for each of the m issues .
+4-39:Also, for 1 ≤ c ≤ m, δc is the discount factor for issue c .
+4-40:The symbols 0 and 1 denote m element vectors of zeroes and ones respectively .
+4-41:Note that for 1 ≤ t ≤ n, at c + bt c = 1 (i.e., the sum of the agents" shares (at time t) for each pie is one) .
+4-42:Finally, for time period t (for 1 ≤ t ≤ n) we let A(t) (respectively B(t)) denote the equilibrium strategy for agent a (respectively b) .
+4-43:3.2 Equilibrium strategies As mentioned in Section 1, the package deal allows agents to make tradeoffs .
+4-44:We let TRADEOFFA denote agent a"s (b"s) function for making tradeoffs .
+4-45:We let P denote a set of parameters to the procedure TRADEOFFA where P = {ka , kb , δ, m} .
+4-46:Given this, the following theorem characterises the equilibrium for the package deal procedure .
+4-47:THEOREM 1 .
+4-48:For the package deal procedure, the following strategies form a Nash equilibrium .
+4-49:The equilibrium strategy for t = n is: A(n) = j OFFER [1, 0] IF a"s TURN ACCEPT IF b"s TURN B(n) = j OFFER [0, 1] IF b"s TURN ACCEPT IF a"s TURN For all preceding time periods t < n, if [xt , yt ] denotes the offer made at time t, then the equilibrium strategies are defined as follows: A(t) = 8 < : OFFER TRADEOFFA(P, UB(t), t) IF a"s TURN If (Ua ([xt , yt ], t) ≥ UA(t)) ACCEPT else REJECT IF b"s TURN B(t) = 8 < : OFFER TRADEOFFB(P, UA(t), t) IF b"s TURN If (Ub ([xt , yt ], t) ≥ UB(t)) ACCEPT else REJECT IF a"s TURN The Sixth Intl .
+4-50:Joint Conf .
+4-51:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 953 where UA(t) = Ua ([at+1 , bt+1 ], t + 1) and UB(t) = Ub ([at+1 , bt+1 ], t + 1) .
+4-52:PROOF .
+4-53:We look ahead to the last time period (i.e., t = n) and then reason backwards .
+4-54:To begin, if negotiation reaches the deadline (n), then the agent whose turn it is takes everything and leaves nothing for its opponent .
+4-55:Hence, we get the strategies A(n) and B(n) as given in the statement of the theorem .
+4-56:In all the preceding time periods (t < n), the offering agent proposes a package that gives its opponent a cumulative utility equal to what the opponent would get from its own equilibrium offer for the next time period .
+4-57:During time period t, either a or b could be the offering agent .
+4-58:Consider the case where a makes an offer at t .
+4-59:The package that a offers at t gives b a cumulative utility of Ub ([at+1 , bt+1 ], t + 1) .
+4-60:However, since there is more than one issue, there is more than one package that gives b this cumulative utility .
+4-61:From among these packages, a offers the one that maximises its own cumulative utility (because it is a utility maximiser) .
+4-62:Thus, the problem for a is to find the package [at , bt ] so as to: maximize mX c=1 ka c (1 − bt c)δt−1 c (3) such that mX c=1 bt ckb c ≥ UB(t) bt c = 0 or 1 for 1 ≤ c ≤ m where UB(t), δt−1 c , ka c , and kb c are constants and bt c (1 ≤ c ≤ m) is a variable .
+4-63:Assume that the function TRADEOFFA takes parameters P, UB(t), and t, to solve the maximisation problem given in Equation 3 and returns the corresponding package .
+4-64:If there is more than one package that solves Equation 3, then TRADEOFFA returns any one of them (because agent a gets equal utility from all such packages and so does agent b) .
+4-65:The function TRADEOFFB for agent b is analogous to that for a .
+4-66:On the other hand, the equilibrium strategy for the agent that receives an offer is as follows .
+4-67:For time period t, let b denote the receiving agent .
+4-68:Then, b accepts [xt , yt ] if UB(t) ≤ Ub ([xt , yt ], t), otherwise it rejects the offer because it can get a higher utility in the next time period .
+4-69:The equilibrium strategy for a as receiving agent is defined analogously .
+4-70:In this way, we reason backwards and obtain the offers for the first time period .
+4-71:Thus, we get the equilibrium strategies (A(t) and B(t)) given in the statement of the theorem .
+4-72:The following example illustrates how the agents make tradeoffs using the above equilibrium strategies .
+4-73:EXAMPLE 1 .
+4-74:Assume there are m = 2 issues for negotiation, the deadline for both issues is n = 2, and the discount factor for both issues for both agents is δ = 1 2 .
+4-75:Let ka 1 = 3, ka 2 = 1, kb 1 = 1, and kb 2 = 5 .
+4-76:Let agent a be the first mover .
+4-77:By using backward reasoning, a knows that if negotiation reaches the second time period (which is the deadline), then b will get a hundred percent of both the issues .
+4-78:This gives b a cumulative utility of UB(2) = 1 2 + 5 2 = 3 .
+4-79:Thus, in the first time period, if b gets anything less than a utility of 3, it will reject a"s offer .
+4-80:So, at t = 1, a offers the package where it gets issue 1 and b gets issue 2 .
+4-81:This gives a cumulative utility of 3 to a and 5 to b .
+4-82:Agent b accepts the package and an agreement takes place in the first time period .
+4-83:The maximization problem in Equation 3 can be viewed as the 0 1 knapsack problem3 .
+4-84:In the 0 1 knapsack problem, we have a set 3 Note that for the case of divisible issues this is the fractional knapof m items where each item has a profit and a weight .
+4-85:There is a knapsack with a given capacity .
+4-86:The objective is to fill the knapsack with items so as to maximize the cumulative profit of the items in the knapsack .
+4-87:This problem is analogous to the negotiation problem we want to solve (i.e., the maximization problem of Equation 3) .
+4-88:Since ka c and δt−1 c are constants, maximizing Pm c=1 ka c (1−bt c)δt−1 c is the same as minimizing Pm c=1 ka c bt The quality of an approximate algorithm is determined by comparing its performance to that of the optimal algorithm and measuring the relative error [3, 1] .
+4-89:The relative error is defined as (z−z∗ ) z∗ where z is the approximate solution and z∗ the optimal one .
+4-90:In general, we are interested in finding approximate algorithms whose relative error is bounded from above by a certain constant , i.e., (z − z∗ ) z∗ ≤ (5) Regarding the second issue of time complexity, we are interested in finding fully polynomial approximation algorithms .
+4-91:An approximation algorithm is said to be fully polynomial if for any > 0 it finds a solution satisfying Equation 5 in time polynomially bounded by size of the problem (for the 0 1 knapsack problem, the problem size is equal to the number of items) and by 1 [1] .
+4-92:For the 0 1 knapsack problem, Ibarra and Kim [10] presented a fully polynomial approximation method .
+4-93:This method is based on dynamic programming .
+4-94:It is a parametric method that takes as a parameter and for any > 0, finds a heuristic solution z with relative error at most , such that the time and space complexity grow polynomially with the number of items m and 1 .
+4-95:More specifically, the space and time complexity are both O(m 2 ) and hence polynomial in m and 1 (see [10] for the detailed approximation algorithm and proof of time and space complexity) .
+4-96:Since the Ibarra and Kim method is fully polynomial, we use it to solve our negotiation problem .
+4-97:This is done as follows .
+4-98:For agent a, let APRX TRADEOFFA(P, UB(t), t, ) denote a procedure that returns an approximate solution to Equation 4 using the Ibarra and Kim method .
+4-99:The procedure APRX TRADEOFFB(P, UA(t), t, ) for agent b is analogous .
+4-100:For 1 ≤ c ≤ m, the approximate equilibrium offer for issue c at time t is denoted as [¯at c,¯bt c] where ¯at c and ¯bt c denote the shares for agent a and b respectively .
+4-101:We denote the equilibrium package at time t as [¯at ,¯bt ] where ¯at ∈ Bm (¯bt ∈ Bm ) is an m element vector that denotes a"s (b"s) share for each of the m issues .
+4-102:Also, as before, for 1 ≤ c ≤ m, δc is the discount factor for issue c .
+4-103:Note that for 1 ≤ t ≤ n, ¯at c + ¯bt c = 1 (i.e., the sum of the agents" shares (at time t) for each pie is one) .
+4-104:Finally, for time period t (for 1 ≤ t ≤ n) we let ¯A(t) (respectively ¯B(t)) denote the approximate equilibrium strategy for agent a (respectively b).The following theorem uses this notation and characterizes an approximate equilibrium for multi issue negotiation .
+4-105:THEOREM 3 .
+4-106:For the package deal procedure, the following strategies form an approximate Nash equilibrium .
+4-107:The equilibrium strategy for t = n is: ¯A(n) = j OFFER [1, 0] IF a"s TURN ACCEPT IF b"s TURN ¯B(n) = j OFFER [0, 1] IF b"s TURN ACCEPT IF a"s TURN For all preceding time periods t < n, if [xt , yt ] denotes the offer made at time t, then the equilibrium strategies are defined as follows: ¯A(t) = 8 < : OFFER APRX TRADEOFFA(P, UB(t), t, ) IF a"s TURN If (Ua ([xt , yt ], t) ≥ UA(t)) ACCEPT else REJECT IF b"s TURN ¯B(t) = 8 < : OFFER APRX TRADEOFFB(P, UA(t), t, ) IF b"s TURN If (Ub ([xt , yt ], t) ≥ UB(t)) ACCEPT else REJECT IF a"s TURN where UA(t) = Ua ([¯at+1 ,¯bt+1 ], t + 1) and UB(t) = Ub ([¯at+1 , ¯bt+1 ], t + 1) .
+4-108:An agreement takes place at t = 1 .
+4-109:PROOF .
+4-110:As in the proof for Theorem 1, we use backward reasoning .
+4-111:We first obtain the strategies for the last time period t = n .
+4-112:It is straightforward to get these strategies; the offering agent gets a hundred percent of all the issues .
+4-113:Then for t = n − 1, the offering agent must solve the maximization problem of Equation 4 by substituting t = n−1 in it .
+4-114:For agent a (b), this is done by APPROX TRADEOFFA (APPROX TRADEOFFB) .
+4-115:These two functions are nothing but the Ibarra and Kim"s approximation method for solving the 0 1 knapsack problem .
+4-116:These two functions take as a parameter and use the Ibarra and Kim"s approximation method to return a package that approximately maximizes Equation 4 .
+4-117:Thus, the relative error for these two functions is the same as that for Ibarra and Kim"s method (i.e., it is at most where is given in Equation 5) .
+4-118:Assume that a is the offering agent for t = n − 1 .
+4-119:Agent a must offer a package that gives b a cumulative utility equal to what it would get from its own approximate equilibrium offer for the next time period (i.e., Ub ([¯at+1 ,¯bt+1 ], t + 1) where [¯at+1 ,¯bt+1 ] is the approximate equilibrium package for the next time period) .
+4-120:Recall that for the last time period, the offering agent gets a hundred percent of all the issues .
+4-121:Since a is the offering agent for t = n − 1 and the agents use the alternating offers protocol, it is b"s turn at t = n .
+4-122:Thus Ub ([¯at+1 ,¯bt+1 ], t + 1) is equal to b"s cumulative utility from receiving a hundred percent of all the issues .
+4-123:Using this utility as the capacity of the knapsack, a uses APPROX TRADEOFFA and obtains the approximate equilibrium package for t = n − 1 .
+4-124:On the other hand, if b is the offering agent at t = n − 1, it uses APPROX TRADEOFFB to obtain the approximate equilibrium package .
+4-125:In the same way for t < n − 1, the offering agent (say a) uses APPROX TRADEOFFA to find an approximate equilibrium package that gives b a utility of Ub ([¯at+1 ,¯bt+1 ], t + 1) .
+4-126:By reasoning backwards, we obtain the offer for time period t = 1 .
+4-127:If a (b) is the offering agent, it proposes the offer APPROX TRADEOFFA(P, UB(1), 1, ) (APPROX TRADEOFFB(P, UA(1), 1, )) .
+4-128:The receiving agent accepts the offer .
+4-129:This is because the relative error in its cumulative utility from the offer is at most .
+4-130:An agreement therefore takes place in the first time period .
+4-131:THEOREM 4 .
+4-132:The time complexity of finding the approximate equilibrium offer for the first time period is O(nm 2 ) .
+4-133:PROOF .
+4-134:The time complexity of APPROX TRADEOFFA and APPROXTRADEOFFB is the same as the time complexity of the Ibarra and Kim method [10] i.e., O(m 2 )) .
+4-135:In order to find the equilibrium offer for the first time period using backward reasoning, APPROXTRADEOFFA (or APPROX TRADEOFFB) is invoked n times .
+4-136:Hence the time complexity of finding the approximate equilibrium offer for the first time period is O(nm 2 ) .
+4-137:This analysis was done in a complete information setting .
+4-138:However an extension of this analysis to an incomplete information setting where the agents have probability distributions over some uncertain parameter is straightforward, as long as the negotiation is done offline; i.e., the agents know their preference for each individual issue before negotiation begins .
+4-139:For instance, consider the case where different agents have different discount factors, and each agent is uncertain about its opponent"s discount factor although it knows its own .
+4-140:This uncertainty is modelled with a probability distribution over the possible values for the opponent"s discount factor and having this distribution as common knowledge to the agents .
+4-141:All our analysis for the complete information setting still holds for The Sixth Intl .
+4-142:Joint Conf .
+4-143:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 955 this incomplete information setting, except for the fact that an agent must now use the given probability distribution and find its opponent"s expected utility instead of its actual utility .
+4-144:Hence, instead of analyzing an incomplete information setting for offline negotiation, we focus on online multi issue negotiation. .
+5 ONLINE MULTI ISSUE NEGOTIATION :
+5-1:We now consider a more general and, arguably more realistic, version of multi issue negotiation, where the agents are uncertain about the issues they will have to negotiate about in future .
+5-2:In this setting, when negotiating an issue, the agents know that they will negotiate more issues in the future, but they are uncertain about the details of those issues .
+5-3:As before, let m be the total number of issues that are up for negotiation .
+5-4:The agents have a probability distribution over the possible values of ka c and kb Work on multi issue negotiation can be divided into two main types: that for indivisible issues and that for divisible issues .
+5-5:We first describe the existing work for the case of divisible issues .
+5-6:Since Schelling [24] first noted that the outcome of negotiation depends on the choice of negotiation procedure, much research effort has been devoted to the study of different procedures for negotiating multiple issues .
+5-7:However, most of this work has focussed on the sequential procedure [7, 2] .
+5-8:For this procedure, a key issue is the negotiation agenda .
+5-9:Here the term agenda refers to the order in which the issues are negotiated .
+5-10:The agenda is important because each agent"s cumulative utility depends on the agenda; if we change the agenda then these utilities change .
+5-11:Hence, the agents must decide what agenda they will use .
+5-12:Now, the agenda can be decided before negotiating the issues (such an agenda is called exogenous) or it may be decided during the process of negotiation (such an agenda is called endogenous) .
+5-13:For instance, Fershtman [7] analyze sequential negotiation with exogenous agenda .
+5-14:A number of researchers have also studied negotiations with an endogenous agenda [2] .
+5-15:In contrast to the above work that mainly deals with sequential negotiation, [6] studies the equilibrium for the package deal procedure .
+5-16:However, all the above mentioned work differs from ours in that we focus on indivisible issues while others focus on the case The Sixth Intl .
+5-17:Joint Conf .
+5-18:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 957 where each issue is divisible .
+5-19:Specifically, no previous work has determined an approximate equilibrium for multi issue negotiation or for online negotiation .
+5-20:Existing work for the case of indivisible issues has mostly dealt with task allocation problems (for tasks that cannot be partioned) to a group of agents .
+5-21:The problem of task allocation has been previously studied in the context of coalitions involving more than two agents .
+5-22:For example [25] analyze the problem for the case where the agents act so as to maximize the benefit of the system as a whole .
+5-23:In contrast, our focus is on two agents where both of them are self interested and want to maximize their individual utilities .
+5-24:On the other hand [22] focus on the use of contracts for task allocation to multiple self interested agents but this work concerns finding ways of decommitting contracts (after the initial allocation has been done) so as to improve an agent"s utility .
+5-25:In contrast, our focuses on negotiation regarding who will carry out which task .
+5-26:Finally, online and approximate mechanisms have been studied in the context of auctions [14, 9] but not for bilateral negotiations (which is the focus of our work). .
+6-1:This paper has studied bilateral multi issue negotiation between self interested autonomous agents with time constraints
+6-2:The issues are indivisible and different agents value different issues differently
+6-3:Thus, the problem is for the agents to decide how to allocate the issues between themselves so as to maximize their individual utilities
+6-4:Specifically, we first showed that finding the equilibrium offers is an NP hard problem even in a complete information setting
+6-5:We then presented approximately optimal negotiation strategies and showed that they form an equilibrium
+6-6:These strategies have polynomial time complexity
+6-7:We also analysed the difference between the true optimum and the approximate optimum
+6-8:Finally, we extended the analysis to online negotiation where the issues become available at different time points and the agents are uncertain about the features of these issues
+6-9:Specifically, we showed that an approximate equilibrium exists for online negotiation and analysed the approximation error
+6-10:These approximate strategies also have polynomial time complexity
+6-11:There are several interesting directions for future work
+6-12:First, for online negotiation, we assumed that the constants ka c and kb c are both uniformly distributed
+6-13:It will be interesting to analyze the case where ka c and kb c have other, possibly different, probability distributions
+6-14:Apart from this, we treated the number of issues as being common knowledge to the agents
+6-15:In future, it will be interesting to treat the number of issues as uncertain.
+7-1:G
+7-2:Ausiello, P
+7-3:Crescenzi, G
+7-4:Gambosi, V
+7-5:Kann, A
+7-6:Marchetti Spaccamela, and M
+7-7:Protasi
+7-8:Complexity and approximation: Combinatorial optimization problems and their approximability properties
+7-9:Springer, 2003
+7-10:M
+7-11:Bac and H
+7-12:Raff
+7-13:Issue by issue negotiations: the role of information and time preference
+7-14:Games and Economic Behavior, 13:125 134, 1996
+7-15:A
+7-16:Borodin and R
+7-17:El Yaniv
+7-18:Online Computation and Competitive Analysis
+7-19:Cambridge University Press, 1998
+7-20:S
+7-21:J
+7-22:Brams
+7-23:Fair division: from cake cutting to dispute resolution
+7-24:Cambridge University Press, 1996
+7-25:L
+7-26:A
+7-27:Busch and I
+7-28:J
+7-29:Horstman
+7-30:Bargaining frictions, bargaining procedures and implied costs in multiple issue bargaining
+7-31:Economica, 64:669 680, 1997
+7-32:S
+7-33:S
+7-34:Fatima, M
+7-35:Wooldridge, and N
+7-36:R
+7-37:Jennings
+7-38:Multi issue negotiation with deadlines
+7-39:Journal of Artificial Intelligence Research, 27:381 417, 2006
+7-40:C
+7-41:Fershtman
+7-42:The importance of the agenda in bargaining
+7-43:Games and Economic Behavior, 2:224 238, 1990
+7-44:F
+7-45:Glover
+7-46:A multiphase dual algorithm for the zero one integer programming problem
+7-47:Operations Research, 13:879 919, 1965
+7-48:M
+7-49:T
+7-50:Hajiaghayi, R
+7-51:Kleinberg, and D
+7-52:C
+7-53:Parkes
+7-54:Adaptive limited supply online auctions
+7-55:In ACM Conference on Electronic Commerce (ACMEC 04), pages 71 80, New York, 2004
+7-56:O
+7-57:H
+7-58:Ibarra and C
+7-59:E
+7-60:Kim
+7-61:Fast approximation algorithms for the knapsack and sum of subset problems
+7-62:Journal of ACM, 22:463 468, 1975
+7-63:R
+7-64:Inderst
+7-65:Multi issue bargaining with endogenous agenda
+7-66:Games and Economic Behavior, 30:64 82, 2000
+7-67:R
+7-68:Keeney and H
+7-69:Raiffa
+7-70:Decisions with Multiple Objectives: Preferences and Value Trade offs
+7-71:New York: John Wiley, 1976
+7-72:S
+7-73:Kraus
+7-74:Strategic negotiation in multi agent environments
+7-75:The MIT Press, Cambridge, Massachusetts, 2001
+7-76:D
+7-77:Lehman, L
+7-78:I
+7-79:O"Callaghan, and Y
+7-80:Shoham
+7-81:Truth revelation in approximately efficient combinatorial auctions
+7-82:Journal of the ACM, 49(5):577 602, 2002
+7-83:A
+7-84:Lomuscio, M
+7-85:Wooldridge, and N
+7-86:R
+7-87:Jennings
+7-88:A classification scheme for negotiation in electronic commerce
+7-89:International Journal of Group Decision and Negotiation, 12(1):31 56, 2003
+7-90:A
+7-91:Marchetti Spaccamela and C
+7-92:Vercellis
+7-93:Stochastic online knapsack problems
+7-94:Mathematical Programming, 68:73 104, 1995
+7-95:S
+7-96:Martello and P
+7-97:Toth
+7-98:Knapsack problems: Algorithms and computer implementations
+7-99:John Wiley and Sons, 1990
+7-100:M
+7-101:J
+7-102:Osborne and A
+7-103:Rubinstein
+7-104:A Course in Game Theory
+7-105:The MIT Press, 1994
+7-106:H
+7-107:Raiffa
+7-108:The Art and Science of Negotiation
+7-109:Harvard University Press, Cambridge, USA, 1982
+7-110:J
+7-111:S
+7-112:Rosenschein and G
+7-113:Zlotkin
+7-114:Rules of Encounter
+7-115:MIT Press, 1994
+7-116:A
+7-117:Rubinstein
+7-118:Perfect equilibrium in a bargaining model
+7-119:Econometrica, 50(1):97 109, January 1982
+7-120:T
+7-121:Sandholm and V
+7-122:Lesser
+7-123:Levelled commitment contracts and strategic breach
+7-124:Games and Economic Behavior: Special Issue on AI and Economics, 35:212 270, 2001
+7-125:T
+7-126:Sandholm and N
+7-127:Vulkan
+7-128:Bargaining with deadlines
+7-129:In AAAI 99, pages 44 51, Orlando, FL, 1999
+7-130:T
+7-131:C
+7-132:Schelling
+7-133:An essay on bargaining
+7-134:American Economic Review, 46:281 306, 1956
+7-135:O
+7-136:Shehory and S
+7-137:Kraus
+7-138:Methods for task allocation via agent coalition formation
+7-139:Artificial Intelligence Journal, 101(1 2):165 200, 1998
+7-140:S
+7-141:Singh, V
+7-142:Soni, and M
+7-143:Wellman
+7-144:Computing approximate Bayes Nash equilibria in tree games of incomplete information
+7-145:In Proceedings of the ACM Conference on Electronic Commerce ACM EC, pages 81 90, New York, May 2004
+7-146:I
+7-147:Stahl
+7-148:Bargaining Theory
+7-149:Economics Research Institute, Stockholm School of Economics, Stockholm, 1972
+7-150:958 The Sixth Intl
+7-151:Joint Conf
+7-152:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

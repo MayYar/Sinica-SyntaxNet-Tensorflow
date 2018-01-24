@@ -1,0 +1,80 @@
+In the previous section we have investigated the behavior of each technique when adding a fixed number of keywords to the user query .
+However, an optimal personalized query expansion algorithm should automatically adapt itself to various aspects of each query, as well as to the particularities of the person using it .
+In this section we discuss the factors influencing the behavior of our expansion algorithms, which might be used as input for the adaptivity process .
+Then, in the second part we present some initial experiments with one of them, namely query clarity .
+4.1 Adaptivity Factors Several indicators could assist the algorithm to automatically tune the number of expansion terms .
+We start by discussing adaptation by analyzing the query clarity level .
+Then, we briefly introduce an approach to model the generic query formulation process in order to tailor the search algorithm automatically, and discuss some other possible factors that might be of use for this task .
+Query Clarity .
+The interest for analyzing query difficulty has increased only recently, and there are not many papers addressing this topic .
+Yet it has been long known that query disambiguation has a high potential of improving retrieval effectiveness for low recall searches with very short queries [20], which is exactly our targeted scenario .
+Also, the success of IR systems clearly varies across different topics .
+We thus propose to use an estimate number expressing the calculated level of query clarity in order to automatically tweak the amount of personalization fed into the algorithm .
+The following metrics are available
+The solution is rather inefficient, as reported by He and Ounis [14] .
+? The Query Scope relates to the IDF of the entire query, as in
+? The Query Clarity [7] seems to be the best, as well as the most applied technique so far .
+It measures the divergence between the language model associated to the user query and the language model associated to the collection .
+In a simplified version (i.e., without smoothing over the terms which are not present in the query), it can be expressed as follows
+Other solutions exist, but we think they are too computationally expensive for the huge amount of data that needs to be processed within Web applications .
+We thus decided to investigate only C1 and C2 .
+First, we analyzed their performance over a large set of queries and split their clarity predictions in three categories
+? Medium Scope Semi Ambiguous Query
+? Large Scope Ambiguous Query
+In order to limit the amount of experiments, we analyzed only the results produced when employing C1 for the PIR and C2 for the Web .
+As algorithmic basis we used LC[O], i.e., optimized lexical compounds, which was clearly the winning method in the previous analysis .
+As manual investigation showed it to slightly overfit the expansion terms for clear queries, we utilized a substitute for this particular case .
+Two candidates were considered
+Desktop Scope Web Clarity No .
+of Terms Algorithm Large Ambiguous 4 LC[O] Large Semi Ambig .
+3 LC[O] Large Clear 2 LC[O] Medium Ambiguous 3 LC[O] Medium Semi Ambig .
+2 LC[O] Medium Clear 1 TF WN[SYN] Small Ambiguous 2 TF WN[SYN] Small Semi Ambig .
+1 TF WN[SYN] Small Clear 0Table 3
+Given the algorithms and clarity measures, we implemented the adaptivity procedure by tailoring the amount of expansion terms added to the original query, as a function of its ambiguity in the Web, as well as within user"s PIR .
+Note that the ambiguity level is related to the number of documents covering a certain query .
+Thus, to some extent, it has different meanings on the Web and within PIRs .
+While a query deemed ambiguous on a large collection such as the Web will very likely indeed have a large number of meanings, this may not be the case for the Desktop .
+Take for example the query PageRank .
+If the user is a link analysis expert, many of her documents might match this term, and thus the query would be classified as ambiguous .
+However, when analyzed against the Web, this is definitely a clear query .
+Consequently, we employed more additional terms, when the query was more ambiguous in the Web, but also on the Desktop .
+Put another way, queries deemed clear on the Desktop were inherently not well covered within user"s PIR, and thus had fewer keywords appended to them .
+The number of expansion terms we utilized for each combination of scope and clarity levels is depicted in Table 3 .
+Query Formulation Process .
+Interactive query expansion has a high potential for enhancing search [29] .
+We believe that modeling its underlying process would be very helpful in producing qualitative adaptive Web search algorithms .
+For example, when the user is adding a new term to her previously issued query, she is basically reformulating her original request .
+Thus, the newly added terms are more likely to convey information about her search goals .
+For a general, non personalized retrieval engine, this could correspond to giving more weight to these new keywords .
+Within our personalized scenario, the generated expansions can similarly be biased towards these terms .
+Nevertheless, more investigations are necessary in order to solve the challenges posed by this approach .
+Other Features .
+The idea of adapting the retrieval process to various aspects of the query, of the user itself, and even of the employed algorithm has received only little attention in the literature .
+Only some approaches have been investigated, usually indirectly .
+There exist studies of query behaviors at different times of day, or of the topics spanned by the queries of various classes of users, etc .
+However, they generally do not discuss how these features can be actually incorporated in the search process itself and they have almost never been related to the task of Web personalization .
+4.2 Experiments We used exactly the same experimental setup as for our previous analysis, with two log based queries and two self selected ones (all different from before, in order to make sure there is no bias on the new approaches), evaluated with NDCG over the Top 5 results output by each algorithm .
+The newly proposed adaptive personalized query expansion algorithms are denoted as A[LCO TF] for the approach using TF with the clear Desktop queries, and as A[LCO WN] when WN[SYN] was utilized instead of TF .
+The overall results were at least similar, or better than Google for all kinds of log queries (see Table 4) .
+For top frequent queries, Algorithm NDCG Signific .
+NDCG Signific .
+Top vs .
+Google Random vs .
+Google Google 0.51 0.45TF 0.51 0.48 p = 0.04 LC[O] 0.53 p = 0.09 0.52 p < 0.01 WN[SYN] 0.51 0.45A[LCO TF] 0.56 p < 0.01 0.49 p = 0.04 A[LCO WN] 0.55 p = 0.01 0.44Table 4
+Algorithm NDCG Signific .
+NDCG Signific .
+Clear vs .
+Google Ambiguous vs .
+Google Google 0.81 0.46TF 0.76 0.54 p = 0.03 LC[O] 0.77 0.59 p 0.01 WN[SYN] 0.79 0.44A[LCO TF] 0.81 0.64 p 0.01 A[LCO WN] 0.81 0.63 p 0.01 Table 5
+both adaptive algorithms, A[LCO TF] and A[LCO WN], improve with 10.8% and 7.9% respectively, both differences being also statistically significant with p ? 0.01 .
+They also achieve an improvement of up to 6.62% over the best performing static algorithm, LC[O] (p = 0.07) .
+For randomly selected queries, even though A[LCO TF] yields significantly better results than Google (p = 0.04), both adaptive approaches fall behind the static algorithms .
+The major reason seems to be the imperfect selection of the number of expansion terms, as a function of query clarity .
+Thus, more experiments are needed in order to determine the optimal number of generated expansion keywords, as a function of the query ambiguity level .
+The analysis of the self selected queries shows that adaptivity can bring even further improvements into Web search personalization (see Table 5) .
+For ambiguous queries, the scores given to Google search are enhanced by 40.6% through A[LCO TF] and by 35.2% through A[LCO WN], both strongly significant with p 0.01 .
+Adaptivity also brings another 8.9% improvement over the static personalization of LC[O] (p = 0.05) .
+Even for clear queries, the newly proposed flexible algorithms perform slightly better, improving with 0.4% and 1.0% respectively .
+All results are depicted graphically in Figure 1 .
+We notice that A[LCO TF] is the overall best algorithm, performing better than Google for all types of queries, either extracted from the search engine log, or self selected .
+The experiments presented in this section confirm clearly that adaptivity is a necessary further step to take in Web search personalization. .

@@ -1,0 +1,106 @@
+AGGREGATION Judgment aggregation is concerned with judgment aggregation rules aggregating sets of logical formulae; preference aggregation is concerned with social welfare functions aggregating preferences over some set of alternatives .
+Let n be a number of agents; we write £U for the set {1, .
+.
+.
+, n} .
+2.1 Judgment Aggregation Rules Let L be a logic with language L(L) .
+We require that the language has negation and material implication, with the usual semantics .
+We will sometimes refer to L as the underlying logic .
+An agenda over L is a non empty set A ? L(L), where for every formula £p that does not start with a negation, £p ? A iff ?£p ? A .
+We sometimes call a member of A an agenda item .
+A subset A ? A is consistent unless A entails both ?£p and £p in L for some £p ? L(L); A is complete if either £p ? A or ?£p ? A for every £p ? A which does not start with negation .
+An (admissible) individual judgment set is a complete and consistent subset Ai ? A of the agenda .
+The idea here is that a judgment set Ai represents the choices from A made by agent i .
+Two rationality criteria demand that an agents" choices at least be internally consistent, and that each agent makes a decision between every item and its negation .
+An (admissible) judgment profile is an n tuple A1, .
+.
+.
+, An , where Ai is the individual judgment set of agent i .
+J(A, L) denotes the set of all individual (complete and L consistent) judgment sets over A, and J(A, L)n the set of all judgment profiles over A .
+When £^ ? J(A, L)n , we use £^i to denote the ith element of £^, i.e., agent i"s individual judgment set in judgment profile £^ .
+A judgment aggregation rule is a function f that maps each judgment profile A1, .
+.
+.
+, An to a complete and consistent collective judgment set f(A1, .
+.
+.
+, An) ? J(A, L) .
+Such a rule hence is a recipe to enforce a rational group decision, given an tuple of rational choices by the individual agents .
+Of course, such a rule should to a certain extent be ¡¥fair" .
+Some possible properties of a judgment aggregation rule f over an agenda A
+.
+.
+, An , f(A1, .
+.
+.
+, An) = Ai Independence For any p ? A and judgment profiles A1, .
+.
+.
+, An and B1, .
+.
+.
+, Bn , if for all agents i (p ? Ai iff p ? Bi), then p ? f(A1, .
+.
+.
+, An) iff p ? f(B1, .
+.
+.
+, Bn) Unanimity For any judgment profile A1, .
+.
+.
+, An and any p ? A, if p ? Ai for all agents i, then p ? f(A1, .
+.
+.
+, An) 2.2 Social Welfare Functions Social welfare functions (SWFs) are usually defined in terms of ordinal preference structures, rather than cardinal structures such as utility functions .
+An SWF takes a preference relation, a binary relation over some set of alternatives, for each agent, and outputs another preference relation representing the aggregated preferences .
+The most well known result about SWFs is Arrow"s theorem [1] .
+Many variants of the theorem appear in the literature, differing in assumptions about the preference relations .
+In this paper, we take the assumption that all preference relations are linear orders, i.e., that neither agents nor the aggregated preference can be indifferent between distinct alternatives .
+This gives one of the simplest formulations of Arrow"s theorem (Theorem 1 below) .
+Cf., e.g., [2] for a discussion and more general formulations .
+Formally, let K be a set of alternatives .
+We henceforth implicitly assume that there are always at least two alternatives .
+A preference relation (over K) is, here, a total (linear) order on K, i.e., a relation R over K which is antisymmetric (i.e., (a, b) ? R and (b, a) ? R implies that a = b), transitive (i.e., (a, b) ? R and (b, c) ? R implies that (a, c) ? R), and total (i.e., either (a, b) ? R or (b, a) ? R) .
+We sometimes use the infix notation aRb for (a, b) ? R .
+The set of preference relations over alternatives K is denoted L(K) .
+Alternatively, we can view L(K) as the set of all permutations of K .
+Thus, we shall sometimes use a permutation of K to denote a member of L(K) .
+For example, when K = {a, b, c}, we will sometimes use the expression acb to denote the relation {(a, c), (a, b), (c, b), (a, a), (b, b), (c, c)} .
+aRb means that b is preferred over a if a and b are different .
+Rs denotes the irreflexive version of R, i.e., Rs = R \ {(a, a) 
+aRs b means that b is preferred over a and that a b .
+A preference profile for £U over alternatives K is a tuple (R1, .
+.
+.
+, Rn) ? L(K)n , consisting of one preference relation Ri for each agent i .
+A social welfare function is a function F 
+The class of all SWFs over alternatives K is denoted F .
+Properties of SWFs F corresponding to the judgment aggregation rule properties discussed in Section 2.1 are
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 567 Non dictatorship (ND2) ??i?£U?(R1, .
+.
+.
+, Rn) ? L(K)n F(R1, .
+.
+.
+, Rn) = Ri (corresponds to ND1) Independence of irrelevant alternatives ?(R1, .
+.
+.
+, Rn) ? L(K)n ?(S1, .
+.
+.
+, Sn) ? L(K)n ?a ? K?b ? K((?i ? £U(aRib ? aSib)) ? (aF(R1, .
+.
+.
+, Rn)b ? aF(S1, .
+.
+.
+, Sn)b)) (corresponds to IND) Pareto Optimality ?(R1, .
+.
+.
+, Rn) ? L(K)n ?a ? K?b ? K ((?i ? £UaRs i b) ?aF(R1, .
+.
+.
+, Rn)s b) (corresponds to UNA) Arrow"s theorem says that the three properties above are inconsistent if there are more than two alternatives .
+Theorem 1 (Arrow) .
+If there are more than two alternatives, no SWF has all the properties PO, ND2 and IIA. .

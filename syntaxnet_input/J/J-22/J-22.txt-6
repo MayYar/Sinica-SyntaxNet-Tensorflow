@@ -1,0 +1,145 @@
+In this section we show that a slight change of the bidding language may bring about a dramatic change in the complexity of the optimal matching problem of the auctioneer .
+In particular, we show that finding the optimal match in the pair betting market is NP hard for both divisible and indivisible orders .
+We then identify a polynomially verifiable sufficient condition for deciding the existence of a match .
+The hardness results are surprising especially in light of the observation that a pair betting market has a seemingly more restrictive bidding language which only offers n(n?1) 1 The notion of perfect matching in a bipartite graph, which we use only in this proof, should not be confused with the notion of matching bets which we use throughout the paper .
+securities .
+In contrast, the subset betting market enables traders to bet on an exponential number of securities and yet had a polynomial time solution for finding the optimal match .
+Our hope is that the comparison of the complexities of the subset and pair betting markets would offer insight into what makes a bidding language expressive while at the same time enabling an efficient matching solution .
+In all analysis that follows, we assume that traders submit unit orders in pair betting markets, that is qi = 1 .
+A set of orders O received by the auctioneer in a pair betting market with unit orders can be represented by a directed graph, G(V, E), where the vertex set V contains candidates that traders bet on .
+An edge e ? E, denoted (£\, £], be), represents an order to buy 1 share of the security £\ > £] at price be .
+All edges have equal weight of 1 .
+We adopt the following notations throughout the paper
+? be
+? G? (V ? , E? ); a weighted directed graph of accepted orders for optimal matching, where edge weight xe is the quantity of order e accepted by the auctioneer .
+xe = 1 for indivisible orders and 0 < xe ? 1 for divisible orders .
+? H(V, E)
+? k(H)
+k(H) is the minimum number of edges to remove so that H becomes acyclic .
+? l(H)
+l(H) is the minimum total weights for the set of edges which, when removed, leave H acyclic .
+? c(H)
+? 
+Where not stated, < 1 (2|E|) for a graph H(V, E) .
+In other cases, the value is determined in context .
+A feedback arc set of a directed graph is a set of edges which, when removed from the graph, leave a directed acyclic graph .
+Unweighted minimum feedback arc set problem is to find a feedback arc set with the minimum cardinality, while weighted minimum feedback arc set problem seeks to find a feedback arc set with the minimum total edge weight .
+Both unweighted and weighted minimum feedback arc set problems have been shown to be NP complete [10] .
+We will use this result in our complexity analysis on pair betting markets .
+5.1 Optimal Indivisible Matching The auctioneer"s optimal indivisible matching problem is introduced in Definition 3 of Section 3 .
+Assuming unit orders and considering the order graph G(V, E), we restate the auctioneer"s optimal matching problem in a pair betting market as picking a subset of edges to accept such that 330 worst case profit is maximized in the following optimization problem, max xe,c c (6) s.t .
+e be ? Ie(s) xe ? c, ?s ? S xe ? {0, 1}, ?e ? E .
+Without lose of generality, we assume that there are no multi edges in the order graph G .
+We show that the optimal matching problem for indivisible orders is NP hard via a reduction from the unweighted minimum feedback arc set problem .
+The latter takes as input a directed graph, and asks what is the minimum number of edges to delete from the graph so as to be left with a DAG .
+Our hardness proof is based on the following lemmas .
+Lemma 2 .
+Suppose the auctioneer accepts all edges in an equally weighted directed graph H(V, E) with edge price be = (1 ? ) and edge weight xe = 1 .
+Then the worst case profit is equal to k(H) ? |E|, where k(H) is the solution to the unweighted minimum feedback arc problem on H .
+Proof .
+If the order of an edge gets $1 payoff at the end of the market we call the edge a winning edge, otherwise it is called a losing edge .
+For any state s, all winning edges necessarily form a DAG .
+Conversely, for every DAG there is a state in which the DAG edges are winners (though the remaining edges in G are not necessarily losers) .
+Suppose that in state s there are ws winning edges and ls = |E| ? ws losing edges .
+Then, ls is the cardinality of a feedback arc set that consists of all losing edges in state s .
+The edges that remain after deleting the minimum feedback arc set form the maximum DAG for the graph H .
+Consider the state smax in which all edges of the maximum DAG are winners .
+This gives the maximum number of winning edges wmax .
+All other edges are necessarily losers in the state smax, since any edge which is not in the max DAG must form a cycle together with some of the DAG edges .
+The number of losing edges in state smax is the cardinality of the minimum feedback arc set of H, that is |E| ? wmax = k(H) .
+The profit of the auctioneer in a state s is profit(s) = e?E be ? w = (1 ? )|E| ? w ? (1 ? )|E| ? wmax, where equality holds when s = smax .
+Thus, the worst case profit is achieved at state smax, profit(smax) = (|E| ? wmax) ? |E| = k(H) ? |E| .
+Consider the graph of accepted orders for optimal matching, G? (V ? , E? ), which consists of the optimal subset of edges E? to be accepted by the auctioneer, that is edges with xe = 1 in the solution of the optimization problem (6) .
+We have the following lemma .
+Lemma 3 .
+If the edge prices are be = (1? ), then the optimal indivisible solution graph G? has the same unweighted minimum feedback arc set size as the graph of all orders G, that is k(G? ) = k(G) .
+Furthermore, G? is the smallest such subgraph of G, i.e., it is the subgraph of G with the smallest number of edges, that has the same size of unweighted minimum feedback arc set as G .
+Proof .
+G? is a subgraph of G, hence the minimum number of edges to break cycles in G? is no more than that in G, namely k(G? ) ? k(G) .
+Suppose k(G? ) < k(G) .
+Since both k(G? ) and k(G) are integers, for any < 1 |E| we have that k(G? ) ? |E? | < k(G)? |E| .
+Hence by Lemma 2, the auctioneer has a higher worst case profit by accepting G than accepting G? , which contradicts the optimality of G? .
+Finally, the worst case profit k(G) ? |E? | is maximized when |E? | is minimized .
+Hence, G? is the smallest subgraph of G such that k(G? ) = k(G) .
+The above two lemmas prove that the maximum worstcase profit in the optimal indivisible matching is directly related to the size of the minimum feedback arc set .
+Thus computing each automatically gives the other, hence computing the maximum worst case profit in the indivisible pair betting problem is NP hard .
+Theorem 4 .
+Computing the maximum worst case profit in indivisible pair betting is NP hard .
+Proof .
+By Lemma 3, the maximum worst case profit which is the optimum to the mixed integer programming problem (6), is k(G) ? |E? |, where |E? | is the number of accepted edges .
+Since k(G) is integer and |E? | ? |E| < 1, solving (6) will automatically give us the cardinality of the minimum feedback arc set of G, k(G) .
+Because the minimum feedback arc set problem is NP complete [10], computing the maximum worst case profit is NP hard .
+Theorem 4 states that solving the optimization problem is hard, because even if the optimal set of orders are provided computing the optimal worst case profit from accepting those orders is NP hard .
+However, it does not imply whether the optimal matching problem, i.e .
+finding the optimal set of orders to accept, is NP hard .
+It is possible to be able to determine which edges in a graph participating in the optimal match, yet unable to compute the corresponding worst case profit .
+Next, we prove that the indivisible optimal matching problem is actually NP hard .
+We will use the following short fact repeatedly .
+Lemma 5 (Edge removal lemma) .
+Given a weighted graph H(V, E), removing a single edge e with weight xe from the graph decreases the weighted minimum feedback arc set solution l(H) by no more than xe and reduces the unweighted minimum feedback arc set solution k(H) by no more than 1 .
+Proof .
+Suppose the weighted minimum feedback arc set for the graph H ? {e} is F .
+Then F ¡å {e} is a feedback arc set for H, and has total edge weight l(H?{e})+xe .
+Because l(H) is the solution to the weighted minimum feedback arc set problem on H, we have l(H) ? l(H ?{e})+xe, implying that l(H ? {e}) ? l(H) ? xe .
+Similarly, suppose the unweighted minimum feedback arc set for the graph H ? {e} is F .
+Then F ¡å {e} is a feedback arc set for H, and has set cardinality k(H?{e})+1 .
+Because k(H) is the solution to the unweighted minimum feedback arc set problem on H, we have k(H) ? k(H ? {e}) + 1, giving that k(H ? {e}) ? k(H) ? 1 .
+Theorem 6 .
+Finding the optimal match in indivisible pair betting is NP hard .
+331 Proof .
+We reduce from the unweighted minimum feedback arc set problem again, although with a slightly more complex polynomial transformation involving multiple calls to the optimal match oracle .
+Consider an instance graph G of the minimum feedback arc set problem .
+We are interested in computing k(G), the size of the minimum feedback arc set of G .
+Suppose we have an oracle which solves the optimal matching problem .
+Denote by optimal match(G ) the output of the optimal matching oracle on graph G with prices be = (1? ) on all its edges .
+By Lemma 3, on input G , the oracle optimal match returns the subgraph of G with the smallest number of edges, that has the same size of minimum feedback arc set as G .
+The following procedure finds k(G) by using polynomially many calls to the optimal match oracle on a sequence of subgraphs of G .
+set G 
+In each iteration, we start with a graph G and replace it with the smallest subgraph G that has the same k(G ) .
+At this stage, removing an additional edge e necessarily results in k(G ?{e}) = k(G )?1, because k(G ?{e}) < k(G ) by the optimality of G , and k(G ? {e}) ? k(G ) ? 1 by the edgeremoval lemma .
+Therefore, in each iteration the cardinality of the minimum feedback arc set gets reduced exactly by 1 .
+Hence the number of iterations is equal to k(G) .
+Note that this procedure gives a polynomial transformation from the optimal matching problem to the unweighted minimum feedback arc set problem, which calls the optimal matching oracle exactly k(G) ? |E| times, where |E| is the number of edges of G .
+Hence the optimal matching problem is NP hard .
+5.2 Optimal Divisible Matching When orders are divisible, the auctioneer"s optimal matching problem is described in Definition 4 of Section 3 .
+Assuming unit orders and considering the order graph G(V, E), we restate the auctioneer"s optimal matching problem for divisible orders as choosing quantity of orders to accept, xe ? [0, 1], such that worst case profit is maximized in the following linear programming problem, max xe,c c (7) s.t .
+e be ? Ie(s) xe ? c, ?s ? S xe ? [0, 1], ?e ? E .
+We still assume that there are no multi edges in the order graph G .
+When orders are divisible, the auctioneer can be better off by accepting partial orders .
+Example 2 shows a situation when accepting partial orders generates higher worst case profit than the optimal indivisible solution .
+Example 2 .
+We show that the linear program (7) sometimes has a non integer optimal solution .
+A B C D E F b b b b b b b b b Figure 2
+Letters on edges represent order prices .
+Consider the graph in Figure 2 .
+There are a total of five cycles in the graph
+Suppose each edge has price b such that 4b ? 3 > 0 and 6b ? 5 < 0, namely b ? (.75, .80), for example b = .78 .
+With this, the optimal indivisible solution consists of at most one four edge cycle, with worst case profit (4b?3) .
+On the other hand, taking 1 2 fraction of each of the three four edge cycles would yield higher worst case profit of 3 2 (4b ? 3) .
+Despite the potential profit increase for accepting divisible orders, the auctioneer"s optimal matching problem remains to be NP hard for divisible orders, which is presented below via several lemmas and theorems .
+Lemma 7 .
+Suppose the auctioneer accept orders described by a weighted directed graph H(V, E) with edge weight xe to be the quantity accepted for edge order e .
+The worst case profit for the auctioneer is c(H) = e?E (be ? 1)xe + l(H) .
+(8) Proof .
+For any state s, the winning edges form a DAG .
+Thus, the worst case profit for the auctioneer achieves at the state(s) when the total quantity of losing orders is minimized .
+The minimum total quantity of losing orders is the solution to weighted minimal feedback arc set problem on H, that is l(H) .
+Consider the graph of accepted orders for optimal divisible matching, G? (V ? , E? ), which consists of the optimal subset of edges E? to be accepted by the auctioneer, with edge weight xe > 0 getting from the optimal solution of the linear program (7) .
+We have the following lemmas .
+332 Lemma 8 .
+l(G? ) ? k(G? ) ? k(G) .
+Proof .
+l(G? ) is the solution of the weighted minimum feedback arc set problem on G? , while k(G? ) is the solution of the unweighted minimum feedback arc set problem on G? .
+When all edge weights in G? are 1, l(G? ) = k(G? ) .
+When xe"s are less than 1, l(G? ) can be less than or equal to k(G? We consider a permutation betting scenario, where traders wager on the final ordering of n candidates .
+While it is unnatural and intractable to allow traders to bet directly on the n! different final orderings, we propose two expressive betting languages, subset betting and pair betting .
+In a subset betting market, traders can bet either on a subset of positions that a candidate stands or on a subset of candidates who occupy a specific position in the final ordering .
+Pair betting allows traders bet on whether one given candidate ranks higher than another given candidate .
+We examine the auctioneer problem of matching orders without incurring risk .
+We find that in a subset betting market an auctioneer can find the optimal set and quantity of orders to accept such that his worst case profit is maximized in polynomial time if orders are divisible .
+The complexity changes dramatically for pair betting .
+We prove that the optimal matching problem for the auctioneer is NP hard for pair betting with both indivisible and divisible orders via reductions to the minimum feedback arc set problem .
+We identify a sufficient condition for the existence of a match, which can be verified in polynomial time .
+A natural greedy algorithm has been shown to give poor approximation for indivisible pair betting .
+Interesting open questions for our permutation betting include the computational complexity of optimal indivisible matching for subset betting and the necessary condition for the existence of a match in pair betting markets .
+We are interested in further exploring better approximation algorithms for pair betting markets. .

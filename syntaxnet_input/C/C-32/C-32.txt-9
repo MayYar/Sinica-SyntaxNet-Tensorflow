@@ -1,0 +1,89 @@
+In this section we provide the details of the BuddyCache implementation .
+We have implemented BuddyCache in the Thor client server object oriented database [23] .
+Thor supports high performance access to distributed objects and therefore provides a good test platform to investigate BuddyCache performance .
+30 4.1 Base Storage System Thor servers provide persistent storage for objects and clients cache copies of these objects .
+Applications run at the clients and interact with the system by making calls on methods of cached objects .
+All method calls occur within atomic transactions .
+Clients communicate with servers to fetch pages or to commit a transaction .
+The servers have a disk for storing persistent objects, a stable transaction log, and volatile memory .
+The disk is organized as a collection of pages which are the units of disk access .
+The stable log holds commit information and object modifications for committed transactions .
+The server memory contains cache directory and a recoverable modified object cache called the MOB .
+The directory keeps track of which pages are cached by which clients .
+The MOB holds recently modified objects that have not yet been written back to their pages on disk .
+As MOB fills up, a background process propagates modified objects to the disk [21, 26] .
+4.2 Base Cache Coherence Transactions are serialized using optimistic concurrency control OCC [3] described in Section 3.1 .
+We provide some of the relevant OCC protocol implementation details .
+The client keeps track of objects that are read and modified by its transaction; it sends this information, along with new copies of modified objects, to the servers when it tries to commit the transaction .
+The servers determine whether the commit is possible, using a two phase commit protocol if the transaction used objects at multiple servers .
+If the transaction commits, the new copies of modified objects are appended to the log and also inserted in the MOB .
+The MOB is recoverable, i.e .
+if the server crashes, the MOB is reconstructed at recovery by scanning the log .
+Since objects are not locked before being used, a transaction commit can cause caches to contain obsolete objects .
+Servers will abort a transaction that used obsolete objects .
+However, to reduce the probability of aborts, servers notify clients when their objects become obsolete by sending them invalidation messages; a server uses its directory and the information about the committing transaction to determine what invalidation messages to send .
+Invalidation messages are small because they simply identify obsolete objects .
+Furthermore, they are sent in the background, batched and piggybacked on other messages .
+When a client receives an invalidation message, it removes obsolete objects from its cache and aborts the current transaction if it used them .
+The client continues to retain pages containing invalidated objects; these pages are now incomplete with holes in place of the invalidated objects .
+Performing invalidation on an object basis means that false sharing does not cause unnecessary aborts; keeping incomplete pages in the client cache means that false sharing does not lead to unnecessary cache misses .
+Clients acknowledge invalidations to indicate removal of stale data as explained in Section 3.1 .
+Invalidation messages prevent some aborts, and accelerate those that must happen thus wasting less work and o?oading detection of aborts from servers to clients .
+When a transaction aborts, its client restores the cached copies of modified objects to the state they had before the transaction started; this is possible because a client makes a copy of an object the first time it is modified by a transaction .
+4.3 Redirection The redirector runs on the same local network as the peer group, in one of the peer nodes, or in a special node within the infrastructure .
+It maintains a directory of pages available in the peer group and provides fast centralized fetch redirection (see figure 2) between the peer caches .
+To improve performance, clients inform the redirector when they evict pages or objects by piggybacking that information on messages sent to the redirector .
+To ensure up to date objects are fetched from the group cache the redirector tracks the status of the pages .
+A cached page is either complete in which case it contains consistent values for all the objects, or incomplete, in which case some of the objects on a page are marked invalid .
+Only complete pages are used by the peer fetch .
+The protocol for maintaining page status when pages are updated and invalidated is described in Section 4.4 .
+When a client request has to be processed at the servers, e.g., a complete requested page is unavailable in the peer group or a peer needs to commit a transaction, the redirector acts as a server proxy
+In addition, in response to invalidations sent by a server, the redirector distributes the update or invalidation information to clients caching the modified page and, after all clients acknowledge, propagates the group acknowledgment back to the server (see figure 3) .
+The redirector server protocol is, in effect, the client server protocol used in the base Thor storage system, where the combined peer group cache is playing the role of a single client cache in the base system .
+4.4 Peer Update The peer update is implemented as follows .
+An update commit request from a client arriving at the redirector contains the object updates .
+Redirector retains the updates and propagates the request to the coordinator server .
+After a transaction commits, using a two phase commit if needed, the coordinator server sends a commit reply to the redirector of the committing client group .
+The redirector forwards the reply to the committing client .
+It waits for the invalidations to arrive to propagate corresponding retained (committed) updates to the clients caching the modified pages (see figure 3.) Participating servers that are home to objects modified by the transaction generate object invalidations for each cache group that caches pages containing the modified objects (including the committing group) .
+The invalidations are sent lazily to the redirectors to ensure that all the clients in the groups caching the modified objects get rid of the stale data .
+In cache groups other than the committing group, redirectors propagates the invalidations to all the clients caching the modified pages, collect the client acknowledgments and after completing the collection, propagate collective acknowledgments back to the server .
+Within the committing client group, the arriving invalidations are not propagated .
+Instead, updates are sent to clients caching those objects" pages, the updates are acknowledged by the client, and the collective acknowledgment is propagated to the server .
+An invalidation renders a cached page unavailable for peer fetch changing the status of a complete page p into an incomplete .
+In contrast, an update of a complete page preserves the complete page status .
+As shown by studies of the 31 fragment reconstruction [2], such update propagation allows to avoid the performance penalties of false sharing .
+That is, when clients within a group modify different objects on the same page, the page retains its complete status and remains available for peer fetch .
+Therefore, the effect of peer update is similar to eager fragment reconstruction [2] .
+We have also considered the possibility of allowing a peer to fetch an incomplete page (with invalid objects marked accordingly) but decided against this possibility because of the extra complexity involved in tracking invalid objects .
+4.5 Vcache The solo commit validation protocol allows clients with up to date objects to commit independently of slower (or failed) group members .
+As explained in Section 3.3, the solo commit protocol allows a transaction T to pass validation if extra coherence information supplied by the client indicates that transaction T has read up to date objects .
+Clients use page version numbers to provide this extra coherence information .
+That is, a client includes the page version number corresponding to each object in the read object set sent in the commit request to the server .
+Since a unique page version number corresponds to each committed object update, the page version number associated with an object allows the validation procedure at the server to check if the client transaction has read up to date objects .
+The use of coarse grain page versions to identify object versions avoids the high penalty of maintaining persistent object versions for small objects, but requires an extra protocol at the client to maintain the mapping from a cached object to the identifying page version (ObjectToVersion) .
+The main implementation issue is concerned with maintaining this mapping efficiently .
+At the server side, when modifications commit, servers associate page version numbers with the invalidations .
+At validation time, if an unacknowledged invalidation is pending for an object x read by a transaction T, the validation procedure checks if the version number for x in T"s read set matches the version number for highest pending invalidation for x, in which case the object value is current, otherwise T fails validation .
+We note again that the page version number based checks, and the invalidation acknowledgment based checks are complimentary in the solo commit validation and both are needed .
+The page version number check allows the validation to proceed before invalidation acknowledgments arrive but by itself a page version number check detects page level conflicts and is not sufficient to support fine grain coherence without the object level invalidations .
+We now describe how the client manages the mapping ObjectToVersion .
+The client maintains a page version number for each cached page .
+The version number satisfies the following invariant V P about the state of objects on a page
+New object values and new page version numbers arrive when a client fetches a page or when a commit reply or invalidations arrive for this page .
+The new object values modify the page and, therefore, the page version number needs to be updated to maintain the invariant V P .
+A page version number that arrives when a client fetches a page, replaces Object Version x 8 Redirector Server 1Client 1 com(P(x,6),Q(y,9)) com(P(x,6),Q(y,9)) ok(P(x,8),Q(y,10)) ok(P(x,8),Q(y,10)) inv(Q(s,11)) inv(Q(s,11)) inv(P(r,7) inv(P(r,7) Server 2 Figure 5
+Such an update preserves the invariant V P .
+Similarly, an in sequence page version number arriving at the client in a commit or invalidation message advances the version number for the entire cached page, without violating V P .
+However, invalidations or updates and their corresponding page version numbers can also arrive at the client out of sequence, in which case updating the page version number could violate V P .
+For example, a commit reply for a transaction that updates object x on page P in server S1, and object y on page Q in server S2, may deliver a new version number for P from the transaction coordinator S1 before an invalidation generated for an earlier transaction that has modified object r on page P arrives from S1 (as shown in figure 5) .
+The cache update protocol ensures that the value of any object o in a cached page P reflects the update or invalidation with the highest observed version number .
+That is, obsolete updates or invalidations received out of sequence do not affect the value of an object .
+To maintain the ObjectToVersion mapping and the invariant V P in the presence of out of sequence arrival of page version numbers, the client manages a small version number cache vcache that maintains the mapping from an object into its corresponding page version number for all reordered version number updates until a complete page version number sequence is assembled .
+When the missing version numbers for the page arrive and complete a sequence, the version number for the entire page is advanced .
+The ObjectToVersion mapping, including the vcache and page version numbers, is used at transaction commit time to provide version numbers for the read object set as follows .
+If the read object has an entry in the vcache, its version number is equal to the highest version number in the vcache for this object .
+If the object is not present in the vcache, its version number is equal the version number of its containing cached page .
+Figure 6 shows the ObjectToVersion mapping in the client cache, including the page version numbers for pages and the vcache .
+Client can limit vcache size as needed since re fetching a page removes all reordered page version numbers from the vcache .
+However, we expect version number reordering to be uncommon and therefore expect the vcache to be very small. .

@@ -1,0 +1,26 @@
+Relevance feedback[17, 19] has long been recognized as an effective method for improving retrieval performance .
+Normally, the top N documents retrieved using the original query are presented to the user for judgment, after which terms are extracted from the judged relevant documents, weighted by their potential of attracting more relevant documents, and added into the query model .
+The expanded query usually represents the user"s information need better than the original one, which is often just a short keyword query .
+A second iteration of retrieval using this modified query usually produces significant increase in retrieval accuracy .
+In cases where true relevance judgment is unavailable and all top N documents are assumed to be relevant, it is called blind or pseudo feedback[5, 16] and usually still brings performance improvement .
+Because document is a large text unit, when it is used for relevance feedback many irrelevant terms can be introduced into the feedback process .
+To overcome this, passage feedback is proposed and shown to improve feedback performance[1, 23] .
+A more direct solution is to ask the user for their relevance judgment of feedback terms .
+For example, in some relevance feedback systems such as [12], there is an interaction step that allows the user to add or remove expansion terms after they are automatically extracted from relevant documents .
+This is categorized as interactive query expansion, where the original query is augmented with user provided terms, which can come from direct user input (free form text or keywords)[22, 7, 10] or user selection of system suggested terms (using thesauri[6, 22] or extracted from feedback documents[6, 22, 12, 4, 7]) .
+In many cases term relevance feedback has been found to effectively improve retrieval performance[6, 22, 12, 4, 10] .
+For example, the study in [12] shows that the user prefers to have explicit knowledge and direct control of which terms are used for query expansion, and the penetrable interface that provides this freedom is shown to perform better than other interfaces .
+However, in some other cases there is no significant benefit[3, 14], even if the user likes interacting with expansion terms .
+In a simulated study carried out in [18], the author compares the retrieval performance of interactive query expansion and automatic query expansion with a simulated study, and suggests that the potential benefits of the former can be hard to achieve .
+The user is found to be not good at identifying useful terms for query expansion, when a simple term presentation interface is unable to provide sufficient semantic context of the feedback terms .
+Our work differs from the previous ones in two important aspects .
+First, when we choose terms to present to the user for relevance judgment, we not only consider single term value (e.g., the relative frequency of a term in the top documents, which can be measured by metrics such as Robertson Selection Value and Simplified Kullback Leibler Distance as listed in [24]), but also examine the cluster structure of the terms, so as to produce a balanced coverage of the different topic aspects .
+Second, with the language modelling framework, we allow an elaborate construction of the updated query model, by setting different probabilities for different terms based on whether it is a query term, its significance in the top documents, and its cluster membership .
+Although techniques for adjusting query term weights exist for vector space models[17] and probablistic relevance models[9], most of the aforementioned works do not use them, choosing to just append feedback terms to the original query (thus using equal weights for them), which can lead to poorer retrieval performance .
+The combination of the two aspects allows our method to perform much better than the baseline .
+The usual way for feedback term presentation is just to display the terms in a list .
+There have been some works on alternative user interfaces .
+[8] arranges terms in a hierarchy, and [11] compares three different interfaces, including terms + checkboxes, terms + context (sentences) + checkboxes, sentences + input text box .
+In both studies, however, there is no significant performance difference .
+In our work we adopt the simplest approach of terms + checkboxes .
+We focus on term presentation and query model construction from feedback terms, and believe using contexts to improve feedback term quality should be orthogonal to our method. .

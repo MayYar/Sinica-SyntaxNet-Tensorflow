@@ -1,0 +1,46 @@
+Newly emerging game based application systems such as Second Life1 provide 3D virtual environments where multiple users interact with each other in real time .
+They are filled with autonomous, mutable virtual content which is continuously augmented by the users .
+To make the systems highly scalable and dynamically extensible, they are usually built on a client server based grid subspace division where the virtual worlds are partitioned into manageable sub worlds .
+In each sub world, the user continuously receives relevant geometry updates of moving objects from remotely connected servers and renders them according to her viewpoint, rather than retrieving them from a local storage medium .
+In such systems, the determination of the set of objects that are visible from a user"s viewpoint is one of the primary factors that affect server throughput and scalability .
+Specifically, performing real time visibility tests in extremely dynamic virtual environments is a very challenging task as millions of objects and sub millions of active users are moving and interacting .
+We recognize that the described challenges are closely related to a spatial database problem, and hence we map the moving geometry objects in the virtual space to a set of multi dimensional objects in a spatial database while modeling each avatar both as a spatial object and a moving query .
+Unfortunately, existing spatial indexing methods are unsuitable for this kind of new environments .
+The main goal of this paper is to present an efficient spatial index structure that minimizes unexpected object popping and supports highly scalable real time visibility determination .
+We then uncover many useful properties of this structure and compare the index structure with various spatial indexing methods in terms of query quality, system throughput, and resource utilization .
+We expect our approach to lay the groundwork for next generation virtual frameworks that may merge into existing web based services in the near future .
+Categories and Subject Descriptors
+Many MMOG applications, however, still limit themselves to a traditional design approach where their 3D scene complexity is carefully controlled in advance to meet real time rendering constraints at the client console side .
+To enable a virtual landscape in next generation environments that is seamless, endless, and limitless, Marshall et al .
+[1] identified four new requirements2 
+In this paper, we mainly focus on the first two requirements .
+Dynamic extensibility allows regular game users to deploy their own created content .
+This is a powerful concept, but unfortunately, user created content tends to create imbalances among the existing scene complexity, causing system wide performance problems .
+Full support for dynamic extensibility will, thus, continue to be one of the biggest challenges for game developers .
+Another important requirement is scalability .
+Although MMOG developers proclaim that their systems can support hundreds of thousands of concurrent users, it usually does not mean that all the users can interact with each other in the same world .
+By carefully partitioning the world into multiple sub worlds or replicating worlds at geographically dispersed locations, massive numbers of concurrent users can be supported .
+Typically, the maximum number of users in the same world managed by a single server or a server cluster is limited to several thousands, assuming a rather stationary world [2, 3] .
+Second Life [4] is the first successfully deployed MMOG system that meets both requirements .
+To mitigate the dynamics of the game world, where a large number of autonomous objects are continuously moving, it partitions the space in a grid like manner and 2 Originally, these requirements were specified for their dedicated platform .
+But we acknowledge that these requirements are also valid for new virtual environments .
+402 Avatar Object PoppingAutonomous Entities (a) At time t (b) At time t+£G Figure 1
+employs a client server based 3D object streaming model [5] .
+In this model, a server continuously transmits both update events and geometry data to every connected user .
+As a result, this extensible gaming environment has accelerated the deployment of usercreated content and provides users with unlimited freedom to pursue a navigational experience in its space .
+One of the main operations in MMOG applications that stream 3D objects is to accurately calculate all objects that are visible to a user .
+The traditional visibility determination approach, however, has an object popping problem .
+For example, a house outside a user"s visible range is not drawn at time t, illustrated in Figure 1(a) .
+As the user moves forward, the house will suddenly appear at time (t + £G) as shown in Figure 1(b) .
+If £G is small, or the house is large enough to collide with the user, it will disrupt the user"s navigational experience .
+The visibility calculation for each user not only needs to be accurate, but also fast .
+This challenge is illustrated by the fact that the maximum number of concurrent users per server of Second Life is still an order of magnitude smaller than for stationary worlds .
+To address these challenges, we propose a method that identifies the most relevant visible objects from a given geometry database (view model) and then put forth a fast indexing method that computes the visible objects for each user (spatial indexing) .
+Our two novel methods represent the main contributions of this work .
+The organization of this paper is as follows .
+Section 2 presents related work .
+Section 3 describes our new view method .
+In Section 4, we present assumptions on our target application and introduce a new spatial indexing method designed to support real time visibility computations .
+We also discuss its optimization issues .
+Section 5 reports on the quantitative analysis and Section 6 presents preliminary results of our simulation based experiments .
+Finally, we conclude and address future research directions in Section 7. .

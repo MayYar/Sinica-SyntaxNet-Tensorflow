@@ -1,0 +1,125 @@
+Next we extend the results to a model where traders may be connected to an arbitrary number of sellers and buyers
+For a trader t ? T we will use S(t) and B(t) to denote the set of buyers and sellers connected to trader t
+In this section we focus on the general case when goods are distinguishable (i.e
+both buyers and sellers have valuations that are sensitive to the identity of the agent they are paired with in the allocation)
+In the full version of the paper we also discuss the special case of indistinguishable goods in more detail
+To get the optimal trade, we consider the bipartite graph G = (S °Â B, E) connecting sellers and buyers where an edge e = (i, j) connects a seller i and a buyer j if there is a trader adjacent to both
+On this graph, we then solve the instance of the assignment problem that was also used in Section 2.2, with the value of edge (i, j) equal to £cji ? £cij (since the value of trading between i and j is independent of which trader conducted the trade)
+We will also use the dual of this linear program
+zi + zj ? £cji ? £cij ?i ? S, j ? B 
+3.1 Bids and Asks and Trader Optimization First we need to understand what bidding model we will use
+Even when goods are indistinguishable, a trader may want to pricediscriminate, and offer different bid and ask values to different sellers and buyers
+In the case of distinguishable goods, we have to deal with a further complication
+There are two variants of our model depending whether a trader makes a single bid or ask to a seller or buyer, or she offers a menu of options
+(i) A trader t can offer a buyer j a menu of asks £\tji, a vector of values for all the products that she is connected to, where £\tji is the ask for the product of seller i
+Symmetrically, a trader t can offer to each seller i a menu of bids £]tij for selling to different buyers j
+(ii) Alternatively, we can require that each trader t can make at most one ask to each seller and one bid for each buyer, and an ask has to include the product sold, and a bid has to offer a particular buyer to sell to
+Our results hold in either model
+For notational simplicity we will use the menu option here
+Next we need to understand the optimization problem of a trader t = t
+What are the best bid and ask offers trader t can make as a best response to the current set of bids and asks? For each seller i let pi be the maximum profit seller i can make using bids by other traders, and symmetrically assume pj is the maximum profit buyer j can make using asks by other traders (let pi = 0 for any seller or buyer i who cannot make profit)
+Now consider a seller buyer pair (i, j) that trader t can connect
+Trader t will have to make a bid of at least £]tij = £cij +pi to seller i and an ask of at most £\tji = £cji ?pj to buyer j to get this trade, so the maximum profit she can make on this trade is vtij = £\tji ? £]tij = £cji ? pj ? (£cij + pi)
+The optimal trade for trader t is obtained by solving a matching problem to find the matching between the sellers S(t) and buyers B(t) that maximizes the total value vtij for trader t
+We will need the dual of the linear program of finding the trade of maximum profit for the trader t
+We will use qti as the dual variable associated with the constraint of seller or buyer i
+The dual is then the following problem
+min val(qt) = X i?B(t)°ÂS(t) qti qti ? 0 ?i ? S(t) °Â B(t)
+qti + qtj ? vtij ?i ? S(t), j ? B(t)
+We view qti as the profit made by t from trading with seller or buyer THEOREM 3.1
+For a trader t, given the lowest bids £]tij and highest asks £\tji that can be accepted for sellers i ? S(t) and buyers j ? B(t), the best trade t can make is the maximum value matching between S(t) and B(t) with value vtij = £\tji ? £]tij for the edge (i, j)
+This maximum value is equal to the minimum of the dual linear program above
+3.2 Efficient Trade and Equilibrium Now we can prove trade at equilibrium is always efficient
+THEOREM 3.2
+Every equilibrium results in an efficient allocation of the goods
+Proof
+Consider an equilibrium, with xe = 1 if and only if trade occurs along edge e = (i, j)
+Trade is a solution to the transshipment linear program used in Section 2.2
+Let pi denote the profit of seller or buyer i
+Each trader t currently has the best solution to his own optimization problem
+A trader t finds his optimal trade (given bids and asks by all other 149 traders) by solving a matching problem
+Let qti for i ? B(t)°ÂS(t) denote the optimal dual solution to this matching problem as described by Theorem 3.1
+When setting up the optimization problem for a trader t above, we used pi to denote the maximum profit i can make without the offer of trader t
+Note that this pi is exactly the same pi we use here, the profit of agent i
+This is clearly true for all traders t that are not trading with i in the equilibrium
+To see why it is true for the trader t that i is trading with we use that the current set of bid ask values is an equilibrium
+If for any agent i the bid or ask of trader t were the unique best option, then t could extract more profit by offering a bit larger ask or a bit smaller bid, a contradiction
+We show the trade x is optimal by considering the dual solution zi = pi + P t qti for all agents i ? B °Â S
+We claim z is a dual solution, and it satisfies complementary slackness with trade x
+To see this we need to show a few facts
+We need that zi > 0 implies that i trades
+If zi > 0 then either pi > 0 or qti > 0 for some trader t
+Agent i can only make profit pi > 0 if he is involved in a trade
+If qti > 0 for some t, then trader t must trade with i, as his solution is optimal, and by complementary slackness for the dual solution, qti > 0 implies that t trades with i
+For an edge (i, j) associated with a trader t we need to show the dual solution is feasible, that is zi + zj ? £cji ? £cij
+Recall vtij = £cji ?pj ?(£cij +pi), and the dual constraint of the trader"s optimization problem requires qti + qtj ? vtij
+Putting these together, we have zi + zj ? pi + qti + pj + qtj ? vtij + pi + pj = £cji ? £cij
+Finally, we need to show that the trade variables x also satisfy the complementary slackness constraint
+Let t be the trader involved in the trade
+By complementary slackness of t"s optimization problem we have qti + qtj = vtij
+To see that z satisfies complementary slackness we need to argue that for all other traders t = t we have both qt i = 0 and qt j = 0
+This is true as qt i > 0 implies by complementary slackness of t "s optimization problem that t must trade with i at optimum, and t = t is trading
+Next we want to show that a non crossing equilibrium always exists
+We call an equilibrium non crossing if the bid ask offers a trader t makes for a seller buyer pair (i, j) never cross, that is £]tij ? £\tji for all t, i, j
+THEOREM 3.3
+There exists a non crossing equilibrium supporting any socially optimal trade
+Proof
+Consider an optimal trade x and a dual solution z as before
+To find a non crossing equilibrium we need to divide the profit zi between i and the trader t trading with i
+We will use qti as the trader t"s profit associated with agent i for any i ? S(t) °Â B(t)
+We will need to guarantee the following properties
+This is one of the complementary slackness conditions to make sure the current trade is optimal for trader t
+For all seller buyer pairs (i, j) that a trader t can trade with, we have pi + qti + pj + qtj ? £cji ? £cij , (1) which will make sure that qt is a feasible dual solution for the optimization problem faced by trader t
+We need to have equality in (1) when trader t is trading between i and j
+This is one of the complementary slackness conditions for trader t, and will ensure that the trade of t is optimal for the trader
+Finally, we want to arrange that each agent i with pi > 0 has multiple offers for making profit pi, and the trade occurs at one of his best offers
+To guarantee this in the corresponding bids and asks we need to make sure that whenever pi > 0 there are multiple t ? adj(i) that have equation in the above constraint (1)
+We start by setting pi = zi for all i ? S °Â B and qti = 0 for all i ? S °Â B and traders t ? adj(i)
+This guarantees all invariants except the last property about multiple t ? adj(t) having equality in (1)
+We will modify p and q to gradually enforce the last condition, while maintaining the others
+Consider a seller with pi > 0
+By optimality of the trade and dual solution z, seller i must trade with some trader t, and that trader will have equality in (1) for the buyer j that he matches with involving seller i then we increase qti and decrease pi till either pi = 0 or another trader t = t will be achieve equality in (1) for some buyer edge adjacent to i (possibly a different buyer j )
+This change maintains all invariants, and increases the set of sellers that also satisfy the last constraint
+We can do a similar change for a buyer j that has pj > 0 and has only one trader t with a tight constraint (1) adjacent to j
+After possibly repeating this for all sellers and buyers, we get profits satisfying all constraints
+Now we get equilibrium bid and ask values as follows
+For a trader t that has equality for the seller buyer pair (i, j) in (1) we offer £\tji = £cji ? pj and £]tij = £cij + pi
+For all other traders t and seller buyer pairs (i, j) we have the invariant (1), and using this we know we can pick a value £^ in the range £cij +pi+qti ? £^ ? £cji ? (pj + qtj )
+We offer bid and ask values £]tij = £\tji = £^
+Neither the bid nor the ask will be the unique best offer for the buyer, and hence the trade x remains an equilibrium
+3.3 Trader Profits Finally we turn to the goal of understanding, in the case of general traders, how a trader"s profit is affected by its position in the network
+First, we show how to maximize the total profit of a set of traders
+The profit of trader t in an equilibrium is P i qti
+To find the maximum possible profit for a trader t or a set of traders T , we need to do the following
+Now, subject to all these conditions, we maximize the sum P t?T P i?S(t)°ÂB(t) qti
+Note that this maximization is a secondary objective function to the primary objective that z is an optimal dual solution
+Then we use the proof of Theorem 3.3 shows how to turn this into an equilibrium
+THEOREM 3.4
+The maximum value for P t?T P i qti above is the maximum profit the set T of traders can make
+Proof
+By the proof of Theorem 3.2 the profits of trader t can be written in this form, so the set of traders T cannot make more profit than claimed in this theorem
+To see that T can indeed make this much profit, we use the proof of Theorem 3.3
+We modify that proof to start with profit vectors p and qt for t ? T , and set qt = 0 for all traders t ? T
+We verify that this starting solution satisfies the first three of the four required properties, and then we can follow the proof to make the fourth property true
+We omit the details of this in the present version
+In Section 2.3 we showed that in the case of pair traders, a trader t can make money if he is essential for efficient trade
+This is not 150 1 1 Figure 3
+Yet the only equilibrium is to have bid and ask values equal to 0, and the trader makes no profit
+true for the type of more general traders we consider here, as shown by the example in Figure 3
+However, we still get a characterization for when a trader t can make a positive profit
+THEOREM 3.5
+A trader t can make profit in an equilibrium if and only if there is a seller or buyer i adjacent to t such that the connection of trader t to agent i is essential for social welfarethat is, if deleting agent t from adj(i) decreases the value of the optimal allocation
+Proof
+First we show the direction that if a trader t can make money there must be an agent i so that t"s connection to i is essential to social welfare
+Let p, q be the profits in an equilibrium where t makes money, as described by Theorem 3.2 with P i?S(t)°ÂB(t) qti > 0
+So we have some agent i with qti > 0
+We claim that the connection between agent i and trader t must be essential, in particular, we claim that social welfare must decrease by at least qti if we delete t from adj(t)
+To see why note that decreasing the value of all edges of the form (i, j) associated with trader t by qti keeps the same trade optimum, as we get a matching dual solution by simply resetting qti to zero
+To see the opposite, assume deleting t from adj(t) decreases social welfare by some value £^
+Assume i is a seller (the case of buyers is symmetric), and decrease by £^ the social value of each edge (i, j) for any buyer j such that t is the only agent connecting i and j
+By assumption the trade is still optimal, and we let z be the dual solution for this matching
+Now we use the same process as in the proof of Theorem 3.3 to create a non crossing equilibrium starting with pi = zi for all i ? S °ÂB, and qti = £^, and all other q values 0
+This creates an equilibrium with non crossing bids where t makes at least £^ profit (due to trade with seller i)
+Finally, if we allow crossing equilibria, then we can find the minimum possible profit by simply finding a dual solution minimizing the dual variables associated with agents monopolized by some trader
+THEOREM 3.6
+For any trader t or subset of traders T , the minimum total profit they can make in any equilibrium can be computed in polynomial time.

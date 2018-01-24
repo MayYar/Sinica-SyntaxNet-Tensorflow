@@ -1,0 +1,482 @@
+Searching for Joint Gains in Automated Negotiations 
+content:
+1 ABSTRACT :
+1-1:It is well established by conflict theorists and others that successful negotiation should incorporate creating value as well as claiming value .
+1-2:Joint improvements that bring benefits to all parties can be realised by (i) identifying attributes that are not of direct conflict between the parties, (ii) tradeoffs on attributes that are valued differently by different parties, and (iii) searching for values within attributes that could bring more gains to one party while not incurring too much loss on the other party .
+1-3:In this paper we propose an approach for maximising joint gains in automated negotiations by formulating the negotiation problem as a multi criteria decision making problem and taking advantage of several optimisation techniques introduced by operations researchers and conflict theorists .
+1-4:We use a mediator to protect the negotiating parties from unnecessary disclosure of information to their opponent, while also allowing an objective calculation of maximum joint gains .
+1-5:We separate out attributes that take a finite set of values (simple attributes) from those with continuous values, and we show that for simple attributes, the mediator can determine the Pareto optimal values .
+1-6:In addition we show that if none of the simple attributes strongly dominates the other simple attributes, then truth telling is an equilibrium strategy for negotiators during the optimisation of simple attributes .
+1-7:We also describe an approach for improving joint gains on non simple attributes, by moving the parties in a series of steps, towards the Pareto optimal frontier .
+1-8:I.2.11 [Distributed Artificial Intelligence]: Multiagent Systems; .
+2 INTRODUCTION :
+2-1:Given that negotiation is perhaps one of the oldest activities in the history of human communication, it"s perhaps surprising that conducted experiments on negotiations have shown that negotiators more often than not reach inefficient compromises [1, 21] .
+2-2:Raiffa [17] and Sebenius [20] provide analyses on the negotiators" failure to achieve efficient agreements in practice and their unwillingness to disclose private information due to strategic reasons .
+2-3:According to conflict theorists Lax and Sebenius [13], most negotiation actually involves both integrative and distributive bargaining which they refer to as creating value and claiming value .
+2-4:They argue that negotiation necessarily includes both cooperative and competitive elements, and that these elements exist in tension .
+2-5:Negotiators face a dilemma in deciding whether to pursue a cooperative or a competitive strategy at a particular time during a negotiation .
+2-6:They refer to this problem as the Negotiator"s Dilemma .
+2-7:We argue that the Negotiator"s Dilemma is essentially informationbased, due to the private information held by the agents .
+2-8:Such private information contains both the information that implies the agent"s bottom lines (or, her walk away positions) and the information that enforces her bargaining strength .
+2-9:For instance, when bargaining to sell a house to a potential buyer, the seller would try to hide her actual reserve price as much as possible for she hopes to reach an agreement at a much higher price than her reserve price .
+2-10:On the other hand, the outside options available to her (e.g .
+2-11:other buyers who have expressed genuine interest with fairly good offers) consist in the information that improves her bargaining strength about which she would like to convey to her opponent .
+2-12:But at the same time, her opponent is well aware of the fact that it is her incentive to boost her bargaining strength and thus will not accept every information she sends out unless it is substantiated by evidence .
+2-13:Coming back to the Negotiator"s Dilemma, it"s not always possible to separate the integrative bargaining process from the distributive bargaining process .
+2-14:In fact, more often than not, the two processes interplay with each other making information manipulation become part of the integrative bargaining process .
+2-15:This is because a negotiator could use the information about his opponent"s interests against her during the distributive negotiation process .
+2-16:That is, a negotiator may refuse to concede on an important conflicting issue by claiming that he has made a major concession (on another issue) to meet his opponent"s interests even though the concession he made could be insignificant to him .
+2-17:For instance, few buyers would start a bargaining with a dealer over a deal for a notebook computer by declaring that he is most interested in an extended warranty for the item and therefore prepared to pay a high price to get such an extended warranty .
+2-18:Negotiation Support Systems (NSSs) and negotiating software 508 978 81 904262 7 5 c 2007 IFAAMAS agents (NSAs) have been introduced either to assist humans in making decisions or to enable automated negotiation to allow computer processes to engage in meaningful negotiation to reach agreements (see, for instance, [14, 15, 19, 6, 5]) .
+2-19:However, because of the Negotiator"s Dilemma and given even bargaining power and incomplete information, the following two undesirable situations often arise: (i) negotiators reach inefficient compromises, or (ii) negotiators engage in a deadlock situation in which both negotiators refuse to act upon with incomplete information and at the same time do not want to disclose more information .
+2-20:In this paper, we argue for the role of a mediator to resolve the above two issues .
+2-21:The mediator thus plays two roles in a negotiation: (i) to encourage cooperative behaviour among the negotiators, and (ii) to absorb the information disclosure by the negotiators to prevent negotiators from using uncertainty and private information as a strategic device .
+2-22:To take advantage of existing results in negotiation analysis and operations research literatures [18], we employ multi criteria decision making theory to allow the negotiation problem to be represented and analysed .
+2-23:Section 2 provides background on MCDM theory and the negotiation framework .
+2-24:Section 3 formulates the problem .
+2-25:In Section 4, we discuss our approach to integrative negotiation .
+2-26:Section 5 discusses the future work with some concluding remarks. .
+3 BACKGROUND :
+3-1:2.1 Multi criteria decision making theory Let A denote the set of feasible alternatives available to a decision maker M .
+3-2:As an act, or decision, a in A may involve multiple aspects, we usually describe the alternatives a with a set of attributes j; (j = 1, .
+3-3:.
+3-4:.
+3-5:, m) .
+3-6:(Attributes are also referred to as issues, or decision variables.) A typical decision maker also has several objectives X1, .
+3-7:.
+3-8:.
+3-9:, Xk .
+3-10:We assume that Xi, (i = 1, .
+3-11:.
+3-12:.
+3-13:, k), maps the alternatives to real numbers .
+3-14:Thus, a tuple (x1, .
+3-15:.
+3-16:.
+3-17:, xk) = (X1(a), .
+3-18:.
+3-19:.
+3-20:, Xk(a)) denotes the consequence of the act a to the decision maker M .
+3-21:By definition, objectives are statements that delineate the desires of a decision maker .
+3-22:Thus, M wishes to maximise his objectives .
+3-23:However, as discussed thoroughly by Keeney and Raiffa [8], it is quite likely that a decision maker"s objectives will conflict with each other in that the improved achievement with one objective can only be accomplished at the expense of another .
+3-24:For instance, most businesses and public services have objectives like minimise cost and maximise the quality of services .
+3-25:Since better services can often only be attained for a price, these objectives conflict .
+3-26:Due to the conflicting nature of a decision maker"s objectives, M usually has to settle at a compromise solution .
+3-27:That is, he may have to choose an act a ∈ A that does not optimise every objective .
+3-28:This is the topic of the multi criteria decision making theory .
+3-29:Part of the solution to this problem is that M has to try to identify the Pareto frontier in the consequence space {(X1(a), .
+3-30:.
+3-31:.
+3-32:, Xk(a))}a∈A .
+3-33:DEFINITION 1 .
+3-34:(Dominant) Let x = (x1, .
+3-35:.
+3-36:.
+3-37:, xk) and x = (x1, .
+3-38:.
+3-39:.
+3-40:, xk) be two consequences .
+3-41:x dominates x iff xi > xi for all i, and the inequality is strict for at least one i .
+3-42:The Pareto frontier in a consequence space then consists of all consequences that are not dominated by any other consequence .
+3-43:This is illustrated in Fig .
+3-44:1 in which an alternative consists of two attributes d1 and d2 and the decision maker tries to maximise the two objectives X1 and X2 .
+3-45:A decision a ∈ A whose consequence does not lie on the Pareto frontier is inefficient .
+3-46:While the Pareto 1x d2 a (X (a),X (a)) d1 1 x2 2 Alternative spaceA Pareto frontier Consequence space optimal consequenc Figure 1: The Pareto frontier frontier allows M to avoid taking inefficient decisions, M still has to decide which of the efficient consequences on the Pareto frontier is most preferred by him .
+3-47:MCDM theorists introduce a mechanism to allow the objective components of consequences to be normalised to the payoff valuations for the objectives .
+3-48:Consequences can then be ordered: if the gains in satisfaction brought about by C1 (in comparison to C2) equals to the losses in satisfaction brought about by C1 (in comparison to C2), then the two consequences C1 and C2 are considered indifferent .
+3-49:M can now construct the set of indifference curves1 in the consequence space (the dashed curves in Fig .
+3-50:1) .
+3-51:The most preferred indifference curve that intersects with the Pareto frontier is in focus: its intersection with the Pareto frontier is the sought after consequence (i.e., the optimal consequence in Fig .
+3-52:1) .
+3-53:2.2 A negotiation framework A multi agent negotiation framework consists of: issues the agents are negotiating over .
+3-54:Each attribute α can take a value from the set V alα; represented by an assignment of values to the corresponding attributes in Att .
+3-55:making [8], we define the agents" utility as follows: • Objectives: Agent i has a set of ni objectives, or interests; denoted by j (j = 1, .
+3-56:.
+3-57:.
+3-58:, ni) .
+3-59:To measure how much an outcome o fulfills an objective j to an agent i, we use objective functions: for each agent i, we define i"s interests using the objective vector function fi = [fij ] : O → Rni .
+3-60:• Value functions: Instead of directly evaluating an outcome o, agent i looks at how much his objectives are fulfilled and will make a valuation based on these more basic criteria .
+3-61:Thus, for each agent i, there is a value function σi : Rni → R .
+3-62:In particular, Raiffa [17] shows how to systematically construct an additive value function to each party involved in a negotiation .
+3-63:• Utility: Now, given an outcome o ∈ O, an agent i is able to determine its value, i.e., σi(fi(o)) .
+3-64:However, a negotiation infrastructure is usually required to facilitate negotiation .
+3-65:This might involve other mechanisms and factors parties, e.g., a mediator, a legal institution, participation fees, etc .
+3-66:The standard way to implement such a thing is to allow money 1 In fact, given the k dimensional space, these should be called indifference surfaces .
+3-67:However, we will not bog down to that level of details .
+3-68:The Sixth Intl .
+3-69:Joint Conf .
+3-70:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 509 and side payments .
+3-71:In this paper, we ignore those side effects and assume that agent i"s utility function ui is normalised so that ui : O → [0, 1] .
+3-72:EXAMPLE 1 .
+3-73:There are two agents, A and B .
+3-74:Agent A has a task T that needs to be done and also 100 units of a resource obtain at least 10 and at most 20 units of the resource R .
+3-75:Agent B is indifferent on any amount between 10 and 20 units of the resource revenue .
+3-76:And they both aim at minimising costs while maximising revenues .
+3-77:Having T done generates for A a revenue rA,T while doing T incurs a cost cB,T to B .
+3-78:Agent B obtains a revenue rB,R for each unit of the resource R while providing each unit of the resource R costs agent A cA,R .
+3-79:Assuming that money transfer between agents is possible, the set Att then contains three attributes: • T, taking values from the set {0, 1}, indicates whether the task T is assigned to agent B; • R, taking values from the set of non negative integer, indicates the amount of resource R being allocated to agent B; and • MT, taking values from R, indicates the payment p to be transferred from A to B .
+3-80:Consider the outcome o = [T = 1, R = k, MT = p], i.e., the task T is assigned to B, and A allocates to B with k units of the resource R, and A transfers p dollars to B .
+3-81:Then, costA(o) = k.cA,R + p and revA(o) = rA,T ; and costB(o) = cB,T and revA(o) = j k.rB,R + p if 10 ≤ k ≤ 20 p otherwise .
+3-82:And, σi(costi(o), revi(o)) = revi(o) − costi(o), (i = A, B). .
+4 PROBLEM FORMALISATION :
+4-1:Consider Example 1, assume that rA,T = $150 and cB,T = $100 and rB,R = $10 and cA,R = $7 .
+4-2:That is, the revenues generated for A exceeds the costs incurred to B to do task T, and B values resource R more highly than the cost for A to provide it .
+4-3:The optimal solution to this problem scenario is to assign task T to agent B and to allocate 20 units of resource R (i.e., the maximal amount of resource R required by agent B) from agent A to agent problems leaves payoffs of $10 to agent A and $100 to agent B.2 Any other outcome would leave at least one of the agents worse off .
+4-4:In other words, the presented outcome is Pareto efficient and should be part of the solution outcome for this problem scenario .
+4-5:However, as the agents still have to bargain over the amount of money transfer p, neither agent would be willing to disclose their respective costs and revenues regarding the task T and the resource outcome presented above in practice .
+4-6:To address this issue, we introduce a mediator to help the agents discover better agreements than the ones they might try to settle on .
+4-7:Note that this problem is essentially the problem of searching for joint gains in a multilateral negotiation in which the involved parties hold strategic information, i.e., the integrative part in a negotiation .
+4-8:In order to help facilitate this process, we introduce the role of a neutral mediator .
+4-9:Before formalising the decision problems faced by the mediator and the 2 Certainly, without money transfer to compensate agent A, this outcome is not a fair one .
+4-10:negotiating agents, we discuss the properties of the solution outcomes to be achieved by the mediator .
+4-11:In a negotiation setting, the two typical design goals would be: • Efficiency: Avoid the agents from settling on an outcome that is not Pareto optimal; and • Fairness: Avoid agreements that give the most of the gains to a subset of agents while leaving the rest with too little .
+4-12:The above goals are axiomatised in Nash"s seminal work [16] on cooperative negotiation games .
+4-13:Essentially, Nash advocates for the following properties to be satisfied by solution to the bilateral negotiation problem: (i) it produces only Pareto optimal outcomes; (ii) it is invariant to affine transformation (to the consequence space); (iii) it is symmetric; and (iv) it is independent from irrelevant alternatives .
+4-14:A solution satisfying Nash"s axioms is called a Nash bargaining solution .
+4-15:It then turns out that, by taking the negotiators" utilities as its objectives the mediator itself faces a multi criteria decision making problem .
+4-16:The issues faced by the mediator are: (i) the mediator requires access to the negotiators" utility functions, and (ii) making (fair) tradeoffs between different agents" utilities .
+4-17:Our methods allow the agents to repeatedly interact with the mediator so that a Nash solution outcome could be found by the parties .
+4-18:Informally, the problem faced by both the mediator and the negotiators is construction of the indifference curves .
+4-19:Why are the indifference curves so important? • To the negotiators, knowing the options available along indifference curves opens up opportunities to reach more efficient outcomes .
+4-20:For instance, consider an agent A who is presenting his opponent with an offer θA which she refuses to accept .
+4-21:Rather than having to concede, A could look at his indifference curve going through θA and choose another proposal θA .
+4-22:To him, θA and θA are indifferent but θA could give some gains to B and thus will be more acceptable to B .
+4-23:In other words, the outcome θA is more efficient than θA to these two negotiators .
+4-24:• To the mediator, constructing indifference curves requires a measure of fairness between the negotiators .
+4-25:The mediator needs to determine how much utility it needs to take away from the other negotiators to give a particular negotiator a specific gain G (in utility) .
+4-26:In order to search for integrative solutions within the outcome space O, we characterise the relationship between the agents over the set of attributes Att .
+4-27:As the agents hold different objectives and have different capacities, it may be the case that changing between two values of a specific attribute implies different shifts in utility of the agents .
+4-28:However, the problem of finding the exact Paretooptimal set3 is NP hard [2] .
+4-29:Our approach is thus to solve this optimisation problem in two steps .
+4-30:In the first steps, the more manageable attributes will be solved .
+4-31:These are attributes that take a finite set of values .
+4-32:The result of this step would be a subset of outcomes that contains the Pareto optimal set .
+4-33:In the second step, we employ an iterative procedure that allows the mediator to interact with the negotiators to find joint improvements that move towards a Pareto optimal outcome .
+4-34:This approach will not work unless the attributes from Att 3 The Pareto optimal set is the set of outcomes whose consequences (in the consequence space) correspond to the Pareto frontier .
+4-35:510 The Sixth Intl .
+4-36:Joint Conf .
+4-37:on Autonomous Agents and Multi Agent Systems (AAMAS 07) are independent .
+4-38:Most works on multi attribute, or multi issue, negotiation (e.g .
+4-39:[17]) assume that the attributes or the issues are independent, resulting in an additive value function for each agent.4 ASSUMPTION 1 .
+4-40:Let i ∈ N and S ⊆ Att .
+4-41:Denote by ¯S the set Att \ S .
+4-42:Assume that vS and vS are two assignments of values to the attributes of S and v1 ¯S, v2 ¯S are two arbitrary value assignments to the attributes of ¯S, then (ui([vS, v1 ¯S]) − ui([vS, v2 ¯S])) = (ui([vS, v1 ¯S])−ui([vS, v2 ¯S])) .
+4-43:That is, the utility function of agent i will be defined on the attributes from S independently of any value assignment to other attributes. .
+5 MEDIATOR BASED BILATERAL  NEGOTIATIONS :
+5-1:NEGOTIATIONS As discussed by Lax and Sebenius [13], under incomplete information the tension between creating and claiming values is the primary cause of inefficient outcomes .
+5-2:This can be seen most easily in negotiations involving two negotiators; during the distributive phase of the negotiation, the two negotiators"s objectives are directly opposing each other .
+5-3:We will now formally characterise this relationship between negotiators by defining the opposition between two negotiating parties .
+5-4:The following exposition will be mainly reproduced from [9] .
+5-5:Assuming for the moment that all attributes from Att take values from the set of real numbers R, i.e., V alj ⊆ R for all j ∈ Att .
+5-6:We further assume that the set O = ×j∈AttV alj of feasible outcomes is defined by constraints that all parties must obey and O is convex .
+5-7:Now, an outcome o ∈ O is just a point in the m dimensional space of real numbers .
+5-8:Then, the questions are: (i) from the point of view of an agent i, is o already the best outcome for i? (ii) if o is not the best outcome for i then is there another outcome o such that o gives i a better utility than o and o does not cause a utility loss to the other agent j in comparison to o? The above questions can be answered by looking at the directions of improvement of the negotiating parties at o, i.e., the directions in the outcome space O into which their utilities increase at point differentiable concave, the set of all directions of improvement for a party at a point o can be defined in terms of his most preferred, or gradient, direction at that point .
+5-9:When the gradient direction ∇ui(o) of agent i at point o is outright opposing to the gradient direction ∇uj (o) of agent j at point o then the two parties strongly disagree at o and no joint improvements can be achieved for i and j in the locality surrounding o .
+5-10:Since opposition between the two parties can vary considerably over the outcome space (with one pair of outcomes considered highly antagonistic and another pair being highly cooperative), we need to describe the local properties of the relationship .
+5-11:We begin with the opposition at any point of the outcome space Rm .
+5-12:The following definition is reproduced from [9]: DEFINITION 2 .
+5-13:1 .
+5-14:The parties are in local strict opposition at a point x ∈ Rm iff for all points x ∈ Rm that are sufficiently close to x (i.e., for some > 0 such that ∀x x −x < ), an increase of one utility can be achieved only at the expense of a decrease of the other utility .
+5-15:Rm iff they are not in local strict opposition at x, i.e., iff it is possible for both parties to raise their utilities by moving an infinitesimal distance from x .
+5-16:4 Klein et al .
+5-17:[10] explore several implications of complex contracts in which attributes are possibly inter dependent .
+5-18:iff ∇u1(x).∇u2(x) ≥ 0, i.e., iff the gradients at x of the two utility functions form an acute or right angle .
+5-19:iff ∇u1(x).∇u2(x) < 0, i.e., iff the gradients at x form an obtuse angle .
+5-20:opposition iff for every x ∈ Rm they are in local strict (nonstrict, weak, strong) opposition .
+5-21:Global strict and nonstrict oppositions are complementary cases .
+5-22:Essentially, under global strict opposition the whole outcome space O becomes the Pareto optimal set as at no point in O can the negotiating parties make a joint improvement, i.e., every point in O is a Pareto efficient outcome .
+5-23:In other words, under global strict opposition the outcome space O can be flattened out into a single line such that for each pair of outcomes x, y ∈ O, u1(x) < u1(y) iff u2(x) > u2(y), i.e., at every point in O, the gradient of the two utility functions point to two different ends of the line .
+5-24:Intuitively, global strict opposition implies that there is no way to obtain joint improvements for both agents .
+5-25:As a consequence, the negotiation degenerates to a distributive negotiation, i.e., the negotiating parties should try to claim as much shares from the negotiation issues as possible while the mediator should aim for the fairness of the division .
+5-26:On the other hand, global nonstrict opposition allows room for joint improvements and all parties might be better off trying to realise the potential gains by reaching Pareto efficient agreements .
+5-27:Weak and strong oppositions indicate different levels of opposition .
+5-28:The weaker the opposition, the more potential gains can be realised making cooperation the better strategy to employ during negotiation .
+5-29:On the other hand, stronger opposition suggests that the negotiating parties tend to behave strategically leading to misrepresentation of their respective objectives and utility functions and making joint gains more difficult to realise .
+5-30:We have been temporarily making the assumption that the outcome space O is the subset of Rm .
+5-31:In many real world negotiations, this assumption would be too restrictive .
+5-32:We will continue our exposition by lifting this restriction and allowing discrete attributes .
+5-33:However, as most negotiations involve only discrete issues with a bounded number of options, we will assume that each attribute takes values either from a finite set or from the set of real numbers R .
+5-34:In the rest of the paper, we will refer to attributes whose values are from finite sets as simple attributes and attributes whose values are from R as continuous attributes .
+5-35:The notions of local oppositions, i.e., strict, nonstrict, weak and strong, are not applicable to outcome spaces that contain simple attributes and nor are the notions of global weak and strong oppositions .
+5-36:However, the notions of global strict and nonstrict oppositions can be generalised for outcome spaces that contain simple attributes .
+5-37:DEFINITION 3 .
+5-38:Given an outcome space O, the parties are in global strict opposition iff ∀x, y ∈ O, u1(x) < u1(y) iff u2(x) > u2(y) .
+5-39:The parties are in global nonstrict opposition if they are not in global strict opposition .
+5-40:4.1 Optimisation on simple attributes In order to extract the optimal values for a subset of attributes, in the first step of this optimisation process the mediator requests the negotiators to submit their respective utility functions over the set of simple attributes .
+5-41:Let Simp ⊆ Att denote the set of all simple attributes from Att .
+5-42:Note that, due to Assumption 1, agent i"s The Sixth Intl .
+5-43:Joint Conf .
+5-44:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 511 utility function can be characterised as follows: ui([vSimp, vSimp]) = wi 1 ∗ ui,1([vSimp]) + wi 2 ∗ ui,2([vSimp]), where Simp = Att \ Simp, and ui,1 and ui,2 are the utility components of ui over the sets of attributes Simp and Simp, respectively, and 0 < wi 1, wi 2 < 1 and wi 1 + wi 2 = 1 .
+5-45:As attributes are independent of each other regarding the agents" utility functions, the optimisation problem over the attributes from Simp can be carried out by fixing ui([vSimp]) to a constant C, and then search for the optimal values within the set of attributes Simp .
+5-46:Now, how does the mediator determine the optimal values for the attributes in Simp? Several well known optimisation strategies could be applicable here: • The utilitarian solution: The sum of the agents" utilities are maximised .
+5-47:Thus, the optimal values are the solution of the following optimisation problem: arg max v∈V alSimp X i∈N ui(v) • The Nash solution: The product of the agents" utilities are maximised .
+5-48:Thus, the optimal values are the solution of the following optimisation problem: arg max v∈V alSimp Y i∈N ui(v) • The egalitarian solution (aka .
+5-49:the maximin solution): The utility of the agent with minimum utility is maximised .
+5-50:Thus, the optimal values are the solution of the following optimisation problem: arg max v∈V alSimp min i∈N ui(v) The question now is of course whether a negotiator has the incentive to misrepresent his utility function .
+5-51:First of all, recall that the agents" utility functions are bounded, i.e., ∀o ∈ O.0 ≤ ui(o) ≤ 1 .
+5-52:Thus, the agents have no incentive to overstate their utility regarding an outcome o: If o is the most preferred outcome to an agent i then he already assigns the maximal utility to o .
+5-53:On the other hand, if o is not the most preferred outcome to i then by overstating the utility he assigns to o, the agent i runs the risk of having to settle on an agreement which would give him less payoffs than he is supposed to receive .
+5-54:However, agents do have an incentive to understate their utility if the final settlement will be based on the above solutions alone .
+5-55:Essentially, the mechanism to avoid an agent to understate his utility regarding particular outcomes is to guarantee a certain measure of fairness for the final settlement .
+5-56:That is, the agents lose the incentive to be dishonest to obtain gains from taking advantage of the known solutions to determine the settlement outcome for they would be offset by the fairness maintenance mechanism .
+5-57:Firsts, we state an easy lemma .
+5-58:LEMMA 1 .
+5-59:When Simp contains one single attributes, the agents have the incentive to understate their utility functions regarding outcomes that are not attractive to them .
+5-60:By way of illustration, consider the set Simp containing only one attribute that could take values from the finite set {A, B, C, D} .
+5-61:Assume that negotiator 1 assigns utilities of 0.4, 0.7, 0.9, and 1 to A, B, C, and D, respectively .
+5-62:Assume also that negotiator 2 assigns utilities of 1, 0.9, 0.7, and 0.4 to A, B, C, and D, respectively .
+5-63:If agent 1 misrepresents his utility function to the mediator by reporting utility 0 for all values A, B and C and utility 1 for value D then the agent 2 who plays honestly in his report to the mediator will obtain the worst outcome D given any of the above solutions .
+5-64:Note that agent 1 doesn"t need to know agent 2"s utility function, nor does he need to know the strategy employed by agent the above three solutions, then the above misrepresentation is the dominant strategy for this game .
+5-65:However, when the set Simp contains more than one attribute and none of the attributes strongly dominate the other attributes then the above problem disminishes by itself thanks to the integrative solution .
+5-66:We of course have to define clearly what it means for an attribute to strongly dominate other attributes .
+5-67:Intuitively, if most of an agent"s utility concentrates on one of the attributes then this attribute strongly dominates other attributes .
+5-68:We again appeal to the Assumption 1 on additivity of utility functions to achieve a measure of fairness within this negotiation setting .
+5-69:Due to Assumption 1, we can characterise agent i"s utility component over the set of attributes Simp by the following equation: ui,1([vSimp]) = X j∈Simp wi j ∗ ui,j([vj]) (1) where P j∈Simp wj = 1 .
+5-70:Then, an attribute ∈ Simp strongly dominates the rest of the attributes in Simp (for agent i) iff wi > P j∈(Simp− ) wi j .
+5-71:Attribute is said to be strongly dominant (for agent i) wrt .
+5-72:the set of simple attributes Simp .
+5-73:The following theorem shows that if the set of attributes Simp does not contain a strongly dominant attribute then the negotiators have no incentive to be dishonest .
+5-74:THEOREM 1 .
+5-75:Given a negotiation framework, if for every agent the set of simple attributes doesn"t contain a strongly dominant attribute, then truth telling is an equilibrium strategy for the negotiators during the optimisation of simple attributes .
+5-76:So far, we have been concentrating on the efficiency issue while leaving the fairness issue aside .
+5-77:A fair framework does not only support a more satisfactory distribution of utility among the agents, but also often a good measure to prevent misrepresentation of private information by the agents .
+5-78:Of the three solutions presented above, the utilitarian solution does not support fairness .
+5-79:On the other hand, Nash [16] proves that the Nash solution satisfies the above four axioms for the cooperative bargaining games and is considered a fair solution .
+5-80:The egalitarian solution is another mechanism to achieve fairness by essentially helping the worst off .
+5-81:The problem with these solutions, as discussed earlier, is that they are vulnerable to strategic behaviours when one of the attributes strongly dominates the rest of attributes .
+5-82:However, there is yet another solution that aims to guarantee fairness, the minimax solution .
+5-83:That is, the utility of the agent with maximum utility is minimised .
+5-84:It"s obvious that the minimax solution produces inefficient outcomes .
+5-85:However, to get around this problem (given that the Pareto optimal set can be tractably computed), we can apply this solution over the Pareto optimal set only .
+5-86:Let POSet ⊆ V alSimp be the Pareto optimal subset of the simple outcomes, the minimax solution is defined to be the solution of the following optimisation problem .
+5-87:arg min v∈P OSet max i∈N ui(v) While overall efficiency often suffers under a minimax solution, i.e., the sum of all agents" utilities are often lower than under other solutions, it can be shown that the minimax solution is less vulnerable to manipulation .
+5-88:512 The Sixth Intl .
+5-89:Joint Conf .
+5-90:on Autonomous Agents and Multi Agent Systems (AAMAS 07) THEOREM 2 .
+5-91:Given a negotiation framework, under the minimax solution, if the negotiators are uncertain about their opponents" preferences then truth telling is an equilibrium strategy for the negotiators during the optimisation of simple attributes .
+5-92:That is, even when there is only one single simple attribute, if an agent is uncertain whether the other agent"s most preferred resolution is also his own most preferred resolution then he should opt for truth telling as the optimal strategy .
+5-93:4.2 Optimisation on continuous attributes When the attributes take values from infinite sets, we assume that they are continuous .
+5-94:This is similar to the common practice in operations research in which linear programming solutions techniques are applied to integer programming problems .
+5-95:We denote the number of continuous attributes by k, i.e., Att = Simp ∪ Simp and |Simp| = k .
+5-96:Then, the outcome space O can be represented as follows: O = ( Q j∈Simp V alj) × ( Q l∈Simp V all), where Q l∈Simp V all ⊆ Rk is the continuous component of O .
+5-97:Let Oc denote the set Q l∈Simp V all .
+5-98:We"ll refer to Oc as the feasible set and assume that Oc is closed and convex .
+5-99:After carrying out the optimisation over the set of simple attributes, we are able to assign the optimal values to the simple attributes from Simp .
+5-100:Thus, we reduce the original problem to the problem of searching for optimal (and fair) outcomes within the feasible set Oc .
+5-101:Recall that, by Assumption 1, we can characterise agent i"s utility function as follows: ui([v∗ Simp, vSimp]) = C + wi 2 ∗ ui,2([vSimp]), where C is the constant wi 1 ∗ ui,1([v∗ Simp]) and v∗ Simp denotes the optimal values of the simple attributes in Simp .
+5-102:Hence, without loss of generality (albeit with a blatant abuse of notation), we can take the agent i"s utility function as ui : Rk → [0, 1] .
+5-103:Accordingly we will also take the set of outcomes under consideration by the agents to be the feasible set Oc .
+5-104:We now state another assumption to be used in this section: ASSUMPTION 2 .
+5-105:The negotiators" utility functions can be described by continuously differentiable and concave functions ui : Rk → [0, 1], (i = 1, 2) .
+5-106:It should be emphasised that we do not assume that agents explicitly know their utility functions .
+5-107:For the method to be described in the following to work, we only assume that the agents know the relevant information, e.g .
+5-108:at certain point within the feasible set Oc , the gradient direction of their own utility functions and some section of their respective indifference curves .
+5-109:Assume that a tentative agreement (which is a point x ∈ Rk ) is currently on the table, the process for the agents to jointly improve this agreement in order to reach a Pareto optimal agreement can be described as follows .
+5-110:The mediator asks the negotiators to discretely submit their respective gradient directions at x, i.e., ∇u1(x) and ∇u2(x) .
+5-111:Note that the goal of the process to be described here is to search for agreements that are more efficient than the tentative agreement currently on the table .
+5-112:That is, we are searching for points x within the feasible set Oc such that moving to x from the current tentative agreement x brings more gains to at least one of the agents while not hurting any of the agents .
+5-113:Due to the assumption made above, i.e .
+5-114:the feasible set Oc is bounded, the conditions for an alternative x ∈ Oc to be efficient vary depending on the position of x .
+5-115:The following results are proved in [9]: Let B(x) = 0 denote the equation of the boundary of Oc , defining x ∈ Oc iff B(x) ≥ 0 .
+5-116:An alternative x∗ ∈ Oc is efficient iff, either Given the current tentative agreement xh (h ≥ 0), the mediator has to choose a point xh+1 along d = T(xh) so that all parties gain .
+5-117:Ehtamo et al then define a mechanism to generate a sequence of points and prove that when the generated sequence is bounded and when all generated points (from the sequence) belong to the interior set Oc 0 then the sequence converges to a weakly Paretooptimal agreement [4, pp .
+5-118:59 60].5 As the above mechanism does not work at the boundary points of Oc , we will introduce a procedure that works everywhere in an alternative space Oc .
+5-119:Let x ∈ Oc and let θ(x) denote the angle between the gradients ∇u1(x) and ∇u2(x) at x .
+5-120:That is, θ(x) = arccos( ∇u1(x).∇u2(x) ∇u1(x) .
+5-121:∇u2(x) ) From Definition 2, it is obvious that the two parties are in local strict opposition (at x) iff θ(x) = π, and they are in local strong opposition iff π ≥ θ(x) > π 2, and they are in local weak opposition iff π 2 ≥ θ(x) ≥ 0 .
+5-122:Note also that the two vectors ∇u1(x) and ∇u2(x) define a hyperplane, denoted by h∇(x), in the kdimensional space Rk .
+5-123:Furthermore, there are two indifference curves of agents 1 and 2 going through point x, denoted by IC1(x) and IC2(x), respectively .
+5-124:Let hT1(x) and hT2(x) denote the tangent hyperplanes to the indifference curves IC1(x) and IC2(x), respectively, at point x .
+5-125:The planes hT1(x) and hT2(x) intersect h∇(x) in the lines IS1(x) and IS2(x), respectively .
+5-126:Note that given a line L(x) going through the point x, there are two (unit) vectors from x along L(x) pointing to two opposite directions, denoted by L+ (x) and L− (x) .
+5-127:We can now informally explain our solution to the problem of searching for joint gains .
+5-128:When it isn"t possible to obtain a compromise direction for joint improvements at a point x ∈ Oc either because the compromise vector points to the space outside of the feasible set Oc or because the two parties are in local strong opposition at x, we will consider to move along the indifference curve of one party while trying to improve the utility of the other party .
+5-129:As 5 Let S be the set of alternatives, x∗ is weakly Pareto optimal if there is no x ∈ S such that ui(x) > ui(x∗ ) for all agents i .
+5-130:the mediator does not know the indifference curves of the parties, he has to use the tangent hyperplanes to the indifference curves of the parties at point x .
+5-131:Note that the tangent hyperplane to a curve is a useful approximation of the curve in the immediate vicinity of the point of tangency, x .
+5-132:We are now describing an iteration step to reach the next tentative agreement xh+1 from the current tentative agreement xh ∈ Oc .
+5-133:A vector v whose tail is xh is said to be bounded in Oc if ∃λ > 0 such that xh +λv ∈ Oc .
+5-134:To start, the mediator asks the negotiators for their gradients ∇u1(xh) and ∇u2(xh), respectively, at xh .
+5-135:equation 3, then the process is terminated .
+5-136:(xh) is bounded in Oc then the mediator chooses the compromise improving direction d = T BS (xh) and apply the method described by Ehtamo et al [4] to generate the next tentative agreement xh+1 .
+5-137:i (xh), i = 1, 2 and σ = + −, the mediator chooses the vector that (i) is bounded in Oc , and (ii) is closest to the gradient of the other agent, ∇uj (xh)(j = i) .
+5-138:Denote this vector by T G(xh) .
+5-139:That is, we will be searching for a point on the indifference curve of agent i, ICi(xh), while trying to improve the utility of agent then the situation is symmetric for the two agents 1 and 2, and the mediator has the choice of either finding a point on IC1(xh) to improve the utility of agent 2, or finding a point on IC2(xh) to improve the utility of agent 1 .
+5-140:To decide on which choice to make, the mediator has to compute the distribution of gains throughout the whole process to avoid giving more gains to one agent than to the other .
+5-141:Now, the point xh+1 to be generated lies somewhere on the intersection of ICi(xh) and the hyperplane defined by ∇ui(xh) and T G(xh) .
+5-142:This intersection is approximated by T G(xh) .
+5-143:Thus, the sought after point xh+1 can be generated by first finding a point yh along the direction of T G(xh) and then move from yh to the same direction of ∇ui(xh) until we intersect with ICi(xh) .
+5-144:Mathematically, let ζ and ξ denote the vectors T G(xh) and ∇ui(xh), respectively, xh+1 is the solution to the following optimisation problem: max λ1,λ2∈L uj(xh + λ1ζ + λ2ξ) s.t .
+5-145:xh+λ1ζ+λ2ξ ∈ Oc , and ui(xh+λ1ζ+λ2ξ) = ui(xh), where L is a suitable interval of positive real numbers; e.g., L = {λ|λ > 0}, or L = {λ|a < λ ≤ b}, 0 ≤ a < b .
+5-146:Given an initial tentative agreement x0, the method described above allows a sequence of tentative agreements x1, x2, .
+5-147:.
+5-148:.
+5-149:to be iteratively generated .
+5-150:The iteration stops whenever a weakly Pareto optimal agreement is reached .
+5-151:THEOREM 3 .
+5-152:If the sequence of agreements generated by the above method is bounded then the method converges to a point x∗ ∈ Oc that is weakly Pareto optimal. .
+6-1:In this paper we have established a framework for negotiation that is based on MCDM theory for representing the agents" objectives and utilities
+6-2:The focus of the paper is on integrative negotiation in which agents aim to maximise joint gains, or create value
+6-3:514 The Sixth Intl
+6-4:Joint Conf
+6-5:on Autonomous Agents and Multi Agent Systems (AAMAS 07) We have introduced a mediator into the negotiation in order to allow negotiators to disclose information about their utilities, without providing this information to their opponents
+6-6:Furthermore, the mediator also works toward the goal of achieving fairness of the negotiation outcome
+6-7:That is, the approach that we describe aims for both efficiency, in the sense that it produces Pareto optimal outcomes (i.e
+6-8:no aspect can be improved for one of the parties without worsening the outcome for another party), and also for fairness, which chooses optimal solutions which distribute gains amongst the agents in some appropriate manner
+6-9:We have developed a two step process for addressing the NP hard problem of finding a solution for a set of integrative attributes, which is within the Pareto optimal set for those attributes
+6-10:For simple attributes (i.e
+6-11:those which have a finite set of values) we use known optimisation techniques to find a Paretooptimal solution
+6-12:In order to discourage agents from misrepresenting their utilities to gain an advantage, we look for solutions that are least vulnerable to manipulation
+6-13:We have shown that as long as one of the simple attributes does not strongly dominate the others, then truth telling is an equilibrium strategy for the negotiators during the stage of optimising simple attributes
+6-14:For non simple attributes we propose a mechanism that provides stepwise improvements to move the proposed solution in the direction of a Paretooptimal solution
+6-15:The approach presented in this paper is similar to the ideas behind negotiation analysis [18]
+6-16:Ehtamo et al [4] presents an approach to searching for joint gains in multi party negotiations
+6-17:The relation of their approach to our approach is discussed in the preceding section
+6-18:Lai et al [12] provide an alternative approach to integrative negotiation
+6-19:While their approach was clearly described for the case of two issue negotiations, the generalisation to negotiations with more than two issues is not entirely clear
+6-20:Zhang et at [22] discuss the use of integrative negotiation in agent organisations
+6-21:They assume that agents are honest
+6-22:Their main result is an experiment showing that in some situations, agents" cooperativeness may not bring the most benefits to the organisation as a whole, while giving no explanation
+6-23:Jonker et al [7] consider an approach to multi attribute negotiation without the use of a mediator
+6-24:Thus, their approach can be considered a complement of ours
+6-25:Their experimental results show that agents can reach Paretooptimal outcomes using their approach
+6-26:The details of the approach have currently been shown only for bilateral negotiation, and while we believe they are generalisable to multiple negotiators, this work remains to be done
+6-27:There is also future work to be done in more fully characterising the outcomes of the determination of values for the non simple attributes
+6-28:In order to provide a complete framework we are also working on the distributive phase using the mediator
+6-29:Acknowledgement The authors acknowledge financial support by ARC Dicovery Grant (2006 2009, grant DP0663147) and DEST IAP grant (2004 2006, grant CG040014)
+6-30:The authors would like to thank Lawrence Cavedon and the RMIT Agents research group for their helpful comments and suggestions.
+7-1:F
+7-2:Alemi, P
+7-3:Fos, and W
+7-4:Lacorte
+7-5:A demonstration of methods for studying negotiations between physicians and health care managers
+7-6:Decision Science, 21:633 641, 1990
+7-7:M
+7-8:Ehrgott
+7-9:Multicriteria Optimization
+7-10:Springer Verlag, Berlin, 2000
+7-11:H
+7-12:Ehtamo, R
+7-13:P
+7-14:Hamalainen, P
+7-15:Heiskanen, J
+7-16:Teich, M
+7-17:Verkama, and S
+7-18:Zionts
+7-19:Generating pareto solutions in a two party setting: Constraint proposal methods
+7-20:Management Science, 45(12):1697 1709, 1999
+7-21:H
+7-22:Ehtamo, E
+7-23:Kettunen, and R
+7-24:P
+7-25:Hmlinen
+7-26:Searching for joint gains in multi party negotiations
+7-27:European Journal of Operational Research, 130:54 69, 2001
+7-28:P
+7-29:Faratin
+7-30:Automated Service Negotiation Between Autonomous Computational Agents
+7-31:PhD thesis, University of London, 2000
+7-32:A
+7-33:Foroughi
+7-34:Minimizing negotiation process losses with computerized negotiation support systems
+7-35:The Journal of Applied Business Research, 14(4):15 26, 1998
+7-36:C
+7-37:M
+7-38:Jonker, V
+7-39:Robu, and J
+7-40:Treur
+7-41:An agent architecture for multi attribute negotiation using incomplete preference information
+7-42:J
+7-43:Autonomous Agents and Multi Agent Systems, (to appear)
+7-44:R
+7-45:L
+7-46:Keeney and H
+7-47:Raiffa
+7-48:Decisions with Multiple Objectives: Preferences and Value Trade Offs
+7-49:John Wiley and Sons, Inc., New York, 1976
+7-50:G
+7-51:Kersten and S
+7-52:Noronha
+7-53:Rational agents, contract curves, and non efficient compromises
+7-54:IEEE Systems, Man, and Cybernetics, 28(3):326 338, 1998
+7-55:M
+7-56:Klein, P
+7-57:Faratin, H
+7-58:Sayama, and Y
+7-59:Bar Yam
+7-60:Protocols for negotiating complex contracts
+7-61:IEEE Intelligent Systems, 18(6):32 38, 2003
+7-62:S
+7-63:Kraus, J
+7-64:Wilkenfeld, and G
+7-65:Zlotkin
+7-66:Multiagent negotiation under time constraints
+7-67:Artificial Intelligence Journal, 75(2):297 345, 1995
+7-68:G
+7-69:Lai, C
+7-70:Li, and K
+7-71:Sycara
+7-72:Efficient multi attribute negotiation with incomplete information
+7-73:Group Decision and Negotiation, 15:511 528, 2006
+7-74:D
+7-75:Lax and J
+7-76:Sebenius
+7-77:The manager as negotiator: The negotiator"s dilemma: Creating and claiming value, 2nd ed
+7-78:In S
+7-79:Goldberg, F
+7-80:Sander & N
+7-81:Rogers, editors, Dispute Resolution, 2nd ed., pages 49 62
+7-82:Little Brown & Co., 1992
+7-83:M
+7-84:Lomuscio and N
+7-85:Jennings
+7-86:A classification scheme for negotiation in electronic commerce
+7-87:In Agent Mediated Electronic Commerce: A European Agentlink Perspective
+7-88:Springer Verlag, 2001
+7-89:R
+7-90:Maes and A
+7-91:Moukas
+7-92:Agents that buy and sell
+7-93:Communications of the ACM, 42(3):81 91, 1999
+7-94:J
+7-95:Nash
+7-96:Two person cooperative games
+7-97:Econometrica, 21(1):128 140, April 1953
+7-98:H
+7-99:Raiffa
+7-100:The Art and Science of Negotiation
+7-101:Harvard University Press, Cambridge, USA, 1982
+7-102:H
+7-103:Raiffa, J
+7-104:Richardson, and D
+7-105:Metcalfe
+7-106:Negotiation Analysis: The Science and Art of Collaborative Decision Making
+7-107:Belknap Press, Cambridge, MA, 2002
+7-108:T
+7-109:Sandholm
+7-110:Agents in electronic commerce: Component technologies for automated negotiation and coalition formation
+7-111:JAAMAS, 3(1):73 96, 2000
+7-112:J
+7-113:Sebenius
+7-114:Negotiation analysis: A characterization and review
+7-115:Management Science, 38(1):18 38, 1992
+7-116:L
+7-117:Weingart, E
+7-118:Hyder, and M
+7-119:Pietrula
+7-120:Knowledge matters: The effect of tactical descriptions on negotiation behavior and outcome
+7-121:Tech
+7-122:Report, CMU, 1995
+7-123:X
+7-124:Zhang, V
+7-125:R
+7-126:Lesser, and T
+7-127:Wagner
+7-128:Integrative negotiation among agents situated in organizations
+7-129:IEEE Trans
+7-130:on Systems, Man, and Cybernetics, Part C, 36(1):19 30, 2006
+7-131:The Sixth Intl
+7-132:Joint Conf
+7-133:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 515
+picture:

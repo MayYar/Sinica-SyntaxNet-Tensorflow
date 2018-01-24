@@ -1,0 +1,589 @@
+Downloading Textual Hidden Web Content Through 
+content:
+1 ABSTRACT :
+1-1:An ever increasing amount of information on the Web today is available only through search interfaces: the users have to type in a set of keywords in a search form in order to access the pages from certain Web sites .
+1-2:These pages are often referred to as the Hidden Web or the Deep Web .
+1-3:Since there are no static links to the Hidden Web pages, search engines cannot discover and index such pages and thus do not return them in the results .
+1-4:However, according to recent studies, the content provided by many Hidden Web sites is often of very high quality and can be extremely valuable to many users .
+1-5:In this paper, we study how we can build an effective Hidden Web crawler that can autonomously discover and download pages from the Hidden Web .
+1-6:Since the only entry point to a Hidden Web site is a query interface, the main challenge that a Hidden Web crawler has to face is how to automatically generate meaningful queries to issue to the site .
+1-7:Here, we provide a theoretical framework to investigate the query generation problem for the Hidden Web and we propose effective policies for generating queries automatically .
+1-8:Our policies proceed iteratively, issuing a different query in every iteration .
+1-9:We experimentally evaluate the effectiveness of these policies on 4 real Hidden Web sites and our results are very promising .
+1-10:For instance, in one experiment, one of our policies downloaded more than 90% of a Hidden Web site (that contains 14 million documents) after issuing fewer than 100 queries .
+1-11:Categories and Subject Descriptors: H.3.7 [Information Systems]: Digital Libraries; H.3.1 [Information Systems]: Content Analysis Recent studies show that a significant fraction of Web content cannot be reached by following links [7, 12] .
+1-12:In particular, a large part of the Web is hidden behind search forms and is reachable only when users type in a set of keywords, or queries, to the forms .
+1-13:These pages are often referred to as the Hidden Web [17] or the Deep Web [7], because search engines typically cannot index the pages and do not return them in their results (thus, the pages are essentially hidden from a typical Web user) .
+1-14:According to many studies, the size of the Hidden Web increases rapidly as more organizations put their valuable content online through an easy to use Web interface [7] .
+1-15:In [12], Chang et al .
+1-16:estimate that well over 100,000 Hidden Web sites currently exist on the Web .
+1-17:Moreover, the content provided by many Hidden Web sites is often of very high quality and can be extremely valuable to many users [7] .
+1-18:For example, PubMed hosts many high quality papers on medical research that were selected from careful peerreview processes, while the site of the US Patent and Trademarks Office1 makes existing patent documents available, helping potential inventors examine prior art .
+1-19:In this paper, we study how we can build a Hidden Web crawler2 that can automatically download pages from the Hidden Web, so that search engines can index them .
+1-20:Conventional crawlers rely on the hyperlinks on the Web to discover pages, so current search engines cannot index the Hidden Web pages (due to the lack of links) .
+1-21:We believe that an effective Hidden Web crawler can have a tremendous impact on how users search information on the Web: • Tapping into unexplored information: The Hidden Web crawler will allow an average Web user to easily explore the vast amount of information that is mostly hidden at present .
+1-22:Since a majority of Web users rely on search engines to discover pages, when pages are not indexed by search engines, they are unlikely to be viewed by many Web users .
+1-23:Unless users go directly to Hidden Web sites and issue queries there, they cannot access the pages at the sites .
+1-24:• Improving user experience: Even if a user is aware of a number of Hidden Web sites, the user still has to waste a significant amount of time and effort, visiting all of the potentially relevant sites, querying each of them and exploring the result .
+1-25:By making the Hidden Web pages searchable at a central location, we can significantly reduce the user"s wasted time and effort in searching the Hidden Web .
+1-26:• Reducing potential bias: Due to the heavy reliance of many Web users on search engines for locating information, search engines influence how the users perceive the Web [28] .
+1-27:Users do not necessarily perceive what actually exists on the Web, but what is indexed by search engines [28] .
+1-28:According to a recent article [5], several organizations have recognized the importance of bringing information of their Hidden Web sites onto the surface, and committed considerable resources towards this effort .
+1-29:Our 1 US Patent Office: http: www.uspto.gov 2 Crawlers are the programs that traverse the Web automatically and download pages for search engines .
+1-30:100 Figure 1: A single attribute search interface Hidden Web crawler attempts to automate this process for Hidden Web sites with textual content, thus minimizing the associated costs and effort required .
+1-31:Given that the only entry to Hidden Web pages is through querying a search form, there are two core challenges to implementing an effective Hidden Web crawler: (a) The crawler has to be able to understand and model a query interface, and (b) The crawler has to come up with meaningful queries to issue to the query interface .
+1-32:The first challenge was addressed by Raghavan and Garcia Molina in [29], where a method for learning search interfaces was presented .
+1-33:Here, we present a solution to the second challenge, i.e .
+1-34:how a crawler can automatically generate queries so that it can discover and download the Hidden Web pages .
+1-35:Clearly, when the search forms list all possible values for a query (e.g., through a drop down list), the solution is straightforward .
+1-36:We exhaustively issue all possible queries, one query at a time .
+1-37:When the query forms have a free text input, however, an infinite number of queries are possible, so we cannot exhaustively issue all possible queries .
+1-38:In this case, what queries should we pick? Can the crawler automatically come up with meaningful queries without understanding the semantics of the search form? In this paper, we provide a theoretical framework to investigate the Hidden Web crawling problem and propose effective ways of generating queries automatically .
+1-39:We also evaluate our proposed solutions through experiments conducted on real Hidden Web sites .
+1-40:In summary, this paper makes the following contributions: • We present a formal framework to study the problem of HiddenWeb crawling .
+1-41:(Section 2) .
+1-42:• We investigate a number of crawling policies for the Hidden Web, including the optimal policy that can potentially download the maximum number of pages through the minimum number of interactions .
+1-43:Unfortunately, we show that the optimal policy is NP hard and cannot be implemented in practice (Section 2.2) .
+1-44:• We propose a new adaptive policy that approximates the optimal policy .
+1-45:Our adaptive policy examines the pages returned from previous queries and adapts its query selection policy automatically based on them (Section 3) .
+1-46:• We evaluate various crawling policies through experiments on real Web sites .
+1-47:Our experiments will show the relative advantages of various crawling policies and demonstrate their potential .
+1-48:The results from our experiments are very promising .
+1-49:In one experiment, for example, our adaptive policy downloaded more than 90% of the pages within PubMed (that contains 14 million documents) after it issued fewer than 100 queries. .
+2 FRAMEWORK :
+2-1:In this section, we present a formal framework for the study of the Hidden Web crawling problem .
+2-2:In Section 2.1, we describe our assumptions on Hidden Web sites and explain how users interact with the sites .
+2-3:Based on this interaction model, we present a highlevel algorithm for a Hidden Web crawler in Section 2.2 .
+2-4:Finally in Section 2.3, we formalize the Hidden Web crawling problem .
+2-5:2.1 Hidden Web database model There exists a variety of Hidden Web sources that provide information on a multitude of topics .
+2-6:Depending on the type of information, we may categorize a Hidden Web site either as a textual database or a structured database .
+2-7:A textual database is a site that Figure 2: A multi attribute search interface mainly contains plain text documents, such as PubMed and LexisNexis (an online database of legal documents [1]) .
+2-8:Since plaintext documents do not usually have well defined structure, most textual databases provide a simple search interface where users type a list of keywords in a single search box (Figure 1) .
+2-9:In contrast, a structured database often contains multi attribute relational data (e.g., a book on the Amazon Web site may have the fields title=‘Harry Potter", author=‘J.K .
+2-10:Rowling" and isbn=‘0590353403") and supports multi attribute search interfaces (Figure 2) .
+2-11:In this paper, we will mainly focus on textual databases that support single attribute keyword queries .
+2-12:We discuss how we can extend our ideas for the textual databases to multi attribute structured databases in Section 6.1 .
+2-13:Typically, the users need to take the following steps in order to access pages in a Hidden Web database: search interface provided by the Web site (such as the one shown in Figure 1) .
+2-14:with a result index page .
+2-15:That is, the Web site returns a list of links to potentially relevant Web pages, as shown in Figure 3(a) .
+2-16:the pages that look interesting and follows the links .
+2-17:Clicking on a link leads the user to the actual Web page, such as the one shown in Figure 3(b), that the user wants to look at .
+2-18:2.2 A generic Hidden Web crawling algorithm Given that the only entry to the pages in a Hidden Web site is its search from, a Hidden Web crawler should follow the three steps described in the previous section .
+2-19:That is, the crawler has to generate a query, issue it to the Web site, download the result index page, and follow the links to download the actual pages .
+2-20:In most cases, a crawler has limited time and network resources, so the crawler repeats these steps until it uses up its resources .
+2-21:In Figure 4 we show the generic algorithm for a Hidden Web crawler .
+2-22:For simplicity, we assume that the Hidden Web crawler issues single term queries only.3 The crawler first decides which query term it is going to use (Step (2)), issues the query, and retrieves the result index page (Step (3)) .
+2-23:Finally, based on the links found on the result index page, it downloads the Hidden Web pages from the site (Step (4)) .
+2-24:This same process is repeated until all the available resources are used up (Step (1)) .
+2-25:Given this algorithm, we can see that the most critical decision that a crawler has to make is what query to issue next .
+2-26:If the crawler can issue successful queries that will return many matching pages, the crawler can finish its crawling early on using minimum resources .
+2-27:In contrast, if the crawler issues completely irrelevant queries that do not return any matching pages, it may waste all of its resources simply issuing queries without ever retrieving actual pages .
+2-28:Therefore, how the crawler selects the next query can greatly affect its effectiveness .
+2-29:In the next section, we formalize this query selection problem .
+2-30:3 For most Web sites that assume AND for multi keyword queries, single term queries return the maximum number of results .
+2-31:Extending our work to multi keyword queries is straightforward .
+2-32:101 (a) List of matching pages for query liver .
+2-33:(b) The first matching page for liver .
+2-34:Figure 3: Pages from the PubMed Web site .
+2-35:ALGORITHM 2.1 .
+2-36:Crawling a Hidden Web site Procedure (1) while ( there are available resources ) do select a term to send to the site (2) qi = SelectTerm() send query and acquire result index page (3) R(qi) = QueryWebSite( qi ) download the pages of interest (4) Download( R(qi) ) (5) done Figure 4: Algorithm for crawling a Hidden Web site .
+2-37:S q1 q qq 2 34 Figure 5: A set formalization of the optimal query selection problem .
+2-38:2.3 Problem formalization Theoretically, the problem of query selection can be formalized as follows: We assume that the crawler downloads pages from a Web site that has a set of pages S (the rectangle in Figure 5) .
+2-39:We represent each Web page in S as a point (dots in Figure 5) .
+2-40:Every potential query qi that we may issue can be viewed as a subset of S, containing all the points (pages) that are returned when we issue qi to the site .
+2-41:Each subset is associated with a weight that represents the cost of issuing the query .
+2-42:Under this formalization, our goal is to find which subsets (queries) cover the maximum number of points (Web pages) with the minimum total weight (cost) .
+2-43:This problem is equivalent to the set covering problem in graph theory [16] .
+2-44:There are two main difficulties that we need to address in this formalization .
+2-45:First, in a practical situation, the crawler does not know which Web pages will be returned by which queries, so the subsets of S are not known in advance .
+2-46:Without knowing these subsets the crawler cannot decide which queries to pick to maximize the coverage .
+2-47:Second, the set covering problem is known to be NP Hard [16], so an efficient algorithm to solve this problem optimally in polynomial time has yet to be found .
+2-48:In this paper, we will present an approximation algorithm that can find a near optimal solution at a reasonable computational cost .
+2-49:Our algorithm leverages the observation that although we do not know which pages will be returned by each query qi that we issue, we can predict how many pages will be returned .
+2-50:Based on this information our query selection algorithm can then select the best queries that cover the content of the Web site .
+2-51:We present our prediction method and our query selection algorithm in Section 3 .
+2-52:2.3.1 Performance Metric Before we present our ideas for the query selection problem, we briefly discuss some of our notation and the cost performance metrics .
+2-53:Given a query qi, we use P(qi) to denote the fraction of pages that we will get back if we issue query qi to the site .
+2-54:For example, if a Web site has 10,000 pages in total, and if 3,000 pages are returned for the query qi = medicine, then P(qi) = 0.3 .
+2-55:We use P(q1 ∧ q2) to represent the fraction of pages that are returned from both q1 and q2 (i.e., the intersection of P(q1) and P(q2)) .
+2-56:Similarly, we use P(q1 ∨ q2) to represent the fraction of pages that are returned from either q1 or q2 (i.e., the union of P(q1) and P(q2)) .
+2-57:We also use Cost(qi) to represent the cost of issuing the query qi .
+2-58:Depending on the scenario, the cost can be measured either in time, network bandwidth, the number of interactions with the site, or it can be a function of all of these .
+2-59:As we will see later, our proposed algorithms are independent of the exact cost function .
+2-60:In the most common case, the query cost consists of a number of factors, including the cost for submitting the query to the site, retrieving the result index page (Figure 3(a)) and downloading the actual pages (Figure 3(b)) .
+2-61:We assume that submitting a query incurs a fixed cost of cq .
+2-62:The cost for downloading the result index page is proportional to the number of matching documents to the query, while the cost cd for downloading a matching document is also fixed .
+2-63:Then the overall cost of query qi is Cost(qi) = cq + crP(qi) + cdP(qi) .
+2-64:(1) In certain cases, some of the documents from qi may have already been downloaded from previous queries .
+2-65:In this case, the crawler may skip downloading these documents and the cost of qi can be Cost(qi) = cq + crP(qi) + cdPnew(qi) .
+2-66:(2) Here, we use Pnew(qi) to represent the fraction of the new documents from qi that have not been retrieved from previous queries .
+2-67:Later in Section 3.1 we will study how we can estimate P(qi) and Pnew(qi) to estimate the cost of qi .
+2-68:Since our algorithms are independent of the exact cost function, we will assume a generic cost function Cost(qi) in this paper .
+2-69:When we need a concrete cost function, however, we will use Equation 2 .
+2-70:Given the notation, we can formalize the goal of a Hidden Web crawler as follows: 102 PROBLEM 1 .
+2-71:Find the set of queries q1, .
+2-72:.
+2-73:.
+2-74:, qn that maximizes P(q1 ∨ · · · ∨ qn) under the constraint n i=1 Cost(qi) ≤ t .
+2-75:Here, t is the maximum download resource that the crawler has. .
+3 KEYWORD SELECTION :
+3-1:How should a crawler select the queries to issue? Given that the goal is to download the maximum number of unique documents from a textual database, we may consider one of the following options: • Random: We select random keywords from, say, an English dictionary and issue them to the database .
+3-2:The hope is that a random query will return a reasonable number of matching documents .
+3-3:• Generic frequency: We analyze a generic document corpus collected elsewhere (say, from the Web) and obtain the generic frequency distribution of each keyword .
+3-4:Based on this generic distribution, we start with the most frequent keyword, issue it to the Hidden Web database and retrieve the result .
+3-5:We then continue to the second most frequent keyword and repeat this process until we exhaust all download resources .
+3-6:The hope is that the frequent keywords in a generic corpus will also be frequent in the Hidden Web database, returning many matching documents .
+3-7:• Adaptive: We analyze the documents returned from the previous queries issued to the Hidden Web database and estimate which keyword is most likely to return the most documents .
+3-8:Based on this analysis, we issue the most promising query, and repeat the process .
+3-9:Among these three general policies, we may consider the random policy as the base comparison point since it is expected to perform the worst .
+3-10:Between the generic frequency and the adaptive policies, both policies may show similar performance if the crawled database has a generic document collection without a specialized topic .
+3-11:The adaptive policy, however, may perform significantly better than the generic frequency policy if the database has a very specialized collection that is different from the generic corpus .
+3-12:We will experimentally compare these three policies in Section 4 .
+3-13:While the first two policies (random and generic frequency policies) are easy to implement, we need to understand how we can analyze the downloaded pages to identify the most promising query in order to implement the adaptive policy .
+3-14:We address this issue in the rest of this section .
+3-15:3.1 Estimating the number of matching pages In order to identify the most promising query, we need to estimate how many new documents we will download if we issue the query qi as the next query .
+3-16:That is, assuming that we have issued queries q1, .
+3-17:.
+3-18:.
+3-19:, qi−1 we need to estimate P(q1∨· · ·∨qi−1∨qi), for every potential next query qi and compare this value .
+3-20:In estimating this number, we note that we can rewrite P(q1 ∨ · · · ∨ qi−1 ∨ qi) as: P((q1 ∨ · · · ∨ qi−1) ∨ qi) = P(q1 ∨ · · · ∨ qi−1) + P(qi) − P((q1 ∨ · · · ∨ qi−1) ∧ qi) = P(q1 ∨ · · · ∨ qi−1) + P(qi) − P(q1 ∨ · · · ∨ qi−1)P(qi|q1 ∨ · · · ∨ qi−1) (3) In the above formula, note that we can precisely measure P(q1 ∨ · · · ∨ qi−1) and P(qi | q1 ∨ · · · ∨ qi−1) by analyzing previouslydownloaded pages: We know P(q1 ∨ · · · ∨ qi−1), the union of all pages downloaded from q1, .
+3-21:.
+3-22:.
+3-23:, qi−1, since we have already issued q1, .
+3-24:.
+3-25:.
+3-26:, qi−1 and downloaded the matching pages.4 We can also measure P(qi | q1 ∨ · · · ∨ qi−1), the probability that qi appears in the pages from q1, .
+3-27:.
+3-28:.
+3-29:, qi−1, by counting how many times qi appears in the pages from q1, .
+3-30:.
+3-31:.
+3-32:, qi−1 .
+3-33:Therefore, we only need to estimate P(qi) to evaluate P(q1 ∨ · · · ∨ qi) .
+3-34:We may consider a number of different ways to estimate P(qi), including the following: term qi is independent of the terms q1, .
+3-35:.
+3-36:.
+3-37:, qi−1 .
+3-38:That is, we assume that P(qi) = P(qi|q1 ∨ · · · ∨ qi−1) .
+3-39:estimate how many times a particular term occurs in the entire corpus based on a subset of documents from the corpus .
+3-40:Their method exploits the fact that the frequency of terms inside text collections follows a power law distribution [30, 25] .
+3-41:That is, if we rank all terms based on their occurrence frequency (with the most frequent term having a rank of 1, second most frequent a rank of 2 etc.), then the frequency f of a term inside the text collection is given by: f = α(r + β)−γ (4) where r is the rank of the term and α, β, and γ are constants that depend on the text collection .
+3-42:Their main idea is (1) to estimate the three parameters, α, β and γ, based on the subset of documents that we have downloaded from previous queries, and (2) use the estimated parameters to predict f given the ranking r of a term within the subset .
+3-43:For a more detailed description on how we can use this method to estimate P(qi), we refer the reader to the extended version of this paper [27] .
+3-44:After we estimate P(qi) and P(qi|q1 ∨ · · · ∨ qi−1) values, we can calculate P(q1 ∨ · · · ∨ qi) .
+3-45:In Section 3.3, we explain how we can efficiently compute P(qi|q1 ∨ · · · ∨ qi−1) by maintaining a succinct summary table .
+3-46:In the next section, we first examine how we can use this value to decide which query we should issue next to the Hidden Web site .
+3-47:3.2 Query selection algorithm The goal of the Hidden Web crawler is to download the maximum number of unique documents from a database using its limited download resources .
+3-48:Given this goal, the Hidden Web crawler has to take two factors into account .
+3-49:(1) the number of new documents that can be obtained from the query qi and (2) the cost of issuing the query qi .
+3-50:For example, if two queries, qi and qj, incur the same cost, but qi returns more new pages than qj, qi is more desirable than qj .
+3-51:Similarly, if qi and qj return the same number of new documents, but qi incurs less cost then qj, qi is more desirable .
+3-52:Based on this observation, the Hidden Web crawler may use the following efficiency metric to quantify the desirability of the query qi: Efficiency(qi) = Pnew(qi) Cost(qi) Here, Pnew(qi) represents the amount of new documents returned for qi (the pages that have not been returned for previous queries) .
+3-53:Cost(qi) represents the cost of issuing the query qi .
+3-54:Intuitively, the efficiency of qi measures how many new documents are retrieved per unit cost, and can be used as an indicator of 4 For exact estimation, we need to know the total number of pages in the site .
+3-55:However, in order to compare only relative values among queries, this information is not actually needed .
+3-56:103 ALGORITHM 3.1 .
+3-57:Greedy SelectTerm() Parameters: T: The list of potential query keywords Procedure (1) Foreach tk in T do (2) Estimate Efficiency(tk) = Pnew(tk) Cost(tk) (3) done (4) return tk with maximum Efficiency(tk) Figure 6: Algorithm for selecting the next query term .
+3-58:how well our resources are spent when issuing qi .
+3-59:Thus, the Hidden Web crawler can estimate the efficiency of every candidate qi, and select the one with the highest value .
+3-60:By using its resources more efficiently, the crawler may eventually download the maximum number of unique documents .
+3-61:In Figure 6, we show the query selection function that uses the concept of efficiency .
+3-62:In principle, this algorithm takes a greedy approach and tries to maximize the potential gain in every step .
+3-63:We can estimate the efficiency of every query using the estimation method described in Section 3.1 .
+3-64:That is, the size of the new documents from the query qi, Pnew(qi), is Pnew(qi) = P(q1 ∨ · · · ∨ qi−1 ∨ qi) − P(q1 ∨ · · · ∨ qi−1) = P(qi) − P(q1 ∨ · · · ∨ qi−1)P(qi|q1 ∨ · · · ∨ qi−1) from Equation 3, where P(qi) can be estimated using one of the methods described in section 3 .
+3-65:We can also estimate Cost(qi) similarly .
+3-66:For example, if Cost(qi) is Cost(qi) = cq + crP(qi) + cdPnew(qi) (Equation 2), we can estimate Cost(qi) by estimating P(qi) and Pnew(qi) .
+3-67:3.3 Efficient calculation of query statistics In estimating the efficiency of queries, we found that we need to measure P(qi|q1∨· · ·∨qi−1) for every potential query qi .
+3-68:This calculation can be very time consuming if we repeat it from scratch for every query qi in every iteration of our algorithm .
+3-69:In this section, we explain how we can compute P(qi|q1 ∨ · · · ∨ qi−1) efficiently by maintaining a small table that we call a query statistics table .
+3-70:The main idea for the query statistics table is that P(qi|q1 ∨· · ·∨ qi−1) can be measured by counting how many times the keyword qi appears within the documents downloaded from q1, .
+3-71:.
+3-72:.
+3-73:, qi−1 .
+3-74:We record these counts in a table, as shown in Figure 7(a) .
+3-75:The left column of the table contains all potential query terms and the right column contains the number of previously downloaded documents containing the respective term .
+3-76:For example, the table in Figure 7(a) shows that we have downloaded 50 documents so far, and the term model appears in 10 of these documents .
+3-77:Given this number, we can compute that P(model|q1 ∨ · · · ∨ qi−1) = 10 50 = 0.2 .
+3-78:We note that the query statistics table needs to be updated whenever we issue a new query qi and download more documents .
+3-79:This update can be done efficiently as we illustrate in the following example .
+3-80:EXAMPLE 1 .
+3-81:After examining the query statistics table of Figure 7(a), we have decided to use the term computer as our next query qi .
+3-82:From the new query qi = computer, we downloaded 20 more new pages .
+3-83:Out of these, 12 contain the keyword model Term tk N(tk) model 10 computer 38 digital 50 Term tk N(tk) model 12 computer 20 disk 18 Total pages: 50 New pages: 20 (a) After q1, .
+3-84:.
+3-85:.
+3-86:, qi−1 (b) New from qi = computer Term tk N(tk) model 10+12 = 22 computer 38+20 = 58 disk 0+18 = 18 digital 50+0 = 50 Total pages: 50 + 20 = 70 (c) After q1, .
+3-87:.
+3-88:.
+3-89:, qi Figure 7: Updating the query statistics table .
+3-90:q i1 i−1 q\ .. .
+3-91:\ q q i S Figure 8: A Web site that does not return all the results .
+3-92:and 18 the keyword disk .
+3-93:The table in Figure 7(b) shows the frequency of each term in the newly downloaded pages .
+3-94:We can update the old table (Figure 7(a)) to include this new information by simply adding corresponding entries in Figures 7(a) and (b) .
+3-95:The result is shown on Figure 7(c) .
+3-96:For example, keyword model exists in 10 + 12 = 22 pages within the pages retrieved from q1, .
+3-97:.
+3-98:.
+3-99:, qi .
+3-100:According to this new table, P(model|q1∨· · ·∨qi) is now 22 70 = 0.3 .
+3-101:3.4 Crawling sites that limit the number of results In certain cases, when a query matches a large number of pages, the Hidden Web site returns only a portion of those pages .
+3-102:For example, the Open Directory Project [2] allows the users to see only up to 10, 000 results after they issue a query .
+3-103:Obviously, this kind of limitation has an immediate effect on our Hidden Web crawler .
+3-104:First, since we can only retrieve up to a specific number of pages per query, our crawler will need to issue more queries (and potentially will use up more resources) in order to download all the pages .
+3-105:Second, the query selection method that we presented in Section 3.2 assumes that for every potential query qi, we can find P(qi|q1 ∨ · · · ∨ qi−1) .
+3-106:That is, for every query qi we can find the fraction of documents in the whole text database that contains qi with at least one of q1, .
+3-107:.
+3-108:.
+3-109:, qi−1 .
+3-110:However, if the text database returned only a portion of the results for any of the q1, .
+3-111:.
+3-112:.
+3-113:, qi−1 then the value P(qi|q1 ∨ · · · ∨ qi−1) is not accurate and may affect our decision for the next query qi, and potentially the performance of our crawler .
+3-114:Since we cannot retrieve more results per query than the maximum number the Web site allows, our crawler has no other choice besides submitting more queries .
+3-115:However, there is a way to estimate the correct value for P(qi|q1 ∨ · · · ∨ qi−1) in the case where the Web site returns only a portion of the results .
+3-116:104 Again, assume that the Hidden Web site we are currently crawling is represented as the rectangle on Figure 8 and its pages as points in the figure .
+3-117:Assume that we have already issued queries q1, .
+3-118:.
+3-119:.
+3-120:, qi−1 which returned a number of results less than the maximum number than the site allows, and therefore we have downloaded all the pages for these queries (big circle in Figure 8) .
+3-121:That is, at this point, our estimation for P(qi|q1 ∨· · ·∨qi−1) is accurate .
+3-122:Now assume that we submit query qi to the Web site, but due to a limitation in the number of results that we get back, we retrieve the set qi (small circle in Figure 8) instead of the set qi (dashed circle in Figure 8) .
+3-123:Now we need to update our query statistics table so that it has accurate information for the next step .
+3-124:That is, although we got the set qi back, for every potential query qi+1 we need to find P(qi+1|q1 ∨ · · · ∨ qi): P(qi+1|q1 ∨ · · · ∨ qi) = 1 P(q1 ∨ · · · ∨ qi) · [P(qi+1 ∧ (q1 ∨ · · · ∨ qi−1))+ P(qi+1 ∧ qi) − P(qi+1 ∧ qi ∧ (q1 ∨ · · · ∨ qi−1))] (5) In the previous equation, we can find P(q1 ∨· · ·∨qi) by estimating P(qi) with the method shown in Section 3 .
+3-125:Additionally, we can calculate P(qi+1 ∧ (q1 ∨ · · · ∨ qi−1)) and P(qi+1 ∧ qi ∧ (q1 ∨ · · · ∨ qi−1)) by directly examining the documents that we have downloaded from queries q1, .
+3-126:.
+3-127:.
+3-128:, qi−1 .
+3-129:The term P(qi+1 ∧ qi) however is unknown and we need to estimate it .
+3-130:Assuming that qi is a random sample of qi, then: P(qi+1 ∧ qi) P(qi+1 ∧ qi) = P(qi) P(qi) (6) From Equation 6 we can calculate P(qi+1 ∧ qi) and after we replace this value to Equation 5 we can find P(qi+1|q1 ∨ · · · ∨ qi). .
+4 EXPERIMENTAL EVALUATION :
+4-1:In this section we experimentally evaluate the performance of the various algorithms for Hidden Web crawling presented in this paper .
+4-2:Our goal is to validate our theoretical analysis through realworld experiments, by crawling popular Hidden Web sites of textual databases .
+4-3:Since the number of documents that are discovered and downloaded from a textual database depends on the selection of the words that will be issued as queries5 to the search interface of each site, we compare the various selection policies that were described in section 3, namely the random, generic frequency, and adaptive algorithms .
+4-4:The adaptive algorithm learns new keywords and terms from the documents that it downloads, and its selection process is driven by a cost model as described in Section 3.2 .
+4-5:To keep our experiment and its analysis simple at this point, we will assume that the cost for every query is constant .
+4-6:That is, our goal is to maximize the number of downloaded pages by issuing the least number of queries .
+4-7:Later, in Section 4.4 we will present a comparison of our policies based on a more elaborate cost model .
+4-8:In addition, we use the independence estimator (Section 3.1) to estimate P(qi) from downloaded pages .
+4-9:Although the independence estimator is a simple estimator, our experiments will show that it can work very well in practice.6 For the generic frequency policy, we compute the frequency distribution of words that appear in a 5.5 million Web page corpus 5 Throughout our experiments, once an algorithm has submitted a query to a database, we exclude the query from subsequent submissions to the same database from the same algorithm .
+4-10:6 We defer the reporting of results based on the Zipf estimation to a future work .
+4-11:downloaded from 154 Web sites of various topics [26] .
+4-12:Keywords are selected based on their decreasing frequency with which they appear in this document set, with the most frequent one being selected first, followed by the second most frequent keyword, etc.7 Regarding the random policy, we use the same set of words collected from the Web corpus, but in this case, instead of selecting keywords based on their relative frequency, we choose them randomly (uniform distribution) .
+4-13:In order to further investigate how the quality of the potential query term list affects the random based algorithm, we construct two sets: one with the 16, 000 most frequent words of the term collection used in the generic frequency policy (hereafter, the random policy with the set of 16,000 words will be referred to as random 16K), and another set with the 1 million most frequent words of the same collection as above (hereafter, referred to as random 1M) .
+4-14:The former set has frequent words that appear in a large number of documents (at least 10, 000 in our collection), and therefore can be considered of high quality terms .
+4-15:The latter set though contains a much larger collection of words, among which some might be bogus, and meaningless .
+4-16:The experiments were conducted by employing each one of the aforementioned algorithms (adaptive, generic frequency, random16K, and random 1M) to crawl and download contents from three Hidden Web sites: The PubMed Medical Library,8 Amazon,9 and the Open Directory Project[2] .
+4-17:According to the information on PubMed"s Web site, its collection contains approximately 14 million abstracts of biomedical articles .
+4-18:We consider these abstracts as the documents in the site, and in each iteration of the adaptive policy, we use these abstracts as input to the algorithm .
+4-19:Thus our goal is to discover as many unique abstracts as possible by repeatedly querying the Web query interface provided by PubMed .
+4-20:The Hidden Web crawling on the PubMed Web site can be considered as topic specific, due to the fact that all abstracts within PubMed are related to the fields of medicine and biology .
+4-21:In the case of the Amazon Web site, we are interested in downloading all the hidden pages that contain information on books .
+4-22:The querying to Amazon is performed through the Software Developer"s Kit that Amazon provides for interfacing to its Web site, and which returns results in XML form .
+4-23:The generic keyword field is used for searching, and as input to the adaptive policy we extract the product description and the text of customer reviews when present in the XML reply .
+4-24:Since Amazon does not provide any information on how many books it has in its catalogue, we use random sampling on the 10 digit ISBN number of the books to estimate the size of the collection .
+4-25:Out of the 10, 000 random ISBN numbers queried, 46 are found in the Amazon catalogue, therefore the size of its book collection is estimated to be 46 10000 · 1010 = 4.6 million books .
+4-26:It"s also worth noting here that Amazon poses an upper limit on the number of results (books in our case) returned by each query, which is set to 32, 000 .
+4-27:As for the third Hidden Web site, the Open Directory Project (hereafter also referred to as dmoz), the site maintains the links to 3.8 million sites together with a brief summary of each listed site .
+4-28:The links are searchable through a keyword search interface .
+4-29:We consider each indexed link together with its brief summary as the document of the dmoz site, and we provide the short summaries to the adaptive algorithm to drive the selection of new keywords for querying .
+4-30:On the dmoz Web site, we perform two Hidden Web crawls: the first is on its generic collection of 3.8 million indexed 7 We did not manually exclude stop words (e.g., the, is, of, etc.) from the keyword list .
+4-31:As it turns out, all Web sites except PubMed return matching documents for the stop words, such as the .
+4-32:8 PubMed Medical Library: http: www.pubmed.org 9 Amazon Inc.: http: www.amazon.com 105 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 50 100 150 200 fractionofdocuments query number Cumulative fraction of unique documents PubMed website adaptive generic frequency random 16K random 1M Figure 9: Coverage of policies for Pubmed 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 100 200 300 400 500 600 700 fractionofdocuments query number Cumulative fraction of unique documents Amazon website adaptive generic frequency random 16K random 1M Figure 10: Coverage of policies for Amazon sites, regardless of the category that they fall into .
+4-33:The other crawl is performed specifically on the Arts section of dmoz (http: dmoz.org Arts), which comprises of approximately 429, 000 indexed sites that are relevant to Arts, making this crawl topicspecific, as in PubMed .
+4-34:Like Amazon, dmoz also enforces an upper limit on the number of returned results, which is 10, 000 links with their summaries .
+4-35:4.1 Comparison of policies The first question that we seek to answer is the evolution of the coverage metric as we submit queries to the sites .
+4-36:That is, what fraction of the collection of documents stored in the Hidden Web site can we download as we continuously query for new words selected using the policies described above? More formally, we are interested in the value of P(q1 ∨ · · · ∨ qi−1 ∨ qi), after we submit q1, .
+4-37:.
+4-38:.
+4-39:, qi queries, and as i increases .
+4-40:In Figures 9, 10, 11, and 12 we present the coverage metric for each policy, as a function of the query number, for the Web sites of PubMed, Amazon, general dmoz and the art specific dmoz, respectively .
+4-41:On the y axis the fraction of the total documents downloaded from the website is plotted, while the x axis represents the query number .
+4-42:A first observation from these graphs is that in general, the generic frequency and the adaptive policies perform much better than the random based algorithms .
+4-43:In all of the figures, the graphs for the random 1M and the random 16K are significantly below those of other policies .
+4-44:Between the generic frequency and the adaptive policies, we can see that the latter outperforms the former when the site is topic spe0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 100 200 300 400 500 600 700 fractionofdocuments query number Cumulative fraction of unique documents dmoz website adaptive generic frequency random 16K random 1M Figure 11: Coverage of policies for general dmoz 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 50 100 150 200 250 300 350 400 450 fractionofdocuments query number Cumulative fraction of unique documents dmoz Arts website adaptive generic frequency random 16K random 1M Figure 12: Coverage of policies for the Arts section of dmoz cific .
+4-45:For example, for the PubMed site (Figure 9), the adaptive algorithm issues only 83 queries to download almost 80% of the documents stored in PubMed, but the generic frequency algorithm requires 106 queries for the same coverage, .
+4-46:For the dmoz Arts crawl (Figure 12), the difference is even more substantial: the adaptive policy is able to download 99.98% of the total sites indexed in the Directory by issuing 471 queries, while the frequency based algorithm is much less effective using the same number of queries, and discovers only 72% of the total number of indexed sites .
+4-47:The adaptive algorithm, by examining the contents of the pages that it downloads at each iteration, is able to identify the topic of the site as expressed by the words that appear most frequently in the result set .
+4-48:Consequently, it is able to select words for subsequent queries that are more relevant to the site, than those preferred by the genericfrequency policy, which are drawn from a large, generic collection .
+4-49:Table 1 shows a sample of 10 keywords out of 211 chosen and submitted to the PubMed Web site by the adaptive algorithm, but not by the other policies .
+4-50:For each keyword, we present the number of the iteration, along with the number of results that it returned .
+4-51:As one can see from the table, these keywords are highly relevant to the topics of medicine and biology of the Public Medical Library, and match against numerous articles stored in its Web site .
+4-52:In both cases examined in Figures 9, and 12, the random based policies perform much worse than the adaptive algorithm, and the generic frequency .
+4-53:It is worthy noting however, that the randombased policy with the small, carefully selected set of 16, 000 quality words manages to download a considerable fraction of 42.5% 106 Iteration Keyword Number of Results 23 department 2, 719, 031 34 patients 1, 934, 428 53 clinical 1, 198, 322 67 treatment 4, 034, 565 69 medical 1, 368, 200 70 hospital 503, 307 146 disease 1, 520, 908 172 protein 2, 620, 938 Table 1: Sample of keywords queried to PubMed exclusively by the adaptive policy from the PubMed Web site after 200 queries, while the coverage for the Arts section of dmoz reaches 22.7%, after 471 queried keywords .
+4-54:On the other hand, the random based approach that makes use of the vast collection of 1 million words, among which a large number is bogus keywords, fails to download even a mere 1% of the total collection, after submitting the same number of query words .
+4-55:For the generic collections of Amazon and the dmoz sites, shown in Figures 10 and 11 respectively, we get mixed results: The genericfrequency policy shows slightly better performance than the adaptive policy for the Amazon site (Figure 10), and the adaptive method clearly outperforms the generic frequency for the general dmoz site (Figure 11) .
+4-56:A closer look at the log files of the two Hidden Web crawlers reveals the main reason: Amazon was functioning in a very flaky way when the adaptive crawler visited it, resulting in a large number of lost results .
+4-57:Thus, we suspect that the slightly poor performance of the adaptive policy is due to this experimental variance .
+4-58:We are currently running another experiment to verify whether this is indeed the case .
+4-59:Aside from this experimental variance, the Amazon result indicates that if the collection and the words that a Hidden Web site contains are generic enough, then the generic frequency approach may be a good candidate algorithm for effective crawling .
+4-60:As in the case of topic specific Hidden Web sites, the randombased policies also exhibit poor performance compared to the other two algorithms when crawling generic sites: for the Amazon Web site, random 16K succeeds in downloading almost 36.7% after issuing 775 queries, alas for the generic collection of dmoz, the fraction of the collection of links downloaded is 13.5% after the 770th query .
+4-61:Finally, as expected, random 1M is even worse than random16K, downloading only 14.5% of Amazon and 0.3% of the generic dmoz .
+4-62:In summary, the adaptive algorithm performs remarkably well in all cases: it is able to discover and download most of the documents stored in Hidden Web sites by issuing the least number of queries .
+4-63:When the collection refers to a specific topic, it is able to identify the keywords most relevant to the topic of the site and consequently ask for terms that is most likely that will return a large number of results .
+4-64:On the other hand, the generic frequency policy proves to be quite effective too, though less than the adaptive: it is able to retrieve relatively fast a large portion of the collection, and when the site is not topic specific, its effectiveness can reach that of adaptive (e.g .
+4-65:Amazon) .
+4-66:Finally, the random policy performs poorly in general, and should not be preferred .
+4-67:4.2 Impact of the initial query An interesting issue that deserves further examination is whether the initial choice of the keyword used as the first query issued by the adaptive algorithm affects its effectiveness in subsequent iterations .
+4-68:The choice of this keyword is not done by the selection of the 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 10 20 30 40 50 60 fractionofdocuments query number Convergence of adaptive under different initial queries PubMed website pubmed data information return Figure 13: Convergence of the adaptive algorithm using different initial queries for crawling the PubMed Web site adaptive algorithm itself and has to be manually set, since its query statistics tables have not been populated yet .
+4-69:Thus, the selection is generally arbitrary, so for purposes of fully automating the whole process, some additional investigation seems necessary .
+4-70:For this reason, we initiated three adaptive Hidden Web crawlers targeting the PubMed Web site with different seed words: the word data, which returns 1,344,999 results, the word information that reports 308, 474 documents, and the word return that retrieves 29, 707 pages, out of 14 million .
+4-71:These keywords represent varying degrees of term popularity in PubMed, with the first one being of high popularity, the second of medium, and the third of low .
+4-72:We also show results for the keyword pubmed, used in the experiments for coverage of Section 4.1, and which returns 695 articles .
+4-73:As we can see from Figure 13, after a small number of queries, all four crawlers roughly download the same fraction of the collection, regardless of their starting point: Their coverages are roughly equivalent from the 25th query .
+4-74:Eventually, all four crawlers use the same set of terms for their queries, regardless of the initial query .
+4-75:In the specific experiment, from the 36th query onward, all four crawlers use the same terms for their queries in each iteration, or the same terms are used off by one or two query numbers .
+4-76:Our result confirms the observation of [11] that the choice of the initial query has minimal effect on the final performance .
+4-77:We can explain this intuitively as follows: Our algorithm approximates the optimal set of queries to use for a particular Web site .
+4-78:Once the algorithm has issued a significant number of queries, it has an accurate estimation of the content of the Web site, regardless of the initial query .
+4-79:Since this estimation is similar for all runs of the algorithm, the crawlers will use roughly the same queries .
+4-80:4.3 Impact of the limit in the number of results While the Amazon and dmoz sites have the respective limit of 32,000 and 10,000 in their result sizes, these limits may be larger than those imposed by other Hidden Web sites .
+4-81:In order to investigate how a tighter limit in the result size affects the performance of our algorithms, we performed two additional crawls to the generic dmoz site: we ran the generic frequency and adaptive policies but we retrieved only up to the top 1,000 results for every query .
+4-82:In Figure 14 we plot the coverage for the two policies as a function of the number of queries .
+4-83:As one might expect, by comparing the new result in Figure 14 to that of Figure 11 where the result limit was 10,000, we conclude that the tighter limit requires a higher number of queries to achieve the same coverage .
+4-84:For example, when the result limit was 10,000, the adaptive pol107 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 500 1000 1500 2000 2500 3000 3500 FractionofUniquePages Query Number Cumulative fraction of unique pages downloaded per query Dmoz Web site (cap limit 1000) adaptive generic frequency Figure 14: Coverage of general dmoz after limiting the number of results to 1,000 icy could download 70% of the site after issuing 630 queries, while it had to issue 2,600 queries to download 70% of the site when the limit was 1,000 .
+4-85:On the other hand, our new result shows that even with a tight result limit, it is still possible to download most of a Hidden Web site after issuing a reasonable number of queries .
+4-86:The adaptive policy could download more than 85% of the site after issuing 3,500 queries when the limit was 1,000 .
+4-87:Finally, our result shows that our adaptive policy consistently outperforms the generic frequency policy regardless of the result limit .
+4-88:In both Figure 14 and Figure 11, our adaptive policy shows significantly larger coverage than the generic frequency policy for the same number of queries .
+4-89:4.4 Incorporating the document download cost For brevity of presentation, the performance evaluation results provided so far assumed a simplified cost model where every query involved a constant cost .
+4-90:In this section we present results regarding the performance of the adaptive and generic frequency algorithms using Equation 2 to drive our query selection process .
+4-91:As we discussed in Section 2.3.1, this query cost model includes the cost for submitting the query to the site, retrieving the result index page, and also downloading the actual pages .
+4-92:For these costs, we examined the size of every result in the index page and the sizes of the documents, and we chose cq = 100, cr = 100, and cd = 10000, as values for the parameters of Equation 2, and for the particular experiment that we ran on the PubMed website .
+4-93:The values that we selected imply that the cost for issuing one query and retrieving one result from the result index page are roughly the same, while the cost for downloading an actual page is 100 times larger .
+4-94:We believe that these values are reasonable for the PubMed Web site .
+4-95:Figure 15 shows the coverage of the adaptive and genericfrequency algorithms as a function of the resource units used during the download process .
+4-96:The horizontal axis is the amount of resources used, and the vertical axis is the coverage .
+4-97:As it is evident from the graph, the adaptive policy makes more efficient use of the available resources, as it is able to download more articles than the generic frequency, using the same amount of resource units .
+4-98:However, the difference in coverage is less dramatic in this case, compared to the graph of Figure 9 .
+4-99:The smaller difference is due to the fact that under the current cost metric, the download cost of documents constitutes a significant portion of the cost .
+4-100:Therefore, when both policies downloaded the same number of documents, the saving of the adaptive policy is not as dramatic as before .
+4-101:That 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 5000 10000 15000 20000 25000 30000 FractionofUniquePages Total Cost (cq=100, cr=100, cd=10000) Cumulative fraction of unique pages downloaded per cost unit PubMed Web site adaptive frequency Figure 15: Coverage of PubMed after incorporating the document download cost is, the savings in the query cost and the result index download cost is only a relatively small portion of the overall cost .
+4-102:Still, we observe noticeable savings from the adaptive policy .
+4-103:At the total cost of 8000, for example, the coverage of the adaptive policy is roughly 0.5 while the coverage of the frequency policy is only 0.3. .
+5 RELATED WORK :
+5-1:In a recent study, Raghavan and Garcia Molina [29] present an architectural model for a Hidden Web crawler .
+5-2:The main focus of this work is to learn Hidden Web query interfaces, not to generate queries automatically .
+5-3:The potential queries are either provided manually by users or collected from the query interfaces .
+5-4:In contrast, our main focus is to generate queries automatically without any human intervention .
+5-5:The idea of automatically issuing queries to a database and examining the results has been previously used in different contexts .
+5-6:For example, in [10, 11], Callan and Connel try to acquire an accurate language model by collecting a uniform random sample from the database .
+5-7:In [22] Lawrence and Giles issue random queries to a number of Web Search Engines in order to estimate the fraction of the Web that has been indexed by each of them .
+5-8:In a similar fashion, Bharat and Broder [8] issue random queries to a set of Search Engines in order to estimate the relative size and overlap of their indexes .
+5-9:In [6], Barbosa and Freire experimentally evaluate methods for building multi keyword queries that can return a large fraction of a document collection .
+5-10:Our work differs from the previous studies in two ways .
+5-11:First, it provides a theoretical framework for analyzing the process of generating queries for a database and examining the results, which can help us better understand the effectiveness of the methods presented in the previous work .
+5-12:Second, we apply our framework to the problem of Hidden Web crawling and demonstrate the efficiency of our algorithms .
+5-13:Cope et al .
+5-14:[15] propose a method to automatically detect whether a particular Web page contains a search form .
+5-15:This work is complementary to ours; once we detect search interfaces on the Web using the method in [15], we may use our proposed algorithms to download pages automatically from those Web sites .
+5-16:Reference [4] reports methods to estimate what fraction of a text database can be eventually acquired by issuing queries to the database .
+5-17:In [3] the authors study query based techniques that can extract relational data from large text databases .
+5-18:Again, these works study orthogonal issues and are complementary to our work .
+5-19:In order to make documents in multiple textual databases searchable at a central place, a number of harvesting approaches have 108 been proposed (e.g., OAI [21], DP9 [24]) .
+5-20:These approaches essentially assume cooperative document databases that willingly share some of their metadata and or documents to help a third party search engine to index the documents .
+5-21:Our approach assumes uncooperative databases that do not share their data publicly and whose documents are accessible only through search interfaces .
+5-22:There exists a large body of work studying how to identify the most relevant database given a user query [20, 19, 14, 23, 18] .
+5-23:This body of work is often referred to as meta searching or database selection problem over the Hidden Web .
+5-24:For example, [19] suggests the use of focused probing to classify databases into a topical category, so that given a query, a relevant database can be selected based on its topical category .
+5-25:Our vision is different from this body of work in that we intend to download and index the Hidden pages at a central location in advance, so that users can access all the information at their convenience from one single location. .
+6-1:Traditional crawlers normally follow links on the Web to discover and download pages
+6-2:Therefore they cannot get to the Hidden Web pages which are only accessible through query interfaces
+6-3:In this paper, we studied how we can build a Hidden Web crawler that can automatically query a Hidden Web site and download pages from it
+6-4:We proposed three different query generation policies for the Hidden Web: a policy that picks queries at random from a list of keywords, a policy that picks queries based on their frequency in a generic text collection, and a policy which adaptively picks a good query based on the content of the pages downloaded from the Hidden Web site
+6-5:Experimental evaluation on 4 real Hidden Web sites shows that our policies have a great potential
+6-6:In particular, in certain cases the adaptive policy can download more than 90% of a Hidden Web site after issuing approximately 100 queries
+6-7:Given these results, we believe that our work provides a potential mechanism to improve the search engine coverage of the Web and the user experience of Web search
+6-8:6.1 Future Work We briefly discuss some future research avenues
+6-9:Multi attribute Databases We are currently investigating how to extend our ideas to structured multi attribute databases
+6-10:While generating queries for multi attribute databases is clearly a more difficult problem, we may exploit the following observation to address this problem: When a site supports multi attribute queries, the site often returns pages that contain values for each of the query attributes
+6-11:For example, when an online bookstore supports queries on title, author and isbn, the pages returned from a query typically contain the title, author and ISBN of corresponding books
+6-12:Thus, if we can analyze the returned pages and extract the values for each field (e.g, title = ‘Harry Potter", author = ‘J.K
+6-13:Rowling", etc), we can apply the same idea that we used for the textual database: estimate the frequency of each attribute value and pick the most promising one
+6-14:The main challenge is to automatically segment the returned pages so that we can identify the sections of the pages that present the values corresponding to each attribute
+6-15:Since many Web sites follow limited formatting styles in presenting multiple attributes  for example, most book titles are preceded by the label Title:  we believe we may learn page segmentation rules automatically from a small set of training examples
+6-16:Other Practical Issues In addition to the automatic query generation problem, there are many practical issues to be addressed to build a fully automatic Hidden Web crawler
+6-17:For example, in this paper we assumed that the crawler already knows all query interfaces for Hidden Web sites
+6-18:But how can the crawler discover the query interfaces? The method proposed in [15] may be a good starting point
+6-19:In addition, some Hidden Web sites return their results in batches of, say, 20 pages, so the user has to click on a next button in order to see more results
+6-20:In this case, a fully automatic Hidden Web crawler should know that the first result index page contains only a partial result and press the next button automatically
+6-21:Finally, some Hidden Web sites may contain an infinite number of Hidden Web pages which do not contribute much significant content (e.g
+6-22:a calendar with links for every day)
+6-23:In this case the Hidden Web crawler should be able to detect that the site does not have much more new content and stop downloading pages from the site
+6-24:Page similarity detection algorithms may be useful for this purpose [9, 13].
+7-1:Lexisnexis http:  www.lexisnexis.com
+7-2:The Open Directory Project, http:  www.dmoz.org
+7-3:E
+7-4:Agichtein and L
+7-5:Gravano
+7-6:Querying text databases for efficient information extraction
+7-7:In ICDE, 2003
+7-8:E
+7-9:Agichtein, P
+7-10:Ipeirotis, and L
+7-11:Gravano
+7-12:Modeling query based access to text databases
+7-13:In WebDB, 2003
+7-14:Article on New York Times
+7-15:Old Search Engine, the Library, Tries to Fit Into a Google World
+7-16:Available at: http:   www.nytimes.com 2004 06 21 technology 21LIBR.html, June 2004
+7-17:L
+7-18:Barbosa and J
+7-19:Freire
+7-20:Siphoning hidden web data through keyword based interfaces
+7-21:In SBBD, 2004
+7-22:M
+7-23:K
+7-24:Bergman
+7-25:The deep web: Surfacing hidden value,http:   www.press.umich.edu jep 07 01 bergman.html
+7-26:K
+7-27:Bharat and A
+7-28:Broder
+7-29:A technique for measuring the relative size and overlap of public web search engines
+7-30:In WWW, 1998
+7-31:A
+7-32:Z
+7-33:Broder, S
+7-34:C
+7-35:Glassman, M
+7-36:S
+7-37:Manasse, and G
+7-38:Zweig
+7-39:Syntactic clustering of the web
+7-40:In WWW, 1997
+7-41:J
+7-42:Callan, M
+7-43:Connell, and A
+7-44:Du
+7-45:Automatic discovery of language models for text databases
+7-46:In SIGMOD, 1999
+7-47:J
+7-48:P
+7-49:Callan and M
+7-50:E
+7-51:Connell
+7-52:Query based sampling of text databases
+7-53:Information Systems, 19(2):97 130, 2001
+7-54:K
+7-55:C. C
+7-56:Chang, B
+7-57:He, C
+7-58:Li, and Z
+7-59:Zhang
+7-60:Structured databases on the web: Observations and implications
+7-61:Technical report, UIUC
+7-62:J
+7-63:Cho, N
+7-64:Shivakumar, and H
+7-65:Garcia Molina
+7-66:Finding replicated web collections
+7-67:In SIGMOD, 2000
+7-68:W
+7-69:Cohen and Y
+7-70:Singer
+7-71:Learning to query the web
+7-72:In AAAI Workshop on Internet Based Information Systems, 1996
+7-73:J
+7-74:Cope, N
+7-75:Craswell, and D
+7-76:Hawking
+7-77:Automated discovery of search interfaces on the web
+7-78:In 14th Australasian conference on Database technologies, 2003
+7-79:T
+7-80:H
+7-81:Cormen, C
+7-82:E
+7-83:Leiserson, and R
+7-84:L
+7-85:Rivest
+7-86:Introduction to Algorithms, 2nd Edition
+7-87:MIT Press McGraw Hill, 2001
+7-88:D
+7-89:Florescu, A
+7-90:Y
+7-91:Levy, and A
+7-92:O
+7-93:Mendelzon
+7-94:Database techniques for the world wide web: A survey
+7-95:SIGMOD Record, 27(3):59 74, 1998
+7-96:B
+7-97:He and K
+7-98:C. C
+7-99:Chang
+7-100:Statistical schema matching across web query interfaces
+7-101:In SIGMOD Conference, 2003
+7-102:P
+7-103:Ipeirotis and L
+7-104:Gravano
+7-105:Distributed search over the hidden web: Hierarchical database sampling and selection
+7-106:In VLDB, 2002
+7-107:P
+7-108:G
+7-109:Ipeirotis, L
+7-110:Gravano, and M
+7-111:Sahami
+7-112:Probe, count, and classify: Categorizing hidden web databases
+7-113:In SIGMOD, 2001
+7-114:C
+7-115:Lagoze and H
+7-116:V
+7-117:Sompel
+7-118:The Open Archives Initiative: Building a low barrier interoperability framework In JCDL, 2001
+7-119:S
+7-120:Lawrence and C
+7-121:L
+7-122:Giles
+7-123:Searching the World Wide Web
+7-124:Science, 280(5360):98 100, 1998
+7-125:V
+7-126:Z
+7-127:Liu, J
+7-128:C
+7-129:Richard C
+7-130:Luo and, and W
+7-131:W
+7-132:Chu
+7-133:Dpro: A probabilistic approach for hidden web database selection using dynamic probing
+7-134:In ICDE, 2004
+7-135:X
+7-136:Liu, K
+7-137:Maly, M
+7-138:Zubair and M
+7-139:L
+7-140:Nelson
+7-141:DP9 An OAI Gateway Service for Web Crawlers
+7-142:In JCDL, 2002
+7-143:B
+7-144:B
+7-145:Mandelbrot
+7-146:Fractal Geometry of Nature
+7-147:W
+7-148:H
+7-149:Freeman & Co
+7-150:A
+7-151:Ntoulas, J
+7-152:Cho, and C
+7-153:Olston
+7-154:What"s new on the web? the evolution of the web from a search engine perspective
+7-155:In WWW, 2004
+7-156:A
+7-157:Ntoulas, P
+7-158:Zerfos, and J
+7-159:Cho
+7-160:Downloading hidden web content
+7-161:Technical report, UCLA, 2004
+7-162:S
+7-163:Olsen
+7-164:Does search engine"s power threaten web"s independence? http:  news.com.com 2009 1023 963618.html
+7-165:S
+7-166:Raghavan and H
+7-167:Garcia Molina
+7-168:Crawling the hidden web
+7-169:In VLDB, 2001
+7-170:G
+7-171:K
+7-172:Zipf
+7-173:Human Behavior and the Principle of Least Effort
+7-174:Addison Wesley, Cambridge, MA, 1949
+7-175:109
+picture:

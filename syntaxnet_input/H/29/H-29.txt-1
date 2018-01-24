@@ -1,0 +1,26 @@
+Existing pseudo relevance feedback methods typically perform averaging over the top retrieved documents, but ignore an important statistical dimension
+Treating the baseline feedback method as a black box, and the output feedback model as a random variable, we estimate a posterior distribution for the feedback model by resampling a given query"s top retrieved documents, using the posterior mean or mode as the enhanced feedback model .
+We then perform model combination over several enhanced models, each based on a slightly modified query sampled from the original query .
+We find that resampling documents helps increase individual feedback model precision by removing noise terms, while sampling from the query improves robustness (worst case performance) by emphasizing terms related to multiple query aspects .
+The result is a meta feedback algorithm that is both more robust and more precise than the original strong baseline method .
+Categories and Subject Descriptors
+Not only do we not know the queries that will be presented to our retrieval algorithm ahead of time, but the user"s information need may be vague or incompletely specified by these queries .
+Even if the query were perfectly specified, language in the collection documents is inherently complex and ambiguous and matching such language effectively is a formidable problem by itself .
+With this in mind, we wish to treat many important quantities calculated by the retrieval system, whether a relevance score for a document, or a weight for a query expansion term, as random variables whose true value is uncertain but where the uncertainty about the true value may be quantified by replacing the fixed value with a probability distribution over possible values .
+In this way, retrieval algorithms may attempt to quantify the risk or uncertainty associated with their output rankings, or improve the stability or precision of their internal calculations .
+Current algorithms for pseudo relevance feedback tend to follow the same basic method whether we use vector space based algorithms such as Rocchio"s formula [16], or more recent language modeling approaches such as Relevance Models [10] .
+First, a set of top retrieved documents is obtained from an initial query and assumed to approximate a set of relevant documents .
+Next, a single feedback model vector is computed according to some sort of average, centroid, or expectation over the set of possibly relevant document models .
+For example, the document vectors may be combined with equal weighting, as in Rocchio, or by query likelihood, as may be done using the Relevance Model1 .
+The use of an expectation is reasonable for practical and theoretical reasons, but by itself ignores potentially valuable information about the risk of the feedback model .
+Our main hypothesis in this paper is that estimating the uncertainty in feedback is useful and leads to better individual feedback models and more robust combined models .
+Therefore, we propose a method for estimating uncertainty associated with an individual feedback model in terms of a posterior distribution over language models .
+To do this, we systematically vary the inputs to the baseline feedback method and fit a Dirichlet distribution to the output .
+We use the posterior mean or mode as the improved feedback model estimate .
+This process is shown in Figure 1 .
+As we show later, the mean and mode may vary significantly from the single feedback model proposed by the baseline method .
+We also perform model combination using several improved feedback language models obtained by a small number of new queries sampled from the original query .
+A model"s weight combines two complementary factors
+1 For example, an expected parameter vector conditioned on the query observation is formed from top retrieved documents, which are treated as training strings (see [10], p .
+62) .
+Figure 1

@@ -1,0 +1,78 @@
+This section presents two simulation setups and their performance results .
+Section 6.1 examines whether our new view approach is superior to existing view models, in spite of its higher indexing complexity .
+Section 6.2 discusses the degree of practicality and scalability of our indexing method that is designed for our new view model .
+6.1 JustificationofObject initiatedView Model 6.1.1 Evaluation Metrics To quantify the quality of the retrieved results of query processing, we use two widely known evaluation metrics, Precision and Recall (R), that estimate the degree of accuracy and comprehensiveness of a given result set [15] .
+P is the ratio of relevant, retrieved items to all retrieved items .
+A lower value of P implies that the query result set contains a large number of unnecessary objects that do not have to be delivered to a client .
+A higher P value means a higher network traffic load than required .
+R is the ratio of relevant, retrieved items to all relevant items .
+A lower R value means that more objects that should be recognized are ignored .
+From the R measure, we can quantitatively estimate the occurrence of object popping .
+In addition to the P and R metrics, we use a standardized singlevalued query evaluation metric that combines P and R, called Emeasure [15] .
+The E measure is defined as
+If £] is equal to 1, P and R are equally important .
+If £] is less than 1, P becomes more important .
+Otherwise, R will affect the E measure significantly .
+A lower E measure value implies that the tested view model has a higher quality .
+The best E measure value is zero, where the best values for P and R are both ones .
+6.1.2 Simulation Setup We tested four query processing schemes, which use either a user initiated or an object initiated view model
+PQ OR collects a set of objects whose AOI intersects with a given user point, formally {o|q.P ? o.R} .
+RQ OR, an imaginary computation scheme, is the combination of RQ OP and PQ OR where the AOI of an object intersects with that of a user, {o|o.R ¡ä q.R = ?} .
+Lastly, ACQ OR, an approximate visibility computation model, is a special scheme designed for grid based space partitioning, which is our choice of cell evaluation methodology for edge indexing .
+If a virtual space is partitioned into tiled cells and a user point belongs to one of the cells, the ACQ OR searches the objects whose AOI 409 Table 5
+Scheme P R RQ OP |{o|o.P ?q.R?q.P ?o.R)}| |{o|o.P ?q.R}| |{o|o.P ?q.R?q.P ?o.R)}| |{o|q.P ?o.R}| PQ OR |{o|q.P ?o.R}| |{o|q.P ?o.R}| = 1 |{o|q.P ?o.R}| |{o|q.P ?o.R}| = 1 RQ OR |{o|q.P ?o.R}| |{o|q.R¡äo.R=?}| |{o|q.P ?o.R}| |{o|q.P ?o.R}| = 1 ACQ OR |{o|q.P ?o.R}| |{o|c.R¡äo.R=?,q.P ?c.R}| |{o|q.P ?o.R}| |{o|q.P ?o.R}| = 1 would intersect with the region of the corresponding grid cell .
+Of course, it exhibits similar properties as RQ OR while the result set of its query is not a subset of the RQ OR query result .
+It identifies any object o satisfying the condition c.R ¡ä o.R = ? where the cell c satisfies q.P ? c.R as well .
+Our simulation program populated 100K object entities and 10K user entities in a 2D unit space, [0, 1) ¡Ñ [0, 1) .
+The populated entities are uniformly located in the unit space .
+The side length of their AOI is also uniformly assigned in the range of [0.05, 0.14], meaning 5% to 14% of the side length of the unit space .
+The program performs intersection tests between all user and all object entities exhaustively and computes the P, R, and E measure values (shown in Table 5) .
+6.1.3 Experimental Results Distribution of P and R measure
+We can observe that P and R are roughly inversely proportional to each other when varying a user AOI range .
+A smaller side length leads to higher accuracy but lower comprehensiveness .
+For example, 5% of the side length of a user AOI detects all objects whose side length of the AOI is at least 5% .
+Thus, every object retrieved by RQ OP is guaranteed to be all rendered at the client .
+But RQ OP cannot detect the objects outside the AOI of the user, thus suffering from too many missing objects that should be rendered .
+Similarly, the user whose AOI is wider than any other AOI cannot miss any objects that should be rendered, but detects too many unnecessary objects .
+To remove any object popping problem, the side length of any AOI should be greater than or equal to the maximum visible distance of any object in the system, which may incur significant system degradation .
+E measure Distribution
+First, the precision values of RQ OP lie in between those of ACQ OR (100 ¡Ñ 100 grid) and RQ OR .
+Second, the tendency curve of the Precision to E measure plot of RQ OR shows resemblance to that of ACQ OR .
+It looks as if the two curves lie on the same imaginary curve, which conveys that ACQ OR inherits the properties of RQ OR .
+Effect of Different Grid Size
+We use a boxand whisker plot to show both median values and the variances of E measure distributions and the outliers of each scheme .
+We also draw the median value of the RQ OP E measures (green line) for comparison purposes .
+While the ACQ OR schemes have some outliers, their E measure values are heavily concentrated around the median values, thus, they are less sensitive to object AOI .
+As expected, fine grained grid partitioning showed a smaller E measure value .
+The RQ OP scheme showed a wider variance of its quality than other schemes, which is largely attributable to different user side lengths .
+As the R measure becomes more important, the query quality of ACQ OR is improved more evidently than that of RQOP .
+From Figure 9, the 20¡Ñ20 grid scheme had a better E measure Table 6
+indexing Update Time Evaluation Time Total Single tableF ull 3.48 0.82 4.30 Single tableIncr 2.08 0.80 2.88 Two table 1.74 0.93 2.67 Table 7
+indexing Update Time Evaluation Time Total Single tableF ull 3.65 0.77 4.42 Single tableIncr 3.49 0.74 4.23 Two table 1.75 0.93 2.68 value in a prioritized environment than in an equal prioritized environment .
+As a result, we can roughly anticipate that at least the 20¡Ñ20 grid cell partitioning retrieves a higher quality of visible sets than the RQ OP .
+6.2 Evaluation of Edge Indexing In this section, we present the preliminary results of the simulations that examine the applicability of our edge indexing implementation .
+To estimate the degree of real time support of our indexing method, we used the total elapsed time of updating all moving entities and computing visible sets for every cell .
+We also experimented with different grid partitioning policies and compared them with exhaustive search solutions .
+6.2.1 Simulation Setup We implemented edge indexing algorithms in C and ran the experiments on a 64 bit 900MHz Itanium processor with 8 GBs of memory .
+We implemented a generalized hash table mechanism to store node and edge structures .
+6.2.2 Experimental Results Periodic Monitoring Cost
+The moving speed of entities was also uniformly assigned between 0 and v .
+In a slowly moving environment (Table 6), the incremental edge indexing method outperforms full update edge indexing, due to reduced index updates; the two table approach surpasses the performance of single table schemes, mainly due to the lack of token lookup during an update .
+However, the two table method showed a slightly higher evaluation time than the two single table methods because of its sequential token removal .
+Table 7 exemplified the elapsed time of index updates and cell evaluations in a highly dynamic environment where slowly moving and dynamically moving objects co exist .
+Compared with the results shown in Table 6, the two table approach produced similar performance numbers regardless of the underlying moving environments .
+However, the performance gain obtained by the incremental policy of the single table is decreased compared with that in the slowly moving environment .
+Effect of Different Grid Size
+In this section, we evaluate the performance results of three different visibility computation models
+410 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Recall Precision(P) 5% Range Query 6% Range Query 7% Range Query 8% Range Query 9% Range Query 10% Range Query 11% Range Query 12% Range Query 13% Range Query 14% Range Query Optimality 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Precision E?measure Optimality RQ?OP RQ?OR ACQ?OR (100x100 grid cells) 10x10 20x20 50x50 100x100 200x200 500x500 1Kx1K RQ?OP 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 E?Measure Visibility Test Scheme Median of RQ?OP Figure 7
+Figure 8
+Figure 9
+10K 50K 100K 10 ?1 10 0 10 1 10 2 # of Object Updates (10K queries) TotalElapsedTime(seconds) Population Size = 100K, visible range = 5?15%, mobility = 1% Exhaustive Search (Intersection Test) Exhaustive Search (Euclidean Distance Measure) 200x200 Two?table Edge Indexing 100x100 Two?table Edge Indexing 50x50 Two?table Edge Indexing Figure 10
+Exhaustive search methods do not maintain any intermediate results .
+They simply compute whether a given user point is inside a given object AOI .
+They can tolerate unpredictable behavior of object movement .
+In spite of their simple design and extensibility, they suffer from lengthy computational delays to complete the visibility determination .
+Figure 10 reveals the performance difference between the exhaustive solutions and the two table methods, a difference of up to two orders of magnitude .
+As shown in Section 5, the total elapsed time of object updates and cell evaluations is linear with respect to the average side length of object AOI .
+Because the side length is represented by cell units, an increase in the number of cells increases the side lengths proportionally .
+Figure 10 illustrates that the measured simulation results roughly match the expected performance gain computed from the analysis. .

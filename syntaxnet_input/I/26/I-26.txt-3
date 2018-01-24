@@ -1,0 +1,121 @@
+We consider an environment populated with an infinite number of self interested fully rational agents of different types3 .
+Any agent Ai can form a partnership with any other agent Aj in the environment, associated with an immediate perceived utility U(Ai, Aj) for both agents .
+As in many other partnership formation models (see [5, 21]) we assume that the value of U(x, y) (where x and y are any two agents in the environment) is randomly drawn from a continuous population characterized with a probability distribution function (p.d.f.) f(U) and a cumulative distribution function (c.d.f.) F(U), (0 ? U < ¡Û) .
+The agents are assumed to be acquainted with the utility distribution function f(x), however they cannot tell a priori what utility can be gained by a partnership with any specific agent in their environment .
+Therefore, the only way by which an agent Ai can learn the value of a partnership with another agent Aj, U(Ai, Aj), is by interacting with agent Aj .
+Since each agent in two sided search models has no prior information concerning any of the other agents in its environment, it initiates interactions (i.e., search) with other agents randomly .
+The nature of the two sided search application suggests that the agents are satisfied with having a single partner, thus once a partnership is formed the two agents forming it terminate their search process and leave the environment .
+The agents are not limited to interacting with a single potential partner agent at a time, but rather can select to interact with several other agents in parallel .
+We define a search round stage as the interval in which the agent interacts with several agents in parallel and learns the utility of forming a partnership with each of them .
+Based on the learned values, the agent needs to decide whether to commit or reject each of the potential partnerships available to it .
+Commitment is achieved by sending a commit message to the appropriate agent and an agent cannot commit to more than one potential partnership simultaneously .
+Declining a partnership is achieved by sending a reject message .
+The communication between the agents is assumed to be asynchronous and each agent can delay its decision, concerning any given potential partnership, as necessary.4 If two agents Ai and Aj mutually commit to a partnership between 3 The infinite number of agents assumption is common in two sided search models (see [5, 22, 21]) .
+In many domains (e.g., eCommerce) this derives from the high entrance and leave rates, thus the probability of running into the same agent in a random match is negligible .
+4 Notice that the asynchronous procedure does not eliminate the inherent structure of the search .
+The search is still based on stages rounds where on each search round the agent interacts with several other agents, except that now the agent can delay its decision making process (within each search round) as necessary .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 451 them, then the partnership is formed and both agents gain the immediate utility U(Ai, Aj) associated with it .
+If an agent does not form a partnership in a given search stage, it continues to its next search stage and interacts with more agents in a similar manner .
+Given the option for asynchronous decision making, each individual agent, Ai, follows the following procedure
+.
+.
+, AN } of agents to interact with 4
+.
+.
+, U(Ai, AN )} 5
+In the above algorithm, any agent Ai first identifies the set A? of other agents it is willing to accept out of those reviewed in the current search stage and sends a reject message to the rest .
+Then it sends a commit message to the agent Aj ? A? that is associated with the partnership yielding the highest utility .
+If a reject message was received from agent Aj then this agent is removed from A? and a new commit message is sent according to the same criteria .
+The process continues until either
+The method differs from the one used in the I DM model in the way it handles the commitment messages
+Our proposed S DM model is much more intuitive as it allows an agent to hold and possibly exploit relatively beneficial opportunities even if its first priority partnership is rejected by the other agent .
+In the I DM model, on the other hand, since reject messages are sent alongside the commit message, simultaneously, a reject message from the agent associated with the best partnership enforces a new search round .
+Notice that the two sided search mechanism above aligns with most other two sided search mechanisms in a sense that it is based on random matching (i.e., in each search round the agent encounters a random sample of agents) .
+While the maintenance of the random matching infrastructure is an interesting research question, it is beyond the scope of this paper .
+Notwithstanding, we do wish to emphasize that given the large number of agents in the environment and the fact that in MAS the turnover rate is quite substantial due to the open nature of the environment (and the interoperability between environments) .
+Therefore, the probability of ending up interacting with the same agent more than once, when initiating a random interaction, is practically negligible .
+THEOREM 1 .
+The S DM agent"s decision making process
+Proof
+Since bargaining is not applicable here (benefits are non divisible) then the agent"s strategy is limited to accepting or rejecting offers .
+The decision of rejecting a partnership in step 6 is based only on the immediate utility that can be gained from this partnership in comparison to the expected utility of resuming the search (i.e., moving on to the next search stage) and is not affected by the willingness of the other agents to commit or reject a partnership with Ai .
+As for partnerships that yield a utility greater than the expected utility of resuming the search (i.e., the partnerships with agents from the set A? ), the agent always prefers to delay its decision concerning partnerships of this type until receiving all notifications concerning potential partnerships that are associated with a greater immediate utility .
+The delay never results with a loss of opportunity since the other agent"s decision concerning this opportunity is not affected by agent Ai"s willingness to commit or reject this opportunity (but rather by the other agent"s estimation of its expected utility if resuming the search and the rejection messages it receives for more beneficial potential partnerships) .
+Finally, the agent cannot benefit from delaying a commit message to the agent associated with the highest utility in A? , thus will always send it a commit message .
+(b) We first prove the following lemma that states that the probability of having two partnering opportunities associated with an identical utility is zero .
+LEMMA 2.1 .
+When f is a continuous distribution function, then lim y¡÷x ?Z y z=x f(z)dz 2 ! = 0 .
+Proof
+Therefore ?Z y z=x f(z)dz 2 = |f(c)|2 |y ? x|2 When y ¡÷ x, f(c) stays bounded due to continuity of f, moreover limy¡÷x f(c) = f(x), hence lim y¡÷x ?Z y z=x f(z)dz 2 ! = f(x)2 lim y¡÷x |y ? x|2 = 0 .
+.
+An immediate derivative from the above lemma is that no tiebreaking procedures are required and an agent in a waiting state is always waiting for a reply from the single agent that is associated with the highest utility among the agents in the set A? (i.e., no other agent in the set A? is associated with an equal utility) .
+A deadlock can be formed only if we can create a cyclic sequence of agents in which any agent is waiting for a reply from the subsequent agent in the sequence .
+However, in our method any agent Ai will be waiting for a reply from another agent Aj, to which it sent a commit message, only if
+Therefore, if we have a sequence of waiting agents then the utility associated with partnerships between any two subsequent agents in the sequence must increase along the sequence .
+If the sequence is cyclic, then we have a 452 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) pattern of the form
+Since U(Ai, Al) > U(Aj, Ai), agent Ai can be waiting for agent Aj only if it has already been rejected by Al (see (1) above) .
+However, if agent Al has rejected agent Ai then it has also rejected agent Aj .
+Therefore, agent Aj cannot be waiting for agent Al to make a decision .
+The same logic can be applied to any longer sequence .
+2 The search activity is assumed to be costly [11, 1, 16] in a way that any agent needs to consume some of its resources in order to locate other agents to interact with, and for maintaining the interactions themselves .
+We assume utilities and costs are additive and that the agents are trying to maximize their overall utility, defined as the utility from the partnership formed minus the aggregated search costs along the search process .
+The agent"s cost of interacting with N other agents (in parallel) is given by the function c(N) .
+The search cost structure is principally a parameter of the environment and thus shared by all agents .
+An agent"s strategy S(A ) ¡÷ {commit Aj ? A , reject A ? A , N} defines for any given set of partnership opportunities, A , what is the subset of opportunities that should be immediately declined, to which agent to send a commit message (if no pending notification from another agent is expected) or the number of new interactions to initiate .
+Since the search process is two sided, our goal is to find an equilibrium set of strategies for the agents .
+2.1 Strategy Structure Recall that each agent declines partnerships based on (a) the partnerships" immediate utility in comparison to the agent"s expected utility from resuming search; and (b) achieving a mutual commitment (thus declining pending partnerships that were not rejected in (a)) .
+Therefore an agent"s strategy can be represented by a pair (Nt , xt ) where Nt is the number of agents with whom it chooses to interact in search stage t and xt is its reservation value5 (a threshold) for accepting rejecting the resulting N potential partnerships .
+The subset A? , thus, will include all partnership opportunities of search stage t that are associated with a utility equal to or greater than xt .
+The reservation value xt is actually the expected utility for resuming the search at time t (i.e., U(resume)) .
+The agent will always prefer committing to an opportunity greater than the expected utility of resuming the search and will always prefer to resume the search otherwise .
+Since the agents are not limited by a decision horizon, and their search process does not imply any new information about the market structure (e.g., about the utility distribution of future partnership opportunities), their strategy is stationary an agent will not accept an opportunity it has rejected beforehand (i.e., x1 = x2 = .. .
+= x) and will use the same sample size, N1 = N2 = .. .
+= N, along its search .
+2.2 Calculating Acceptance Probabilities The transition from instantaneous decision making process to a sequential one introduces several new difficulties in extracting the agents" strategies .
+Now, in order to estimate the probability of being accepted by any of the other agents, the agent needs to recursively model, while setting its strategy, the probabilities of rejections other agents might face from other agents they interact with .
+In the following paragraphs we introduce several complementary definitions and notations, facilitating the formal introduction of the acceptance probabilities .
+Consider an agent Ai, using a strategy (N, xN ) while operating in an environment where all other agents 5 Notice the reservation value used here is different from a reservation price concept (that is usually used as buyers" private evaluation) .
+The use of reservation value based strategies is common in economic search models [21, 17] .
+are using a strategy (k, xk) .
+The probability that agent Ai will receive a commitment message from agent Aj it interacted with depends on the utility associated with the potential partnership between them, x .
+This probability, denoted by Gk(x) can be calculated as
+(1) The case where x < xk above is trivial
+However even when the partnership"s utility is greater or equal to xk, commitment is not guaranteed .
+In the latter scenario, a commitment message from agent Aj will be received only if agent Aj has been rejected by all other agents in its set A? that were associated with a utility greater than the utility of a partnership with agent Ai .
+The unique solution to the recursive Equation 1 is
+(2) Notice that as expected, a partnership opportunity that yields the maximum mutual utility is necessarily accepted by both agents, i.e., limx¡÷¡Û Gk(x) = 1 .
+On the other hand, when the utility associated with a potential partnership opportunity is zero (x = 0) the acceptance probability is non negligible
+2.3 Setting the Agents" Strategies Using the function Gk(x), we can now formulate and explore the agents" expected utility when using their search strategies .
+Consider again an agent Ai that is using a sample of size N while all other agents are using a strategy (k, xk) .
+We denote by RN (x) the probability that the maximum utility that agent Ai can be guaranteed when interacting with N agents (i.e., the highest utility to which a commit message will be received) is at most x .
+This can be calculated as the probability that none of N agents send agent Ai a commit message for a partnership associated with a utility greater than x
+Therefore, the derivative of the function RN (x), denoted rN (x), is in fact the probability distribution function of the maximum utility that can be guaranteed for agent Ai when sampling N other agents
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 453 This function rN (x) is essential for calculating VN (xN ), the expected utility of agent Ai when using a strategy (N, xN ), given the strategy (k, xk) used by the other agents
+The first term represents the expected utility from mutual commitment scenarios, whereas the second term is the expected utility associated with resuming the search (which equals VN (xN ) since nothing has changed for the agent) .
+Using simple mathematical manipulations and substituting rN (x), Equation 6 transforms into
+THEOREM 2 .
+When other agents use strategy (k, xk)
+After applying further mathematical manipulations we obtain (9) and (10) .
+Both parts of Theorem 2 can be used as an efficient means for extracting the optimal reservation value xN of an agent, given the strategies of the other agents in the environment and the number of parallel interactions it uses .
+Furthermore, in the case of complex distribution functions where extracting xN from Equation 10 is not immediate, a simple algorithm (principally based on binary search) can be constructed for calculating the agent"s optimal reservation value (which equals its expected utility, according to 9), with a complexity O(log( ?x £l )), where £l is the required precision level for xN and ?x is the solution to
+Having the ability to calculate xN , we can now prove the following Proposition 2.1 .
+PROPOSITION 2.1 .
+An agent operating in an environment where all agents are using a strategy according to the instantaneous parallel search equilibrium (i.e., according to the I DM model [21]) can only benefit from deviating to the proposed S DM strategy .
+Sketch of proof
+This results with an optimal reservation value for the agent using S DM, satisfying
+Given the fact that both terms equal c(N), we obtain xS?DM N > xI?DM N and consequently (according to Theorem 2) a similar relationship in terms of expected utilities .
+Figure 1 illustrates the superiority of the proposed search strategy S DM, as well as the expected utility function"s characteristics (as reflected in Theorem 2) .
+For comparative reasons we use the same synthetic environment that was used for the I DM model [21] .
+Here the utilities are assumed to be drawn from a uniform distribution function and the cost function was taken to be c(N) = 0.05 + 0.005N .
+The agent is using N = 3 while other agents are using k = 25 and xk = 0.2 .
+The different curves depict the expected utility of the agent as a function of the reservation value, x, that it uses, when
+As expected, according to Equation 8 and Theorem 2, the agent"s expected utility remains constant until its reservation value exceeds xk .
+Then, it reaches a global maximum when the reservation value satisfies VN (x) = x .
+From the graph we can see that the agent always has an incentive to deviate from the I DM strategy to S DM strategy (as was proven in Proposition 2.1) .
+0.2 0.3 0.4 0.5 0.6 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 reservation value (x) expected utility VN(x) S D M I D M I D M S D M Figure 1

@@ -1,0 +1,401 @@
+﻿Computation in a Distributed Information Market∗ 
+content:
+1 ABSTRACT :
+1-1:According to economic theory supported by empirical and laboratory evidence the equilibrium price of a financial security reflects all of the information regarding the security"s value .
+1-2:We investigate the computational process on the path toward equilibrium, where information distributed among traders is revealed step by step over time and incorporated into the market price .
+1-3:We develop a simplified model of an information market, along with trading strategies, in order to formalize the computational properties of the process .
+1-4:We show that securities whose payoffs cannot be expressed as weighted threshold functions of distributed input bits are not guaranteed to converge to the proper equilibrium predicted by economic theory .
+1-5:On the other hand, securities whose payoffs are threshold functions are guaranteed to converge, for all prior probability distributions .
+1-6:Moreover, these threshold securities converge in at most n rounds, where n is the number of bits of distributed information .
+1-7:We also prove a lower bound, showing a type of threshold security that requires at least n 2 rounds to converge in the worst case .
+1-8:F.m [Theory of Computation]: Miscellaneous; J.4 .
+2 INTRODUCTION :
+2-1:The strong form of the efficient markets hypothesis states that market prices nearly instantly incorporate all information available to all traders .
+2-2:As a result, market prices encode the best forecasts of future outcomes given all information, even if that information is distributed across many sources .
+2-3:Supporting evidence can be found in empirical studies of options markets [14], political stock markets [7, 8, 22], sports betting markets [3, 9, 27], horse racing markets [30], market games [23, 24], and laboratory investigations of experimental markets [6, 25, 26] .
+2-4:The process of information incorporation is, at its essence, a distributed computation .
+2-5:Each trader begins with his or her own information .
+2-6:As trades are made, summary information is revealed through market prices .
+2-7:Traders learn or infer what information others are likely to have by observing prices, then update their own beliefs based on their observations .
+2-8:Over time, if the process works as advertised, all information is revealed, and all traders converge to the same information state .
+2-9:At this point, the market is in what is called a rational expectations equilibrium [11, 16, 19] .
+2-10:All information available to all traders is now reflected in the going prices, and no further trades are desirable until some new information becomes available .
+2-11:While most markets are not designed with information aggregation as a primary motivation for example, derivatives 156 markets are intended mainly for risk management and sports betting markets for entertainment recently, some markets have been created solely for the purpose of aggregating information on a topic of interest .
+2-12:The Iowa Electronic Market1 is a prime example, operated by the University of Iowa Tippie College of Business for the purpose of investigating how information about political elections distributed among traders gets reflected in securities prices whose payoffs are tied to actual election outcomes [7, 8] .
+2-13:In this paper, we investigate the nature of the computational process whereby distributed information is revealed and combined over time into the prices in information markets .
+2-14:To do so, in Section 3, we propose a model of an information market that is tractable for theoretical analysis and, we believe, captures much of the important essence of real information markets .
+2-15:In Section 4, we present our main theoretical results concerning this model .
+2-16:We prove that only Boolean securities whose payoffs can be expressed as threshold functions of the distributed input bits of information are guaranteed to converge as predicted by rational expectations theory .
+2-17:Boolean securities with more complex payoffs may not converge under some prior distributions .
+2-18:We also provide upper and lower bounds on the convergence time for these threshold securities .
+2-19:We show that, for all prior distributions, the price of a threshold security converges to its rational expectations equilibrium price in at most n rounds, where n is the number of bits of distributed information .
+2-20:We show that this worst case bound is tight within a factor of two by illustrating a situation in which a threshold security requires n 2 rounds to converge. .
+3 RELATIONSHIP TO RELATED WORK :
+3-1:As mentioned, there is a great deal of documented evidence supporting the notion that markets are able to aggregate information in a number of scenarios using a variety of market mechanisms .
+3-2:The theoretically ideal mechanism requires what is called a complete market .
+3-3:A complete market contains enough linearly independent securities to span the entire state space of interest [1, 31] .
+3-4:That is, the dimensionality of the available securities equals the dimensionality of the event space over which information is to be aggregated.2 In this ideal case, all private information becomes common knowledge in equilibrium, and thus any function of the private information can be directly evaluated by any agent or observer .
+3-5:However, this theoretical ideal is almost never achievable in practice, because it generally requires a number of securities exponential in the number of random variables of interest .
+3-6:When available securities form an incomplete market [17] in relation to the desired information space as is usually the case aggregation may be partial .
+3-7:Not all private information is revealed in equilibrium, and prices may not convey enough information to recover the complete joint probability distribution over all events .
+3-8:Still, it is generally assumed that aggregation does occur along the dimensions represented in the market; that is, prices do reflect a consistent projection of the entire joint distribution onto the smaller dimensional space spanned by securities .
+3-9:In this pa1 http: www.biz.uiowa.edu iem 2 When we refer to independence or dimensionality of securities, we mean the independence or dimensionality of the random variables on which the security payoffs are based .
+3-10:per, we investigate cases in which even this partial aggregation fails .
+3-11:For example, even though there is enough private information to determine completely the price of a security in the market, the equilibrium price may in fact reveal no information at all! So characterizations of when a rational expectations equilibrium is fully revealing do not immediately apply to our problem .
+3-12:We are not asking whether all possible functions of private information can be evaluated, but whether a particular target function can be evaluated .
+3-13:We show that properties of the function itself play a major role, not just the relative dimensionalities of the information and security spaces .
+3-14:Our second main contribution is examining the dynamics of information aggregation before equilibrium, in particular proving upper and lower bounds on the time to convergence in those cases in which aggregation succeeds .
+3-15:Shoham and Tennenholtz [29] define a rationally computable function as a function of agents" valuations (types) that can be computed by a market, assuming agents follow rational equilibrium strategies .
+3-16:The authors mainly consider auctions of goods as their basic mechanistic unit and examine the communication complexity involved in computing various functions of agents" valuations of goods .
+3-17:For example, they give auction mechanisms that can compute the maximum, minimum, and kth highest of the agents" valuations of a single good using 1, 1, and n − k + 1 bits of communication, respectively .
+3-18:They also examine the potential tradeoff between communication complexity and revenue. .
+4 MODEL OF AN INFORMATION  MARKET :
+4-1:MARKET To investigate the properties and limitations of the process whereby an information market converges toward its rational expectations equilibrium, we formulate a representative model of the market .
+4-2:In designing the model, our goals were two fold: (1) to make the model rich enough to be realistic and (2) to make the model simple enough to admit meaningful analysis .
+4-3:Any modeling decisions must trade off these two generally conflicting goals, and the decision process is as much an art as a science .
+4-4:Nonetheless, we believe that our model captures enough of the essence of real information markets to lend credence to the results that follow .
+4-5:In this section, we present our modeling assumptions and justifications in detail .
+4-6:Section 3.1 describes the initial information state of the system, Section 3.2 covers the market mechanism, and Section 3.3 presents the agents" strategies .
+4-7:3.1 Initial information state There are n agents (traders) in the system, each of whom is privy to one bit of information, denoted xi .
+4-8:The vector of all n bits is denoted x = (x1, x2, .
+4-9:.
+4-10:.
+4-11:, xn) .
+4-12:In the initial state, each agent is aware only of her own bit of information .
+4-13:All agents have a common prior regarding the joint distribution of bits among agents, but none has any specific information about the actual value of bits held by others .
+4-14:Note that this common prior assumption typical in the economics literature does not imply that all agents agree .
+4-15:To the contrary, because each agent has different information, the initial state of the system is in general a state of disagreement .
+4-16:Nearly any disagreement that could be modeled by assuming different priors can instead be mod157 eled by assuming a common prior with different information, and so the common prior assumption is not as severe as it may seem .
+4-17:3.2 Market mechanism The security being traded by the agents is a financial instrument whose payoff is a function f(x) of the agents" bits .
+4-18:The form of f (the description of the security) is common knowledge3 among agents .
+4-19:We sometimes refer to the xi as the input bits .
+4-20:At some time in the future after trading is completed, the true value of f(x) is revealed,4 and every owner of the security is paid an amount f(x) in cash per unit owned .
+4-21:If an agent ends with a negative quantity of the security (by selling short), then the agent must pay the amount f(x) in cash per unit .
+4-22:Note that if someone were to have complete knowledge of all input bits x, then that person would know the true value f(x) of the security with certainty, and so would be willing to buy it at any price lower than f(x) and (short) sell it at any price higher than f(x).5 Following Dubey, Geanakoplos, and Shubik [4], and Jackson and Peck [13], we model the market price formation process as a multiperiod Shapley Shubik market game [28] .
+4-23:The Shapley Shubik process operates as follows: The market proceeds in synchronous rounds .
+4-24:In each round, each agent i submits a bid bi and a quantity qi .
+4-25:The semantics are that agent i is supplying a quantity qi of the security and an amount bi of money to be traded in the market .
+4-26:For simplicity, we assume that there are no restrictions on credit or short sales, and so an agent"s trade is not constrained by her possessions .
+4-27:The market clears in each round by settling at a single price that balances the trade in that round: The clearing price is p = i bi i qi .
+4-28:At the end of the round, agent i holds a quantity qi proportional to the money she bid: qi = bi p .
+4-29:In addition, she is left with an amount of money bi that reflects her net trade at price p: bi = bi − p(qi − qi) = pqi .
+4-30:Note that agent i"s net trade in the security is a purchase if p < bi qi and a sale if p > bi qi .
+4-31:After each round, the clearing price p is publicly revealed .
+4-32:Agents then revise their beliefs according to any information garnered from the new price .
+4-33:The next round proceeds as the previous .
+4-34:The process continues until an equilibrium is reached, meaning that prices and bids do not change from one round to the next .
+4-35:In this paper, we make a further simplifying restriction on the trading in each round: We assume that qi = 1 for each agent i .
+4-36:This modeling assumption serves two analytical purposes .
+4-37:First, it ensures that there is forced trade in every round .
+4-38:Classic results in economics show that perfectly rational and risk neutral agents will never trade with each other for purely speculative reasons (even if they have differing information) [20] .
+4-39:There are many factors that can induce rational agents to trade, such as differing degrees of risk aversion, the presence of other traders who are trading for liquidity reasons rather than speculative gain, or a market maker who is pumping money into the market through a subsidy .
+4-40:We sidestep this issue by simply assuming that the 3 Common knowledge is information that all agents know, that all agents know that all agents know, and so on ad infinitum [5] .
+4-41:4 The values of the input bits themselves may or may not be publicly revealed .
+4-42:5 Throughout this paper we ignore the time value of money .
+4-43:informed agents will trade (for unspecified reasons) .
+4-44:Second, forcing qi = 1 for all i means that the total volume of trade and the impact of any one trader on the clearing price are common knowledge; the clearing price p is a simple function of the agents" bids, p = i bi n .
+4-45:We will discuss the implications of alternative market models in Section 5 .
+4-46:3.3 Agent strategies In order to draw formal conclusions about the price evolution process, we need to make some assumptions about how agents behave .
+4-47:Essentially we assume that agents are riskneutral, myopic,6 and bid truthfully: Each agent in each round bids his or her current valuation of the security, which is that agent"s estimation of the expected payoff of the security .
+4-48:Expectations are computed according to each agent"s probability distribution, which is updated via Bayes" rule when new information (revealed via the clearing prices) becomes available .
+4-49:We also assume that it is common knowledge that all the agents behave in the specified manner .
+4-50:Would rational agents actually behave according to this strategy? It"s hard to say .
+4-51:Certainly, we do not claim that this is an equilibrium strategy in the game theoretic sense .
+4-52:Furthermore, it is clear that we are ignoring some legitimate tactics, e.g., bidding falsely in one round in order to effect other agents" judgments in the following rounds (nonmyopic reasoning) .
+4-53:However, we believe that the strategy outlined is a reasonable starting point for analysis .
+4-54:Solving for a true game theoretic equilibrium strategy in this setting seems extremely difficult .
+4-55:Our assumptions seem reasonable when there are enough agents in the system such that extremely complex meta reasoning is not likely to improve upon simply bidding one"s true expected value .
+4-56:In this case, according the the Shapley Shubik mechanism, if the clearing price is below an agent"s expected value that agent will end up buying (increasing expected profit); otherwise, if the clearing price is above the agent"s expected value, the agent will end up selling (also increasing expected profit). .
+5 COMPUTATIONAL PROPERTIES :
+5-1:In this section, we study the computational power of information markets for a very simple class of aggregation functions: Boolean functions of n variables .
+5-2:We characterize the set of Boolean functions that can be computed in our market model for all prior distributions and then prove upper and lower bounds on the worst case convergence time for these markets .
+5-3:The information structure we assume is as follows: There are n agents, and each agent i has a single bit of private information xi .
+5-4:We use x to denote the vector (x1, .
+5-5:.
+5-6:.
+5-7:, xn) of inputs .
+5-8:All the agents also have a common prior probability distribution P : {0, 1}n → [0, 1] over the values of x .
+5-9:We define a Boolean aggregate function f(x) : {0, 1}n → {0, 1} that we would like the market to compute .
+5-10:Note that x, and hence f(x), is completely determined by the combination of all the agents" information, but it is not known to any one agent .
+5-11:The agents trade in a Boolean security F, which pays off $1 if f(x) = 1 and $0 if f(x) = 0 .
+5-12:So an omniscient 6 Risk neutrality implies that each agent"s utility for the security is linearly related to his or her subjective estimation of the expected payoff of the security .
+5-13:Myopic behavior means that agents treat each round as if it were the final round: They do not reason about how their bids may affect the bids of other agents in future rounds .
+5-14:158 agent with access to all the agents" bits would know the true value of security F either exactly $1 or exactly $0 .
+5-15:In reality, risk neutral agents with limited information will value F according to their expectation of its payoff, or Ei[f(x)], where Ei is the expectation operator applied according to agent i"s probability distribution .
+5-16:For any function f, trading in F may happen to converge to the true value of f(x) by coincidence if the prior probability distribution is sufficiently degenerate .
+5-17:More interestingly, we would like to know for which functions f does the price of the security F always converge to f(x) for all prior probability distributions P.7 In Section 4.2, we prove a necessary and sufficient condition that guarantees convergence .
+5-18:In Section 4.3, we address the natural follow up question, by deriving upper and lower bounds on the worst case number of rounds of trading required for the value of f(x) to be revealed .
+5-19:4.1 Equilibrium price characterization Our analysis builds on a characterization of the equilibrium price of F that follows from a powerful result on common knowledge of aggregates due to McKelvey and Page [19], later extended by Nielsen et al .
+5-20:[21] .
+5-21:Information markets aim to aggregate the knowledge of all the agents .
+5-22:Procedurally, this occurs because the agents learn from the markets: The price of the security conveys information to each agent about the knowledge of other agents .
+5-23:We can model the flow of information through prices as follows .
+5-24:Let Ω = {0, 1}n be the set of possible values of x; we say that Ω denotes the set of possible states of the world .
+5-25:The prior P defines everyone"s initial belief about the likelihood of each state .
+5-26:As trading proceeds, some possible states can be logically ruled out, but the relative likelihoods among the remaining states are fully determined by the prior P .
+5-27:So the common knowledge after any stage is completely described by the set of states that an external observer with no information beyond the sequence of prices observed considers possible (along with the prior) .
+5-28:Similarly, the knowledge of agent i at any point is also completely described by the set of states she considers possible .
+5-29:We use the notation Sr to denote the common knowledge possibility set after round r, and Sr i to denote the set of states that agent i considers possible after round r .
+5-30:Initially, the only common knowledge is that the input vector x is in Ω; in other words, the set of states considered possible by an external observer before trading has occurred is the set S0 = Ω .
+5-31:However, each agent i also knows the value of her bit xi; thus, her knowledge set S0 i is the set {y ∈ Ω|yi = xi} .
+5-32:Agent i"s first round bid is her conditional expectation of the event f(x) = 1 given that x ∈ S0 i .
+5-33:All the agents" bids are processed, and the clearing price p1 is announced .
+5-34:An external observer could predict agent i"s bid if he knew the value of xi .
+5-35:Thus, if he knew the value of x, he could predict the value of p1 .
+5-36:In other words, the external observer knows the function price1 (x) that relates the first round price to the true state x .
+5-37:Of course, he does not know the value of x; however, he can rule out any vector x that would have resulted in a different clearing price from the observed price p1 .
+5-38:7 We assume that the common prior is consistent with x in the sense that it assigns a non zero probability to the actual value of x .
+5-39:Thus, the common knowledge after round 1 is the set S1 = {y ∈ S0 | price1 (y) = p1 Our results have been derived in a simplified model of an information market .
+5-40:In this section, we discuss the applicability of these results to more general trading models .
+5-41:Assuming that agents bid truthfully, Theorem 2 holds in any model in which the price is a known stochastically monotone aggregate of agents" bids .
+5-42:While it seems reasonable that the market price satisfies monotonicity properties, the exact form of the aggregate function may not be known if the volume of each user"s trades is not observable; this depends on the details of the market process .
+5-43:Theorem 3 and Theorem 5 hold more generally; they only require that an agent"s strategy depends only on her conditional expectation of the security"s value .
+5-44:Perhaps the most fragile result is Theorem 4, which relies on the linear form of the Shapley Shubik clearing price (in addition to the conditions for Theorem 2); however, it seems plausible that a similar dimension based bound will hold for other families of nonlinear clearing prices .
+5-45:Up to this point, we have described the model with the same number of agents as bits of information .
+5-46:However, all the results hold even if there is competition in the form of a known number of agents who know each bit of information .
+5-47:Indeed, modeling such competition may help alleviate the strategic problems in our current model .
+5-48:Another interesting approach to addressing the strategic issue is to consider alternative markets that are at least myopically incentive compatible .
+5-49:One example is a market mechanism called a market scoring rule, suggested by Hanson [12] .
+5-50:These markets have the property that a riskneutral agent"s best myopic strategy is to truthfully bid her current expected value of the security .
+5-51:Additionally, the number of securities involved in each trade is fixed and publicly known .
+5-52:If the market structure is such that, for example, the current scoring rule is posted publicly after each agent"s trade, then in equilibrium there is common knowledge of all agents" expectation, and hence Theorem 2 holds .
+5-53:Theorem 3 also applies in this case, and hence we have the same characterization for the set of computable Boolean functions .
+5-54:This suggests that the problem of eliciting truthful responses may be orthogonal to the problem of computing the desired aggregate, reminiscent of the revelation principle [18] .
+5-55:In this paper, we have restricted our attention to the simplest possible aggregation problem: computing Boolean functions of Boolean inputs .
+5-56:The proofs of Theorems 3 and 5 also hold if we consider Boolean functions of real inputs, where each agent"s private information is a real number .
+5-57:Further, Theorem 2 also holds provided the market reaches equilibrium .
+5-58:With real inputs and arbitrary prior distributions, however, it is not clear that the market will reach an equilibrium in a finite number of steps. .
+6 ABSTRACT :
+6-1:6.1 Summary We have framed the process of information aggregation in markets as a computation on distributed information
+6-2:We have developed a simplified model of an information market that we believe captures many of the important aspects of real agent interaction in an information market
+6-3:Within this model, we prove several results characterizing precisely what the market can compute and how quickly
+6-4:Specifically, we show that the market is guaranteed to converge to the true rational expectations equilibrium if and only if the security payoff function is a weighted threshold function
+6-5:We prove that the process whereby agents reveal their information over time and learn from the resulting announced prices takes at most n rounds to converge to the correct full information price in the worst case
+6-6:We show that this bound is tight within a factor of two
+6-7:6.2 Future work We view this paper as a first step towards understanding the computational power of information markets
+6-8:Some interesting and important next steps include gaining a better understanding of the following: • The effect of price accuracy and precision: We have assumed that the clearing price is known with unlimited precision; in practice, this will not be true
+6-9:Further, we have neglected influences on the market price other than from rational traders; the market price may also be influenced by other factors such as misinformed or irrational traders
+6-10:It is interesting to ask what aggregates can be computed even in the presence of noisy prices
+6-11:• Incremental updates: If the agents have computed the value of the function and a small number of input bits are switched, can the new value of the function be computed incrementally and quickly? • Distributed computation: In our model, distributed information is aggregated through a centralized market 163 computation
+6-12:In a sense, some of the computation itself is distributed among the participating agents, but can the market computation also be distributed? For example, can we find a good distributed computational model of a decentralized market? • Agents" computation: We have not accounted for the complexity of the computations that agents must do to accurately update their beliefs after each round
+6-13:• Strategic market models: For reasons of simplicity and tractability, we have directly assumed that agents bid truthfully
+6-14:A more satisfying approach would be to assume only rationality and solve for the resulting gametheoretic solution strategy, either in our current computational model or another model of an information market
+6-15:• The common prior assumption: Can we say anything about the market behavior when agents" priors are only approximately the same or when they differ greatly? • Average case analysis: Our negative results (Theorems 3 and 5) examine worst case scenarios, and thus involve very specific prior probability distributions
+6-16:It is interesting to ask whether we would get very different results for generic prior distributions
+6-17:• Information market design: Non threshold functions can be implemented by layering two or more threshold functions together
+6-18:What is the minimum number of threshold securities required to implement a given function? This is exactly the problem of minimizing the size of a neural network, a well studied problem known to be NP hard [15]
+6-19:What configuration of securities can best approximate a given function? Are there ways to define and configure securities to speed up convergence to equilibrium? What is the relationship between machine learning (e.g., neural network learning) and information market design? Acknowledgments We thank Joe Kilian for many helpful discussions
+6-20:We thank Robin Hanson and the anonymous reviewers for useful insights and pointers.
+7 ABSTRACT :
+7-1:K
+7-2:J
+7-3:Arrow
+7-4:The role of securities in the optimal allocation of risk bearing
+7-5:Review of Economic Studies, 31(2):91 96, 1964
+7-6:J
+7-7:Bergin and A
+7-8:Brandenburger
+7-9:A simple characterization of stochastically monotone functions
+7-10:Econometrica, 58(5):1241 1243, Sept
+7-11:1990
+7-12:S
+7-13:Debnath, D
+7-14:M
+7-15:Pennock, C
+7-16:L
+7-17:Giles, and S
+7-18:Lawrence
+7-19:Information incorporation in online in game sports betting markets
+7-20:In Proceedings of the Fourth Annual ACM Conference on Electronic Commerce (EC"03), June 2003
+7-21:P
+7-22:Dubey, J
+7-23:Geanakoplos, and M
+7-24:Shubik
+7-25:The revelation of information in strategic market games: A critique of rational expectations equilibrium
+7-26:Journal of Mathematical Economics, 16:105 137, 1987
+7-27:R
+7-28:Fagin, J
+7-29:Y
+7-30:Halpern, Y
+7-31:Moses, and M
+7-32:Y
+7-33:Vardi
+7-34:Reasoning About Knowledge
+7-35:MIT Press, Cambridge, MA, 1996
+7-36:R
+7-37:Forsythe and R
+7-38:Lundholm
+7-39:Information aggregation in an experimental market
+7-40:Econometrica, 58(2):309 347, 1990
+7-41:R
+7-42:Forsythe, F
+7-43:Nelson, G
+7-44:R
+7-45:Neumann, and J
+7-46:Wright
+7-47:Anatomy of an experimental political stock market
+7-48:American Economic Review, 82(5):1142 1161, 1992
+7-49:R
+7-50:Forsythe, T
+7-51:A
+7-52:Rietz, and T
+7-53:W
+7-54:Ross
+7-55:Wishes, expectations, and actions: A survey on price formation in election stock markets
+7-56:Journal of Economic Behavior and Organization, 39:83 110, 1999
+7-57:J
+7-58:M
+7-59:Gandar, W
+7-60:H
+7-61:Dare, C
+7-62:R
+7-63:Brown, and R
+7-64:A
+7-65:Zuber
+7-66:Informed traders and price variations in the betting market for professional basketball games
+7-67:Journal of Finance, LIII(1):385 401, 1998
+7-68:J
+7-69:Geanakoplos and H
+7-70:Polemarchakis
+7-71:We can"t disagree forever
+7-72:Journal of Economic Theory, 28(1):192 200, 1982
+7-73:S
+7-74:J
+7-75:Grossman
+7-76:An introduction to the theory of rational expectations under asymmetric information
+7-77:Review of Economic Studies, 48(4):541 559, 1981
+7-78:R
+7-79:Hanson
+7-80:Combinatorial information market design
+7-81:Information Systems Frontiers, 5(1), 2002
+7-82:M
+7-83:Jackson and J
+7-84:Peck
+7-85:Asymmetric information in a strategic market game: Reexamining the implications of rational expectations
+7-86:Economic Theory, 13:603 628, 1999
+7-87:J
+7-88:C
+7-89:Jackwerth and M
+7-90:Rubinstein
+7-91:Recovering probability distributions from options prices
+7-92:Journal of Finance, 51(5):1611 1631, Dec
+7-93:1996
+7-94:J. H
+7-95:Lin and J
+7-96:S
+7-97:Vitter
+7-98:Complexity results on learning by neural nets
+7-99:Machine Learning, 6:211 230, 1991
+7-100:R
+7-101:E
+7-102:Lucas
+7-103:Expectations and the neutrality of money
+7-104:Journal of Economic Theory, 4(2):103 24, 1972
+7-105:M
+7-106:Magill and M
+7-107:Quinzii
+7-108:Theory of Incomplete Markets, Vol
+7-109:1
+7-110:MIT Press, 1996
+7-111:A
+7-112:Mas Colell, M
+7-113:D
+7-114:Whinston, and J
+7-115:R
+7-116:Green
+7-117:Microeconomic Theory
+7-118:Oxford University Press, New York, 1995
+7-119:R
+7-120:D
+7-121:McKelvey and T
+7-122:Page
+7-123:Common knowledge, consensus, and aggregate information
+7-124:Econometrica, 54(1):109 127, 1986
+7-125:P
+7-126:Milgrom and N
+7-127:Stokey
+7-128:Information, trade, and common knowledge
+7-129:Journal of Economic Theory, 26:17 27, 1982
+7-130:L
+7-131:T
+7-132:Nielsen, A
+7-133:Brandenburger, J
+7-134:Geanakoplos, R
+7-135:McKelvey, and T
+7-136:Page
+7-137:Common knowledge of an aggregate of expectations
+7-138:Econometrica, 58(5):1235 1238, 1990
+7-139:D
+7-140:M
+7-141:Pennock, S
+7-142:Debnath, E
+7-143:J
+7-144:Glover, and C
+7-145:L
+7-146:Giles
+7-147:Modeling information incorporation in markets, with application to detecting and explaining events
+7-148:In Proceedings of the Eighteenth Conference on Uncertainty in Artificial Intelligence, 2002
+7-149:164 D
+7-150:M
+7-151:Pennock, S
+7-152:Lawrence, C
+7-153:L
+7-154:Giles, and F
+7-155:˚A
+7-156:Nielsen
+7-157:The real power of artificial markets
+7-158:Science, 291:987 988, February 2001
+7-159:D
+7-160:M
+7-161:Pennock, S
+7-162:Lawrence, F
+7-163:˚A
+7-164:Nielsen, and C
+7-165:L
+7-166:Giles
+7-167:Extracting collective probabilistic forecasts from web games
+7-168:In Proceedings of the 7th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pages 174 183, 2001
+7-169:C
+7-170:R
+7-171:Plott and S
+7-172:Sunder
+7-173:Rational expectations and the aggregation of diverse information in laboratory security markets
+7-174:Econometrica, 56(5):1085 1118, 1988
+7-175:C
+7-176:R
+7-177:Plott, J
+7-178:Wit, and W
+7-179:C
+7-180:Yang
+7-181:Parimutuel betting markets as information aggregation devices: Experimental results
+7-182:Technical Report Social Science Working Paper 986, California Institute of Technology, Apr
+7-183:1997
+7-184:C
+7-185:Schmidt and A
+7-186:Werwatz
+7-187:How accurate do markets predict the outcome of an event? the Euro 2000 soccer championships experiment
+7-188:Technical Report 09 2002, Max Planck Institute for Research into Economic Systems, 2002
+7-189:L
+7-190:Shapley and M
+7-191:Shubik
+7-192:Trade using one commodity as a means of payment
+7-193:Journal of Political Economy, 85:937 968, 1977
+7-194:Y
+7-195:Shoham and M
+7-196:Tennenholtz
+7-197:Rational computation and the communication complexity of auctions
+7-198:Games and Economic Behavior, 35(1 2):197 211, 2001
+7-199:R
+7-200:H
+7-201:Thaler and W
+7-202:T
+7-203:Ziemba
+7-204:Anomalies: Parimutuel betting markets: Racetracks and lotteries
+7-205:Journal of Economic Perspectives, 2(2):161 174, 1988
+7-206:H
+7-207:R
+7-208:Varian
+7-209:The arbitrage principle in financial economics
+7-210:Journal of Economic Perspectives, 1(2):55 72, 1987
+7-211:165
+picture:

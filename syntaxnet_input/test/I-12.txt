@@ -1,0 +1,457 @@
+Sharing Experiences to Learn User Characteristics in 
+content:
+1 ABSTRACT :
+1-1:This paper investigates the problem of estimating the value of probabilistic parameters needed for decision making in environments in which an agent, operating within a multi agent system, has no a priori information about the structure of the distribution of parameter values .
+1-2:The agent must be able to produce estimations even when it may have made only a small number of direct observations, and thus it must be able to operate with sparse data .
+1-3:The paper describes a mechanism that enables the agent to significantly improve its estimation by augmenting its direct observations with those obtained by other agents with which it is coordinating .
+1-4:To avoid undesirable bias in relatively heterogeneous environments while effectively using relevant data to improve its estimations, the mechanism weighs the contributions of other agents" observations based on a real time estimation of the level of similarity between each of these agents and itself .
+1-5:The coordination autonomy module of a coordination manager system provided an empirical setting for evaluation .
+1-6:Simulation based evaluations demonstrated that the proposed mechanism outperforms estimations based exclusively on an agent"s own observations as well as estimations based on an unweighted aggregate of all other agents" observations .
+1-7:I.2.6 [Artificial Intelligence]: Learning Parameter learning; I.2.11 .
+2 INTRODUCTION :
+2-1:For many real world scenarios, autonomous agents need to operate in dynamic, uncertain environments in which they have only incomplete information about the results of their actions and characteristics of other agents or people with whom they need to cooperate or collaborate .
+2-2:In such environments, agents can benefit from sharing information they gather, pooling their individual experiences to improve their estimations of unknown parameters required for reasoning about actions under uncertainty .
+2-3:This paper addresses the problem of learning the distribution of the values of a probabilistic parameter that represents a characteristic of a person who is interacting with a computer agent .
+2-4:The characteristic to be learned is (or is clearly related to) an important factor in the agent"s decision making.1 The basic setting we consider is one in which an agent accumulates observations about a specific user characteristic and uses them to produce a timely estimate of some measure that depends on that characteristic"s distribution .
+2-5:The mechanisms we develop are designed to be useful in a range of application domains, such as disaster rescue, that are characterized by environments in which conditions may be rapidly changing, actions (whether of autonomous agents or of people) and the overall operations occur at a fast pace, and decisions must be made within tightly constrained time frames .
+2-6:Typically, agents must make decisions in real time, concurrent with task execution, and in the midst of great uncertainty .
+2-7:In the remainder of this paper, we use the term fast paced to refer to such environments .
+2-8:In fast paced environments, information gathering may be limited, and it is not possible to learn offline or to wait until large amounts of data are collected before making decisions .
+2-9:Fast paced environments impose three constraints on any mechanism for learning a distribution function (including the large range of Bayesian update techniques [23]): (a) the no structure constraint: no a priori information about the structure of the estimated parameter"s distribution nor any initial data from which such structure can be inferred is available; (b) the limited use constraint: agents typically need to produce only a small number of estimations in total for this parameter; (c) the early use constraint: high accuracy is a critical requirement even in the initial stages of learning .
+2-10:Thus, the goal of the estimation methods presented in this paper is to minimize the average error over time, rather than to determine an accurate value at the end of a long period of interaction .
+2-11:That is, the agent is expected to work with the user for a limited time, and it attempts to minimize the overall error in its estimations .
+2-12:In such environments, an agent"s individually acquired data (its own observations) are too sparse for it to obtain good estimations in the requisite time frame .
+2-13:Given the no structure constraint of the environment, approaches that depend on structured distributions may result in a significantly high estimation bias .
+2-14:We consider this problem in the context of a multi agent distributed system in which computer agents support people who are carrying out complex tasks in a dynamic environment .
+2-15:The fact that agents are part of a multi agent setting, in which other agents may 1 Learning the distribution rather than just determining some value in the distribution is important whenever the overall shape of the distribution and not just such individual features as mean are important .
+2-16:also be gathering data to estimate a similar characteristic of their users, offers the possibility for an agent to augment its own observations with those of other agents, thus improving the accuracy of its learning process .
+2-17:Furthermore, in the environments we consider, agents are usually accumulating data at a relatively similar rate .
+2-18:Nonetheless, the extent to which the observations of other agents will be useful to a given agent depends on the extent to which their users" characteristics" distributions are correlated with that of this agent"s user .
+2-19:There is no guarantee that the distribution for two different agents is highly, positively correlated, let alone that they are the same .
+2-20:Therefore, to use a data sharing approach, a learning mechanism must be capable of effectively identifying the level of correlation between the data collected by different agents and to weigh shared data depending on the level of correlation .
+2-21:The design of a coordination autonomy module within a coordination manager system (as part of the DARPA Coordinators project [18]), in which agents support a distributed scheduling task, provided the initial motivation and a conceptual setting for this work .
+2-22:However, the mechanisms themselves are general and can be applied not only to other fast paced domains, but also in other multi agent settings in which agents are collecting data that overlaps to some extent, at approximately similar rates, and in which the environment imposes the no structure, limited and early use constraints defined above (e.g., exploration of remote planets) .
+2-23:In particular, our techniques would be useful in any setting in which a group of agents undertakes a task in a new environment, with each agent obtaining observations at a similar rate of individual parameters they need for their decision making .
+2-24:In this paper, we present a mechanism that was used for learning key user characteristics in fast paced environments .
+2-25:The mechanism provides relatively accurate estimations within short time frames by augmenting an individual agent"s direct observations with observations obtained by other agents with which it is coordinating .
+2-26:In particular, we focus on the related problems of estimating the cost of interrupting a person and estimating the probability that that person will have the information required by the system .
+2-27:Our adaptive approach, which we will refer to throughout the paper as selective sharing, allows our CA to improve the accuracy of its distribution based estimations in comparison to relying only on the interactions with a specific user (subsequently, self learning) or pooling all data unconditionally (average all), in particular when the number of available observations is relatively small .
+2-28:The mechanism was successfully tested using a system that simulates a Coordinators environment .
+2-29:The next section of the paper describes the problem of estimating user related parameters in fastpaced domains .
+2-30:Section 3 provides an overview of the methods we developed .
+2-31:The implementation, empirical setting, and results are given in Sections 4 and 5 .
+2-32:A comparison with related methods is given in Section 6 and conclusions in section 7. .
+3 PARAMETER ESTIMATION IN  FASTPACED DOMAINS :
+3-1:FASTPACED DOMAINS The CA module and algorithms we describe in this paper were developed and tested in the Coordinators domain [21] .
+3-2:In this domain, autonomous agents, called Coordinators, are intended to help maximize an overall team objective by handling changes in the task schedule as conditions of operation change .
+3-3:Each agent operates on behalf of its owner (e.g., the team leader of a firstresponse team or a unit commander) whose schedule it manages .
+3-4:Thus, the actual tasks being scheduled are executed either by owners or by units they oversee, and the agent"s responsibility is limited to maintaining the scheduling of these tasks and coordinating with the agents of other human team members (i.e., other owners) .
+3-5:In this domain, scheduling information and constraints are distributed .
+3-6:Each agent receives a different view of the tasks and structures that constitute the full multi agent problem typically only a partial, local one .
+3-7:Schedule revisions that affect more than one agent must be coordinated, so agents thus must share certain kinds of information .
+3-8:(In a team context they may be designed to share other types as well.) However, the fast paced nature of the domain constrains the amount of information they can share, precluding a centralized solution; scheduling problems must be solved distributively .
+3-9:The agent owner relationship is a collaborative one, with the agent needing to interact with its owner to obtain task and environment information relevant to scheduling .
+3-10:The CA module is responsible for deciding intelligently when and how to interact with the owner for improving the agent"s scheduling .
+3-11:As a result, the CA must estimate the expected benefit of any such interaction and the cost associated with it [19] .
+3-12:In general, the net benefit of a potential interaction is PV − C, where V is the value of the information the user may have, P is the probability that the user has this information, and C is the cost associated with an interaction .
+3-13:The values of P, V , and C are time varying, and the CA estimates their value at the intended time of initiating the interaction with its owner .
+3-14:This paper focuses on the twin problems of estimating the parameters P and C, both of which are user centric in the sense of being determined by characteristics of the owner and the environment in which the owner is operating); it presumes a mechanism for determining V [18] .
+3-15:2.1 Estimating Interruption Costs The cost of interrupting owners derives from the potential degradation in performance of tasks they are doing caused by the disruption [1; 9, inter alia] .
+3-16:Research on interaction management has deployed sensor based statistical models of human interruptibility to infer the degree of distraction likely to be caused by an interruption .
+3-17:This work aims to reduce interruption costs by delaying interruptions to times that are convenient .
+3-18:It typically uses Bayesian models to learn a user"s current or likely future focus of attention from an ongoing stream of actions .
+3-19:By using sensors to provide continuous incoming indications of the user"s attentional state, these models attempt to provide a means for computing probability distributions over a user"s attention and intentions [9] .
+3-20:Work which examines such interruptibility cost factors as user frustration and distractability [10] includes work on the cost of repeatedly bothering the user which takes into account the fact that recent interruptions and difficult questions should carry more weight than interruptions in the distant past or straightforward questions [5] .
+3-21:Although this prior work uses interruptibility estimates to balance the interaction"s estimated importance against the degree of distraction likely to be caused, it differs from the fast paced environments problem we address in three ways that fundamentally change the nature of the problem and hence alter the possible solutions .
+3-22:First, it considers settings in which the computer system has information that may be relevant to its user rather than the user (owner) having information needed by the system, which is the complement of the information exchange situation we consider .
+3-23:Second, the interruptibility estimation models are task based .
+3-24:Lastly, it relies on continuous monitoring of a user"s activities .
+3-25:In fast paced environments, there usually is no single task structure, and some of the activities themselves may have little internal structure .
+3-26:As a result, it is difficult to determine the actual attentional state of agent owners [15] .
+3-27:In such settings, owners must make complex decisions that typically involve a number of other members of their units, while remaining reactive to events that diverge from expectations [24] .
+3-28:For instance, during disaster rescue, a first response unit may begin rescuing survivors trapped in a burning house, when a wall collapses suddenly, forcing the unit to The Sixth Intl .
+3-29:Joint Conf .
+3-30:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 203 retract and re plan their actions .
+3-31:Prior work has tracked users" focus of attention using a range of devices, including those able to monitor gestures [8] and track eyegaze to identify focus of visual attention [13, 20], thus enabling estimations of cognitive load and physical indicators of performance degradation .
+3-32:The mechanisms described in this paper also presume the existence of such sensors .
+3-33:However, in contrast to prior work, which relies on these devices operating continuously, our mechanism presumes that fast paced environments only allow for the activation of sensors for short periods of time on an ad hoc basis, because agents" resources are severely limited .
+3-34:Methods that depend on predicting what a person will do next based only on what the user is currently doing (e.g., MDPs) are not appropriate for modeling focus of attention in fast paced domains, because an agent cannot rely on a person"s attentional state being well structured and monitoring can only be done on a sporadic, non continuous basis .
+3-35:Thus, at any given time, the cost of interaction with the user is essentially probabilistic, as reflected over a single random monitoring event, and can be assigned a probability distribution function .
+3-36:Consequently, in fast paced environments, an agent needs a sampling strategy by which the CA samples its owner"s interruptibility level (with some cost) and decides whether to initiate an interaction at this specific time or to delay until a lower cost is observed in future samplings .
+3-37:The method we describe in the remainder of this subsection applies concepts from economic search theory [16] to this problem .
+3-38:The CA"s cost estimation uses a mechanism that integrates the distribution of an owner"s interruptibility level (as estimated by the CA) into an economic search strategy, in a way that the overall combined cost of sensor costs and interaction costs is minimized .
+3-39:In its most basic form, the economic search problem aims to identify an opportunity that will minimize expected cost or maximize expected utility .
+3-40:The search process itself is associated with a cost, and opportunities (in our case, interruption opportunities) are associated with a stationary distribution function .
+3-41:We use a sequential search strategy [16] in which one observation is drawn at a time, over multiple search stages .
+3-42:The dominating strategy in this model is a reservation value based strategy which determines a lower bound, and keeps drawing samples as long as no opportunity above the bound was drawn .
+3-43:In particular, we consider the situation in which an agent"s owner has an interruption cost described by a probability distribution function (pdf) f(x) and a cumulative distribution function (cdf) F(x) .
+3-44:The agent can activate sensing devices to get an estimation of the interruption cost, x, at the current time, but there is a cost c of operating the sensing devices for a single time unit .
+3-45:The CA module sets a reservation value and as long as the sensor based observation x is greater than this reservation value, the CA will wait and re sample the user for a new estimation .
+3-46:The expected cost, V (xrv), using such a strategy with reservation value xrv is described by Equation 1, V (xrv) = c + R xrv y=0 yf(y) F(xrv) , (1) which decomposes into two parts .
+3-47:The first part, c divided by F(xrv), represents the expected sampling cost .
+3-48:The second, the integral divided by F(xrv), represents the expected cost of interruption, because the expected number of search cycles is (random) geometric and the probability of success is F(xrv) .
+3-49:Taking the derivative of the left hand side of Equation 1 and equating it to zero, yields the characteristics of the optimal reservation value, namely x∗ rv must satisfy, V (x∗ rv) = x∗ rv .
+3-50:(2) Substituting (2) in Equation 1 yields Equation 3 (after integration by parts) from which the optimal reservation value, x∗ rv, and consequently (from Equation 2) V (x∗ rv) can be computed .
+3-51:c = Z x∗ rv y=0 F(y) (3) This method, which depends on extracting the optimal sequence of sensor based user sampling, relies heavily on the structure of the distribution function, f(x) .
+3-52:However, we need only a portion of the distribution function, namely from the origin to the reservation value .
+3-53:(See Equation 1 and Figure 1.) Thus, when we consider sharing data, it is not necessary to rely on complete similarity in the distribution function of different users .
+3-54:For some parameters, including the user"s interruptibility level, it is enough to rely on similarity in the relevant portion of the distribution function .
+3-55:The implementation described in Sections 4 5 relies on this fact .
+3-56:Figure 1: The distribution structure affecting the expected cost"s calculation 2.2 Estimating the Probability of Having Information One way an agent can estimate the probability a user will have information it needs (e.g., will know at a specific interruption time, with some level of reliability, the actual outcome of a task currently being executed) is to rely on prior interactions with this user, calculating the ratio between the number of times the user had the information and the total number of interactions .
+3-57:Alternatively, the agent can attempt to infer this probability from measurable characteristics of the user"s behavior, which it can assess without requiring an interruption .
+3-58:This indirect approach, which does not require interrupting the user, is especially useful in fast paced domains .
+3-59:The CA module we designed uses such an indirect method: ownerenvironment interactions are used as a proxy for measuring whether the owner has certain information .
+3-60:For instance, in Coordinatorslike scenarios, owners may obtain a variety of information through occasional coordination meetings of all owners, direct communication with other individual owners participating in the execution of a joint task (through which they may learn informally about the existence or status of other actions they are executing), open communications they overhear (e.g .
+3-61:if commanders leave their radios open, they can listen to messages associated with other teams in their area), and other formal or informal communication channels [24] .
+3-62:Thus, owners" levels of communication with others, which can be obtained without interrupting them, provide some indication of the frequency with which they obtain new information .
+3-63:Given occasional updates about its owner"s level of communication, the CA can estimate the probability that a random interaction with the owner will yield the information it needs .
+3-64:Denoting the probability distribution function of the amount of communication the user generally maintains with its environment by g(x), and using the transformation function Z(x), mapping from a level of communication, x, to a probability of having the information, the expected probability of getting the information that is needed from the owner when interrupting at a given time can be calculated from P = Z ∞ 0 Z(x)g(x)dy .
+3-65:(4) 204 The Sixth Intl .
+3-66:Joint Conf .
+3-67:on Autonomous Agents and Multi Agent Systems (AAMAS 07) The more observations an agent can accumulate about the distribution of the frequency of an owner"s interaction with the environment at a given time, the better it can estimate the probability the owner has the information needed by the system. .
+4 THE SELECTIVE SHARING MECHANISM :
+4-1:This section presents the selective sharing mechanism by which the CA learns the distribution function of a probabilistic parameter by taking advantage of data collected by other CAs in its environment .
+4-2:We first explain the need for increasing the number of observations used as the basis of estimation and then present a method for determining how much data to adopt from other agents .
+4-3:The most straightforward method for the CA to learn the distribution functions associated with the different parameters characterizing an owner is by building a histogram based on the observations it has accumulated up to the estimation point .
+4-4:Based on this histogram, the CA can estimate the parameter either by taking into account the entire range of values (e.g., to estimate the mean) or a portion of it (e.g., to find the expected cost when using a reservation value based strategy) .
+4-5:The accuracy of the estimation will vary widely if it is based on only a small number of observations .
+4-6:For example, Figure 2 illustrates the reservation value based cost calculated according to observations received from an owner with a uniform interruption cost distribution U(0, 100) as a function of the number of accumulated observations used for generating the distribution histogram .
+4-7:(In this simulation, device activation cost was taken to be c = 0.5) .
+4-8:Figure 2: The convergence of a single CA to its optimal strategy These deviations from the actual (true) value (which is 10 in this case, according to Equation 3) is because the sample used in each stage cannot accurately capture the actual structure of the distribution function .
+4-9:Eventually this method yields a very accurate estimation for the expected interruption cost .
+4-10:However, in the initial stages of the process, its estimation deviates significantly from the true value .
+4-11:This error could seriously degrade the CA"s decision making process: underestimating the cost may result in initiating costly, non beneficial interactions, and overestimating the cost might result in missing opportunities for valuable interactions .
+4-12:Any improvement that can be achieved in predicting the cost values, especially in the initial stages of learning, can make a significant difference in performance, especially because the agent is severely limited in the number of times it can interact with its owner in fastpaced domains .
+4-13:One way to decrease the deviation from the actual value is by augmenting the data the CA acquires by observing its owner with observations made by other owners" agents .
+4-14:Such an approach depends on identifying other owners with distribution functions for the characteristic of interest similar to the CA"s owner .
+4-15:This dataaugmentation idea is simple: different owners may exhibit similar basic behaviors or patterns in similar fast paced task scenarios .
+4-16:Since they are all coordinating on a common overall task and are operating in the same environment, it is reasonable to assume some level of similarity in the distribution function of their modeled parameters .
+4-17:People vary in their behavior, so, obviously, there may be different types of owners: some will emphasize communication with their teams, and some will spend more time on map based planning; some will dislike being disturbed while trying to evaluate their team"s progress, while others may be more open to interruptions .
+4-18:Consequently, an owner"s CA is likely to be able to find some CAs that are working with owners who are similar to its owner .
+4-19:When adopting data collected by other agents, the two main questions are which agents the CA should rely on and to what extent it should rely on each of them .
+4-20:The selective sharing mechanism relies on a statistical measure of similarity that allows the CA of any specific user to identify the similarity between its owner and other owners dynamically .
+4-21:Based on this similarity level, the CA decides if and to what degree to import other CAs" data in order to augment its direct observations, and thus to enable better modeling of its owner"s characteristics .
+4-22:It is notable that the cost of transferring observations between different CA modules of different agents is relatively small .
+4-23:This information can be transferred as part of regular negotiation communication between agents .
+4-24:The volume of such communication is negligible: it involves just the transmission of new observations" values .
+4-25:In our learning mechanism, the CA constantly updates its estimation of the level of similarity between its owner and the owners represented by other CAs in the environment .
+4-26:Each new observation obtained either by that CA or any of the other CAs updates this estimation .
+4-27:The similarity level is determined using the Wilcoxon rank sum test (Subsection 3.1) .
+4-28:Whenever it is necessary to produce a parameter estimate, the CA decides on the number of additional observations it intends to rely on for extracting its estimation .
+4-29:The number of additional observations to be taken from each other agent is a function of the number of observations it currently has from former interactions with its owner and the level of confidence the CA has in the similarity between its owner and other owners .
+4-30:In most cases, the number of observations the CA will want to take from another agent is smaller than the overall number of observations the other agent has; thus, it randomly samples (without repetitions) the required number of observations from this other agent"s database .
+4-31:The additional observations the CA takes from other agents are used only to model its owner"s characteristics .
+4-32:Future similarity level determination is not affected by this information augmentation procedure .
+4-33:3.1 The Wilcoxon Test We use a nonparametric method (i.e., one that makes no assumptions about the parametric form of the distributions each set is drawn from), because user characteristics in fast paced domains do not have the structure needed for parametric approaches .
+4-34:Two additional advantages of a non parametric approach are their usefulness for dealing with unexpected, outlying observations (possibly problematic for a parametric approach), and the fact that non parametric approaches are computationally very simple and thus ideal for settings in which computational resources are scarce .
+4-35:The Wilcoxon rank sum test we use is a nonparametric alternative to the two sample t test [22, 14]2 .
+4-36:While the t test compares means, the Wilcoxon test can be used to test the null hypothesis that two populations X and Y have the same continuous distribution .
+4-37:We assume that we have independent random samples {x1, x2, ..., xm} and {y1, y2, ..., yn}, of sizes m and n respectively, from each population .
+4-38:We then merge the data and rank each measurement from lowest to highest .
+4-39:All sequences of ties are assigned an average rank .
+4-40:From the sum of the ranks of the smaller 2 Chi Square Goodness of Fit Test is for a single sample and thus not suitable .
+4-41:The Sixth Intl .
+4-42:Joint Conf .
+4-43:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 205 sample, we calculate the test statistic and extract the level of confidence for rejecting the null hypothesis .
+4-44:This level of confidence becomes the measure for the level of similarity between the two owners .
+4-45:The Wilcoxon test does not require that the data originates from a normally distributed population or that the distribution is characterized by a finite set of parameters .
+4-46:3.2 Determining Required Information Correctly identifying the right number of additional observations to gather is a key determinant of success of the selective sharing mechanism .
+4-47:Obviously, if the CA can identify another owner who has identical characteristics to the owner it represents, then it should use all of the observations collected by that owner"s agent .
+4-48:However, cases of identical matches are likely to be very uncommon .
+4-49:Furthermore, even to establish that another user is identical to its own, the CA would need substantial sample sizes to have a relatively high level of confidence .
+4-50:Thus, usually the CA needs to decide how much to rely on another agent"s data while estimating various levels of similarity with a changing level of confidence .
+4-51:At the beginning of its process, the selective sharing mechanism has almost no data to rely on, and thus no similarity measure can be used .
+4-52:In this case, the CA module relies heavily on other agents, in the expectation that all owners have some basic level of similarity in their distribution (see Section 2) .
+4-53:As the number of its direct observations increases, the CA module refines the number of additional observations required .
+4-54:Again, there are two conflicting effects .
+4-55:On one hand, the more data the CA has, the better it can determine its level of confidence in the similarity ratings it has for other owners .
+4-56:On the other hand, assuming there is some difference among owners (even if not noticed yet), as the number of its direct observations increases, the owner"s own data should gain weight in its analysis .
+4-57:Therefore, when CAi decides how many additional observations, Oi j should be adopted from CAj"s database, it calculates Oi j as follows: Oi j = N ∗ (1 − αi,j) √ N + 2 + ln(N) N (5) where N is the number of observations CAi already has (which is similar in magnitude to the number of observations CAj has) and αi,j is the confidence of rejecting the Wilcoxon null hypothesis .
+4-58:The function in Equation 5 ensures that the number of additional observations to be taken from another CA module increases as the confidence in the similarity with the source for these additional observations increases .
+4-59:At the same time, it ensures that the level of dependency on external observations decreases as the number of direct observations increases .
+4-60:When calculating the parameter αi,j, we always perform the test over the interval relevant to the originating CA"s distribution function .
+4-61:For example, when estimating the cost of interrupting the user, we apply the Wilcoxon test only for observations in the interval that starts from zero and ends slightly to the right of the formerly estimated RV (see Figure 1). .
+5 EMPIRICAL SETTING :
+5-1:We tested the selective sharing mechanism in a system that simulates a distributed, Coordinators like MAS .
+5-2:This testbed environment includes a variable number of agents, each corresponding to a single CA module .
+5-3:Each agent is assigned an external source (simulating an owner) which it periodically samples to obtain a value from the distribution being estimated .
+5-4:The simulation system enabled us to avoid unnecessary inter agent scheduling and communication overhead (which are an inherent part of the Coordinators environment) and thus to better isolate the performance and effectiveness of the estimation and decision making mechanisms .
+5-5:The distribution functions used in the experiments (i.e., the distribution functions assigned to each user in the simulated environment) are multi rectangular shaped .
+5-6:This type of function is ideal for representing empirical distribution functions .
+5-7:It is composed of k rectangles, where each rectangle i is defined over the interval (xi−1, xi), and represents a probability pi, ( Pk i=1 pi =1) .
+5-8:For any value x in rectangle i, we can formulate F(x) and f(x) as: f(x) = pi xi − xi−1 F(x) = i−1X j=1 pj + (x − xi−1)pi xi − xi−1 (6) For example, the multi rectangular function in Figure 3 depicts a possible interruption cost distribution for a specific user .
+5-9:Each rectangle is associated with one of the user"s typical activities, characterized by a set of typical interruption costs .
+5-10:(We assume the distribution of cost within each activity is uniform.) The rectangular area represents the probability of the user being engaged in this type of activity when she is randomly interrupted .
+5-11:Any overlap between the interruption costs of two or more activities results in a new rectangle for the overlapped interval .
+5-12:The user associated with the above distribution function spends most of her time in reporting (notice that this is the largest rectangle in terms of area), an activity associated with a relatively high cost of interruption .
+5-13:The user also spends a large portion of her time in planning (associated with a very high cost of interruption), monitoring his team (with a relatively small interruption cost) and receiving reports (mid level cost of interruption) .
+5-14:The user spends a relatively small portion of her time in scouting the enemy (associated with relatively high interruption cost) and resting .
+5-15:Figure 3: Representing interruption cost distribution using a multi rectangular function Multi rectangular functions are modular and allow the representation of any distribution shape by controlling the number and dimensions of the rectangles used .
+5-16:Furthermore, these functions have computational advantages, mostly due to the ability to re use many of their components when calculating the optimal reservation value in economical search models .
+5-17:They also fit well the parameters the CA is trying to estimate in fast paced domains, because these parameters are mostly influenced by activities in which the user is engaged .
+5-18:The testbed system enabled us to define either hand crafted or automatically generated multi rectangular distribution functions .
+5-19:At each step of a simulation, each of the CAs samples its owner (i.e., all CAs in the system collect data at a similar rate) and then estimates the parameter (either the expected cost when using the sequential interruption technique described in Section 2 or the probability that the owner will have the required information) using one of the following methods: (a) relying solely on direct observation (self learning) data; (b) relying on the combined data of all other agents (average all); and, (c) relying on its own data and selective portions of the other agents" data based on the selective sharing mechanism described in Section 3. .
+6 RESULTS :
+6-1:We present the results in two parts: (1) using a specific sample environment for illustrating the basic behavior of the selectivesharing mechanism; and (2) using general environments that were automatically generated .
+6-2:206 The Sixth Intl .
+6-3:Joint Conf .
+6-4:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 5.1 Sample Environment To illustrate the gain obtained by using the selective sharing mechanism, we used an environment of 10 agents, associated with 5 different interruptibility cost distribution function types .
+6-5:The table in Figure 4 details the division of the 10 agents into types, the dimensions of the rectangles that form the distribution functions, and the theoretical mean and reservation value (following Equation 3) with a cost c = 2 for sensing the interruption cost .
+6-6:Even though the means of the five types are relatively similar, the use of a reservation value based interruption strategy yields relatively different expected interruption costs (RV , following Equation 2) .
+6-7:The histogram in this figure depicts the number of observations obtained for each bin of size 1 out of a sample of 100000 observations taken from each type"s distribution function .
+6-8:Type Agents Rect .
+6-9:Range prob mean RV I 1,2 1 0 20 0.40 50 14.1 2 20 80 0.20 3 80 100 0.40 II 3,4,5,6 1 0 40 0.25 50 25.3 2 40 60 0.50 3 60 100 0.25 III 7 1 0 80 0.10 85 56.6 2 80 100 0.90 IV 8,9 1 0 60 0.60 48 20.0 2 60 90 0.40 V 10 1 0 100 1.00 50 20.0 0 500 1000 1500 2000 2500 1 8 15 22 29 36 43 50 57 64 71 78 85 92 99 type I type II type III type IV type V #ofobservations range Figure 4: Users" interruptibility cost distribution functions (5 types) Figure 5 gives CA performance in estimating the expected cost of interruption when using the reservation value based interruption initiation technique .
+6-10:Each graph presents the average prediction accuracy (in terms of the absolute deviation from the theoretical value, so the lower the curve the better the performance) of a different type, based on 10000 simulation runs .
+6-11:The three curves in each graph represent the methods being compared (self learning, average all, and selective sharing) .
+6-12:The data is given as a function of the accumulated number of observations collected .
+6-13:The sixth graph in the figure is the average for all types, weighted according to the number of agents of each type .
+6-14:Similarly, the following table summarizes the overall average performance in terms of the absolute deviation from the theoretical value of each of the different methods: Iterations Self Learning Averaging All Selective Sharing % Improvement3 5 20.08 8.70 9.51 53% 15 12.62 7.84 8.14 36% 40 8.16 7.42 6.35 22% Table 1: Average absolute error along time Several observations may be made from Figure 5 .
+6-15:First, although the average all method may produce relatively good results, it quickly reaches stagnation, while the other two methods exhibit continuous improvement as a function of the amount of accumulated data .
+6-16:For the Figure 4 environment, average all is a good strategy for agents of type II, IV and V, because the theoretical reservation value of each of these types is close to the one obtained based on the aggregated distribution function (i.e., 21.27).4 However, for types I and III for which the optimal RV differs from that value, the average all method performs significantly worse .
+6-17:Overall, the sixth graph and the table above show that while in this specific environment the average all method works well in the first interactions, it 3 The improvement is measured in percentages relative to the self learning method .
+6-18:4 The value is obtained by constructing the weighted aggregated distributed function according to the different agents" types and extracting the optimal RV using Equation 3 .
+6-19:0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type I 0 4 8 12 16 20 1 6 11 16 21 26 31 36 selective sharing self learning average all 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type II 0 8 16 24 32 40 1 6 11 16 21 26 31 36 Type III 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type IV 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type V 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Weighted Average Figure 5: Average absolute deviation from the theoretical RV in each method (10000 runs) is quickly outperformed by the selective sharing mechanism .
+6-20:Furthermore, the more user observations the agents accumulate (i.e., as we extend the horizontal axis), the better the other two methods are in comparison to average all .
+6-21:In the long run (and as shown in the following subsection for the general case), the average all method exhibits the worst performance .
+6-22:Second, the selective sharing mechanism starts with a significant improvement in comparison to relying on the agent"s own observations, and then this improvement gradually decreases until finally its performance curve coincides with the self learning method"s curve .
+6-23:The selective sharing mechanism performs better or worse, depending on the type, because the Wilcoxon test cannot guarantee an exact identification of similarity; different combinations of distribution function can result in an inability to exactly identify the similar users for some of the specific types .
+6-24:For example, for type I agents, the selective sharing mechanism actually performs worse than self learning in the short term (in the long run the two methods" performance converge) .
+6-25:Nevertheless, for the other types in our example, the selective sharing mechanism is the most efficient one, and outperforms the other two methods overall .
+6-26:Third, it is notable that for agents that have a unique type (e.g., agent III), the selective sharing mechanism quickly converges towards relying on self collected data .
+6-27:This behavior guarantees that even in scenarios in which users are completely different, the method exhibits a graceful initial degradation but manages, within a few time steps, to adopt the proper behavior of counting exclusively on self generated data .
+6-28:Last, despite the difference in their overall distribution function, agents of type IV and V exhibit similar performance because the relevant portion of their distribution functions (i.e., the effective parts that affect the RV calculation as explained in Figure 1) is identical .
+6-29:Thus, the selective sharing mechanism enables the agent of type V, despite its unique distribution function, to adopt relevant information collected by agents of types IV which improves its estimation of the expected interruption cost .
+6-30:5.2 General Evaluation To evaluate selective sharing, we ran a series of simulations in which the environment was randomly generated .
+6-31:These experiments focused on the CAs" estimations of the probability that the user would have the required information if interrupted .
+6-32:They used a multi rectangular probability distribution function to represent The Sixth Intl .
+6-33:Joint Conf .
+6-34:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 207 the amount of communication the user is engaged in with its environment .
+6-35:We models the growth of the probability the user has the required information as a function of the amount of communication using the logistic function,5 G(x) = 1 + e −x 12 1 + 60e −x 12 .
+6-36:(7) The expected (mean) value of the parameter representing the probability the user has the required information is thus μ = Z ∞ y=0 G(y)f(y)dy = kX i=1 hx + 708ln(60 + e x 12 )pi 60(xi − xi−1) ixi xi−1 (8) where k is the number of rectangles used .
+6-37:We ran 10000 simulation runs .
+6-38:For each simulation, a new 20 agent environment was automatically generated by the system, and the agents were randomly divided into a random number of different types.6 For each type, a random 3 rectangle distribution function was generated .
+6-39:Each simulation ran 40 time steps .
+6-40:At each time step each one of the agents accumulated one additional observation .
+6-41:Each CA calculated an estimate of the probability its user had the necessary information according to the three methods, and the absolute error (difference from the theoretical value calculated according to Equation 8) was recorded .
+6-42:The following table summarizes the average performance of the three mechanisms along different time horizons (measured at 5, 15 and 40 time steps): Iterations Self Learning Averaging All Selective Sharing % Improvement 5 0.176 0.099 0.103 41.4% 15 0.115 0.088 0.087 23.9% 40 0.075 0.082 0.065 13.6% Table 2: Average absolute error along time steps As can be seen in the table above, the proposed selective sharing method outperforms the two other methods over any execution in which more than 15 observations are collected by each of the agents .
+6-43:As in the sample environment, the average all method performs well in the initial few time steps, but does not exhibit further improvement .
+6-44:Thus, the more data collected, the greater the difference between this latter method and the two other methods .
+6-45:The average difference between selective sharing and self learning decreases as more data is collected .
+6-46:Finally, we measured the effect of the number of types in the environment .
+6-47:For this purpose, we used the same self generation method, but controlled the number of types generated for each run .
+6-48:The number of types is a good indication for the level of heterogeneity in the environment .
+6-49:For each number of types, we ran 10000 simulations .
+6-50:Figure 6 depicts the performance of the different methods (for a 40 observation collection period for each agent) .
+6-51:Since all simulation runs used for generating Figure 6 are based on the same seed, the performance of the self learning mechanism is constant regardless of the number of types in the environment .
+6-52:As expected, the average all mechanism performs best when all agents are of the same type; however its performance deteriorates as the number of types increases .
+6-53:Similarly, the selective sharing mechanism exhibits good results when all agents are of the same type, and as the number of types increases, its performance deteriorates .
+6-54:However, the performance decrease is significantly more modest in comparison to the one experienced in the average all mechanism .
+6-55:5 The specific coefficients used guarantee an S like curve of growth, along the interval (0, 100), where the initial stage of growth is approximately exponential, followed by asymptotically slowing growth .
+6-56:6 In this suggested environment generation scheme there is no guarantee that every agent will have a potential similar agent to share information with .
+6-57:In those non rare scenarios where the CA is the only one of its type, it will rapidly need to stop relying on others .
+6-58:0 0.02 0.04 0.06 0.08 0.1 0.12 0.14 1 2 3 4 5 Self Learning Average All Selective Sharing number of types averageabsoluteerror Figure 6: Average absolute deviation from actual value in 20 agent scenarios as a function of the agents" heterogeneity level Overall, the selective sharing mechanism outperforms both other methods for any number of types greater than one. .
+7 RELATED WORK :
+7-1:In addition to the interruption management literature reviewed in Section 2, several other areas of prior work are relevant to the selective sharing mechanism described in this paper .
+7-2:Collaborative filtering, which makes predictions (filtering) about the interests of a user [7], operates similarly to selective sharing .
+7-3:However, collaborative filtering systems exhibit poor performance when there is not sufficient information about the users and when there is not sufficient information about a new user whose taste the system attempts to predict [7] .
+7-4:Selective sharing relies on the ability to find similarity between specific parts of the probability distribution function associated with a characteristic of different users .
+7-5:This capability is closely related to clustering and classification, an area widely studied in machine learning .
+7-6:Given space considerations, our review of this area is restricted to some representative approaches for clustering .
+7-7:In spite of the richness of available clustering algorithms (such as the famous K means clustering algorithm [11], hierarchical methods, Bayesian classifiers [6], and maximum entropy), various characteristics of fast paced domains do not align well with the features of attributesbased clustering mechanisms, suggesting these mechanisms would not perform well in such domains .
+7-8:Of particular importance is that the CA needs to find similarity between functions, defined over a continuous interval, with no distinct pre defined attributes .
+7-9:An additional difficulty is defining the distance measure .
+7-10:Many clustering techniques have been used in data mining [2], with particular focus on incremental updates of the clustering, due to the very large size of the databases [3] .
+7-11:However the applicability of these to fast paced domains is quite limited because they rely on a large set of existing data .
+7-12:Similarly, clustering algorithms designed for the task of class identification in spatial databases (e.g., relying on a density based notion [4]) are not useful for our case, because our data has no spatial attributes .
+7-13:The most relevant method for our purposes is the Kullback Leibler relative entropy index that is used in probability theory and information theory [12] .
+7-14:This measure, which can also be applied on continuous random variables, relies on a natural distance measure from a true probability distribution (either observation based or calculated) to an arbitrary probability distribution .
+7-15:However, the method will perform poorly in scenarios in which the functions alternate between different levels while keeping the general structure and moments .
+7-16:For example, consider the two functions f(x) = ( x mod2) 100 and g(x) = ( x mod2) 100 defined over the interval (0, 200) .
+7-17:While these two functions are associated with almost identical reservation values (for any sampling cost) and mean, the Kullback Leibler method will assign a poor correlation between 208 The Sixth Intl .
+7-18:Joint Conf .
+7-19:on Autonomous Agents and Multi Agent Systems (AAMAS 07) them, while our Wilcoxon based approach will give them the highest rank in terms of similarity .
+7-20:While the Wilcoxon test is a widely used statistical procedure [22, 14], it is usually used for comparing two sets of single variate data .
+7-21:To our knowledge, no attempt has been made yet to extend its properties as an infrastructure for determining with whom and to what extent information should be shared, as presented in this paper .
+7-22:Typical use of this non parametric tool includes detection of rare events in time series (e.g., a hard drive failure prediction [17]) and bioinformatics applications (e.g., finding informative genes from microarray data) .
+7-23:In these applications, it is used primarily as an identification tool and ranking criterion. .
+8 DISCUSSION AND CONCLUSIONS :
+8-1:The selective sharing mechanism presented in this paper does not make any assumptions about the format of the data used or about the structure of the distribution function of the parameter to be estimated .
+8-2:It is computationally lightweight and very simple to execute .
+8-3:Selective sharing allows an agent to benefit from other agents" observations in scenarios in which data sources of the same type are available .
+8-4:It also guarantees, as a fallback, performance equivalent to that of a self learner when the information source is unique .
+8-5:Furthermore, selective sharing does not require any prior knowledge about the types of information sources available in the environment or of the number of agents associated with each type .
+8-6:The results of our simulations demonstrate the selective sharing mechanism"s effectiveness in improving the estimation produced for probabilistic parameters based on a limited set of observations .
+8-7:Furthermore, most of the improvement is achieved in initial interactions, which is of great importance for agents operating in fast paced environments .
+8-8:Although we tested the selective sharing mechanism in the context of the Coordinators project, it is applicable in any MAS environment having the characteristics of a fast paced environment (e.g., rescue environments) .
+8-9:Evidence for its general effectiveness is given in the general evaluation section, where environments were continuously randomly generated .
+8-10:The Wilcoxon statistic used as described in this paper to provide a classifier for similarity between users provides high flexibility with low computational costs and is applicable for any characteristic being learned .
+8-11:Its use provides a good measure of similarity which an agent can use to decide how much external information to adopt for its assessments. .
+9-1:The research reported in this paper was supported in part by contract number 55 000720, a subcontract to SRI International"s DARPA Contract No
+9-2:FA8750 05 C 0033
+9-3:Any opinions, findings and conclusions, or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of DARPA or the U.S
+9-4:Government
+9-5:We are grateful to an anonymous AAMAS reviewer for an exceptionally comprehensive review of this paper.
+10-1:P
+10-2:Adamczyk, S
+10-3:Iqbal, and B
+10-4:Bailey
+10-5:A method, system, and tools for intelligent interruption management
+10-6:In TAMODIA "05, pages 123 126, New York, NY, USA, 2005
+10-7:ACM Press
+10-8:P
+10-9:Berkhin
+10-10:Survey of clustering data mining techniques
+10-11:Technical report, Accrue Software, San Jose, CA, 2002
+10-12:M
+10-13:Ester, H
+10-14:Kriegel, J
+10-15:Sander, M
+10-16:Wimmer, and X
+10-17:Xu
+10-18:Incremental clustering for mining in a data warehousing environment
+10-19:In Proc
+10-20:24th Int
+10-21:Conf
+10-22:Very Large Data Bases, VLDB, pages 323 333, 24 27 1998
+10-23:M
+10-24:Ester, H
+10-25:Kriegel, J
+10-26:Sander, and X
+10-27:Xu
+10-28:A density based algorithm for discovering clusters in large spatial databases with noise
+10-29:In KDD 96, pages 226 231, 1996
+10-30:M
+10-31:Fleming and R
+10-32:Cohen
+10-33:A decision procedure for autonomous agents to reason about interaction with humans
+10-34:In AAAI Spring Symp
+10-35:on Interaction between Humans and Autonomous Systems over Extended Operation, 2004
+10-36:N
+10-37:Friedman, D
+10-38:Geiger, and M
+10-39:Goldszmidt
+10-40:Bayesian network classifiers
+10-41:Machine Learning, 29:131 163, 1997
+10-42:N
+10-43:Good, J
+10-44:Ben Schafer, J
+10-45:Konstan, A
+10-46:Borchers, B
+10-47:Sarwar, J
+10-48:Herlocker, and J
+10-49:Riedl
+10-50:Combining collaborative filtering with personal agents for better recommendations
+10-51:In AAAI IAAI, pages 439 446, 1999
+10-52:K
+10-53:Hinckley, J
+10-54:Pierce, M
+10-55:Sinclair, and E
+10-56:Horvitz
+10-57:Sensing techniques for mobile interaction
+10-58:In UIST "00, pages 91 100, New York, NY, USA, 2000
+10-59:ACM Press
+10-60:E
+10-61:Horvitz, C
+10-62:Kadie, T
+10-63:Paek, and D
+10-64:Hovel
+10-65:Models of attention in computing and communication: from principles to applications
+10-66:Commun
+10-67:ACM, 46(3):52 59, 2003
+10-68:B
+10-69:Hui and C
+10-70:Boutilier
+10-71:Who"s asking for help?: a bayesian approach to intelligent assistance
+10-72:In IUI "06, 2006
+10-73:J
+10-74:Jang, C
+10-75:Sun, and E
+10-76:Mizutani
+10-77:Neuro Fuzzy and Soft Computing A Computational Approach to Learning and Machine Intelligence
+10-78:Prentice Hall, 1997
+10-79:S
+10-80:Kullback and R
+10-81:Leibler
+10-82:On information and sufficiency
+10-83:Ann
+10-84:Math
+10-85:Statist., 22:79 86, 1951
+10-86:P
+10-87:Maglio, T
+10-88:Matlock, C
+10-89:Campbell, S
+10-90:Zhai, and B
+10-91:Smith
+10-92:Gaze and speech in attentive user interfaces
+10-93:In ICMI, pages 1 7, 2000
+10-94:H
+10-95:Mann and D
+10-96:Whitney
+10-97:On a test of whether one of 2 random variables is stochastically larger than the other
+10-98:Annals of Mathematical Statistics, 18:50 60, 1947
+10-99:W
+10-100:McClure
+10-101:Technology and command: Implications for military operations in the twenty first century
+10-102:Maxwell Air Force Base, Center for Strategy and Technology, 2000
+10-103:J
+10-104:McMillan and M
+10-105:Rothschild
+10-106:Search
+10-107:In Robert J
+10-108:Aumann and Amsterdam Sergiu Hart, editors, Handbook of Game Theory with Economic Applications, pages 905 927
+10-109:1994
+10-110:J
+10-111:Murray, G
+10-112:Hughes, and K
+10-113:Kreutz Delgado
+10-114:Machine learning methods for predicting failures in hard drives: A multiple instance application
+10-115:J
+10-116:Mach
+10-117:Learn
+10-118:Res., 6:783 816, 2005
+10-119:D
+10-120:Sarne and B
+10-121:J
+10-122:Grosz
+10-123:Estimating information value in collaborative multi agent planning systems
+10-124:In AAMAS"07, page (to appear), 2007
+10-125:D
+10-126:Sarne and B
+10-127:J
+10-128:Grosz
+10-129:Timing interruptions for better human computer coordinated planning
+10-130:In AAAI Spring Symp
+10-131:on Distributed Plan and Schedule Management, 2006
+10-132:R
+10-133:Vertegaal
+10-134:The GAZE groupware system: Mediating joint attention in multiparty communication and collaboration
+10-135:In CHI, pages 294 301, 1999
+10-136:T
+10-137:Wagner, J
+10-138:Phelps, V
+10-139:Guralnik, and R
+10-140:VanRiper
+10-141:An application view of coordinators: Coordination managers for first responders
+10-142:In AAAI, pages 908 915, 2004
+10-143:F Wilcoxon
+10-144:Individual comparisons by ranking methods
+10-145:Biometrics, 1:80 83, 1945
+10-146:D
+10-147:Zeng and K
+10-148:Sycara
+10-149:Bayesian learning in negotiation
+10-150:In AAAI Symposium on Adaptation, Co evolution and Learning in Multiagent Systems, pages 99 104, 1996
+10-151:Y
+10-152:Zhang, K
+10-153:Biggers, L
+10-154:He, S
+10-155:Reddy, D
+10-156:Sepulvado, J
+10-157:Yen, and T
+10-158:Ioerger
+10-159:A distributed intelligent agent architecture for simulating aggregate level behavior and interactions on the battlefield
+10-160:In SCI 2001, pages 58 63, 2001
+10-161:The Sixth Intl
+10-162:Joint Conf
+10-163:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 209
+picture:

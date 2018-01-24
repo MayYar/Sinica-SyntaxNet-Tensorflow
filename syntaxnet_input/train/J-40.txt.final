@@ -1,0 +1,249 @@
+Networks Preserving Evolutionary Equilibria 
+content:
+1 ABSTRACT :
+1-1:We study a natural extension of classical evolutionary game theory to a setting in which pairwise interactions are restricted to the edges of an undirected graph or network .
+1-2:We generalize the definition of an evolutionary stable strategy (ESS), and show a pair of complementary results that exhibit the power of randomization in our setting: subject to degree or edge density conditions, the classical ESS of any game are preserved when the graph is chosen randomly and the mutation set is chosen adversarially, or when the graph is chosen adversarially and the mutation set is chosen randomly .
+1-3:We examine natural strengthenings of our generalized ESS definition, and show that similarly strong results are not possible for them .
+1-4:J.4 [Social and Behavioral Sciences]: Economics .
+2 INTRODUCTION :
+2-1:In this paper, we introduce and examine a natural extension of classical evolutionary game theory to a setting in which pairwise interactions are restricted to the edges of an undirected graph or network .
+2-2:This extension generalizes the classical setting, in which all pairs of organisms in an infinite population are equally likely to interact .
+2-3:The classical setting can be viewed as the special case in which the underlying network is a clique .
+2-4:There are many obvious reasons why one would like to examine more general graphs, the primary one being in that many scenarios considered in evolutionary game theory, all interactions are in fact not possible .
+2-5:For example, geographical restrictions may limit interactions to physically proximate pairs of organisms .
+2-6:More generally, as evolutionary game theory has become a plausible model not only for biological interaction, but also economic and other kinds of interaction in which certain dynamics are more imitative than optimizing (see [2, 16] and chapter 4 of [19]), the network constraints may come from similarly more general sources .
+2-7:Evolutionary game theory on networks has been considered before, but not in the generality we will do so here (see Section 4) .
+2-8:We generalize the definition of an evolutionary stable strategy to networks, and show a pair of complementary results that exhibit the power of randomization in our setting: subject to degree or edge density conditions, the classical ESS of any game are preserved when the graph is chosen randomly and the mutation set is chosen adversarially, or when the graph is chosen adversarially and the mutation set is chosen randomly .
+2-9:We examine natural strengthenings of our generalized ESS definition, and show that similarly strong results are not possible for them .
+2-10:The work described here is part of recent efforts examining the relationship between graph topology or structure and properties of equilibrium outcomes .
+2-11:Previous works in this line include studies of the relationship of topology to properties of correlated equilibria in graphical games [11], and studies of price variation in graph theoretic market exchange models [12] .
+2-12:More generally, this work contributes to the line of graph theoretic models for game theory investigated in both computer science [13] and economics [10]. .
+3 CLASSICAL EGT :
+3-1:The fundamental concept of evolutionary game theory is the evolutionarily stable strategy .
+3-2:Intuitively, an ESS is a strategy such that if all the members of a population adopt it, then no mutant strategy could invade the population [17] .
+3-3:To make this more precise, we describe the basic model of evolutionary game theory, in which the notion of an ESS resides .
+3-4:The standard model of evolutionary game theory considers an infinite population of organisms, each of which plays a strategy in a fixed, 2 player, symmetric game .
+3-5:The game is defined by a fitness function F .
+3-6:All pairs of members of the infinite population are equally likely to interact with one another .
+3-7:If two organisms interact, one playing strategy s 200 and the other playing strategy t, the s player earns a fitness of F(s|t) while the t player earns a fitness of F(t|s) .
+3-8:In this infinite population of organisms, suppose there is a 1 − fraction who play strategy s, and call these organisms incumbents; and suppose there is an fraction who play t, and call these organisms mutants .
+3-9:Assume two organisms are chosen uniformly at random to play each other .
+3-10:The strategy s is an ESS if the expected fitness of an organism playing s is higher than that of an organism playing t, for all t = s and all sufficiently small .
+3-11:Since an incumbent will meet another incumbent with probability 1 − and it will meet a mutant with probability , we can calculate the expected fitness of an incumbent, which is simply (1 − )F(s|s) + F(s|t) .
+3-12:Similarly, the expected fitness of a mutant is (1 − )F(t|s) + F(t|t) .
+3-13:Thus we come to the formal definition of an ESS [19] .
+3-14:Definition 2.1 .
+3-15:A strategy s is an evolutionarily stable strategy for the 2 player, symmetric game given by fitness function F, if for every strategy t = s, there exists an t such that for all 0 < < t, (1 − )F(s|s) + F(s|t) > (1 − )F(t|s) + F(t|t) .
+3-16:A consequence of this definition is that for s to be an ESS, it must be the case that F(s|s) ≥ F(t|s), for all strategies to itself, and thus any ESS strategy s must also be a Nash equilibrium .
+3-17:In general the notion of ESS is more restrictive than Nash equilibrium, and not all 2 player, symmetric games have an ESS .
+3-18:In this paper our interest is to examine what kinds of network structure preserve the ESS strategies for those games that do have a standard ESS .
+3-19:First we must of course generalize the definition of ESS to a network setting. .
+4 EGT ON GRAPHS :
+4-1:In our setting, we will no longer assume that two organisms are chosen uniformly at random to interact .
+4-2:Instead, we assume that organisms interact only with those in their local neighborhood, as defined by an undirected graph or network .
+4-3:As in the classical setting (which can be viewed as the special case of the complete network or clique), we shall assume an infinite population, by which we mean we examine limiting behavior in a family of graphs of increasing size .
+4-4:Before giving formal definitions, some comments are in order on what to expect in moving from the classical to the graph theoretic setting .
+4-5:In the classical (complete graph) setting, there exist many symmetries that may be broken in moving to the the network setting, at both the group and individual level .
+4-6:Indeed, such asymmetries are the primary interest in examining a graph theoretic generalization .
+4-7:For example, at the group level, in the standard ESS definition, one need not discuss any particular set of mutants of population fraction .
+4-8:Since all organisms are equally likely to interact, the survival or fate of any specific mutant set is identical to that of any other .
+4-9:In the network setting, this may not be true: some mutant sets may be better able to survive than others due to the specific topologies of their interactions in the network .
+4-10:For instance, foreshadowing some of our analysis, if s is an ESS but F(t|t) is much larger than F(s|s) and F(s|t), a mutant set with a great deal of internal interaction (that is, edges between mutants) may be able to survive, whereas one without this may suffer .
+4-11:At the level of individuals, in the classical setting, the assertion that one mutant dies implies that all mutants die, again by symmetry .
+4-12:In the network setting, individual fates may differ within a group all playing a common strategy .
+4-13:These observations imply that in examining ESS on networks we face definitional choices that were obscured in the classical model .
+4-14:If G is a graph representing the allowed pairwise interactions between organisms (vertices), and u is a vertex of G playing strategy su, then the fitness of u is given by F(u) = P v∈Γ(u) F(su|sv) |Γ(u)| .
+4-15:Here sv is the strategy being played by the neighbor v, and Γ(u) = {v ∈ V : (u, v) ∈ E} .
+4-16:One can view the fitness of u as the average fitness u would obtain if it played each if its neighbors, or the expected fitness u would obtain if it were assigned to play one of its neighbors chosen uniformly at random .
+4-17:Classical evolutionary game theory examines an infinite, symmetric population .
+4-18:Graphs or networks are inherently finite objects, and we are specifically interested in their asymmetries, as discussed above .
+4-19:Thus all of our definitions shall revolve around an infinite family G = {Gn}∞ n=0 of finite graphs Gn over n vertices, but we shall examine asymptotic (large n) properties of such families .
+4-20:We first give a definition for a family of mutant vertex sets in such an infinite graph family to contract .
+4-21:Definition 3.1 .
+4-22:Let G = {Gn}∞ n=0 be an infinite family of graphs, where Gn has n vertices .
+4-23:Let M = {Mn}∞ n=0 be any family of subsets of vertices of the Gn such that |Mn| ≥ n for some constant > 0 .
+4-24:Suppose all the vertices of Mn play a common (mutant) strategy t, and suppose the remaining vertices in Gn play a common (incumbent) strategy s .
+4-25:We say that Mn contracts if for sufficiently large n, for all but o(n) of the j ∈ Mn, j has an incumbent neighbor i such that F(j) < F(i) .
+4-26:A reasonable alternative would be to ask that the condition above hold for all mutants rather than all but o(n) .
+4-27:Note also that we only require that a mutant have one incumbent neighbor of higher fitness in order to die; one might considering requiring more .
+4-28:In Sections 6.1 and 6.2 we consider these stronger conditions and demonstrate that our results can no longer hold .
+4-29:In order to properly define an ESS for an infinite family of finite graphs in a way that recovers the classical definition asymptotically in the case of the family of complete graphs, we first must give a definition that restricts attention to families of mutant vertices that are smaller than some invasion threshold n, yet remain some constant fraction of the population .
+4-30:This prevents invasions that survive merely by constituting a vanishing fraction of the population .
+4-31:Definition 3.2 .
+4-32:Let > 0, and let G = {Gn}∞ n=0 be an infinite family of graphs, where Gn has n vertices .
+4-33:Let M = {Mn}∞ n=0 be any family of (mutant) vertices in Gn .
+4-34:We say that M is linear if there exists an , > > 0, such that for all sufficiently large n, n > |Mn| > n .
+4-35:We can now give our definition for a strategy to be evolutionarily stable when employed by organisms interacting with their neighborhood in a graph .
+4-36:201 Definition 3.3 .
+4-37:Let G = {Gn}∞ n=0 be an infinite family of graphs, where Gn has n vertices .
+4-38:Let F be any 2 player, symmetric game for which s is a strategy .
+4-39:We say that s is an ESS with respect to F and G if for all mutant strategies t = s, there exists an t > 0 such that for any t linear family of mutant vertices M = {Mn}∞ n=0 all playing t, for n sufficiently large, Mn contracts .
+4-40:Thus, to violate the ESS property for G, one must witness a family of mutations M in which each Mn is an arbitrarily small but nonzero constant fraction of the population of Gn, but does not contract (i.e .
+4-41:every mutant set has a subset of linear size that survives all of its incumbent interactions) .
+4-42:In Section A.1 we show that the definition given coincides with the classical one in the case where G is the family of complete graphs, in the limit of large n .
+4-43:We note that even in the classical model, small sets of mutants were allowed to have greater fitness than the incumbents, as long as the size of the set was o(n) [18] .
+4-44:In the definition above there are three parameters: the game F, the graph family G and the mutation family M .
+4-45:Our main results will hold for any 2 player, symmetric game M: that in which G is a family of random graphs and M is arbitrary, and that in which G is nearly arbitrary and M is randomly chosen .
+4-46:In both cases, we will see that, subject to conditions on degree or edge density (essentially forcing connectivity of G but not much more), for any 2 player, symmetric game, the ESS of the classical settings, and only those strategies, are always preserved .
+4-47:Thus a common theme of these results is the power of randomization: as long as either the network itself is chosen randomly, or the mutation set is chosen randomly, classical ESS are preserved. .
+5 RELATED WORK :
+5-1:There has been previous work that analyzes which strategies are resilient to mutant invasions with respect to various types of graphs .
+5-2:What sets our work apart is that the model we consider encompasses a significantly more general class of games and graph topologies .
+5-3:We will briefly survey this literature and point out the differences in the previous models and ours .
+5-4:In [8], [3], and [4], the authors consider specific families of graphs, such as cycles and lattices, where players play specific games, such as 2 × 2 games or k × k coordination games .
+5-5:In these papers the authors specify a simple, local dynamic for players to improve their payoffs by changing strategies, and analyze what type of strategies will grow to dominate the population .
+5-6:The model we propose is more general than both of these, as it encompasses a larger class of graphs as well as a richer set of games .
+5-7:Also related to our work is that of [14], where the authors propose two models .
+5-8:The first assumes organisms interact according to a weighted, undirected graph .
+5-9:However, the fitness of each organism is simply assigned and does not depend on the actions of each organism"s neighborhood .
+5-10:The second model has organisms arranged around a directed cycle, where neighbors play a 2 × 2 game .
+5-11:With probability proportional to its fitness, an organism is chosen to reproduce by placing a replica of itself in its neighbors position, thereby killing the neighbor .
+5-12:We consider more general games than the first model and more general graphs than the second .
+5-13:Finally, the works most closely related to ours are [7], [15], and [6] .
+5-14:The authors consider 2 action, coordination games played by players in a general undirected graph .
+5-15:In these three works, the authors specify a dynamic for a strategy to reproduce, and analyze properties of the graph that allow a strategy to overrun the population .
+5-16:Here again, one can see that our model is more general than these, as it allows for organisms to play any 2 player, symmetric game. .
+6-1:We now proceed to state and prove two complementary results in the network ESS model defined in Section 3
+6-2:First, we consider a setting where the graphs are generated via the Gn,p model of Erd˝os and R´enyi [5]
+6-3:In this model, every pair of vertices are joined by an edge independently and with probability p (where p may depend on n)
+6-4:The mutant set, however, will be constructed adversarially (subject to the linear size constraint given by Definition 3.3)
+6-5:For these settings, we show that for any 2 player, symmetric game, s is a classical ESS of that game, if and only if s is an ESS for {Gn,p}∞ n=0, where p = Ω(1 nc ) and 0 ≤ c < 1, and any mutant family {Mn}∞ n=0, where each Mn has linear size
+6-6:We note that under these settings, if we let c = 1 − γ for small γ > 0, the expected number of edges in Gn is n1+γ or larger  that is, just superlinear in the number of vertices and potentially far smaller than O(n2 In this section we show that if one tried to strengthen the model described in Section 3 in two natural ways, one would not be able to prove results as strong as Theorems 5.1 and 5.2, which hold for every 2 player, symmetric game
+6-7:6.1 Stronger Contraction for the Mutant Set In Section 3 we alluded to the fact that we made certain design decisions in arriving at Definitions 3.1, 3.2 and 3.3
+6-8:One such decision was to require that all but o(n) mutants have incumbent neighbors of higher fitness
+6-9:Instead, we could have required that all mutants have an incumbent neighbor of higher fitness
+6-10:The two theorems in this subsection show that if one were to strengthen our notion of contraction for the mutant set, given by Definition 3.1, in this way, it would be impossible to prove theorems analogous to Theorems 5.1 and 5.3
+6-11:Recall that Definition 3.1 gave the notion of contraction for a linear sized subset of mutants
+6-12:In what follows, we will say an edge (i, j) contracts if i is an incumbent, j is a mutant, and F(i) > F(j)
+6-13:Also, recall that Theorem 5.1 stated that if s is a classical ESS, then it is an ESS for random graphs with adversarial mutations
+6-14:Next, we prove that if we instead required every incumbent mutant edge to contract, this need not be the case
+6-15:Theorem 6.1
+6-16:Let F be a 2 player, symmetric game that has a classical ESS s for which there exists a mutant strategy t = s with F(t|t) > F(s|s) and F(t|t) > F(s|t)
+6-17:Let G = {Gn}∞ n=0 be an infinite family of random graphs drawn according to Gn,p, where p = Ω(1 nc ) for any constant 0 ≤ c < 1
+6-18:Then with probability approaching 1 as n → ∞, there exists a mutant family M = {Mn}∞ n=0, where tn > |Mn| > n and t, > 0, in which there is an edge that does not contract
+6-19:Proof
+6-20:(Sketch) With probability approaching 1 as n → ∞, there exists a vertex j where deg(j) is arbitrarily close to n
+6-21:So label j mutant, label one of its neighbors incumbent, denoted i, and label the rest of j"s neighborhood mutant
+6-22:Also, label all of i"s neighbors incumbent, with the exception of j and j"s neighbors (which were already labeled mutant)
+6-23:In this setting, one can show that F(j) will be arbitrarily close to F(t|t) and F(i) will be a convex combination of F(s|s) and F(s|t), which are both strictly less than F(t|t)
+6-24:Theorem 5.3 stated that if s is a classical ESS, then for graphs where |En| ≥ n1+γ , for some γ > 0, and where each organism is labeled a mutant with probability , one edge must contract
+6-25:Below we show that, for certain graphs and certain games, there will always exist one edge that will not contract
+6-26:Theorem 6.2
+6-27:Let F be a 2 player, symmetric game that has a classical ESS s, such that there exists a mutant strategy t = s where F(t|s) > F(s|t)
+6-28:There exists an infinite family of graphs {Gn = (Vn, En)}∞ n=0, where |En| = Θ(n2 ), such that for a mutant family M = {Mn}∞ n=0, which is determined by labeling each vertex a mutant with probability > 0, the probability there exists an edge in En that does not contract approaches 1 as n → ∞
+6-29:Proof
+6-30:(Sketch) Construct Gn as follows
+6-31:Pick n 4 vertices u1, u2,
+6-32:
+6-33:
+6-34:, un 4 and add edges such that they from a clique
+6-35:Then, for each ui, i ∈ [n 4] add edges (ui, vi), (vi, wi) and (wi, xi)
+6-36:With probability 1 as n → ∞, there exists an i such that ui and wi are mutants and vi and xi are incumbents
+6-37:Observe that F(vi) = F(xi) = F(s|t) and F(wi) = F(t|s)
+6-38:6.2 Stronger Contraction for Individuals The model of Section 3 requires that for an edge (i, j) to contract, the fitness of i must be greater than the fitness of j
+6-39:One way to strengthen this notion of contraction would be to require that the maximum fitness incumbent in the neighborhood of j be more fit than the maximum fitness mutant in the neighborhood of j
+6-40:This models the idea that each organism is trying to take over each place in its neighborhood, but only the most fit organism in the neighborhood of a vertex gets the privilege of taking it
+6-41:If we assume that we adopt this notion of contraction for individual mutants, and require that all incumbent mutant edges contract, we will next show that Theorems 6.1 and 6.2 still hold, and thus it is still impossible to get results such as Theorems 5.1 and 5.3 which hold for every 2 player, symmetric game
+6-42:In the proof of Theorem 6.1 we proved that F(i) is strictly less than F(j)
+6-43:Observe that maximum fitness mutant in the neighborhood of j must have fitness at least F(j)
+6-44:Also observe that there is only 1 incumbent in the neighborhood of j, namely i
+6-45:So under this stronger notion of contraction, the edge (i, j) will not contract
+6-46:Similarly, in the proof of Theorem 6.2, observe that the only mutant in the neighborhood of wi is wi itself, which has fitness F(t|s)
+6-47:Furthermore, the only incumbents in the neighborhood of wi are vi and xi, both of which have fitness F(s|t)
+6-48:By assumption, F(t|s) > F(s|t), thus, under this stronger notion of contraction, neither of the incumbentmutant edges, (vi, wi) and (xi, wi), will contract.
+7-1:Elwyn R
+7-2:Berlekamp, John Horton Conway, and Richard K
+7-3:Guy
+7-4:Winning Ways for Your 205 Mathematical Plays, volume 4
+7-5:AK Peters, Ltd, March 2004
+7-6:Jonas Bj¨ornerstedt and Karl H
+7-7:Schlag
+7-8:On the evolution of imitative behavior
+7-9:Discussion Paper B 378, University of Bonn, 1996
+7-10:L
+7-11:E
+7-12:Blume
+7-13:The statistical mechanics of strategic interaction
+7-14:Games and Economic Behavior, 5:387 424, 1993
+7-15:L
+7-16:E
+7-17:Blume
+7-18:The statistical mechanics of best response strategy revision
+7-19:Games and Economic Behavior, 11(2):111 145, November 1995
+7-20:B
+7-21:Bollob´as
+7-22:Random Graphs
+7-23:Cambridge University Press, 2001
+7-24:Michael Suk Young Chwe
+7-25:Communication and coordination in social networks
+7-26:Review of Economic Studies, 67:1 16, 2000
+7-27:Glenn Ellison
+7-28:Learning, local interaction, and coordination
+7-29:Econometrica, 61(5):1047 1071, Sept
+7-30:1993
+7-31:I
+7-32:Eshel, L
+7-33:Samuelson, and A
+7-34:Shaked
+7-35:Altruists, egoists, and hooligans in a local interaction model
+7-36:The American Economic Review, 88(1), 1998
+7-37:Geoffrey R
+7-38:Grimmett and David R
+7-39:Stirzaker
+7-40:Probability and Random Processes
+7-41:Oxford University Press, 3rd edition, 2001
+7-42:M
+7-43:Jackson
+7-44:A survey of models of network formation: Stability and efficiency
+7-45:In Group Formation in Economics; Networks, Clubs and Coalitions
+7-46:Cambridge University Press, 2004
+7-47:S
+7-48:Kakade, M
+7-49:Kearns, J
+7-50:Langford, and L
+7-51:Ortiz
+7-52:Correlated equilibria in graphical games
+7-53:ACM Conference on Electronic Commerce, 2003
+7-54:S
+7-55:Kakade, M
+7-56:Kearns, L
+7-57:Ortiz, R
+7-58:Pemantle, and S
+7-59:Suri
+7-60:Economic properties of social networks
+7-61:Neural Information Processing Systems, 2004
+7-62:M
+7-63:Kearns, M
+7-64:Littman, and S
+7-65:Singh
+7-66:Graphical models for game theory
+7-67:Conference on Uncertainty in Artificial Intelligence, pages 253 260, 2001
+7-68:E
+7-69:Lieberman, C
+7-70:Hauert, and M
+7-71:A
+7-72:Nowak
+7-73:Evolutionary dynamics on graphs
+7-74:Nature, 433:312 316, 2005
+7-75:S
+7-76:Morris
+7-77:Contagion
+7-78:Review of Economic Studies, 67(1):57 78, 2000
+7-79:Karl H
+7-80:Schlag
+7-81:Why imitate and if so, how? Journal of Economic Theory, 78:130 156, 1998
+7-82:J
+7-83:M
+7-84:Smith
+7-85:Evolution and the Theory of Games
+7-86:Cambridge University Press, 1982
+7-87:William L
+7-88:Vickery
+7-89:How to cheat against a simple mixed strategy ESS
+7-90:Journal of Theoretical Biology, 127:133 139, 1987
+7-91:J¨orgen W
+7-92:Weibull
+7-93:Evolutionary Game Theory
+7-94:The MIT Press, 1995
+7-95:APPENDIX
+picture:

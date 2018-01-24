@@ -1,0 +1,107 @@
+For each document identifier passed to the Snippet Engine, the engine must generate text, preferably containing query terms, that attempts to summarize that document .
+Previous work on summarization identifies the sentence as the minimal unit for extraction and presentation to the user [12] .
+Accordingly, we also assume a web snippet extraction process will extract sentences from documents .
+In order to construct a snippet, all sentences in a document should be ranked against the query, and the top two or three returned as the snippet .
+The scoring of sentences against queries has been explored in several papers [7, 12, 18, 20, 21], with different features of sentences deemed important .
+Based on these observations, Figure 2, shows the general algorithm for scoring sentences in relevant documents, with the highest scoring sentences making the snippet for each document .
+The final score of a sentence, assigned in Step 7, can be derived in many different ways .
+In order to avoid bias towards any particular scoring mechanism, we compare sentence quality later in the paper using the individual components of the score, rather than an arbitrary combination of the components .
+4.1 Parsing Web Documents Unlike well edited text collections that are often the target for summarization systems, Web data is often poorly structured, poorly punctuated, and contains a lot of data that do not form part of valid sentences that would be candidates for parts of snippets .
+We assume that the documents passed to the Snippet Engine by the Indexing Engine have all HTML tags and JavaScript removed, and that each document is reduced to a series of word tokens separated by non word tokens .
+We define a word token as a sequence of alphanumeric characters, while a non word is a sequence of non alphanumeric characters such as whitespace and the other punctuation symbols .
+Both are limited to a maximum of 50 characters .
+Adjacent, repeating characters are removed from the punctuation .
+Included in the punctuation set is a special end of sentence marker which replaces the usual three sentence terminators ?!. .
+Often these explicit punctuation characters are missing, and so HTML tags such as <br> and <p> are assumed to terminate sentences .
+In addition, a sentence must contain at least five words and no more than twenty words, with longer or shorter sentences being broken and joined as required to meet these criteria [10] .
+Unterminated HTML tags that is, tags with an open brace, but no close brace cause all text from the open brace to the next open brace to be discarded .
+A major problem in summarizing web pages is the presence of large amounts of promotional and navigational material (navbars) visually above and to the left of the actual page content .
+For example, The most wonderful company on earth .
+Products .
+Service .
+About us .
+Contact us .
+Try before you buy .
+Similar, but often not identical, navigational material is typically presented on every page within a site .
+This material tends to lower the quality of summaries and slow down summary generation .
+In our experiments we did not use any particular heuristics for removing navigational information as the test collection in use (wt100g) pre dates the widespread take up of the current style of web publishing .
+In wt100g, the average web page size is more than half the current Web average [11] .
+Anecdotally, the increase is due to inclusion of sophisticated navigational and interface elements and the JavaScript functions to support them .
+Having defined the format of documents that are presented to the Snippet Engine, we now define our Compressed Token System document storage scheme, and the baseline system used for comparison .
+4.2 Baseline Snippet Engine An obvious document representation scheme is to simply compress each document with a well known adaptive compressor, and then decompress the document as required [1], using a string matching algorithm to effect the algorithm in Figure 2 .
+Accordingly, we implemented such a system, using zlib [4] with default parameters to compress every document after it has been parsed as in Section 4.1 .
+Each document is stored in a single file .
+While manageable for our small test collections or small enterprises with millions of documents, a full Web search engine may require multiple documents to inhabit single files, or a special purpose filesystem [6] .
+For snippet generation, the required documents are decompressed one at a time, and a linear search for provided query terms is employed .
+The search is optimized for our specific task, which is restricted to matching whole words and the sentence terminating token, rather than general pattern matching .
+4.3 The CTS Snippet Engine Several optimizations over the baseline are possible .
+The first is to employ a semi static compression method over the entire document collection, which will allow faster decompression with minimal compression loss [24] .
+Using a semistatic approach involves mapping words and non words produced by the parser to single integer tokens, with frequent symbols receiving small integers, and then choosing a coding scheme that assigns small numbers a small number of bits .
+Words and non words strictly alternate in the compressed file, which always begins with a word .
+In this instance we simply assign each symbol its ordinal number in a list of symbols sorted by frequency .
+We use the vbyte coding scheme to code the word tokens [22] .
+The set of non words is limited to the 64 most common punctuation sequences in the collection itself, and are encoded with a flat 6 bit binary code .
+The remaining 2 bits of each punctuation symbol are used to store capitalization information .
+The process of computing the semi static model is complicated by the fact that the number of words and non words appearing in large web collections is high .
+If we stored all words and non words appearing in the collection, and their associated frequency, many gigabytes of RAM or a B tree or similar on disk structure would be required [23] .
+Moffat et al .
+[14] have examined schemes for pruning models during compression using large alphabets, and conclude that rarely occurring terms need not reside in the model .
+Rather, rare terms are spelt out in the final compressed file, using a special word token (escape symbol), to signal their occurrence .
+During the first pass of encoding, two move to front queues are kept; one for words and one for non words .
+Whenever the available memory is consumed and a new symbol is discovered in the collection, an existing symbol is discarded from the end of the queue .
+In our implementation, we enforce the stricter condition on eviction that, where possible, the evicted symbol should have a frequency of one .
+If there is no symbol with frequency one in the last half of the queue, then we evict symbols of frequency two, and so on until enough space is available in the model for the new symbol .
+The second pass of encoding replaces each word with its vbyte encoded number, or the escape symbol and an ASCII representation of the word if it is not in the model .
+Similarly each non word sequence is replaced with its codeword, or the codeword for a single space character if it is not in the model .
+We note that this lossless compression of non words is acceptable when the documents are used for snippet generation, but may not be acceptable for a document database .
+We assume that a separate sub system would hold cached documents for other purposes where exact punctuation is important .
+While this semi static scheme should allow faster decompression than the baseline, it also readily allows direct matching of query terms as compressed integers in the compressed file .
+That is, sentences can be scored without having to decompress a document, and only the sentences returned as part of a snippet need to be decoded .
+The CTS system stores all documents contiguously in one file, and an auxiliary table of 64 bit integers indicating the start offset of each document in the file .
+Further, it must have access to the reverse mapping of term numbers, allowing those words not spelt out in the document to be recovered and returned to the Query Engine as strings .
+The first of these data structures can be readily partitioned and distributed if the Snippet Engine occupies multiple machines; the second, however, is not so easily partitioned, as any document on a remote machine might require access to the whole integer to string mapping .
+This is the second reason for employing the model pruning step during construction of the semi static code
+4.4 Experimental assessment of CTS All experiments reported in this paper were run on a Sun Fire V210 Server running Solaris 10 .
+The machine consists of dual 1.34 GHz UltraSPARC IIIi processors and 4GB of wt10g wt50g wt100g No .
+Docs .
+(กั106 ) 1.7 10.1 18.5 Raw Text 10, 522 56, 684 102, 833 Baseline(zlib) 2, 568 (24%) 10, 940 (19%) 19, 252 (19%) CTS 2, 722 (26%) 12, 010 (21%) 22, 269 (22%) Table 1
+0 20 40 60 0.00.20.40.60.8 Queries grouped in 100"s Time(seconds) 0 20 40 60 0.00.20.40.60.8 Queries grouped in 100"s Time(seconds) 0 20 40 60 0.00.20.40.60.8 Queries grouped in 100"s Time(seconds) Baseline CTS with caching CTS without caching Figure 3
+RAM .
+All source code was compiled using gcc4.1.1 with O9 optimisation .
+Timings were run on an otherwise unoccupied machine and were averaged over 10 runs, with memory flushed between runs to eliminate any caching of data files .
+In the absence of evidence to the contrary, we assume that it is important to model realistic query arrival sequences and the distribution of query repetitions for our experiments .
+Consequently, test collections which lack real query logs, such as TREC ad hoc and .GOV2 were not considered suitable .
+Obtaining extensive query logs and associated result doc ids for a corresponding large collection is not easy .
+We have used two collections (wt10g and wt100g) from the TREC Web Track [8] coupled with queries from Excite logs from the same (c .
+1997) period .
+Further, we also made use of a medium sized collection wt50g, obtained by randomly sampling half of the documents from wt100g .
+The first two rows of Table 1 give the number of documents and the size in Mb of these collections .
+The final two rows of Table 1 show the size of the resulting document sets after compression with the baseline and CTS schemes .
+As expected, CTS admits a small compression loss over zlib, but both substantially reduce the size of the text to about 20% of the original, uncompressed size .
+Note that the figures for CTS do not include the reverse mapping from integer token to string that is required to produce the final snippets as that occupies RAM .
+It is 1024 Mb in these experiments .
+The Zettair search engine [25] was used to produce a list of documents to summarize for each query .
+For the majority of the experiments the Okapi BM25 scoring scheme was used to determine document rankings .
+For the static caching experiments reported in Section 5, the score of each document wt10g wt50g wt100g Baseline 75 157 183 CTS 38 70 77 Reduction in time 49% 56% 58% Table 2
+is a 50
+This is to simulate effects of ranking algorithms like PageRank [1] on the distribution of document requests to the Snippet Engine .
+In our case we used the normalized Access Count [5] computed from the top 20 documents returned to the first 1 million queries from the Excite log to determine the query independent score component .
+Points on Figure 3 indicate the mean running time to generate 10 snippets for each query, averaged in groups of 100 queries, for the first 7000 queries in the Excite query log .
+Only the data for wt10g is shown, but the other collections showed similar patterns .
+The x axis indicates the group of 100 queries; for example, 20 indicates the queries 2001 to 2100 .
+Clearly there is a caching effect, with times dropping substantially after the first 1000 or so queries are processed .
+All of this is due to the operating system caching disk blocks and perhaps pre fetching data ahead of specific read requests .
+This is evident because the baseline system has no large internal data structures to take advantage of non disk based caching, it simply opens and processes files, and the speed up is evident for the baseline system .
+Part of this gain is due to the spatial locality of disk references generated by the query stream
+But when the log is processed after removing all but the first request for each document, the pronounced speed up is still evident as more queries are processed (not shown in figure) .
+This suggests that the operating system (or the disk itself) is reading and buffering a larger amount of data than the amount requested and that this brings benefit often enough to make an appreciable difference in snippet generation times .
+This is confirmed by the curve labeled CTS without caching, which was generated after mounting the filesystem with a no caching option (directio in Solaris) .
+With disk caching turned off, the average time to generate snippets varies little .
+The time to generate ten snippets for a query, averaged over the final 7000 queries in the Excite log as caching effects have dissipated, are shown in Table 2 .
+Once the system has stabilized, CTS is over 50% faster than the Baseline system .
+This is primarily due to CTS matching single integers for most query words, rather than comparing strings in the baseline system .
+Table 3 shows a break down of the average time to generate ten snippets over the final 7000 queries of the Excite log on the wt50g collection when entire documents are processed, and when only the first half of each document is processed .
+As can be seen, the majority of time spent generating a snippet is in locating the document on disk (Seek)
+Even if the amount of processing a document must % of doc processed Seek Read Score & Decode 100% 45 4 21 50% 45 4 11 Table 3
+undergo is halved, as in the second row of the Table, there is only a 14% reduction in the total time required to generate a snippet .
+As locating documents in secondary storage occupies such a large proportion of snippet generation time, it seems logical to try and reduce its impact through caching. .

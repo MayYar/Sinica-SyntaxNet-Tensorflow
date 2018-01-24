@@ -1,0 +1,497 @@
+﻿Combinatorial Agency 
+content:
+1 ABSTRACT :
+1-1:∗ Moshe Babaioff School of Information Management and Systems UC Berkeley Berkeley, CA, 94720 USA moshe@sims.berkeley.edu Michal Feldman School of Engineering and Computer Science The Hebrew University of Jerusalem Jerusalem, 91904 Israel mfeldman@cs.huji.ac.il Noam Nisan School of Engineering and Computer Science The Hebrew University of Jerusalem Jerusalem, 91904 Israel noam@cs.huji.ac.il ABSTRACT Much recent research concerns systems, such as the Internet, whose components are owned and operated by different parties, each with his own selfish goal .
+1-2:The field of Algorithmic Mechanism Design handles the issue of private information held by the different parties in such computational settings .
+1-3:This paper deals with a complementary problem in such settings: handling the hidden actions that are performed by the different parties .
+1-4:Our model is a combinatorial variant of the classical principal agent problem from economic theory .
+1-5:In our setting a principal must motivate a team of strategic agents to exert costly effort on his behalf, but their actions are hidden from him .
+1-6:Our focus is on cases where complex combinations of the efforts of the agents influence the outcome .
+1-7:The principal motivates the agents by offering to them a set of contracts, which together put the agents in an equilibrium point of the induced game .
+1-8:We present formal models for this setting, suggest and embark on an analysis of some basic issues, but leave many questions open .
+1-9:J.4 [Social and Behavioral Sciences]: Economics; K.4.4 .
+2 INTRODUCTION :
+2-1:1.1 Background One of the most striking characteristics of modern computer networks in particular the Internet is that different parts of it are owned and operated by different individuals, firms, and organizations .
+2-2:The analysis and design of protocols for this environment thus naturally needs to take into account the different selfish economic interests of the different participants .
+2-3:Indeed, the last few years have seen much work addressing this issue using game theoretic notions (see [7] for an influential survey) .
+2-4:A significant part of the difficulty stems from underlying asymmetries of information: one participant may not know everything that is known or done by another .
+2-5:In particular, the field of algorithmic mechanism design [6] uses appropriate incentives to extract the private information from the participants .
+2-6:This paper deals with the complementary lack of knowledge, that of hidden actions .
+2-7:In many cases the actual behaviors actions of the different participants are hidden from others and only influence the final outcome indirectly .
+2-8:Hidden here covers a wide range of situations including not precisely measurable, costly to determine, or even non contractible meaning that it can not be formally used in a legal contract .
+2-9:An example that was discussed in [3] is Quality of Service routing in a network: every intermediate link or router may exert a different amount of effort (priority, bandwidth, ...) when attempting to forward a packet of information .
+2-10:While the final outcome of whether a packet reached its destination is clearly visible, it is rarely feasible to monitor the exact amount of effort exerted by each intermediate link how can we ensure that they really do exert the appropriate amount of effort? Many other complex resource allocation problems exhibit similar hidden actions, e.g., a task that runs on a collection of shared servers may be allocated, by each server, an unknown percentage of the CPU"s processing power or of the physical memory .
+2-11:How can we ensure that the right combination of allocations is actually made by the different servers? A related class of examples concerns security issues: each link in a complex system may exert different levels of effort for protecting some desired security property of the system .
+2-12:How can we ensure that the desired level of 18 collective security is obtained? Our approach to this problem is based on the well studied principal agent problem in economic theory: How can a principal motivate a rational agent to exert costly effort towards the welfare of the principal? The crux of the model is that the agent"s action (i.e .
+2-13:whether he exerts effort or not) is invisible to the principal and only the final outcome, which is probabilistic and also influenced by other factors, is visible .
+2-14:This problem is well studied in many contexts in classical economic theory and we refer the readers to introductory texts on economic theory such as [5] Chapter 14 .
+2-15:The solution is based on the observation that a properly designed contract, in which the payments are contingent upon the final outcome, can influence a rational agent to exert the required effort .
+2-16:In this paper we initiate a general study of handling combinations of agents rather than a single agent .
+2-17:While much work was already done on motivating teams of agents [4], our emphasis is on dealing with the complex combinatorial structure of dependencies between agents" actions .
+2-18:In the general case, each combination of efforts exerted by the n different agents may result in a different expected gain for the principal .
+2-19:The general question asks which conditional payments should the principal offer to which agents as to maximize his net utility? In our setting and unlike in previous work (see, e.g., [12]), the main challenge is to determine the optimal amount of effort desired from each agent .
+2-20:This paper suggest models for and provides some interesting initial results about this combinatorial agency problem .
+2-21:We believe that we have only scratched the surface and leave many open questions, conjectures, and directions for further research .
+2-22:We believe that this type of analysis may also find applications in regular economic activity .
+2-23:Consider for example a firm that sub contracts a family of related tasks to many individuals (or other firms) .
+2-24:It will often not be possible to exactly monitor the actual effort level of each sub contractor (e.g., in cases of public relations activities, consulting activities, or any activities that require cooperation between different sub contractors.) When the dependencies between the different subtasks are complex, we believe that combinatorial agency models can offer a foundation for the design of contracts with appropriate incentives .
+2-25:It may also be useful to view our work as part of a general research agenda stemming from the fact that all types of economic activity are increasingly being handled with the aid of sophisticated computer systems .
+2-26:In general, in such computerized settings, complex scenarios involving multiple agents and goods can naturally occur, and they need to be algorithmically handled .
+2-27:This calls for the study of the standard issues in economic theory in new complex settings .
+2-28:The principal agent problem is a prime example where such complex settings introduce new challenges .
+2-29:1.2 Our Models We start by presenting a general model: in this model each of n agents has a set of possible actions, the combination of actions by the players results in some outcome, where this happens probabilistically .
+2-30:The main part of the specification of a problem in this model is a function that specifies this distribution for each n tuple of agents" actions .
+2-31:Additionally, the problem specifies the principal"s utility for each possible outcome, and for each agent, the agent"s cost for each possible action .
+2-32:The principal motivates the agents by offering to each of them a contract that specifies a payment for each possible outcome of the whole project1 .
+2-33:Key here is that the actions of the players are non observable and thus the contract cannot make the payments directly contingent on the actions of the players, but rather only on the outcome of the whole project .
+2-34:Given a set of contracts, the agents will each optimize his own utility: i.e .
+2-35:will choose the action that maximizes his expected payment minus the cost of his action .
+2-36:Since the outcome depends on the actions of all players together, the agents are put in a game and are assumed to reach a Nash equilibrium2 .
+2-37:The principal"s problem, our problem in this paper, is of designing an optimal set of contracts: i.e .
+2-38:contracts that maximize his expected utility from the outcome, minus his expected total payment .
+2-39:The main difficulty is that of determining the required Nash equilibrium point .
+2-40:In order to focus on the main issues, the rest of the paper deals with the basic binary case: each agent has only two possible actions exert effort and shirk and there are only two possible outcomes success and failure .
+2-41:It seems that this case already captures the main interesting ingredients3 .
+2-42:In this case, each agent"s problem boils down to whether to exert effort or not, and the principal"s problem boils down to which agents should be contracted to exert effort .
+2-43:This model is still pretty abstract, and every problem description contains a complete table specifying the success probability for each subset of the agents who exert effort .
+2-44:We then consider a more concrete model which concerns a subclass of problem instances where this exponential size table is succinctly represented .
+2-45:This subclass will provide many natural types of problem instances .
+2-46:In this subclass every agent performs a subtask which succeeds with a low probability γ if the agent does not exert effort and with a higher probability δ > γ, if the agent does exert effort .
+2-47:The whole project succeeds as a deterministic Boolean function of the success of the subtasks .
+2-48:This Boolean function can now be represented in various ways .
+2-49:Two basic examples are the AND function in which the project succeeds only if all subtasks succeed, and the OR function which succeeds if any of the subtasks succeeds .
+2-50:A more complex example considers a communication network, where each agent controls a single edge, and success of the subtask means that a message is forwarded by that edge .
+2-51:Effort by the edge increases this success probability .
+2-52:The complete project succeeds if there is a complete path of successful edges between a given source and sink .
+2-53:Complete definitions of the models appear in Section 2 .
+2-54:1.3 Our Results 1 One could think of a different model in which the agents have intrinsic utility from the outcome and payments may not be needed, as in [10, 11] .
+2-55:2 In this paper our philosophy is that the principal can suggest a Nash equilibrium point to the agents, thus focusing on the best Nash equilibrium .
+2-56:One may alternatively study the worst case equilibrium as in [12], or alternatively, attempt modeling some kind of an extensive game between the agents, as in [9, 10, 11] .
+2-57:3 However, some of the more advanced questions we ask for this case can be viewed as instances of the general model .
+2-58:19 We address a host of questions and prove a large number of results .
+2-59:We believe that despite the large amount of work that appears here, we have only scratched the surface .
+2-60:In many cases we were not able to achieve the general characterization theorems that we desired and had to settle for analyzing special cases or proving partial results .
+2-61:In many cases, simulations reveal structure that we were not able to formally prove .
+2-62:We present here an informal overview of the issues that we studied, what we were able to do, and what we were not .
+2-63:The full treatment of most of our results appears only in the extended version [2], and only some are discussed, often with associated simulation results, in the body of the paper .
+2-64:Our first object of study is the structure of the class of sets of agents that can be contracted for a given problem instance .
+2-65:Let us fix a given function describing success probabilities, fix the agent"s costs, and let us consider the set of contracted agents for different values of the principal"s associated value from success .
+2-66:For very low values, no agent will be contracted since even a single agent"s cost is higher than the principal"s value .
+2-67:For very high values, all agents will always be contracted since the marginal contribution of an agent multiplied by the principal"s value will overtake any associated payment .
+2-68:What happens for intermediate principal"s values? We first observe that there is a finite number of transitions between different sets, as the principal"s project value increases .
+2-69:These transitions behave very differently for different functions .
+2-70:For example, we show that for the AND function only a single transition occurs: for low enough values no agent will be contracted, while for higher values all agents will be contracted there is no intermediate range for which only some of the agents are contracted .
+2-71:For the OR function, the situation is opposite: as the principal"s value increases, the set of contracted agents increases one by one .
+2-72:We are able to fully characterize the types of functions for which these two extreme types of transitions behavior occur .
+2-73:However, the structure of these transitions in general seems quite complex, and we were not able to fully analyze them even in simple cases like the Majority function (the project succeeds if a majority of subtasks succeeds) or very simple networks .
+2-74:We do have several partial results, including a construction with an exponential number of transitions .
+2-75:During the previous analysis we also study what we term the price of unaccountability: How much is the social utility achieved under the optimal contracts worse than what could be achieved in the non strategic case4 , where the socially optimal actions are simply dictated by the principal? We are able to fully analyze this price for the AND function, where it is shown to tend to infinity as the number of agents tends to infinity .
+2-76:More general analysis remains an open problem .
+2-77:Our analysis of these questions sheds light on the difficulty of the various natural associated algorithmic problems .
+2-78:In particular, we observe that the optimal contract can be found in time polynomial in the explicit representation of the probability function .
+2-79:We prove a lower bound that shows that the optimal contract cannot be found in number of queries that is polynomial just in the number of agents, in a general black box model .
+2-80:We also show that when the probability function is succinctly represented as 4 The non strategic case is often referred to as the case with contractible actions or the principal"s first best solution .
+2-81:a read once network, the problem becomes #P hard .
+2-82:The status of some algorithmic questions remains open, in particular that of finding the optimal contract for technologies defined by serial parallel networks .
+2-83:In a follow up paper [1] we deal with equilibria in mixed strategies and show that the principal can gain from inducing a mixed Nash equilibrium between the agents rather than a pure one .
+2-84:We also show cases where the principal can gain by asking agents to reduce their effort level, even when this effort comes for free .
+2-85:Both phenomena can not occur in the non strategic setting. .
+3 MODEL AND PRELIMINARIES :
+3-1:2.1 The General Setting A principal employs a set of agents N of size n .
+3-2:Each agent i ∈ N has a possible set of actions Ai, and a cost (effort) ci(ai) ≥ 0 for each possible action ai ∈ Ai (ci : Ai → +) .
+3-3:The actions of all players determine, in a probabilistic way, a contractible outcome o ∈ O, according to a success function t : A1×, .
+3-4:.
+3-5:.
+3-6:× An → Δ(O) (where Δ(O) denotes the set of probability distributions on O) .
+3-7:A technology is a pair, (t, c), of a success function, t, and cost functions, c = (c1, c2, .
+3-8:.
+3-9:.
+3-10:, cn) .
+3-11:The principal has a certain value for each possible outcome, given by the function v : O → .
+3-12:As we will only consider risk neutral players in this paper5 , we will also treat v as a function on Δ(O), by taking simple expected value .
+3-13:Actions of the players are invisible, but the final outcome o is visible to him and to others (in particular the court), and he may design enforceable contracts based on the final outcome .
+3-14:Thus the contract for agent i is a function (payment) pi : O → ; again, we will also view pi as a function on Δ(O) .
+3-15:Given this setting, the agents have been put in a game, where the utility of agent i under the vector of actions a = (a1, .
+3-16:.
+3-17:.
+3-18:, an) is given by ui(a) = pi(t(a))−ci(ai) .
+3-19:The agents will be assumed to reach Nash equilibrium, if such equilibrium exists .
+3-20:The principal"s problem (which is our problem in this paper) is how to design the contracts pi as to maximize his own expected utility u(a) = v(t(a)) − P i pi(t(a)), where the actions a1, .
+3-21:.
+3-22:.
+3-23:, an are at Nash equilibrium .
+3-24:In the case of multiple Nash equilibria we let the principal choose the equilibrium, thus focusing on the best Nash equilibrium .
+3-25:A variant, which is similar in spirit to strong implementation in mechanism design would be to take the worst Nash equilibrium, or even, stronger yet, to require that only a single equilibrium exists .
+3-26:Finally, the social welfare for a ∈ A is u(a) + P i∈N ui(a) = v(t(a)) − P i∈N ci(ai) .
+3-27:2.2 The Binary Outcome Binary Action Model We wish to concentrate on the complexities introduced by the combinatorial structure of the success function t, we restrict ourselves to a simpler setting that seems to focus more clearly on the structure of t .
+3-28:A similar model was used in [12] .
+3-29:We first restrict the action spaces to have only two states (binary action): 0 (low effort) and 1 (high effort) .
+3-30:The cost function of agent i is now just a scalar ci > 0 denoting the cost of exerting high effort (where the low effort has cost 0) .
+3-31:The vector of costs is c = (c1, c2, .
+3-32:.
+3-33:.
+3-34:, cn), 5 The risk averse case would obviously be a natural second step in the research of this model, as has been for noncombinatorial scenarios .
+3-35:20 and we use the notation (t, c) to denote a technology in such a binary outcome model .
+3-36:We then restrict the outcome space to have only two states (binary outcome): 0 (project failure) and 1 (project success) .
+3-37:The principal"s value for a successful project is given by a scalar v > 0 (where the value of project failure is 0) .
+3-38:We assume that the principal can pay the agents but not fine them (known as the limited liability constraint) .
+3-39:The contract to agent i is thus now given by a scalar value pi ≥ 0 that denotes the payment that i gets in case of project success .
+3-40:If the project fails, the agent gets 0 .
+3-41:When the lowest cost action has zero cost (as we assume), this immediately implies that the participation constraint holds .
+3-42:At this point the success function t becomes a function t : {0, 1}n → [0, 1], where t(a1, .
+3-43:.
+3-44:.
+3-45:, an) denotes the probability of project success where players with ai = 0 do not exert effort and incur no cost, and players with ai = 1 do exert effort and incur a cost of ci .
+3-46:As we wish to concentrate on motivating agents, rather than on the coordination between agents, we assume that more effort by an agent always leads to a better probability of success, i.e .
+3-47:that the success function t is strictly monotone .
+3-48:Formally, if we denote by a−i ∈ A−i the (n − 1)dimensional vector of the actions of all agents excluding agent i .
+3-49:i.e., a−i = (a1, .
+3-50:.
+3-51:.
+3-52:, ai−1, ai+1, .
+3-53:.
+3-54:.
+3-55:, an), then a success function must satisfy: ∀i ∈ N, ∀a−i ∈ A−i t(1, a−i) > t(0, a−i) Additionally, we assume that t(a) > 0 for any a ∈ A (or equivalently, t(0, 0, .
+3-56:.
+3-57:.
+3-58:, 0) > 0) .
+3-59:Definition 1 .
+3-60:The marginal contribution of agent i, denoted by Δi, is the difference between the probability of success when i exerts effort and when he shirks .
+3-61:Δi(a−i) = t(1, a−i) − t(0, a−i) Note that since t is monotone, Δi is a strictly positive function .
+3-62:At this point we can already make some simple observations .
+3-63:The best action, ai ∈ Ai, of agent i can now be easily determined as a function of what the others do, a−i ∈ A−i, and his contract pi .
+3-64:Claim 1 .
+3-65:Given a profile of actions a−i, agent i"s best strategy is ai = 1 if pi ≥ ci Δi(a−i) , and is ai = 0 if pi ≤ ci Δi(a−i) .
+3-66:(In the case of equality the agent is indifferent between the two alternatives.) As pi ≥ ci Δi(a−i) if and only if ui(1, a−i) = pi ·t(1, a−i)−ci ≥ pi ·t(0, a−i) = ui(0, a−i), i"s best strategy is to choose ai = 1 in this case .
+3-67:This allows us to specify the contracts that are the principal"s optimal, for inducing a given equilibrium .
+3-68:Observation 1 .
+3-69:The best contracts (for the principal) that induce a ∈ A as an equilibrium are pi = 0 for agent i who exerts no effort (ai = 0), and pi = ci Δi(a−i) for agent i who exerts effort (ai = 1) .
+3-70:In this case, the expected utility of agent i who exerts effort is ci · t(1,a−i) Δi(a−i) − 1 , and 0 for an agent who shirk .
+3-71:The principal"s expected utility is given by u(a, v) = (v−P)·t(a), where P is the total payment in case of success, given by P = P i|ai=1 ci Δi(a−i) .
+3-72:We say that the principal contracts with agent i if pi > 0 (and ai = 1 in the equilibrium a ∈ A) .
+3-73:The principal"s goal is to maximize his utility given his value v, i.e .
+3-74:to determine the profile of actions a∗ ∈ A, which gives the highest value of u(a, v) in equilibrium .
+3-75:Choosing a ∈ A corresponds to choosing a set S of agents that exert effort (S = {i|ai = 1}) .
+3-76:We call the set of agents S∗ that the principal contracts with in a∗ (S∗ = {i|a∗ i = 1}) an optimal contract for the principal at value v .
+3-77:We sometimes abuse notation and denote t(S) instead of t(a), when S is exactly the set of agents that exert effort in a ∈ A .
+3-78:A natural yardstick by which to measure this decision is the non strategic case, i.e .
+3-79:when the agents need not be motivated but are rather controlled directly by the principal (who also bears their costs) .
+3-80:In this case the principal will simply choose the profile a ∈ A that optimizes the social welfare (global efficiency), t(a) · v − P i|ai=1 ci .
+3-81:The worst ratio between the social welfare in this non strategic case and the social welfare for the profile a ∈ A chosen by the principal in the agency case, may be termed the price of unaccountability .
+3-82:Given a technology (t, c), let S∗ (v) denote the optimal contract in the agency case and let S∗ ns(v) denote an optimal contract in the non strategic case, when the principal"s value is v .
+3-83:The social welfare for value v when the set S of agents is contracted is t(S) · v − P i∈S ci (in both the agency and non strategic cases) .
+3-84:Definition 2 .
+3-85:The price of unaccountability POU(t, c) of a technology (t, c) is defined as the worst ratio (over v) between the total social welfare in the non strategic case and the agency case: POU(t, c) = Supv>0 t(S∗ ns(v)) · v − P i∈S∗ ns(v) ci t(S∗(v)) · v − P i∈S∗(v) ci In cases where several sets are optimal in the agency case, we take the worst set (i.e., the set that yields the lowest social welfare) .
+3-86:When the technology (t, c) is clear in the context we will use POU to denote the price of unaccountability for technology (t, c) .
+3-87:Note that the POU is at least 1 for any technology .
+3-88:As we would like to focus on results that derived from properties of the success function, in most of the paper we will deal with the case where all agents have an identical cost c, that is ci = c for all i ∈ N .
+3-89:We denote a technology (t, c) with identical costs by (t, c) .
+3-90:For the simplicity of the presentation, we sometimes use the term technology function to refer to the success function of the technology .
+3-91:2.3 Structured Technology Functions In order to be more concrete, we will especially focus on technology functions whose structure can be described easily as being derived from independent agent tasks we call these structured technology functions .
+3-92:This subclass will first give us some natural examples of technology function, and will also provide a succinct and natural way to represent the technology functions .
+3-93:In a structured technology function, each individual succeeds or fails in his own task independently .
+3-94:The project"s success or failure depends, possibly in a complex way, on the set of successful sub tasks .
+3-95:Thus we will assume a monotone Boolean function f : {0, 1}n → {0, 1} which denotes 21 whether the project succeeds as a function of the success of the n agents" tasks (and is not determined by any set of n−1 agents) .
+3-96:Additionally there are constants 0 < γi < δi < 1, where γi denotes the probability of success for agent i if he does not exert effort, and δi (> γi) denotes the probability of success if he does exert effort .
+3-97:In order to reduce the number of parameters, we will restrict our attention to the case where γ1 = .
+3-98:.
+3-99:.
+3-100:= γn = γ and δ1 = .
+3-101:.
+3-102:.
+3-103:= δn = 1 − γ thus leaving ourselves with a single parameter γ s.t .
+3-104:0 < γ < 1 2 .
+3-105:Under this structure, the technology function t is defined by t(a1, .
+3-106:.
+3-107:.
+3-108:, an) being the probability that f(x1, .
+3-109:.
+3-110:.
+3-111:, xn) = 1 where the bits x1, .
+3-112:.
+3-113:.
+3-114:, xn are chosen according to the following distribution: if ai = 0 then xi = 1 with probability γ and xi = 0 with probability 1 − γ; otherwise, i.e .
+3-115:if ai = 1, then xi = 1 with probability 1 − γ and xi = 0 with probability γ .
+3-116:We denote x = (x1, .
+3-117:.
+3-118:.
+3-119:, xn) .
+3-120:The question of the representation of the technology function is now reduced to that of representing the underlying monotone Boolean function f .
+3-121:In the most general case, the function f can be given by a general monotone Boolean circuit .
+3-122:An especially natural sub class of functions in the structured technologies setting would be functions that can be represented as a read once network a graph with a given source and sink, where every edge is labeled by a different player .
+3-123:The project succeeds if the edges that belong to player"s whose task succeeded form a path between the source and the sink6 .
+3-124:A few simple examples should be in order here: conjunction of xi (f(x) = V i∈N xi) .
+3-125:Thus the project succeeds only if all agents succeed in their tasks .
+3-126:This is shown graphically as a read once network in Figure 1(a) .
+3-127:If m agents exert effort ( P i ai = m), then t(a) = tm = γn−m (1 − γ)m .
+3-128:E.g .
+3-129:for two players, the technology function t(a1a2) = ta1+a2 is given by t0 = t(00) = γ2 , t1 = t(01) = t(10) = γ(1 − γ), and t2 = t(11) = (1 − γ)2 .
+3-130:disjunction of xi (f(x) = W i∈N xi) .
+3-131:Thus the project succeeds if at least one of the agents succeed in their tasks .
+3-132:This is shown graphically as a read once network in Figure 1(b) .
+3-133:If m agents exert effort, then tm = 1 − γm (1 − γ)n−m .E.g .
+3-134:for two players, the technology function is given by t(00) = 1 − (1 − γ)2 , t(01) = t(10) = 1 − γ(1 − γ), and t(11) = 1 − γ2 .
+3-135:logical disjunction of conjunctions .
+3-136:In the simplest case of equal length clauses (denote by nc the number of clauses and by nl their length), f(x) = Wnc j=1( Vnl k=1 xj k) .
+3-137:Thus the project succeeds if in at least one clause all agents succeed in their tasks .
+3-138:This is shown graphically as a read once network in Figure 2(a) .
+3-139:If mi agents on path i exert effort, then t(m1, ..., mnc ) = 1 − Q i(1 − γnl−mi (1 − γ)mi TECHNOLOGIES A success function t is called anonymous if it is symmetric with respect to the players .
+3-140:I.e .
+3-141:t(a1, .
+3-142:.
+3-143:.
+3-144:, an) depends only on P i∈N ai (the number of agents that exert effort) .
+3-145:A technology (t, c) is anonymous if t is anonymous and the cost c is identical to all agents .
+3-146:Of the examples presented above, the AND, OR, and majority technologies were anonymous (but not AOO and OOA) .
+3-147:As for an anonymous t only the number of agents that exert effort is important, we can shorten the notations and denote tm = t(1m , 0n−m ), Δm = tm+1 − tm, pm = c Δm−1 and um = tm · (v − m · pm), for the case of identical cost c .
+3-148:22 v 3 0 gamma 200 150 0.4 100 50 0.3 0 0.20.10 2 1 0 3 12000 6000 8000 4000 2000 gamma 0 0.4 0.45 10000 0.3 0.350.250.2 Figure 3: Number of agents in the optimal contract of the AND (left) and OR (right) technologies with 3 players, as a function of γ and v .
+3-149:AND technology: either 0 or 3 agents are contracted, and the transition value is monotonic in γ .
+3-150:OR technology: for any γ we can see all transitions .
+3-151:3.1 AND and OR Technologies Let us start with a direct and full analysis of the AND and OR technologies for two players for the case γ = 1 4 and c = 1 .
+3-152:Example 1 .
+3-153:AND technology with two agents, c = 1, γ = 1 4: we have t0 = γ2 = 1 16, t1 = γ(1 − γ) = 3 16, and t2 = (1 − γ)2 = 9 16 thus Δ0 = 1 8 and Δ1 = 3 8 .
+3-154:The principal has 3 possibilities: contracting with 0, 1, or 2 agents .
+3-155:Let us write down the expressions for his utility in these 3 cases: • 0 Agents: No agent is paid thus and the principal"s utility is u0 = t0 · v = v 16 .
+3-156:• 1 Agent: This agent is paid p1 = c Δ0 = 8 on success and the principal"s utility is u1 = t1(v − p1) = 3v 16− 3 2 .
+3-157:• 2 Agents: each agent is paid p2 = c Δ1 = 8 3 on success, and the principal"s utility is u2 = t2(v−2p2) = 9v 16 − 3 .
+3-158:Notice that the option of contracting with one agent is always inferior to either contracting with both or with none, and will never be taken by the principal .
+3-159:The principal will contract with no agent when v < 6, with both agents whenever v > 6, and with either non or both for v = 6 .
+3-160:This should be contrasted with the non strategic case in which the principal completely controls the agents (and bears their costs) and thus simply optimizes globally .
+3-161:In this case the principal will make both agents exert effort whenever v ≥ (non strategic case) would give a global utility of 6 · 9 16 − 2 = 11 8 while the principal"s decision (in the agency case) would give a global utility of 3 8, giving a ratio of 11 3 .
+3-162:It turns out that this is the worst price of unaccountability in this example, and it is obtained exactly at the transition point of the agency case, as we show below .
+3-163:Example 2 .
+3-164:OR technology with two agents, c = 1, γ = 1 4: we have t0 = 1 − (1 − γ)2 = 7 16, t1 = 1 − γ(1 − γ) = 13 16, and t2 = 1 − γ2 = 15 16 thus Δ0 = 3 8 and Δ1 = 1 8 .
+3-165:Let us write down the expressions for the principal"s utility in these three cases: • 0 Agents: No agent is paid and the principal"s utility is u0 = t0 · v = 7v 16 .
+3-166:• 1 Agent: This agent is paid p1 = c Δ0 = 8 3 on success and the principal"s utility is u1 = t1(v − p1) = 13v 16 − 13 6 .
+3-167:• 2 Agents: each agent is paid p2 = c Δ1 = 8 on success, and the principal"s utility is u2 = t2(v − 2p2) = 15v 16 − 15 2 .
+3-168:Now contracting with one agent is better than contracting with none whenever v > 52 9 (and is equivalent for v = 52 9), and contracting with both agents is better than contracting with one agent whenever v > 128 3 (and is equivalent for v = 128 3), thus the principal will contract with no agent for 0 ≤ v ≤ 52 9, with one agent for 52 9 ≤ v ≤ 128 3, and with both agents for v ≥ 128 3 .
+3-169:In the non strategic case, in comparison, the principal will make a single agent exert effort for v > 8 3, and the second one exert effort as well when v > 8 .
+3-170:It turns out that the price of unaccountability here is 19 13, and is achieved at v = 52 9, which is exactly the transition point from 0 to 1 contracted agents in the agency case .
+3-171:This is not a coincidence that in both the AND and OR technologies the POU is obtained for v that is a transition point (see full proof in [2]) .
+3-172:Lemma 1 .
+3-173:For any given technology (t, c) the price of unaccountability POU(t, c) is obtained at some value v which is a transition point, of either the agency or the non strategic cases .
+3-174:Proof sketch: We look at all transition points in both cases .
+3-175:For any value lower than the first transition point, 0 agents are contracted in both cases, and the social welfare ratio is 1 .
+3-176:Similarly, for any value higher than the last transition point, n agents are contracted in both cases, and the social welfare ratio is 1 .
+3-177:Thus, we can focus on the interval between the first and last transition points .
+3-178:Between any pair of consecutive points, the social welfare ratio is between two linear functions of v (the optimal contracts are fixed on such a segment) .
+3-179:We then show that for each segment, the suprimum ratio is obtained at an end point of the segment (a transition point) .
+3-180:As there are finitely many such points, the global suprimum is obtained at the transition point with the maximal social welfare ratio .
+3-181:2 We already see a qualitative difference between the AND and OR technologies (even with 2 agents): in the first case either all agents are contracted or none, while in the second case, for some intermediate range of values v, exactly one agent is contracted .
+3-182:Figure 3 shows the same phenomena for AND and OR technologies with 3 players .
+3-183:Theorem 1 .
+3-184:For any anonymous AND technology7 : • there exists a value8 v∗ < ∞ such that for any v < v∗ it is optimal to contract with no agent, for v > v∗ it is optimal to contract with all n agents, and for v = v∗, both contracts (0, n) are optimal .
+3-185:7 AND technology with any number of agents n and any γ, and any identical cost c .
+3-186:8 v∗ is a function of n, γ, c .
+3-187:23 • the price of unaccountability is obtained at the transition point of the agency case, and is POU = ` 1 γ − 1 ´n−1 + (1 − γ 1 − γ ) Proof sketch: For any fixed number of contracted agents, k, the principal"s utility is a linear function in v, where the slope equals the success probability under k contracted agents .
+3-188:Thus, the optimal contract corresponds to the maximum over a set of linear functions .
+3-189:Let v∗ denote the point at which the principal is indifferent between contracting with 0 or n agents .
+3-190:In [2] we show that at v∗, the principal"s utility from contracting with 0 (or n) agents is higher than his utility when contracting with any number of agents k ∈ {1, .
+3-191:.
+3-192:.
+3-193:, n − 1} .
+3-194:As the number of contracted agents is monotonic non decreasing in the value (due to Lemma 3), for any v < v∗, contracting with 0 agents is optimal, and for any v > v∗, contracting with n agents is optimal .
+3-195:This is true for both the agency and the non strategic cases .
+3-196:As in both cases there is a single transition point, the claim about the price of unaccountability for AND technology is proved as a special case of Lemma 2 below .
+3-197:For AND technology tn−1 t0 = (1−γ)n−1 ·γ γn = 1 γ − 1 n−1 and tn−1 tn = (1−γ)n−1 ·γ (1−γ)n = γ 1−γ , and the expressions for the POU follows .
+3-198:2 In [2] we present a general characterization of technologies with a single transition in the agency and the non strategic cases, and provide a full proof of Theorem 1 as a special case .
+3-199:The property of a single transition occurs in both the agency and the non strategic cases, where the transition occurs at a smaller value of v in the non strategic case .
+3-200:Notice that the POU is not bounded across the AND family of technologies (for various n, γ) as POU → ∞ either if γ → 0 (for any given n ≥ 2) or n → ∞ (for any fixed γ ∈ (0, 1 2 )) .
+3-201:Next we consider the OR technology and show that it exhibits all n transitions .
+3-202:Theorem 2 .
+3-203:For any anonymous OR technology, there exist finite positive values v1 < v2 < .
+3-204:.
+3-205:.
+3-206:< vn such that for any v s.t .
+3-207:vk < v < vk+1, contracting with exactly k agents is optimal (for v < v1, no agent is contracted, and for v > vn, all n agents are contracted) .
+3-208:For v = vk, the principal is indifferent between contracting with k − 1 or k agents .
+3-209:Proof sketch: To prove the claim we define vk to be the value for which the principal is indifferent between contracting with k − 1 agents, and contracting with k agents .
+3-210:We then show that for any k, vk < vk+1 .
+3-211:As the number of contracted agents is monotonic non decreasing in the value (due to Lemma 3), v1 < v2 < .
+3-212:.
+3-213:.
+3-214:< vn is a sufficient condition for the theorem to hold .
+3-215:2 The same behavior occurs in both the agency and the nonstrategic case .
+3-216:This characterization is a direct corollary of a more general characterization given in [2] .
+3-217:While in the AND technology we were able to fully determine the POU analytically, the OR technology is more difficult to analyze .
+3-218:Open Question 1 .
+3-219:What is the POU for OR with n > 2 agents? Is it bounded by a constant for every n? We are only able to determine the POU of the OR technology for the case of two agents [2] .
+3-220:Even for the 2 agents case we already observe a qualitative difference between the POU in the AND and OR technologies .
+3-221:Observation 2 .
+3-222:While in the AND technology the POU for n = 2 is not bounded from above (for γ → 0), the highest POU in OR technology with two agents is 2 (for γ → 0) .
+3-223:3.2 What Determines the Transitions? Theorems 1 and 2 say that both the AND and OR technologies exhibit the same transition behavior (changes of the optimal contract) in the agency and the non strategic cases .
+3-224:However, this is not true in general .
+3-225:In [2] we provide a full characterization of the sufficient and necessary conditions for general anonymous technologies to have a single transition and all n transitions .
+3-226:We find that the conditions in the agency case are different than the ones in the non strategic case .
+3-227:We are able to determine the POU for any anonymous technology that exhibits a single transition in both the agency and the non strategic cases (see full proof in [2]) .
+3-228:Lemma 2 .
+3-229:For any anonymous technology that has a single transition in both the agency and the non strategic cases, the POU is given by: POU = 1 + tn−1 t0 − tn−1 tn and it is obtained at the transition point of the agency case .
+3-230:Proof sketch: Since the payments in the agency case are higher than in the non strategic case, the transition point in the agency case occurs for a higher value than in the non strategic case .
+3-231:Thus, there exists a region in which the optimal numbers of contracted agents in the agency and the non strategic cases are 0 and n, respectively .
+3-232:By Lemma 1 the POU is obtained at a transition point .
+3-233:As the social welfare ratio is decreasing in v in this region, the POU is obtained at the higher value, that is, at the transition point of the agency case .
+3-234:The transition point in the agency case is the point at which the principal is indifferent between contracting with 0 and with n agents, v∗ = c·n tn−t0 · tn tn−tn−1 .
+3-235:Substituting the transition point of the agency case into the POU expression yields the required expression .
+3-236:POU = v∗ · tn − c · n v∗ · t0 = 1 + tn−1 t0 − tn−1 tn 2 3.3 The MAJORITY Technology The project under the MAJORITY function succeeds if the majority of the agents succeed in their tasks (see Section 2.3) .
+3-237:We are unable to characterize the transition behavior of the MAJORITY technology analytically .
+3-238:Figure 4 presents the optimal number of contracted agents as a function of v and γ, for n = 5 .
+3-239:The phenomena that we observe in this example (and others that we looked at) leads us to the following conjecture .
+3-240:Conjecture 1 .
+3-241:For any Majority technology (any n, γ and c), there exists l, 1 ≤ l ≤ n 2 such that the first transition is from 0 to l agents, and then all the remaining n − l transitions exist .
+3-242:24 4 5 3 1 0 2 400 0 0.3 100 gamma 0.2 300 0.450.25 200 v 500 0.35 0.4 Figure 4: Simulations results showing the number of agents in the optimal contract of the MAJORITY technology with 5 players, as a function of γ and v .
+3-243:As γ decreases the first transition is at a lower value and to a higher number of agents .
+3-244:For any sufficiently small γ, the first transition is to 3 = 5 2 agents, and for any sufficiently large γ, the first transition is to 1 agents .
+3-245:For any γ, the first transition is never to more than 3 agents, and after the first transition we see all following possible transitions .
+3-246:Moreover, for any fixed c, n, l = 1 when γ is close enough to 1 2 , l is a non decreasing function of γ (with image {1, .
+3-247:.
+3-248:.
+3-249:, n 2 }), and l = n 2 when γ is close enough to 0. .
+4 ABSTRACT :
+4-1:In non anonymous technologies (even with identical costs), we need to talk about the contracted set of agents and not only about the number of contracted agents
+4-2:In this section, we identify the sets of agents that can be obtained as the optimal contract for some v
+4-3:These sets construct the orbit of a technology
+4-4:Definition 3
+4-5:For a technology t, a set of agents S is in the orbit of t if for some value v, the optimal contract is exactly with the set S of agents (where ties between different S"s are broken according to a lexicographic order9 Our analysis throughout the paper sheds some light on the algorithmic aspects of computing the best contract
+4-6:In this section we state these implications (for the proofs see [2])
+4-7:We first consider the general model where the technology function is given by an arbitrary monotone function t (with rational values), and we then consider the case of structured technologies given by a network representation of the underlying Boolean function
+4-8:5.1 Binary Outcome Binary Action Technologies Here we assume that we are given a technology and value v as the input, and our output should be the optimal contract, i.e
+4-9:the set S∗ of agents to be contracted and the contract pi for each i ∈ S∗
+4-10:In the general case, the success function t is of size exponential in n, the number of agents, and we will need to deal with that
+4-11:In the special case of anonymous technologies, the description of t is only the n+1 numbers t0,
+4-12:
+4-13:
+4-14:, tn, and in this case our analysis in section 3 completely suffices for computing the optimal contract
+4-15:Proposition 1
+4-16:Given as input the full description of a technology (the values t0,
+4-17:
+4-18:
+4-19:, tn and the identical cost c for an anonymous technology, or the value t(S) for all the 2n possible subsets S ⊆ N of the players, and a vector of costs c for non anonymous technologies), the following can all be computed in polynomial time: • The orbit of the technology in both the agency and the non strategic cases
+4-20:• An optimal contract for any given value v, for both the agency and the non strategic cases
+4-21:• The price of unaccountability POU(t, c)
+4-22:Proof
+4-23:We prove the claims for the non anonymous case, the proof for the anonymous case is similar
+4-24:We first show how to construct the orbit of the technology (the same procedure apply in both cases)
+4-25:To construct the orbit we find all transition points and the sets that are in the orbit
+4-26:The empty contract is always optimal for v = 0
+4-27:Assume that we have calculated the optimal contracts and the transition points up to some transition point v for which S is an optimal contract with the highest success probability
+4-28:We show how to calculate the next transition point and the next optimal contract
+4-29:By Lemma 3 the next contract on the orbit (for higher values) has a higher success probability (there are no two sets with the same success probability on the orbit)
+4-30:We calculate the next optimal contract by the following procedure
+4-31:We go over all sets T such that t(T) > t(S), and calculate the value for which the principal is indifferent between contracting with T and contracting with S
+4-32:The minimal indifference value is the next transition point and the contract that has the minimal indifference value is the next optimal contract
+4-33:Linearity of the utility in the value and monotonicity of the success probability of the optimal contracts ensure that the above works
+4-34:Clearly the above calculation is polynomial in the input size
+4-35:Once we have the orbit, it is clear that an optimal contract for any given value v can be calculated
+4-36:We find the largest transition point that is not larger than the value v, and the optimal contract at v is the set with the higher success probability at this transition point
+4-37:Finally, as we can calculate the orbit of the technology in both the agency and the non strategic cases in polynomial time, we can find the price of unaccountability in polynomial time
+4-38:By Lemma 1 the price of unaccountability POU(t) is obtained at some transition point, so we only need to go over all transition points, and find the one with the maximal social welfare ratio
+4-39:A more interesting question is whether if given the function t as a black box, we can compute the optimal contract in time that is polynomial in n
+4-40:We can show that, in general this is not the case: Theorem 5
+4-41:Given as input a black box for a success function t (when the costs are identical), and a value v, the number of queries that is needed, in the worst case, to find the optimal contract is exponential in n
+4-42:Proof
+4-43:Consider the following family of technologies
+4-44:For some small > 0 and k = n 2 we define the success probability for a given set T as follows
+4-45:If |T| < k, then t(T) = |T| ·
+4-46:If |T| > k, then t(T) = 1 − (n − |T|) ·
+4-47:For each set of agents ˆT of size k, the technology t ˆT is defined by t( ˆT) = 1 − (n − | ˆT|) · and t(T) = |T| · for any T = ˆT of size k
+4-48:For the value v = c·(k + 1 2), the optimal contract for t ˆT is ˆT (for the contract ˆT the utility of the principal is about v −c·k = 1 2·c > 0, while for any other contract the utility is negative)
+4-49:If the algorithm queries about at most ` n n 2 ´ − 2 sets of size k, then it cannot always determine the optimal contract (as any of the sets that it has not queried about might be the optimal one)
+4-50:We conclude that ` n n 2 ´ − 1 queries are needed to determine the optimal contract, and this is exponential in n
+4-51:27 5.2 Structured Technologies In this section we will consider the natural representation of read once networks for the underlying Boolean function
+4-52:Thus the problem we address will be: The Optimal Contract Problem for Read Once Networks: Input: A read once network G = (V, E), with two specific vertices s, t; rational values γe, δe for each player e ∈ E (and ce = 1), and a rational value v
+4-53:Output: A set S of agents who should be contracted in an optimal contract
+4-54:Let t(E) denote the probability of success when each edge succeeds with probability δe
+4-55:We first notice that even computing the value t(E) is a hard problem: it is called the network reliability problem and is known to be #P − hard [8]
+4-56:Just a little effort will reveal that our problem is not easier: Theorem 6
+4-57:The Optimal Contract Problem for Read Once Networks is #P hard (under Turing reductions)
+4-58:Proof
+4-59:We will show that an algorithm for this problem can be used to solve the network reliability problem
+4-60:Given an instance of a network reliability problem < G, {ζe}e∈E > (where ζe denotes e"s probability of success), we define an instance of the optimal contract problem as follows: first define a new graph G which is obtained by Anding G with a new player x, with γx very close to 1 2 and δx = 1 − γx
+4-61:For the other edges, we let δe = ζe and γe = ζe 2
+4-62:By choosing γx close enough to 1 2 , we can make sure that player x will enter the optimal contract only for very large values of v, after all other agents are contracted (if we can find the optimal contract for any value, it is easy to find a value for which in the original network the optimal contract is E, by keep doubling the value and asking for the optimal contract
+4-63:Once we find such a value, we choose γx s.t
+4-64:c 1−2γx is larger than that value)
+4-65:Let us denote βx = 1 − 2γx
+4-66:The critical value of v where player x enters the optimal contract of G , can be found using binary search over the algorithm that supposedly finds the optimal contract for any network and any value
+4-67:Note that at this critical value v, the principal is indifferent between the set E and E ∪ {x}
+4-68:Now when we write the expression for this indifference, in terms of t(E) and Δt i(E) , we observe the following
+4-69:t(E) · γx · v − X i∈E c γx · Δt i(E \ i) ! = t(E)(1 − γx) v − X i∈E c (1 − γx) · Δt i(E \ i) − c t(E) · βx ! if and only if t(E) = (1 − γx) · c (βx)2 · v thus, if we can always find the optimal contract we are also able to compute the value of t(E)
+4-70:In conclusion, computing the optimal contract in general is hard
+4-71:These results suggest two natural research directions
+4-72:The first avenue is to study families of technologies whose optimal contracts can be computed in polynomial time
+4-73:The second avenue is to explore approximation algorithms for the optimal contract problem
+4-74:A possible candidate for the first direction is the family of series parallel networks, for which the network reliability problem (computing the value of t) is polynomial
+4-75:Open Question 5
+4-76:Can the optimal contract problem for Read Once series parallel networks be solved in polynomial time? We can only handle the non trivial level of AOO networks: Lemma 8
+4-77:Given a Read Once AND of OR network such that each OR component is an anonymous technology, the optimal contract problem can be solved in polynomial time
+4-78:Acknowledgments
+4-79:This work is supported by the Israel Science Foundation, the USA Israel Binational Science Foundation, the Lady Davis Fellowship Trust, and by a National Science Foundation grant number ANI 0331659.
+5 ABSTRACT :
+5-1:M
+5-2:Babaioff, M
+5-3:Feldman, and N
+5-4:Nisan
+5-5:The Price of Purity and Free Labor in Combinatorial Agency
+5-6:In Working Paper, 2005
+5-7:M
+5-8:Babaioff, M
+5-9:Feldman, and N
+5-10:Nisan
+5-11:Combinatorial agency, 2006
+5-12:www.sims.berkeley.edu ˜moshe comb agency.pdf
+5-13:M
+5-14:Feldman, J
+5-15:Chuang, I
+5-16:Stoica, and S
+5-17:Shenker
+5-18:Hidden action in multi hop routing
+5-19:In EC"05, pages 117 126, 2005
+5-20:B
+5-21:Holmstrom
+5-22:Moral Hazard in Teams
+5-23:Bell Journal of Economics, 13:324 340, 1982
+5-24:A
+5-25:Mass Colell, M
+5-26:Whinston, and J
+5-27:Green
+5-28:Microeconomic Theory
+5-29:Oxford University Press, 1995
+5-30:N
+5-31:Nisan and A
+5-32:Ronen
+5-33:Algorithmic mechanism design
+5-34:Games and Economic Behaviour, 35:166  196, 2001
+5-35:A preliminary version appeared in STOC 1999
+5-36:C
+5-37:Papadimitriou
+5-38:Algorithms, Games, and the Internet
+5-39:In Proceedings of 33rd STOC, pages 749 753, 2001
+5-40:J
+5-41:S
+5-42:Provan and M
+5-43:O
+5-44:Ball
+5-45:The complexity of counting cuts and of computing the probability that a graph is connected
+5-46:SIAM J
+5-47:Comput., 12(4):777 788, 1983
+5-48:A
+5-49:Ronen and L
+5-50:Wahrmann
+5-51:Prediction Games
+5-52:WINE, pages 129 140, 2005
+5-53:R
+5-54:Smorodinsky and M
+5-55:Tennenholtz
+5-56:Sequential Information Elicitation in Multi Agent Systems
+5-57:20th Conference on Uncertainty in AI, 2004
+5-58:R
+5-59:Smorodinsky and M
+5-60:Tennenholtz
+5-61:Overcoming Free Riding in Multi Party Computations  The Anonymous Case
+5-62:Forthcoming, GEB, 2005
+5-63:E
+5-64:Winter
+5-65:Incentives and Discrimination
+5-66:American Economic Review, 94:764 773, 2004
+5-67:28
+picture:

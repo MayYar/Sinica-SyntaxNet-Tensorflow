@@ -1,0 +1,75 @@
+2.1 Game Theory definitions A game £N =< N, (£Ui), (ci) > has a finite set N = {1, .
+.
+.
+, n} of players .
+Player i ? N has a set £Ui of actions, the joint action set is £U = £U1 ¡Ñ ¡P ¡P ¡P ¡Ñ £Un and a joint action S ? £U is also called a profile .
+The cost function of player i is 3 In [19] they allow to restrict some players from using certain links, even though the links exist in the graph, while we do not allow this, and assume that the available strategies for players are fully represented by the underlying graph .
+85 ci 
+Let S = (S1, .
+.
+.
+, Sn) denote the profile of actions taken by the players, and let S?i = (S1, .
+.
+.
+, Si?1, Si+1, .
+.
+.
+, Sn) denote the profile of actions taken by all players other than player i .
+Note that S = (Si, S?i) .
+The social cost of a game £N is the sum of the costs of the players, and we denote by OPT(£N) the minimal social cost of a game £N .
+i.e., OPT(£N) = minS?£U cost£N(S), where cost£N(S) = i?N ci(S) .
+A joint action S ? £U is a pure Nash equilibrium if no player i ? N can benefit from unilaterally deviating from his action to another action, i.e., ?i ? N ?Si ? £Ui 
+We denote by NE(£N) the set of pure Nash equilibria in the game £N .
+Resilience to coalitions
+A joint action S ? £U is not resilient to a pure deviation of a coalition £F if there is a pure joint action £^ of £F such that ci(S?£F, £^) < ci(S) for every i ? £F (i.e., the players in the coalition can deviate in such a way that each player in the coalition reduces its cost) .
+A pure Nash equilibrium S ? £U is a k strong equilibrium, if there is no coalition £F of size at most k, such that S is not resilient to a pure deviation by £F .
+We denote by k SE(£N) the set of k strong equilibria in the game £N .
+We denote by SE(£N) the set of n strong equilibria, and call S ? SE(£N) a strong equilibrium .
+Next we define the Price of Anarchy [9], Price of Stability [2], and their extension to Strong Price of Anarchy and Strong Price of Stability .
+of anarchy (k SPoA) for the game £N .
+The Price of Anarchy (PoA) is the ratio between the maximal cost of a pure Nash equilibrium (assuming one exists) and the social optimum, i.e., maxS?NE(£N) cost£N(S) OPT(£N) .
+Similarly, the Price of Stability (PoS) is the ratio between the minimal cost of a pure Nash equilibrium and the social optimum, i.e., minS?NE(£N) cost£N(S) OPT(£N) .
+The k Strong Price of Anarchy (k SPoA) is the ratio between the maximal cost of a k strong equilibrium (assuming one exists) and the social optimum, i.e., maxS?k SE(£N) cost£N(S) OPT(£N) .
+The SPoA is the n SPoA .
+Similarly, the Strong Price of Stability (SPoS) is the ratio between the minimal cost of a pure strong equilibrium and the social optimum, i.e., minS?SE(£N) cost£N(S) OPT(£N) .
+Note that both k SPoA and SPoS are defined only if some strong equilibrium exists .
+2.2 Cost Sharing Connection Games A cost sharing connection game has an underlying directed graph G = (V, E) where each edge e ? E has an associated cost ce ? 04 .
+In a connection game each player i ? N has an associated source si and sink ti .
+In a fair connection game the actions £Ui of player i include all the paths from si to ti .
+The cost of each edge is shared equally by the set of all players whose paths contain it .
+Given a joint action, the cost of a player is the sum of his costs on the edges it selected .
+More formally, the cost function of each player on an edge e, in a joint action S, is fe(ne(S)) = ce ne(S) , where ne(S) is the number of players that selected a path containing edge e in ci(S) = e?Qi fe(ne(S)) .
+4 In some of the existence proofs, we assume that ce > 0 for simplicity .
+The full version contains the complete proofs for the case ce ? 0 .
+In a general connection game the actions £Ui of player i is a payment vector pi, where pi(e) is how much player i is offering to contribute to the cost of edge e.5 Given a profile p, any edge e such that i pi(e) ? ce is considered bought, and Ep denotes the set of bought edges .
+Let Gp = (V, Ep) denote the graph bought by the players for profile p = (p1, .
+.
+.
+, pn) .
+Clearly, each player tries to minimize his total payment which is ci(p) = e?Ep pi(e) if si is connected to ti in Gp, and infinity otherwise.6 We denote by c(p) = i ci(p) the total cost under the profile p .
+For a subgraph H of G we denote the total cost of the edges in H by c(H) .
+A symmetric connection game implies that the source and sink of all the players are identical .
+(We also call a symmetric connection game a single source single sink connection game, or a single commodity connection game.) A single source connection game implies that the sources of all the players are identical .
+Finally, A multi commodity connection game implies that each player has its own source and sink .
+2.3 Extension Parallel and Series Parallel Directed Graphs Our directed graphs would be acyclic, and would have a source node (from which all nodes are reachable) and a sink node (which every node can reach) .
+We first define the following actions for composition of directed graphs .
+? Identification
+More formally, given graph G = (V, E) we define the identification of a node v1 ? V and v2 ? V forming a new node v ? V as creating a new graph G = (V , E ), where V = V ?{v1, v2}¡å{v} and E includes the edges of E where the edges of v1 and v2 are now connected to v .
+? Parallel composition
+Let G = (V1 ¡å V2, E1 ¡å E2) be the union graph .
+To create G = G1||G2 we identify the sources s1 and s2, forming a new source node s, and identify the sinks t1 and t2, forming a new sink t .
+? Series composition
+Let G = (V1 ¡å V2, E1 ¡å E2) be the union graph .
+To create G = G1 ¡÷ G2 we identify the vertices t1 and s2, forming a new vertex u .
+The graph G has a source s = s1 and a sink t = t2 .
+? Extension composition 
+An extension parallel graph is a graph G consisting of either
+6 This implies that in equilibrium every player has its sink and source connected by a path in Gp .
+86 extension parallel graphs (and in the extension composition either G1 or G2 is a single edge.) .
+A series parallel graph is a graph G consisting of either
+Given a path Q and two vertices u, v on Q, we denote the subpath of Q from u to v by Qu,v .
+The following lemma, whose proof appears in the full version, would be the main topological tool in the case of single source graph .
+Lemma 2.1 .
+Let G be an SPG with source s and sink t .
+Given a path Q, from s to t, and a vertex t , there exist a vertex y ? Q, such that for any path Q from s to t , the path Q contains y and the paths Qy,t and Q are edge disjoint .
+(We call the vertex y the intersecting vertex of Q and t .) .

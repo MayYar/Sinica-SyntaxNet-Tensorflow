@@ -1,0 +1,62 @@
+In Section 3, we analytically compared the Poisson language models and multinomial language models from the perspective of query generation and retrieval .
+In this section, we compare these two families of models empirically .
+Experiment results show that the Poisson model with perterm smoothing outperforms multinomial model, and the performance can be further improved with two stage smoothing .
+Using Poisson mixture as background model also improves the retrieval performance .
+4.1 Datasets Since retrieval performance could significantly vary from one test collection to another, and from one query to another, we select four representative TREC test collections
+To cover different types of queries, we follow [28, 5], and construct short keyword (SK, keyword title), short verbose (SV, one sentence description), and long verbose (LV, multiple sentences) queries .
+The documents are stemmed with the Porter"s stemmer, and we do not remove any stop word .
+For each parameter, we vary its value to cover a reasonably wide range .
+4.2 Comparison to Multinomial We compare the performance of the Poisson retrieval models and multinomial retrieval models using interpolation (JelinekMercer, JM) smoothing and Bayesian smoothing with conjugate priors .
+Table 1 shows that the two JM smoothed models perform similarly on all data sets .
+Since the Dirichlet Smoothing for multinomial language model and the Gamma Smoothing for Poisson language model lead to the same retrieval formula, the performance of these two models are jointly presented .
+We see that Dirichlet Gamma smoothing methods outperform both Jelinek Mercer smoothing methods .
+The parameter sensitivity curves for two Jelinek Mercer 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.05 0.1 0.15 0.2 0.25 0.3 Dataset
+Clearly, these two methods perform similarly either in terms of optimality Data Query JM Multinomial JM Poisson Dirichlet Gamma Per term 2 Stage Poisson MAP InitPr Pr@5d MAP InitPr Pr@5d MAP InitPr Pr@5d MAP InitPr Pr@5d AP88 89 SK 0.203 0.585 0.356 0.203 0.585 0.358 0.224 0.629 0.393 0.226 0.630 0.396 SV 0.187 0.580 0.361 0.183 0.571 0.345 0.204 0.613 0.387 0.217* 0.603 0.390 LV 0.283 0.716 0.480 0.271 0.692 0.470 0.291 0.710 0.496 0.304* 0.695 0.510 Trec7 SK 0.167 0.635 0.400 0.168 0.635 0.404 0.186 0.687 0.428 0.185 0.646 0.436 SV 0.174 0.655 0.432 0.176 0.653 0.432 0.182 0.666 0.432 0.196* 0.660 0.440 LV 0.223 0.730 0.496 0.215 0.766 0.488 0.224 0.748 0.52 0.236* 0.738 0.512 Trec8 SK 0.239 0.621 0.440 0.239 0.621 0.436 0.257 0.718 0.496 0.256 0.704 0.468 SV 0.231 0.686 0.448 0.234 0.702 0.456 0.228 0.691 0.456 0.246* 0.692 0.476 LV 0.265 0.796 0.548 0.261 0.757 0.520 0.260 0.741 0.492 0.274* 0.766 0.508 Web SK 0.250 0.616 0.380 0.250 0.616 0.380 0.302 0.767 0.468 0.307 0.739 0.468 SV 0.214 0.611 0.392 0.217 0.609 0.384 0.273 0.693 0.508 0.292* 0.703 0.480 LV 0.266 0.790 0.464 0.259 0.776 0.452 0.283 0.756 0.496 0.311* 0.759 0.488 Table 1
+or sensitivity .
+This similarity of performance is expected as we discussed in Section 3.1 .
+Although the Poisson model and multinomial model are similar in terms of the basic model and or with simple smoothing methods, the Poisson model has great potential and flexibility to be further improved .
+As shown in the rightmost column of Table 1, term dependent two stage Poisson model consistently outperforms the basic smoothing models, especially for verbose queries .
+This model is given in Formula 4, with a Gamma smoothing for the document model p(¡P|d), and £_w, which is term dependent .
+The parameter ? of the first stage Gamma smoothing is empirically tuned .
+The combination coefficients (i.e., ?), are estimated with the EM algorithm in Section 3.2 .
+The parameter sensitivity curves for Dirichlet Gamma and the per term two stage smoothing model are plotted in Figure 2 .
+The per term two stage smoothing method is less sensitive to the parameter ? than Dirichlet Gamma, and yields better optimal performance .
+0 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 0.1 0.12 0.14 0.16 0.18 0.2 0.22 Dataset
+4.3 Term Dependent Smoothing To test the effectiveness of the term dependent smoothing, we conduct the following two experiments .
+In the first experiment, we relax the constant coefficient in the simple Jelinek Mercer smoothing formula (i.e., Formula 3), and use the EM algorithm proposed in Section 3.2 to find a £_w for each unique term .
+Since we are using the EM algorithm to iteratively estimate the parameters, we usually do not want the probability of p(¡P|d) to be zero .
+We then use a simple Laplace method to slightly smooth the document model before it goes into the EM iterations .
+The documents are then still scored with Formula 3, but using learnt £_w .
+The results are labeled with JM+L .
+in Table 2 .
+Data Q JM JM JM+L .
+2 Stage 2 Stage PT
+method and JM method is statistically significant; an asterisk (*) in Column 5 means that the difference between term dependent two stage method and query dependent two stage method is statistically significant; PT stands for per term .
+With term dependent coefficients, the performance of the Jelinek Mercer Poisson model is improved in most cases .
+However, in some cases (e.g., Trec7 SV), it performs poorly .
+This might be caused by the problem of EM estimation with unsmoothed document models .
+Once non zero probability is assigned to all the terms before entering the EM iteration, the performance on verbose queries can be improved significantly .
+This indicates that there is still room to find better methods to estimate £_w .
+Please note that neither the perterm JM method nor the JM+L .
+method has a parameter to tune .
+As shown in Table 1, the term dependent two stage smoothing can significantly improve retrieval performance .
+To understand whether the improvement is contributed by the term dependent smoothing or the two stage smoothing framework, we design another experiment to compare the perterm two stage smoothing with the two stage smoothing method proposed in [29] .
+Their method managed to find coefficients specific to the query, thus a verbose query would use a higher £_ .
+However, since their model is based on multinomial language modeling, they could not get per term coefficients .
+We adopt their method to the Poisson two stage smoothing, and also estimate a per query coefficient for all the terms .
+We compare the performance of such a model with the per term two stage smoothing model, and present the results in the right two columns in Table 2 .
+Again, we see that the per term two stage smoothing outperforms the per query two stage smoothing, especially for verbose queries .
+The improvement is not as large as how the perterm smoothing method improves over Dirichlet Gamma .
+This is expected, since the per query smoothing has already addressed the query discrimination problem to some extent .
+This experiment shows that even if the smoothing is already per query, making it per term is still beneficial .
+In brief, the per term smoothing improved the retrieval performance of both one stage and two stage smoothing method .
+4.4 Mixture Background Model In this section, we conduct experiments to examine the benefits of using a mixture background model without extra computational cost, which can not be achieved for multinomial models .
+Specifically, in retrieval formula 3, instead of using a single Poisson distribution to model the background p(¡P|C), we use Katz"s K Mixture model, which is essentially a mixture of Poisson distributions .
+p(¡P|C) can be computed efficiently with simple collection statistics, as discussed in Section 3.3 .
+Data Query JM .
+Poisson JM .
+K Mixture AP SK 0.203 0.204 SV 0.183 0.188* Trec 7 SK 0.168 0.169 SV 0.176 0.178* Trec 8 SK 0.239 0.239 SV 0.234 0.238* Web SK 0.250 0.250 SV 0.217 0.223* Table 3
+Clearly, using K Mixture to model the background model outperforms the single Poisson background model in most cases, especially for verbose queries where the improvement is statistically significant .
+Figure 3 shows that the performance changes over different parameters for short verbose queries .
+The model using K Mixture background is less sensitive than the one using single Poisson background .
+Given that this type of mixture 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.05 0.1 0.15 0.2 0.25 Data

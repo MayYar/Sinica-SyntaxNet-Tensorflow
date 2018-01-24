@@ -1,0 +1,250 @@
+OPTIMAL NASH EQUILIBRIUM We have seen that the Nash equilibrium that maximizes the social welfare may involve strategies that are not in Q .
+Hence, in this section we focus on finding a Nash equilibrium that is almost optimal from the social welfare perspective .
+We propose an algorithm that for any > 0 finds a Nash equilibrium whose total payoff is within from optimal .
+The running time of this algorithm is polynomial in 1 , n and |Pmax| (recall that Pmax is the maximum absolute value of an entry of a payoff matrix) .
+While the negative result of the previous section is for graphical games on paths, our algorithm applies to a wider range of scenarios .
+Namely, it runs in polynomial time on bounded degree trees 166 as long as the best response policy of each vertex, given its parent, can be represented as a union of a polynomial number of rectangles .
+Note that path graphs always satisfy this condition
+Consequently, for path graphs the running time of our algorithm is guaranteed to be polynomial .
+(Note that [9] exhibits a family of graphical games on bounded degree trees for which the best response policies of some of the vertices, given their parents, have exponential size, when represented as unions of rectangles.) Due to space restrictions, in this version of the paper we present the algorithm for the case where the graph underlying the graphical game is a path .
+We then state our result for the general case; the proof can be found in the full version of this paper [10] .
+Suppose that s is a strategy profile for a graphical game G .
+That is, s assigns a mixed strategy to each vertex of G .
+let EPV (s) be the expected payoff of player V under s and let EP(s) =P V EPV (s) .
+Let M(G) = max{EP(s) | s is a Nash equilibrium for G} .
+THEOREM 3 .
+Suppose that G is a graphical game on an nvertex path .
+Then for any > 0 there is an algorithm that constructs a Nash equilibrium s for G that satisfies EP(s ) ? M(G)? .
+The running time of the algorithm is O(n4 P3 max 3 ) PROOF .
+Let {V1, .
+.
+.
+, Vn} be the set of all players .
+We start by constructing the best response policies for all Vi, i = 1, .
+.
+.
+, n ? 1 .
+As shown in [9], this can be done in time O(n3 ) .
+Let N > 5n be a parameter to be selected later, set £_ = 1 N, and define X = {j£_ | j = 0, .
+.
+.
+, N} .
+We say that vj is an event point for a player Vi if it is a Vi event point for B(Vi, Vi?1) or B(Vi+1, Vi) .
+For each player Vi, consider a finite set of strategies Xi given by Xi = X ¡å {vj |vj is an event point for Vi} .
+It has been shown in [9] that for any i = 2, .
+.
+.
+, n, the best response policy B(Vi, Vi?1) has at most 2n + 4 Vi event points .
+As we require N > 5n, we have |Xi| ? 2N; assume without loss of generality that |Xi| = 2N .
+Order the elements of Xi in increasing order as x1 i = 0 < x2 i < ¡P ¡P ¡P < x2N i .
+We will refer to the strategies in Xi as discrete strategies of player Vi; a strategy profile in which each player has a discrete strategy will be referred to as a discrete strategy profile .
+We will now show that even we restrict each player Vi to strategies from Xi, the players can still achieve a Nash equilibrium, and moreover, the best such Nash equilibrium (with respect to the social welfare) has total payoff at least M(G) ? as long as N is large enough .
+Let s be a strategy profile that maximizes social welfare .
+That is, let s = (s1, .
+.
+.
+, sn) where si is the mixed strategy of player Vi and EP(s) = M(G) .
+For i = 1, .
+.
+.
+, n, let ti = max{xj i | xj i ? si} .
+First, we will show that the strategy profile t = (t1, .
+.
+.
+, tn) is a Nash equilibrium for G .
+Fix any i, 1 < i ? n, and let R = [v1, v2]¡Ñ[u1, u2] be the rectangle in B(Vi, Vi?1) that contains (si, si?1) .
+As v1 is a Vi event point of B(Vi, Vi?1), we have v1 ? ti, so the point (ti, si?1) is inside R .
+Similarly, the point u1 is a Vi?1 event point of B(Vi, Vi?1), so we have u1 ? ti?1, and therefore the point (ti, ti?1) is inside R .
+This means that for any i, 1 < i ? n, we have ti?1 ? pbrVi?1 (ti), which implies that t = (t1, .
+.
+.
+, tn) is a Nash equilibrium for G .
+Now, let us estimate the expected loss in social welfare caused by playing t instead of s .
+LEMMA 3 .
+For any pair of strategy profiles t, s such that |ti ? si| ? £_ we have |EPVi (s) ? EPVi (t)| ? 24Pmax£_ for any i = 1, .
+.
+.
+, n .
+PROOF .
+Let Pi klm be the payoff of the player Vi, when he plays k, Vi?1 plays l, and Vi+1 plays m .
+Fix i = 1, .
+.
+.
+, n and for k, l, m ? {0, 1}, set tklm = tk i?1(1 ? ti?1)1?k tl i(1 ? ti)1?l tm i+1(1 ? ti+1)1?m sklm = sk i?1(1 ? si?1)1?k sl i(1 ? si)1?l sm i+1(1 ? si+1)1?m .
+We have |EPVi (s) ? EPVi (t)| ? X k,l,m=0,1 |Pi klm(tklm ? sklm )| ? 8Pmax max klm |tklm ? sklm | We will now show that for any k, l, m ? {0, 1} we have |tklm ? sklm | ? 3£_; clearly, this implies the lemma .
+Indeed, fix k, l, m ? {0, 1} .
+Set x = tk i?1(1 ? ti?1)1?k , x = sk i?1(1 ? si?1)1?k , y = tl i(1 ? ti)1?l , y = sl i(1 ? si)1?l , z = tm i+1(1 ? ti+1)1?m , z = sm i+1(1 ? si+1)1?m .
+Observe that if k = 0 then x ? x = (1 ? ti?1) ? (1 ? si?1), and if k = 1 then x ? x = ti?1 ? si?1, so |x ? x | ? £_ .
+A similar argument shows |y ? y | ? £_, |z ? z | ? £_ .
+Also, we have x, x , y, y , z, z ? [0, 1] .
+Hence, |tklm ?sklm | = |xyz?x y z | = |xyz ? x yz + x yz ? x y z + x y z ? x y z | ? |x ? x |yz + |y ? y |x z + |z ? z |x y ? 3£_ .
+Lemma 3 implies Pn i=1 |EPVi (s) ? EPVi (t)| ? 24nPmax£_, so by choosing £_ < (24nPmax), or, equivalently, setting N > 24nPmax , we can ensure that the total expected payoff for the strategy profile t is within from optimal .
+We will now show that we can find the best discrete Nash equilibrium (with respect to the social welfare) using dynamic programming .
+As t is a discrete strategy profile, this means that the strategy profile found by our algorithm will be at least as good as t .
+Define ml,k i to be the maximum total payoff that V1, .
+.
+.
+, Vi?1 can achieve if each Vj , j ? i, chooses a strategy from Xj , for each j < i the strategy of Vj is a potential best response to the strategy of Vj+1, and, moreover, Vi?1 plays xl i?1, Vi plays xk i .
+If there is no way to choose the strategies for V1, .
+.
+.
+, Vi?1 to satisfy these conditions, we set ml,k i = ?¡Û .
+The values ml,k i , i = 1, .
+.
+.
+, n; k, l = 1, .
+.
+.
+, N, can be computed inductively, as follows .
+We have ml,k 1 = 0 for k, l = 1, .
+.
+.
+, N .
+Now, suppose that we have already computed ml,k j for all j < i; k, l = 1, .
+.
+.
+, N .
+To compute mk,l i , we first check if (xk i , xl i?1) ? B(Vi, Vi?1) .
+If this is not the case, we have ml,k i = ?¡Û .
+Otherwise, consider the set Y = Xi?2 ¡ä pbrVi?2 (xl i?1), i.e., the set of all discrete strategies of Vi?2 that are potential best responses to xl i?1 .
+The proof of Theorem 1 in [9] implies that the set pbrVi?2 (xl i?1) is non empty
+By construction of the set Xi?2, this implies that Y is not empty .
+For each xj i?2 ? Y , let pjlk be the payoff that Vi?1 receives when Vi?2 plays xj i?2, Vi?1 plays xl i?1, and Vi plays xk i .
+Clearly, pjlk can be computed in constant time .
+Then we have ml,k i = max{mj,l i?1 + pjlk | xj i?2 ? Y } .
+Finally, suppose that we have computed ml,k n for l, k = 1, .
+.
+.
+, N .
+We still need to take into account the payoff of player Vn .
+Hence, 167 we consider all pairs (xk n, xl n?1) that satisfy xl n?1 ? pbrVn?1 (xk n), and pick the one that maximizes the sum of mk,l n and the payoff of Vn when he plays xk n and Vn?1 plays xl n?1 .
+This results in the maximum total payoff the players can achieve in a Nash equilibrium using discrete strategies; the actual strategy profile that produces this payoff can be reconstructed using standard dynamic programming techniques .
+It is easy to see that each ml,k i can be computed in time O(N), i.e., all of them can be computed in time O(nN3 Another natural way to define what is a good Nash equilibrium is to require that each player"s expected payoff exceeds a certain threshold .
+These thresholds do not have to be the same for all players .
+In this case, in addition to the payoff matrices of the n players, we are given n numbers T1, .
+.
+.
+, Tn, and our goal is to find a Nash equilibrium in which the payoff of player i is at least Ti, or report that no such Nash equilibrium exists .
+It turns out that we can design an FPTAS for this problem using the same techniques as in the previous section .
+THEOREM 5 .
+Given a graphical game G on an n vertex path and n rational numbers T1, .
+.
+.
+, Tn, suppose that there exists a strategy profile s such that s is a Nash equilibrium for G and EPVi (s) ? Ti for i = 1, .
+.
+.
+, n .
+Then for any > 0 we can find in time O(max{nP3 max 3 , n4 3 }) a strategy profile s such that s is a Nash equilibrium for G and EPVi (s ) ? Ti ? for i = 1, .
+.
+.
+, n .
+PROOF .
+The proof is similar to that of Theorem 3 .
+First, we construct the best response policies for all players, choose N > 5n, and construct the sets Xi, i = 1, .
+.
+.
+, n, as described in the proof of Theorem 3 .
+Consider a strategy profile s such that s is a Nash equilibrium for G and EPVi (s) ? Ti for i = 1, .
+.
+.
+, n .
+We construct a strategy profile ti = max{xj i | xj i ? si} and use the same argument as in the proof of Theorem 3 to show that t is a Nash equilibrium for G .
+By Lemma 3, we have |EPVi (s) ? EPVi (t)| ? 24Pmax£_, so choosing £_ < (24Pmax), or, equivalently, N > max{5n, 24Pmax }, we can ensure EPVi (t) ? Ti ? for i = 1, .
+.
+.
+, n .
+Now, we will use dynamic programming to find a discrete Nash equilibrium that satisfies EPVi (t) ? Ti ? for i = 1, .
+.
+.
+, n .
+As t is a discrete strategy profile, our algorithm will succeed whenever there is a strategy profile s with EPVi (s) ? Ti? for i = 1, .
+.
+.
+, n .
+Let zl,k i = 1 if there is a discrete strategy profile such that for any j < i the strategy of the player Vj is a potential best response to the strategy of Vj+1, the expected payoff of Vj is at least Tj ? , and, moreover, Vi?1 plays xl i?1, Vi plays xk i .
+Otherwise, let zl,k i = 0 .
+We can compute zl,k i , i = 1, .
+.
+.
+, n; k, l = 1, .
+.
+.
+, N inductively, as follows .
+We have zl,k 1 = 1 for k, l = 1, .
+.
+.
+, N .
+Now, suppose that we have already computed zl,k j for all j < i; k, l = 1, .
+.
+.
+, N .
+To compute zk,l i , we first check if (xk i , xl i?1) ? B(Vi, Vi?1) .
+If this 168 is not the case, clearly, zk,l i = 0 .
+Otherwise, consider the set Y = Xi?2 ¡äpbrVi?2 (xl i?1), i.e., the set of all discrete strategies of Vi?2 that are potential best responses to xl i?1 .
+It has been shown in the proof of Theorem 3 that Y = ? .
+For each xj i?2 ? Y , let pjlk be the payoff that Vi?1 receives when Vi?2 plays xj i?2, Vi?1 plays xl i?1, and Vi plays xk i .
+Clearly, pjlk can be computed in constant time .
+If there exists an xj i?2 ? Y such that zj,l i?1 = 1 and pjlk ? Ti?2 ? , set zl,k i = 1 .
+Otherwise, set zl,k i = 0 .
+Having computed zl,k n , l, k = 1, .
+.
+.
+, N, we check if zl,k n = 1 for some pair (l, k) .
+if such a pair of indices exists, we instruct Vn to play xk n and use dynamic programming techniques (or, equivalently, the downstream pass of the algorithm of [13]) to find a Nash equilibrium s that satisfies EPVi (s ) ? Ti ? for i = 1, .
+.
+.
+, n (recall that Vn is a dummy player, i.e., we assume Tn = 0, EPn(s ) = 0 for any choice of s ) .
+If zl,k n = 0 for all l, k = 1, .
+.
+.
+, N, there is no discrete Nash equilibrium s that satisfies EPVi (s ) ? Ti ? for i = 1, .
+.
+.
+, n and hence no Nash equilibrium s (not necessarily discrete) such that EPVi (s) ? Ti for i = 1, .
+.
+.
+, n .
+The running time analysis is similar to that for Theorem 3; we conclude that the running time of our algorithm is O(nN3 ) = O(max{nP3 max 3 , n4 3 }) .
+REMARK 1 .
+Theorem 5 can be extended to trees of bounded degree in the same way as Theorem 4 .
+5.1 Exact Computation Another approach to finding Nash equilibria with bounded payoffs is based on inductively computing the subsets of the best response policies of all players so as to exclude the points that do not provide sufficient payoffs to some of the players .
+Formally, we say that a strategy v of the player V is a potential best response to a strategy w of its parent W with respect to a threshold vector T = (T1, .
+.
+.
+, Tn), (denoted by v ? pbrV (w, T)) if there is an equilibrium in the instance G(V,W ),W =w in which V plays mixed strategy v and the payoff to any player Vi downstream of V (including V ) is at least Ti .
+The best response policy for V with respect to a threshold vector T is defined as B(W, V, T) = {(w, v) | v ? pbrV (w, T), w ? [0, 1]} .
+It is easy to see that if any of the sets B(Vj, Vj?1, T), j = 1, .
+.
+.
+, n, is empty, it means that it is impossible to provide all players with expected payoffs prescribed by T .
+Otherwise, one can apply the downstream pass of the original algorithm of [13] to find a Nash equilibrium .
+As we assume that Vn is a dummy vertex whose payoff is identically 0, the Nash equilibrium with these payoffs exists as long as Tn ? 0 and B(Vn, Vn?1, T) is not empty .
+Using the techniques developed in [9], it is not hard to show that for any j = 1, .
+.
+.
+, n, the set B(Vj , Vj?1, T) consists of a finite number of rectangles, and one can compute B(Vj+1, Vj , T) given B(Vj , Vj?1, T) .
+The advantage of this approach is that it allows us to represent all Nash equilibria that provide required payoffs to the players .
+However, it is not likely to be practical, since it turns out that the rectangles that appear in the representation of B(Vj , Vj?1, T) may have irrational coordinates .
+CLAIM 6 .
+There exists a graphical game G on a 3 vertex path UV W and a vector T = (T1, T2, T3) such that B(V, W, T) cannot be represented as a union of a finite number of rectangles with rational coordinates .
+PROOF .
+We define the payoffs to the players in G as follows .
+The payoff to U is identically 0, i.e., P0 = P1 = 0 .
+Using Claim 1, we select the payoffs to V so that P0 (V ) = uw, P1 (V ) = P0 (V ) + w ? .8u ? .1, where u and w are the (mixed) strategies of U and W , respectively .
+It follows that V is indifferent between playing 0 and 1 if and only if w = f(u) = .8u + .1; observe that for any u ? [0, 1] we have f(u) ? [0, 1] .
+It is not hard to see that we have B(W, V ) = [0, .1]¡Ñ{0} ¡å [.1, .9]¡Ñ[0, 1] ¡å [.9, 1]¡Ñ{1} .
+The payoffs to W are not important for our construction; for example, set P0(W ) = P0(W ) = 0 .
+Now, set T = (0, 1 8, 0), i.e., we are interested in Nash equilibria in which V "s expected payoff is at least 1 8 .
+Suppose w ? [0, 1] .
+The player V can play a mixed strategy v when W is playing w as long as U plays u = f?1 (w) = 5w 4 ? 1 8 (to ensure that V is indifferent between 0 and 1) and P0 (V ) = P1 (V ) = uw = w(5w 4 ? 1 8) ? 1 8 .
+The latter condition is satisfied if w ? (1 ? ¡Ô 41) 20 < 0 or w ? (1 + ¡Ô 41) 20 .
+Note that we have .1 < (1 + ¡Ô 41) 20 < .9 .
+For any other value of w, any strategy of U either makes V prefer one of the pure strategies or does not provide it with a sufficient expected payoff .
+There are also some values of w for which V can play a pure strategy (0 or 1) as a potential best response to W and guarantee itself an expected payoff of at least 1 8; it can be shown that these values of w form a finite number of segments in [0, 1] .
+We conclude that any representation of B(W, V, T) as a union of a finite number of rectangles must contain a rectangle of the form [(1 + ¡Ô 41) 20, w ]¡Ñ[v , v ] for some w , v , v ? [0, 1] .
+On the other hand, it can be shown that for any integer payoff matrices and threshold vectors and any j = 1, .
+.
+.
+, n ? 1, the sets B(Vj+1, Vj, T) contain no rectangles of the form [u , u ]¡Ñ{v} or {v}¡Ñ[w , w ], where v ? R\Q .
+This means that if B(Vn, Vn?1, T) is non empty, i.e., there is a Nash equilibrium with payoffs prescribed by T, then the downstream pass of the algorithm of [13] can always pick a strategy profile that forms a Nash equilibrium, provides a payoff of at least Ti to the player Vi, and has no irrational coordinates .
+Hence, unlike in the case of the Nash equilibrium that maximizes the social welfare, working with irrational numbers is not necessary, and the fact that the algorithm discussed in this section has to do so can be seen as an argument against using this approach. .

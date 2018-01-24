@@ -1,0 +1,32 @@
+RATERS To account for the observations described in the previous sections, we propose a model for the behavior of the users when submitting online reviews .
+For a given hotel, we make the assumption that the quality experienced by the users is normally distributed around some value vf , which represents the objective quality offered by the hotel on the feature ?ri f = £_f vi f + (1 ? £_f ) ¡P sign vi f ? ef (i) c + d(vi f , ef (i)|wi f ) (2) where
+vi f is assumed normally distributed around some value vf ; ? £_f ? [0, 1] can be seen as a measure of the bias when reporting feedback .
+High values reflect the fact that users rate objectively, without being influenced by prior expectations .
+The value of £_f may depend on various factors; we fix one value for each feature f; ? c is a constant between 1 and 5; ? wi f is the weight of feature f in the textual comment of review i, computed according to Eq .
+(1); ? d(vi f , ef (i)|wi f ) is a distance function between the expectation and the observation of user i .
+The distance function satisfies the following properties
+(2) encodes the bias of the rating .
+The higher the distance between the true observation vi f and the function ef , the higher the bias .
+5.1 Model Validation We use the data set of TripAdvisor reviews to validate the behavior model presented above .
+We split for convenience the rating values in three ranges
+For every hotel, we take the sequence of reports, and whenever we encounter a rating that is either good or bad (but not indifferent) we try to predict it using Eq .
+(2) ? Second, instead of predicting the value of extremal ratings, we try to classify them as either good or bad .
+For every hotel we take the sequence of reports, and for each report (regardless of it value) we classify it as being good or bad However, to perform these tests, we need to estimate the objective value, vf , that is the average of the true quality observations, vi f .
+The algorithm we are using is based on the intuition that the amount of conformity rating is minimized .
+In other words, the value vf should be such that as often as possible, bad ratings follow expectations above vf and good ratings follow expectations below vf .
+Formally, we define the sets
+We define vf as the value that minimize these union of the two sets
+(2) we replace vi f by the value vf computed in Eq .
+(3), and use the following distance function
+The values for £_f were fixed at {0.7, 0.7, 0.8, 0.7, 0.6} for the features {Overall, Rooms, Service, Cleanliness, Value} respectively .
+The weights are computed as described in Section 3 .
+As a first experiment, we take the sets of extremal ratings {ri f |ri f ? I} for each hotel and feature .
+For every such rating, ri f , we try to estimate it by computing ?ri f using Eq .
+(2) .
+We compare this estimator with the one obtained by simply averaging the ratings over all hotels and features
+In all cases the estimate produced by our model is better than the simple average .
+Table 7
+For example, we compute the set Bf using the following classifier (called £m)
+For the s metric £m tends to add a 140 Table 8
+This is likely because Sydney reviews are more positive than those of the American cities and cases where the number of bad reviews exceeded the number of good ones are rare .
+Replacing the test algorithm with one that plays a 1 with probability equal to the proportion of bad reviews improves its results for this city, but it is still outperformed by around 80%. .

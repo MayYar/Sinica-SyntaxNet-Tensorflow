@@ -1,0 +1,66 @@
+, the agent finds the values of k and £c by evaluating
+The gradient of this expression is then numerically evaluated at these points, and new estimates of k and £c calculated by making a fixed size move in the direction of maximum gradient .
+This process is repeated until k and £c have converged to an appropriate degree of accuracy .
+5.3 Expected Utility of an Advertising Cycle The goal of the advertising agent is to gain the maximum exposure for its advert given its constrained budget .
+We define the utility of any advertising cycle as the expected number of users who will see the advert for the first time during that cycle, and hence, we explicitly assume that no additional utility is derived by showing the advert to any user more than once8 .
+Thus, we can use the results of the previous two sections to calculate the expected utility of each advertising cycle remaining within the advertising agent"s period of 7 In the case that no unsuccessful bids have been observed, there is no evidence of where the transition point between successful and unsuccessful bids is likely to occur .
+Thus, in this case, an additional pair with value {£\ min(b1 .
+.
+.
+bn), 0} is automatically created .
+Here £\ ? [0, 1] determines how far below the lowest successful bid the advertising agent believes the transition point to be .
+We have typically used £\ = 0.5 within our experiments .
+8 As noted before, we assume that a user has seen the advert if they are present during any part of the advertising cycle, and we do not differentiate between users who see the entire advert, or users who see a fraction of it .
+0 10 20 30 40 0 0.2 0.4 0.6 0.8 1 Probability of Winning Auction P(b) Bid (b) k = 5 k = 10 k = 20 Figure 4
+interest .
+In the first advertising cycle this is simply determined by the probability of the advertising agent winning the auction, given that it submits a bid b1, and the number of users who are currently in front of the BluScreen display, but have not seen the advert before, is n .
+Thus, the expected utility of this advertising cycle is simply described by
+If the first auction was indeed won by the agent, then there will be no users who have yet to see the advert present at the start of the second advertising cycle .
+Thus, in this case, the expected number of new users who will see the advert in the second advertising cycle is described by N0,0 (i.e .
+only newly arriving users will contribute any utility) .
+By contrast, if the first auction was not won by the agent, then the expected number of users who have yet to see the advert is given by Nn,tc where tc is the length of the preceding adverting cycle (i.e .
+exactly the case described in section 5.1 where there are n users initially present and the advertising cycle starts at a time tc in the future) .
+Thus, the expected utility of the second advertising cycle is given by
+Thus, we must sum over all possible ways in which this can occur, and weight each by its probability .
+Hence, the general case for any advertising cycle is described by the rather complex expression
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 267 0 0.25 0.5 0.75 1 0 1 2 3 4 5 6 Expected Utility b 1 B B = 5 B = 10 B = 20 B = 30 B = 40 Figure 5
+Having calculated this sequence, a bid of b1 is submitted in the next auction .
+Once the outcome of this auction is known, the process repeats with a new optimal sequence of bids being calculated for the remaining advertising cycles of the agent"s period of interest .
+5.4 Optimal Sequence of Bids Solving for the optimal sequence of bids expressed in equation 9 can not be performed analytically .
+Instead we develop a numerical routine to perform this maximisation .
+However, it is informative to initially consider the simple case of just two auctions .
+5.4.1 Two Auction Example In this case the expected utility of the advertising agent is simply given by u1 + u2 (as described in equations 6 and 7), and the bidding sequence is solely dependent on b1 (since b2 = B?b1) .
+Thus, we can plot the total expected utility against b1 and graphically determine the optimal value of b1 (and thus also b2) .
+To this end, figure 5 shows an example calculated using parameter values £fa = 1 120, £fd = 1 480 and tc = 120 .
+In this case, we assume that k = 10 and £c = 1, and thus, given that k£c describes the midpoint of the cumulative gamma distribution, a bid of 10 represents a 50% chance of winning any auction (i.e .
+P(10) = 0.5) .
+In addition, we assume that n = £fa £fd = 4, and thus the initial number of users present is equal to the mean number that we expect to find present at any time .
+The plot indicates that when the budget is small, then the maximum utility is achieved at the extreme values of b1 .
+This corresponds to bidding in just one of the two auctions (i.e .
+b1 = 0 and b2 = B or b1 = B and b2 = 0) .
+However, as the budget increases, the plot passes through a transition whereby the maximum utility occurs at the midpoint of the x axis, corresponding to bidding equally in both auctions (i.e .
+b1 = b2 = B 2) .
+This is simply understood by the fact that continuing to allocate the budget to a single auction results in diminishing returns as the probability of actually winning this auction approaches one .
+In this case, the plot is completely symmetrical since the number of users present at the start is equal to its expected value (i.e .
+n = £fa £fd) .
+If however, n < £fa £fd the plot is skewed such that when the budget is small, it should be allocated to the second auction (since more users are expected to arrive before this advertising cycle commences) .
+Conversely, when n > £fa £fd the entire budget should be allocated to the first auction (since the users who are currently present are likely to depart in the near future) .
+However, in both cases, a transition occurs whereby given sufficient budget it is preferable to allocate the budget evenly between both auctions9 .
+9 In fact, one auction is still slightly preferred, but the difference in temp ¡ö 1 rate ¡ö 0.995 bold ¡ö initial random allocation Uold ¡ö Evaluate(bold ) WHILE temp > 0.0001 i, j ¡ö random integer index within b t ¡ö random real number between 0 and bi bnew ¡ö bold bnew i ¡ö bold i ? t bnew j ¡ö bold j + t Unew ¡ö Evaluate(bnew ) IF rand < exp((Unew ? Uold ) temp) THEN bold ¡ö bnew Uold ¡ö Unew ENDIF temp ¡ö temp ¡Ñ rate ENDWHILE Figure 6
+5.4.2 General Case In general, the behaviour seen in the previous example characterises the optimal bidding behaviour of the advertising agent .
+If there is sufficient budget, bidding equally in all auctions results in the maximum expected utility .
+However, typically this is not possible and thus utility is maximised by concentrating what budget is available into a subset of the available auction .
+The choice of this subset is determined by a number of factors .
+If there are very few users currently present, it is optimal to allocate the budget to later auctions in the expectation that more users will arrive .
+Conversely, if there are many users present, a significant proportion of the budget should be allocated to the first auction to ensure that it is indeed won, and these users see the advert .
+Finally, since no utility is derived by showing the advert to a single user more than once, the budget should be allocated such that there are intervals between showings of the advert, in order that new users may arrive .
+Now, due to the complex form of the expression for the expected utility of the agent (shown in equation 8) it is not possible to analytically calculate the optimal sequence of bids .
+However, the inverse problem (that of calculating the expected utility for any given sequence of bids) is easy .
+Thus, we can use a stochastic optimisation routine based on simulated annealing to solve the maximisation problem .
+This algorithm starts by assuming some initial random allocation of bids (normalised such that the total of all the bids is equal to the budget B) .
+It then makes small adjustments to this allocation by randomly transferring the budget from one auction to another .
+If this transfer results in an increase in expected utility, then it is accepted .
+If it results in a decrease in expected utility, it might still be accepted, but with a probability that is determined by a temperature parameter .
+This temperature parameter is annealed such that the probability of accepting such transfers decreases over time .
+In figure 6 we present this algorithm in pseudo code. .

@@ -1,0 +1,591 @@
+Beyond PageRank: Machine Learning for Static Ranking 
+content:
+1 ABSTRACT :
+1-1:Since the publication of Brin and Page"s paper on PageRank, many in the Web community have depended on PageRank for the static (query independent) ordering of Web pages .
+1-2:We show that we can significantly outperform PageRank using features that are independent of the link structure of the Web .
+1-3:We gain a further boost in accuracy by using data on the frequency at which users visit Web pages .
+1-4:We use RankNet, a ranking machine learning algorithm, to combine these and other static features based on anchor text and domain characteristics .
+1-5:The resulting model achieves a static ranking pairwise accuracy of 67.3% (vs .
+1-6:56.7% for PageRank or 50% for random) .
+1-7:I.2.6 [Artificial Intelligence]: Learning .
+1-8:H.3.3 [Information .
+2 INTRODUCTION :
+2-1:Over the past decade, the Web has grown exponentially in size .
+2-2:Unfortunately, this growth has not been isolated to good quality pages .
+2-3:The number of incorrect, spamming, and malicious (e.g., phishing) sites has also grown rapidly .
+2-4:The sheer number of both good and bad pages on the Web has led to an increasing reliance on search engines for the discovery of useful information .
+2-5:Users rely on search engines not only to return pages related to their search query, but also to separate the good from the bad, and order results so that the best pages are suggested first .
+2-6:To date, most work on Web page ranking has focused on improving the ordering of the results returned to the user (querydependent ranking, or dynamic ranking) .
+2-7:However, having a good query independent ranking (static ranking) is also crucially important for a search engine .
+2-8:A good static ranking algorithm provides numerous benefits: • Relevance: The static rank of a page provides a general indicator to the overall quality of the page .
+2-9:This is a useful input to the dynamic ranking algorithm .
+2-10:• Efficiency: Typically, the search engine"s index is ordered by static rank .
+2-11:By traversing the index from highquality to low quality pages, the dynamic ranker may abort the search when it determines that no later page will have as high of a dynamic rank as those already found .
+2-12:The more accurate the static rank, the better this early stopping ability, and hence the quicker the search engine may respond to queries .
+2-13:• Crawl Priority: The Web grows and changes as quickly as search engines can crawl it .
+2-14:Search engines need a way to prioritize their crawl to determine which pages to recrawl, how frequently, and how often to seek out new pages .
+2-15:Among other factors, the static rank of a page is used to determine this prioritization .
+2-16:A better static rank thus provides the engine with a higher quality, more upto date index .
+2-17:Google is often regarded as the first commercially successful search engine .
+2-18:Their ranking was originally based on the PageRank algorithm [5][27] .
+2-19:Due to this (and possibly due to Google"s promotion of PageRank to the public), PageRank is widely regarded as the best method for the static ranking of Web pages .
+2-20:Though PageRank has historically been thought to perform quite well, there has yet been little academic evidence to support this claim .
+2-21:Even worse, there has recently been work showing that PageRank may not perform any better than other simple measures on certain tasks .
+2-22:Upstill et al .
+2-23:have found that for the task of finding home pages, the number of pages linking to a page and the type of URL were as, or more, effective than PageRank [32] .
+2-24:They found similar results for the task of finding high quality companies [31] .
+2-25:PageRank has also been used in systems for TREC"s very large collection and Web track competitions, but with much less success than had been expected [17] .
+2-26:Finally, Amento et al .
+2-27:[1] found that simple features, such as the number of pages on a site, performed as well as PageRank .
+2-28:Despite these, the general belief remains among many, both academic and in the public, that PageRank is an essential factor for a good static rank .
+2-29:Failing this, it is still assumed that using the link structure is crucial, in the form of the number of inlinks or the amount of anchor text .
+2-30:In this paper, we show there are a number of simple url or pagebased features that significantly outperform PageRank (for the purposes of statically ranking Web pages) despite ignoring the structure of the Web .
+2-31:We combine these and other static features using machine learning to achieve a ranking system that is significantly better than PageRank (in pairwise agreement with human labels) .
+2-32:A machine learning approach for static ranking has other advantages besides the quality of the ranking .
+2-33:Because the measure consists of many features, it is harder for malicious users to manipulate it (i.e., to raise their page"s static rank to an undeserved level through questionable techniques, also known as Web spamming) .
+2-34:This is particularly true if the feature set is not known .
+2-35:In contrast, a single measure like PageRank can be easier to manipulate because spammers need only concentrate on one goal: how to cause more pages to point to their page .
+2-36:With an algorithm that learns, a feature that becomes unusable due to spammer manipulation will simply be reduced or removed from the final computation of rank .
+2-37:This flexibility allows a ranking system to rapidly react to new spamming techniques .
+2-38:A machine learning approach to static ranking is also able to take advantage of any advances in the machine learning field .
+2-39:For example, recent work on adversarial classification [12] suggests that it may be possible to explicitly model the Web page spammer"s (the adversary) actions, adjusting the ranking model in advance of the spammer"s attempts to circumvent it .
+2-40:Another example is the elimination of outliers in constructing the model, which helps reduce the effect that unique sites may have on the overall quality of the static rank .
+2-41:By moving static ranking to a machine learning framework, we not only gain in accuracy, but also gain in the ability to react to spammer"s actions, to rapidly add new features to the ranking algorithm, and to leverage advances in the rapidly growing field of machine learning .
+2-42:Finally, we believe there will be significant advantages to using this technique for other domains, such as searching a local hard drive or a corporation"s intranet .
+2-43:These are domains where the link structure is particularly weak (or non existent), but there are other domain specific features that could be just as powerful .
+2-44:For example, the author of an intranet page and his her position in the organization (e.g., CEO, manager, or developer) could provide significant clues as to the importance of that page .
+2-45:A machine learning approach thus allows rapid development of a good static algorithm in new domains .
+2-46:This paper"s contribution is a systematic study of static features, including PageRank, for the purposes of (statically) ranking Web pages .
+2-47:Previous studies on PageRank typically used subsets of the Web that are significantly smaller (e.g., the TREC VLC2 corpus, used by many, contains only 19 million pages) .
+2-48:Also, the performance of PageRank and other static features has typically been evaluated in the context of a complete system for dynamic ranking, or for other tasks such as question answering .
+2-49:In contrast, we explore the use of PageRank and other features for the direct task of statically ranking Web pages .
+2-50:We first briefly describe the PageRank algorithm .
+2-51:In Section 3 we introduce RankNet, the machine learning technique used to combine static features into a final ranking .
+2-52:Section 4 describes the static features .
+2-53:The heart of the paper is in Section 5, which presents our experiments and results .
+2-54:We conclude with a discussion of related and future work. .
+3 PAGERANK :
+3-1:The basic idea behind PageRank is simple: a link from a Web page to another can be seen as an endorsement of that page .
+3-2:In general, links are made by people .
+3-3:As such, they are indicative of the quality of the pages to which they point when creating a page, an author presumably chooses to link to pages deemed to be of good quality .
+3-4:We can take advantage of this linkage information to order Web pages according to their perceived quality .
+3-5:Imagine a Web surfer who jumps from Web page to Web page, choosing with uniform probability which link to follow at each step .
+3-6:In order to reduce the effect of dead ends or endless cycles the surfer will occasionally jump to a random page with some small probability α, or when on a page with no out links .
+3-7:If averaged over a sufficient number of steps, the probability the surfer is on page j at some point in time is given by the formula: ∑∈ + − = ji i iP N jP B F )()1( )( α α (1) Where Fi is the set of pages that page i links to, and Bj is the set of pages that link to page j .
+3-8:The PageRank score for node j is defined as this probability: PR(j)=P(j) .
+3-9:Because equation (1) is recursive, it must be iteratively evaluated until P(j) converges (typically, the initial distribution for P(j) is uniform) .
+3-10:The intuition is, because a random surfer would end up at the page more frequently, it is likely a better page .
+3-11:An alternative view for equation (1) is that each page is assigned a quality, P(j) .
+3-12:A page gives an equal share of its quality to each page it points to .
+3-13:PageRank is computationally expensive .
+3-14:Our collection of 5 billion pages contains approximately 370 billion links .
+3-15:Computing PageRank requires iterating over these billions of links multiple times (until convergence) .
+3-16:It requires large amounts of memory (or very smart caching schemes that slow the computation down even further), and if spread across multiple machines, requires significant communication between them .
+3-17:Though much work has been done on optimizing the PageRank computation (see e.g., [25] and [6]), it remains a relatively slow, computationally expensive property to compute. .
+4 RANKNET :
+4-1:Much work in machine learning has been done on the problems of classification and regression .
+4-2:Let X={xi} be a collection of feature vectors (typically, a feature is any real valued number), and Y={yi} be a collection of associated classes, where yi is the class of the object described by feature vector xi .
+4-3:The classification problem is to learn a function f that maps yi=f(xi), for all i .
+4-4:When yi is real valued as well, this is called regression .
+4-5:Static ranking can be seen as a regression problem .
+4-6:If we let xi represent features of page i, and yi be a value (say, the rank) for each page, we could learn a regression function that mapped each page"s features to their rank .
+4-7:However, this over constrains the problem we wish to solve .
+4-8:All we really care about is the order of the pages, not the actual value assigned to them .
+4-9:Recent work on this ranking problem [7][13][18] directly attempts to optimize the ordering of the objects, rather than the value assigned to them .
+4-10:For these, let Z={<i,j>} be a collection of pairs of items, where item i should be assigned a higher value than item j .
+4-11:The goal of the ranking problem, then, is to learn a function f such that, )()(,, ji ffji xxZ >∈∀ 708 Note that, as with learning a regression function, the result of this process is a function (f) that maps feature vectors to real values .
+4-12:This function can still be applied anywhere that a regressionlearned function could be applied .
+4-13:The only difference is the technique used to learn the function .
+4-14:By directly optimizing the ordering of objects, these methods are able to learn a function that does a better job of ranking than do regression techniques .
+4-15:We used RankNet [7], one of the aforementioned techniques for learning ranking functions, to learn our static rank function .
+4-16:RankNet is a straightforward modification to the standard neural network back prop algorithm .
+4-17:As with back prop, RankNet attempts to minimize the value of a cost function by adjusting each weight in the network according to the gradient of the cost function with respect to that weight .
+4-18:The difference is that, while a typical neural network cost function is based on the difference between the network output and the desired output, the RankNet cost function is based on the difference between a pair of network outputs .
+4-19:That is, for each pair of feature vectors <i,j> in the training set, RankNet computes the network outputs oi and oj .
+4-20:Since vector i is supposed to be ranked higher than vector j, the larger is oj oi, the larger the cost .
+4-21:RankNet also allows the pairs in Z to be weighted with a confidence (posed as the probability that the pair satisfies the ordering induced by the ranking function) .
+4-22:In this paper, we used a probability of one for all pairs .
+4-23:In the next section, we will discuss the features used in our feature vectors, xi. .
+5 FEATURES :
+5-1:To apply RankNet (or other machine learning techniques) to the ranking problem, we needed to extract a set of features from each page .
+5-2:We divided our feature set into four, mutually exclusive, categories: page level (Page), domain level (Domain), anchor text and inlinks (Anchor), and popularity (Popularity) .
+5-3:We also optionally used the PageRank of a page as a feature .
+5-4:Below, we describe each of these feature categories in more detail .
+5-5:PageRank We computed PageRank on a Web graph of 5 billion crawled pages (and 20 billion known URLs linked to by these pages) .
+5-6:This represents a significant portion of the Web, and is approximately the same number of pages as are used by Google, Yahoo, and MSN for their search engines .
+5-7:Because PageRank is a graph based algorithm, it is important that it be run on as large a subset of the Web as possible .
+5-8:Most previous studies on PageRank used subsets of the Web that are significantly smaller (e.g .
+5-9:the TREC VLC2 corpus, used by many, contains only 19 million pages) We computed PageRank using the standard value of 0.85 for α .
+5-10:Popularity Another feature we used is the actual popularity of a Web page, measured as the number of times that it has been visited by users over some period of time .
+5-11:We have access to such data from users who have installed the MSN toolbar and have opted to provide it to MSN .
+5-12:The data is aggregated into a count, for each Web page, of the number of users who viewed that page .
+5-13:Though popularity data is generally unavailable, there are two other sources for it .
+5-14:The first is from proxy logs .
+5-15:For example, a university that requires its students to use a proxy has a record of all the pages they have visited while on campus .
+5-16:Unfortunately, proxy data is quite biased and relatively small .
+5-17:Another source, internal to search engines, are records of which results their users clicked on .
+5-18:Such data was used by the search engine Direct Hit, and has recently been explored for dynamic ranking purposes [20] .
+5-19:An advantage of the toolbar data over this is that it contains information about URL visits that are not just the result of a search .
+5-20:The raw popularity is processed into a number of features such as the number of times a page was viewed and the number of times any page in the domain was viewed .
+5-21:More details are provided in section 5.5 .
+5-22:Anchor text and inlinks These features are based on the information associated with links to the page in question .
+5-23:It includes features such as the total amount of text in links pointing to the page (anchor text), the number of unique words in that text, etc .
+5-24:Page This category consists of features which may be determined by looking at the page (and its URL) alone .
+5-25:We used only eight, simple features such as the number of words in the body, the frequency of the most common term, etc .
+5-26:Domain This category contains features that are computed as averages across all pages in the domain .
+5-27:For example, the average number of outlinks on any page and the average PageRank .
+5-28:Many of these features have been used by others for ranking Web pages, particularly the anchor and page features .
+5-29:As mentioned, the evaluation is typically for dynamic ranking, and we wish to evaluate the use of them for static ranking .
+5-30:Also, to our knowledge, this is the first study on the use of actual page visitation popularity for static ranking .
+5-31:The closest similar work is on using click through behavior (that is, which search engine results the users click on) to affect dynamic ranking (see e.g., [20]) .
+5-32:Because we use a wide variety of features to come up with a static ranking, we refer to this as fRank (for feature based ranking) .
+5-33:fRank uses RankNet and the set of features described in this section to learn a ranking function for Web pages .
+5-34:Unless otherwise specified, fRank was trained with all of the features. .
+6 EXPERIMENTS :
+6-1:In this section, we will demonstrate that we can out perform PageRank by applying machine learning to a straightforward set of features .
+6-2:Before the results, we first discuss the data, the performance metric, and the training method .
+6-3:5.1 Data In order to evaluate the quality of a static ranking, we needed a gold standard defining the correct ordering for a set of pages .
+6-4:For this, we employed a dataset which contains human judgments for 28000 queries .
+6-5:For each query, a number of results are manually assigned a rating, from 0 to 4, by human judges .
+6-6:The rating is meant to be a measure of how relevant the result is for the query, where 0 means poor and 4 means excellent .
+6-7:There are approximately 500k judgments in all, or an average of 18 ratings per query .
+6-8:The queries are selected by randomly choosing queries from among those issued to the MSN search engine .
+6-9:The probability that a query is selected is proportional to its frequency among all 709 of the queries .
+6-10:As a result, common queries are more likely to be judged than uncommon queries .
+6-11:As an example of how diverse the queries are, the first four queries in the training set are chef schools, chicagoland speedway, eagles fan club, and Turkish culture .
+6-12:The documents selected for judging are those that we expected would, on average, be reasonably relevant (for example, the top ten documents returned by MSN"s search engine) .
+6-13:This provides significantly more information than randomly selecting documents on the Web, the vast majority of which would be irrelevant to a given query .
+6-14:Because of this process, the judged pages tend to be of higher quality than the average page on the Web, and tend to be pages that will be returned for common search queries .
+6-15:This bias is good when evaluating the quality of static ranking for the purposes of index ordering and returning relevant documents .
+6-16:This is because the most important portion of the index to be well ordered and relevant is the portion that is frequently returned for search queries .
+6-17:Because of this bias, however, the results in this paper are not applicable to crawl prioritization .
+6-18:In order to obtain experimental results on crawl prioritization, we would need ratings on a random sample of Web pages .
+6-19:To convert the data from query dependent to query independent, we simply removed the query, taking the maximum over judgments for a URL that appears in more than one query .
+6-20:The reasoning behind this is that a page that is relevant for some query and irrelevant for another is probably a decent page and should have a high static rank .
+6-21:Because we evaluated the pages on queries that occur frequently, our data indicates the correct index ordering, and assigns high value to pages that are likely to be relevant to a common query .
+6-22:We randomly assigned queries to a training, validation, or test set, such that they contained 84%, 8%, and 8% of the queries, respectively .
+6-23:Each set contains all of the ratings for a given query, and no query appears in more than one set .
+6-24:The training set was used to train fRank .
+6-25:The validation set was used to select the model that had the highest performance .
+6-26:The test set was used for the final results .
+6-27:This data gives us a query independent ordering of pages .
+6-28:The goal for a static ranking algorithm will be to reproduce this ordering as closely as possible .
+6-29:In the next section, we describe the measure we used to evaluate this .
+6-30:5.2 Measure We chose to use pairwise accuracy to evaluate the quality of a static ranking .
+6-31:The pairwise accuracy is the fraction of time that the ranking algorithm and human judges agree on the ordering of a pair of Web pages .
+6-32:If S(x) is the static ranking assigned to page x, and H(x) is the human judgment of relevance for x, then consider the following sets: )}()(:,{ yHxHyx >=pH and )}()(:,{ ySxSyx >=pS The pairwise accuracy is the portion of Hp that is also contained in Sp: p pp H SH ∩ =accuracypairwise This measure was chosen for two reasons .
+6-33:First, the discrete human judgments provide only a partial ordering over Web pages, making it difficult to apply a measure such as the Spearman rank order correlation coefficient (in the pairwise accuracy measure, a pair of documents with the same human judgment does not affect the score) .
+6-34:Second, the pairwise accuracy has an intuitive meaning: it is the fraction of pairs of documents that, when the humans claim one is better than the other, the static rank algorithm orders them correctly .
+6-35:5.3 Method We trained fRank (a RankNet based neural network) using the following parameters .
+6-36:We used a fully connected 2 layer network .
+6-37:The hidden layer had 10 hidden nodes .
+6-38:The input weights to this layer were all initialized to be zero .
+6-39:The output layer (just a single node) weights were initialized using a uniform random distribution in the range [ 0.1, 0.1] .
+6-40:We used tanh as the transfer function from the inputs to the hidden layer, and a linear function from the hidden layer to the output .
+6-41:The cost function is the pairwise cross entropy cost function as discussed in section 3 .
+6-42:The features in the training set were normalized to have zero mean and unit standard deviation .
+6-43:The same linear transformation was then applied to the features in the validation and test sets .
+6-44:For training, we presented the network with 5 million pairings of pages, where one page had a higher rating than the other .
+6-45:The pairings were chosen uniformly at random (with replacement) from all possible pairings .
+6-46:When forming the pairs, we ignored the magnitude of the difference between the ratings (the rating spread) for the two URLs .
+6-47:Hence, the weight for each pair was constant (one), and the probability of a pair being selected was independent of its rating spread .
+6-48:We trained the network for 30 epochs .
+6-49:On each epoch, the training pairs were randomly shuffled .
+6-50:The initial training rate was 0.001 .
+6-51:At each epoch, we checked the error on the training set .
+6-52:If the error had increased, then we decreased the training rate, under the hypothesis that the network had probably overshot .
+6-53:The training rate at each epoch was thus set to: Training rate = 1+ε κ Where κ is the initial rate (0.001), and ε is the number of times the training set error has increased .
+6-54:After each epoch, we measured the performance of the neural network on the validation set, using 1 million pairs (chosen randomly with replacement) .
+6-55:The network with the highest pairwise accuracy on the validation set was selected, and then tested on the test set .
+6-56:We report the pairwise accuracy on the test set, calculated using all possible pairs .
+6-57:These parameters were determined and fixed before the static rank experiments in this paper .
+6-58:In particular, the choice of initial training rate, number of epochs, and training rate decay function were taken directly from Burges et al [7] .
+6-59:Though we had the option of preprocessing any of the features before they were input to the neural network, we refrained from doing so on most of them .
+6-60:The only exception was the popularity features .
+6-61:As with most Web phenomenon, we found that the distribution of site popularity is Zipfian .
+6-62:To reduce the dynamic range, and hopefully make the feature more useful, we presented the network with both the unpreprocessed, as well as the logarithm, of the popularity features (As with the others, the logarithmic feature values were also normalized to have zero mean and unit standard deviation) .
+6-63:710 Applying fRank to a document is computationally efficient, taking time that is only linear in the number of input features; it is thus within a constant factor of other simple machine learning methods such as naïve Bayes .
+6-64:In our experiments, computing the fRank for all five billion Web pages was approximately 100 times faster than computing the PageRank for the same set .
+6-65:5.4 Results As Table 1 shows, fRank significantly outperforms PageRank for the purposes of static ranking .
+6-66:With a pairwise accuracy of 67.4%, fRank more than doubles the accuracy of PageRank (relative to the baseline of 50%, which is the accuracy that would be achieved by a random ordering of Web pages) .
+6-67:Note that one of fRank"s input features is the PageRank of the page, so we would expect it to perform no worse than PageRank .
+6-68:The significant increase in accuracy implies that the other features (anchor, popularity, etc.) do in fact contain useful information regarding the overall quality of a page .
+6-69:Table 1: Basic Results Technique Accuracy (%) None (Baseline) 50.00 PageRank 56.70 fRank 67.43 There are a number of decisions that go into the computation of PageRank, such as how to deal with pages that have no outlinks, the choice of α, numeric precision, convergence threshold, etc .
+6-70:We were able to obtain a computation of PageRank from a completely independent implementation (provided by Marc Najork) that varied somewhat in these parameters .
+6-71:It achieved a pairwise accuracy of 56.52%, nearly identical to that obtained by our implementation .
+6-72:We thus concluded that the quality of the PageRank is not sensitive to these minor variations in algorithm, nor was PageRank"s low accuracy due to problems with our implementation of it .
+6-73:We also wanted to find how well each feature set performed .
+6-74:To answer this, for each feature set, we trained and tested fRank using only that set of features .
+6-75:The results are shown in Table 2 .
+6-76:As can be seen, every single feature set individually outperformed PageRank on this test .
+6-77:Perhaps the most interesting result is that the Page level features had the highest performance out of all the feature sets .
+6-78:This is surprising because these are features that do not depend on the overall graph structure of the Web, nor even on what pages point to a given page .
+6-79:This is contrary to the common belief that the Web graph structure is the key to finding a good static ranking of Web pages .
+6-80:Table 2: Results for individual feature sets .
+6-81:Feature Set Accuracy (%) PageRank 56.70 Popularity 60.82 Anchor 59.09 Page 63.93 Domain 59.03 All Features 67.43 Because we are using a two layer neural network, the features in the learned network can interact with each other in interesting, nonlinear ways .
+6-82:This means that a particular feature that appears to have little value in isolation could actually be very important when used in combination with other features .
+6-83:To measure the final contribution of a feature set, in the context of all the other features, we performed an ablation study .
+6-84:That is, for each set of features, we trained a network to contain all of the features except that set .
+6-85:We then compared the performance of the resulting network to the performance of the network with all of the features .
+6-86:Table 3 shows the results of this experiment, where the decrease in accuracy is the difference in pairwise accuracy between the network trained with all of the features, and the network missing the given feature set .
+6-87:Table 3: Ablation study .
+6-88:Shown is the decrease in accuracy when we train a network that has all but the given set of features .
+6-89:The last line is shows the effect of removing the anchor, PageRank, and domain features, hence a model containing no network or link based information whatsoever .
+6-90:Feature Set Decrease in Accuracy PageRank 0.18 Popularity 0.78 Anchor 0.47 Page 5.42 Domain Anchor, PageRank & Domain 0.10 0.60 The results of the ablation study are consistent with the individual feature set study .
+6-91:Both show that the most important feature set is the Page level feature set, and the second most important is the popularity feature set .
+6-92:Finally, we wished to see how the performance of fRank improved as we added features; we wanted to find at what point adding more feature sets became relatively useless .
+6-93:Beginning with no features, we greedily added the feature set that improved performance the most .
+6-94:The results are shown in Table 4 .
+6-95:For example, the fourth line of the table shows that fRank using the page, popularity, and anchor features outperformed any network that used the page, popularity, and some other feature set, and that the performance of this network was 67.25% .
+6-96:Table 4: fRank performance as feature sets are added .
+6-97:At each row, the feature set that gave the greatest increase in accuracy was added to the list of features (i.e., we conducted a greedy search over feature sets) .
+6-98:Feature Set Accuracy (%) None 50.00 +Page 63.93 +Popularity 66.83 +Anchor 67.25 +PageRank 67.31 +Domain 67.43 711 Finally, we present a qualitative comparison of PageRank vs .
+6-99:fRank .
+6-100:In Table 5 are the top ten URLs returned for PageRank and for fRank .
+6-101:PageRank"s results are heavily weighted towards technology sites .
+6-102:It contains two QuickTime URLs (Apple"s video playback software), as well as Internet Explorer and FireFox URLs (both of which are Web browsers) .
+6-103:fRank, on the other hand, contains more consumer oriented sites such as American Express, Target, Dell, etc .
+6-104:PageRank"s bias toward technology can be explained through two processes .
+6-105:First, there are many pages with buttons at the bottom suggesting that the site is optimized for Internet Explorer, or that the visitor needs QuickTime .
+6-106:These generally link back to, in these examples, the Internet Explorer and QuickTime download sites .
+6-107:Consequently, PageRank ranks those pages highly .
+6-108:Though these pages are important, they are not as important as it may seem by looking at the link structure alone .
+6-109:One fix for this is to add information about the link to the PageRank computation, such as the size of the text, whether it was at the bottom of the page, etc .
+6-110:The other bias comes from the fact that the population of Web site authors is different than the population of Web users .
+6-111:Web authors tend to be technologically oriented, and thus their linking behavior reflects those interests .
+6-112:fRank, by knowing the actual visitation popularity of a site (the popularity feature set), is able to eliminate some of that bias .
+6-113:It has the ability to depend more on where actual Web users visit rather than where the Web site authors have linked .
+6-114:The results confirm that fRank outperforms PageRank in pairwise accuracy .
+6-115:The two most important feature sets are the page and popularity features .
+6-116:This is surprising, as the page features consisted only of a few (8) simple features .
+6-117:Further experiments found that, of the page features, those based on the text of the page (as opposed to the URL) performed the best .
+6-118:In the next section, we explore the popularity feature in more detail .
+6-119:5.5 Popularity Data As mentioned in section 4, our popularity data came from MSN toolbar users .
+6-120:For privacy reasons, we had access only to an aggregate count of, for each URL, how many times it was visited by any toolbar user .
+6-121:This limited the possible features we could derive from this data .
+6-122:For possible extensions, see section 6.3, future work .
+6-123:For each URL in our train and test sets, we provided a feature to fRank which was how many times it had been visited by a toolbar user .
+6-124:However, this feature was quite noisy and sparse, particularly for URLs with query parameters (e.g., http: search.msn.com results.aspx?q=machine+learning&form=QBHP) .
+6-125:One solution was to provide an additional feature which was the number of times any URL at the given domain was visited by a toolbar user .
+6-126:Adding this feature dramatically improved the performance of fRank .
+6-127:We took this one step further and used the built in hierarchical structure of URLs to construct many levels of backoff between the full URL and the domain .
+6-128:We did this by using the set of features shown in Table 6 .
+6-129:Table 6: URL functions used to compute the Popularity feature set .
+6-130:Function Example Exact URL cnn.com 2005 tech wikipedia.html?v=mobile No Params cnn.com 2005 tech wikipedia.html Page wikipedia.html URL 1 cnn.com 2005 tech URL 2 cnn.com 2005 … Domain cnn.com Domain+1 cnn.com 2005 … Each URL was assigned one feature for each function shown in the table .
+6-131:The value of the feature was the count of the number of times a toolbar user visited a URL, where the function applied to that URL matches the function applied to the URL in question .
+6-132:For example, a user"s visit to cnn.com 2005 sports.html would increment the Domain and Domain+1 features for the URL cnn.com 2005 tech wikipedia.html .
+6-133:As seen in Table 7, adding the domain counts significantly improved the quality of the popularity feature, and adding the numerous backoff functions listed in Table 6 improved the accuracy even further .
+6-134:Table 7: Effect of adding backoff to the popularity feature set Features Accuracy (%) URL count 58.15 URL and Domain counts 59.31 All backoff functions (Table 6) 60.82 Table 5: Top ten URLs for PageRank vs .
+6-135:fRank PageRank fRank google.com google.com apple.com quicktime download yahoo.com amazon.com americanexpress.com yahoo.com hp.com microsoft.com windows ie target.com apple.com quicktime bestbuy.com mapquest.com dell.com ebay.com autotrader.com mozilla.org products firefox dogpile.com ftc.gov bankofamerica.com 712 Backing off to subsets of the URL is one technique for dealing with the sparsity of data .
+6-136:It is also informative to see how the performance of fRank depends on the amount of popularity data that we have collected .
+6-137:In Figure 1 we show the performance of fRank trained with only the popularity feature set vs .
+6-138:the amount of data we have for the popularity feature set .
+6-139:Each day, we receive additional popularity data, and as can be seen in the plot, this increases the performance of fRank .
+6-140:The relation is logarithmic: doubling the amount of popularity data provides a constant improvement in pairwise accuracy .
+6-141:In summary, we have found that the popularity features provide a useful boost to the overall fRank accuracy .
+6-142:Gathering more popularity data, as well as employing simple backoff strategies, improve this boost even further .
+6-143:5.6 Summary of Results The experiments provide a number of conclusions .
+6-144:First, fRank performs significantly better than PageRank, even without any information about the Web graph .
+6-145:Second, the page level and popularity features were the most significant contributors to pairwise accuracy .
+6-146:Third, by collecting more popularity data, we can continue to improve fRank"s performance .
+6-147:The popularity data provides two benefits to fRank .
+6-148:First, we see that qualitatively, fRank"s ordering of Web pages has a more favorable bias than PageRank"s .
+6-149:fRank"s ordering seems to correspond to what Web users, rather than Web page authors, prefer .
+6-150:Second, the popularity data is more timely than PageRank"s link information .
+6-151:The toolbar provides information about which Web pages people find interesting right now, whereas links are added to pages more slowly, as authors find the time and interest. .
+7 RELATED AND FUTURE WORK :
+7-1:6.1 Improvements to PageRank Since the original PageRank paper, there has been work on improving it .
+7-2:Much of that work centers on speeding up and parallelizing the computation [15][25] .
+7-3:One recognized problem with PageRank is that of topic drift: A page about dogs will have high PageRank if it is linked to by many pages that themselves have high rank, regardless of their topic .
+7-4:In contrast, a search engine user looking for good pages about dogs would likely prefer to find pages that are pointed to by many pages that are themselves about dogs .
+7-5:Hence, a link that is on topic should have higher weight than a link that is not .
+7-6:Richardson and Domingos"s Query Dependent PageRank [29] and Haveliwala"s Topic Sensitive PageRank [16] are two approaches that tackle this problem .
+7-7:Other variations to PageRank include differently weighting links for inter vs .
+7-8:intra domain links, adding a backwards step to the random surfer to simulate the back button on most browsers [24] and modifying the jump probability (α) [3] .
+7-9:See Langville and Meyer [23] for a good survey of these, and other modifications to PageRank .
+7-10:6.2 Other related work PageRank is not the only link analysis algorithm used for ranking Web pages .
+7-11:The most well known other is HITS [22], which is used by the Teoma search engine [30] .
+7-12:HITS produces a list of hubs and authorities, where hubs are pages that point to many authority pages, and authorities are pages that are pointed to by many hubs .
+7-13:Previous work has shown HITS to perform comparably to PageRank [1] .
+7-14:One field of interest is that of static index pruning (see e.g., Carmel et al .
+7-15:[8]) .
+7-16:Static index pruning methods reduce the size of the search engine"s index by removing documents that are unlikely to be returned by a search query .
+7-17:The pruning is typically done based on the frequency of query terms .
+7-18:Similarly, Pandey and Olston [28] suggest crawling pages frequently if they are likely to incorrectly appear (or not appear) as a result of a search .
+7-19:Similar methods could be incorporated into the static rank (e.g., how many frequent queries contain words found on this page) .
+7-20:Others have investigated the effect that PageRank has on the Web at large [9] .
+7-21:They argue that pages with high PageRank are more likely to be found by Web users, thus more likely to be linked to, and thus more likely to maintain a higher PageRank than other pages .
+7-22:The same may occur for the popularity data .
+7-23:If we increase the ranking for popular pages, they are more likely to be clicked on, thus further increasing their popularity .
+7-24:Cho et al .
+7-25:[10] argue that a more appropriate measure of Web page quality would depend on not only the current link structure of the Web, but also on the change in that link structure .
+7-26:The same technique may be applicable to popularity data: the change in popularity of a page may be more informative than the absolute popularity .
+7-27:One interesting related work is that of Ivory and Hearst [19] .
+7-28:Their goal was to build a model of Web sites that are considered high quality from the perspective of content, structure and navigation, visual design, functionality, interactivity, and overall experience .
+7-29:They used over 100 page level features, as well as features encompassing the performance and structure of the site .
+7-30:This let them qualitatively describe the qualities of a page that make it appear attractive (e.g., rare use of italics, at least 9 point font, …), and (in later work) to build a system that assists novel Web page authors in creating quality pages by evaluating it according to these features .
+7-31:The primary differences between this work and ours are the goal (discovering what constitutes a good Web page vs .
+7-32:ordering Web pages for the purposes of Web search), the size of the study (they used a dataset of less than 6000 pages vs .
+7-33:our set of 468,000), and our comparison with PageRank .
+7-34:y = 0.577Ln(x) + 58.283 R 2 = 0.9822 58 58.5 59 59.5 60 60.5 61 1 10 100 Days of Toolbar Data PairwiseAccuracy Figure 1: Relation between the amount of popularity data and the performance of the popularity feature set .
+7-35:Note the x axis is a logarithmic scale .
+7-36:713 Nevertheless, their work provides insights to additional useful static features that we could incorporate into fRank in the future .
+7-37:Recent work on incorporating novel features into dynamic ranking includes that by Joachims et al .
+7-38:[21], who investigate the use of implicit feedback from users, in the form of which search engine results are clicked on .
+7-39:Craswell et al .
+7-40:[11] present a method for determining the best transformation to apply to query independent features (such as those used in this paper) for the purposes of improving dynamic ranking .
+7-41:Other work, such as Boyan et al .
+7-42:[4] and Bartell et al .
+7-43:[2] apply machine learning for the purposes of improving the overall relevance of a search engine (i.e., the dynamic ranking) .
+7-44:They do not apply their techniques to the problem of static ranking .
+7-45:6.3 Future work There are many ways in which we would like to extend this work .
+7-46:First, fRank uses only a small number of features .
+7-47:We believe we could achieve even more significant results with more features .
+7-48:In particular the existence, or lack thereof, of certain words could prove very significant (for instance, under construction probably signifies a low quality page) .
+7-49:Other features could include the number of images on a page, size of those images, number of layout elements (tables, divs, and spans), use of style sheets, conforming to W3C standards (like XHTML 1.0 Strict), background color of a page, etc .
+7-50:Many pages are generated dynamically, the contents of which may depend on parameters in the URL, the time of day, the user visiting the site, or other variables .
+7-51:For such pages, it may be useful to apply the techniques found in [26] to form a static approximation for the purposes of extracting features .
+7-52:The resulting grammar describing the page could itself be a source of additional features describing the complexity of the page, such as how many non terminal nodes it has, the depth of the grammar tree, etc .
+7-53:fRank allows one to specify a confidence in each pairing of documents .
+7-54:In the future, we will experiment with probabilities that depend on the difference in human judgments between the two items in the pair .
+7-55:For example, a pair of documents where one was rated 4 and the other 0 should have a higher confidence than a pair of documents rated 3 and 2 .
+7-56:The experiments in this paper are biased toward pages that have higher than average quality .
+7-57:Also, fRank with all of the features can only be applied to pages that have already been crawled .
+7-58:Thus, fRank is primarily useful for index ordering and improving relevance, not for directing the crawl .
+7-59:We would like to investigate a machine learning approach for crawl prioritization as well .
+7-60:It may be that a combination of methods is best: for example, using PageRank to select the best 5 billion of the 20 billion pages on the Web, then using fRank to order the index and affect search relevancy .
+7-61:Another interesting direction for exploration is to incorporate fRank and page level features directly into the PageRank computation itself .
+7-62:Work on biasing the PageRank jump vector [16], and transition matrix [29], have demonstrated the feasibility and advantages of such an approach .
+7-63:There is reason to believe that a direct application of [29], using the fRank of a page for its relevance, could lead to an improved overall static rank .
+7-64:Finally, the popularity data can be used in other interesting ways .
+7-65:The general surfing and searching habits of Web users varies by time of day .
+7-66:Activity in the morning, daytime, and evening are often quite different (e.g., reading the news, solving problems, and accessing entertainment, respectively) .
+7-67:We can gain insight into these differences by using the popularity data, divided into segments of the day .
+7-68:When a query is issued, we would then use the popularity data matching the time of query in order to do the ranking of Web pages .
+7-69:We also plan to explore popularity features that use more than just the counts of how often a page was visited .
+7-70:For example, how long users tended to dwell on a page, did they leave the page by clicking a link or by hitting the back button, etc .
+7-71:Fox et al .
+7-72:did a study that showed that features such as this can be valuable for the purposes of dynamic ranking [14] .
+7-73:Finally, the popularity data could be used as the label rather than as a feature .
+7-74:Using fRank in this way to predict the popularity of a page may useful for the tasks of relevance, efficiency, and crawl priority .
+7-75:There is also significantly more popularity data than human labeled data, potentially enabling more complex machine learning methods, and significantly more features. .
+8 CONCLUSIONS :
+8-1:A good static ranking is an important component for today"s search engines and information retrieval systems .
+8-2:We have demonstrated that PageRank does not provide a very good static ranking; there are many simple features that individually out perform PageRank .
+8-3:By combining many static features, fRank achieves a ranking that has a significantly higher pairwise accuracy than PageRank alone .
+8-4:A qualitative evaluation of the top documents shows that fRank is less technology biased than PageRank; by using popularity data, it is biased toward pages that Web users, rather than Web authors, visit .
+8-5:The machine learning component of fRank gives it the additional benefit of being more robust against spammers, and allows it to leverage further developments in the machine learning community in areas such as adversarial classification .
+8-6:We have only begun to explore the options, and believe that significant strides can be made in the area of static ranking by further experimentation with additional features, other machine learning techniques, and additional sources of data. .
+9-1:Thank you to Marc Najork for providing us with additional PageRank computations and to Timo Burkard for assistance with the popularity data
+9-2:Many thanks to Chris Burges for providing code and significant support in using training RankNets
+9-3:Also, we thank Susan Dumais and Nick Craswell for their edits and suggestions.
+10-1:B
+10-2:Amento, L
+10-3:Terveen, and W
+10-4:Hill
+10-5:Does authority mean quality? Predicting expert quality ratings of Web documents
+10-6:In Proceedings of the 23rd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, 2000
+10-7:B
+10-8:Bartell, G
+10-9:Cottrell, and R
+10-10:Belew
+10-11:Automatic combination of multiple ranked retrieval systems
+10-12:In Proceedings of the 17th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, 1994
+10-13:P
+10-14:Boldi, M
+10-15:Santini, and S
+10-16:Vigna
+10-17:PageRank as a function of the damping factor
+10-18:In Proceedings of the International World Wide Web Conference, May 2005
+10-19:714 J
+10-20:Boyan, D
+10-21:Freitag, and T
+10-22:Joachims
+10-23:A machine learning architecture for optimizing web search engines
+10-24:In AAAI Workshop on Internet Based Information Systems, August 1996
+10-25:S
+10-26:Brin and L
+10-27:Page
+10-28:The anatomy of a large scale hypertextual web search engine
+10-29:In Proceedings of the Seventh International Wide Web Conference, Brisbane, Australia, 1998
+10-30:Elsevier
+10-31:A
+10-32:Broder, R
+10-33:Lempel, F
+10-34:Maghoul, and J
+10-35:Pederson
+10-36:Efficient PageRank approximation via graph aggregation
+10-37:In Proceedings of the International World Wide Web Conference, May 2004
+10-38:C
+10-39:Burges, T
+10-40:Shaked, E
+10-41:Renshaw, A
+10-42:Lazier, M
+10-43:Deeds, N
+10-44:Hamilton, G
+10-45:Hullender
+10-46:Learning to rank using gradient descent
+10-47:In Proceedings of the 22nd International Conference on Machine Learning, Bonn, Germany, 2005
+10-48:D
+10-49:Carmel, D
+10-50:Cohen, R
+10-51:Fagin, E
+10-52:Farchi, M
+10-53:Herscovici, Y
+10-54:S
+10-55:Maarek, and A
+10-56:Soffer
+10-57:Static index pruning for information retrieval systems
+10-58:In Proceedings of the 24th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 43 50, New Orleans, Louisiana, USA, September 2001
+10-59:J
+10-60:Cho and S
+10-61:Roy
+10-62:Impact of search engines on page popularity
+10-63:In Proceedings of the International World Wide Web Conference, May 2004
+10-64:J
+10-65:Cho, S
+10-66:Roy, R
+10-67:Adams
+10-68:Page Quality: In search of an unbiased web ranking
+10-69:In Proceedings of the ACM SIGMOD 2005 Conference
+10-70:Baltimore, Maryland
+10-71:June 2005
+10-72:N
+10-73:Craswell, S
+10-74:Robertson, H
+10-75:Zaragoza, and M
+10-76:Taylor
+10-77:Relevance weighting for query independent evidence
+10-78:In Proceedings of the 28th Annual Conference on Research and Development in Information Retrieval (SIGIR), August, 2005
+10-79:N
+10-80:Dalvi, P
+10-81:Domingos, Mausam, S
+10-82:Sanghai, D
+10-83:Verma
+10-84:Adversarial Classification
+10-85:In Proceedings of the Tenth International Conference on Knowledge Discovery and Data Mining (pp
+10-86:99 108), Seattle, WA, 2004
+10-87:O
+10-88:Dekel, C
+10-89:Manning, and Y
+10-90:Singer
+10-91:Log linear models for label ranking
+10-92:In Advances in Neural Information Processing Systems 16
+10-93:Cambridge, MA: MIT Press, 2003
+10-94:S
+10-95:Fox, K S
+10-96:Fox, K
+10-97:Karnawat, M
+10-98:Mydland, S
+10-99:T
+10-100:Dumais and T
+10-101:White (2005)
+10-102:Evaluating implicit measures to improve the search experiences
+10-103:In the ACM Transactions on Information Systems, 23(2), pp
+10-104:147 168
+10-105:April 2005
+10-106:T
+10-107:Haveliwala
+10-108:Efficient computation of PageRank
+10-109:Stanford University Technical Report, 1999
+10-110:T
+10-111:Haveliwala
+10-112:Topic sensitive PageRank
+10-113:In Proceedings of the International World Wide Web Conference, May 2002
+10-114:D
+10-115:Hawking and N
+10-116:Craswell
+10-117:Very large scale retrieval and Web search
+10-118:In D
+10-119:Harman and E
+10-120:Voorhees (eds), The TREC Book
+10-121:MIT Press
+10-122:R
+10-123:Herbrich, T
+10-124:Graepel, and K
+10-125:Obermayer
+10-126:Support vector learning for ordinal regression
+10-127:In Proceedings of the Ninth International Conference on Artificial Neural Networks, pp
+10-128:97 102
+10-129:1999
+10-130:M
+10-131:Ivory and M
+10-132:Hearst
+10-133:Statistical profiles of highly rated Web sites
+10-134:In Proceedings of the ACM SIGCHI Conference on Human Factors in Computing Systems, 2002
+10-135:T
+10-136:Joachims
+10-137:Optimizing search engines using clickthrough data
+10-138:In Proceedings of the ACM Conference on Knowledge Discovery and Data Mining (KDD), 2002
+10-139:T
+10-140:Joachims, L
+10-141:Granka, B
+10-142:Pang, H
+10-143:Hembrooke, and G
+10-144:Gay
+10-145:Accurately Interpreting Clickthrough Data as Implicit Feedback
+10-146:In Proceedings of the Conference on Research and Development in Information Retrieval (SIGIR), 2005
+10-147:J
+10-148:Kleinberg
+10-149:Authoritative sources in a hyperlinked environment
+10-150:Journal of the ACM 46:5, pp
+10-151:604 32
+10-152:1999
+10-153:A
+10-154:Langville and C
+10-155:Meyer
+10-156:Deeper inside PageRank
+10-157:Internet Mathematics 1(3):335 380, 2004
+10-158:F
+10-159:Matthieu and M
+10-160:Bouklit
+10-161:The effect of the back button in a random walk: application for PageRank
+10-162:In Alternate track papers and posters of the Thirteenth International World Wide Web Conference, 2004
+10-163:F
+10-164:McSherry
+10-165:A uniform approach to accelerated PageRank computation
+10-166:In Proceedings of the International World Wide Web Conference, May 2005
+10-167:Y
+10-168:Minamide
+10-169:Static approximation of dynamically generated Web pages
+10-170:In Proceedings of the International World Wide Web Conference, May 2005
+10-171:L
+10-172:Page, S
+10-173:Brin, R
+10-174:Motwani, and T
+10-175:Winograd
+10-176:The PageRank citation ranking: Bringing order to the web
+10-177:Technical report, Stanford University, Stanford, CA, 1998
+10-178:S
+10-179:Pandey and C
+10-180:Olston
+10-181:User centric Web crawling
+10-182:In Proceedings of the International World Wide Web Conference, May 2005
+10-183:M
+10-184:Richardson and P
+10-185:Domingos
+10-186:The intelligent surfer: probabilistic combination of link and content information in PageRank
+10-187:In Advances in Neural Information Processing Systems 14, pp
+10-188:1441 1448
+10-189:Cambridge, MA: MIT Press, 2002
+10-190:C
+10-191:Sherman
+10-192:Teoma vs
+10-193:Google, Round 2
+10-194:Available from World Wide Web (http:  dc.internet.com news article.php  1002061), 2002
+10-195:T
+10-196:Upstill, N
+10-197:Craswell, and D
+10-198:Hawking
+10-199:Predicting fame and fortune: PageRank or indegree?
+10-200:In the Eighth Australasian Document Computing Symposium
+10-201:2003
+10-202:T
+10-203:Upstill, N
+10-204:Craswell, and D
+10-205:Hawking
+10-206:Query independent evidence in home page finding
+10-207:In ACM Transactions on Information Systems
+10-208:2003
+10-209:715
+picture:

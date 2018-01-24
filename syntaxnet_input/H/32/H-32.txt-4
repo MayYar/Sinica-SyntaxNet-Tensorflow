@@ -1,0 +1,70 @@
+Getting a computer system to identify sentences that a human reader would find interesting is a tall order .
+However, there are many documents on the world wide web that are contain concise, human written summaries on just about any topic .
+What"s more, these documents are written explicitly for human beings and will contain information about the topic that most human readers would be interested in .
+Assuming we can identify such relevant documents on the web, we can leverage them to assist in identifying definitional answers to such topics .
+We can take the assumption that most sentences found within these web documents will contain interesting facets about the topic at hand .
+This greatly simplifies the problem to that of finding within the AQUAINT corpus sentences similar to those found in web documents .
+This approach has been successfully used in several factoid and list Question Answering systems [11] and we feel the use of such an approach for definitional or Other question answering is justified .
+Identifying interesting nuggets requires computing machinery to understand world knowledge and human insight .
+This is still a very challenging task and the use of human written documents dramatically simplifies the complexity of the task .
+In this paper, we report on such an approach by experimenting with a simple word level edit distance based weighted term comparison algorithm .
+We use the edit distance algorithm to score the similarity of a pair of sentences, with one sentence coming from web resources and the other sentence selected from the AQUAINT corpus .
+Through a series of experiments, we will show that even such a simple approach can be very effective at definitional question answering .
+3.1 Web Resources There exists on the internet articles on just about any topic a human can think of .
+What"s more, many such articles are centrally located on several prominent websites, making them an easily accessible source of world knowledge .
+For our work on identifying interesting nuggets, we focused on finding short one or two page articles on the internet that are highly relevant to our desired topic .
+Such articles are useful as they contain concise information about the topic .
+More importantly, the articles are written by humans, for human readers and thus contain the critical human world knowledge that a computer system currently is unable to capture .
+We leverage this world knowledge by collecting articles for each topic from the following external resources to build our Interest Corpus for each topic .
+Wikipedia is a Web based, free content encyclopedia written collaboratively by volunteers .
+This resource has been used by many Question Answering system as a source of knowledge about each topic .
+We use a snapshot of Wikipedia taken in March 2006 and include the most relevant article in the Interest Corpus .
+NewsLibrary is a searchable archive of news articles from over 100 different newspaper agencies .
+For each topic, we download the 50 most relevant articles and include the title and first paragraph of each article in the Interest Corpus .
+Google Snippets are retrieved by issuing the topic as a query to the Google search engine .
+From the search results, we extracted the top 100 snippets .
+While Google snippets are not articles, we find that they provide a wide coverage of authorative information about most topics .
+Due to their comprehensive coverage of a wide variety of topics, the above resources form the bulk of our Interest Corpus .
+We also extracted documents from other resources .
+However, as these resources are more specific in nature, we do not always get any single relevant document .
+These resources are listed below .
+Biography.com is the website for the Biography television cable channel .
+The channel"s website contains searchable biographies on over 25,000 notable people .
+If the topic is a person and we can find a relevant biography on the person, we include it it in our Interest Corpus .
+Bartleby.com contains a searchable copy of several resources including the Columbia Encyclopedia, the World Factbook, and several English dictionaries .
+s9.com is a biography dictionary on over 33,000 notable people .
+Like Biography.com, we include the most relevant biography we can find in the Interest Corpus .
+Google Definitions Google search engine offers a feature called Definitions that provides the definition for a query, if it has one .
+We use this feature and extract whatever definitions the Google search engine has found for each topic into the Interest Corpus .
+Figure 1
+WordNet WordNet is an well known electronic semantic lexicon for the English language .
+Besides grouping English words into sets of synonyms called synsets, it also provide a short definition on the meaning of words found in each synset .
+We add this short definition, if there is one, into our Interest Corpus .
+We have two major uses for this topic specific Interest Corpus, as a source of sentences containing interesting nuggets and as a unigram language model of topic terms, I .
+3.2 Multiple Interesting Centroids We have seen that interesting nuggets are highly specific to a topic .
+Relevance based approaches such as the bigram language model used by Chen et al .
+[3] are focused on identifying highly relevant sentences and pick up definitional answer nuggets as an indirect consequence .
+We believe that the use of only a single collection of centroid words has over emphasized topic relevance and choose instead to use multiple centroids .
+Since sentences in the Interest Corpus of articles we collected from the internet are likely to contain nuggets that are of interest to human readers, we can essentially use each sentence as pseudocentroids .
+Each sentence in the Interest Corpus essentially raises a different aspect of the topic for consideration as a sentence of interest to human readers .
+By performing a pairwise sentence comparison between sentences in the Interest Corpus and candidate sentences retrieved from the AQUAINT corpus, we increase the number of sentence comparisons from O(n) to O(nm) .
+Here, n is the number of potential candidate sentences and m is the number of sentences in the Interest Corpus .
+In return, we obtain a diverse ranked list of answers that are individually similar to various sentences found in the topic"s Interest Corpus .
+An answer can only be highly ranked if it is strongly similar to a sentence in the Interest Corpus, and is also strongly relevant to the topic .
+3.3 Implementation Figure 1 shows the system architecture for the proposed Human Interest based definitional QA system .
+The AQUAINT Retrieval module shown in Figure 1 reuses a document retrieval module of a current Factoid and List Question Answering system we have implemented .
+Given a set of words describing the topic, the AQUAINT Retrieval module does query expansion using Google and searches an index of AQUAINT documents to retrieve the 800 most relevant documents for consideration .
+The Web Retrieval module on the other hand, searches the online resources described in Section 3.1 for interesting documents in order to populate the Interest Corpus .
+The HIM Ranker, or Human Interest Model Ranking module, is the implementation of what is described in this paper .
+The module first builds the unigram language model, I, from the collected web documents .
+This language model will be used to weight the importance of terms within sentences .
+Next, a sentence chunker is used to segment all 800 retrieved documents into individual sentences .
+Each of these sentences can be a potential answer sentence that will be independently ranked by interestingness .
+We rank sentences by interestingness using sentences from both the Interest Corpus of external documents as well as the unigram language model we built earlier which we use to weight terms .
+A candidate sentence in our top 800 relevant AQUAINT documents is considered interesting if it is highly similar in content to a sentence found in our collection of external web documents .
+To achieve this, we perform a pairwise similarity comparison between a candidate sentence and sentences in our external documents using a weighted term edit distance algorithm .
+Term weights are used to adjust the relative importance of each unique term found in the Interest Corpus .
+When both sentences share the same term, the similarity score is incremented by the two times the term"s weight and every dissimilar term decrements the similarity score by the dissimilar term"s weight .
+We choose the highest achieved similarity score for a candidate sentence as the Human Interest Model score for the candidate sentence .
+In this manner, every candidate sentence is ranked by interestingness .
+Finally, to obtain the answer set, we select the top 12 highest ranked and non redundant sentences as definitional answers for the topic. .

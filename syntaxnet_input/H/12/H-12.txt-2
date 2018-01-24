@@ -1,0 +1,27 @@
+Each result in search results list delivered by current WWW search engines such as search.yahoo.com, google.com and search.msn.com typically contains the title and URL of the actual document, links to live and cached versions of the document and sometimes an indication of file size and type .
+In addition, one or more snippets are usually presented, giving the searcher a sneak preview of the document contents .
+Snippets are short fragments of text extracted from the document content (or its metadata) .
+They may be static (for example, always show the first 50 words of the document, or the content of its description metadata, or a description taken from a directory site such as dmoz.org) or query biased [20] .
+A query biased snippet is one selectively extracted on the basis of its relation to the searcher"s query .
+The addition of informative snippets to search results may substantially increase their value to searchers .
+Accurate snippets allow the searcher to make good decisions about which results are worth accessing and which can be ignored .
+In the best case, snippets may obviate the need to open any documents by directly providing the answer to the searcher"s real information need, such as the contact details of a person or an organization .
+Generation of query biased snippets by Web search engines indexing of the order of ten billion web pages and handling hundreds of millions of search queries per day imposes a very significant computational load (remembering that each search typically generates ten snippets) .
+The simpleminded approach of keeping a copy of each document in a file and generating snippets by opening and scanning files, works when query rates are low and collections are small, but does not scale to the degree required .
+The overhead of opening and reading ten files per query on top of accessing the index structure to locate them, would be manifestly excessive under heavy query load .
+Even storing ten billion files and the corresponding hundreds of terabytes of data is beyond the reach of traditional filesystems .
+Special purpose filesystems have been built to address these problems [6] .
+Note that the utility of snippets is by no means restricted to whole of Web search applications .
+Efficient generation of snippets is also important at the scale of whole of government search services such as www.firstgov.gov (c .
+25 million pages) and govsearch.australia.gov.au (c .
+5 million pages) and within large enterprises such as IBM [2] (c .
+50 million pages) .
+Snippets may be even more useful in database or filesystem search applications in which no useful URL or title information is present .
+We present a new algorithm and compact single file structure designed for rapid generation of high quality snippets and compare its space time performance against an obvious baseline based on the zlib compressor on various data sets .
+We report the proportion of time spent for disk seeks, disk reads and cpu processing; demonstrating that the time for locating each document (seek time) dominates, as expected .
+As the time to process a document in RAM is small in comparison to locating and reading the document into memory, it may seem that compression is not required .
+However, this is only true if there is no caching of documents in RAM .
+Controlling the RAM of physical systems for experimentation is difficult, hence we use simulation to show that caching documents dramatically improves the performance of snippet generation .
+In turn, the more documents can be compressed, the more can fit in cache, and hence the more disk seeks can be avoided
+As hitting the document cache is important, we examine document compaction, as opposed to compression, schemes by imposing an a priori ordering of sentences within a document, and then only allowing leading sentences into cache for each document .
+This leads to further time savings, with only marginal impact on the quality of the snippets returned. .

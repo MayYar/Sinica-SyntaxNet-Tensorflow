@@ -1,0 +1,166 @@
+In this section, we show how we should prune the full index IF to IP , so that (1) we can compute the correctness indicator function C from IP itself and (2) we can handle a large fraction of queries by IP .
+In designing the pruning policies, we note the following two localities in the users" search behavior
+This keyword locality implies that the search engine will be able to answer a significant fraction of user queries even if it can handle only these few popular keywords .
+matching documents, users typically look at only the first few results [16] .
+Thus, as long as search engines can compute the first few top k answers correctly, users often will not notice that the search engine actually has not computed the correct answer for the remaining results (unless the users explicitly request them) .
+Based on the above two localities, we now investigate two different types of pruning policies
+As we discussed before, we need to be able to compute the correctness indicator function from the pruned index alone in order to provide the correctness guarantee .
+Since the computation of correctness indicator function may critically depend on the particular ranking function used by a search engine, we first clarify our assumptions on the ranking function .
+4.1 Assumptions on ranking function Consider a query q = {t1, t2, .
+.
+.
+, tw} that contains a subset of the index terms .
+The goal of the search engine is to return the documents that are most relevant to query q .
+This is done in two steps
+Second, once we have the relevant documents, we calculate the rank (or score) of each one of the documents with respect to the query and we return to the user the documents that rank the highest .
+Most of the major search engines today return documents containing all query terms (i.e .
+they use AND semantics) .
+In order to make our discussions more concise, we will also assume the popular AND semantics while answering a query .
+It is straightforward to extend our results to OR semantics as well .
+The exact ranking function that search engines employ is a closely guarded secret .
+What is known, however, is that the factors in determining the document ranking can be roughly categorized into two classes
+This particular factor of relevance captures how relevant the query is to every document .
+At a high level, given a document D, for every term ti a search engine assigns a term relevance score tr(D, ti) to D .
+Given the tr(D, ti) scores for every ti, then the query dependent relevance of D to the query, noted as tr(D, q), can be computed by combining the individual term relevance values .
+One popular way for calculating the querydependent relevance is to represent both the document D and the query q using the TF.IDF vector space model [29] and employ a cosine distance metric .
+Since the exact form of tr(D, ti) and tr(D, q) differs depending on the search engine, we will not restrict to any particular form; instead, in order to make our work applicable in the general case, we will make the generic assumption that the query dependent relevance is computed as a function of the individual term relevance values in the query
+.
+.
+, tr(D, tw)) (1) Query independent document quality .
+This is a factor that measures the overall quality of a document D independent of the particular query issued by the user .
+Popular techniques that compute the general quality of a page include PageRank [26], HITS [17] and the likelihood that the page is a spam page [25, 15] .
+Here, we will use pr(D) to denote this query independent part of the final ranking function for document D .
+The final ranking score r(D, q) of a document will depend on both the query dependent and query independent parts of the ranking function .
+The exact combination of these parts may be done in a variety of ways .
+In general, we can assume that the final ranking score of a document is a function of its query dependent and query independent relevance scores .
+More formally
+In Equations 1 and 2 the exact form of fr and ftr can vary depending on the search engine .
+Therefore, to make our discussion applicable independent of the particular ranking function used by search engines, in this paper, we will make only the generic assumption that the ranking function r(D, q) is monotonic on its parameters tr(D, t1), .
+.
+.
+, tr(D, tw) and pr(D) .
+t1 ¡÷ D1 D2 D3 D4 D5 D6 t2 ¡÷ D1 D2 D3 t3 ¡÷ D3 D5 D7 D8 t4 ¡÷ D4 D10 t5 ¡÷ D6 D8 D9 Figure 4
+Algorithm 4.1 Computation of C for keyword pruning Procedure (1) C = 1 (2) Foreach ti ? q (3) If (I(ti) ? IP ) Then C = 0 (4) Return C Figure 5
+Definition 2 A function f(£\, £], .
+.
+.
+, £s) is monotonic if ?£\1 ? £\2, ?£]1 ? £]2, .
+.
+.
+?£s1 ? £s2 it holds that
+.
+.
+, £s1) ? f(£\2, £]2, .
+.
+.
+, £s2) .
+Roughly, the monotonicity of the ranking function implies that, between two documents D1 and D2, if D1 has higher querydependent relevance than D2 and also a higher query independent score than D2, then D1 should be ranked higher than D2, which we believe is a reasonable assumption in most practical settings .
+4.2 Keyword pruning Given our assumptions on the ranking function, we now investigate the keyword pruning policy, which prunes the inverted index IF horizontally by removing the whole I(ti)"s corresponding to the least frequent terms .
+In Figure 4 we show a graphical representation of keyword pruning, where we remove the inverted lists for t3 and t5, assuming that they do not appear often in the query load .
+Note that after keyword pruning, if all keywords {t1, .
+.
+.
+, tn} in the query q appear in IP , the p index has the same information as IF as long as q is concerned .
+In other words, if all keywords in q appear in IP , the answer computed from IP is guaranteed to be the same as the answer computed from IF .
+Figure 5 formalizes this observation and computes the correctness indicator function C for a keyword pruned index IP .
+It is straightforward to prove that the answer from IP is identical to that from IF if C = 1 in the above algorithm .
+We now consider the issue of optimizing the IP such that it can handle the largest fraction of queries .
+This problem can be formally stated as follows
+.
+.
+, I(th)} such that |IP | ? s ¡P |IF | and the fraction of queries that IP can answer (expressed by f(s)) is maximized .
+2 Unfortunately, the optimal solution to the above problem is intractable as we can show by reducing from knapsack (we omit the complete proof) .
+Theorem 2 The problem of calculating the optimal keyword pruning is NP hard .
+2 Given the intractability of the optimal solution, we need to resort to an approximate solution .
+A common approach for similar knapsack problems is to adopt a greedy policy by keeping the items with the maximum benefit per unit cost [9] .
+In our context, the potential benefit of an inverted list I(ti) is the number of queries that can be answered by IP when I(ti) is included in IP .
+We approximate this number by the fraction of queries in the query load Q that include the term ti and represent it as P(ti) .
+For example, if 100 out of 1000 queries contain the term computer, Algorithm 4.2 Greedy keyword pruning HS Procedure (1) ?ti, calculate HS(ti) = P (ti) |I(ti)| .
+(2) Include the inverted lists with the highest HS(ti) values such that |IP | ? s ¡P |IF | .
+Figure 6
+Algorithm 4.3 Global document pruning V SG Procedure (1) Sort all documents Di based on pr(Di) (2) Find the threshold value £np, such that only s fraction of the documents have pr(Di) > £np (4) Keep Di in the inverted lists if pr(Di) > £np Figure 7
+then P(computer) = 0.1 .
+The cost of including I(ti) in the pindex is its size |I(ti)| .
+Thus, in our greedy approach in Figure 6, we include I(ti)"s in the decreasing order of P(ti) |I(ti)| as long as |IP | ? s ¡P |IF | .
+Later in our experiment section, we evaluate what fraction of queries can be handled by IP when we employ this greedy keyword pruning policy .
+4.3 Document pruning At a high level, document pruning tries to take advantage of the observation that most users are mainly interested in viewing the top few answers to a query .
+Given this, it is unnecessary to keep all postings in an inverted list I(ti), because users will not look at most of the documents in the list anyway .
+We depict the conceptual diagram of the document pruning policy in Figure 4 .
+In the figure, we vertically prune postings corresponding to D4, D5 and D6 of t1 and D8 of t3, assuming that these documents are unlikely to be part of top k answers to user queries .
+Again, our goal is to develop a pruning policy such that (1) we can compute the correctness indicator function C from IP alone and (2) we can handle the largest fraction of queries with IP .
+In the next few sections, we discuss a few alternative approaches for document pruning .
+4.3.1 Global PR based pruning We first investigate the pruning policy that is commonly used by existing search engines .
+The basic idea for this pruning policy is that the query independent quality score pr(D) is a very important factor in computing the final ranking of the document (e.g .
+PageRank is known to be one of the most important factors determining the overall ranking in the search results), so we build the p index by keeping only those documents whose pr values are high (i.e., pr(D) > £np for a threshold value £np) .
+The hope is that most of the top ranked results are likely to have high pr(D) values, so the answer computed from this p index is likely to be similar to the answer computed from the full index .
+Figure 7 describes this pruning policy more formally, where we sort all documents Di"s by their respective pr(Di) values and keep a Di in the p index when its Algorithm 4.4 Local document pruning V SL N
+Algorithm 4.5 Extended keyword specific document pruning Procedure (1) For each I(ti) (2) Keep D ? I(ti) if pr(D) > £npi or tr(D, ti) > £nti Figure 9
+pr(Di) value is higher than the global threshold value £np .
+We refer to this pruning policy as global PR based pruning .
+Variations of this pruning policy are possible .
+For example, we may adjust the threshold value £np locally for each inverted list I(ti), so that we maintain at least a certain number of postings for each inverted list I(ti) .
+This policy is shown in Figure 8 .
+We refer to this pruning policy as local PR based pruning .
+Unfortunately, the biggest shortcoming of this policy is that we can prove that we cannot compute the correctness function C from IP alone when IP is constructed this way .
+Theorem 3 No PR based document pruning can provide the result guarantee .
+2 Proof Assume we create IP based on the GPR policy (generalizing the proof to LPR is straightforward) and that every document D with pr(D) > £np is included in IP .
+Assume that the kth entry in the top k results, has a ranking score of r(Dk, q) = fr(tr(Dk, q), pr(Dk)) .
+Now consider another document Dj that was pruned from IP because pr(Dj) < £np .
+Even so, it is still possible that the document"s tr(Dj, q) value is very high such that r(Dj, q) = fr(tr(Dj, q), pr(Dj)) > r(Dk, q) .
+Therefore, under a PR based pruning policy, the quality of the answer computed from IP can be significantly worse than that from IF and it is not possible to detect this degradation without computing the answer from IF .
+In the next section, we propose simple yet essential changes to this pruning policy that allows us to compute the correctness function C from IP alone .
+4.3.2 Extended keyword specific pruning The main problem of global PR based document pruning policies is that we do not know the term relevance score tr(D, ti) of the pruned documents, so a document not in IP may have a higher ranking score than the ones returned from IP because of their high tr scores .
+Here, we propose a new pruning policy, called extended keyword specific document pruning (EKS), which avoids this problem by pruning not just based on the query independent pr(D) score but also based on the term relevance tr(D, ti) score .
+That is, for every inverted list I(ti), we pick two threshold values, £npi for pr and £nti for tr, such that if a document D ? I(ti) satisfies pr(D) > £npi or tr(D, ti) > £nti, we include it in I(ti) of IP .
+Otherwise, we prune it from IP .
+Figure 9 formally describes this algorithm .
+The threshold values, £npi and £nti, may be selected in a number of different ways .
+For example, if pr and tr have equal weight in the final ranking and if we want to keep at most N postings in each inverted list I(ti), we may want to set the two threshold values equal to £ni (£npi = £nti = £ni) and adjust £ni such that N postings remain in I(ti) .
+This new pruning policy, when combined with a monotonic scoring function, enables us to compute the correctness indicator function C from the pruned index .
+We use the following example to explain how we may compute C .
+Example 4 Consider the query q = {t1, t2} and a monotonic ranking function, f(pr(D), tr(D, t1), tr(D, t2)) .
+There are three possible scenarios on how a document D appears in the pruned index IP .
+information of D appears in IP , we can compute the exact Algorithm 4.6 Computing Answer from IP Input Query q = {t1, .
+.
+.
+, tw} Output A
+.
+.
+, tr?(Di, tn)) (8) A = top k Di"s with highest f(Di) values (9) C = j 1 if all Di ? A appear in all I(ti), ti ? q 0 otherwise Figure 10
+score of D based on pr(D), tr(D, t1) and tr(D, t2) values in IP 
+not appear in I(t2), we do not know tr(D, t2), so we cannot compute its exact ranking score .
+However, from our pruning criteria, we know that tr(D, t2) cannot be larger than the threshold value £nt2 .
+Therefore, from the monotonicity of f (Definition 2), we know that the ranking score of D, f(pr(D), tr(D, t1), tr(D, t2)), cannot be larger than f(pr(D), tr(D, t1), £nt2) .
+at all in IP , we do not know any of the pr(D), tr(D, t1), tr(D, t2) values .
+However, from our pruning criteria, we know that pr(D) ? £np1 and ? £np2 and that tr(D, t1) ? £nt1 and tr(D, t2) ? £nt2 .
+Therefore, from the monotonicity of f, we know that the ranking score of D, cannot be larger than f(min(£np1, £np2), £nt1, £nt2) .
+2 The above example shows that when a document does not appear in one of the inverted lists I(ti) with ti ? q, we cannot compute its exact ranking score, but we can still compute its upper bound score by using the threshold value £nti for the missing values .
+This suggests the algorithm in Figure 10 that computes the top k result A from IP together with the correctness indicator function C .
+In the algorithm, the correctness indicator function C is set to one only if all documents in the top k result A appear in all inverted lists I(ti) with ti ? q, so we know their exact score .
+In this case, because these documents have scores higher than the upper bound scores of any other documents, we know that no other documents can appear in the top k .
+The following theorem formally proves the correctness of the algorithm .
+In [11] Fagin et al., provides a similar proof in the context of multimedia middleware .
+Theorem 4 Given an inverted index IP pruned by the algorithm in Figure 9, a query q = {t1, .
+.
+.
+, tw} and a monotonic ranking function, the top k result from IP computed by Algorithm 4.6 is the same as the top k result from IF if C = 1 .
+2 Proof Let us assume Dk is the kth ranked document computed from IP according to Algorithm 4.6 .
+For every document Di ? IF that is not in the top k result from IP , there are two possible scenarios
+In this case, we know that pr(Di) ? min1?j?w£npj < pr(Dk) and that tr(Di, tj) ? £ntj < tr(Dk, tj), 1 ? j ? w .
+From the monotonicity assumption, it follows that the ranking score of DI is r(Di) < r(Dk) .
+That is, Di"s score can never be larger than that of Dk .
+Second, Di is not in the answer because Di is pruned from some inverted lists, say, I(t1), .
+.
+.
+, I(tm), in IP .
+Let us assume ¡Âr(Di) = f(pr(Di),£nt1, .
+.
+.
+,£ntm,tr(Di, tm+1), .
+.
+.
+,tr(Di, tw)) .
+Then, from tr(Di, tj) ? £ntj(1 ? j ? m) and the monotonicity assumption, 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Fractionofqueriesguaranteed?f(s) Fraction of index ? s Fraction of queries guaranteed per fraction of index queries guaranteed Figure 11
+we know that r(Di) ? ¡Âr(Di) .
+Also, Algorithm 4.6 sets C = 1 only when the top k documents have scores larger than ¡Âr(Di) .
+Therefore, r(Di) cannot be larger than r(Dk). .

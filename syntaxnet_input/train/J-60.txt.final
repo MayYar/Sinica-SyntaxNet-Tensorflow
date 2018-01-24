@@ -1,0 +1,415 @@
+On Decentralized Incentive Compatible Mechanisms 
+content:
+1 ABSTRACT :
+1-1:Algorithmic Mechanism Design focuses on Dominant Strategy Implementations .
+1-2:The main positive results are the celebrated Vickrey Clarke Groves mechanisms and computationally efficient mechanisms for severely restricted players (single parameter domains) .
+1-3:As it turns out, many natural social goals cannot be implemented using the dominant strategy concept [35, 32, 22, 20] .
+1-4:This suggests that the standard requirements must be relaxed in order to construct general purpose mechanisms .
+1-5:We observe that in many common distributed environments computational entities can take advantage of the network structure to collect and distribute information .
+1-6:We thus suggest a notion of partially informed environments .
+1-7:Even if the information is recorded with some probability, this enables us to implement a wider range of social goals, using the concept of iterative elimination of weakly dominated strategies .
+1-8:As a result, cooperation is achieved independent of agents" belief .
+1-9:As a case study, we apply our methods to derive Peer to Peer network mechanism for file sharing .
+1-10:J.4 [Social and Behavioral Sciences]: Economics .
+2 INTRODUCTION :
+2-1:Recently, global networks have attracted widespread study .
+2-2:The emergence of popular scalable shared networks with self interested entities such as peer to peer systems over the Internet and mobile wireless communication ad hoc networks poses fundamental challenges .
+2-3:Naturally, the study of such giant decentralized systems involves aspects of game theory [32, 34] .
+2-4:In particular, the subfield of Mechanism Design deals with the construction of mechanisms: for a given social goal the challenge is to design rules for interaction such that selfish behavior of the agents will result in the desired social goal [23, 33] .
+2-5:Algorithmic Mechanism Design focuses on efficiently computable constructions [32] .
+2-6:Distributed Algorithmic Mechanism Design studies mechanism design in inherently decentralized settings [30, 12] .
+2-7:The standard model assumes rational agents with quasi linear utilities and private information, playing dominant strategies .
+2-8:The solution concept of dominant strategies in which each player has a best response strategy regardless of the strategy played by any other player is well suited to the assumption of private information, in which each player is not assumed to have knowledge or beliefs regarding the other players .
+2-9:The appropriateness of this set up stems from the strength of the solution concept, which complements the weak information assumption .
+2-10:Many mechanisms have been constructed using this set up, e.g., [1, 4, 6, 11, 14, 22] .
+2-11:Most of these apply to severely restricted cases (e.g., single item auctions with no externalities) in which a player"s preference is described by only one parameter (single parameter domains) .
+2-12:To date, Vickrey Clarke Groves mechanisms are the only known general method for designing dominant strategy mechanisms for general domains of preferences .
+2-13:However, in distributed settings without available subsidies from outside sources, VCG mechanisms cannot be accepted as valid solutions due to a serious lack of budget balance .
+2-14:Additionally, for some domains of preferences, VCG mechanisms and weighted VCG mechanisms are faced with computational hardness [22, 20] .
+2-15:Further limitations of the set up are discussed in subsection 1.3 .
+2-16:In most distributed environments, players can take advantage of the network structure to collect and distribute information about other players .
+2-17:This paper thus studies the effects of relaxing the private information assumption .
+2-18:240 One model that has been extensively studied recently is the Peer to Peer (P2P) network .
+2-19:A P2P network is a distributed network with no centralized authority, in which the participants share their individual resources (e.g., processing power, storage capacity, bandwidth and content) .
+2-20:The aggregation of such resources provides inexpensive computational platforms .
+2-21:The most popular P2P networks are those for sharing media files, such as Napster, Gnutella, and Kazaa .
+2-22:Recent work on P2P Incentives include micropayment methods [15] and reputation based methods [9, 13] .
+2-23:The following description of a P2P network scenario illustrates the relevance of our relaxed informational assumption .
+2-24:Example 1 .
+2-25:Consider a Peer to Peer network for file sharing .
+2-26:Whenever agent B uploads a file from agent A, all peers along the routing path know that B has loaded the file .
+2-27:They can record this information about agent B .
+2-28:In addition, they can distribute this information .
+2-29:However, it is impossible to record all the information everywhere .
+2-30:First, such duplication induces huge costs .
+2-31:Second, as agents dynamically enter and exit from the network, the information might not be always available .
+2-32:And so it is seems natural to consider environments in which the information is locally recorded, that is, the information is recorded in the closest neighborhood with some probability p .
+2-33:In this paper we shall see that if the information is available with some probability, then this enables us to implement a wider range of social goals .
+2-34:As a result, cooperation is achieved independent of agents" belief .
+2-35:This demonstrates that in some computational contexts our approach is far less demanding than the Bayesian approach (that assumes that players" types are drawn according to some identified probability density function) .
+2-36:1.1 Implementations in Complete Information Set ups In complete information environments, each agent is informed about everyone else .
+2-37:That is, each agent observes his own preference and the preferences of all other agents .
+2-38:However, no outsider can observe this information .
+2-39:Specifically, neither the mechanism designer nor the court .
+2-40:Many positive results were shown for such arguably realistic settings .
+2-41:For recent surveys see [25, 27, 18] .
+2-42:Moore and Repullo implement a large class of social goals using sequential mechanisms with a small number of rounds [28] .
+2-43:The concept they used is subgame perfect implementations .
+2-44:The SPE implementability concept seems natural for the following reasons: the designed mechanisms usually have non artificial constructs and a small strategy space .
+2-45:As a result, it is straightforward for a player to compute his strategy.1 Second, sequential mechanisms avoid simultaneous moves, and thus can be considered for distributed networks .
+2-46:Third, the constructed mechanisms are often decentralized (i.e., lacking a centralized authority or designer) 1 Interestingly, in real life players do not always use their subgame perfect strategies .
+2-47:One such widely studied case is the Ultimatum Bargaining 2 person game .
+2-48:In this simple game, the proposer first makes an offer of how to divide a certain known sum of money, and the responder either agrees or refuses, in the latter case both players earn zero .
+2-49:Somewhat surprisingly, experiments show that the responder often rejects the suggested offer, even if it is bounded away from zero and the game is played only once (see e.g .
+2-50:[38]) .
+2-51:and budget balanced (i.e., transfers always sum up to zero) .
+2-52:This happens essentially if there are at least three players, and a direct network link between any two agents .
+2-53:Finally, Moore and Repullo observed that they actually use a relaxed complete information assumption: it is only required that for every player there exists only one other player who is informed about him .
+2-54:1.2 Implementations in Partially Informed Set ups and Our Results The complete information assumption is realistic for small groups of players, but not in general .
+2-55:In this paper we consider players that are informed about each other with some probability .
+2-56:More formally, we say that agent B is p informed about agent A, if B knows the type of A with probability p .
+2-57:For such partially informed environments, we show how to use the solution concept of iterative elimination of weakly dominated strategies .
+2-58:We demonstrate this concept through some motivating examples that (i) seem natural in distributed settings and (ii) cannot be implemented in dominant strategies even if there is an authorized center with a direct connection to every agent or even if players have single parameter domains .
+2-59:Moore and Repullo [28] can be applied to p informed environments and further adjusted to the concept of iterative elimination of weakly dominated strategies (for large enough p) .
+2-60:that is more natural in computerized p informed environments and different from the one introduced by Moore and Repullo [28] (for p ∈ (0, 1]) .
+2-61:structures .
+2-62:As a case study we apply our methods to derive: (1) Simplified Peer to Peer network for file sharing with no payments in equilibrium .
+2-63:Our approach is (agent, file) specific .
+2-64:(2) Web cache budget balanced and economically efficient mechanism .
+2-65:Our mechanisms use reasonable punishments that inversely depend on p .
+2-66:And so, if the fines are large then small p is enough to induce cooperation .
+2-67:Essentially, large p implies a large amount of recorded information .
+2-68:1.2.1 Malicious Agents Decentralized mechanisms often utilize punishing outcomes .
+2-69:As a result, malicious players might cause severe harm to others .
+2-70:We suggest a quantified notion of malicious player, who benefits from his own gained surplus and from harm caused to others .
+2-71:[12] suggests several categories to classify non cooperating players .
+2-72:Our approach is similar to [7] (and the references therein), who considered independently such players in different context .
+2-73:We show a simple decentralized mechanism in which q malicious players cooperate and in particular, do not use their punishing actions in equilibrium .
+2-74:241 1.3 Dominant Strategy Implementations In this subsection we shall refer to some recent results demonstrating that the set up of private information with the concept of dominant strategies is restrictive in general .
+2-75:First, Roberts" classical impossibility result shows that if players" preferences are not restricted and there are at least 3 different outcomes, then every dominant strategy mechanism must be weighted VCG (with the social goal that maximizes the weighted welfare) [35] .
+2-76:For slightly restricted preference domains, it is not known how to turn efficiently computable algorithms into dominant strategy mechanisms .
+2-77:This was observed and analyzed in [32, 22, 31] .
+2-78:Recently [20] extends Roberts" result to some leading examples .
+2-79:They showed that under mild assumptions any dominant strategy mechanism for variety of Combinatorial Auctions over multi dimensional domains must be almost weighted VCG .
+2-80:Additionally, it turns out that the dominant strategy requirement implies that the social goal must be monotone [35, 36, 22, 20, 5, 37] .
+2-81:This condition is very restrictive, as many desired natural goals are non monotone2 .
+2-82:Several recent papers consider relaxations of the dominant strategy concept: [32, 1, 2, 19, 16, 17, 26, 21] .
+2-83:However, most of these positive results either apply to severely restricted cases (e.g., single parameter, 2 players) or amount to VCG or almost VCG mechanisms (e.g., [19]) .
+2-84:Recently, [8, 3] considered implementations for generalized single parameter players .
+2-85:Organization of this paper: In section 2 we illustrate the concepts of subgame perfect and iterative elimination of weakly dominated strategies in completely informed and partially informed environments .
+2-86:In section 3 we show a mechanism for Peer to Peer file sharing networks .
+2-87:In section 4 we apply our methods to derive a web cache mechanism .
+2-88:Future work is briefly discussed in section 5. .
+3 MOTIVATING EXAMPLES :
+3-1:In this section we examine the concepts of subgame perfect and iterative elimination of weakly dominated strategies for completely informed and p informed environments .
+3-2:We also present the notion of q maliciousness and some other related considerations through two illustrative examples .
+3-3:2.1 The Fair Assignment Problem Our first example is an adjustment to computerized context of an ancient procedure to ensure that the wealthiest man in Athens would sponsor a theatrical production known as the Choregia [27] .
+3-4:In the fair assignment problem, Alice and Bob are two workers, and there is a new task to be performed .
+3-5:Their goal is to assign the task to the least loaded worker without any monetary transfers .
+3-6:The informational assumption is that Alice and Bob know both loads and the duration of the new task.3 2 E.g., minimizing the makespan within a factor of 2 [32] and Rawls" Rule over some multi dimensional domains [20] .
+3-7:3 In first glance one might ask why the completely informed agents could not simply sign a contract, specifying the desired goal .
+3-8:Such a contract is sometimes infeasible due to fact that the true state cannot be observed by outsiders, especially not the court .
+3-9:Claim 1 .
+3-10:The fair assignment goal cannot be implemented in dominant strategies.4 2.1.1 Basic Mechanism The following simple mechanism implements this goal in subgame perfect equilibrium .
+3-11:• Stage 1: Alice either agrees to perform the new task or refuses .
+3-12:• Stage 2: If she refuses, Bob has to choose between: (a) Performing the task himself .
+3-13:(b) Exchanging his load with Alice and performing the new task as well .
+3-14:Let LT A, LT B be the true loads of Alice and Bob, and let t > 0 be the load of the new task .
+3-15:Assume that load exchanging takes zero time and cost .
+3-16:We shall see that the basic mechanism achieves the goal in a subgame perfect equilibrium .
+3-17:Intuitively this means that in equilibrium each player will choose his best action at each point he might reach, assuming similar behavior of others, and thus every SPE is a Nash equilibrium .
+3-18:Claim 2 .
+3-19:([27]) The task is assigned to the least loaded worker in subgame perfect equilibrium .
+3-20:Proof .
+3-21:By backward induction argument (look forward and reason backward), consider the following cases: .
+4 LT B ≤ LT :
+4-1:B ≤ LT exchange. .
+5 LT A < LT :
+5-1:A < LT B < LT A + t .
+5-2:If stage 2 is reached Bob will exchange, and this is what Alice prefers. .
+6 LT :
+6-1:A + t ≤ LT In this section we describe a simplified Peer to Peer network for file sharing, without payments in equilibrium, using a certificate based challenging method .
+6-2:In this challenging method as opposed to [28] an agent that challenges cannot harm other agents, unless he provides a valid certificate .
+6-3:In general, if agent B copied a file f from agent A, then agent A knows that agent B holds a copy of the file .
+6-4:We denote such information as a certificate(B, f) (we shall omit cryptographic details) .
+6-5:Such a certificate can be recorded and distributed along the network, and so we can treat each agent holding the certificate as an informed agent .
+6-6:Assumptions: We assume an homogeneous system with files of equal size .
+6-7:The benefit each agent gains by holding a copy of any file is V .
+6-8:The only cost each agent has is the uploading cost C (induced while transferring a file to an immediate neighbor) .
+6-9:All other costs are negligible (e.g., storing the certificates, forwarding messages, providing acknowledgements, digital signatures, etc) .
+6-10:Let upA, downA be the numbers of agent A uploads and downloads if he always cooperates .
+6-11:We assume that each agent A enters the system if upA · C < downA · V .
+6-12:Each agent has a quasilinear utility and only cares about his current bandwidth usage .
+6-13:In particular, he ignores future scenarios (e.g., whether forwarding or dropping of a packet might affect future demand) .
+6-14:3.1 Basic Mechanism We start with a mechanism for a network with 3 p informed agents: B, A1, A2 .
+6-15:We assume that B is directly connected to A1 and A2 .
+6-16:If B has the certificate(A1, f), then he can apply directly to A1 and request the file (if he refuses, then B can go to court) .
+6-17:The following basic sequential mechanism is applicable whenever agent B is not informed and still would like to download the file if it exists in the network .
+6-18:Note that this goal cannot be implemented in dominant strategies without payments (similar to Claim 1, when the type of each agent here is the set of files he holds) .
+6-19:Define tA,B to be the monetary amount that agent A should transfer to B .
+6-20:• Stage 1: Agent B requests the file f from A1 .
+6-21:If A1 replies yes then B downloads the file from A1 .
+6-22:STOP .
+6-23:Otherwise, agent B sends A1s no reply to agent A2 .
+6-24:∗ If A2 declares agree then goto the next stage .
+6-25:∗ Else, A2 sends a certificate(A1, f) to agent B .
+6-26:· If the certificate is correct then tA1,A2 = βp .
+6-27:STOP .
+6-28:· Else tA2,A1 = |C| + .
+6-29:STOP .
+6-30:Stage 2: Agent B requests the file f from A2 .
+6-31:Switch the roles of the agents A1, A2 .
+6-32:Claim 6 .
+6-33:The basic mechanism is budget balanced (transfers always sum to zero) and decentralized .
+6-34:Theorem 1 .
+6-35:Let βp = |C| p + , p ∈ (0, 1] .
+6-36:A strategy that survives iterative elimination of weakly dominated strategies is to reply yes if Ai holds the file, and to challenge only with a valid certificate .
+6-37:As a result, B downloads the file if some agent holds it, in equilibrium .
+6-38:There are no payments or transfers in equilibrium .
+6-39:Proof .
+6-40:Clearly if the mechanism ends without challenging: −C ≤ u(Ai) ≤ 0 .
+6-41:And so, challenging with an invalid certificate is always a dominated strategy .
+6-42:Now, when Stage 2 is reached, A2 is the last to report if he has the file .
+6-43:If A2 has the file it is a weakly undominated strategy to misreport, whether A1 is informed or not: A2"s expected payoff gained by misreporting no ≤ p · (−βp) + (1 − p) · 0 < −C ≤ A2"s payoff if she reports yes .
+6-44:This argument can be reasoned also for Stage 1, when A1 reports whether he has the file .
+6-45:A1 knows that A2 will report yes if and only if she has the file in the next stage, and so the maximum payoff he can gain is at most zero since he cannot expect to get a bonus .
+6-46:3.2 Chain Networks In a chain network, agent B is directly connected to A1, and Ai is directly connected to agent Ai+1 .
+6-47:Assume that we have an acknowledgment protocol to confirm the receipt of a particular message .
+6-48:To avoid message dropping, we add the fine (βp +2 ) to be paid by an agent who hasn"t properly forwarded a message .
+6-49:The chain mechanism follows: • Stage i: Agent B forwards a request for the file f to Ai (through {Ak}k≤i) .
+6-50:• If Ai reports yes, then B downloads f from Ai .
+6-51:STOP .
+6-52:• Otherwise Ai reports no .
+6-53:If Aj sends a certificate(Ak, f) to B, ( j, k ≤ i), then If certificate(Ak, f) is correct, then t(Ak, Aj) = βp .
+6-54:STOP .
+6-55:Else, t(Aj, Ak) = C + .
+6-56:STOP .
+6-57:If Ai reports that he has no copy of the file, then any agent in between might challenge .
+6-58:Using digital signatures and acknowledgements, observe that every agent must forward each message, even if it contains a certificate showing that he himself has misreported .
+6-59:We use the same fine, βp, as in the basic mechanism, because the protocol might end at stage 1 (clearly, the former analysis still applies, since the actual p increases with the number of players) .
+6-60:3.3 Network Mechanism In this subsection we consider general network structures .
+6-61:We need the assumption that there is a ping protocol that checks whether a neighbor agent is on line or not (that is, an on line agent cannot hide himself) .
+6-62:To limit the amount of information to be recorded, we assume that an agent is committed to keep any downloaded file to at least one hour, and so certificates are valid for a limited amount of time .
+6-63:We assume that each agent has a digitally signed listing of his current immediate neighbors .
+6-64:As in real P2P file sharing applications, we restrict each request for a file to be forwarded at most r times (that is, downloads are possible only inside a neighborhood of radius r) .
+6-65:245 The network mechanism utilizes the chain mechanism in the following way: When agent B requests a file from agent A (at most r − 1 far), then A sends to B the list of his neighbors and the output of the ping protocol to all of these neighbors .
+6-66:As a result, B can explore the network .
+6-67:Remark: In this mechanism we assumed that the environment is p informed .
+6-68:An important design issue that it is not addressed here is the incentives for the information propagation phase. .
+7 WEB CACHE :
+7-1:Web caches are widely used tool to improve overall system efficiency by allowing fast local access .
+7-2:They were listed in [12] as a challenging application of Distributed Algorithmic Mechanism Design .
+7-3:Nisan [30] considered a single cache shared by strategic agents .
+7-4:In this problem, agent i gains the value vT i if a particular item is loaded to the local shared cache .
+7-5:The efficient goal is to load the item if and only if ΣvT i ≥ C, where C is the loading cost .
+7-6:This goal reduces to the public project problem analyzed by Clarke [10] .
+7-7:However, it is well known that this mechanism is not budget balanced (e.g., if the valuation of each player is C, then everyone pays zero) .
+7-8:In this section we suggest informational and environmental assumptions for which we describe a decentralized budgetbalanced efficient mechanism .
+7-9:We consider environments for which future demand of each agent depends on past demand .
+7-10:The underlying informational and environmental requirements are as follows .
+7-11:is the target node (even if he has to forward the message as an intermediate node of some routing path) .
+7-12:An agent cannot initiate a message on behalf of other agents .
+7-13:every agent can provide a certificate indicating that he handled a certain message properly .
+7-14:p is such that the agent"s induced cost for keeping records of information is negligible .
+7-15:We also assume that the cost incurred by sending and forwarding messages is negligible .
+7-16:i initiated for the item during the time slot t .
+7-17:We assume that vT i (t), the value for caching the item in the beginning of slot t depends only on most recent slot, formally vT i (t) = max{Vi(qi(t − 1)), C}, where Vi(·) is a non decreasing real function .
+7-18:In addition, Vi(·) is a common knowledge among the players .
+7-19:agent j happens to handle k requests initiated by agent i during the time slot t, then qi(t) = kα, where α depends on the routing protocol and the environment (α might be smaller than 1, if each request is flooded several times) .
+7-20:We assume that the only way agent i can affect the true qi(t) is by superficially increasing his demand for the cached item, but not the other way (that is, agent"s loss, incurred by giving up a necessary request for the item, is not negligible) .
+7-21:The first requirement is to avoid free riding, and also to avoid the case that an agent superficially increases the demand of others and as a result decreases his own demand .
+7-22:The second requirement is to avoid the case that an agent who gets a routing request for the item, records it and then drops it .
+7-23:The third is to ensure that the environment stays well informed .
+7-24:In addition, if the forwarding cost is negligible each agent cooperates and forwards messages as he would not like to decrease the future demand (that monotonically depends on the current time slot, as assumed in the forth requirement) of some other agent .
+7-25:Given that the payments are increasing with the declared values, the forth and fifth requirements ensure that the agent would not increase his demand superficially and so qi(t) is the true demand .
+7-26:The following Web Cache Mechanism implements the efficient goal that shares the cost proportionally .
+7-27:For simplicity it is described for two players and w.l.o.g vT i (t) equals the number of requests initiated by i and observed by any informed j (that is, α = 1 and Vi(qi(t − 1)) = qi(t − 1)) .
+7-28:• Stage 1: (Elicitation of vT A(t)) Alice announces vA .
+7-29:Bob announces vA ≥ vA .
+7-30:If vA = vA goto the next Stage .
+7-31:Otherwise (Bob challenges): If Bob provides vA valid records then Alice pays C to finance the loading of the item into the cache .
+7-32:She also pays βp to Bob .
+7-33:STOP .
+7-34:Otherwise, Bob finances the loading of the item into the cache .
+7-35:STOP .
+7-36:• Stage 2: The elicitation of vT B(t) is done analogously .
+7-37:• Stage 3: If vA + vB < C, then STOP .
+7-38:Otherwise, load the item to the cache, Alice pays pA = vA vA+vB · C, and Bob pays pB = vB vA+vB · C .
+7-39:Claim 7 .
+7-40:It is a dominated strategy to overreport the true value .
+7-41:Proof .
+7-42:Let vT A < VA .
+7-43:There are two cases to consider: • If vT A + vB < C and vA + vB ≥ C .
+7-44:We need to show that if the mechanism stops normally Alice would pay more than vT A, that is: vA vA+vB ·C > vT A .
+7-45:Indeed, vA C > vA (vT A + vB) > vT A (vA + vB) .
+7-46:• If vT A + vB ≥ C, then clearly, vA vA+vB > vT A vT A +vB .
+7-47:Theorem 2 .
+7-48:Let βp = max{0, 1−2p p · C} + , p ∈ (0, 1] .
+7-49:A strategy that survives iterative elimination of weakly dominated strategies is to report the truth and to challenge only when the agent is informed .
+7-50:The mechanism is efficient, budget balanced, exhibits consumer sovereignty, no positive transfer and individual rationality10 .
+7-51:Proof .
+7-52:Challenging without being informed (that is, without providing enough valid records) is always dominated strategy in this mechanism .
+7-53:Now, assume w.l.o.g .
+7-54:Alice is 10 See [29] or [12] for exact definitions .
+7-55:246 the last to report her value .
+7-56:Alice"s expected payoff gained by underreporting ≤ p · (−C − βp) + (1 − p) · C < p · 0 + (1 − p) · 0 ≤ Alice"s expected payoff if she honestly reports .
+7-57:The right hand side equals zero as the participation costs are negligible .
+7-58:Reasoning back, Bob cannot expect to get the bonus and so misreporting is dominated strategy for him. .
+8-1:In this paper we have seen a new partial informational assumption, and we have demonstrated its suitability to networks in which computational agents can easily collect and distribute information
+8-2:We then described some mechanisms using the concept of iterative elimination of weakly dominated strategies
+8-3:Some issues for future work include: • As we have seen, the implementation issue in p informed environments is straightforward  it is easy to construct incentive compatible mechanisms even for non singleparameter cases
+8-4:The challenge is to find more realistic scenarios in which the partial informational assumption is applicable
+8-5:• Mechanisms for information propagation and maintenance
+8-6:In our examples we choose p such that the maintenance cost over time is negligible
+8-7:However, the dynamics of the general case is delicate: an agent can use the recorded information to eliminate data that is not likely to be needed, in order to decrease his maintenance costs
+8-8:As a result, the probability that the environment is informed decreases, and selfish agents would not cooperate
+8-9:Incentives for information propagation should be considered as well (e.g., for P2P networks for file sharing)
+8-10:• It seems that some social choice goals cannot be implemented if each player is at least 1 n malicious (where n is the number of players)
+8-11:It would be interesting to identify these cases
+8-12:Acknowledgements We thank Meitav Ackerman, Moshe Babaioff, Liad Blumrozen, Michal Feldman, Daniel Lehmann, Noam Nisan, Motty Perry and Eyal Winter for helpful discussions.
+9-1:A
+9-2:Archer and E
+9-3:Tardos
+9-4:Truthful mechanisms for one parameter agents
+9-5:In IEEE Symposium on Foundations of Computer Science, pages 482 491, 2001
+9-6:Aaron Archer, Christos Papadimitriou, Kunal Talwar, and Eva Tardos
+9-7:An approximate truthful mechanism for combinatorial auctions with single parameter agent
+9-8:In SODA, 2003
+9-9:Moshe Babaioff, Ron Lavi, and Elan Pavlov
+9-10:Single parameter domains and implementation in undominated strategies, 2004
+9-11:Working paper
+9-12:Yair Bartal, Rica Gonen, and Noam Nisan
+9-13:Incentive compatible multi unit combinatorial auctions, 2003
+9-14:TARK 03
+9-15:Sushil Bikhchandani, Shurojit Chatterji, and Arunava Sen
+9-16:Incentive compatibility in multi unit auctions, 2003
+9-17:Working paper
+9-18:Liad Blumrosen, Noam Nisan, and Ilya Segal
+9-19:Auctions with severely bounded communication, 2004
+9-20:Working paper
+9-21:F
+9-22:Brandt, T
+9-23:Sandholm, and Y
+9-24:Shoham
+9-25:Spiteful bidding in sealed bid auctions, 2005
+9-26:Patrick Briest, Piotr Krysta, and Berthold Voecking
+9-27:Approximation techniques for utilitarian mechanism design
+9-28:In STOC, 2005
+9-29:Chiranjeeb Buragohain, Divy Agrawal, and Subhash Suri
+9-30:A game theoretic framework for incentives in p2p systems
+9-31:In IEEE P2P, 2003
+9-32:E
+9-33:H
+9-34:Clarke
+9-35:Multipart pricing of public goods
+9-36:Public Choice, 11:17 33, 1971
+9-37:Joan Feigenbaum, Christos Papadimitrios, and Scott Shenkar
+9-38:Sharing the cost of multicast transmissions
+9-39:Computer and system Sciences, 63(1), 2001
+9-40:Joan Feigenbaum and Scott Shenker
+9-41:Distributed algorithmic mechanism design: Recent results and future directions
+9-42:In Proceedings of the 6th International Workshop on Discrete Algorithms and Methods for Mobile Computing and Communications, pages 1 13
+9-43:ACM Press, New York, 2002
+9-44:M
+9-45:Feldman, K
+9-46:Lai, I
+9-47:Stoica, and J
+9-48:Chuang
+9-49:Robust incentive techniques for peer to peer networks
+9-50:In EC, 2004
+9-51:A
+9-52:Goldberg, J
+9-53:Hartline, A
+9-54:Karlin, and A
+9-55:Wright
+9-56:Competitive auctions, 2004
+9-57:Working paper
+9-58:Philippe Golle, Kevin Leyton Brown, Ilya Mironov, and Mark Lillibridge
+9-59:Incentives for sharing in peer to peer networks
+9-60:In EC, 2001
+9-61:Ron Holzman, Noa Kfir Dahav, Dov Monderer, and Moshe Tennenholtz
+9-62:Bundling equilibrium in combinatorial auctions
+9-63:Games and Economic Behavior, 47:104 123, 2004
+9-64:Ron Holzman and Dov Monderer
+9-65:Characterization of ex post equilibrium in the vcg combinatorial auctions
+9-66:Games and Economic Behavior, 47:87 103, 2004
+9-67:Matthew O
+9-68:Jackson
+9-69:A crash course in implementation theory, 1997
+9-70:mimeo: California Institute of Technology
+9-71:25
+9-72:A
+9-73:Kothari, D
+9-74:Parkes, and S
+9-75:Suri
+9-76:Approximately strategyproof and tractable multi unit auctions
+9-77:In EC, 2003
+9-78:Ron Lavi, Ahuva Mu"alem, and Noam Nisan
+9-79:Towards a characterization of truthful combinatorial auctions
+9-80:In FOCS, 2003
+9-81:Ron Lavi and Noam Nisan
+9-82:Online ascending auctions for gradually expiring goods
+9-83:In SODA, 2005
+9-84:Daniel Lehmann, Liadan O"Callaghan, and Yoav Shoham
+9-85:Truth revelation in approximately efficient combinatorial auctions
+9-86:Journal of the ACM, 49(5):577 602, 2002
+9-87:A
+9-88:Mas Collel, W
+9-89:Whinston, and J
+9-90:Green
+9-91:Microeconomic Theory
+9-92:Oxford university press, 1995
+9-93:Eric Maskin
+9-94:Nash equilibrium and welfare optimality
+9-95:Review of Economic Studies, 66:23 38, 1999
+9-96:Eric Maskin and Tomas Sj¨ostr¨om
+9-97:Implementation theory, 2002
+9-98:247 Aranyak Mehta and Vijay Vazirani
+9-99:Randomized truthful auctions of digital goods are randomizations over truthful auctions
+9-100:In EC, 2004
+9-101:John Moore
+9-102:Implementation, contract and renegotiation in environments with complete information, 1992
+9-103:John Moore and Rafael Repullo
+9-104:Subgame perfect implementation
+9-105:Econometrica, 56(5):1191 1220, 1988
+9-106:H
+9-107:Moulin and S
+9-108:Shenker
+9-109:Strategyproof sharing of submodular costs: Budget balance versus efficiency
+9-110:Economic Theory, 18(3):511 533, 2001
+9-111:Noam Nisan
+9-112:Algorithms for selfish agents
+9-113:In STACS, 1999
+9-114:Noam Nisan and Amir Ronen
+9-115:Computationally feasable vcg mechanisms
+9-116:In EC, 2000
+9-117:Noam Nisan and Amir Ronen
+9-118:Algorithmic mechanism design
+9-119:Games and Economic Behavior, 35:166 196, 2001
+9-120:M
+9-121:J
+9-122:Osborne and A
+9-123:Rubinstein
+9-124:A Course in Game Theory
+9-125:MIT press, 1994
+9-126:Christos H
+9-127:Papadimitriou
+9-128:Algorithms, games, and the internet
+9-129:In STOC, 2001
+9-130:Kevin Roberts
+9-131:The characterization of implementable choice rules
+9-132:In Jean Jacques Laffont, editor, Aggregation and Revelation of Preferences
+9-133:Papers presented at the 1st European Summer Workshop of the Econometric Society, pages 321 349
+9-134:North Holland, 1979
+9-135:Irit Rozenshtrom
+9-136:Dominant strategy implementation with quasi linear preferences, 1999
+9-137:Master"s thesis, Dept
+9-138:of Economics, The Hebrew University, Jerusalem, Israel
+9-139:Rakesh Vohra and Rudolf Muller
+9-140:On dominant strategy mechanisms, 2003
+9-141:Working paper
+9-142:Shmuel Zamir
+9-143:Rationality and emotions in ultimatum bargaining
+9-144:Annales D" Economie et De Statistique, 61, 2001
+9-145:248
+picture:

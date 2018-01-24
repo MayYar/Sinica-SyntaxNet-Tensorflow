@@ -1,0 +1,48 @@
+Since the covariance matrix Hsse used in traditional approaches is only dependent on the measured samples, i.e .
+zi"s, these approaches fail to evaluate the expected errors on the unmeasured samples .
+In this Section, we introduce a novel active learning algorithm called Laplacian Optimal Design which makes efficient use of both measured (labeled) and unmeasured (unlabeled) samples .
+3.1 The Objective Function In many machine learning problems, it is natural to assume that if two points xi, xj are sufficiently close to each other, then their measurements (f(xi), f(xj)) are close as well .
+Let S be a similarity matrix .
+Thus, a new loss function which respects the geometrical structure of the data space can be defined as follows
+Note that, the loss function (3) is essentially the same as the one used in Laplacian Regularized Regression (LRR, [2]) .
+However, LRR is a passive learning algorithm where the training data is given .
+In this paper, we are focused on how to select the most informative data for training .
+The loss function with our choice of symmetric weights Sij (Sij = Sji) incurs a heavy penalty if neighboring points xi and xj are mapped far apart .
+Therefore, minimizing J0(w) is an attempt to ensure that if xi and xj are close then f(xi) and f(xj) are close as well .
+There are many choices of the similarity matrix Canonical experimental design approaches (e.g .
+A Optimal Design, D Optimal Design, and E Optimal) only consider linear functions .
+They fail to discover the intrinsic geometry in the data when the data space is highly nonlinear .
+In this section, we describe how to perform Laplacian Experimental Design in Reproducing Kernel Hilbert Space which gives rise to Kernel Laplacian Experimental Design .
+For given data points x1, ¡P ¡P ¡P , xm ? X with a positive definite mercer kernel K 
+Let Kt(s) be the function of s obtained by fixing t and letting Kt(s) .
+= K(s, t) .
+HK consists of all finite linear combinations of the form l i=1 £\iKti with ti ? X and limits of such functions as the ti become dense in X .
+We have Ks, Kt HK = K(s, t) .
+4.1 Derivation of LOD in Reproducing Kernel Hilbert Space Consider the optimization problem (5) in RKHS .
+Thus, we seek a function f ? HK such that the following objective function is minimized
+Proposition 4.1 .
+Let H = { m i=1 £\iK(¡P, xi)|£\i ? R} be a subspace of HK , the solution to the problem (12) is in H .
+Proof .
+Let H¡æ be the orthogonal complement of H, i.e .
+HK = H ¡ò H¡æ .
+Thus, for any function f ? HK , it has orthogonal decomposition as follows
+This implies that fH¡æ , Kxi HK = 0 .
+Therefore, f(xi) = fH, Kxi HK = fH(xi) This completes the proof .
+Proposition 4.1 tells us the minimizer of problem (12) admits a representation f? = m i=1 £\iK(¡P, xi) .
+Please see [2] for the details .
+Let £p 
+Let X denote the data matrix in RKHS, X = (£p(x1), £p(x2), ¡P ¡P ¡P , £p(xm)) .
+Similarly, we define Z = (£p(z1), £p(z2), ¡P ¡P ¡P , £p(zk)) .
+Thus, the optimization problem in RKHS can be written as follows
+In the following, we apply kernel tricks to solve this optimization problem .
+Let X?1 be the Moore Penrose inverse (also known as pseudo inverse) of X .
+Thus, we have
+Thus, the Kernel Laplacian Optimal Design can be defined as follows
+Kernel Laplacian Optimal Design minZ=(z1,¡P¡P¡P ,zk) Tr KXX KXZKZX + £f1KXXLKXX £f2KXX ?1 KXX (14) 4.2 Optimization Scheme In this subsection, we discuss how to solve the optimization problems (11) and (14) .
+Particularly, if we select a linear kernel for KLOD, then it reduces to LOD .
+Therefore, we will focus on problem (14) in the following .
+It can be shown that the optimization problem (14) is NP hard .
+In this subsection, we develop a simple sequential greedy approach to solve (14) .
+Suppose n points have been selected, denoted by a matrix Zn = (z1, ¡P ¡P ¡P , zn) .
+The (n + 1) th point zn+1 can be selected by solving the following optimization problem
+Thus, the (n + 1) th point zn+1 is given by

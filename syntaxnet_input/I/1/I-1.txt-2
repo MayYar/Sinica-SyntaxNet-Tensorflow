@@ -1,0 +1,33 @@
+Intelligent agents generally work in complex, dynamic environments, such as air traffic control or robot navigation, in which the success of any particular action or plan cannot be guaranteed [13] .
+Accordingly, dealing with failure is fundamental to agent programming, and is an important element of agent characteristics such as robustness, flexibility, and persistence [21] .
+In agent architectures inspired by the Belief Desire Intention model [16], these properties are often characterized by the interactions between beliefs, goals, and plans [2].1 In general, an agent that wishes to achieve a particular set of tasks will pursue a number of plans concurrently .
+When failures occur, the choice of plans will be reviewed .
+This may involve seeking alternative plans for a particular task, re scheduling tasks to better comply with resource constraints, dropping some tasks, or some other decision that will increase the likelihood of success [12, 14] .
+Failures can occur for a number of reasons, and it is often not possible to predict these in advance, either because of the complexity of the system or because changes in the environment invalidate some earlier decisions .
+Given this need for deliberation about failed tasks or plans, failure deliberation is commonly built into the agent"s execution cycle .
+Besides dealing with failure, an important capability of an intelligent agent is to be able to abort a particular task or plan .
+This decision may be due to an internal deliberation (such as the agent believing the task can no longer be achieved, or that some conflicting task now has a higher priority) or due to an external factor (such as another agent altering a commitment, or a change in the environment) .
+Aborting a task or plan is distinct from its failure .
+Failure reflects an inability to perform and does not negate the need to perform for example, a reasonable response to failure may be to try again .
+In contrast, aborting says nothing about the ability to perform; it merely eliminates the need .
+Failure propagates from the bottom up, whereas aborting propagates from the top down .
+The potential for concurrently executing sub plans introduces different complexities for aborting and failure .
+For aborting, it means that multiple concurrent sub plans may need to be aborted as the abort is propagated down .
+For failure, it means that parallel sibling plans may need to be aborted as the failure is propagated up .
+There has been a considerable amount of work on plan failures (such as detecting and resolving resource conflicts [20, 10]) and most agent systems incorporate some notion of failure handling .
+However, there has been relatively little work on the development of abort techniques beyond simple dropping of currently intended plans and tasks, which does not deal with the clean up required .
+As one consequence, most agent systems are quite limited in their treatment of the situation where one branch of a parallel construct 1 One can consider both tasks to be performed and goals to achieve a certain state of the world .
+A task can be considered a goal of achieving the state of the task having been performed, and a goal can be considered a task of bringing about that state of the world .
+We adopt the latter view and use task to also refer to goals .
+8 978 81 904262 7 5 c 2007 IFAAMAS fails (common approaches include either letting the other branch run to completion unhindered or dropping it completely) .
+In this paper we discuss in detail the incorporation of abort cleanup methods into the agent execution cycle, providing a unified approach to failure and abort .
+A key feature of our procedure based approach is that we allow each plan to execute some particular code on a failure and on an abort .
+This allows a plan to attempt to ensure a stable, known state, and possibly to recover some resources and otherwise clean up before exiting .
+Accordingly, a central technical challenge is to manage the orderly execution of the appropriate clean up code .
+We show how aborts can be smoothly introduced into a BDI style architecture, and for the first time we give an operational semantics for aborting in the abstract agent language CAN [23, 17] .
+This allows us to specify an appropriate level of detail for the execution model, without focusing on the specific constructs of any one agent system such as JACK [2], Jadex [14], Jason [6], or SPARK [9] .
+Our focus is on a single agent, complementary to related work that considers exception handling for single and multiagent systems (e.g., [22, 5, 6]) .
+This paper is organized as follows .
+In Section 2 we give an example of the consequences of aborting a task, and in Section 3 we discuss some circumstances under which aborts should occur, and the appropriate representation and invocation procedures .
+In Section 4 we show how we can use CAN to formally specify the behaviour of an aborted plan .
+Section 5 discusses related work, and in Section 6 we present our conclusions and future work. .

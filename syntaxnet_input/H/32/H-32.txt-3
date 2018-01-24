@@ -1,0 +1,51 @@
+There are currently two general methods for Definitional Question Answering .
+The more common method uses a lexical patternbased approach was first proposed by Blair Goldensohn et al .
+[1] and Xu et al .
+[14] .
+Both groups predominantly used patterns such as copulas and appositives, as well as manually crafted lexicosyntactic patterns to identify sentences that contain informative nuggets .
+For example, Xu et al .
+used 40 manually defined structured patterns in their 2003 definitional question answering system .
+Since then, in an attempt to capture a wider class of informational nuggets, many such systems of increasing complexity has been created .
+A recent system by Harabagiu et al .
+[6] created a definitional question answering system that combines the use of 150 manually defined positive and negative patterns, named entity relations and specially crafted information extraction templates for 33 target domains .
+Here, a musician template may contain lexical patterns that identify information such as the musician"s musical style, songs sung by the musician and the band, if any, that the musician belongs to .
+As one can imagine, this is a knowledge intensive approach that requires an expert linguist to manually define all possible lexical or syntactic patterns required to identify specific types of information .
+This process requires a lot of manual labor, expertise and is not scalable .
+This lead to the development of the soft pattern approach by Cui et al .
+[4, 11] .
+Instead of manually encoding patterns, answers to previous definitional question answering evaluations were converted into generic patterns and a probabilistic model is trained to identify such patterns in sentences .
+Given a potential answer sentence, the probabilistic model outputs a probability that indicates how likely the sentence matches one or more patterns that the model has seen in training .
+Such lexicalosyntactic patterns approach have been shown to be adept at identifying factual informative nuggets such as a person"s birthdate, or the name of a company"s CEO .
+However, these patterns are either globally applicable to all topics or to a specific set of entities such as musicians or organizations .
+This is in direct contrast to interesting nuggets that are highly specific to individual topics and not to a set of entities .
+For example, the interesting nuggets for George Foreman are specific only George Foreman and no other boxer or human being .
+Topic specificity or topic relevance is thus an important criteria that helps identify interesting nuggets .
+This leads to the exploration of the second relevance based approach that has been used in definitional question answering .
+Predominantly, this approach has been used as a backup method for identifying definitional sentences when the primary method of lexicalosyntactic patterns failed to find a sufficient number of informative nuggets [1] .
+A similar approach has also been used as a baseline system for TREC 2003 [14] .
+More recently, Chen et al .
+[3] adapted a bi gram or bi term language model for definitional Question Answering .
+Generally, the relevance based approach requires a definitional corpus that contain documents highly relevant to the topic .
+The baseline system in TREC 2003 simply uses the topic words as its definitional corpus .
+Blair Goldensohn et al .
+[1] uses a machine learner to include in the definitonal corpus sentences that are likely to be definitional .
+Chen et al .
+[3] collect snippets from Google to build its definitional corpus .
+From the definitional corpus, a definitional centroid vector is built or a set of centroid words are selected .
+This centroid vector or set of centroid words is taken to be highly indicative of the topic .
+Systems can then use this centroid to identify definitional answers by using a variety of distance metrics to compare against sentences found in the set of retrieved documents for the topic .
+BlairGoldensohn et al .
+[1] uses Cosine similarity to rank sentences by centrality .
+Chen et al .
+[3] builds a bigram language model using the 350 most frequently occurring google snippet terms, described in their paper as an ordered centroid, to estimate the probability that a sentence is similar to the ordered centroid .
+As described here, the relevance based approach is highly specific to individual topics due to its dependence on a topic specific definitional corpus .
+However if individual sentences are viewed as a document, then relevance based approaches essentially use the collected topic specific centroid words as a form of document retrieval with automated query expansion to identify strongly relevant sentences .
+Thus such methods identify relevant sentences and not sentences containing definitional nuggets .
+Yet, the TREC 2003 baseline system [14] outperformed all but one other system .
+The bi term language model [3] is able to report results that are highly competitive to state of the art results using this retrieval based approach .
+At TREC 2006, a simple weighted sum of all terms model with terms weighted using solely Google snippets outperformed all other systems by a significant margin [7] .
+We believe that interesting nuggets often come in the form of trivia, novel or rare facts about the topic that tend to strongly cooccur with direct mention of topic keywords .
+This may explain why relevance based method can perform competitively in definitional question answering .
+However, simply comparing against a single centroid vector or set of centroid words may have over emphasized topic relevance and has only identified interesting definitional nuggets in an indirect manner .
+Still, relevance based retrieval methods can be used as a starting point in identifying interesting nuggets .
+We will describe how we expand upon such methods to identify interesting nuggets in the next section. .

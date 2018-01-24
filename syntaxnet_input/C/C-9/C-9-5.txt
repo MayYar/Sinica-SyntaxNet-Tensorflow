@@ -1,0 +1,75 @@
+ DECENTRALIZED  RESOURCEMANAGEMENT 
+RESOURCEMANAGEMENT Resource management for long term services has other requirements than resource management in common grid computing environments .
+For instance even in the context of traditional grid systems it is very difficult to determine or even only estimate the resource requirements of a task [] .
+For long term services this is even harder, and it is likely that the resource demand frequently changes .
+This turns Article  Host FHost D Host E Host A Host C Service Environment Service B Service A Home Env .
+Home Environment Home Environment Boundary of the fragmented object Service Manager Domain Manager Domain Manager Figure  EDAS Scenario the optimal distribution of services over a set of nodes into a difficult problem .
+In general the migration of services is a prerequisite of EDAS as it offers a solution if the initial distribution decision was wrong (e.g .
+initial start of previously unknown service) or the demand of services has changed substantially .
+But migration is costly, since the whole state of a service possibly including program code has to be transfered .
+If the service is not replicated it will be unavailable during migration .
+Taking this into account a resource management should place services and adaptively rededicate resources between services and nodes as needed to prevent migration .
+As EDAS aims at providing a grid like infrastructure for a large set of nodes that can join and leave the system all resource management tasks have to be decentralized to be scalable and should not require global knowledge .
+The resource management can be structured into the following different tasks ?? Adding and changing the assigned resources of a service environment ?? Automatic placement of service at startup time and during migration due to overload ?? Keeping all kind of resource limits, especially the limits of service environments ?? Compensate leaving and crashed nodes In the next sections we will describe what kind of resource limits there are and how to do resource management based on these basic conditions .
+. Resource Limits Our approach manages resources on two stages, the node level and the service environment level .
+At the node level we monitor usage of all kind of physical resources like disk space, memory, CPU and network bandwidth but also logical ones like open files, sockets and threads .
+The entity of monitoring is a service or a service component in case of a decentralized adaptive service .
+Every service has so called local limits that restrict the resource usage in context of the current node .
+If a service runs the risk of exceeding such a local limit the home environment tries to extend the limits or notifies the responsible service environment if rededication is not possible .
+Reaching a local limit can be caused by two reasons an overloaded node or an overloaded service environment .
+In the first case service migration might help, in the second case migration to another administrative domain might be an option, or simply reducing resource demand by stopping the service .
+Of course there could be more than one service of the same service environment at a node .
+Therefore the assigned resources of a service environment at a node can be easily computed by summing up all local limits of its services .
+Furthermore each node has node limits that restrict the overall usage of certain resources .
+A node limit must never exceed the physical resource (e.g .
+disk space) of a node and might be much smaller, e.g., for supporting local users .
+The sum of all local limits at a node must never exceed the node limit of a resource .
+Therefore observing and controlling the local limits will keep the node limits and preventing overload .
+NodeLimitNode ?‰¥ numberOfLocalLimitsNodeX i= LocalLimiti At the institution level the resource usage of a service environment and its associated services is also restricted by so called global limits .
+These limits determine the maximum resource usage of a project in scope of a home environment .
+The sum of all local limits on all nodes of the institution for a certain project therefore never exceeds its global limit .
+GlobaleLimitSE ?‰¥ numberOfLocalLimitsSEX i= LocalLimiti . Adaptive Resource Rededication We start with a straight forward implementation to describe the principal workflow .
+Then we propose an approach for a more efficient solution and discuss its problems .
+If a new project should be supported by a home environment it is first necessary to identify the nodes that offer sufficient unassigned resources to start a service .
+This can be achieved in a naive implementation by using a flooding approach like it is done by the Gnutella protocol assuming the nodes are connected in a random graph .
+These resources then can be assigned to the service environment of the new project which further on can start services on these nodes .
+Of course a home environment supports usually numerous projects .
+Each of these projects has resource shares on various nodes, some of them occupied by services, other free and unused .
+As the resource demand of a service changes it might be possible that a service reaches its local limit if the service is under high demand .
+What happens next depends on the overall resource usage of the service environment and the resource consumption at the local node .
+If the service environment has not reached its global limit and the node is not overloaded the dependent local limit of the service should be extended simply by reducing a local limit at another node of the same service environment .
+When all resources of the node are assigned to other service environments there are two possibilities .
+All resources are used by services, so we have to migrate a service, or the resources are assigned but not used .
+In the later case we shall rededicate resources and assign them to the demanding service environment .
+Finally the service environment might have reached its global limit .
+In this case the resource consumption has to be reduced either by migrating the service to another domain and its depended home environment or simply by bounding resource usage and if this is not possible, stopping the service .
+In contrary to the setup of a new service environment which is not time critical and a less frequent task the adaptation of local limits occurs frequently and needs to be done Article  almost immediately .
+Thus it is not an option to use broadcast searches for rededication .
+Instead a more efficient approach with a bounded complexity is necessary .
+The same applies for detecting if a global limit is reached by a service environment .
+Currently we investigate if this can be achieved by using a diffusive algorithm[] like it is used for decentralized load balancing .
+Thereby all nodes of a system are partitioned in groups that overlap partially .
+The union of all groups achieves a full coverage .
+Group members frequently exchange load information and balance the load by migration .
+In our case we aim not at balancing the load but the amount of available free resources of a service environment .
+Each node that supports a certain service environment is at least connected to another node that supports the same project .
+This way it always should be known if a service environment has still enough resources and therefore if a service can grow .
+There still remain open issues like if the diffusively balanced free resources should be tightly connected to the real resources, comparable to reservations .
+In this case there might be problems if a node supports several service environments which all have services running at the node and a node limit is exceeded which would require service migration .
+In fact it can be needless as the services might not use all the assigned resources but the diffusive algorithm caused the limit overrun by equally balancing the free resources of all supported service environments .
+If we remove the mapping between free resources and real resources of a node we can evade these situations .
+However it gets more complicated to determine the free and unassigned resources of a home environment .
+. Placement of Services Independent of the mapping of free resources the placement of a service is, as already stated, a difficult problem .
+Distributing the services equally over all nodes would surely prevent migration in the average case even if resource demand of services changes .
+However if the resource demand of services varies highly and the grid is clogged by many projects it might be that a service can"t be placed because the free resources are too scattered .
+A different approach would be to consider it as an variant of the bin packing problem that aims at packing items in bins by optimizing the number of used bins .
+In our case we need an online approach as the items are not known in advance and we have a multi dimensional problem since a service has various resource requirements .
+The number of bins is bounded as we have a finite number of nodes in our grid .
+An algorithm for this problem has recently been proposed by Epstein and van Stee in [] .
+On the downside this algorithm needs to know all nodes and their actual usage .
+As the placement of a service is not a time critical problem again a flooding based approach might offer a solution .
+To reduce the number of answers only nodes that provide sufficient resources need to reply .
+It has also to be considered to transform the algorithm to a distributed one .
+Another problem might be that the algorithm optimizes the occupancy too strong .
+Therefore demand changes of service can lead to overloaded nodes and causing migration .
+We believe this can be prevented by not only considering the actual resource consumption to determine the resource demand of a service but taking the previous demand into account. .

@@ -1,0 +1,59 @@
+IN BOUNDED LAYER GRAPH CONNECTIVITY GAMES We here present a polynomial algorithm to calculate the Banzhaf index of an edge in a connectivity game, where the network is a bounded layer graph .
+This positive result indicates that for some restricted domains of network flow games, it is possible to calculate the Banzhaf index in a reasonable amount of time .
+DEFINITION 3 .
+A layer graph is a graph G =< V, E >, with source vertex s and target vertex t, where the vertices of the graph are partitioned into n + 1 layers, L0 = {s}, L1, ..., Ln = {t} .
+The edges run only between consecutive layers .
+DEFINITION 4 .
+A c bounded layer graph is a layer graph where the number of vertices in each layer is bounded by some constant number c .
+Although there is no limit on the number of layers in a bounded layer graph, the structure of such graphs makes it possible to calculate the Banzhaf index of edges in connectivity games on such graphs .
+The algorithm provided below is indeed polynomial in the number of vertices given that the network is a c bounded layer graph .
+However, there is a constant factor to the running time, which is exponential in c .
+Therefore, this method is only tractable for graphs where the bound c is small .
+Bounded layer graphs may occur in networks when the nodes are located in several ordered segments, where nodes can be connected only between consecutive segments .
+Let v be a vertex in layer Li .
+We say an edge e occurs before v if it connects two vertices in v"s layer or a previous layer
+Let Predv ? E be the subset of edges that occur before v .
+Consider a subset of these edges, E ? Predv .
+E may contain a path from s to v, or it may not .
+We define Pv as the number of subsets E ? Predv that contain a path from s to v .
+Similarly, let Vi ? V be the subset of all the vertices in the same layer Li .
+Let PredVi ? E be the subset of edges that occur before Vi (all the vertices in Vi are in the same layer, so any edge that occurs before some v ? Vi occurs before any other vertex w ? Vi) .
+Consider a subset of these edges, E ? PredV .
+Let Vi(E ) be the subset of vertices in Vi that are reachable from s using only the edges in E 
+We say E ? PredV connects exactly the vertices in Si ? Vi if all the vertices in Si are reachable from s using the edges in E but no other vertices in Vi are reachable from s using E , so Vi(E ) = Si .
+Let V ? Vi be a subset of the vertices in layer Li .
+We define PV as the number of subsets E ? PredV that connect exactly the vertices in V 
+LEMMA 1 .
+Let S1, S2 ? Vi where S1 = S2 be two different subsets of vertices in the same layer .
+Let E , E ? PredVi be two sets of edge subsets, so that E connects exactly the vertices in S1 and E connects exactly the vertices in S2
+Then E and E do not contain the same edges
+PROOF .
+If E = E then both sets of edges allow the same paths from s, so Vi(E ) = Vi(E ) .
+Let Si ? Vi be a subset of vertices in layer Li .
+Let Ei ? E be the set of edges between the vertices in layer Li and layer Li+1 .
+Let E ? Ei be some subset of these edges .
+We denote by Dests(Si, E) the set of vertices in layer Li+1 that are connected to some vertex in Si by an edge in E
+Let Si ? Vi be a subset of vertices in Li and E ? Ei be some subset of the edges between layer Li and layer Li+1 .
+PSi counts the number of edge subsets in PredVi that connect exactly the vertices in Si .
+Consider such a subset E counted in PSi .
+E ¡å E is a subset of edges in PredVi+1 that connects exactly to Dest(Si, E) .
+According to Lemma 1, if we iterate over the different Si"s in layer Li, the PSi "s count different subsets of edges, and thus every expansion using the edges in E is also different .
+Algorithm 1 calculates Pt .
+It iterates through the layers, and updates the data for the next layer given the data for the current layer .
+For each layer Li and every subset of edges in that layer Si ? Vi, it calculates PSi .
+It does so using the values calculated in the previous layer .
+The algorithm considers every subset of possible vertices in the current layer, and every possible subset of expanding edges to the next layer, and updates the value of the appropriate subset in the next layer .
+Algorithm 1 1
+There are also at most c2 edges between 2 consecutive layers, and thus at most 2(c2 ) edge subsets between two layers .
+If the graph contains k layers, the running time of the algorithm is bounded by k¡P2c ¡P2(c2 ) .
+Since c is a constant, this is a polynomial algorithm .
+Consider the connectivity game on a layer graph G, with a single source vertex s and target vertex t .
+The Banzhaf index of the edge e is the number of subsets of edges that allow a path between s and t, but do not allow such a path when e is removed (divided by a constant) .
+We can calculate P{t} = P{t}(G) for G using the algorithm to count the number of subsets of edges that allow a path from s to t .
+We can then remove e from G to obtain the graph G =< V, E \ {e} >, and calculate P{t} = P{t}(G ) .
+The difference P{t}(G) ? P{t}(G ) is the number of subsets of edges that contain a path from s to t but no longer contain such a path when e is removed .
+The Banzhaf index for e is P{t}(G)?P{t}(G ) 2|E|?1 .
+Thus, this algorithm allows us to calculate the Banzhaf index on an edge in the connectivity games on bounded layer graphs .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 339 .

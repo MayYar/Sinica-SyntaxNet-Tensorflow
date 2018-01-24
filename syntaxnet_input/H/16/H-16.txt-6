@@ -1,0 +1,28 @@
+The previous section shows that caching posting lists can obtain a higher hit rate compared to caching query answers .
+In this section we study the problem of how to select posting lists to place on a certain amount of available memory, assuming that the whole index is larger than the amount of memory available .
+The posting lists have variable size (in fact, their size distribution follows a power law), so it is beneficial for a caching policy to consider the sizes of the posting lists .
+We consider both dynamic and static caching .
+For dynamic caching, we use two well known policies, LRU and LFU, as well as a modified algorithm that takes posting list size into account .
+Before discussing the static caching strategies, we introduce some notation .
+We use fq(t) to denote the query term frequency of a term t, that is, the number of queries containing t in the query log, and fd(t) to denote the document frequency of t, that is, the number of documents in the collection in which the term t appears .
+The first strategy we consider is the algorithm proposed by Baeza Yates and Saint Jean [2], which consists in selecting the posting lists of the terms with the highest query term frequencies fq(t) .
+We call this algorithm Qtf .
+We observe that there is a trade off between fq(t) and fd(t) .
+Terms with high fq(t) are useful to keep in the cache because they are queried often .
+On the other hand, terms with high fd(t) are not good candidates because they correspond to long posting lists and consume a substantial amount of space .
+In fact, the problem of selecting the best posting lists for the static cache corresponds to the standard Knapsack problem
+In our case, value corresponds to fq(t) and size corresponds to fd(t) .
+Thus, we employ a simple algorithm for the knapsack problem, which is selecting the posting lists of the terms with the highest values of the ratio fq(t) fd(t) .
+We call this algorithm QtfDf .
+We tried other variations considering query frequencies instead of term frequencies, but the gain was minimal compared to the complexity added .
+In addition to the above two static algorithms we consider the following algorithms for dynamic caching
+The performance of all the above algorithms for 15 weeks of the query log and the UK dataset are shown in Figure 8 .
+Performance is measured with hit rate .
+The cache size is measured as a fraction of the total space required to store the posting lists of all terms .
+For the dynamic algorithms, we load the cache with terms in order of fq(t) and we let the cache warm up for 1 million queries .
+For the static algorithms, we assume complete knowledge of the frequencies fq(t), that is, we estimate fq(t) from the whole query stream .
+As we show in Section 7 the results do not change much if we compute the query term frequencies using the first 3 or 4 weeks of the query log and measure the hit rate on the rest .
+0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0.1 0.2 0.3 0.4 0.5 0.6 0.7 Hitrate Cache size Caching posting lists static QTF DF LRU LFU Dyn QTF DF QTF Figure 8
+The most important observation from our experiments is that the static QtfDf algorithm has a better hit rate than all the dynamic algorithms .
+An important benefit a static cache is that it requires no eviction and it is hence more efficient when evaluating queries .
+However, if the characteristics of the query traffic change frequently over time, then it requires re populating the cache often or there will be a significant impact on hit rate. .

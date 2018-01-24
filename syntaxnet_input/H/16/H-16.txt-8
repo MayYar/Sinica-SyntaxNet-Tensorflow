@@ -1,0 +1,18 @@
+For our query log, the query distribution and query term distribution change slowly over time .
+To support this claim, we first assess how topics change comparing the distribution of queries from the first week in June, 2006, to the distribution of queries for the remainder of 2006 that did not appear in the first week in June .
+We found that a very small percentage of queries are new queries .
+The majority of queries that appear in a given week repeat in the following weeks for the next six months .
+We then compute the hit rate of a static cache of 128, 000 answers trained over a period of two weeks (Figure 13) .
+We report hit rate hourly for 7 days, starting from 5pm .
+We observe that the hit rate reaches its highest value during the night (around midnight), whereas around 2 3pm it reaches its minimum .
+After a small decay in hit rate values, the hit rate stabilizes between 0.28, and 0.34 for the entire week, suggesting that the static cache is effective for a whole week after the training period .
+0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0 20 40 60 80 100 120 140 160 Hit rate Time Hits on the frequent queries of distances Figure 13
+The static cache of posting lists can be periodically recomputed .
+To estimate the time interval in which we need to recompute the posting lists on the static cache we need to consider an efficiency quality trade off
+We measured the effect on the QtfDf algorithm of the changes in a 15 week query stream (Figure 14) .
+We compute the query term frequencies over the whole stream, select which terms to cache, and then compute the hit rate on the whole query stream .
+This hit rate is as an upper bound, and it assumes perfect knowledge of the query term frequencies .
+To simulate a realistic scenario, we use the first 6 (3) weeks of the query stream for computing query term frequencies and the following 9 (12) weeks to estimate the hit rate .
+As Figure 14 shows, the hit rate decreases by less than 2% .
+The high correlation among the query term frequencies during different time periods explains the graceful adaptation of the static caching algorithms to the future query stream .
+Indeed, the pairwise correlation among all possible 3 week periods of the 15 week query stream is over 99.5%. .

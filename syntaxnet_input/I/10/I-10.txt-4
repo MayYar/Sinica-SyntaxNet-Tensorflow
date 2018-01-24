@@ -1,0 +1,122 @@
+LEARNING 3.1 The learning task We experiment the mechanism proposed above in the case of incremental MAS concept learning .
+We consider here a hypothesis language in which a hypothesis is a disjunction of terms .
+Each term is a conjunction of atoms from a set A .
+An example is represented by a tag + or ? and a description 2 composed of a subset of atoms e ? A .
+A term covers an example if its constituting atoms are included in the example .
+A hypothesis covers an example if one of its term covers it .
+This representation will be used below for learning boolean formulae .
+Negative literals are here represented by additional atoms, like not ? a .
+The boolean formulae f =(a ? b) ? (b ? ?c) will then be written (a ? b) ? (b ? not ? c) .
+A positive example of f, like {not ? a, b, not ? c}, represents a model for f .
+3.2 Incremental learning process The learning process is an update mechanism that, given a current hypothesis H, a memory E = E+ ¡å E? filled with the previously received examples, and a new positive or negative example e, produces a new updated hypothesis .
+Before this update, the given hypothesis is complete, meaning that it covers all positive examples of E+ , and 2 When no confusion is possible, the word example will be used to refer to the pair (tag, description) as well as the description alone .
+166 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) coherent, meaning that it does not cover any negative example of E? .
+After the update, the new hypothesis must be complete and coherent with the new memory state E ¡å {e} .
+We describe below our single agent update mechanism, inspired from a previous work on incremental learning[7] .
+In the following, a hypothesis H for the target formula f is a list of terms h, each of them being a conjunction of atoms .
+H is coherent if all terms h are coherent, and H is complete if each element of E+ is covered by at least one term h of generalization) of a subset of positives instances {e1, ..., en}[5], that is the most specific term covering {e1, ..., en} .
+The lgg operator is defined by considering examples as terms, so we denote as lgg(e) the most specific term that covers e, and as lgg(h, e) the most specific term which is more general than h and that covers e .
+Restricting the term to lgg is the basis of a lot of Bottom Up learning algorithms (for instance [5]) .
+In the typology proposed by [9], our update mechanism is an incremental learner with full instance memory
+The update mechanism depends of the ongoing hypothesis H, the ongoing examples E+ and E? , and the new example In the following, we will learn a boolean formula that is a difficult test for the learning method
+It concerns 3 address boolean attributes a0, a1, a2 and 8 data boolean attributes d0, ..., d7 .
+Formulae f11 is satisfied if the number coded by the 3 address attributes is the number of a data attribute whose value is 1 .
+Its formula is the following
+There are 2048 = 211 possible examples, half of whom are positive (meaning they satisfy f11) while the other half is negative .
+An experiment is typically composed of 50 trials .
+Each run corresponds to a sequence of 600 examples that are incrementally learned by a Multi Agent System with n agents The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 167 (n MAS) .
+A number of variables such as accuracy, (i.e .
+the frequency of correct classification of a set of unseen examples), hypothesis size (i.e .
+the number of terms in the current formula) or number of stored examples, is recorded each time 25 examples are received by the system during those runs .
+In the protocol that is used here, a new example is sent to a random agent when the MAS is consistent .
+The next example will be sent in turn to an other agent when the MAS consistency will have been restored .
+In such a way we simulate a kind of slow learning
+4.1 Efficiency of MAS concept learning 4.1.1 Execution time We briefly discuss here execution time of learning in the MAS .
+Note that the whole set of action and interaction in the MAS is simulated on a single processor .
+Figure 1 shows that time linearly depends on the number of agents .
+At the end of the most active part of learning (200 examples), a 16MAS has taken 4 times more learning time than a 4 MAS .
+This execution time represents the whole set of learning and Figure 1
+communication activity and hints at the cost of maintaining a consistent learning hypothesis in a MAS composed of autonomous agents .
+4.1.2 Redundancy in the MAS memory We study now the distribution of the examples in the MAS memory .
+Redundancy is written RS = nS ne, where nS is the total number of examples stored in the MAS, that is the sum of the sizes of agents examples memories Ei, and ne is the total number of examples received from the environment in the MAS .
+In figure 2, we compare redundancies in 2 to 20 agents MAS .
+There is a peak, slowly moving from 80 to 100 examples, that represents the number of examples for which the learning is most active .
+For 20 agents, maximal redundancy is no more than 6, which is far less than the maximal theoretical value of 20 .
+Note that when learning becomes less active, redundancy tends towards its minimal value 1
+stored by the agent that receives them .
+4.1.3 A n MAS selects a simpler solution than a single agent The proposed mechanism tends to minimize the number of terms in the selected hypothesis .
+During learning, the size of the current hypothesis grows up beyond the optimum, and then decreases when the MAS converges .
+In the Multiplexer 11 testbed, the optimal number of terms is 8, but there also exist equivalent formulas with more terms .
+It is interesting to note that in this case the 10 MAS converges towards an exact solution closer to the optimal number of terms (here 8) (see Figure 3) .
+After 1450 examples have been presented both 1 MAS and 10 MAS have exactly learned the concept (the respective accuracies are 0.9999 and 1) but the single agent expresses in average the result as a 11.0 terms DNF whereas the 10 MAS expresses it as a 8.8 terms DNF .
+However for some other boolean functions we found that during learning 1 MAS always produces larger hypotheses than 10 MAS but that both MAS converge to hypotheses with similar size results .
+4.1.4 A n MAS is more accurate than a single agent Figure 4 shows the improvement brought by a MAS with n agents compared to a single agent .
+This improvement was not especially expected, because whether we have one or n agents, when N examples are given to the MAS it has access to the same amount of information, maintains only on ongoing hypothesis and uses the same basic revision algorithm whenever an agent has to modify the current hypothesis .
+Note that if the accuracy of 1, 2, 4 and 10 MAS are significantly different, getting better as the number of agents increases, there is no clear difference beyond this point
+4.1.4.1 Boolean formulas .
+To evaluate this accuracy improvement, we have experimented our protocol on other problems of boolean function learning, As in the Multiplexer 11 case, these functions 168 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) Figure 3
+Figure 4
+are learnt in the form of more or less syntactically complex DNF3 (that is with more or less conjunctive terms in the DNF), but are also more or less difficult to learn as it can be difficult to get its way in the hypothesis space to reach them .
+Furthermore, the presence in the description of irrelevant attributes (that is attributes that does not belong to the target DNF) makes the problem more difficult .
+The following problems have been selected to experiment our protocol
+The following table sums up some information about these problems, giving the total number of attributes including irrelevant ones, the number of irrelevant 3 Disjunctive Normal Forms attributes, the minimal number of terms of the corresponding DNF, and the number of learning examples used .
+Pb att .
+irre .
+att .
+terms ex .
+M11 11 0 8 200 M11 9 20 9 8 200 M20 20 0 16 450 Xor3 25 28 25 4 200 Xor5 5 10 5 16 180 Xor5 15 20 15 16 600 Simple4 9 19 28 19 4 200 Below are given the accuracy results of our learning mechanism with a single agent and a 10 agents MAS, along with the results of two standard algorithms implemented with the learning environment WEKA[16]
+For the experiments with JRip and Id3, we measured the mean accuracy on 50 trials, each time randomly separating examples in a learning set and a test set .
+JRip and Id3 parameters are default parameters, except that JRip is used without pruning .
+The following table shows the results
+We think that these benefits, which can be important with an increasing number of agents, are due to the fact that each agent really memorizes only part of the total number of examples, and this part is partly selected by other agents as counter examples, which cause a greater number of current hypothesis updates and therefore, a better exploration of the hypotheses space .
+4.1.4.2 ML database problems .
+We did also experiments with some non boolean problems .
+We considered only two classes (positive negative) problems, taken from the UCI"s learning problems database[3] .
+In all these problems, examples are described as a vector of couples (attribute, value) .
+The value domains can be either boolean, numeric (wholly ordered set), or nominal (non ordered set) .
+An adequate set of atoms A must be constituted for each problem .
+For instance, if a is a numeric attribute, we define at most k threshold si, giving k+1 intervals of uniform density4 .
+Therefore, each distinct threshold si gives two atoms a ? si and a > si .
+In our experiments, we took a maximal number of threshold k = 8 .
+For instance, in the iono problem case, there were 34 numeric attributes, and an instance is described with 506 atoms .
+Below are given the accuracy results of our system along with previous results .
+The column Nb ex .
+refer to the 4 The probability for the value of a to be in any interval is constant The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 169 number of examples used for learning5 .
+Column (1) represents minimal and maximal accuracy values for the thirty three classifiers tested in [8] .
+Column (2) represents the results of [13], where various learning methods are compared to ensemble learning methods using weighted classifiers sets .
+Column S 1 and S 10 gives the accuracy of SMILE with respectively 1 and 10 agents .
+Pb Nb ex .
+(1) (2) S 1 S 10 ttt 862 574 76.2 99.7 99.7 99.9 kr vs kp 2876 958 91.4 99.4 96.8 97.3 iono 315 88.0 91.8 87.2 88.1 bupa 310 57 72 58 69.3 62.5 63.3 breastw 614 91 97 94.3 97.3 94.7 94.7 vote 391 94 96 95.3 96 91.9 92.6 pima 691 71.5 73.4 65.0 65.0 heart 243 66 86 77.1 84.1 69.5 70.7 This table shows that the incremental algorithm corresponding to the single agent case, gives honorable results relatively to non incremental classical methods using larger and more complex hypotheses .
+In some cases, there is an accuracy improvement with a 10 agents MAS .
+However, with such benchmarks data, which are often noisy, the difficulty does not really come from the way in which the search space is explored, and therefore the improvement observed is not always significant .
+The same kind of phenomenon have been observed with methods dedicated to hard boolean problems [4] .
+4.2 MAS synchronization Here we consider that n single agents learn without interactions and at a given time start interacting thus forming a MAS .
+The purpose is to observe how the agents take advantage of collaboration when they start from different states of beliefs and memories .
+We compare in this section a 1 MAS, a 10 MAS (ref) and a 10 MAS (100sync) whose agents did not communicate during the arrival of the first 100 examples (10 by agents) .
+The three accuracy curves are shown in figure 5 .
+By comparing the single agent curve and the synchronized 10 MAS, we can observe that after the beginning of the synchronization, that is at 125 examples, accuracies are identical .
+This was expected since as soon as an example e received by the MAS contradicts the current hypothesis of the agent ra receiving it, this agent makes an update and its new hypothesis is proposed to the others agents for criticism .
+Therefore, this first contradictory example brings the MAS to reach consistency relatively to the whole set of examples present in agents" memories .
+A higher accuracy, corresponding to a 10 MAS is obtained later, from the 175th example .
+In other words, the benefit of a better exploration of the research space is obtained slightly later in the learning process .
+Note that this synchronization happens naturally in all situations where agents have, for some reason, a divergence between their hypothesis and the system memory .
+This includes the fusion of two MAS into a single one or the arrival of new agents in an existing MAS .
+4.3 Experiments on asynchronous learning
+Figure 5
+In this experiment we relax our slow learning mode
+The resulting example stream is measured in ms?1 , and represents the number of examples sent to the MAS each ms .
+Whenever the stream is too large, the MAS cannot reach MAS consistency on reception of an example from the environment before a new example arrives .
+This means that the update process, started by agent r0 as he received an example, may be unfinished when a new example is received by r0 or another agent r1 .
+As a result, a critic agent may have at instant t to send counterexamples of hypotheses sent by various agents .
+However as far as the agents, in our setting, memorizes all the examples they receive whenever the stream ends, the MAS necessarily reaches MAS consistency with respect to all the examples received so far .
+In our experiments, though its learning curve is slowed down during the intense learning phase (corresponding to low accuracy of the current hypotheses), the MAS still reaches a satisfying hypothesis later on as there are less and less counterexamples in the example stream .
+In Figure 6 we compare the accuracies of two 11 MAS respectively submitted to example streams of different rates when learning the M11 formula .
+The learning curve of the MAS receiving an example at a 1 33 ms?1 rate is almost not altered (see Figure 4) whereas the 1 16 ms?1 MAS is first severely slowed down before catching up with the first one. .

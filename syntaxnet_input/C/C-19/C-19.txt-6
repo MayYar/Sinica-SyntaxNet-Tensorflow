@@ -1,0 +1,69 @@
+PROTOCOL FRAMEWORK DESIGN We show in this section the advantages of service based protocol frameworks over event based protocol frameworks .
+We structure our discussion in three parts .
+Firstly, we present how protocol interactions are modeled in each of the protocol frameworks .
+Then, we discuss the composition of protocol modules in each of these frameworks .
+Finally, we present the problem of dynamic protocol replacement and the advantages of service interfaces in order to implement it .
+The discussion is summarized in Table 1 .
+5.1 Protocol Module Interactions A natural model of protocol interactions (as presented in Section 2) facilitates the implementation of protocol modules .
+For each protocol interaction, we show how it is modeled in both frameworks .
+We also explain that an inadequate model may lead to problems .
+Requests .
+In service based frameworks, a request is generated to a service interface .
+Each request is handled by at most one executer, since we allow only one executer to be bound to a service interface at any time .
+On the other hand, in event based frameworks, a protocol module emulates a request by triggering an event .
+There is no guarantee 1 The two service interfaces t in the left part of Figure 4 represent the same service interface t .
+The duplication is only to make the figure readable .
+693 that this event is bound to only one handler, which may lead to programming errors .
+Replies .
+When a protocol module generates a reply in a service based framework, only the correct listener (identified at the time the corresponding request was issued) is executed .
+This ensures that a request issued by some protocol module Qi, leads to replies handled by protocol modules Qj (i.e .
+protocol modules of the same protocol) .
+This is not the case in event based frameworks, as we now show .
+Consider protocol module Q1 in Figure 2 that triggers event g to emulate a request .
+Module S1 handles the request .
+When modules Si triggers event h to emulate a reply (remember that a reply can occur in many stacks), both modules Qi and Ri will handle the reply (they both contain a handler bound to h) .
+This behavior is not correct
+Moreover, as modules Ri are not necessarily implemented to interact with modules Qi, this behavior may lead to errors .
+Solutions to solve this problem exist .
+However, they introduce an unnecessary burden on the protocol programmers and the stack composer .
+For instance, channels allow to route events to ensure that modules handle only events concerning them .
+However, the protocol programmer must take channels into account when implementing protocols .
+Moreover, the composition of complex stacks becomes more difficult due to the fact that the composer has to create many channels to ensure that modules handle events correctly .
+An addition of special protocol modules (named connectors) for routing events is also not satisfactory, since it requires additional work from the composer and introduces overhead .
+Notifications .
+Contrary to requests and replies, notifications are well modeled in event based frameworks .
+The reason is that notifications correspond to the one to many communication scheme provided by events .
+In service based frameworks, notifications are also well modeled .
+When a module generates a notification to a service interface si, all listeners bound to s are executed .
+Note that in this case, service interfaces provide the same pattern of communication as events .
+5.2 Protocol Module Composition Replies (and sometimes notifications) are the results of a request .
+Thus, there is a semantic link between them .
+The composer of protocol modules must preserve this link in order to compose correct stacks .
+We explain now that service based frameworks provide a mechanism to preserve this link, while in event based frameworks, the lack of such mechanism leads to error prone composition .
+In service based frameworks, requests, replies and notifications are issued to a service interface .
+Thus, a service interface introduces a link between these interactions .
+To compose a correct stack, the composer has to bound a listener to service interface si for each module that issues a request to si .
+The same must be done for one executer that is part of a module that issues replies or notifications .
+Applying this simple methodology ensures that every request issued to a service interface si eventually results in several replies or notifications issued to the same service interface si .
+In event based frameworks, all protocol interactions are issued through different events
+Thus, the composer of a protocol stack must know the meaning of each event in order to preserve the semantic link between replies (and notifications) and requests .
+Moreover, nothing prevents from binding a handler that should handle a request to an event used to issue a reply .
+Note that these problems can be partially solved by typing events and handlers .
+However, it does not prevent from errors if there are several instances of the same event type .
+Note that protocol composition is clearer in the protocol frameworks that are based on services, rather than on events .
+The reason is that several events that are used to model different protocol interactions can be modeled by a single service interface .
+5.3 Dynamic Replacement of Protocols Dynamic replacement of protocols consists in switching on the fly between protocols that solve the same problem .
+Replacement of a protocol P by a new protocol newP means that a protocol module Pi is replaced by newPi in every stack i .
+This replacement is problematic since the local replacements (within stacks) must be synchronized in order to guarantee protocol correctness [21, 18] .
+Q1 Q1 R1 P1 1P 1newP 1 Repl?P1 Repl?P1 R newP1 gg h h" g" t Figure 5
+(Other solutions, e.g .
+in [11], are more complex.) In Fig .
+5, we show how this interception can be implemented in protocol frameworks that are based on services (in the left part of the figure) and events (in the right part of the figure) .
+The two sided arrows point to the protocol modules P1 and newP1 that are switched .
+It can be seen that the approach that uses the Service Interface mechanism has advantages .
+The intercepting module Repl P1 has an interceptor bound to service interface t that intercepts every request handled by modules P1 and all replies and notifications issued by P1 .
+The code of the module P1 can therefore remain unchanged .
+In event based frameworks, the solution is to add an intermediate module Repl P1 that intercepts the requests issued to P1 and also the replies and notifications issued by P1 .
+Although this ad hoc solution may seem similar to the servicebased approach, there is an important difference .
+The eventbased solution requires to slightly modify the module P1 since instead of handling event g and triggering event h, P1 must now handle different events g" and h" (see Fig .
+5). .

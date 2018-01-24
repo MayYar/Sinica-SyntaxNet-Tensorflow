@@ -1,0 +1,134 @@
+In the previous section we proposed using uniform strategies and gave an efficient algorithm to compute the best such strategy .
+In section we prove that there is always a good uniform strategy
+There always exists a uniform bidding strategy that is (1 ? 1 e ) optimal .
+Furthermore, for any > 0, there exists an instance for which all uniform strategies are at most (1 ? 1 e + ) optimal .
+We introduce the notion of a click price curve, which is central to our analysis .
+This definition makes it simple to show that there is always a single bid strategy that is a 1 2 approximation (and this is tight); we then build on this to prove Theorem 3 .
+4.1 Click price curves Consider a set of queries Q, and for each query q ? Q, let (clicksq(¡P), costq(¡P)) be the corresponding bid landscape .
+Consider an adversarial bidder £[ with the power to bid independently on each query .
+Note that this bidder is more powerful than an optimal bidder, which has to bid on the keywords .
+Suppose this strategy bids b? q for each query q .
+Thus, £[ achieves traffic C£[ = P i clicks(b? i ), and incurs total spend U£[ = P i cost(b? i ) .
+Without loss of generality we can assume that £[ bids so that for each query q, the cost per click is equal to b? q , i.e .
+costq(b? q ) clicksq(b? q ) = b? q .
+We may assume this because for some query q, if costq(b? q) clicksq(b? q) < b? q , we can always lower b? q and without changing the cost and clicks .
+To aid our discussion, we introduce the notion of a clickprice curve (an example of which is shown in Figure 2), which describes the cpc distribution obtained by £[ .
+Formally the curve is a non decreasing function h 
+Another way to construct this curve is to sort the queries in increasing order by b? q = costq(b? q) clicksq(b? q), then make a step function where the qth step has height b? q and width clicksq(b? q ) (see Figure 2) .
+Note that the area of each step is costq(b? q ) .
+The following claim follows immediately
+U£[ = R C£[ 0 h(r)dr .
+Suppose we wanted to buy some fraction r C£[ of the traffic that £[ is getting .
+The click price curve says that if we bid h(r ) on every keyword (and therefore every query), we get at least r traffic, since this bid would ensure that for all q such that b? q ? h(r ) we win as many clicks as £[ .
+Note that by bidding h(r ) on every keyword, we may actually get even more than r traffic, since for queries q where b? q is much less than h(r ) we may win more clicks than £[ .
+However, all of these extra clicks still cost at most h(r ) per click .
+Thus we see that for any r ? [0, C£[], if we bid h(r ) on every keyword, we receive at least r traffic at a total spend of at most h(r ) per click .
+Note that by randomizing between bidding zero and bidding h(r ), we can receive exactly r traffic at a total spend of at most r ¡P h(r ) .
+We summarize this discussion in the following lemma
+For any r ? [0, C£[], there exists a single bid strategy that randomizes between bidding h(r) and bidding zero, and this strategy receives exactly r traffic with total spend at most r ¡P h(r) .
+Lemma 4 describes a landscape as a continuous function .
+For our lower bounds, we will need to show that given any continuous function, there exists a discrete landscape that approximates it arbitrarily well .
+Lemma 5 .
+For any C, U > 0 and non decreasing function f 
+Proof .
+Construct an instance as follows .
+Let > 0 be a small number that we will later define in terms of .
+Define r0 = 0, r1, r2, .
+.
+.
+, rm = C such that ri?1 < ri ? ri?1 + , f(ri?1) ? f(ri) ? f(ri?1)+ , and m ? (C +f(C)) .
+(This is possible by choosing ri"s spaced by min( , f(ri)?f(ri?1))) Now make a query qi for all i ? [m] with bidders bidding h(ri), h(ri+1), .
+.
+.
+, h(rm), and ctrs £\[1] = £\[2] = ¡P ¡P ¡P = £\[m? i+1] = ri ?ri?1 .
+The graph is a matching with one keyword per query, and so we can imagine the optimal solution as bidding on queries .
+The optimal solution will always bid exactly h(ri) on query qi, and if it did so on all queries, it would spend U 
+Define small enough so that U = U + , which is always possible since U ? Z C 0 f(r)dr + mX i=1 (ri ? ri?1)(h(ri) ? h(ri?1)) ? U + 2 m ? U + (C + f(C)) .
+Note that the only possible bids (i.e., all others have the same results as one of these) are f(r0), .
+.
+.
+, f(rm), and bidding uniformly with f(ri) results in Pi j=1 ri ? ri?1 = ri clicks at cost h(ri)ri .
+4.2 A 1 2 approximation algorithm Using Lemma 4 we can now show that there is a uniform single bid strategy that is 1 2 optimal .
+In addition to being an interesting result in its own right, it also serves as a warm up for our main result .
+Theorem 6 .
+There always exists a uniform single bid strategy that is 1 2 optimal .
+Furthermore, for any > 0 there exists an instance for which all single bid strategies are at most (1 2 + ) optimal .
+45 Proof .
+Applying Lemma 4 with r = C£[ 2, we see that there is a strategy that achieves traffic C£[ 2 with spend C£[ 2¡Ph(C£[ 2) .
+Now, using the fact that h is a non decreasing function combined with Claim 1, we have (C£[ 2)h(C£[ 2) ? Z C£[ C£[ 2 h(r)dr ? Z C£[ 0 h(r)dr = U£[, (4) which shows that we spend at most U£[ .
+We conclude that there is a 1 2 optimal single bid strategy randomizing between bidding C£[ 2 and zero .
+For the second part of the theorem, we construct a tight example using two queries Q = {x, y}, two keywords K = {u, v}, and edges E = {(u, x), (v, y)} .
+Fix some £\ where 0 < £\ ? 1, and fix some very small > 0 .
+Query x has two positions, with bids of bx 1 = 1 £\ and bx 2 = , and with identical click through rates £\x [1] = £\x [2] = £\ .
+Query y has one position, with a bid of by 1 = 1 £\ and a click through rate of £\y [1] = £\ .
+The budget is U = 1 + £\ .
+The optimal solution is to bid on u (and therefore x) and bid 1 £\ on v (and therefore y), both with probability exactly .
+The only useful bids are 0, and 1 £\, since for both queries all other bids are identical in terms of cost and clicks to one of those three .
+Any single bid solution that uses as its non zero bid gets at most £\ clicks .
+Bidding 1 £\ on both keywords results in 2£\ clicks and total cost 2 .
+Thus, since the budget is U = 1 + £\ < 2, a single bid solution using 1 £\ can put weight at most (1+ £\) 2 on the 1 £\ bid .
+This results in at most £\(1 + £\) clicks .
+This can be made arbitrarily close to £\ by lowering .
+4.3 A (1 ? 1 e ) approximation algorithm The key to the proof of Theorem 3 is to show that there is a distribution over single bid strategies from Lemma 4 that obtains at least (1 ? 1 e )C£[ clicks .
+In order to figure out the best distribution, we wrote a linear program that models the behavior of a player who is trying to maximize clicks and an adversary who is trying to create an input that is hard for the player .
+Then using linear programming duality, we were able to derive both an optimal strategy and a tight instance .
+After solving the LP numerically, we were also able to see that there is a uniform strategy for the player that always obtains (1 ? 1 e )C£[ clicks; and then from the solution were easily able to guess the optimal distribution .
+This methodology is similar to that used in work on factor revealing LPs [8, 10] .
+4.3.1 An LP for the worst case click price curve .
+Consider the adversary"s problem of finding a click price curve for which no uniform bidding strategy can achieve £\C£[ clicks .
+Recall that by Lemma 1 we can assume that a uniform strategy randomizes between two bids u and v .
+We also assume that the uniform strategy uses a convex combination of strategies from Lemma 4, which we can assume by Lemma 5 .
+Thus, to achieve £\C£[ clicks, a uniform strategy must randomize between bids h(u) and h(v) where u ? £\C£[ and v ? £\C£[ .
+Call the set of such strategies S .
+Given a (u, v) ? S, the necessary probabilities in order to achieve £\C£[ clicks are easily determined, and we denote them by p1(u, v) and p2(u, v) respectively .
+Note further that the advertiser is trying to figure out which of these strategies to use, and ultimately wants to compute a distribution over uniform strategies .
+In the LP, she is actually going to compute a distribution over pairs of strategies in S, which we will then interpret as a distribution over strategies .
+Using this set of uniform strategies as constraints, we can characterize a set of worst case click price curves by the constraints Z C£[ 0 h(r)dr ? U ?(u, v) ? S p1(u, v)uh(u) + p2(u, v)vh(v) ? U A curve h that satisfies these constraints has the property that all uniform strategies that obtain £\C£[ clicks spend more than U .
+Discretizing this set of inequalities, and pushing the first constraint into the objective function, we get the following LP over variables hr representing the curve
+?(u, v) ? S, p1(u, v)uhu + p2(u, v)vhv ? U In this LP, S is defined in the discrete domain as S = {(u, v) ? {0, , 2 , .
+.
+.
+, C£[}2 
+Solving this LP for a particular £\, if we get an objective less than U, we know (up to some discretization) that an instance of Budget Optimization exists that cannot be approximated better than £\ .
+(The instance is constructed as in the proof of Lemma 5.) A binary search yields the smallest such £\ where the objective is exactly U .
+To obtain a strategy for the advertiser, we look at the dual, constraining the objective to be equal to U in order to get the polytope of optimum solutions
+It is straightforward to show that the second set of constraints is equivalent to the following
+Here the variables can be interpreted as weights on strategies in S .
+A point in this polytope represents a convex combination over strategies in S, with the property that for any click price curve h, the cost of the mixed strategy is at most have a strategy that achieves an £\ approximation .
+Interestingly, the equivalence between this polytope and the LP dual above shows that there is a mixture over values r ? [0, C] that achieves an £\ approximation for any curve h .
+After a search for the appropriate £\ (which turned out to be 1 ? 1 e ), we solved these two LPs and came up with the plots in Figure 3, which reveal not only the right approximation ratio, but also a picture of the worst case distribution and the approximation achieving strategy.9 From the pic9 The parameters U and C£[ can be set arbitrarily using scaling arguments .
+46 0 0 C e C 0 0 C e C Figure 3
+tures, we were able to quickly guess the optimal strategy and worst case example .
+4.3.2 Proof of Theorem 3 By Lemma 4, we know that for each r ? U£[, there is a strategy that can obtain traffic r at cost r ¡P h(r) .
+By mixing strategies for multiple values of r, we construct a uniform strategy that is guaranteed to achieve at least 1?e?1 = 0.63 fraction of £["s traffic and remain within budget .
+Note that the final resulting bid distribution will have some weight on the zero bid, since the single bid strategies from Lemma 4 put some weight on bidding zero .
+Consider the following probability density function over such strategies (also depicted in Figure 3)
+Note that R C£[ 0 g(r)dr = R C£[ C£[ e 1 r dr = 1, i.e .
+g is a probability density function .
+The traffic achieved by our strategy is equal to traffic = Z C£[ 0 g(r)¡Pr dr = Z C£[ C£[ e 1 r ¡Pr dr = ? 1 ? 1 e ? C£[ .
+The expected total spend of this strategy is at most spend = Z C£[ 0 g(r) ¡P rh(r) dr = Z C£[ C£[ e h(r) dr ? Z C£[ 0 h(r) dr = U£[ .
+Thus we have shown that there exists a uniform bidding strategy that is (1 ? 1 e ) optimal .
+We now show that no uniform strategy can do better .
+We will prove that for all > 0 there exists an instance for which all uniform strategies are at most (1 ? 1 e + ) optimal .
+First we define the following click price curve over the domain [0, 1]
+Since the curve is over the domain [0, 1] it corresponds to an instance where C£[ = 1 .
+Note also that R 1 0 h(r) dr = 1 e?2 R 1 1 e e ? 1 r dr = 1 .
+Thus, this curve corresponds to an instance where U£[ = 1 .
+Using Lemma 5, we construct an actual instance where the best uniform strategies are convex combinations of strategies that bid h(u) and achieve u clicks and u ¡P h(u) cost .
+Suppose for the sake of contradiction that there exists a uniform bidding strategy that achieves £\ > 1?e?1 traffic on this instance .
+By Lemma 1 there is always a two bid optimal uniform bidding strategy and so we may assume that the strategy achieving £\ clicks randomizes over two bids .
+To achieve £\ clicks, the two bids must be on values h(u) and h(v) with probabilities pu and pv such that pu + pv = 1, 0 ? u ? £\ ? v and puu + pvv = £\ .
+To calculate the spend of this strategy consider two cases
+The spend in this case is
+Using v ? £\ and then £\ > 1 ? 1 e we get spend ? £\e ? 1 e ? 2 > (1 ? 1 e)e ? 1 e ? 2 = 1, contradicting the assumption .
+We turn to the case u > 0 .
+Here we have pu = v?£\ v?u and pv = £\?u v?u .
+Note that for r ? (0, 1] we have h(r) ? 1 e?2 (e ? 1 r By a reduction from vertex cover we can show the following (proof omitted)
+Budget Optimization is strongly NP hard .
+47 Query Bidding Uniform Bidding (randomized) Uniform Bidding (deterministic) Lower bound 0 0 0.5 0.5 1 1 Budget Clicks Figure 4
+Now suppose we introduce weights on the queries that indicate the relative value of a click from the various search users .
+Formally, we have weights wq for all q ? Q and our goal is maximize the total weighted traffic given a budget .
+Call this the Weighted Keyword Bidding problem .
+With this additional generalization we can show hardness of approximation via a simple reduction from the Maximum Coverage problem, which is known to be (1?1 e) hard [6] (proof omitted) .
+Theorem 8 .
+The Weighted Keyword Bidding problem is hard to approximate to within (1 ? 1 e). .

@@ -1,0 +1,49 @@
+Having responded locally to an unexpected execution result or model change, it is necessary to communicate the consequences to agents with inter dependent activities so that they can align their decisions accordingly .
+Responses that look good locally may have a sub optimal global effect once alignments are made, and hence agents must have the ability to seek mutually beneficial joint schedule changes .
+In this section we summarize the coordination mechanisms provided in the agent architecture to address these issues .
+6.1 Communicating Non Local Constraints A basic means of coordination with other agents is provided by the Distributed State Mechanism (DSM), which is responsible for communicating changes made to the model or schedule of a given agent to other interested agents .
+More specifically, the DSM of a given agent acts to push any changes made to the time bounds, quality, or status of a local task method to all the other agents that have that same task method as a remote node in their subjective views .
+A recipient agent treats any communicated changes as additional forms of updates, in this case an update that modifies the current constraints associated with non local (but inter dependent) tasks or methods .
+These changes are handled identically to updates reflecting schedule execution results, potentially triggering the local scheduler if the need to reschedule is detected .
+6.2 Generating Non Local Options As mentioned in the previous section, the agent"s first response to any given query or update (either from execution or from another agent) is to generate one or more local options .
+Such options represent local schedule changes that are consistent with all currently known constraints originating from other agents" schedules, and hence can be implemented without interaction with other agents .
+In many cases, however, a larger scoped change to the schedules of two or more agents can produce a higher quality response .
+Exploration of opportunities for such coordinated action by two or more agents is the responsibility of the Options Manager .
+Running in lower priority mode than the Executor and Scheduler, the Options Manager initiates a non local option generation and evaluation process in response to any local schedule change made by the agent if computation time constraints permits .
+Generally speaking, a non local option identifies certain relaxations (to one or more constraints imposed by methods that are scheduled by one or more remote agents) that enable the generation of a higher quality local schedule .
+When found, a non local option is used by a coordinating agent to formulate queries to any other involved agents in order to determine the impact of such constraint relaxations on their local schedules .
+If the combined quality change reported back from a set of one or more relevant queries is a net gain, then the issuing agent signals to the other involved agents to commit to this joint set of schedule changes .
+The Option Manager currently employs two basic search strategies for generating non local options, each exploiting the local scheduler in hypothetical mode .
+Optimistic Synchronization Optimistic synchronization is a non local option generation strategy where search is used to explore the impact on quality if optimistic assumptions are made about currently unscheduled remote enablers .
+More specifically, the strategy looks for would be contributor methods that are currently unscheduled due to the fact that one or more remote enabling (source) tasks or methods are not currently scheduled .
+For each such local method, the set of remote enablers are hypothetically activated, and the scheduler attempts to construct a new local schedule under these optimistic assumptions .
+If successful, a non local option is generated, specifying the value of the new, higher quality local schedule, the temporal constraints on the local target activity, and the set of must schedule enabler activities that must be scheduled by remote agents in order to achieve this local quality .
+The needed queries requesting the quality impact of scheduling these activities are then formulated and sent to the relevant remote agents .
+To illustrate, consider again the example in Figure 1 .
+The maximum quality that Agent1 can contribute to the task group is 15 (by scheduling M1, M2 and M3) .
+Assume that this is Agent1"s current schedule .
+Given this state, the maximum quality that Agent2 can contribute to the task group is 10, and the total task group quality would then be 15 + 10 = 25 .
+Using optimistic synchronization, Agent2 will generate a non local option that indicates that if M5 becomes enabled, both M5 and M6 would be scheduled, and the quality contributed by Agent2 to the task group would become 30 .
+Agent2 sends a must schedule M4 query to Agent1 .
+Because of the time window constraints, Agent1 must remove M3 from its schedule to get M4 on, resulting in a new lower quality schedule of 5 .
+However, when Agent2 receives this option response from Agent1, it determines that the total quality accumulated for the task group would be 5 + 30 = 35, a net gain of 10 .
+Hence, Agent 2 signals to Agent1 to commit to this non local option .
+Conflict Driven Relaxation A second strategy for generating non local options, referred to as Conflict Directed Relaxation, utilizes analysis of STN conflicts to identify and prioritize external constraints to relax in the event that a particular method that would increase local quality is found to be unschedulable .
+Recall that if a method cannot be feasibly inserted into the schedule, an attempt to do so will generate a negative cycle .
+Given this cycle, the mechanism proceeds in three steps .
+First, the constraints involved in the cycle are collected .
+Second, by virtue of the connections in the STN to the domain level C TAEMS model, this set is filtered to identify the subset associated with remote nodes .
+Third, constraints in this subset are selectively retracted to The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 489 Figure 4
+Figure 5
+determine if STN consistency is restored .
+If successful, a non local option is generated indicating which remote constraint(s) must be relaxed and by how much to allow installation of the new, higher quality local schedule .
+To illustrate this strategy, consider Figure 5 where Agent1 has M1, M2 and M4 on its timeline, and therefore est(M4) = 21 .
+Agent2 has M5 and M6 on its timeline, with est(M5) = 31 (M6 could be scheduled before or after M5) .
+Suppose that Agent2 receives a new task M7 with deadline 55 (see Figure 4) .
+If Agent2 could schedule M7, the quality contributed by Agent2 to the task group would be 70 .
+However, an attempt to schedule M7 together with M5 and M6 leads to a conflict, since the est(M7) = 46, dur(M7) = 10 and lft(M7) = 55 (see Figure 5) .
+Conflict directed relaxation by Agent 2 suggests relaxing the lft(M4) by 1 tick to 30, and this query is communicated to Agent 1 .
+In fact, by retracting either method M1 or M2 from the schedule this relaxation can be accommodated with no quality loss to Agent1 (due to the min qaf) .
+Upon communication of this fact Agent 2 signals to commit. .

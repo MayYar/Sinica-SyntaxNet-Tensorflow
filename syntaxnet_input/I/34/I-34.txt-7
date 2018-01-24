@@ -1,0 +1,49 @@
+That is, a prohibition and a permission conflict (condition 1) if, and only if, the agents and roles they apply to and their actions, respectively, unify under £m (condition 2) and their activation periods overlap (condition 3) .
+Substitution £m, the conflict set, unifies the agents, roles and atomic formulae of a permission and a prohibition .
+The annotation £Uc does not play any role when detecting conflicts, but, as we show below, we have to update the annotation to reflect new curtailments to solve conflicts .
+For instance, cflct( (Fa
+We define below how we obtain the set of conflicting norms of a normative state £[
+8 .
+The finite, possibly empty set of conflicting norms of a normative state £[, denoted as CFLS(£[), is defined as CFLS(£[) = { £s, £s , £m |£s, £s ? £[, cflct(£s, £s , £m)} 3.2 Conflict Resolution A fine grained way of resolving conflict can be done via unification .
+We detect the overlapping of the norms" influences, i.e .
+how they affect the behaviours of agents in the VO, and we curtail the 646 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) influence of the prohibition .
+We illustrate with Venn diagrams in Figure 2 the overlap of norm influences (left) which characterises a conflict and the curtailment necessary to resolve the conflict (right) .
+The illustration shows the space of possible values for p(X, Y ) and p(X, Y ) PA
+The scope of these norms overlap, illustrated by the intersection of boxes on the left, in actions with values, for instance, a, b, p(c, 2) , .
+.
+.
+, a, b, p(c, n) .
+The curtailment of the prohibition eliminates the intersection
+If there were multiple overlaps among one prohibition and various permissions, which is likely to happen, then the prohibition will be multiply curtailed to move the scope of the norm to avoid all intersections .
+The algorithm shown in Figure 3 depicts how we obtain a conflictfree set of norms .
+It maps an existing set £[ possibly with conflictalgorithm conflictResolution(£[, £[ ) input £[ output £[ begin £[ 
+£s = (Fa
+£s = (F£n1
+The algorithm forms £[ as a set that is conflict freethis means that prohibitions are annotated with a conflict set that indicates which bindings for variables have to be avoided .
+Initially, £[ is set to be £[ .
+The algorithm operates in two stages .
+In the first stage (first for each loop), we remove all conflicting prohibitions £s = (Fa
+In the second stage (second for each loop), the remaining prohibitions in £[ are examined
+As a prohibition may have conflicts with various permissions, the set CFLS(£[ ) may contain more than one tuple for each prohibition .
+In order to provide an £[ that reflects all these conflicts for a specific prohibition, we have to form £UMAX c containing all conflict sets £mc for a given prohibition £s .
+The maximal set is used to update the annotation of the prohibition .
+It is important to explain the need for updating the conflict set of prohibitions .
+Normative states change as a result of agents" actions [11]
+Whenever new norms are added we must check for new conflicts and inconsistencies .
+If we only apply our algorithm to a pair consisting of an old and a new norm, then some re processing of pairs of old norms (which were dealt with before) can be saved .
+The removal of norms from the set £[ is dealt with efficiently
+If there is a conflict, then the conflict set will have been recorded in the prohibition"s annotation; this conflict set is thus removed from the prohibition"s annotation .
+The removal of obligations follows a similar process .
+Prohibitions are removed without the need to consider their relationships with other norms .
+Our algorithm is correct in that it provides, for a given £[, a new £[ in which i) all ground prohibitions which conflict with permissions have been removed; and ii) all remaining annotated prohibitions (F£n
+The first requirement is addressed by the first for each loop, which does precisely this
+The second requirement is addressed by the second for each loop
+It is easy to see that the algorithm always terminates
+The set CFLS(£[) is computed in a finite number of steps as are the set operations performed within each loop .
+The algorithm has, however, exponential complexity3 , as the computation of CFLS(£[) requires a pairwise comparison of all elements in £[ .
+We illustrate our algorithm with the following example .
+Let there be the following global normative state £[
+The final £[ is thus
+We show in Section 5.1 how annotations are used by norm aware agents. .

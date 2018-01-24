@@ -1,0 +1,35 @@
+The core components of CAF?E are 1) AF for incremental learning of query profiles, 2) IR for estimating relevance of passages with respect to query profiles, 3) ND for assessing novelty of passages with respect to user"s history, and 4) anti redundancy component to remove redundancy from ranked lists .
+3.1 Adaptive Filtering Component We use a state of the art algorithm in the field the regularized logistic regression method which had the best results on several benchmark evaluation corpora for AF [21] .
+Logistic regression is a supervised learning algorithm for statistical classification .
+Based on a training set of labeled instances, it learns a class model which can then by used to predict the labels of unseen instances .
+Its performance as well as efficiency in terms of training time makes it a good candidate when frequent updates of the class model are required, as is the case in adaptive filtering, where the system must learn from each new feedback provided by the user .
+(See [21] and [23] for computational complexity and implementation issues) .
+In adaptive filtering, each query is considered as a class and the probability of a passage belonging to this class corresponds to the degree of relevance of the passage with respect to the query .
+For training the model, we use the query itself as the initial positive training example of the class, and the user highlighted pieces of text (marked as Relevant or Not relevant) during feedback as additional training examples .
+To address the cold start issue in the early stage before any user feedback is obtained, the system uses a small sample from a retrospective corpus as the initial negative examples in the training set .
+The details of using logistic regression for adaptive filtering (assigning different weights to positive and negative training instances, and regularizing the objective function to prevent over fitting on training data) are presented in [21] .
+The class model w? learned by Logistic Regression, or the query profile, is a vector whose dimensions are individual terms and whose elements are the regression coefficients, indicating how influential each term is in the query profile .
+The query profile is updated whenever a new piece of user feedback is received .
+A temporally decaying weight can be applied to each training example, as an option, to emphasize the most recent user feedback .
+3.2 Passage Retrieval Component We use standard IR techniques in this part of our system .
+Incoming documents are processed in chunks, where each chunk can be defined as a fixed span of time or as a fixed number of documents, as preferred by the user .
+For each incoming document, corpus statistics like the IDF (Inverted Document Frequency) of each term are updated .
+We use a state of the art named entity identifier and tracker [8, 12] to identify person and location names, and merge them with co referent named entities seen in the past .
+Then the documents are segmented into passages, which can be a whole document, a paragraph, a sentence, or any other continuous span of text, as preferred .
+Each passage is represented using a vector of TF IDF (Term FrequencyInverse Document Frequency) weights, where term can be a word or a named entity .
+Given a query profile, i.e .
+the logistic regression solution w? as described in Section 3.1, the system computes the posterior probability of relevance for each passage x as fRL(x) ¡Ý P(y = 1|x, w? ) = 1 (1 + e?w?¡Px) (1) Passages are ordered by their relevance scores, and the ones with scores above a threshold (tuned on a training set) comprise the relevance list that is passed on to the novelty detection step .
+3.3 Novelty Detection Component CAF?E maintains a user history H(t), which contains all the spans of text hi that the user highlighted (as feedback) during his or her past interactions with the system, up to the current time t .
+Denoting the history as H(t) = n h1, h2, ..., ht o , (2) the novelty score of a new candidate passage x is computed as
+The novelty score of each passage is compared to a prespecified threshold (also tuned on a training set), and any passage with a score below this threshold is removed from the relevance list .
+3.4 Anti redundant Ranking Component Although the novelty detection component ensures that only novel (previously unseen) information remains in the relevance list, this list might still contain the same novel information at multiple positions in the ranked list .
+Suppose, for example, that the user has already read about a $100,000 reward for information about the escaped convicts .
+A new piece of news that the award has been increased to $200,000 is novel since the user hasn"t read about it yet .
+However, multiple news sources would report this news and we might end up showing (redundant) articles from all these sources in a ranked list .
+Hence, a ranked list should also be made non redundant with respect to its own contents .
+We use a simplified version of the Maximal Marginal Relevance method [5], originally developed for combining relevance and novelty in text retrieval and summarization .
+Our procedure starts with the current list of passages sorted by relevance (section 3.2), filtered by Novelty Detection component (section 3.3), and generates a new non redundant list as follows
+list only if fAR(x) > t where fAR(x) = 1 ? max pi?Lnew {cos(x, pi)} and Lnew is the set of passages already selected in the new list .
+have been examined .
+After applying the above mentioned algorithm, each passage in the new list is sufficiently dissimilar to others, thus favoring diversity rather than redundancy in the new ranked list .
+The anti redundancy threshold t is tuned on a training set. .

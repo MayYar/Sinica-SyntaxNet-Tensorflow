@@ -1,0 +1,435 @@
+Relaxed Online SVMs for Spam Filtering 
+content:
+1 ABSTRACT :
+1-1:Spam is a key problem in electronic communication, including large scale email systems and the growing number of blogs .
+1-2:Content based filtering is one reliable method of combating this threat in its various forms, but some academic researchers and industrial practitioners disagree on how best to filter spam .
+1-3:The former have advocated the use of Support Vector Machines (SVMs) for content based filtering, as this machine learning methodology gives state of the art performance for text classification .
+1-4:However, similar performance gains have yet to be demonstrated for online spam filtering .
+1-5:Additionally, practitioners cite the high cost of SVMs as reason to prefer faster (if less statistically robust) Bayesian methods .
+1-6:In this paper, we offer a resolution to this controversy .
+1-7:First, we show that online SVMs indeed give state of the art classification performance on online spam filtering on large benchmark data sets .
+1-8:Second, we show that nearly equivalent performance may be achieved by a Relaxed Online SVM at greatly reduced computational cost .
+1-9:Our results are experimentally verified on email spam, blog spam, and splog detection tasks .
+1-10:H.3.3 [Information Storage and Retrieval]: Information .
+2 INTRODUCTION :
+2-1:Electronic communication is increasingly plagued by unwanted or harmful content known as spam .
+2-2:The most well known form of spam is email spam, which remains a major problem for large email systems .
+2-3:Other forms of spam are also becoming problematic, including blog spam, in which spammers post unwanted comments in blogs [21], and splogs, which are fake blogs constructed to enable link spam with the hope of boosting the measured importance of a given webpage in the eyes of automated search engines [17] .
+2-4:There are a variety of methods for identifying these many forms of spam, including compiling blacklists of known spammers, and conducting link analysis .
+2-5:The approach of content analysis has shown particular promise and generality for combating spam .
+2-6:In content analysis, the actual message text (often including hyper text and meta text, such as HTML and headers) is analyzed using machine learning techniques for text classification to determine if the given content is spam .
+2-7:Content analysis has been widely applied in detecting email spam [11], and has also been used for identifying blog spam [21] and splogs [17] .
+2-8:In this paper, we do not explore the related problem of link spam, which is currently best combated by link analysis [13] .
+2-9:1.1 An Anti Spam Controversy The anti spam community has been divided on the choice of the best machine learning method for content based spam detection .
+2-10:Academic researchers have tended to favor the use of Support Vector Machines (SVMs), a statistically robust machine learning method [7] which yields state of theart performance on general text classification [14] .
+2-11:However, SVMs typically require training time that is quadratic in the number of training examples, and are impractical for largescale email systems .
+2-12:Practitioners requiring content based spam filtering have typically chosen to use the faster (if less statistically robust) machine learning method of Naive Bayes text classification [11, 12, 20] .
+2-13:This Bayesian method requires only linear training time, and is easily implemented in an online setting with incremental updates .
+2-14:This allows a deployed system to easily adapt to a changing environment over time .
+2-15:Other fast methods for spam filtering include compression models [1] and logistic regression [10] .
+2-16:It has not yet been empirically demonstrated that SVMs give improved performance over these methods in an online spam detection setting [4] .
+2-17:1.2 Contributions In this paper, we address the anti spam controversy and offer a potential resolution .
+2-18:We first demonstrate that online SVMs do indeed provide state of the art spam detection through empirical tests on several large benchmark data sets of email spam .
+2-19:We then analyze the effect of the tradeoff parameter in the SVM objective function, which shows that the expensive SVM methodology may, in fact, be overkill for spam detection .
+2-20:We reduce the computational cost of SVM learning by relaxing this requirement on the maximum margin in online settings, and create a Relaxed Online SVM, ROSVM, appropriate for high performance content based spam filtering in large scale settings. .
+3 SPAM AND ONLINE SVMS :
+3-1:The controversy between academics and practitioners in spam filtering centers on the use of SVMs .
+3-2:The former advocate their use, but have yet to demonstrate strong performance with SVMs on online spam filtering .
+3-3:Indeed, the results of [4] show that, when used with default parameters, SVMs actually perform worse than other methods .
+3-4:In this section, we review the basic workings of SVMs and describe a simple Online SVM algorithm .
+3-5:We then show that Online SVMs indeed achieve state of the art performance on filtering email spam, blog comment spam, and splogs, so long as the tradeoff parameter C is set to a high value .
+3-6:However, the cost of Online SVMs turns out to be prohibitive for largescale applications .
+3-7:These findings motivate our proposal of Relaxed Online SVMs in the following section .
+3-8:2.1 Background: SVMs SVMs are a robust machine learning methodology which has been shown to yield state of the art performance on text classification [14] .
+3-9:by finding a hyperplane that separates two classes of data in data space while maximizing the margin between them .
+3-10:We use the following notation to describe SVMs, which draws from [23] .
+3-11:A data set X contains n labeled example vectors {(x1, y1) .
+3-12:.
+3-13:.
+3-14:(xn, yn)}, where each xi is a vector containing features describing example i, and each yi is the class label for that example .
+3-15:In spam detection, the classes spam and ham (i.e., not spam) are assigned the numerical class labels +1 and −1, respectively .
+3-16:The linear SVMs we employ in this paper use a hypothesis vector w and bias term b to classify a new example x, by generating a predicted class label f(x): f(x) = sign(< w, x > +b) SVMs find the hypothesis w, which defines the separating hyperplane, by minimizing the following objective function over all n training examples: τ(w, ξ) = 1 2 ||w||2 + C nX i=i ξi under the constraints that ∀i = {1..n} : yi(< w, xi > +b) ≥ 1 − ξi, ξi ≥ 0 In this objective function, each slack variable ξi shows the amount of error that the classifier makes on a given example xi .
+3-17:Minimizing the sum of the slack variables corresponds to minimizing the loss function on the training data, while minimizing the term 1 2 ||w||2 corresponds to maximizing the margin between the two classes [23] .
+3-18:These two optimization goals are often in conflict; the tradeoff parameter C determines how much importance to give each of these tasks .
+3-19:Linear SVMs exploit data sparsity to classify a new instance in O(s) time, where s is the number of non zero features .
+3-20:This is the same classification time as other linear Given: data set X = (x1, y1), .
+3-21:.
+3-22:.
+3-23:, (xn, yn), C, m: Initialize w := 0, b := 0, seenData := { } For Each xi ∈ X do: Classify xi using f(xi) = sign(< w, xi > +b) IF yif(xi) < 1 Find w , b using SMO on seenData, using w, b as seed hypothesis .
+3-24:Add xi to seenData done Figure 1: Pseudo code for Online SVM .
+3-25:classifiers, and as Naive Bayesian classification .
+3-26:Training SVMs, however, typically takes O(n2 ) time, for n training examples .
+3-27:A variant for linear SVMs was recently proposed which trains in O(ns) time [15], but because this method has a high constant, we do not explore it here .
+3-28:2.2 Online SVMs In many traditional machine learning applications, SVMs are applied in batch mode .
+3-29:That is, an SVM is trained on an entire set of training data, and is then tested on a separate set of testing data .
+3-30:Spam filtering is typically tested and deployed in an online setting, which proceeds incrementally .
+3-31:Here, the learner classifies a new example, is told if its prediction is correct, updates its hypothesis accordingly, and then awaits a new example .
+3-32:Online learning allows a deployed system to adapt itself in a changing environment .
+3-33:Re training an SVM from scratch on the entire set of previously seen data for each new example is cost prohibitive .
+3-34:However, using an old hypothesis as the starting point for re training reduces this cost considerably .
+3-35:One method of incremental and decremental SVM learning was proposed in [2] .
+3-36:Because we are only concerned with incremental learning, we apply a simpler algorithm for converting a batch SVM learner into an online SVM (see Figure 1 for pseudocode), which is similar to the approach of [16] .
+3-37:Each time the Online SVM encounters an example that was poorly classified, it retrains using the old hypothesis as a starting point .
+3-38:Note that due to the Karush Kuhn Tucker conditions, it is not necessary to re train on wellclassified examples that are outside the margins [23] .
+3-39:We used Platt"s SMO algorithm [22] as a core SVM solver, because it is an iterative method that is well suited to converge quickly from a good initial hypothesis .
+3-40:Because previous work (and our own initial testing) indicates that binary feature values give the best results for spam filtering [20, 9], we optimized our implementation of the Online SMO to exploit fast inner products with binary vectors .
+3-41:1 2.3 Feature Mapping Spam Content Extracting machine learning features from text may be done in a variety of ways, especially when that text may include hyper content and meta content such as HTML and header information .
+3-42:However, previous research has shown that simple methods from text classification, such as bag of words vectors, and overlapping character level n grams, can achieve strong results [9] .
+3-43:Formally, a bag of words vector is a vector x with a unique dimension for each possible 1 Our source code is freely available at www.cs.tufts.edu ∼dsculley onlineSMO .
+3-44:1 0.999 0.995 0.99 0.985 0.98 0.1 1 10 100 1000 ROCArea C 2 grams 3 grams 4 grams words Figure 2: Tuning the Tradeoff Parameter C .
+3-45:Tests were conducted with Online SMO, using binary feature vectors, on the spamassassin data set of 6034 examples .
+3-46:Graph plots C versus Area under the ROC curve .
+3-47:word, defined as a contiguous substring of non whitespace characters .
+3-48:An n gram vector is a vector x with a unique dimension for each possible substring of n total characters .
+3-49:Note that n grams may include whitespace, and are overlapping .
+3-50:We use binary feature scoring, which has been shown to be most effective for a variety of spam detection methods [20, 9] .
+3-51:We normalize the vectors with the Euclidean norm .
+3-52:Furthermore, with email data, we reduce the impact of long messages (for example, with attachments) by considering only the first 3,000 characters of each string .
+3-53:For blog comments and splogs, we consider the whole text, including any meta data such as HTML tags, as given .
+3-54:No other feature selection or domain knowledge was used .
+3-55:2.4 Tuning the Tradeoff Parameter, C The SVM tradeoff parameter C must be tuned to balance the (potentially conflicting) goals of maximizing the margin and minimizing the training error .
+3-56:Early work on SVM based spam detection [9] showed that high values of C give best performance with binary features .
+3-57:Later work has not always followed this lead: a (low) default setting of C was used on splog detection [17], and also on email spam [4] .
+3-58:Following standard machine learning practice, we tuned C on separate tuning data not used for later testing .
+3-59:We used the publicly available spamassassin email spam data set, and created an online learning task by randomly interleaving all 6034 labeled messages to create a single ordered set .
+3-60:For tuning, we performed a coarse parameter search for C using powers of ten from .0001 to 10000 .
+3-61:We used the Online SVM described above, and tested both binary bag of words vectors and n gram vectors with n = {2, 3, 4} .
+3-62:We used the first 3000 characters of each message, which included header information, body of the email, and possibly attachments .
+3-63:Following the recommendation of [6], we use Area under the ROC curve as our evaluation measure .
+3-64:The results (see Figure 2) agree with [9]: there is a plateau of high performance achieved with all values of C ≥ 10, and performance degrades sharply with C < 1 .
+3-65:For the remainder of our experiments with SVMs in this paper, we set C = 100 .
+3-66:We will return to the observation that very high values of C do not degrade performance as support for the intuition that relaxed SVMs should perform well on spam .
+3-67:Table 1: Results for Email Spam filtering with Online SVM on benchmark data sets .
+3-68:Score reported is (1 ROCA)%, where 0 is optimal .
+3-69:trec05p 1 trec06p OnSVM: words 0.015 (.011 .022) 0.034 (.025 .046) 3 grams 0.011 (.009 .015) 0.025 (.017 .035) 4 grams 0.008 (.007 .011) 0.023 (.017 .032) SpamProbe 0.059 (.049 .071) 0.092 (.078 .110) BogoFilter 0.048 (.038 .062) 0.077 (.056 .105) TREC Winners 0.019 (.015 .023) 0.054 (.034 .085) 53 Ensemble 0.007 (.005 .008) 0.020 (.007 .050) Table 2: Results for Blog Comment Spam Detection using SVMs and Leave One Out Cross Validation .
+3-70:We report the same performance measures as in the prior work for meaningful comparison .
+3-71:accuracy precision recall SVM C = 100: words 0.931 0.946 0.954 3 grams 0.951 0.963 0.965 4 grams 0.949 0.967 0.956 Prior best method 0.83 0.874 0.874 2.5 Email Spam and Online SVMs With C tuned on a separate tuning set, we then tested the performance of Online SVMs in spam detection .
+3-72:We used two large benchmark data sets of email spam as our test corpora .
+3-73:These data sets are the 2005 TREC public data set trec05p 1 of 92,189 messages, and the 2006 TREC public data sets, trec06p, containing 37,822 messages in English .
+3-74:(We do not report our strong results on the trec06c corpus of Chinese messages as there have been questions raised over the validity of this test set.) We used the canonical ordering provided with each of these data sets for fair comparison .
+3-75:Results for these experiments, with bag of words vectors and and n gram vectors appear in Table 1 .
+3-76:To compare our results with previous scores on these data sets, we use the same (1 ROCA)% measure described in [6], which is one minus the area under the ROC curve, expressed as a percent .
+3-77:This measure shows the percent chance of error made by a classifier asserting that one message is more likely to be spam than another .
+3-78:These results show that Online SVMs do give state of the art performance on email spam .
+3-79:The only known system that out performs the Online SVMs on the trec05p 1 data set is a recent ensemble classifier which combines the results of 53 unique spam filters [19] .
+3-80:To our knowledge, the Online SVM has out performed every other single filter on these data sets, including those using Bayesian methods [5, 3], compression models [5, 3], logistic regression [10], and perceptron variants [3], the TREC competition winners [5, 3], and open source email spam filters BogoFilter v1.1.5 and SpamProbe v1.4d .
+3-81:2.6 Blog Comment Spam and SVMs Blog comment spam is similar to email spam in many regards, and content based methods have been proposed for detecting these spam comments [21] .
+3-82:However, large benchmark data sets of labeled blog comment spam do not yet exist .
+3-83:Thus, we run experiments on the only publicly available data set we know of, which was used in content based blog Table 3: Results for Splog vs .
+3-84:Blog Detection using SVMs and Leave One Out Cross Validation .
+3-85:We report the same evaluation measures as in the prior work for meaningful comparison .
+3-86:features precision recall F1 SVM C = 100: words 0.921 0.870 0.895 3 grams 0.904 0.866 0.885 4 grams 0.928 0.876 0.901 Prior SVM with: words 0.887 0.864 0.875 4 grams 0.867 0.844 0.855 words+urls 0.893 0.869 0.881 comment spam detection experiments by [21] .
+3-87:Because of the small size of the data set, and because prior researchers did not conduct their experiments in an on line setting, we test the performance of linear SVMs using leave one out cross validation, with SVM Light, a standard open source SVM implementation [14] .
+3-88:We use the parameter setting C = 100, with the same feature space mappings as above .
+3-89:We report accuracy, precision, and recall to compare these to the results given on the same data set by [21] .
+3-90:These results (see Table 2) show that SVMs give superior performance on this data set to the prior methodology .
+3-91:2.7 Splogs and SVMs As with blog comment spam, there is not yet a large, publicly available benchmark corpus of labeled splog detection test data .
+3-92:However, the authors of [17] kindly provided us with the labeled data set of 1,389 blogs and splogs that they used to test content based splog detection using SVMs .
+3-93:The only difference between our methodology and that of [17] is that they used default parameters for C, which SVM Light sets to 1 avg||x||2 .
+3-94:(For normalized vectors, this default value sets C = 1.) They also tested several domain informed feature mappings, such as giving special features to url tags .
+3-95:For our experiments, we used the same feature mappings as above, and tested the effect of setting C = 100 .
+3-96:As with the methodology of [17], we performed leave one out cross validation for apples to apples comparison on this data .
+3-97:The results (see Table 3) show that a high value of C produces higher performance for the same feature space mappings, and even enables the simple 4 gram mapping to out perform the previous best mapping which incorporated domain knowledge by using words and urls .
+3-98:2.8 Computational Cost The results presented in this section demonstrate that linfeatures trec06p trec05p 1 words 12196s 66478s 3 grams 44605s 128924s 4 grams 87519s 242160s corpus size 32822 92189 Table 4: Execution time for Online SVMs with email spam detection, in CPU seconds .
+3-99:These times do not include the time spent mapping strings to feature vectors .
+3-100:The number of examples in each data set is given in the last row as corpus size .
+3-101:A B Figure 3: Visualizing the effect of C .
+3-102:Hyperplane A maximizes the margin while accepting a small amount of training error .
+3-103:This corresponds to setting C to a low value .
+3-104:Hyperplane B accepts a smaller margin in order to reduce training error .
+3-105:This corresponds to setting C to a high value .
+3-106:Content based spam filtering appears to do best with high values of C .
+3-107:ear SVMs give state of the art performance on content based spam filtering .
+3-108:However, this performance comes at a price .
+3-109:Although the blog comment spam and splog data sets are too small for the quadratic training time of SVMs to appear problematic, the email data sets are large enough to illustrate the problems of quadratic training cost .
+3-110:Table 4 shows computation time versus data set size for each of the online learning tasks (on same system) .
+3-111:The training cost of SVMs are prohibitive for large scale content based spam detection, or a large blog host .
+3-112:In the following section, we reduce this cost by relaxing the expensive requirements of SVMs. .
+4 RELAXED ONLINE SVMS (ROSVM) :
+4-1:One of the main benefits of SVMs is that they find a decision hyperplane that maximizes the margin between classes in the data space .
+4-2:Maximizing the margin is expensive, typically requiring quadratic training time in the number of training examples .
+4-3:However, as we saw in the previous section, the task of content based spam detection is best achieved by SVMs with a high value of C .
+4-4:Setting C to a high value for this domain implies that minimizing training loss is more important than maximizing the margin (see Figure 3) .
+4-5:Thus, while SVMs do create high performance spam filters, applying them in practice is overkill .
+4-6:The full margin maximization feature that they provide is unnecessary, and relaxing this requirement can reduce computational cost .
+4-7:We propose three ways to relax Online SVMs: • Reduce the size of the optimization problem by only optimizing over the last p examples .
+4-8:• Reduce the number of training updates by only training on actual errors .
+4-9:• Reduce the number of iterations in the iterative SVM Given: dataset X = (x1, y1), .
+4-10:.
+4-11:.
+4-12:, (xn, yn), C, m, p: Initialize w := 0, b := 0, seenData := { } For Each xi ∈ X do: Classify xi using f(xi) = sign(< w, xi > +b) If yif(xi) < m Find w , b with SMO on seenData, using w, b as seed hypothesis .
+4-13:set (w, b) := (w",b") If size(seenData) > p remove oldest example from seenData Add xi to seenData done Figure 4: Pseudo code for Relaxed Online SVM .
+4-14:solver by allowing an approximate solution to the optimization problem .
+4-15:As we describe in the remainder of this subsection, all of these methods trade statistical robustness for reduced computational cost .
+4-16:Experimental results reported in the following section show that they equal or approach the performance of full Online SVMs on content based spam detection .
+4-17:3.1 Reducing Problem Size In the full Online SVMs, we re optimize over the full set of seen data on every update, which becomes expensive as the number of seen data points grows .
+4-18:We can bound this expense by only considering the p most recent examples for optimization (see Figure 4 for pseudo code) .
+4-19:Note that this is not equivalent to training a new SVM classifier from scratch on the p most recent examples, because each successive optimization problem is seeded with the previous hypothesis w [8] .
+4-20:This hypothesis may contain values for features that do not occur anywhere in the p most recent examples, and these will not be changed .
+4-21:This allows the hypothesis to remember rare (but informative) features that were learned further than p examples in the past .
+4-22:Formally, the optimization problem is now defined most clearly in the dual form [23] .
+4-23:In this case, the original softmargin SVM is computed by maximizing at example n: W (α) = nX i=1 αi − 1 2 nX i,j=1 αiαjyiyj < xi, xj >, subject to the previous constraints [23]: ∀i ∈ {1, .
+4-24:.
+4-25:.
+4-26:, n} : 0 ≤ αi ≤ C and nX i=1 αiyi = 0 To this, we add the additional lookback buffer constraint ∀j ∈ {1, .
+4-27:.
+4-28:.
+4-29:, (n − p)} : αj = cj where cj is a constant, fixed as the last value found for αj while j > (n − p) .
+4-30:Thus, the margin found by an optimization is not guaranteed to be one that maximizes the margin for the global data set of examples {x1, .
+4-31:.
+4-32:.
+4-33:, xn)}, but rather one that satisfies a relaxed requirement that the margin be maximized over the examples { x(n−p+1), .
+4-34:.
+4-35:.
+4-36:, xn}, subject to the fixed constraints on the hyperplane that were found in previous optimizations over examples {x1, .
+4-37:.
+4-38:.
+4-39:, x(n−p)} .
+4-40:(For completeness, when p ≥ n, define (n − p) = 1.) This set of constraints reduces the number of free variables in the optimization problem, reducing computational cost .
+4-41:3.2 Reducing Number of Updates As noted before, the KKT conditions show that a well classified example will not change the hypothesis; thus it is not necessary to re train when we encounter such an example .
+4-42:Under the KKT conditions, an example xi is considered well classified when yif(xi) > 1 .
+4-43:If we re train on every example that is not well classified, our hyperplane will be guaranteed to be optimal at every step .
+4-44:The number of re training updates can be reduced by relaxing the definition of well classified .
+4-45:An example xi is now considered well classified when yif(xi) > M, for some 0 ≤ M ≤ 1 .
+4-46:Here, each update still produces an optimal hyperplane .
+4-47:The learner may encounter an example that lies within the margins, but farther from the margins than M .
+4-48:Such an example means the hypothesis is no longer globally optimal for the data set, but it is considered good enough for continued use without immediate retraining .
+4-49:This update procedure is similar to that used by variants of the Perceptron algorithm [18] .
+4-50:In the extreme case, we can set M = 0, which creates a mistake driven Online SVM .
+4-51:In the experimental section, we show that this version of Online SVMs, which updates only on actual errors, does not significantly degrade performance on content based spam detection, but does significantly reduce cost .
+4-52:3.3 Reducing Iterations As an iterative solver, SMO makes repeated passes over the data set to optimize the objective function .
+4-53:SMO has one main loop, which can alternate between passing over the entire data set, or the smaller active set of current support vectors [22] .
+4-54:Successive iterations of this loop bring the hyperplane closer to an optimal value .
+4-55:However, it is possible that these iterations provide less benefit than their expense justifies .
+4-56:That is, a close first approximation may be good enough .
+4-57:We introduce a parameter T to control the maximum number of iterations we allow .
+4-58:As we will see in the experimental section, this parameter can be set as low as 1 with little impact on the quality of results, providing computational savings. .
+5 EXPERIMENTS :
+5-1:In Section 2, we argued that the strong performance on content based spam detection with SVMs with a high value of C show that the maximum margin criteria is overkill, incurring unnecessary computational cost .
+5-2:In Section 3, we proposed ROSVM to address this issue, as both of these methods trade away guarantees on the maximum margin hyperplane in return for reduced computational cost .
+5-3:In this section, we test these methods on the same benchmark data sets to see if state of the art performance may be achieved by these less costly methods .
+5-4:We find that ROSVM is capable of achieving these high levels of performance with greatly reduced cost .
+5-5:Our main tests on content based spam detection are performed on large benchmark sets of email data .
+5-6:We then apply these methods on the smaller data sets of blog comment spam and blogs, with similar performance .
+5-7:4.1 ROSVM Tests In Section 3, we proposed three approaches for reducing the computational cost of Online SMO: reducing the prob0.005 0.01 0.025 0.05 0.1 10 100 1000 10000 100000 (1 ROCA)% Buffer Size trec05p 1 trec06p 0 50000 100000 150000 200000 250000 10 100 1000 10000 100000 CPUSec .
+5-8:Buffer Size trec05p 1 trec06p Figure 5: Reduced Size Tests .
+5-9:lem size, reducing the number of optimization iterations, and reducing the number of training updates .
+5-10:Each of these approaches relax the maximum margin criteria on the global set of previously seen data .
+5-11:Here we test the effect that each of these methods has on both effectiveness and efficiency .
+5-12:In each of these tests, we use the large benchmark email data sets, trec05p 1 and trec06p .
+5-13:4.1.1 Testing Reduced Size For our first ROSVM test, we experiment on the effect of reducing the size of the optimization problem by only considering the p most recent examples, as described in the previous section .
+5-14:For this test, we use the same 4 gram mappings as for the reference experiments in Section 2, with the same value C = 100 .
+5-15:We test a range of values p in a coarse grid search .
+5-16:Figure 5 reports the effect of the buffer size p in relationship to the (1 ROCA)% performance measure (top), and the number of CPU seconds required (bottom) .
+5-17:The results show that values of p < 100 do result in degraded performance, although they evaluate very quickly .
+5-18:However, p values from 500 to 10,000 perform almost as well as the original Online SMO (represented here as p = 100, 000), at dramatically reduced computational cost .
+5-19:These results are important for making state of the art performance on large scale content based spam detection practical with online SVMs .
+5-20:Ordinarily, the training time would grow quadratically with the number of seen examples .
+5-21:However, fixing a value of p ensures that the training time is independent of the size of the data set .
+5-22:Furthermore, a lookback buffer allows the filter to adjust to concept drift .
+5-23:0.005 0.01 0.025 0.05 0.1 10521 (1 ROCA)% Max Iters .
+5-24:trec06p trec05p 1 50000 100000 150000 200000 250000 10521 CPUSec .
+5-25:Max Iters .
+5-26:trec06p trec05p 1 Figure 6: Reduced Iterations Tests .
+5-27:4.1.2 Testing Reduced Iterations In the second ROSVM test, we experiment with reducing the number of iterations .
+5-28:Our initial tests showed that the maximum number of iterations used by Online SMO was rarely much larger than 10 on content based spam detection; thus we tested values of T = {1, 2, 5, ∞} .
+5-29:Other parameters were identical to the original Online SVM tests .
+5-30:The results on this test were surprisingly stable (see Figure 6) .
+5-31:Reducing the maximum number of SMO iterations per update had essentially no impact on classification performance, but did result in a moderate increase in speed .
+5-32:This suggests that any additional iterations are spent attempting to find improvements to a hyperplane that is already very close to optimal .
+5-33:These results show that for content based spam detection, we can reduce computational cost by allowing only a single SMO iteration (that is, T = 1) with effectively equivalent performance .
+5-34:4.1.3 Testing Reduced Updates For our third ROSVM experiment, we evaluate the impact of adjusting the parameter M to reduce the total number of updates .
+5-35:As noted before, when M = 1, the hyperplane is globally optimal at every step .
+5-36:Reducing M allows a slightly inconsistent hyperplane to persist until it encounters an example for which it is too inconsistent .
+5-37:We tested values of M from 0 to 1, at increments of 0.1 .
+5-38:(Note that we used p = 10000 to decrease the cost of evaluating these tests.) The results for these tests are appear in Figure 7, and show that there is a slight degradation in performance with reduced values of M, and that this degradation in performance is accompanied by an increase in efficiency .
+5-39:Values of 0.005 0.01 0.025 0.05 0.1 0 0.2 0.4 0.6 0.8 1 (1 ROCA)% M trec05p 1 trec06p 5000 10000 15000 20000 25000 30000 35000 40000 0 0.2 0.4 0.6 0.8 1 CPUSec .
+5-40:M trec05p 1 trec06p Figure 7: Reduced Updates Tests .
+5-41:M > 0.7 give effectively equivalent performance as M = 1, and still reduce cost .
+5-42:4.2 Online SVMs and ROSVM We now compare ROSVM against Online SVMs on the email spam, blog comment spam, and splog detection tasks .
+5-43:These experiments show comparable performance on these tasks, at radically different costs .
+5-44:In the previous section, the effect of the different relaxation methods was tested separately .
+5-45:Here, we tested these methods together to create a full implementation of ROSVM .
+5-46:We chose the values p = 10000, T = 1, M = 0.8 for the email spam detection tasks .
+5-47:Note that these parameter values were selected as those allowing ROSVM to achieve comparable performance results with Online SVMs, in order to test total difference in computational cost .
+5-48:The splog and blog data sets were much smaller, so we set p = 100 for these tasks to allow meaningful comparisons between the reduced size and full size optimization problems .
+5-49:Because these values were not hand tuned, both generalization performance and runtime results are meaningful in these experiments .
+5-50:4.2.1 Experimental Setup We compared Online SVMs and ROSVM on email spam, blog comment spam, and splog detection .
+5-51:For the email spam, we used the two large benchmark corpora, trec05p 1 and trec06p, in the standard online ordering .
+5-52:We randomly ordered both the blog comment spam corpus and the splog corpus to create online learning tasks .
+5-53:Note that this is a different setting than the leave one out cross validation task presented on these corpora in Section 2 the results are not directly comparable .
+5-54:However, this experimental design Table 5: Email Spam Benchmark Data .
+5-55:These results compare Online SVM and ROSVM on email spam detection, using binary 4 gram feature space .
+5-56:Score reported is (1 ROCA)%, where 0 is optimal .
+5-57:trec05p 1 trec05p 1 trec06p trec06p (1 ROC)% CPUs (1 ROC)% CPUs OnSVM 0.0084 242,160 0.0232 87,519 ROSVM 0.0090 24,720 0.0240 18,541 Table 6: Blog Comment Spam .
+5-58:These results comparing Online SVM and ROSVM on blog comment spam detection using binary 4 gram feature space .
+5-59:Acc .
+5-60:Prec .
+5-61:Recall F1 CPUs OnSVM 0.926 0.930 0.962 0.946 139 ROSVM 0.923 0.925 0.965 0.945 11 does allow meaningful comparison between our two online methods on these content based spam detection tasks .
+5-62:We ran each method on each task, and report the results in Tables 5, 6, and 7 .
+5-63:Note that the CPU time reported for each method was generated on the same computing system .
+5-64:This time reflects only the time needed to complete online learning on tokenized data .
+5-65:We do not report the time taken to tokenize the data into binary 4 grams, as this is the same additive constant for all methods on each task .
+5-66:In all cases, ROSVM was significantly less expensive computationally .
+5-67:4.3 Discussion The comparison results shown in Tables 5, 6, and 7 are striking in two ways .
+5-68:First, they show that the performance of Online SVMs can be matched and even exceeded by relaxed margin methods .
+5-69:Second, they show a dramatic disparity in computational cost .
+5-70:ROSVM is an order of magnitude more efficient than the normal Online SVM, and gives comparable results .
+5-71:Furthermore, the fixed lookback buffer ensures that the cost of each update does not depend on the size of the data set already seen, unlike Online SVMs .
+5-72:Note the blog and splog data sets are relatively small, and results on these data sets must be considered preliminary .
+5-73:Overall, these results show that there is no need to pay the high cost of SVMs to achieve this level of performance on contentbased detection of spam .
+5-74:ROSVMs offer a far cheaper alternative with little or no performance loss. .
+6-1:In the past, academic researchers and industrial practitioners have disagreed on the best method for online contentbased detection of spam on the web
+6-2:We have presented one resolution to this debate
+6-3:Online SVMs do, indeed, proTable 7: Splog Data Set
+6-4:These results compare Online SVM and ROSVM on splog detection using binary 4 gram feature space
+6-5:Acc
+6-6:Prec
+6-7:Recall F1 CPUs OnSVM 0.880 0.910 0.842 0.874 29353 ROSVM 0.878 0.902 0.849 0.875 1251 duce state of the art performance on this task with proper adjustment of the tradeoff parameter C, but with cost that grows quadratically with the size of the data set
+6-8:The high values of C required for best performance with SVMs show that the margin maximization of Online SVMs is overkill for this task
+6-9:Thus, we have proposed a less expensive alternative, ROSVM, that relaxes this maximum margin requirement, and produces nearly equivalent results
+6-10:These methods are efficient enough for large scale filtering of contentbased spam in its many forms
+6-11:It is natural to ask why the task of content based spam detection gets strong performance from ROSVM
+6-12:After all, not all data allows the relaxation of SVM requirements
+6-13:We conjecture that email spam, blog comment spam, and splogs all share the characteristic that a subset of features are particularly indicative of content being either spam or not spam
+6-14:These indicative features may be sparsely represented in the data set, because of spam methods such as word obfuscation, in which common spam words are intentionally misspelled in an attempt to reduce the effectiveness of word based spam detection
+6-15:Maximizing the margin may cause these sparsely represented features to be ignored, creating an overall reduction in performance
+6-16:It appears that spam data is highly separable, allowing ROSVM to be successful with high values of C and little effort given to maximizing the margin
+6-17:Future work will determine how applicable relaxed SVMs are to the general problem of text classification
+6-18:Finally, we note that the success of relaxed SVM methods for content based spam detection is a result that depends on the nature of spam data, which is potentially subject to change
+6-19:Although it is currently true that ham and spam are linearly separable given an appropriate feature space, this assumption may be subject to attack
+6-20:While our current methods appear robust against primitive attacks along these lines, such as the good word attack [24], we must explore the feasibility of more sophisticated attacks.
+7-1:A
+7-2:Bratko and B
+7-3:Filipic
+7-4:Spam filtering using compression models
+7-5:Technical Report IJS DP 9227, Department of Intelligent Systems, Jozef Stefan Institute, L jubljana, Slovenia, 2005
+7-6:G
+7-7:Cauwenberghs and T
+7-8:Poggio
+7-9:Incremental and decremental support vector machine learning
+7-10:In NIPS, pages 409 415, 2000
+7-11:G
+7-12:V
+7-13:Cormack
+7-14:TREC 2006 spam track overview
+7-15:In To appear in: The Fifteenth Text REtrieval Conference (TREC 2006) Proceedings, 2006
+7-16:G
+7-17:V
+7-18:Cormack and A
+7-19:Bratko
+7-20:Batch and on line spam filter comparison
+7-21:In Proceedings of the Third Conference on Email and Anti Spam (CEAS), 2006
+7-22:G
+7-23:V
+7-24:Cormack and T
+7-25:R
+7-26:Lynam
+7-27:TREC 2005 spam track overview
+7-28:In The Fourteenth Text REtrieval Conference (TREC 2005) Proceedings, 2005
+7-29:G
+7-30:V
+7-31:Cormack and T
+7-32:R
+7-33:Lynam
+7-34:On line supervised spam filter evaluation
+7-35:Technical report, David R
+7-36:Cheriton School of Computer Science, University of Waterloo, Canada, February 2006
+7-37:N
+7-38:Cristianini and J
+7-39:Shawe Taylor
+7-40:An introduction to support vector machines
+7-41:Cambridge University Press, 2000
+7-42:D
+7-43:DeCoste and K
+7-44:Wagstaff
+7-45:Alpha seeding for support vector machines
+7-46:In KDD "00: Proceedings of the sixth ACM SIGKDD international conference on Knowledge discovery and data mining, pages 345 349, 2000
+7-47:H
+7-48:Drucker, V
+7-49:Vapnik, and D
+7-50:Wu
+7-51:Support vector machines for spam categorization
+7-52:IEEE Transactions on Neural Networks, 10(5):1048 1054, 1999
+7-53:J
+7-54:Goodman and W
+7-55:Yin
+7-56:Online discriminative spam filter training
+7-57:In Proceedings of the Third Conference on Email and Anti Spam (CEAS), 2006
+7-58:P
+7-59:Graham
+7-60:A plan for spam
+7-61:2002
+7-62:P
+7-63:Graham
+7-64:Better bayesian filtering
+7-65:2003
+7-66:Z
+7-67:Gyongi and H
+7-68:Garcia Molina
+7-69:Spam: It"s not just for inboxes anymore
+7-70:Computer, 38(10):28 34, 2005
+7-71:T
+7-72:Joachims
+7-73:Text categorization with suport vector machines: Learning with many relevant features
+7-74:In ECML "98: Proceedings of the 10th European Conference on Machine Learning, pages 137 142, 1998
+7-75:T
+7-76:Joachims
+7-77:Training linear svms in linear time
+7-78:In KDD "06: Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining, pages 217 226, 2006
+7-79:J
+7-80:Kivinen, A
+7-81:Smola, and R
+7-82:Williamson
+7-83:Online learning with kernels
+7-84:In Advances in Neural Information Processing Systems 14, pages 785 793
+7-85:MIT Press, 2002
+7-86:P
+7-87:Kolari, T
+7-88:Finin, and A
+7-89:Joshi
+7-90:SVMs for the blogosphere: Blog identification and splog detection
+7-91:AAAI Spring Symposium on Computational Approaches to Analyzing Weblogs, 2006
+7-92:W
+7-93:Krauth and M
+7-94:M´ezard
+7-95:Learning algorithms with optimal stability in neural networks
+7-96:Journal of Physics A, 20(11):745 752, 1987
+7-97:T
+7-98:Lynam, G
+7-99:Cormack, and D
+7-100:Cheriton
+7-101:On line spam filter fusion
+7-102:In SIGIR "06: Proceedings of the 29th annual international ACM SIGIR conference on Research and development in information retrieval, pages 123 130, 2006
+7-103:V
+7-104:Metsis, I
+7-105:Androutsopoulos, and G
+7-106:Paliouras
+7-107:Spam filtering with naive bayes  which naive bayes? Third Conference on Email and Anti Spam (CEAS), 2006
+7-108:G
+7-109:Mishne, D
+7-110:Carmel, and R
+7-111:Lempel
+7-112:Blocking blog spam with language model disagreement
+7-113:Proceedings of the 1st International Workshop on Adversarial Information Retrieval on the Web (AIRWeb), May 2005
+7-114:J
+7-115:Platt
+7-116:Sequenital minimal optimization: A fast algorithm for training support vector machines
+7-117:In B
+7-118:Scholkopf, C
+7-119:Burges, and A
+7-120:Smola, editors, Advances in Kernel Methods  Support Vector Learning
+7-121:MIT Press, 1998
+7-122:B
+7-123:Scholkopf and A
+7-124:Smola
+7-125:Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond
+7-126:MIT Press, 2001
+7-127:G
+7-128:L
+7-129:Wittel and S
+7-130:F
+7-131:Wu
+7-132:On attacking statistical spam filters
+7-133:CEAS: First Conference on Email and Anti Spam, 2004
+picture:

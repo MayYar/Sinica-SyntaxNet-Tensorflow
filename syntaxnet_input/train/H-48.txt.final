@@ -1,0 +1,503 @@
+A New Approach for Evaluating Query Expansion: 
+content:
+1 ABSTRACT :
+1-1:The effectiveness of information retrieval systems is influenced by the degree of term overlap between user queries and relevant documents .
+1-2:Query document term mismatch, whether partial or total, is a fact that must be dealt with by IR systems .
+1-3:Query Expansion is one method for dealing with term mismatch .
+1-4:IR systems implementing query expansion are typically evaluated by executing each query twice, with and without query expansion, and then comparing the two result sets .
+1-5:While this measures an overall change in performance, it does not directly measure the effectiveness of IR systems in overcoming the inherent issue of term mismatch between the query and relevant documents, nor does it provide any insight into how such systems would behave in the presence of query document term mismatch .
+1-6:In this paper, we propose a new approach for evaluating query expansion techniques .
+1-7:The proposed approach is attractive because it provides an estimate of system performance under varying degrees of query document term mismatch, it makes use of readily available test collections, and it does not require any additional relevance judgments or any form of manual processing .
+1-8:H.3.3 [Information Storage and Retrieval]: Information .
+2 INTRODUCTION :
+2-1:In our domain,1 and unlike web search, it is very important for attorneys to find all documents (e.g., cases) that are relevant to an issue .
+2-2:Missing relevant documents may have non trivial consequences on the outcome of a court proceeding .
+2-3:Attorneys are especially concerned about missing relevant documents when researching a legal topic that is new to them, as they may not be aware of all language variations in such topics .
+2-4:Therefore, it is important to develop information retrieval systems that are robust with respect to language variations or term mismatch between queries and relevant documents .
+2-5:During our work on developing such systems, we concluded that current evaluation methods are not sufficient for this purpose .
+2-6:{Whooping cough, pertussis}, {heart attack, myocardial infarction}, {car wash, automobile cleaning}, {attorney, legal counsel, lawyer} are all examples of things that share the same meaning .
+2-7:Often, the terms chosen by users in their queries are different than those appearing in the documents relevant to their information needs .
+2-8:This query document term mismatch arises from two sources: (1) the synonymy found in natural language, both at the term and the phrasal level, and (2) the degree to which the user is an expert at searching and or has expert knowledge in the domain of the collection being searched .
+2-9:IR evaluations are comparative in nature (cf .
+2-10:TREC) .
+2-11:Generally, IR evaluations show how System A did in relation to System B on the same test collection based on various precision and recall based metrics .
+2-12:Similarly, IR systems with QE capabilities are typically evaluated by executing each search twice, once with and once without query expansion, and then comparing the two result sets .
+2-13:While this approach shows which system may have performed better overall with respect to a particular test collection, it does not directly or systematically measure the effectiveness of IR systems in overcoming query document term mismatch .
+2-14:If the goal of QE is to increase search performance by mitigating the effects of query document term mismatch, then the degree to which a system does so should be measurable in evaluation .
+2-15:An effective evaluation method should measure the performance of IR systems under varying degrees of query document term mismatch, not just in terms of overall performance on a collection relative to another system .
+2-16:1 Thomson Corporation builds information based solutions to the professional markets including legal, financial, health care, scientific, and tax and accounting .
+2-17:In order to measure that a particular IR system is able to overcome query document term mismatch by retrieving documents that are relevant to a user"s query, but that do not necessarily contain the query terms themselves, we systematically introduce term mismatch into the test collection by removing query terms from known relevant documents .
+2-18:Because we are purposely inducing term mismatch between the queries and known relevant documents in our test collections, the proposed evaluation framework is able to measure the effectiveness of QE in a way that testing on the whole collection is not .
+2-19:If a QE search method finds a document that is known to be relevant but that is nonetheless missing query terms, it shows that QE technique is indeed robust with respect to query document term mismatch. .
+3 RELATED WORK :
+3-1:Accounting for term mismatch between the terms in user queries and the documents relevant to users" information needs has been a fundamental issue in IR research for almost 40 years [38, 37, 47] .
+3-2:Query expansion is one technique used in IR to improve search performance by increasing the likelihood of term overlap (either explicitly or implicitly) between queries and documents that are relevant to users" information needs .
+3-3:Explicit query expansion occurs at run time, based on the initial search results, as is the case with relevance feedback and pseudo relevance feedback [34, 37] .
+3-4:Implicit query expansion can be based on statistical properties of the document collection, or it may rely on external knowledge sources such as a thesaurus or an ontology [32, 17, 26, 50, 51, 2] .
+3-5:Regardless of method, QE algorithms that are capable of retrieving relevant documents despite partial or total term mismatch between queries and relevant documents should increase the recall of IR systems (by retrieving documents that would have previously been missed) as well as their precision (by retrieving more relevant documents) .
+3-6:In practice, QE tends to improve the average overall retrieval performance, doing so by improving performance on some queries while making it worse on others .
+3-7:QE techniques are judged as effective in the case that they help more than they hurt overall on a particular collection [47, 45, 41, 27] .
+3-8:Often, the expansion terms added to a query in the query expansion phase end up hurting the overall retrieval performance because they introduce semantic noise, causing the meaning of the query to drift .
+3-9:As such, much work has been done with respect to different strategies for choosing semantically relevant QE terms to include in order to avoid query drift [34, 50, 51, 18, 24, 29, 30, 32, 3, 4, 5] .
+3-10:The evaluation of IR systems has received much attention in the research community, both in terms of developing test collections for the evaluation of different systems [11, 12, 13, 43] and in terms of the utility of evaluation metrics such as recall, precision, mean average precision, precision at rank, Bpref, etc .
+3-11:[7, 8, 44, 14] .
+3-12:In addition, there have been comparative evaluations of different QE techniques on various test collections [47, 45, 41] .
+3-13:In addition, the IR research community has given attention to differences between the performance of individual queries .
+3-14:Research efforts have been made to predict which queries will be improved by QE and then selectively applying it only to those queries [1, 5, 27, 29, 15, 48], to achieve optimal overall performance .
+3-15:In addition, related work on predicting query difficulty, or which queries are likely to perform poorly, has been done [1, 4, 5, 9] .
+3-16:There is general interest in the research community to improve the robustness of IR systems by improving retrieval performance on difficult queries, as is evidenced by the Robust track in the TREC competitions and new evaluation measures such as GMAP .
+3-17:GMAP (geometric mean average precision) gives more weight to the lower end of the average precision (as opposed to MAP), thereby emphasizing the degree to which difficult or poorly performing queries contribute to the score [33] .
+3-18:However, no attention is given to evaluating the robustness of IR systems implementing QE with respect to querydocument term mismatch in quantifiable terms .
+3-19:By purposely inducing mismatch between the terms in queries and relevant documents, our evaluation framework allows us a controlled manner in which to degrade the quality of the queries with respect to their relevant documents, and then to measure the both the degree of (induced) difficulty of the query and the degree to which QE improves the retrieval performance of the degraded query .
+3-20:The work most similar to our own in the literature consists of work in which document collections or queries are altered in a systematic way to measure differences query performance .
+3-21:[42] introduces into the document collection pseudowords that are ambiguous with respect to word sense, in order to measure the degree to which word sense disambiguation is useful in IR .
+3-22:[6] experiments with altering the document collection by adding semantically related expansion terms to documents at indexing time .
+3-23:In cross language IR, [28] explores different query expansion techniques while purposely degrading their translation resources, in what amounts to expanding a query with only a controlled percentage of its translation terms .
+3-24:Although similar in introducing a controlled amount of variance into their test collections, these works differ from the work being presented in this paper in that the work being presented here explicitly and systematically measures query effectiveness in the presence of query document term mismatch. .
+4 METHODOLOGY :
+4-1:In order to accurately measure IR system performance in the presence of query term mismatch, we need to be able to adjust the degree of term mismatch in a test corpus in a principled manner .
+4-2:Our approach is to introduce querydocument term mismatch into a corpus in a controlled manner and then measure the performance of IR systems as the degree of term mismatch changes .
+4-3:We systematically remove query terms from known relevant documents, creating alternate versions of a test collection that differ only in how many or which query terms have been removed from the documents relevant to a particular query .
+4-4:Introducing query document term mismatch into the test collection in this manner allows us to manipulate the degree of term mismatch between relevant documents and queries in a controlled manner .
+4-5:This removal process affects only the relevant documents in the search collection .
+4-6:The queries themselves remain unaltered .
+4-7:Query terms are removed from documents one by one, so the differences in IR system performance can be measured with respect to missing terms .
+4-8:In the most extreme case (i.e., when the length of the query is less than or equal to the number of query terms removed from the relevant documents), there will be no term overlap between a query and its relevant documents .
+4-9:Notice that, for a given query, only relevant documents are modified .
+4-10:Non relevant documents are left unchanged, even in the case that they contain query terms .
+4-11:Although, on the surface, we are changing the distribution of terms between the relevant and non relevant documents sets by removing query terms from the relevant documents, doing so does not change the conceptual relevancy of these documents .
+4-12:Systematically removing query terms from known relevant documents introduces a controlled amount of query document term mismatch by which we can evaluate the degree to which particular QE techniques are able to retrieve conceptually relevant documents, despite a lack of actual term overlap .
+4-13:Removing a query term from relevant documents simply masks the presence of that query term in those documents .
+4-14:It does not in any way change the conceptual relevancy of the documents .
+4-15:The evaluation framework presented in this paper consists of three elements: a test collection, C; a strategy for selecting which query terms to remove from the relevant documents in that collection, S; and a metric by which to compare performance of the IR systems, m .
+4-16:The test collection, C, consists of a document collection, queries, and relevance judgments .
+4-17:The strategy, S, determines the order and manner in which query terms are removed from the relevant documents in C .
+4-18:This evaluation framework is not metric specific; any metric (MAP, P@10, recall, etc.) can be used to measure IR system performance .
+4-19:Although test collections are difficult to come by, it should be noted that this evaluation framework can be used on any available test collection .
+4-20:In fact, using this framework stretches the value of existing test collections in that one collection becomes several when query terms are removed from relevant documents, thereby increasing the amount of information that can be gained from evaluating on a particular collection .
+4-21:In other evaluations of QE effectiveness, the controlled variable is simply whether or not queries have been expanded or not, compared in terms of some metric .
+4-22:In contrast, the controlled variable in this framework is the query term that has been removed from the documents relevant to that query, as determined by the removal strategy, S .
+4-23:Query terms are removed one by one, in a manner and order determined by S, so that collections differ only with respect to the one term that has been removed (or masked) in the documents relevant to that query .
+4-24:It is in this way that we can explicitly measure the degree to which an IR system overcomes query document term mismatch .
+4-25:The choice of a query term removal strategy is relatively flexible; the only restriction in choosing a strategy S is that query terms must be removed one at a time .
+4-26:Two decisions must be made when choosing a removal strategy S .
+4-27:The first is the order in which S removes terms from the relevant documents .
+4-28:Possible orders for removal could be based on metrics such as IDF or the global probability of a term in a document collection .
+4-29:Based on the purpose of the evaluation and the retrieval algorithm being used, it might make more sense to choose a removal order for S based on query term IDF or perhaps based on a measure of query term probability in the document collection .
+4-30:Once an order for removal has been decided, a manner for term removal masking must be decided .
+4-31:It must be determined if S will remove the terms individually (i.e., remove just one different term each time) or additively (i.e., remove one term first, then that term in addition to another, and so on) .
+4-32:The incremental additive removal of query terms from relevant documents allows the evaluation to show the degree to which IR system performance degrades as more and more query terms are missing, thereby increasing the degree of query document term mismatch .
+4-33:Removing terms individually allows for a clear comparison of the contribution of QE in the absence of each individual query term. .
+5 EXPERIMENTAL SET UP :
+5-1:4.1 IR Systems We used the proposed evaluation framework to evaluate four IR systems on two test collections .
+5-2:Of the four systems used in the evaluation, two implement query expansion techniques: Okapi (with pseudo feedback for QE), and a proprietary concept search engine (we"ll call it TCS, for Thomson Concept Search) .
+5-3:TCS is a language modeling based retrieval engine that utilizes a subject appropriate external corpus (i.e., legal or news) as a knowledge source .
+5-4:This external knowledge source is a corpus separate from, but thematically related to, the document collection to be searched .
+5-5:Translation probabilities for QE [2] are calculated from these large external corpora .
+5-6:Okapi (without feedback) and a language model query likelihood model (implemented using Indri) are included as keyword only baselines .
+5-7:Okapi without feedback is intended as an analogous baseline for Okapi with feedback, and the QL model is intended as an appropriate baseline for TCS, as they both implement language modeling based retrieval algorithms .
+5-8:We choose these as baselines because they are dependent only on the words appearing in the queries and have no QE capabilities .
+5-9:As a result, we expect that when query terms are removed from relevant documents, the performance of these systems should degrade more dramatically than their counterparts that implement QE .
+5-10:The Okapi and QL model results were obtained using the Lemur Toolkit.2 Okapi was run with the parameters k1=1.2, b=0.75, and k3=7 .
+5-11:When run with feedback, the feedback parameters used in Okapi were set at 10 documents and 25 terms .
+5-12:The QL model used Jelinek Mercer smoothing, with λ = 0.6 .
+5-13:4.2 Test Collections We evaluated the performance of the four IR systems outlined above on two different test collections .
+5-14:The two test collections used were the TREC AP89 collection (TIPSTER disk 1) and the FSupp Collection .
+5-15:The FSupp Collection is a proprietary collection of 11,953 case law documents for which we have 44 queries (ranging from four to twenty two words after stop word removal) with full relevance judgments.3 The average length of documents in the FSupp Collection is 3444 words .
+5-16:2 www.lemurproject.org 3 Each of the 11,953 documents was evaluated by domain experts with respect to each of the 44 queries .
+5-17:The TREC AP89 test collection contains 84,678 documents, averaging 252 words in length .
+5-18:In our evaluation, we used both the title and the description fields of topics 151200 as queries, so we have two sets of results for the AP89 Collection .
+5-19:After stop word removal, the title queries range from two to eleven words and the description queries range from four to twenty six terms .
+5-20:4.3 Query Term Removal Strategy In our experiments, we chose to sequentially and additively remove query terms from highest to lowest inverse document frequency with respect to the entire document collection .
+5-21:Terms with high IDF values tend to influence document ranking more than those with lower IDF values .
+5-22:Additionally, high IDF terms tend to be domainspecific terms that are less likely to be known to non expert user, hence we start by removing these first .
+5-23:For the FSupp Collection, queries were evaluated incrementally with one, two, three, five, and seven terms removed from their corresponding relevant documents .
+5-24:The longer description queries from TREC topics 151 200 were likewise evaluated on the AP89 Collection with one, two, three, five, and seven query terms removed from their relevant documents .
+5-25:For the shorter TREC title queries, we removed one, two, three, and five terms from the relevant documents .
+5-26:4.4 Metrics In this implementation of the evaluation framework, we chose three metrics by which to compare IR system performance: mean average precision (MAP), precision at 10 documents (P10), and recall at 1000 documents .
+5-27:Although these are the metrics we chose to demonstrate this framework, any appropriate IR metrics could be used within the framework. .
+6 RESULTS :
+6-1:5.1 FSupp Collection Figures 1, 2, and 3 show the performance (in terms of MAP, P10 and Recall, respectively) for the four search engines on the FSupp Collection .
+6-2:As expected, the performance of the keyword only IR systems, QL and Okapi, drops quickly as query terms are removed from the relevant documents in the collection .
+6-3:The performance of Okapi with feedback (Okapi FB) is somewhat surprising in that on the original collection (i.e., prior to query term removal), its performance is worse than that of Okapi without feedback on all three measures .
+6-4:TCS outperforms the QL keyword baseline on every measure except for MAP on the original collection (i.e., prior to removing any query terms) .
+6-5:Because TCS employs implicit query expansion using an external domain specific knowledge base, it is less sensitive to term removal (i.e., mismatch) than the Okapi FB, which relies on terms from the top ranked documents retrieved by an initial keywordonly search .
+6-6:Because overall search engine performance is frequently measured in terms of MAP, and because other evaluations of QE often only consider performance on the entire collection (i.e., they do not consider term mismatch), the QE implemented in TCS would be considered (in an0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 MeanAveragePrecision(MAP) Okapi FB Okapi TCS QL FSupp: Mean Average Precision with Query Terms Removed Figure 1: The performance of the four retrieval systems on the FSupp collection in terms of Mean Average Precision and as a function of the number of query terms removed (the horizontal axis) .
+6-7:0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 Precisionat10Documents(P10) Okapi FB Okapi TCS QL FSupp: P10 with Query Terms Removed Figure 2: The performance of the four retrieval systems on the FSupp collection in terms of Precision at 10 and as a function of the number of query terms removed (the horizontal axis) .
+6-8:other evaluation) to hurt performance on the FSupp Collection .
+6-9:However, when we look at the comparison of TCS to QL when query terms are removed from the relevant documents, we can see that the QE in TCS is indeed contributing positively to the search .
+6-10:5.2 The AP89 Collection: using the description queries Figures 4, 5, and 6 show the performance of the four IR systems on the AP89 Collection, using the TREC topic descriptions as queries .
+6-11:The most interesting difference between the performance on the FSupp Collection and the AP89 collection is the reversal of Okapi FB and TCS .
+6-12:On FSupp, TCS outperformed the other engines consistently (see Figures 1, 2, and 3); on the AP89 Collection, Okapi FB is clearly the best performer (see Figures 4, 5, and 6) .
+6-13:This is all the more interesting, based on the fact that QE in Okapi FB takes place after the first search iteration, which 0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Recall Okapi FB Okapi TCS Indri FSupp: Recall at 1000 documents with Query Terms Removed Figure 3: The Recall (at 1000) of the four retrieval systems on the FSupp collection as a function of the number of query terms removed (the horizontal axis) .
+6-14:0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 MeanAveragePrecision(MAP) Okapi FB Okapi TCS QL AP89: Mean Average Precision with Query Terms Removed (description queries) Figure 4: MAP of the four IR systems on the AP89 Collection, using TREC description queries .
+6-15:MAP is measured as a function of the number of query terms removed .
+6-16:0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 Precisionat10Documents(P10) Okapi FB Okapi TCS QL AP89: P10 with Query Terms Removed (description queries) Figure 5: Precision at 10 of the four IR systems on the AP89 Collection, using TREC description queries .
+6-17:P at 10 is measured as a function of the number of query terms removed .
+6-18:0 1 2 3 4 5 6 7 Number of Query Terms Removed from Relevant Documents 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 Recall Okapi FB Okapi TCS QL AP89: Recall at 1000 documents with Query Terms Removed (description queries) Figure 6: Recall (at 1000) of the four IR systems on the AP89 Collection, using TREC description queries, and as a function of the number of query terms removed .
+6-19:we would expect to be handicapped when query terms are removed .
+6-20:Looking at P10 in Figure 5, we can see that TCS and Okapi FB score similarly on P10, starting at the point where one query term is removed from relevant documents .
+6-21:At two query terms removed, TCS starts outperforming Okapi FB .
+6-22:If modeling this in terms of expert versus non expert users, we could conclude that TCS might be a better search engine for non experts to use on the AP89 Collection, while Okapi FB would be best for an expert searcher .
+6-23:It is interesting to note that on each metric for the AP89 description queries, TCS performs more poorly than all the other systems on the original collection, but quickly surpasses the baseline systems and approaches Okapi FB"s performance as terms are removed .
+6-24:This is again a case where the performance of a system on the entire collection is not necessarily indicative of how it handles query document term mismatch .
+6-25:5.3 The AP89 Collection: using the title queries Figures 7, 8, and 9 show the performance of the four IR systems on the AP89 Collection, using the TREC topic titles as queries .
+6-26:As with the AP89 description queries, Okapi FB is again the best performer of the four systems in the evaluation .
+6-27:As before, the performance of the Okapi and QL systems, the non QE baseline systems, sharply degrades as query terms are removed .
+6-28:On the shorter queries, TCS seems to have a harder time catching up to the performance of Okapi FB as terms are removed .
+6-29:Perhaps the most interesting result from our evaluation is that although the keyword only baselines performed consistently and as expected on both collections with respect to query term removal from relevant documents, the performances of the engines implementing QE techniques differed dramatically between collections .
+6-30:0 1 2 3 4 5 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 MeanAveragePrecision(MAP) Okapi FB Okapi TCS QL AP89: Mean Average Precision with Query Terms Removed (title queries) Figure 7: MAP of the four IR systems on the AP89 Collection, using TREC title queries and as a function of the number of query terms removed .
+6-31:0 1 2 3 4 5 Number of Query Terms Removed from Relevant Documents 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 Precisionat10Documents(P10) Okapi FB Okapi TCS QL AP89: P10 with Query Terms Removed (title queries) Figure 8: Precision at 10 of the four IR systems on the AP89 Collection, using TREC title queries, and as a function of the number of query terms removed .
+6-32:0 1 2 3 4 5 Number of Query Terms Removed from Relevant Documents 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 Recall Okapi FB Okapi TCS QL AP89: Recall at 1000 documents with Query Terms Removed (title queries) Figure 9: Recall (at 1000) of the four IR systems on the AP89 Collection, using TREC title queries and as a function of the number of query terms removed. .
+7 DISCUSSION :
+7-1:The intuition behind this evaluation framework is to measure the degree to which various QE techniques overcome term mismatch between queries and relevant documents .
+7-2:In general, it is easy to evaluate the overall performance of different techniques for QE in comparison to each other or against a non QE variant on any complete test collection .
+7-3:Such an approach does tell us which systems perform better on a complete test collection, but it does not measure the ability of a particular QE technique to retrieve relevant documents despite partial or complete term mismatch between queries and relevant documents .
+7-4:A systematic evaluation of IR systems as outlined in this paper is useful not only with respect to measuring the general success or failure of particular QE techniques in the presence of query document term mismatch, but it also provides insight into how a particular IR system will perform when used by expert versus non expert users on a particular collection .
+7-5:The less a user knows about the domain of the document collection on which they are searching, the more prevalent query document term mismatch is likely to be .
+7-6:This distinction is especially relevant in the case that the test collection is domain specific (i.e., medical or legal, as opposed to a more general domain, such as news), where the distinction between experts and non experts may be more marked .
+7-7:For example, a non expert in the medical domain might search for whooping cough, but relevant documents might instead contain the medical term pertussis .
+7-8:Since query terms are masked only the in relevant documents, this evaluation framework is actually biased against retrieving relevant documents .
+7-9:This is because non relevant documents may also contain query terms, which can cause a retrieval system to rank such documents higher than it would have before terms were masked in relevant documents .
+7-10:Still, we think this is a more realistic scenario than removing terms from all documents regardless of relevance .
+7-11:The degree to which a QE technique is well suited to a particular collection can be evaluated in terms of its ability to still find the relevant documents, even when they are missing query terms, despite the bias of this approach against relevant documents .
+7-12:However, given that Okapi FB and TCS outperformed each other on two different collection sets, further investigation into the degree of compatibility between QE expansion approach and target collection is probably warranted .
+7-13:Furthermore, the investigation of other term removal strategies could provide insight into the behavior of different QE techniques and their overall impact on the user experience .
+7-14:As mentioned earlier, our choice of the term removal strategy was motivated by (1) our desire to see the highest impact on system performance as terms are removed and (2) because high IDF terms, in our domain context, are more likely to be domain specific, which allows us to better understand the performance of an IR system as experienced by expert and non expert users .
+7-15:Although not attempted in our experiments, another application of this evaluation framework would be to remove query terms individually, rather than incrementally, to analyze which terms (or possibly which types of terms) are being helped most by a QE technique on a particular test collection .
+7-16:This could lead to insight as to when QE should and should not be applied .
+7-17:This evaluation framework allows us to see how IR systems perform in the presence of query document term mismatch .
+7-18:In other evaluations, the performance of a system is measured only on the entire collection, in which the degree of query term document mismatch is not known .
+7-19:By systematically introducing this mismatch, we can see that even if an IR system is not the best performer on the entire collection, its performance may nonetheless be more robust to query document term mismatch than other systems .
+7-20:Such robustness makes a system more user friendly, especially to non expert users .
+7-21:This paper presents a novel framework for IR system evaluation, the applications of which are numerous .
+7-22:The results presented in this paper are not by any means meant to be exhaustive or entirely representative of the ways in which this evaluation could be applied .
+7-23:To be sure, there is much future work that could be done using this framework .
+7-24:In addition to looking at average performance of IR systems, the results of individual queries could be examined and compared more closely, perhaps giving more insight into the classification and prediction of difficult queries, or perhaps showing which QE techniques improve (or degrade) individual query performance under differing degrees of querydocument term mismatch .
+7-25:Indeed, this framework would also benefit from further testing on a larger collection. .
+8-1:The proposed evaluation framework allows us to measure the degree to which different IR systems overcome (or don"t overcome) term mismatch between queries and relevant documents
+8-2:Evaluations of IR systems employing QE performed only on the entire collection do not take into account that the purpose of QE is to mitigate the effects of term mismatch in retrieval
+8-3:By systematically removing query terms from relevant documents, we can measure the degree to which QE contributes to a search by showing the difference between the performances of a QE system and its keywordonly baseline when query terms have been removed from known relevant documents
+8-4:Further, we can model the behavior of expert versus non expert users by manipulating the amount of query document term mismatch introduced into the collection
+8-5:The evaluation framework proposed in this paper is attractive for several reasons
+8-6:Most importantly, it provides a controlled manner in which to measure the performance of QE with respect to query document term mismatch
+8-7:In addition, this framework takes advantage and stretches the amount of information we can get from existing test collections
+8-8:Further, this evaluation framework is not metricspecific: information in terms of any metric (MAP, P@10, etc.) can be gained from evaluating an IR system this way
+8-9:It should also be noted that this framework is generalizable to any IR system, in that it evaluates how well IR systems evaluate users" information needs as represented by their queries
+8-10:An IR system that is easy to use should be good at retrieving documents that are relevant to users" information needs, even if the queries provided by the users do not contain the same keywords as the relevant documents.
+9-1:Amati, G., C
+9-2:Carpineto, and G
+9-3:Romano
+9-4:Query difficulty, robustness and selective application of query expansion
+9-5:In Proceedings of the 25th European Conference on Information Retrieval (ECIR 2004), pp
+9-6:127 137
+9-7:Berger, A
+9-8:and J.D
+9-9:Lafferty
+9-10:1999
+9-11:Information retrieval as statistical translation
+9-12:In Research and Development in Information Retrieval, pages 222 229
+9-13:Billerbeck, B., F
+9-14:Scholer, H
+9-15:E
+9-16:Williams, and J
+9-17:Zobel
+9-18:2003
+9-19:Query expansion using associated queries
+9-20:In Proceedings of CIKM 2003, pp
+9-21:2 9
+9-22:Billerbeck, B., and J
+9-23:Zobel
+9-24:2003
+9-25:When Query Expansion Fails
+9-26:In Proceedings of SIGIR 2003, pp
+9-27:387 388
+9-28:Billerbeck, B
+9-29:and J
+9-30:Zobel
+9-31:2004
+9-32:Questioning Query Expansion: An Examination of Behaviour and Parameters
+9-33:In Proceedings of the 15th Australasian Database Conference (ADC2004), pp
+9-34:69 76
+9-35:Billerbeck, B
+9-36:and J
+9-37:Zobel
+9-38:2005
+9-39:Document Expansion versus Query Expansion for ad hoc Retrieval
+9-40:In Proceedings of the 10th Australasian Document Computing Symposium
+9-41:Buckley, C
+9-42:and E.M
+9-43:Voorhees
+9-44:2000
+9-45:Evaluating Evaluation Measure Stability
+9-46:In Proceedings of SIGIR 2000, pp
+9-47:33 40
+9-48:Buckley, C
+9-49:and E.M
+9-50:Voorhees
+9-51:2004
+9-52:Retrieval evaluation with incomplete information
+9-53:In Proceedings of SIGIR 2004, pp
+9-54:25 32
+9-55:Carmel, D., E
+9-56:Yom Tov, A
+9-57:Darlow, D
+9-58:Pelleg
+9-59:2006
+9-60:What Makes A Query Difficult? In Proceedings of SIGIR 2006, pp
+9-61:390 397
+9-62:Carpineto, C., R
+9-63:Mori and G
+9-64:Romano
+9-65:1998
+9-66:Informative Term Selection for Automatic Query Expansion
+9-67:In The 7th Text REtrieval Conference, pp.363:369
+9-68:Carterette, B
+9-69:and J
+9-70:Allan
+9-71:2005
+9-72:Incremental Test Collections
+9-73:In Proceedings of CIKM 2005, pp
+9-74:680 687
+9-75:Carterette, B., J
+9-76:Allan, and R
+9-77:Sitaraman
+9-78:2006
+9-79:Minimal Test Collections for Retrieval Evaluation
+9-80:In Proceedings of SIGIR 2006, pp
+9-81:268 275
+9-82:Cormack, G.V., C
+9-83:R
+9-84:Palmer, and C.L
+9-85:Clarke
+9-86:1998
+9-87:Efficient Construction of Large Test Collections
+9-88:In Proceedings of SIGIR 1998, pp
+9-89:282 289
+9-90:Cormack, G
+9-91:and T.R
+9-92:Lynam
+9-93:2006
+9-94:Statistical Precision of Information Retrieval Evaluation
+9-95:In Proceedings of SIGIR 2006, pp
+9-96:533 540
+9-97:Cronen Townsend, S., Y
+9-98:Zhou, and W.B
+9-99:Croft
+9-100:2004
+9-101:A Language Modeling Framework for Selective Query Expansion, CIIR Technical Report
+9-102:Efthimiadis, E.N
+9-103:Query Expansion
+9-104:1996
+9-105:In Martha E
+9-106:Williams (ed.), Annual Review of Information Systems and Technology (ARIST), v31, pp 121 187
+9-107:Evans, D.A
+9-108:and Lefferts, R.G
+9-109:1995
+9-110:CLARIT TREC Experiments
+9-111:Information Processing & Management
+9-112:31(3): 385 295
+9-113:Fang, H
+9-114:and C.X
+9-115:Zhai
+9-116:2006
+9-117:Semantic Term Matching in Axiomatic Approaches to Information Retrieval
+9-118:In Proceedings of SIGIR 2006, pp
+9-119:115 122
+9-120:Gao, J., J
+9-121:Nie, G
+9-122:Wu and G
+9-123:Cao
+9-124:2004
+9-125:Dependence language model for information retrieval
+9-126:In Proceedings of SIGIR 2004, pp
+9-127:170 177
+9-128:Harman, D.K
+9-129:1992
+9-130:Relevance feedback revisited
+9-131:In Proceedings of ACM SIGIR 1992, pp
+9-132:1 10
+9-133:Harman, D.K., ed
+9-134:1993
+9-135:The First Text REtrieval Conference (TREC 1): 1992
+9-136:Harman, D.K., ed
+9-137:1994
+9-138:The Second Text REtrieval Conference (TREC 2): 1993
+9-139:Harman, D.K., ed
+9-140:1995
+9-141:The Third Text REtrieval Conference (TREC 3): 1994
+9-142:Harman, D.K., 1998
+9-143:Towards Interactive Query Expansion
+9-144:In Proceedings of SIGIR 1998, pp
+9-145:321 331
+9-146:Hofmann, T
+9-147:1999
+9-148:Probabilistic latent semantic indexing
+9-149:In Proceedings of SIGIR 1999, pp 50 57
+9-150:Jing, Y
+9-151:and W.B
+9-152:Croft
+9-153:1994
+9-154:The Association Thesaurus for Information Retrieval
+9-155:In Proceedings of RIAO 1994, pp
+9-156:146 160 Lu, X.A
+9-157:and R.B
+9-158:Keefer
+9-159:Query expansion reduction and its impact on retrieval effectiveness
+9-160:In: D.K
+9-161:Harman, ed
+9-162:The Third Text REtrieval Conference (TREC 3)
+9-163:Gaithersburg, MD: National Institute of Standards and Technology, 1995,231 239
+9-164:McNamee, P
+9-165:and J
+9-166:Mayfield
+9-167:2002
+9-168:Comparing Cross Language Query Expansion Techniques by Degrading Translation Resources
+9-169:In Proceedings of SIGIR 2002, pp
+9-170:159 166
+9-171:Mitra, M., A
+9-172:Singhal, and C
+9-173:Buckley
+9-174:1998
+9-175:Improving Automatic Query Expansion
+9-176:In Proceedings of SIGIR 1998, pp
+9-177:206 214
+9-178:Peat, H
+9-179:J
+9-180:and P
+9-181:Willett
+9-182:1991
+9-183:The limitations of term co occurrence data for query expansion in document retrieval systems
+9-184:Journal of the American Society for Information Science, 42(5): 378 383
+9-185:Ponte, J.M
+9-186:and W.B
+9-187:Croft
+9-188:1998
+9-189:A language modeling approach to information retrieval
+9-190:In Proceedings of SIGIR 1998, pp.275 281
+9-191:Qiu Y., and Frei H
+9-192:1993
+9-193:Concept based query expansion
+9-194:In Proceedings of SIGIR 1993, pp
+9-195:160 169
+9-196:Robertson, S
+9-197:2006
+9-198:On GMAP  and other transformations
+9-199:In Proceedings of CIKM 2006, pp
+9-200:78 83
+9-201:Robertson, S.E
+9-202:and K
+9-203:Sparck Jones
+9-204:1976
+9-205:Relevance Weighting of Search Terms
+9-206:Journal of the American Society for Information Science, 27(3): 129 146
+9-207:Robertson, S.E., S
+9-208:Walker, S
+9-209:Jones, M.M
+9-210:Hancock Beaulieu, and M
+9-211:Gatford
+9-212:1994
+9-213:Okapi at TREC 2
+9-214:In D.K
+9-215:Harman (ed)
+9-216:1994
+9-217:The Second Text REtrieval Conference (TREC 2): 1993, pp
+9-218:21 34
+9-219:Robertson, S.E., S
+9-220:Walker, S
+9-221:Jones, M.M
+9-222:Hancock Beaulieu, and M
+9-223:Gatford
+9-224:1995
+9-225:Okapi at TREC 3
+9-226:In D.K
+9-227:Harman (ed)
+9-228:1995
+9-229:The Third Text REtrieval Conference (TREC 2): 1993, pp
+9-230:109 126 Rocchio, J.J
+9-231:1971
+9-232:Relevance feedback in information retrieval
+9-233:In G
+9-234:Salton (Ed.), The SMART Retrieval System
+9-235:Prentice Hall, Inc., Englewood Cliffs, NJ, pp
+9-236:313 323
+9-237:Salton, G
+9-238:1968
+9-239:Automatic Information Organization and Retrieval
+9-240:McGraw Hill
+9-241:Salton, G
+9-242:1971
+9-243:The SMART Retrieval System: Experiments in Automatic Document Processing
+9-244:Englewood Cliffs NJ; Prentice Hall
+9-245:Salton,G
+9-246:1980
+9-247:Automatic term class construction using relevance a summary of work in automatic pseudoclassification
+9-248:Information Processing & Management
+9-249:16(1): 1 15
+9-250:Salton, G., and C
+9-251:Buckley
+9-252:1988
+9-253:On the Use of Spreading Activation Methods in Automatic Information Retrieval
+9-254:In Proceedings of SIGIR 1998, pp
+9-255:147 160
+9-256:Sanderson, M
+9-257:1994
+9-258:Word sense disambiguation and information retrieval
+9-259:In Proceedings of SIGIR 1994, pp
+9-260:161 175
+9-261:Sanderson, M
+9-262:and H
+9-263:Joho
+9-264:2004
+9-265:Forming test collections with no system pooling
+9-266:In Proceedings of SIGIR 2004, pp
+9-267:186 193
+9-268:Sanderson, M
+9-269:and Zobel, J
+9-270:2005
+9-271:Information Retrieval System Evaluation: Effort, Sensitivity, and Reliability
+9-272:In Proceedings of SIGIR 2005, pp
+9-273:162 169
+9-274:Smeaton, A.F
+9-275:and C.J
+9-276:Van Rijsbergen
+9-277:1983
+9-278:The Retrieval Effects of Query Expansion on a Feedback Document Retrieval System
+9-279:Computer Journal
+9-280:26(3):239 246
+9-281:Song, F
+9-282:and W.B
+9-283:Croft
+9-284:1999
+9-285:A general language model for information retrieval
+9-286:In Proceedings of the Eighth International Conference on Information and Knowledge Management, pages 316 321
+9-287:Sparck Jones, K
+9-288:1971
+9-289:Automatic Keyword Classification for Information Retrieval
+9-290:London: Butterworths
+9-291:Terra, E
+9-292:and C
+9-293:L
+9-294:Clarke
+9-295:2004
+9-296:Scoring missing terms in information retrieval tasks
+9-297:In Proceedings of CIKM 2004, pp
+9-298:50 58
+9-299:Turtle, Howard
+9-300:1994
+9-301:Natural Language vs
+9-302:Boolean Query Evaluation: A Comparison of Retrieval Performance
+9-303:In Proceedings of SIGIR 1994, pp
+9-304:212 220
+9-305:Voorhees, E.M
+9-306:1994a
+9-307:On Expanding Query Vectors with Lexically Related Words
+9-308:In Harman, D
+9-309:K., ed
+9-310:Text REtrieval Conference (TREC 1): 1992
+9-311:Voorhees, E.M
+9-312:1994b
+9-313:Query Expansion Using Lexical Semantic Relations
+9-314:In Proceedings of SIGIR 1994, pp
+9-315:61 69
+picture:

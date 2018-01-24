@@ -1,0 +1,42 @@
+Recently, software development has evolved toward the development of intelligent, interconnected systems working in a distributed manner .
+The agent paradigm has become well suited as a design metaphor to deal with complex systems comprising many components each having their own thread of control and purposes and involved in dynamic and complex interactions .
+In multi agent environments, agents often need to interact with each other to fulfill their goals .
+Protocols are used to regulate interactions .
+In traditional approaches to protocol specification, like those using Finite State Machines or Petri Nets, protocols are often predetermined legal sequences of interactive behaviors .
+In frequently changing environments such as the Internet, such fixed sequences can quickly become outdated and are prone to failure .
+Therefore, agents are required to adapt their interactive behaviors to succeed and interactions among agents should not be constructed rigidly .
+To achieve flexibility, as characterized by Yolum and Singh in [11], interaction protocols should ensure that agents have autonomy over their interactive behaviors, and be free from any unnecessary constraints .
+Also, agents should be allowed to adjust their interactive actions to take advantages of opportunities or handle exceptions that arise during interaction .
+For example, consider the scenario below for online sales .
+A merchant Mer has 200 cricket bats available for sale with a unit price of 10 dollars .
+A customer Cus has $50 .
+Cus has a goal of obtaining from Mer a cricket bat at some time .
+There are two options for Cus to pay .
+If Cus uses credit payment, Mer needs a bank Ebank to check Cus"s credit .
+If Cus"s credit is approved, Ebank will arrange the credit payment .
+Otherwise, Cus may then take the option to pay via PayPal .
+The interaction ends when goods are delivered and payment is arranged .
+A flexible approach to this example should include several features .
+Firstly, the payment method used by Cus should be at Cus"s own choice and have the property that if Cus"s credit check results in a disapproval, this exception should also be handled automatically by Cus"s switching to PayPal .
+Secondly, there should be no unnecessary constraint on the order in which actions are performed, such as which of making payments and sending the cricket bat should come first .
+Thirdly, choosing a sequence of interactive actions should be based on reasoning about the intrinsic meanings of protocol actions, which are based on the notion of commitment, i.e .
+which refers to a strong promise to other agent(s) to undertake some courses of action .
+Current approaches [11, 12, 10, 1] to achieve flexibilities using the notion of commitment make use of an abstract layer of commitments .
+However, in these approaches, a mapping from protocol actions onto operations on commitments 124 978 81 904262 7 5 c 2007 IFAAMAS as well as handling and enforcement mechanisms of commitments must be externally provided .
+Execution of protocol actions also requires concurrent execution of operations on related commitments .
+As a result, the overhead of processing the commitment layer makes specification and execution of protocols more complicated and error prone .
+There is also a lack of a logic to naturally express aspects of resources, internal and external choices as well as time of protocols .
+Rather than creating another layer of commitment outside protocol actions, we try to achieve a modeling of commitments that is integrated with protocol actions .
+Both commitments and protocol actions can then be reasoned about in one consistent system .
+In order to achieve that, we specify protocols in a declarative manner, i.e .
+what is to be achieved rather then how agents should interact .
+A key to this is using logic .
+Temporal logic, in particular, is suitable for describing and reasoning about temporal constraints while linear logic [3] is quite suitable for modeling resources .
+We suggest using a combination of linear logic and temporal logic to construct a commitment based interaction framework which allows both temporal and resource related reasoning for interaction protocols .
+This provides a natural manipulation and reasoning mechanism as well as internal enforcement mechanisms for commitments based on proof search .
+This paper is organized as follows .
+Section 2 discusses the background material of linear logic, temporal linear logic and commitments .
+Section 3 introduces our modeling framework and specification of protocols .
+Section 4 discusses how our framework can be used for an example of online sale interactions between a merchant, a bank and a customer .
+We then discuss the advantages and limitations of using our framework to model interaction protocols and achieve flexibility in Section 5 .
+Section 6 presents our conclusions and items of further work. .

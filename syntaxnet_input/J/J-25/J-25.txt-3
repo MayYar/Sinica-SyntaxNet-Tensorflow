@@ -1,0 +1,74 @@
+2.1 Background and notation Imagine a world where there are only two future uncertain events of any consequence
+In this simple world there are four possible future states all possible combinations of the binary events" outcomes
+Hedging risk can be thought of as an action of moving money between various possible future states .
+For example, insur1 Technically, an option is a portfolio of infinitely many atomic securities, though it can be approximately modeled with a finite number .
+ing one"s house transfers money from future states where struck is not true to states where it is .
+Selling a security denoted acme100 that pays off $1 iff the event acme100 occurs transfers money from future states where Acme"s price is above $100 on January 4 to states where it"s not .
+Speculating is also an act of transferring money between future states, though usually associated with maximizing expected return rather than reducing risk .
+For example, betting on a football team moves money from the team loses state to the team wins state .
+In practice, agents engage in a mixture of hedging and speculating, and there is no clear dividing line between the two [18] .
+All possible future outcomes form a state space ?, consisting of mutually exclusive and exhaustive states £s ? ? .
+Often a more natural way to think of possible future outcomes is as an event space A of linearly independent events A ? A that may overlap arbitrarily .
+So in our toy example struck ? acme100 is one of the four disjoint states, while struck is one of the two events .
+Note that a set of n linearly independent events defines a state space ? of size 2n consisting of all possible combinations of event outcomes .
+Conversely, any state space ? can be factored into log |?| events .
+Suppose that A exhaustively covers all meaningful future outcomes (i.e., covers all eventualities that agents may wish to hedge against and or speculate upon) .
+Then the existence of 2n linearly independent securities called a complete market allows agents to distribute their wealth arbitrarily across future states.2 An agent may create any hedge or speculation it desires .
+Under classical conditions, agents trading in a complete market form an equilibrium where risk is allocated Pareto optimally .
+If the market is incomplete, meaning it consists of fewer than 2n linearly independent securities, then in general agents cannot construct arbitrary hedges and equilibrium allocations may be nonoptimal [1, 8, 19, 20] .
+In real world settings, the number of meaningful events n is large and thus the number of securities required for completeness is intractable .
+No truly complete market exists or will ever exist .
+One motivation behind compound securities markets is to provide a mechanism that supports the most transfer of risk using the least number of transactions possible .
+Compound securities allow a high degree of expressivity in constructing bids .
+The tradeoff for increased expressivity is increased computational complexity, from both the bidder"s and auctioneer"s point of view .
+2.2 Related work The quest to reduce the number of financial instruments required to support an optimal allocation of risk dates to Arrow"s original work [1] .
+The requirement stated above of only 2n linearly independent securities is itself a reduction from the most straightforward formulation .
+In an economy with k standard goods, the most straightforward complete market contains k¡P2n securities, each paying off in one good under one state realization .
+Arrow [1] showed that a market where securities and goods are essentially separated, with 2n securities paying off in a single numeraire good plus k spot markets in the standard goods, is also complete .
+For our purposes, we need consider only the securities market .
+2 By linearly independent securities, we mean that the vectors of payoffs in all future states of these securities are linearly independent .
+145 Varian [34] shows that a complete market can be constructed using fewer than 2n securities, replacing the missing securities with options .
+Still, the number of linearly independent financial instruments securities plus optionsmust be 2n to guarantee completeness .
+Though the requirement of 2n financial instruments cannot be relaxed if one wants to guarantee completeness in all circumstances, Pennock and Wellman [26] explore conditions under which a smaller securities market may be operationally complete, meaning that its equilibrium is Pareto optimal with respect to the agents involved, even if the market contains less than 2n securities .
+The authors show that in some cases the market can be structured and compacted in analogy to Bayesian network representations of joint probability distributions [23] .
+They show that, if all agents" risk neutral independencies agree with the independencies encoded in the market structure, then the market is operationally complete .
+For collections of agents all with constant absolute risk aversion, agreement on Markov independencies is sufficient .
+Bossaerts, Fine, and Ledyard [2] develop a mechanism they call combined value trading that allows traders to order an arbitrary portfolio of securities in one bid, rather than breaking up the order into a sequence of bids on individual securities .
+If the portfolio order is accepted, all of the implied trades on individual securities are executed simultaneously, thus eliminating so called execution risk that prices will change in the middle of a planned sequence of orders .
+The authors conduct laboratory experiments showing that, even in thin markets where ordinary sequential trading breaks down, CVT supports efficient pricing and allocation .
+Note that CVT differs significantly from compound securities trading .
+CVT allows instantaneous trading of any linear combination of securities, while compound securities allow more expressive securities that can encode nonlinear boolean combinations of events .
+For example, CVT may allow an agent to order securities A and B in a bundle that pays off as a linear combination of A and B,3 but CVT won"t allow the construction of a compound security A ? B that pays off $1 iff both A and B occur, or a compound security A|B .
+Related to CVT are combinatorial auctions [6, 21] and exchanges [31], mechanisms that have recently received quite a bit of attention in the economics and computer science literatures .
+Combinatorial auctions allow bidders to place distinct values on all possible bundles of goods rather than just on individual goods .
+In this way bidders can express substitutability and complementarity relationships among goods that cannot be expressed in standard parallel or sequential auctions .
+Compound securities differ from combinatorial auctions in concept and complexity .
+Compound securities allow bidders to construct an arbitrary bet on any of the 22n possible compound events expressible as logical functions of the n base events, conditional on any other of the 22n compound events .
+Agents optimize based on their own subjective probabilities and risk attitude (and in general, their beliefs about other agents" beliefs and utilities, ad infinitum) .
+The central auctioneer problem is identifying arbitrage opportunities
+Combinatorial auctions, on the other hand, allow bids on any of the 2n bundles of n goods .
+Typically, 3 Specifically, one unit of each pays off $2 iff both A and B occur, $1 iff A or B occurs (but not both), and $0 otherwise .
+uncertainty and thus risk is not considered .
+The central auctioneer problem is to maximize social welfare .
+Also note that the problems lie in different complexity classes .
+While clearing a combinatorial auction is polynomial in the divisible case and NP complete in the indivisible case, matching in a compound securities market is NP complete in the divisible case and £Up 2 complete in the indivisible case .
+In fact, even the problem of deciding whether two bids on compound securities match, even in the divisible case, is NP complete (see Section 5.2) .
+There is a sense in which it is possible to translate our matching problem for compound securities into an analogous problem for clearing two sided combinatorial exchanges [31] of exponential size .
+Specifically, if we regard payoff in a particular state as a good, then compound securities can be viewed as bundles of (fractional quantities of) such goods .
+The material balance constraint facing the combinatorial auctioneer corresponds to a restriction that the compoundsecurity auctioneer be disallowed from assuming any risk .
+Note that this translation is not at all useful for addressing the compound security matching problem, as the resulting combinatorial exchange has an exponential number of goods .
+Hanson [15] develops a market mechanism called a market scoring rule that is especially well suited for allowing bets on a combinatorial number of outcomes .
+The mechanism maintains a joint probability distribution over all 2n states, either explicitly or implicitly using a Bayesian network or other compact representation .
+At any time any trader who believes the probabilities are wrong can change any part of the distribution by accepting a lottery ticket that pays off according to a scoring rule (e.g., the logarithmic scoring rule) [35], as long as that trader also agrees to pay off the most recent person to change the distribution .
+In the limit of a single trader, the mechanism behaves like a scoring rule, suitable for polling a single agent for its probability distribution .
+In the limit of many traders, it produces a combined estimate .
+Since the market essentially always has a complete set of posted prices for all possible outcomes, the mechanism avoids the problem of thin markets, or illiquidity, that necessarily plagues any market containing an exponential number of alternative investments .
+The mechanism requires a patron to pay off the final person to change the distribution, though the patron"s payment is bounded .
+Though Hanson offers some initial suggestions, several open problems remain, including efficient methods for representing and updating the joint distribution and recording traders positions and portfolios, without resorting to exponential time and space algorithms .
+Fagin, Halpern, and Megiddo [9] give a sound and complete axiomatization for deciding whether sets of probabilistic inequalities are consistent .
+Bids for compound securities can be thought of as expressions of probabilistic inequalities
+If a set of single unit bids correspond to a set of inconsistent probabilistic inequalities, then there is a match .
+However, because they are interested in a much different framework, Fagin et al .
+do not consider several complicating factors specific to the securities market framework
+We address these issues below .
+146 .

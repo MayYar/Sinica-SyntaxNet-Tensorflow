@@ -1,0 +1,151 @@
+The main idea of the Spotlight localization system is to generate controlled events in the field where the sensor nodes were deployed .
+An event could be, for example, the presence of light in an area .
+Using the time when an event is perceived by a sensor node and the spatio temporal properties of the generated events, spatial information (i.e .
+location) regarding the sensor node can be inferred .
+Figure 1 .
+Localization of a sensor network using the Spotlight system We envision, and depict in Figure 1, a sensor network deployment and localization scenario as follows
+After deployment, the sensor nodes self organize into a network and execute a time synchronization protocol .
+An aerial vehicle (e.g .
+helicopter), equipped with a device, called Spotlight, flies over the network and generates light events .
+The sensor nodes detect the events and report back to the Spotlight device, through a base station, the timestamps when the events were detected .
+The Spotlight device computes the location of the sensor nodes .
+During the design of our Spotlight system, we made the following assumptions
+the aerial vehicle has a very good knowledge about its position and orientation (6 parameters
+a powerful Spotlight device is available and it is able to generate 14 spatially large events that can be detected by the sensor nodes, even in the presence of background noise (daylight) .
+a line of sight between the Spotlight device and sensor nodes exists .
+Our assumptions are simplifying assumptions, meant to reduce the complexity of the presentation, for clarity .
+We propose solutions that do not rely on these simplifying assumptions, in Section 6 .
+In order to formally describe and generalize the Spotlight localization system, we introduce the following definitions .
+3.1 Definitions and Problem Formulation Let"s assume that the space A ?R3 contains all sensor nodes N, and that each node Ni is positioned at pi(x, y, z) .
+To obtain pi(x, y, z), a Spotlight localization system needs to support three main functions, namely an Event Distribution Function E(t), an Event Detection Function D(e), and a Localization Function L(Ti) .
+They are formally defined as follows
+Examples of events are light, heat, smoke, sound, etc .
+Let Ti={ti1, ti2, ¡K, tin} be a set of n timestamps of events detected by a node i .
+Let T"={t1", t2", ¡K, tm"} be the set of m timestamps of events generated in the sensor field .
+Definition 2
+For a given event e
+Spotlight system architecture As shown in Figure 2, the Event Detection Function D(e) is supported by the sensor nodes .
+It is used to determine whether an external event happens or not .
+It can be implemented through either a simple threshold based detection algorithm or other advanced digital signal processing techniques .
+The Event Distribution E(t) and Localization Functions L(Ti) are implemented by a Spotlight device .
+The Localization function is an aggregation algorithm which calculates the intersection of multiple sets of points .
+The Event Distribution Function E(t) describes the distribution of events over time .
+It is the core of the Spotlight system and it is much more sophisticated than the other two functions .
+Due to the fact that E(t) is realized by the Spotlight device, the hardware requirements for the sensor nodes remain minimal .
+With the support of these three functions, the localization process goes as follows
+2) During the event distribution, sensor nodes record the time sequence Ti = {ti1, ti2, ¡K, tin} at which they detect the events .
+3) After the event distribution, each sensor node sends the detection time sequence back to the Spotlight device .
+4) The Spotlight device estimates the location of a sensor node i, using the time sequence Ti and the known E(t) function .
+The Event Distribution Function E(t) is the core technique used in the Spotlight system and we propose three designs for it .
+These designs have different tradeoffs and the cost comparison is presented in Section 3.5 .
+3.2 Point Scan Event Distribution Function To illustrate the basic functionality of a Spotlight system, we start with a simple sensor system where a set of nodes are placed along a straight line (A = [0, l] R) .
+The Spotlight device generates point events (e.g .
+light spots) along this line with constant speed s .
+The set of timestamps of events detected by a node i is Ti={ti1} .
+The Event Distribution Function E(t) is
+The resulting localization function is
+The implementation of the Event Distribution Function E(t) is straightforward .
+As shown in Figure 3(a), when a light source emits a beam of light with the angular speed given by d s dt d S )(cos 2 £\£\ £\ == , a light spot event with constant speed s is generated along the line situated at distance d .
+Figure 3 .
+The implementation of the Point Scan EDF The Point Scan EDF can be generalized to the case where nodes are placed in a two dimensional plane R2 .
+In this case, the Spotlight system progressively scans the plane to activate the sensor nodes .
+This scenario is depicted in Figure 3(b) .
+3.3 Line Scan Event Distribution Function Some devices, e.g .
+diode lasers, can generate an entire line of events simultaneously .
+With these devices, we can support the Line Scan Event Distributed Function easily .
+We assume that the 15 sensor nodes are placed in a two dimensional plane (A=[l x l] ?R2 ) and that the scanning speed is s .
+The set of timestamps of events detected by a node i is Ti={ti1, ti2} .
+Figure 4 .
+The implementation of the Line Scan EDF The Line Scan EDF is defined as follows
+U )()()( tEtEtE yx= We can localize a node by calculating the intersection of the two event lines, as shown in Figure 4 .
+More formally
+3.4 Area Cover Event Distribution Function Other devices, such as light projectors, can generate events that cover an area .
+This allows the implementation of the Area Cover EDF .
+The idea of Area Cover EDF is to partition the space A into multiple sections and assign a unique binary identifier, called code, to each section .
+Let"s suppose that the localization is done within a plane (A R2 code k .
+The Area Cover EDF is then defined as follows
+We illustrate the Area Cover EDF with a simple example .
+As shown in Figure 5, the plane A is divided in 16 sections .
+Each section Sk has a unique code k .
+The Spotlight device distributes the events according to these codes
+A node residing anywhere in the section Sk is localized at the center of gravity of that section .
+For example, nodes within section 1010 detect the events at time T = {1, 3} .
+At t = 4 the section where each node resides can be determined A more accurate localization requires a finer partitioning of the plane, hence the number of bits in the code will increase .
+Considering the noise that is present in a real, outdoor environment, it is easy to observe that a relatively small error in detecting the correct bit pattern could result in a large localization error .
+Returning to the example shown in Figure 5, if a sensor node is located in the section with code 0000, and due to the noise, at time t = 3, it thinks it detected an event, it will incorrectly conclude that its code is 1000, and it positions itself two squares below its correct position .
+The localization accuracy can deteriorate even further, if multiple errors are present in the transmission of the code .
+A natural solution to this problem is to use error correcting codes, which greatly reduce the probability of an error, without paying the price of a re transmission, or lengthening the transmission time too much .
+Several error correction schemes have been proposed in the past .
+Two of the most notable ones are the Hamming (7, 4) code and the Golay (23, 12) code .
+Both are perfect linear error correcting codes .
+The Hamming coding scheme can detect up to 2 bit errors and correct 1 bit errors .
+In the Hamming (7, 4) scheme, a message having 4 bits of data (e.g .
+dddd, where d is a data bit) is transmitted as a 7 bit word by adding 3 error control bits (e.g .
+dddpdpp, where p is a parity bit) .
+Figure 5 .
+The steps of Area Cover EDF .
+The events cover the shaded areas .
+The steps of the Area Cover technique, when using Hamming (7, 4) scheme are shown in Figure 6 .
+Golay codes can detect up to 6 bit errors and correct up to 3 bit errors .
+Similar to Hamming (7, 4), Golay constructs a 23 bit codeword from 12 bit data .
+Golay codes have been used in satellite and spacecraft data transmission and are most suitable in cases where short codeword lengths are desirable .
+Figure 6 .
+The steps of Area Cover EDF with Hamming (7, 4) ECC .
+The events cover the shaded areas .
+Let"s assume a 1 bit error probability of 0.01, and a 12 bit message that needs to be transmitted .
+The probability of a failed transmission is thus
+more than 1 bit error); and 0.000076 for the Golay scheme (i.e .
+more than 3 bit errors) .
+Golay is thus 80 times more robust that the Hamming scheme, which is 20 times more robust than the no error correction scheme .
+16 Considering that a limited number of corrections is possible by any coding scheme, a natural question arises
+As shown in Figure 7, the placement A, in the presence of a 1 bit error has a smaller average localization error when compared to the placement B .
+The objective of our code placement strategy is to reduce the total Euclidean distance between all pairs of codes with Hamming distances smaller than K, the largest number of expected 1 bit errors .
+Figure 7 .
+Different code placement strategies Formally, a placement is represented by a function P
+We denote by dE(i, j) the Euclidean distance and by dH(i, j) the Hamming distance between two codes i and j .
+In a noisy environment, dH(i,j) determines the crossover probability between the two codes .
+For the case of independent detections, the higher dH(i, j) is, the lower the crossover probability will be .
+The objective function is defined as follows
+In general, it is analytically hard to obtain the global minimum .
+To overcome this, we propose a Greedy Placement method to obtain suboptimal results .
+In this method we initialize the 2 dimensional grid with codes .
+Then we swap the codes within the grid repeatedly, to minimize the objective function .
+For each swap, we greedily chose a pair of codes, which can reduce the objective function (Equation 10) the most .
+The proposed Greedy Placement method ends when no swap of codes can further minimize the objective function .
+For evaluation, we compared the average localization error in the presence of K bit error for two strategies
+0 0.5 1 1.5 2 2.5 3 3.5 4 4 9 16 25 36 49 64 81 Grid Size LocalizationError[gridunit] Row major Consecutive placement Greedy Placement Figure 8 .
+Localization error with code placement and no ECC As Figure 8 shows, if no error detection correction capability is present and 1 bit errors occur, then our Greedy Placement method can reduce the localization error by an average 23%, when compared to the Row Major Placement .
+If error detection and correction schemes are used (e.g .
+Hamming (12, 8) and if 3 bit errors occur (K=3) then the Greedy Placement method reduces localization error by 12%, when compared to the Row Major Placement, as shown in Figure 9 .
+If K=1, then there is no benefit in using the Greedy Placement method, since the 1 bit error can be corrected by the Hamming scheme .
+0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 4 9 16 25 36 49 64 81 Grid Size LocalizationError[gridunit] Row major Consecutive placement Greedy Placement Figure 9 .
+Localization error with code placement and Hamming ECC 3.5 Event Distribution Function Analysis Although all three aforementioned techniques are able to localize the sensor nodes, they differ in the localization time, communication overhead and energy consumed by the Event Distribution Function (let"s call it Event Overhead) .
+Let"s assume that all sensor nodes are located in a square with edge size D, and that the Spotlight device can generate N events (e.g .
+Point, Line and Area Cover events) every second and that the maximum tolerable localization error is r .
+Table 1 presents the execution cost comparison of the three different Spotlight techniques .
+Table 1 .
+Execution Cost Comparison Criterion Point Scan Line Scan Area Cover Localization Time NrD ) ( 22 NrD ) 2( NDlogr # Detections 1 2 logrD # Time Stamps 1 2 logrD Event Overhead D2 2D2 D2 logrD 2 Table 1 indicates that the Event Overhead for the Point Scan method is the smallest it requires a one time coverage of the area, hence the D2 .
+However the Point Scan takes a much longer time than the Area Cover technique, which finishes in logrD seconds .
+The Line Scan method trades the Event Overhead well with the localization time .
+By doubling the Event Overhead, the Line Scan method takes only r 2D percentage of time to complete, when compared with the Point Scan method .
+From Table 1, it can be observed that the execution costs do not depend on the number of sensor nodes to be localized .
+It is important to remark the ratio Event Overhead per unit time, which is indicative of the power requirement for the Spotlight device .
+This ratio is constant for the Point Scan (r2 *N) while it grows linearly with area, for the Area Cover (D2 *N 2) .
+If the deployment area is very large, the use of the Area Cover EDF is prohibitively expensive, if not impossible .
+For practical purposes, the Area Cover is a viable solution for small to medium size networks, while the Line Scan works well for large networks .
+We discuss the implications of the power requirement for the Spotlight device, and offer a hybrid solution in Section 6 .
+3.6 Localization Error Analysis The accuracy of localization with the Spotlight technique depends on many aspects .
+The major factors that were considered during the implementation of the system are discussed below
+It is necessary for the system to reach consensus on global time through synchronization .
+Due to the uncertainty in hardware processing and wireless communication, we can only confine such errors within certain bounds (e.g .
+one jiffy) .
+An imprecise input to the Localization Function L(T) leads to an error in node localization .
+Uncertainty in Detection
+Lower sampling rates will generate larger localizations errors .
+Size of the Event
+If a node detects one event, it is hard for it to estimate the exact location of itself within the event .
+Realization of Event Distribution Function
+Due to the limited accuracy (e.g .
+mechanical imprecision), a Spotlight device might generate events which locate differently from where these events are supposed to be .
+It is important to remark that the localization error is independent of the number of sensor nodes in the network .
+This independence, as well as the aforementioned independence of the execution cost, indicate the very good scalability properties (with the number of sensor nodes, but not with the area of deployment) that the Spotlight system possesses. .

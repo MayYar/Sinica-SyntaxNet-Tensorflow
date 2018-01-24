@@ -1,0 +1,153 @@
+Our general framework for describing the kind of MASs we are interested in is fairly simple .
+Let Ag = {1, .
+.
+.
+, n} a finite set of agents, {Aci}i?Ag a collection of action sets (where Aci are the actions of agent i), A = ¡Ñn i=1Aci the joint action space, and Env a set of environment states .
+A run is a sequence r = e1 a1 ¡÷ .
+.
+.
+at?1 ¡÷ et where ai ? A (ai[j] denotes the action of agent j in this tuple), and ei ? Env .
+We define |r| = t, last(r) = et, r[1 
+Writing R(Env, A) for the set of all possible runs, we can view each agent i as a function gi 
+The set of all agent functions for i given A and Env is denoted by Gi(Env, A) .
+The (finite, discrete, stationary, fully accessible, deterministic) environment is defined by a state transformer function f 
+.
+.
+ai?1 ¡÷ ei)) for all i ? 1 (g is the joint vector of functions gi) .
+This definition implies that execution of actions is synchronised among agents, so that the system evolves though an execution of rounds where all agents perform their actions simultaneously .
+We denote the set of all runs given a particular configuration of agent functions g by R(Env, A, g) .
+We write gi ? r where gi an agent function and r a run iff ?1 ? j ? |r|.gi(r[1 
+gi is compatible with r in every time step as far as i"s actions are concerned) .
+We use a (standard) propositional logical language L with entailment relation e |= ? for e ? Env and ? ? L deunset pending cancelled active violated fulfilled Figure 1
+.
+.
+at?1 ¡÷ et ? a = at?1[i] i.e .
+Done(i, a) is exactly true for those actions that made up part of the joint action vector ai?1 in the predecessor state, and all other formulae that were entailed by the last state of r are still valid .
+Our model implies that each agent executes exactly one action in each time step .
+2.1 Commitments Our notion of commitments is based on a slight variation of the framework proposed by Fornara and Colombetti [6]
+when a request for achieving £q if a certain condition ? becomes true is issued from i to j .
+The commitment becomes pending if the debtor j is required to fulfill it, e.g .
+after having accepted it .
+A pending commitment will become active if its condition ? becomes true, and if £q is brought about in that case it becomes fulfilled, otherwise violated .
+Commitments can become cancelled in different situations, e.g .
+if an unset commitment is rejected .
+Also, environmental events can lead £q to become true in which case the commitment becomes fulfilled without the debtor"s contribution .
+Figure 1 provides a graphic representation of commitment state transitions in this framework .
+Apart from a slightly different notation used to maintain a more detailed history of commitments, we will extend them to also contain a deactivation condition £r apart from ? (which we call activation condition) which causes any commitment to be cancelled if it becomes true .
+1 More precisely L contains atomic propositions P = {p, q, .
+.
+.}, the usual connectives ? and ? (with abbreviations ? and ?) .
+As for semantics, a function interpretation function I 
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 101 D 
+A commitment is a structure £d, s 
+the proposition that i commits to making true in front of j), ?, £r ? L are the activation deactivation conditions, and t is the instant (in a run) at which this commitment entered its current state s .
+As an example, x, v 
+He was supposed to make the payment after receiving the toys unless he sent back the toys .
+We introduce deactivation conditions so as to be able to completely revoke existing commitments
+This provides us with the capability to define validity conditions using ? and £r, which is useful for things like deadlines for unset commitments (if I don"t get a response within 3 time steps my request will expire) .
+For brevity, we sometimes omit indices or content elements when clear from the context (in particular, we often write £F for the content £q ¡ò ? £r) .
+We write C for the set of all possible commitments and denote sets of commitments (so called commitment stores) by CS ? ?fin .
+To handle the effects of environmental events and agent actions on a commitment store CS, table 1 introduces five commitment transition rules which are executed in each time step by the system or any observer who intends to clarify the status of existing commitments in the order shown
+For the remaining pending commitments2 , the activation rule A describes how these become active if ? becomes true .
+Note that when ? is true in subsequent states we check whether 2 To avoid problems with contradictory commitment specifications (e.g .
+when both ? and £r become true), we give deactivation strict precedence over activation .
+this active commitment is contained in CS to avoid duplicates (this is because we keep a full record of the commitment history for reasons which will become clear below).3 Rule S caters for serendipity i.e .
+fulfillment of commitments not brought about by the respective agent, but simply by environmental changes that made the debitum true .
+Finally, the fulfilment violation rules F V record whether the action performed by the debtor in the previous step (r |= Done(i, a)) has caused the debitum £q of any commitment which became active in the previous timestep to become true .
+We need only consider those commitments that became active in the previous step t ? 1 since we can verify their fulfilment status in t .
+This verification hinges on a domain dependent predicate causes(a, £q) which we have not mentioned so far .
+It should be true if action a is supposed to bring about £q, and delineates the existing social notion of what constitutes a reasonable attempt to achieve £q in the given context (its definition may range from requiring that £q has actually been achieved to allowing any action a that does not necessarily result in ?£q) .
+2.2 Grounding In Fornara and Colombetti"s and similar approaches, the status of commitments is verifiable, but they are not grounded in expectations about interaction .
+Such semantics (similar in style to what he have just defined in terms of CS update rules) tell us what commitments exist and which state they are in, but not how this will affect future agent behaviour .
+To provide such grounding, we introduce notions of compliant and expected behaviour .
+An agent is behaving in compliance with its commitments if it always immediately fulfills all active commitments .
+More precisely, the behaviour of agent i is said to be compliant with CS at time t iff ?k ? t £d, a 
+To achieve this, we can instead use the contents of the CS to restrict the range of admissible agent functions to those that are in accordance with it using the following definition
+For any run r ? R(Env, A), let CS(r) the set of commitments that has resulted from execution of r assuming that certain actions (including messages) create commitments or change their status .
+The set of compliant agent functions with respect to a commitment store CS is 3 While commitment identifiers adversely affect the readability of our notation, they are necessary here to uniquely determine which pending commitment is activated .
+102 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) defined as compliant(CS) 
+£d, p 
+?r r .
+£d, a 
+For this, we introduce a second type of commitments which we will call expectations to avoid confusion and distinguish from ordinary (now called normative) commitments by using round brackets (£d, s 
+They are treated exactly like other commitments in terms of the rules introduced above but express what the agent is expected to do (in the non normative sense of an objective prediction of behaviour) rather than what it is supposed to do in a normative sense .
+To define the notions we need below, we introduce the following constructs
+Hence, compliant( CS ) specifies what agents are supposed to do .
+CS , on the other hand, overrides all normative commitment elements in CS for which an expectation also exists, i.e .
+expectations are given precedence over the normative commitments .
+With this, we can define expected behaviour as expected(CS) 
+behaviour that adheres to expectations where such expectations exist and is compliant otherwise .
+The separate, parallel, treatment of compliant and expected behaviour has two advantages
+when we expect that someone will not obey their commitments we can still respond to it if they do (and, for example, regain trust in them) .
+Secondly, we can cater for a variety of rules for translating commitment stores to actual future events which a reasoning agent can use in its planning process .
+For the purposes of this paper, we will assume that agents base their predictions about others on expected behaviour if it is different from compliant behaviour, and that they predict compliant behaviour, else .
+4 Note the quantification in this definition
+In particular, this must be independent of any part of the history (e.g .
+other agents" actions and previous environment states) given CS(r) .
+We also quantify over all extensions r of r, i.e .
+fulfillment of the commitment has to happen if the appropriate conditions arise regardless of other factors .
+2.3 Static ACL Semantics Table 2 shows an example for a small fragment of an ACL semantics defined using our framework, with two alternative definitions (AC and AC2) for the semantics of the accept message type .
+Each of the so called dialogue operators (similar to AI planning action schemata) is defined using the graphical notation p a q where p, a, and q are schemata for preconditions, messages (of a certain type), and post conditions, respectively .
+Preconditions determine whether an action schema is applicable in a certain situation or not and contain formulae from L and or constraints on the current contents of CS .
+PostConditions contain changes to the knowledge base and modifications to CS, i.e .
+they are interpreted like add deletelists in traditional AI planning .
+For any such operator o = p, a, q we define pre(o) = p, action(o) = a and post(o) = q .
+All elements of a dialogue operator can contain logical variables in their pre and post conditions and sender receiver content variables in the action slot .
+In our example fragment, the operator RQ for requests creates an unset commitment with a fresh identifier £d and current timestamp (we assume that r |= time(t) ? |r| = t, and there is a global system time that can be inspected by all agents), and AC RJ add a pending cancelled equivalent of £d to CS .
+A fragment consisting of {RQ, RJ, AC} is equivalent to the standard semantics of the respective performative types defined in [6].5 Note that our operators only contain objectively verifiable pre and post conditions, and if agents want to conform to it they need to comply with these operators .
+In the following, we will assume that agents always adhere to the ACL specification syntactically6 .
+Using AC2 instead of AC enables us to exploit the power of our distinction between compliant and expected behaviour, expressing that we don"t trust i to adhere to the normal semantics of accept
+At the same time, we maintain the normative commitment that £d is pending so that i"s behaviour would be seen to lie within compliant(CS) if i deviates from our (pessimistic) expectation and does the right thing instead .
+2.4 Dynamic Semantics 2.4.1 Defining Dynamic Semantics To define DS for ACLs we now introduce a state transition system in which each state specifies an ordinary (static) commitment based semantics and a range of agent pairs for which these semantics are assumed to apply .
+5 Note that we allow for requesting identical things before receiving a response and responding several times to the same request .
+Simple additional conditions can be introduced to avoid these effects which we omit here for lack of space .
+The same is true of additional constraints to manage control flow issues in actual dialogues (e.g .
+turn taking) .
+6 This means that, for an appropriate variable substitution ?, r |= pre(o)? holds when o is applied at r and that CS(r) is transformed according to post(o)? after its application .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 103 RQ 
+A dynamic semantics is a structure O, S, s0, £G where O = {o1, o2, .
+.
+.
+, on} a set of dialogue operators, S ? ?(O) is a set of semantic states specified as subsets of dialogue operators which are valid in this state, s0 ? S is the initial semantic state, and the transition relation £G ? S ¡Ñ ?(C) ¡Ñ ?(Ag ¡Ñ Ag) ¡Ñ S defines the transitions over S triggered by conditions expressed as elements of ?(C) (C is the set of all possible commitments) .
+The meaning of a transition (s, c, {(i1, j1), .
+.
+.
+, (in, jn)}, s ) ? £G is as follows
+Then, if CS ? c (i.e .
+the current CS matches the constraint c given as a collection of possible CSs) this will trigger a transition to state s for all pairs of agents in {(i1, j1), .
+.
+.
+, (in, jn)} for which the constraint was satisfied and will update act accordingly .
+In other words, the act mapping tracks which version of the semantics is valid for which pairs of communication partners over time .
+2.4.2 Example To illustrate these concepts, consider the following example
+there are two possible states of the semantics which only differ in their definition of accept (we call alternative versions of a single dialogue operator like AC and AC2 semantic variants) .
+We assume that initially act(i, j) = s0 for all agents i, j ? Ag .
+We describe £_ by the transition diagram shown in figure 2 .
+In this diagram, edges carry labels c 
+Writing A(s) = act?1 (s) for the so called range of agent pairs for which s is active, we use agent variables like i and j and the wildcard symbol ? that can be bound to any agent in A(s), and we assume that this binding carries over to descriptions of A .
+For example, the edge with label £d, v 
+i has violated some commitment toward j) and make s1 valid for the set of agents {(i, k)|k ? A(s0)} ¡å {(j, i)} .
+This means that for all agents i who have lied, s1 will become active for (i, j ) where j ? A(s0) and s1 will also become active for (j, i) .
+The way the DS of the diagram above works is as follows
+If an agent i violates a commitment once then s1 will become active for i towards all other agents, so that they won"t expect i to fulfill any future commitments .
+Moreover, this will also apply to (j, i) so that the culprit i should not expect the deceived agent j to keep its promises towards i either in the future .
+However, this will not affect expectations regarding their interactions with i by agents other than i (i.e .
+they still have no right to violate their own commitments) .
+This reflects the idea that (only) agents that have been fooled are allowed to trespass (only) against those agents who trespassed against them .
+However, if i ever fulfills any commitment again (after the latest violation, this is ensured by the complex constraint used as a label for the transition from s1 to s0), the semantics in s0 will become valid for i again .
+In this case, though, s1 will still be valid for the pair (j, i), i.e .
+agent j will regain trust in i but cannot be expected to be trustworthy toward i ever again .
+Rather than suggesting that this is a particularly useful communication inherent mechanism for sanctioning and rewarding specific kinds of behaviour, this example serves to illustrate the expressiveness of our framework and the kind of distinctions it enables us to make .
+2.4.3 Formal Semantics The semantics of a DS can be defined inductively as follows
+We use the notation A(£_, CS) = {(i, j)|CS|i,j ? c} ¡ä A(s) ¡ä A to denote the set of agents that are to be moved from s to s due to transition rule £_ = (s, c, A, s ) ? £G given CS, where CS|i,j is the set of commitments that mention i and or j (in their sender receiver content slots) .
+In other words, A(£_, CS) contains those pairs of agents who are (i) mentioned in the commitments covered by the constraint c, (ii) contained in the range of s, and (iii) explicitly listed in A as belonging to those pairs of agents that should be affected by the transition £_ .
+104 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) Definition 4 .
+The state of a dynamic semantics O, S, s0, £G after run r with immediate predecessor r is defined as a mapping actr as follows

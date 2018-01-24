@@ -1,0 +1,68 @@
+For bids (b[1], .
+.
+.
+, b[p]) that correspond to the bids of other advertisers, we have
+When the context is clear, we drop the subscript q .
+2.1.2 Query Landscapes We can summarize the data contained in the functions cost(b) and clicks(b) as a collection of points in a plot of cost vs .
+clicks, which we refer to as a landscape .
+For example, for a query with four slots, a landscape might look like Table 1 .
+bid range cost per click cost clicks [$2.60,¡Û) $2.60 $1.30 .5 [$2.00,$2.60) $2.00 $0.90 .45 [$1.60,$2.00) $1.60 $0.40 .25 [$0.50,$1.60) $0.50 $0.10 .2 [$0,$0.50) $0 $0 0 Table 1
+Here we graph clicks as a function of cost .
+Observe that in this graph, the cpc (cost(b) clicks(b)) of each point is the reciprocal of the slope of the line from the origin to the point .
+Since cost(b), clicks(b) and cost(b) clicks(b) are non decreasing, the slope of the line from the origin to successive points on the plot decreases .
+This condition is slightly weaker than concavity .
+Suppose we would like to solve the budget optimization problem for a single query landscape.5 As we increase our bid from zero, our cost increases and our expected number of clicks increases, and so we simply submit the highest bid such that we remain within our budget .
+One problem we see right away is that since there are only a finite set of points in this landscape, we may not be able to target arbitrary budgets efficiently .
+Suppose in the example from Table 1 and Figure 1 that we had a budget 5 Of course it is a bit unrealistic to imagine that an advertiser would have to worry about a budget if only one user query was being considered; however one could imagine multiple instances of the same query and the problem scales .
+42 $0.50 $1.00 $1.50 .1 .2 .3 .4 .5 Clicks Cost Figure 1
+of $1.00 .
+Bidding between $2.00 and $2.60 uses only $0.90, and so we are under spending .
+Bidding more than $2.60 is not an option, since we would then incur a cost of $1.30 and overspend our budget .
+2.1.3 Randomized strategies To rectify this problem and better utilize our available budget, we allow randomized bidding strategies .
+Let B be a distribution on bids b ? R+ .
+Now we define cost(B) = Eb?B[cost(b)] and clicks(B) = Eb?B[clicks(b)] .
+Graphically, the possible values of (cost(B), clicks(B)) lie in the convex hull of the landscape points .
+This is represented in Figure 1 by the dashed line .
+To find a bid distribution B that maximizes clicks subject to a budget, we simply draw a vertical line on the plot where the cost is equal to the budget, and find the highest point on this line in the convex hull .
+This point will always be the convex combination of at most two original landscape points which themselves lie on the convex hull .
+Thus, given the point on the convex hull, it is easy to compute a distribution on two bids which led to this point .
+Summarizing, Lemma 1 .
+If an advertiser is bidding on one keyword, subject to a budget U, then the optimal strategy is to pick a convex combination of (at most) two bids which are at the endpoints of the line on the convex hull at the highest point for cost U .
+There is one subtlety in this formulation .
+Given any bidding strategy, randomized or otherwise, the resulting cost is itself a random variable representing the expected cost .
+Thus if our budget constraint is a hard budget, we have to deal with the difficulties that arise if our strategy would be over budget .
+Therefore, we think of our budget constraint as soft, that is, we only require that our expected cost be less than the budget .
+In practice, the budget is often an average daily budget, and thus we don"t worry if we exceed it one day, as long as we are meeting the budget in expectation .
+Further, either the advertiser or the search engine (possibly both), monitor the cost incurred over the day; hence, the advertiser"s bid can be changed to zero for part of the day, so that the budget is not overspent.6 Thus in the remain6 See https
+py?answer=22183, for example .
+der of this paper, we will formulate a budget constraint that only needs to be respected in expectation .
+2.1.4 Multiple Queries
+We want to bid on each query independently subject to our budget
+The first step of the algorithm is to take the convex hull of each landscape, as in Figure 1, and remove any landscape points not on the convex hull .
+Each piecewise linear section of the curve represents the incremental number of clicks and cost incurred by moving one"s bid from one particular value to another .
+We regard these pieces as items in an instance of fractional knapsack with value equal to the incremental number of clicks and size equal to the incremental cost .
+More precisely, for each piece connecting two consecutive bids b and b on the convex hull, we create a knapsack item with value [clicks(b ) ? clicks(b )] and size [cost(b ) ? cost(b )] .
+We then emulate the greedy algorithm for knapsack, sorting by value size (cost per click), and choosing greedily until the budget is exhausted .
+In this reduction to knapsack we have ignored the fact that some of the pieces come from the same landscape and cannot be treated independently .
+However, since each curve is concave, the pieces that come from a particular query curve are in increasing order of cost per click; thus from each landscape we have chosen for our knapsack a set of pieces that form a prefix of the curve .
+2.2 Keyword Interaction In reality, search advertisers can bid on a large set of keywords, each of them qualifying for a different (possibly overlapping) set of queries, but most search engines do not allow an advertiser to appear twice in the same search results page.7 Thus, if an advertiser has a bid on two different keywords that match the same query, this conflict must be resolved somehow .
+For example, if an advertiser has a bid out on the keywords shoes and high heel, then if a user issues the query high heel shoes, it will match on two different keywords .
+The search engine specifies, in advance, a rule for resolution based on the query the keyword and the bid .
+A natural rule is to take the keyword with the highest bid, which we adopt here, but our results apply to other resolution rules .
+We model the keyword interaction problem using an undirected bipartite graph G = (K ¡å Q, E) where K is a set of keywords and Q is a set of queries .
+Each q ? Q has an associated landscape, as defined by costq(b) and clicksq(b) .
+An edge (k, q) ? E means that keyword k matches query q .
+The advertiser can control their individual keyword bid vector a ? R |K| + specifying a bid ak for each keyword k ? K .
+(For now, we do not consider randomized bids, but we will introduce that shortly.) Given a particular bid vector a on the keywords, we use the resolution rule of taking the maximum to define the effective bid on query q as bq(a) = max k
+By submitting a bid vector a, the advertiser receives some 7 See https
+py?answer=14179, for example .
+43 number of clicks and pays some cost on each keyword .
+We use the term spend to denote the total cost; similarly, we use the term traffic to denote the total number of clicks
+The resulting spend and traffic are given by spend(A)=Ea?A[spend(a)]; traffic(A)=Ea?A[traffic(a)] We can now state the problem in its full generality
+Find
+We conclude this section with a small example to illustrate some feature of the budget optimization problem .
+Suppose you have two keywords K = {u, v} and two queries Q = {x, y} and edges E = {(u, x), (u, y), (v, y)} .
+Suppose query x has one position with ctr £\x [1] = 1.0, and there is one bid bx 1 = $1 .
+Query y has two positions with ctrs £\y [1] = £\y [2] = 1.0, and bids by 1 = $ and by 2 = $1 To get any clicks from x, an advertiser must bid at least $1 on u .
+However, because of the structure of the graph, if the advertiser sets bu to $1, then his effective bid is $1 on both x and y .
+Thus he must trade off between getting the clicks from x and getting the bargain of a click for $ that would be possible otherwise. .

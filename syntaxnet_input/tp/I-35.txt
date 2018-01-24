@@ -1,0 +1,570 @@
+﻿Distributed Norm Management in Regulated 
+content:
+1 ABSTRACT :
+1-1:Norms are widely recognised as a means of coordinating multi agent systems .
+1-2:The distributed management of norms is a challenging issue and we observe a lack of truly distributed computational realisations of normative models .
+1-3:In order to regulate the behaviour of autonomous agents that take part in multiple, related activities, we propose a normative model, the Normative Structure (NS), an artifact that is based on the propagation of normative positions (obligations, prohibitions, permissions), as consequences of agents" actions .
+1-4:Within a NS, conflicts may arise due to the dynamic nature of the MAS and the concurrency of agents" actions .
+1-5:However, ensuring conflict freedom of a NS at design time is computationally intractable .
+1-6:We show this by formalising the notion of conflict, providing a mapping of NSs into Coloured Petri Nets and borrowing well known theoretical results from that field .
+1-7:Since online conflict resolution is required, we present a tractable algorithm to be employed distributedly .
+1-8:We then demonstrate that this algorithm is paramount for the distributed enactment of a NS .
+1-9:I.2.11 [Distributed Artificial Intelligence]: Languages .
+2 INTRODUCTION :
+2-1:A fundamental feature of open, regulated multi agent systems in which autonomous agents interact, is that participating agents are meant to comply with the conventions of the system .
+2-2:Norms can be used to model such conventions and hence as a means to regulate the observable behaviour of agents [6, 29] .
+2-3:There are many contributions on the subject of norms from sociologists, philosophers and logicians (e.g., [15, 28]) .
+2-4:However, there are very few proposals for computational realisations of normative models the way norms can be integrated in the design and execution of MASs .
+2-5:The few that exist (e.g .
+2-6:[10, 13, 24]), operate in a centralised manner which creates bottlenecks and single points of failure .
+2-7:To our knowledge, no proposal truly supports the distributed enactment of normative environments .
+2-8:In our paper we approach that problem and propose means to handle conflicting commitments in open, regulated, multiagent systems in a distributed manner .
+2-9:The type of regulated MAS we envisage consists of multiple, concurrent, related activities where agents interact .
+2-10:Each agent may concurrently participate in several activities, and change from one activity to another .
+2-11:An agent"s actions within an activity may have consequences in the form of normative positions (i.e .
+2-12:obligations, permissions, and prohibitions) [26] that may constrain its future behaviour .
+2-13:For instance, a buyer agent who runs out of credit may be forbidden to make further offers, or a seller agent is obliged to deliver after closing a deal .
+2-14:We assume that agents may choose not to fulfill all their obligations and hence may be sanctioned by the MAS .
+2-15:Notice that, when activities are distributed, normative positions must flow from the activities in which they are generated to those in which they take effect .
+2-16:For instance, the seller"s obligation above must flow (or be propagated) from a negotiation activity to a delivery activity .
+2-17:Since in an open, regulated MAS one cannot embed normative aspects into the agents" design, we adopt the view that the MAS should be supplemented with a separate set of norms that further regulates the behaviour of participating agents .
+2-18:In order to model the separation of concerns between the coordination level (agents" interactions) and the normative level (propagation of normative positions), we propose an artifact called the Normative Structure .
+2-19:Within a NS conflicts may arise due to the dynamic nature of the MAS and the concurrency of agents" actions .
+2-20:For instance, an agent may be obliged and prohibited to do the 636 978 81 904262 7 5 c 2007 IFAAMAS very same action in an activity .
+2-21:Since the regulation of a MAS entails that participating agents need to be aware of the validity of those actions that take place within it, such conflicts ought to be identified and possibly resolved if a claim of validity is needed for an agent to engage in an action or be sanctioned .
+2-22:However, ensuring conflict freedom of a NS at design time is computationally intractable .
+2-23:We show this by formalising the notion of conflict, providing a mapping of NSs into Coloured Petri Nets (CPNs) and borrowing well known theoretical results from the field of CPNs .
+2-24:We believe that online conflict detection and resolution is required .
+2-25:Hence, we present a tractable algorithm for conflict resolution .
+2-26:This algorithm is paramount for the distributed enactment of a NS .
+2-27:The paper is organised as follows .
+2-28:In Section 2 we detail a scenario to serve as an example throughout the paper .
+2-29:Next, in Section 3 we formally define the normative structure artifact .
+2-30:Further on, in Section 4 we formalise the notion of conflict to subsequently analyse the complexity of conflict detection in terms of CPNs in Section 5 .
+2-31:Section 6 describes the computational management of NSs by describing their enactment and presenting an algorithm for conflict resolution .
+2-32:Finally, we comment on related work, draw conclusions and report on future work in Section 7. .
+3 SCENARIO :
+3-1:We use a supply chain scenario in which companies and individuals come together at an online marketplace to conduct business .
+3-2:The overall transaction procedure may be organised as six distributed activities, represented as nodes in the diagram in Figure 1 .
+3-3:They involve different participants whose behaviour is coordinated through protocols .
+3-4:In this scenario agents can play one of four roles: marExit Registration Payment Delivery Negotiation Coordination Model Contract Figure 1: Activity Structure of the Scenario ketplace accountant (acc), client, supplier (supp) and warehouse managers (wm) .
+3-5:The arrows connecting the activities represent how agents can move from one activity to another .
+3-6:After registering at the marketplace, clients and suppliers get together in an activity where they negotiate the terms of their transaction, i.e .
+3-7:prices, amounts of goods to be delivered, deadlines and other details .
+3-8:In the contract activity, the order becomes established and an invoice is prepared .
+3-9:The client will then participate in a payment activity, verifying his credit worthiness and instructing his bank to transfer the correct amount of money .
+3-10:The supplier in the meantime will arrange for the goods to be delivered (e.g .
+3-11:via a warehouse manager) in the delivery activity .
+3-12:Finally, agents can leave the marketplace conforming to a predetermined exit protocol .
+3-13:The marketplace accountant participates in most of the activities as a trusted provider of auditing tools .
+3-14:In the rest of the paper we shall build on this scenario to exemplify the notion of normative structure and to illustrate our approach to conflict detection and resolution in a distributed setting. .
+4 NORMATIVE STRUCTURE :
+4-1:In MASs agents interact according to protocols which naturally are distributed .
+4-2:We advocate that actions in one such protocol may have an effect on the enactment of other protocols .
+4-3:Certain actions can become prohibited or obligatory, for example .
+4-4:We take normative positions to be obligations, prohibitions and permissions akin to work described in [26] .
+4-5:The intention of adding or removing a normative position we call normative command .
+4-6:Occurrences of normative positions in one protocol may also have consequences for other protocols1 .
+4-7:In order to define our norm language and specify how normative positions are propagated, we have been inspired by multi context systems [14] .
+4-8:These systems allow the structuring of knowledge into distinct formal theories and the definition of relationships between them .
+4-9:The relationships are expressed as bridge rules deducibility of formulae in some contexts leads to the deduction of other formulae in other contexts .
+4-10:Recently, these systems have been successfully used to define agent architectures [11, 23] .
+4-11:The metaphor translates to our current work as follows: the utterance of illocutions and or the existence of normative positions in some normative scenes leads to the deduction of normative positions in other normative scenes .
+4-12:We are concerned with the propagation and distribution of normative positions within a network of distributed, normative scenes as a consequence of agents" actions .
+4-13:We take normative scenes to be sets of normative positions and utterances that are associated with an underlying interaction protocol corresponding to an activity .
+4-14:In this section, we first present a simple language capturing these aspects and formally introduce the notions of normative scene, normative transition rule and normative structure .
+4-15:We give the intended semantics of these rules and show how to control a MAS via norms in an example .
+4-16:3.1 Basic Concepts The building blocks of our language are terms and atomic formulae: Def .
+4-17:1 .
+4-18:A term, denoted as t, is (i) any constant expressed using lowercase (with or without subscripts), e.g .
+4-19:a, b0, c or (ii) any variable expressed using uppercase (with or without subscripts), e.g .
+4-20:X, Y, Zb or (iii) any function f(t1, .
+4-21:.
+4-22:.
+4-23:, tn), where f is an n ary function symbol and t1, .., tn are terms .
+4-24:Some examples of terms and functions are Credit, price or offer(bible, 30) being respectively a variable, a constant and a function .
+4-25:We will be making use of identifiers throughout the paper, which are constant terms and also need the following definition: Def .
+4-26:2 .
+4-27:An atomic formula is any construct p(t1, .
+4-28:.
+4-29:.
+4-30:, tn), where p is an n ary predicate symbol and t1, .
+4-31:.
+4-32:.
+4-33:, tn are terms .
+4-34:The set of all atomic formulae is denoted as Δ .
+4-35:We focus on an expressive class of MASs in which interaction is carried out by means of illocutionary speech acts exchanged among participating agents: Def .
+4-36:3 .
+4-37:Illocutions I are ground atomic formulae which have the form p(ag, r, ag , r , δ, t) where p is an element of 1 Here, we abstract from protocols and refer to them generically as activities .
+4-38:The Sixth Intl .
+4-39:Joint Conf .
+4-40:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 637 a set of illocutionary particles (e.g .
+4-41:inform, request, offer); ag, ag are agent identifiers; r, r are role identifiers; δ, an arbitrary ground term, is the content of the message, built from a shared content language; t ∈ N is a time stamp .
+4-42:The intuitive meaning of p(ag, r, ag , r , m, t) is that agent ag playing role r sent message m to agent ag playing role r at time t .
+4-43:An example of an illocution is inform(ag4, supp, ag3, client, offer(wire, 12), 10) .
+4-44:Sometimes it is useful to refer to illocutions that are not fully grounded, that is, those that may contain uninstantiated (free) variables .
+4-45:In the description of a protocol, for instance, the precise values of the message exchanged can be left unspecified .
+4-46:During the enactment of the protocol agents will produce the actual values which will give rise to a ground illocution .
+4-47:We can thus define illocution schemata: Def .
+4-48:4 .
+4-49:An illocution schema ¯I is any atomic formula p(ag, r, ag , r , δ, t) in which some of the terms may either be variables or may contain variables .
+4-50:3.2 Formal Definition of the Notion of NS We first define normative scenes as follows: Def .
+4-51:5 .
+4-52:A normative scene is a tuple s = ids, Δs where ids is a scene identifier and Δs is the set of atomic formulae δ (i.e .
+4-53:utterances and normative positions) that hold in s .
+4-54:We will also refer to Δs as the state of normative scene s .
+4-55:For instance, a snapshot of the state of the delivery normative scene of our scenario could be represented as: Δs = 8 < : utt(request(sean, client, kev, wm, receive(wire, 200), 20)), utt(accept(kev, wm, sean, client, receive(wire, 200), 30)), obl(inform(kev, wm, sean, client, delivered(wire, 200), 30)) 9 = ; That is, agent Sean taking up the client role has requested agent Kev (taking up the warehouse manager role wm) to receive 200kg of wire, and agent Kev is obliged to deliver 200kg of wire to Sean since he accepted the request .
+4-56:Note that the state of a normative scene Δs evolves over time .
+4-57:These normative scenes are connected to one another via normative transitions that specify how utterances and normative positions in one scene affect other normative scenes .
+4-58:As mentioned above, activities are not independent since illocutions uttered in some of them may have an effect on other ones .
+4-59:Normative transition rules define the conditions under which a normative command is generated .
+4-60:These conditions are either utterances or normative positions associated with a given protocol (denoted e.g .
+4-61:activity : utterance) which yield a normative command, i.e .
+4-62:the addition or removal of another normative position, possibly related to a different activity .
+4-63:Our transition rules are thus defined: Def .
+4-64:6 .
+4-65:A normative transition rule R is of the form: R ::= V C V ::= ids : D | V, V D ::= N | utt(¯I) N ::= per(¯I) | prh(¯I) | obl(¯I) C ::= add(ids : N) | remove(ids : N) where ¯I is an illocution schema, N is a normative position (i.e .
+4-66:permission, prohibition or obligation), ids is an identifier for activity s and C is a normative command .
+4-67:We endow our language with the usual semantics of rulebased languages [19] .
+4-68:Rules map an existing normative structure to a new normative structure where only the state of the normative scenes change .
+4-69:In the definitions below we rely on the standard concept of substitution [9] .
+4-70:Def .
+4-71:7 .
+4-72:A normative transition is a tuple b = idb, rb where idb is an identifier and rb is a normative transition rule .
+4-73:We are proposing to extend the notion of MAS, regulated by protocols, with an extra layer consisting of normative scenes and normative transitions .
+4-74:This layer is represented as a bi partite graph that we term normative structure .
+4-75:A normative structure relates normative scenes and normative transitions specifying which normative positions are to be generated or removed in which normative scenes .
+4-76:Def .
+4-77:8 .
+4-78:A normative structure is a labelled bi partite graph NS = Nodes, Edges, Lin , Lout .
+4-79:Nodes is a set S∪B where S is a set of normative scenes and B is a set of normative transitions .
+4-80:Edges is a set Ain ∪ Aout where Ain ⊆ S × B is a set of input arcs labelled with an atomic formula using the labelling function Lin : Ain → D; and Aout ⊆ B × S is a set of output arcs labelled with a normative position using the labelling function Lout : Aout → N .
+4-81:The following must hold: rb must be of the form (ids : D) where s ∈ S and D ∈ Δ and ∃ain ∈ Ain such that ain = (s, b) and Lin (ain ) = D .
+4-82:must be of the form add(ids : N) or remove(ids : N) where s ∈ S and ∃aout ∈ Aout such that aout = (b, s) and Lout (aout ) = N. .
+5 ∀a ∈ Ain :
+5-1:such that a = (s, b) and b = idb, rb and Lin (a) = D then (ids:D) must occur in the LHS of rb. .
+6 ∀a ∈ Aout :
+6-1:such that a = (b, s) and b = idb, rb and Lout (a) = N then add(ids : N) or remove(ids : N) must occur in the RHS of rb .
+6-2:The first two points ensure that every atomic formulae on the LHS of a normative transition rule labels an arc entering the appropriate normative transition in the normative structure, and that the atomic formula on the RHS labels the corresponding outgoing arc .
+6-3:Points three and four ensure that labels from all incoming arcs are used in the LHS of the normative transition rule that these arcs enter into, and that the labels from all outgoing arcs are used in the RHS of the normative transition rule that these arcs leave .
+6-4:3.3 Intended Semantics The formal semantics will be defined via a mapping to Coloured Petri Nets in Section 5.1 .
+6-5:Here we start defining the intended semantics of normative transition rules by describing how a rule changes a normative scene of an existing normative structure yielding a new normative structure .
+6-6:Each rule is triggered once for each substitution that unifies the left hand side V of the rule with the state of the corresponding normative scenes .
+6-7:An atomic formula (i.e .
+6-8:an utterance or a normative position) holds iff it is unifiable with an utterance or normative position that belongs to the state of the corresponding normative scene .
+6-9:Every time a rule is triggered, the normative command specified on the right hand side of that rule is carried out, intending to add or remove a normative position from the state of the corresponding normative scene .
+6-10:However, addition is not unconditional as conflicts may arise .
+6-11:This topic will be treated in Sections 4 and 6.1 .
+6-12:638 The Sixth Intl .
+6-13:Joint Conf .
+6-14:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 3.4 Example In our running example we have the following exemplary normative transition rule: „ payment : obl(inform(X, client, Y, acc, pay(Z, P, Q), T )), payment : utt(inform(X, client, Y, acc, pay(Z, P, Q), T )) « delivery : add(obl(inform(Y, wm, X, client, delivered(Z, Q), T ))) That is, during the payment activity, an obligation on client X to inform accountant Y about the payment P of item Z at time T and the corresponding utterance which fulfills this obligation allows the flow of a norm to the delivery activity .
+6-15:The norm is an obligation on agent Y (this time taking up the role of the warehouse manager wm) to send a message to client X that item Z has been delivered .
+6-16:We show in Figure 2 a diagrammatic representation of how activities and a normative structure relate: Payment Delivery Contract Normative Level Exit Registration Payment Delivery Negotiation Coordination Level Contract nt Figure 2: Activities and Normative Structure As illocutions are uttered during activities, normative positions arise .
+6-17:Utterances and normative positions are combined in transition rules, causing the flow of normative positions between normative scenes .
+6-18:The connection between the two levels is described in Section 6.2. .
+7 CONFLICT DEFINITION :
+7-1:The terms deontic conflict and deontic inconsistency have been used interchangeably in the literature .
+7-2:However, in this paper we adopt the view of [7] in which the authors suggest that a deontic inconsistency arises when an action is simultaneously permitted and prohibited since a permission may not be acted upon, no real conflict occurs .
+7-3:The situations when an action is simultaneously obliged and prohibited are, however, deontic conflicts, as both obligations and prohibitions influence behaviours in a conflicting fashion .
+7-4:The content of normative positions in this paper are illocutions .
+7-5:Therefore, a normative conflict arises when an illocution is simultaneously obliged and prohibited .
+7-6:We propose to use the standard notion of unification [9] to detect when a prohibition and a permission overlap .
+7-7:For instance, an obligation obl(inform(A1, R1, A2, R2, p(c, X), T)) and a prohibition prh(inform(a1, r1, a2, r2, p(Y, d), T )) are in conflict as they unify under σ = {A1 a1, R1 r1, A2 a2, R2 r2, Y c, X d, T T }) .
+7-8:We formally capture this notion: Def .
+7-9:9 .
+7-10:A (deontic) conflict arises between two normative positions N and N under a substitution σ, denoted as conflict(N, N , σ), if and only if N = prh(¯I), N = obl(¯I ) and unify(¯I,¯I , σ) .
+7-11:That is, a prohibition and an obligation are in conflict if, and only if, their illocutions unify under σ .
+7-12:The substitution σ, called here the conflict set, unifies the agents, roles and atomic formulae .
+7-13:We assume that unify is a suitable implementation of a unification algorithm which i) always terminates (possibly failing, if a unifier cannot be found); ii) is correct; and iii) has linear computational complexity .
+7-14:Inconsistencies caused by the same illocution being simultaneously permitted and prohibited can be formalised similarly .
+7-15:In this paper we focus on prohibition obligation conflicts, but the computational machinery introduced in Section 6.1 can equally be used to detect prohibition permission inconsistencies, if we substitute modality obl for per. .
+8 FORMALISING CONFLICT FREEDOM :
+8-1:In this section we introduce some background knowledge on CPNs assuming a basic understanding of ordinary Petri Nets .
+8-2:For technical details we refer the reader to [16] .
+8-3:We then map NSs to CPNs and analyse their properties .
+8-4:CPNs combine the strength of Petri nets with the strength of functional programming languages .
+8-5:On the one hand, Petri nets provide the primitives for the description of the synchronisation of concurrent processes .
+8-6:As noticed in [16], CPNs have a semantics which builds upon true concurrency, instead of interleaving .
+8-7:In our opinion, a true concurrency semantics is easier to work with because it is the way we envisage the connection between the coordination level and the normative level of a multi agent system to be .
+8-8:On the other hand, the functional programming languages used by CPNs provide the primitives for the definition of data types and the manipulation of their data values .
+8-9:Thus, we can readily translate expressions of a normative structure .
+8-10:Last but not least, CPNs have a well defined semantics which unambiguously defines the behaviour of each CPN .
+8-11:Furthermore, CPNs have a large number of formal analysis methods and tools by which properties of CPNs can be proved .
+8-12:Summing up, CPNs provide us with all the necessary features to formally reason about normative structures given that an adequate mapping is provided .
+8-13:In accordance with Petri nets, the states of a CPN are represented by means of places .
+8-14:But unlike Petri Nets, each place has an associated data type determining the kind of data which the place may contain .
+8-15:A state of a CPN is called a marking .
+8-16:It consists of a number of tokens positioned on the individual places .
+8-17:Each token carries a data value which has the type of the corresponding place .
+8-18:In general, a place may contain two or more tokens with the same data value .
+8-19:Thus, a marking of a CPN is a function which maps each place into a multi set2 of tokens of the correct type .
+8-20:One often refers to the token values as token colours and one also refers to the data types as colour sets .
+8-21:The types of a CPN can be arbitrarily complex .
+8-22:Actions in a CPN are represented by means of transitions .
+8-23:An incoming arc into a transition from a place indicates that the transition may remove tokens from the corresponding place while an outgoing arc indicates that the transition may add tokens .
+8-24:The exact number of tokens and their data values are determined by the arc expressions, which are encoded using the programming language chosen for the CPN .
+8-25:A transition is enabled in a CPN if and only if all the 2 A multi set (or bag) is an extension to the notion of set, allowing the possibility of multiple appearances of the same element .
+8-26:The Sixth Intl .
+8-27:Joint Conf .
+8-28:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 639 variables in the expressions of its incoming arcs are bound to some value(s) (each one of these bindings is referred to as a binding element) .
+8-29:If so, the transition may occur by removing tokens from its input places and adding tokens to its output places .
+8-30:In addition to the arc expressions, it is possible to attach a boolean guard expression (with variables) to each transition .
+8-31:Putting all the elements above together we obtain a formal definition of CPN that shall be employed further ahead for mapping purposes .
+8-32:Def .
+8-33:10 .
+8-34:A CPN is a tuple Σ, P, T, A, N, C, G, E, I where: (i) Σ is a finite set of non empty types, also called colour sets; (ii) P is a finite set of places; (iii) T is a finite set of transitions; (iv) A is a finite set of arcs; (v) N is a node function defined from A into P × T ∪ T × P; (vi) C is a colour function from P into Σ; (vii) G is a guard function from T into expressions; (viii) E is an arc expression function from A into expressions; (ix) I is an initialisation function from P into closed expressions; Notice that the informal explanation of the enabling and occurrence rules given above provides the foundations to understand the behaviour of a CPN .
+8-35:In accordance with ordinary Petri nets, the concurrent behaviour of a CPN is based on the notion of step .
+8-36:Formally, a step is a non empty and finite multi set over the set of all binding elements .
+8-37:Let step S be enabled in a marking M .
+8-38:Then, S may occur, changing the marking M to M .
+8-39:Moreover, we say that marking M is directly reachable from marking M by the occurrence of step S, and we denote it by M[S > M .
+8-40:A finite occurrence sequence is a finite sequence of steps and markings: M1[S1 > M2 .
+8-41:.
+8-42:.
+8-43:Mn[Sn > Mn+1 such that n ∈ N and Mi[Si > Mi+1 ∀i ∈ {1, .
+8-44:.
+8-45:.
+8-46:, n} .
+8-47:The set of all possible markings reachable for a net Net from a marking M is called its reachability set, and is denoted as R(Net, M) .
+8-48:5.1 Mapping to Coloured Petri Nets Our normative structure is a labelled bi partite graph .
+8-49:The same is true for a Coloured Petri Net .
+8-50:We are presenting a mapping f from one to the other, in order to provide semantics for the normative structure and prove properties about it by using well known theoretical results from work on CPNs .
+8-51:The mapping f makes use of correspondences between normative scenes and CPN places, normative transitions and CPN transitions and finally, between arc labels and CPN arc expressions .
+8-52:S → P B → T Lin ∪ Lout → E The set of types is the singleton set containing the colour NP (i.e .
+8-53:Σ = {NP}) .
+8-54:This complex type is structured as follows (we use CPN ML [4] syntax): color NPT = with Obl | Per | Prh | NoMod color IP = with inform | declare | offer color UTT = record illp : IP ag1, role1, ag2, role2 : string content: string time : int color NP = record mode : NPT illoc : UTT Modelling illocutions as norms without modality (NoMod) is a formal trick we use to ensure that sub nets can be combined as explained below .
+8-55:Arcs are mapped almost directly .
+8-56:A is a finite set of arcs and N is a node function, such that ∀a ∈ A ∃a ∈ Ain ∪Aout .
+8-57:N(a) = a .
+8-58:The initialisation function I is defined as I(p) = Δs (∀s ∈ S where p is obtained from s using the mapping; remember that s = ids, Δs ) .
+8-59:Finally, the colour function C assigns the colour NP to every place: C(p) = NP (∀p ∈ P) .
+8-60:We are not making use of the guard function G .
+8-61:In future work, this function can be used to model constraints when we extend the expressiveness of our norm language .
+8-62:5.2 Properties of Normative Structures Having defined the mapping from normative structures to Coloured Petri Nets, we now look at properties of CPNs that help us understand the complexity of conflict detection .
+8-63:One question we would like to answer is, whether at a given point in time, a given normative structure is conflict free .
+8-64:Such a snapshot of a normative structure corresponds to a marking in the mapped CPN .
+8-65:Def .
+8-66:11 .
+8-67:Given a marking Mi, this marking is conflictfree if ¬∃p ∈ P .
+8-68:∃np1, np2 ∈ Mi(p) such that np1.mode = Obl and np2.mode = Prh and np1.illoc and np2.illoc unify under a valid substitution .
+8-69:Another interesting question would be, whether a conflict will occur from such a snapshot of the system by propagating the normative positions .
+8-70:In order to answer this question, we first translate the snapshot of the normative structure to the corresponding CPN and then execute the finite occurence sequence of markings and steps, verifying the conflict freedom of each marking as we go along .
+8-71:Def .
+8-72:12 .
+8-73:Given a marking Mi, a finite occurrence sequence Si, Si+1, ..., Sn is called conflict free, if and only if Mi[Si > Mi+1 .
+8-74:.
+8-75:.
+8-76:Mn[Sn > Mn+1 and Mk is conflict free for all k such that i ≤ k ≤ n + 1 .
+8-77:However, the main question we would like to investigate, is whether or not a given normative structure is conflictresistant, that is, whether or not the agents enacting the MAS are able to bring about conflicts through their actions .
+8-78:As soon as one includes the possibility of actions (or utterances) from autonomous agents, one looses determinism .
+8-79:Having mapped the normative structure to a CPN, we now add CPN models of the agents" interactions .
+8-80:Each form of agent interaction (i.e .
+8-81:each activity) can be modelled using CPNs along the lines of Cost et al .
+8-82:[5] .
+8-83:These nondeterministic CPNs feed tokens into the CPN that models the normative structure .
+8-84:This leads to the introduction of non determinism into the combined CPN .
+8-85:The lower half of figure 3 shows part of a CPN model of an agent protocol where the arc denoted with ‘1" represents some utterance of an illocution by an agent .
+8-86:The target transition of this arc, not only moves a token on to the next state of this CPN, but also places a token in the place corresponding to the appropriate normative scene in the CPN model of the normative structure (via arc ‘2") .
+8-87:Transition ‘3" finally could propagate that token in form of an obligation, for example .
+8-88:Thus, from a given marking, many different occurrence sequences are possible depending on the agents" actions .
+8-89:We make use of the reachability set R to define a situation in which agents cannot cause conflicts .
+8-90:640 The Sixth Intl .
+8-91:Joint Conf .
+8-92:on Autonomous Agents and Multi Agent Systems (AAMAS 07) Figure 3: Constructing the combined CPN Def .
+8-93:13 .
+8-94:Given a net N, a marking M is conflict resistant if and only if all markings in R(N,M) are conflict free .
+8-95:Checking conflict freedom of a marking can be done in polynomial time by checking all places of the CPN for conflicting tokens .
+8-96:Conflict freedom of an occurrence sequence in the CPN that represents the normative structure can also be done in polynomial time since this sequence is deterministic given a snapshot .
+8-97:Whether or not a normative structure is designed safely corresponds to checking the conflict resistance of the initial marking M0 .
+8-98:Now, verifying conflict resistance of a marking becomes a very difficult task .
+8-99:It corresponds to the reachability problem in a CPN: can a state be reached or a marking achieved, that contains a conflict? .
+8-100:This reachability problem is known to be NP complete for ordinary Petri Nets [22] and since CPNs are functionally identical, we cannot hope to verify conflict resistance of a normative structure off line in a reasonable amount of time .
+8-101:Therefore, distributed, run time mechanisms are needed to ensure that a normative structure maintains consistency .
+8-102:We present one such mechanism in the following section. .
+9 MANAGING NORMATIVE STRUCTURES :
+9-1:Once a conflict (as defined in Section 4) has been detected, we propose to employ the unifier to resolve the conflict .
+9-2:In our example, if the variables in prh(inform(a1, r1, a2, r2, p(Y, d), T )) do not get the values specified in substitution σ then there will not be a conflict .
+9-3:However, rather than computing the complement set of a substitution (which can be an infinite set) we propose to annotate the prohibition with the unifier itself and use it to determine what the variables of that prohibition cannot be in future unifications in order to avoid a conflict .
+9-4:We therefore denote annotated prohibitions as prh(¯I) Σ, where Σ = {σ1, .
+9-5:.
+9-6:.
+9-7:, σn}, is a set of unifiers .
+9-8:Annotated norms3 are interpreted as deontic constructs with curtailed influences, that is, their effect (on agents, roles and illocutions) has been limited by the set Σ of unifiers .
+9-9:A prohibition may be in conflict with various obligations in a given normative scene s = id, Δ and we need to record (and possibly avoid) all these conflicts .
+9-10:We define below an algorithm which ensures that a normative position will be added to a normative scene in such a way that it will not cause any conflicts .
+9-11:3 Although we propose to curtail prohibitions, the same machinery can be used to define the curtailment of obligations instead .
+9-12:These different policies are dependent on the intended deontic semantics and requirements of the systems addressed .
+9-13:For instance, some MASs may require that their agents should not act in the presence of conflicts, that is, the obligation should be curtailed .
+9-14:6.1 Conflict Resolution We propose a fine grained way of resolving normative conflicts via unification .
+9-15:We detect the overlapping of the influences of norms , i.e .
+9-16:how they affect the behaviour of the concerned agents, and we curtail the influence of the normative position, by appropriately using the annotations when checking if the norm applies to illocutions .
+9-17:The algorithm shown in Figure 4 depicts how we maintain a conflict free set of norms .
+9-18:It adds a given norm N to an existing, conflictfree normative state Δ, obtaining a resulting new normative state Δ which is conflict free, that is, its prohibitions are annotated with a set of conflict sets indicating which bindings for variables have to be avoided for conflicts not to take place .
+9-19:algorithm addNorm(N, Δ) begin 1 timestamp(N) 2 case N of 3 per(¯I): Δ := Δ ∪ {N} 4 prh(I): if N ∈ Δ s.t .
+9-20:conflict(N, N , σ) then Δ := Δ 5 else Δ := Δ ∪ {N} 6 prh(¯I): 7 begin 8 Σ := ∅ 9 for each N ∈ Δ do 10 if conflict(N, N , σ) then Σ := Σ ∪ {σ} 11 Δ := Δ ∪ {N Σ} 12 end 13 obl(¯I): 14 begin 15 Δ1 := ∅; Δ2 := ∅ 16 for each (N Σ) ∈ Δ do 17 if N = prh(I) then 18 if conflict(N , N, σ) then Δ1 := Δ1 ∪ {N Σ} 19 else nil 20 else 21 if conflict(N , N, σ) then 22 begin 23 Δ1 := Δ1 ∪ {N Σ} 24 Δ2 := Δ2 ∪ {N (Σ ∪ {σ})} 25 end 26 Δ := (Δ − Δ1) ∪ Δ2 ∪ {N} 27 end 28 end case 29 return Δ end Figure 4: Algorithm to Preserve Conflict Freedom The algorithm uses a case of structure to differentiate the different possibilities for a given norm N .
+9-21:Line 3 addresses the case when the given norm is a permission: N is simply added to Δ .
+9-22:Lines 4 5 address the case when we attempt to add a ground prohibition to a normative state: if it conflicts with any obligation, then it is discarded; otherwise it is added to the normative state .
+9-23:Lines 6 12 describe the situation when the normative position to be added is a nonground prohibition .
+9-24:In this case, the algorithm initialises Σ to an empty set and loops (line 9 10) through the norms N in the old normative state Δ .
+9-25:Upon finding one that conflicts with N, the algorithm updates Σ by adding the newly found conflict set σ to it (line 10) .
+9-26:By looping through Δ, we are able to check any conflicts between the new prohibition and the existing obligations, adequately building the annotation Σ to be used when adding N to Δ in line 11 .
+9-27:Lines 13 27 describe how a new obligation is accommodated to an existing normative state .
+9-28:We make use of two initially empty, temporary sets, Δ1, Δ2 .
+9-29:The algorithm loops through Δ (lines 16 25) picking up those annotated prohibitions N Σ which conflict with the new obligation .
+9-30:There are, however, two cases to deal with: the one when a ground The Sixth Intl .
+9-31:Joint Conf .
+9-32:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 641 prohibition is found (line 17), and its exception, covering non ground prohibitions (line 20) .
+9-33:In both cases, the old prohibition is stored in Δ1 (lines 18 and 23) to be later removed from Δ (line 26) .
+9-34:However, in the case of a nonground prohibition, the algorithm updates its annotation of conflict sets (line 24) .
+9-35:The loop guarantees that an exhaustive (linear) search through a normative state takes place, checking if the new obligation is in conflict with any existing prohibitions, possibly updating the annotations of these conflicting prohibitions .
+9-36:In line 26 the algorithm builds the new updated Δ by removing the old prohibitions stored in Δ1 and adding the updated prohibitions stored in Δ2 (if any), as well as the new obligation N .
+9-37:Our proposed algorithm is correct in that, for a given normative position N and a normative state Δ, it provides a new normative state Δ in which all prohibitions have annotations recording how they unify with existing obligations .
+9-38:The annotations can be empty, though: this is the case when we have a ground prohibition or a prohibition which does not unify conflict with any obligation .
+9-39:Permissions do not affect our algorithm and they are appropriately dealt with (line 3) .
+9-40:Any attempt to insert a ground prohibition which conflicts, yields the same normative state (line 4) .
+9-41:When a new obligation is being added then the algorithm guarantees that all prohibitions are considered (lines 14 27), leading to the removal of conflicting ground prohibitions or the update of annotations of non ground prohibitions .
+9-42:The algorithm always terminates: the loops are over a finite set Δ and the conflict checks and set operations always terminate .
+9-43:The complexity of the algorithm is linear: the set Δ is only examined once for each possible case of norm to be added .
+9-44:When managing normative states we may also need to remove normative positions .
+9-45:This is straightforward: permissions can be removed without any problems; annotated prohibitions can also be removed without further considerations; obligations, however, require some housekeeping .
+9-46:When an obligation is to be removed, we must check it against all annotated prohibitions in order to update their annotations .
+9-47:We apply the conflict check and obtain a unifier, then remove this unifier from the prohibition"s annotation .
+9-48:We invoke the removal algorithm as removeNorm(N, Δ): it returns a new normative state Δ in which N has been removed, with possible alterations to other normative positions as explained .
+9-49:6.2 Enactment of a Normative Structure The enactment of a normative structure amounts to the parallel, distributed execution of normative scenes and normative transitions .
+9-50:For illustrative purposes, hereafter we shall describe the interplay between the payment and delivery normative scenes and the normative transition nt linking them in the upper half of figure 2 .
+9-51:With this aim, consider for instance that obl(inform(jules, client, rod, acc, pay(copper, 400, 350), T) ∈ Δpayment and that Δdelivery holds prh(inform(rod,wm, jules, client, delivered(Z, Q), T)) .
+9-52:Such states indicate that client Jules is obliged to pay £400 for 350kg of copper to accountant Rod according to the payment normative scene, whereas Rod, taking up the role of warehouse manager this time, is prohibited to deliver anything to client Jules according to the delivery normative scene .
+9-53:For each normative scene, the enactment process goes as follows .
+9-54:Firstly, it processes its incoming message queue that contains three types of messages: utterances from the activity it is linked to; and normative commands either to add or remove normative positions .
+9-55:For instance, in our example, the payment normative scene collects the illocution I = utt((inform(jules, client, rod, acc, pay(copper, 400, 350), 35)) standing for client Jules" pending payment for copper (via arrow A in figure 2) .
+9-56:Utterances are timestamped and subsequently added to the normative state .
+9-57:We would have Δpayment = Δpayment ∪ {I}, in our example .
+9-58:Upon receiving normative commands to either add or remove a normative position, the normative scene invokes the corresponding addition or removal algorithm described in Section 6.1 .
+9-59:Secondly, the normative scene acknowledges its state change by sending a trigger message to every outgoing normative transition it is connected to .
+9-60:In our example, the payment normative scene would be signalling its state change to normative transition nt .
+9-61:For normative transitions, the process works differently .
+9-62:Because each normative transition controls the operation of a single rule, upon receiving a trigger message, it polls every incoming normative scene for substitutions for the relevant illocution schemata on the LHS of its rule .
+9-63:In our example, nt (being responsible for the rule described in Section 3.4), would poll the payment normative scene (via arrow B) for substitutions .
+9-64:Upon receiving replies from them (in the form of sets of substitutions together with time stamps), it has to unify substitutions from each of these normative scenes .
+9-65:For each unification it finds, the rule is fired, and hence the corresponding normative command is sent along to the output normative scene .
+9-66:The normative transition then keeps track of the firing message it sent on and of the time stamps of the normative positions that triggered the firing .
+9-67:This is done to ensure that the very same normative positions in the LHS of a rule only trigger its firing once .
+9-68:In our example, nt would be receiving σ = {X jules, Y rod, Z copper, Q 350} from the payment normative scene .
+9-69:Since the substitions in σ unify with nt"s rule, the rule is fired, and the normative command add(delivery : obl(rod, wm, jules, client, delivered(copper, 350), T)) is sent along to the delivery normative scene to oblige Rod to deliver to client Jules 350kg of copper .
+9-70:After that, the delivery normative scene would invoke the addNorm algorithm from figure 4 with Δdelivery and N = obl(rod, wm, jules, client, delivered(copper, 350)) as arguments. .
+10 ABSTRACT :
+10-1:Our contributions in this paper are three fold
+10-2:Firstly, we introduce an approach for the management of and reasoning about norms in a distributed manner
+10-3:To our knowledge, there is little work published in this direction
+10-4:In [8, 21], two languages are presented for the distributed enforcement of norms in MAS
+10-5:However, in both works, each agent has a local message interface that forwards legal messages according to a set of norms
+10-6:Since these interfaces are local to each agent, norms can only be expressed in terms of actions of that agent
+10-7:This is a serious disadvantage, e.g
+10-8:when one needs to activate an obligation to one agent due to a certain message of another one
+10-9:The second contribution is the proposal of a normative structure
+10-10:The notion is fruitful because it allows the separation of normative and procedural concerns
+10-11:The normative structure we propose makes evident the similarity between the propagation of normative positions and the propagation 642 The Sixth Intl
+10-12:Joint Conf
+10-13:on Autonomous Agents and Multi Agent Systems (AAMAS 07) of tokens in Coloured Petri Nets
+10-14:That similarity readily suggests a mapping between the two, and gives grounds to a convenient analytical treatment of the normative structure, in general, and the complexity of conflict detection, in particular
+10-15:The idea of modelling interactions (in the form of conversations) via Petri Nets has been investigated in [18], where the interaction medium and individual agents are modelled as CPN sub nets that are subsequently combined for analysis
+10-16:In [5], conversations are first designed and analysed at the level of CPNs and thereafter translated into protocols
+10-17:Lin et al
+10-18:[20] map conversation schemata to CPNs
+10-19:To our knowledge, the use of this representation in the support of conflict detection in regulated MAS has not been reported elsewhere
+10-20:Finally, we present a distributed mechanism to resolve normative conflicts
+10-21:Sartor [25] treats normative conflicts from the point of view of legal theory and suggests a way to order the norms involved
+10-22:His idea is implemented in [12] but requires a central resource for norm maintenance
+10-23:The approach to conflict detection and resolution is an adaptation and extension of the work on instantiation graphs reported in [17] and a related algorithm in [27]
+10-24:The algorithm presented in the current paper can be used to manage normative states distributedly: normative scenes that happen in parallel have an associated normative state Δ to which the algorithm is independently applied each time a new norm is to be introduced
+10-25:These three contributions we present in this paper open many possibilities for future work
+10-26:We should mention first, that as a broad strategy we are working on a generalisation of the notion of normative structure to make it operate with different coordination models, with richer deontic content and on top of different computational realisations of regulated MAS
+10-27:As a first step in this direction we are taking advantage of the de coupling between interaction protocols and declarative normative guidance that the normative structure makes available, to provide a normative layer for electronic institutions (as defined in [1])
+10-28:We expect such coupling will endow electronic institutions with a more flexible and more expressive normative environment
+10-29:Furthermore, we want to extend our model along several directions: (1) to handle negation and constraints as part of the norm language, and in particular the notion of time; (2) to accommodate multiple, hierarchical norm authorities based on roles, along the lines of Cholvy and Cuppens [3] and power relationships as suggested by Carabelea et al
+10-30:[2]; (3) to capture in the conflict resolution algorithm different semantics relating the deontic notions by supporting different axiomations (e.g., relative strength of prohibition versus obligation, default deontic notions, deontic inconsistencies)
+10-31:On the theoretical side, we intend to use analysis techniques of CPNs in order to characterise classes of CPNs (e.g., acyclic, symmetric, etc.) corresponding to families of Normative Structures that are susceptible to tractable offline conflict detection
+10-32:The combination of these techniques along with our online conflict resolution mechanisms is intended to endow MAS designers with the ability to incorporate norms into their systems in a principled way
+10-33:Coordination in MAS
+10-34:Informatica, 29:433 443, 2005
+10-35:[25] G
+10-36:Sartor
+10-37:Normative conflicts in legal reasoning
+10-38:Artificial Intelligence and Law, 1(2 3):209 235, June 1992
+10-39:[26] M
+10-40:Sergot
+10-41:A Computational Theory of Normative Positions
+10-42:ACM Trans
+10-43:Comput
+10-44:Logic, 2(4):581 622, 2001
+10-45:[27] W
+10-46:W
+10-47:Vasconcelos, M
+10-48:Kollingbaum, and T
+10-49:Norman
+10-50:Resolving Conflict and Inconsistency in Norm Regulated Virtual Organisations
+10-51:In Proceedings of AAMAS "07, Hawai"i, USA, 2007
+10-52:IFAAMAS
+10-53:[28] G
+10-54:H
+10-55:von Wright
+10-56:Norm and Action: A Logical Inquiry
+10-57:Routledge and Kegan Paul, London, 1963
+10-58:[29] M
+10-59:Wooldridge
+10-60:An Introduction to Multiagent Systems
+10-61:John Wiley & Sons, Chichester, UK, Feb
+10-62:2002
+10-63:The Sixth Intl
+10-64:Joint Conf
+10-65:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 643
+11 ABSTRACT :
+11-1:J
+11-2:L
+11-3:Arcos, M
+11-4:Esteva, P
+11-5:Noriega, J
+11-6:A
+11-7:Rodr´ıguez, and C
+11-8:Sierra
+11-9:Engineering open environments with electronic institutions
+11-10:Journal on Engineering Applications of Artificial Intelligence, 18(2):191 204, 2005
+11-11:C
+11-12:Carabelea, O
+11-13:Boissier, and C
+11-14:Castelfranchi
+11-15:Using social power to enable agents to reason about being part of a group
+11-16:In 5th Internat
+11-17:Workshop, ESAW 2004, pages 166 177, 2004
+11-18:L
+11-19:Cholvy and F
+11-20:Cuppens
+11-21:Solving normative conflicts by merging roles
+11-22:In Fifth International Conference on Artificial Intelligence and Law, Washington, USA, 1995
+11-23:S
+11-24:Christensen and T
+11-25:B
+11-26:Haagh
+11-27:Design CPN  overview of CPN ML syntax
+11-28:Technical report, University of Aarhus, 1996
+11-29:R
+11-30:S
+11-31:Cost, Y
+11-32:Chen, T
+11-33:W
+11-34:Finin, Y
+11-35:Labrou, and Y
+11-36:Peng
+11-37:Using colored petri nets for conversation modeling
+11-38:In Issues in Agent Communication, pages 178 192, London, UK, 2000
+11-39:F
+11-40:Dignum
+11-41:Autonomous Agents with Norms
+11-42:Artificial Intelligence and Law, 7(1):69 79, 1999
+11-43:A
+11-44:Elhag, J
+11-45:Breuker, and P
+11-46:Brouwer
+11-47:On the Formal Analysis of Normative Conflicts
+11-48:Information & Comms
+11-49:Techn
+11-50:Law, 9(3):207 217, Oct
+11-51:2000
+11-52:M
+11-53:Esteva, W
+11-54:Vasconcelos, C
+11-55:Sierra, and J
+11-56:A
+11-57:Rodr´ıguez Aguilar
+11-58:Norm consistency in electronic institutions
+11-59:volume 3171 (LNAI), pages 494 505
+11-60:Springer Verlag, 2004
+11-61:M
+11-62:Fitting
+11-63:First Order Logic and Automated Theorem Proving
+11-64:Springer Verlag, New York, U.S.A., 1990
+11-65:N
+11-66:Fornara, F
+11-67:Vigan`o, and M
+11-68:Colombetti
+11-69:An Event Driven Approach to Norms in Artificial Institutions
+11-70:In AAMAS05 Workshop: Agents, Norms and Institutions for Regulated Multiagent Systems (ANI@REM), Utrecht, 2005
+11-71:D
+11-72:Gaertner, P
+11-73:Noriega, and C
+11-74:Sierra
+11-75:Extending the BDI architecture with commitments
+11-76:In Proceedings of the 9th International Conference of the Catalan Association of Artificial Intelligence, 2006
+11-77:A
+11-78:Garc´ıa Camino, P
+11-79:Noriega, and J. A
+11-80:Rodr´ıguez Aguilar
+11-81:An Algorithm for Conflict Resolution in Regulated Compound Activities
+11-82:In 7th Int.Workshop  ESAW "06, 2006
+11-83:A
+11-84:Garc´ıa Camino, J. A
+11-85:Rodr´ıguez Aguilar, C
+11-86:Sierra, and W
+11-87:Vasconcelos
+11-88:A Distributed Architecture for Norm Aware Agent Societies
+11-89:In DALT III, volume 3904 (LNAI), pages 89 105
+11-90:Springer, 2006
+11-91:F
+11-92:Giunchiglia and L
+11-93:Serafini
+11-94:Multi language hierarchical logics or: How we can do without modal logics
+11-95:Artificial Intelligence, 65(1):29 70, 1994
+11-96:J
+11-97:Habermas
+11-98:The Theory of Communication Action, Volume One, Reason and the Rationalization of Society
+11-99:Beacon Press, 1984
+11-100:K
+11-101:Jensen
+11-102:Coloured Petri Nets: Basic Concepts, Analysis Methods and Practical Uses (Volume 1)
+11-103:Springer, 1997
+11-104:M
+11-105:Kollingbaum and T
+11-106:Norman
+11-107:Strategies for resolving norm conflict in practical reasoning
+11-108:In ECAI Workshop Coordination in Emergent Agent Societies 2004, 2004
+11-109:J. L
+11-110:Koning, G
+11-111:Francois, and Y
+11-112:Demazeau
+11-113:Formalization and pre validation for interaction protocols in a multi agent systems
+11-114:In ECAI, pages 298 307, 1998
+11-115:B
+11-116:Kramer and J
+11-117:Mylopoulos
+11-118:Knowledge Representation
+11-119:In S
+11-120:C
+11-121:Shapiro, editor, Encyclopedia of Artificial Intelligence, volume 1, pages 743 759
+11-122:John Wiley & Sons, 1992
+11-123:F
+11-124:Lin, D
+11-125:H
+11-126:Norrie, W
+11-127:Shen, and R
+11-128:Kremer
+11-129:A schema based approach to specifying conversation policies
+11-130:In Issues in Agent Communication, pages 193 204, 2000
+11-131:N
+11-132:Minsky
+11-133:Law Governed Interaction (LGI): A Distributed Coordination and Control Mechanism (An Introduction, and a Reference Manual)
+11-134:Technical report, Rutgers University, 2005
+11-135:T
+11-136:Murata
+11-137:Petri nets: Properties, analysis and applications
+11-138:Proceedings of the IEEE, 77(4):541 580, 1989
+11-139:S
+11-140:Parsons, C
+11-141:Sierra, and N
+11-142:Jennings
+11-143:Agents that reason and negotiate by arguing
+11-144:Journal of Logic and Computation, 8(3):261 292, 1998
+11-145:A
+11-146:Ricci and M
+11-147:Viroli
+11-148:Coordination Artifacts: A Unifying
+picture:

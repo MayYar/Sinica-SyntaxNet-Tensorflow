@@ -1,0 +1,118 @@
+Bullet is an efficient data distribution system for bandwidth intensive applications .
+While many current overlay network distribution algorithms use a distribution tree to deliver data from the tree"s root to all other nodes, Bullet layers a mesh on top of an original overlay tree to increase overall bandwidth to all nodes in the tree .
+Hence, each node receives a parent stream from its parent in the tree and some number of perpendicular streams from chosen peers in the overlay .
+This has significant bandwidth impact when a single node in the overlay is unable to deliver adequate bandwidth to a receiving node .
+Bullet requires an underlying overlay tree for RanSub to deliver random subsets of participants"s state to nodes in the overlay, informing them of a set of nodes that may be good candidates for retrieving data not available from any of the node"s current peers and parent .
+While we also use the underlying tree for baseline streaming, this is not critical to Bullet"s ability to efficiently deliver data to nodes in the overlay .
+As a result, Bullet is capable of functioning on top of essentially any overlay tree .
+In our experiments, we have run Bullet over random and bandwidth optimized trees created o?ine (with global topological knowledge) .
+Bullet registers itself with the underlying overlay tree so that it is informed when the overlay changes as nodes come and go or make performance transformations in the overlay .
+As with streaming overlays trees, Bullet can use standard transports such as TCP and UDP as well as our implementation of TFRC .
+For the remainder of this paper, we assume the use of TFRC since we primarily target streaming highbandwidth content and we do not require reliable or in order delivery .
+For simplicity, we assume that packets originate at the root of the tree and are tagged with increasing sequence numbers .
+Each node receiving a packet will optionally forward it to each of its children, depending on a number of factors relating to the child"s bandwidth and its relative position in the tree .
+3.1 Finding Overlay Peers RanSub periodically delivers subsets of uniformly random selected nodes to each participant in the overlay .
+Bullet receivers use these lists to locate remote peers able to transmit missing data items with good bandwidth .
+RanSub messages contain a set of summary tickets that include a small (120 286 bytes) summary of the data that each node contains .
+RanSub delivers subsets of these summary tickets to nodes every configurable epoch (5 seconds by default) .
+Each node in the tree maintains a working set of the packets it has received thus far, indexed by sequence numbers .
+Nodes associate each working set with a Bloom filter that maintains a summary of the packets received thus far .
+Since the Bloom filter does not exceed a specific size (m) and we would like to limit the rate of false positives, Bullet periodically cleans up the Bloom filter by removing lower sequence numbers from it .
+This allows us to keep the Bloom filter population n from growing at an unbounded rate .
+The net effect is that a node will attempt to recover packets for a finite amount of time depending on the packet arrival rate .
+Similarly, Bullet removes older items that are not needed for data reconstruction from its working set and summary ticket .
+We use the collect and distribute phases of RanSub to carry Bullet summary tickets up and down the tree .
+In our current implementation, we use a set size of 10 summary tickets, allowing each collect and distribute to fit well within the size of a non fragmented IP packet .
+Though Bullet supports larger set sizes, we expect this parameter to be tunable to specific applications" needs .
+In practice, our default size of 10 yields favorable results for a variety of overlays and network topologies .
+In essence, during an epoch a node receives a summarized partial view of the system"s state at that time .
+Upon receiving a random subset each epoch, a Bullet node may choose to peer with the node having the lowest similarity ratio when compared to its own summary ticket .
+This is done only when the node has sufficient space in its sender list to accept another sender (senders with lackluster performance are removed from the current sender list as described in section 3.4) .
+Once a node has chosen the best node it sends it a peering request containing the requesting node"s Bloom filter .
+Such a request is accepted by the potential sender if it has sufficient space in its receiver list for the incoming receiver .
+Otherwise, the send request is rejected (space is periodically created in the receiver lists as further described in section 3.4) .
+3.2 Recovering Data From Peers Assuming it has space for the new peer, a recipient of the peering request installs the received Bloom filter and will periodically transmit keys not present in the Bloom filter to the requesting node .
+The requesting node will refresh its installed Bloom filters at each of its sending peers periodically .
+Along with the fresh filter, a receiving node will also assign a portion of the sequence space to each of its senders .
+In this way, a node is able the reduce the likelihood that two peers simultaneously transmit the same key to it, wasting network resources .
+A node divides the sequence space in its current working set among each of its senders uniformly .
+As illustrated in Figure 4, a Bullet receiver views the data space as a matrix of packet sequences containing s rows, where s is its current number of sending peers .
+A receiver periodically (every 5 seconds by default) updates each sender with its current Bloom filter and the range of sequences covered in its Bloom filter .
+This identifies the range of packets that the receiver is currently interested in recovering .
+Over time, this range shifts as depicted in Figure 4 b) .
+In addition, the receiving node assigns to each sender a row from the matrix, labeled mod .
+A sender will forward packets to b) Mod = 3 00000000000000000000000000000000001111111111111111111111111111111111 7 1 2 8 a) Senders = 7Mod = 2 Low High Time 00000000000000000000000000000000001111111111111111111111111111111111 Figure 4
+It requests data within the range (Low, High) of sequence numbers based on what it has received .
+a) The receiver requests a specific row in the sequence matrix from each sender .
+b) As it receives more data, the range of sequences advances and the receiver requests different rows from senders .
+the receiver that have a sequence number x such that x modulo s equals the mod number .
+In this fashion, receivers register to receive disjoint data from their sending peers .
+By specifying ranges and matrix rows, a receiver is unlikely to receive duplicate data items, which would result in wasted bandwidth .
+A duplicate packet, however, may be received when a parent recovers a packet from one of its peers and relays the packet to its children (and descendants) .
+In this case, a descendant would receive the packet out of order and may have already recovered it from one of its peers .
+In practice, this wasteful reception of duplicate packets is tolerable; less than 10% of all received packets are duplicates in our experiments .
+3.3 Making Data Disjoint We now provide details of Bullet"s mechanisms to increase the ease by which nodes can find disjoint data not provided by parents .
+We operate on the premise that the main challenge in recovering lost data packets transmitted over an overlay distribution tree lies in finding the peer node housing the data to recover .
+Many systems take a hierarchical approach to this problem, propagating repair requests up the distribution tree until the request can be satisfied .
+This ultimately leads to scalability issues at higher levels in the hierarchy particularly when overlay links are bandwidthconstrained .
+On the other hand, Bullet attempts to recover lost data from any non descendant node, not just ancestors, thereby increasing overall system scalability .
+In traditional overlay distribution trees, packets are lost by the transmission transport and or the network .
+Nodes attempt to stream data as fast as possible to each child and have essentially no control over which portions of the data stream are dropped by the transport or network .
+As a result, the streaming subsystem has no control over how many nodes in the system will ultimately receive a particular portion of the data .
+If few nodes receive a particular range of packets, recovering these pieces of data becomes more difficult, requiring increased communication costs, and leading to scalability problems .
+In contrast, Bullet nodes are aware of the bandwidth achievable to each of its children using the underlying transport .
+If 287 a child is unable to receive the streaming rate that the parent receives, the parent consciously decides which portion of the data stream to forward to the constrained child .
+In addition, because nodes recover data from participants chosen uniformly at random from the set of non descendants, it is advantageous to make each transmitted packet recoverable from approximately the same number of participant nodes .
+That is, given a randomly chosen subset of peer nodes, it is with the same probability that each node has a particular data packet .
+While not explicitly proven here, we believe that this approach maximizes the probability that a lost data packet can be recovered, regardless of which packet is lost .
+To this end, Bullet distributes incoming packets among one or more children in hopes that the expected number of nodes receiving each packet is approximately the same .
+A node p maintains for each child, i, a limiting and sending factor, lfi and sfi .
+These factors determine the proportion of p"s received data rate that it will forward to each child .
+The sending factor sfi is the portion of the parent stream (rate) that each child should own based on the number of descendants the child has .
+The more descendants a child has, the larger the portion of received data it should own .
+The limiting factor lfi represents the proportion of the parent rate beyond the sending factor that each child can handle .
+For example, a child with one descendant, but high bandwidth would have a low sending factor, but a very high limiting factor .
+Though the child is responsible for owning a small portion of the received data, it actually can receive a large portion of it .
+Because RanSub collects descendant counts di for each child i, Bullet simply makes a call into RanSub when sending data to determine the current sending factors of its children .
+For each child i out of k total, we set the sending factor to be
+In addition, a node tracks the data successfully transmitted via the transport .
+That is, Bullet data transport sockets are non blocking; successful transmissions are send attempts that are accepted by the non blocking transport .
+If the transport would block on a send (i.e., transmission of the packet would exceed the TCP friendly fair share of network resources), the send fails and is counted as an unsuccessful send attempt .
+When a data packet is received by a parent, it calculates the proportion of the total data stream that has been sent to each child, thus far, in this epoch .
+It then assigns ownership of the current packet to the child with sending proportion farthest away from its sfi as illustrated in Figure 5 .
+Having chosen the target of a particular packet, the parent attempts to forward the packet to the child .
+If the send is not successful, the node must find an alternate child to own the packet .
+This occurs when a child"s bandwidth is not adequate to fulfill its responsibilities based on its descendants (sfi) .
+To compensate, the node attempts to deterministically find a child that can own the packet (as evidenced by its transport accepting the packet) .
+The net result is that children with more than adequate bandwidth will own more of their share of packets than those with inadequate bandwidth .
+In the event that no child can accept a packet, it must be dropped, corresponding to the case where the sum of all children bandwidths is inadequate to serve the received foreach child in children { if ( (child >sent total_sent) < child >sending_factor) target_child = child; } if (!senddata( target_child >addr, msg, size, key)) { send succeeded target_child >sent++; target_child >child_filter.insert(got_key); sent_packet = 1; } foreach child in children { should_send = 0; if (!sent_packet) transfer ownership should_send = 1; else test for available bandwidth if ( key % (1.0 child >limiting_factor) == 0 ) should_send = 1; if (should_send) { if (!senddata( child >addr, msg, size, key)) { if (!sent_packet) i received ownership child >sent++; else increase(child >limiting_factor); child >child_filter.insert(got_key); sent_packet = 1; } else send failed if (sent_packet) was for extra bw decrease(child >limiting_factor); } } Figure 5
+While making data more difficult to recover, Bullet still allows for recovery of such data to its children .
+The sending node will cache the data packet and serve it to its requesting peers .
+This process allows its children to potentially recover the packet from one of their own peers, to whom additional bandwidth may be available .
+Once a packet has been successfully sent to the owning child, the node attempts to send the packet to all other children depending on the limiting factors lfi .
+For each child i, a node attempts to forward the packet deterministically if the packet"s sequence modulo 1 lfi is zero .
+Essentially, this identifies which lfi fraction of packets of the received data stream should be forwarded to each child to make use of the available bandwidth to each .
+If the packet transmission is successful, lfi is increased such that one more packet is to be sent per epoch .
+If the transmission fails, lfi is decreased by the same amount .
+This allows children limiting factors to be continuously adjusted in response to changing network conditions .
+It is important to realize that by maintaining limiting factors, we are essentially using feedback from children (by observing transport behavior) to determine the best data to stop sending during times when a child cannot handle the entire parent stream .
+In one extreme, if the sum of children bandwidths is not enough to receive the entire parent stream, each child will receive a completely disjoint data stream of packets it owns .
+In the other extreme, if each 288 child has ample bandwidth, it will receive the entire parent stream as each lfi would settle on 1.0 .
+In the general case, our owning strategy attempts to make data disjoint among children subtrees with the guiding premise that, as much as possible, the expected number of nodes receiving a packet is the same across all packets .
+3.4 Improving the Bullet Mesh Bullet allows a maximum number of peering relationships .
+That is, a node can have up to a certain number of receivers and a certain number of senders (each defaults to 10 in our implementation) .
+A number of considerations can make the current peering relationships sub optimal at any given time
+For example, a sender node may wind up being unable to provide a node with very much useful (non duplicate) data .
+In such a case, it would be advantageous to remove that sender as a peer and find some other peer that offers better utility .
+Each node periodically (every few RanSub epochs) evaluates the bandwidth performance it is receiving from its sending peers .
+A node will drop a peer if it is sending too many duplicate packets when compared to the total number of packets received .
+This threshold is set to 50% by default .
+If no such wasteful sender is found, a node will drop the sender that is delivering the least amount of useful data to it .
+It will replace this sender with some other sending peer candidate, essentially reserving a trial slot in its sender list .
+In this way, we are assured of keeping the best senders seen so far and will eliminate senders whose performance deteriorates with changing network conditions .
+Likewise, a Bullet sender will periodically evaluate its receivers .
+Each receiver updates senders of the total received bandwidth .
+The sender, knowing the amount of data it has sent to each receiver, can determine which receiver is benefiting the least by peering with this sender .
+This corresponds to the one receiver acquiring the least portion of its bandwidth through this sender .
+The sender drops this receiver, creating an empty slot for some other trial receiver .
+This is similar to the concept of weans presented in [24]. .

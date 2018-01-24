@@ -1,0 +1,28 @@
+The Human Interest based system described in the previous section is designed to identify only interesting nuggets and not informative nuggets .
+Thus, it can be described as a handicapped system that only deals with half the problem in definitional question answering .
+This is done in order to explore how interestingness plays a factor in definitional answers .
+In order to compare and contrast the differences between informative and interesting nuggets, we also implemented the soft pattern bigram model proposed by Cui et al .
+[4, 11] .
+In order to ensure comparable results, both systems are provided identical input data .
+Since both system require the use of external resources, they are both provided the same web articles retrieved by our Web Retrieval module .
+Both systems also rank the same same set of candidate sentences in the form of 800 most relevant documents as retrieved by our AQUAINT Retrieval module .
+For the experiments, we used the TREC 2004 question set to tune any system parameters and use the TREC 2005 question sets to test the both systems .
+Both systems are evaluated the results using the standard scoring methodology for TREC definitions .
+TREC provides a list of vital and okay nuggets for each question topic .
+Every question is scored on nugget recall and nugget precision and a single final score is computed using F Measure (see equation 1) with £] = 3 to emphasize nugget recall .
+Here, NR is the number of vital nuggets returned divided by total number of vital nuggets while NP is computed using a minimum allowed character length function defined in [12] .
+The evaluation is automatically conducted using Pourpre v1.0c [10] .
+FScore = £]2 ? NP ? NR (£]2 + 1)NP + NR (1) System F3 Score Best TREC 2005 System 0.2480 Soft Pattern 0.2872 Human Interest Model 0.3031 Table 1
+4.1 Informativeness vs Interestingness Our first experiment compares the performance of solely identifying interesting nuggets against solely identifying informative nuggets .
+We compare the results attained by the Human Interest Model that only identify interesting nuggets with the results of the syntactic pattern finding Soft Pattern model as well as the result of the top performing definitional system in TREC 2005 [13] .
+Table 1 shows the F3 score the three systems for the TREC 2005 question set .
+The Human Interest Model clearly outperform both soft pattern and the best TREC 2005 system with a F3 score of 0.303 .
+The result is also comparable with the result of a human manual run, which attained a F3 score of 0.299 on the same question set [9] .
+This result is confirmation that interesting nuggets does indeed play a significant role in picking up definitional answers, and may be more vital than using information finding lexical patterns .
+In order to get a better perspective of how well the Human Interest Model performs for different types of topics, we manually divided the TREC 2005 topics into four broad categories of PERSON, ORGANIZATION, THING and EVENT as listed in Table question topics into 4 main entity types [13] .
+The performance of Human Interest Model and Soft Pattern Bigram Model for each entity type can be seen in Figure 2 .
+Both systems exhibit consistent behavior across entity types, with the best performance coming from PERSON and ORGANIZATION topics and the worst performance from THING and EVENT topics .
+This can mainly be attributed to our selection of web based resources for the definitional corpus used by both system .
+In general, it is harder to locate a single web article that describes an event or a general object .
+However given the same set of web based information, the Human Interest Model consistently outperforms the soft pattern model for all four entity types .
+This suggests that the Human Interest Model is better able to leverage the information found in web resources to identify definitional answers. .

@@ -1,0 +1,20 @@
+In the language modeling framework, a typical score function is defined in KL divergence as follows
+Smoothing on document model is recognized to be crucial [35], and one of common smoothing methods is the Jelinek Mercer interpolation smoothing
+In the basic language modeling approaches, the query model is estimated by Maximum Likelihood Estimation without any smoothing .
+In such a setting, the basic retrieval operation is still limited to keyword matching, according to a few words in the query .
+To improve retrieval effectiveness, it is important to create a more complete query model that represents better the information need .
+In particular, all the related and presumed words should be included in the query model .
+A more complete query model by several methods have been proposed using feedback documents [16][35] or using term relations [1][10][34] .
+In these cases, we construct two models for the query
+They are then combined through interpolation .
+In this paper, we generalize this approach and integrate more models for the query .
+Let us use 0 Q£c to denote the original query model, F Q£c for the feedback model created from feedback documents, Dom Q£c for a domain model and K Q£c for a knowledge model created by applying term relations .
+0 Q£c can be created by MLE .
+F Q£c has been used in several previous studies [16][35] .
+In this paper, F Q£c is extracted using the 20 blind feedback documents .
+We will describe the details to construct Dom Q£c and K Q£c in Section 4 and 5 .
+Given these models, we create the following final query model by interpolation
+Then the document score in Equation (1) is extended as follows
+Here we can see that our strategy of enhancing the query model by contextual factors is equivalent to document re ranking, which is used in [5][15][30] .
+The remaining problem is to construct domain models and knowledge model and to combine all the models (parameter setting) .
+We describe this in the following sections. .

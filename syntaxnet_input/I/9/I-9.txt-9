@@ -1,0 +1,56 @@
+5.1 Advantages of TLL framework Our TLL framework has demonstrated natural and expressive specification of agent interaction protocols .
+Linear implication ( ) expresses causal relationship, which makes it natural to model a removal or a consumption, especially of resources, together with its consequences .
+Hence, in our framework, resource transformation is modeled as a linear implication of the consumed resources to the produced resources .
+Resource relocation is modeled as a linear implication from a resource at one agent to that resource at the other agent .
+Linear implication also ensures that fulfillment of the conditions of a conditional commitment will cause the commitments to happen .
+Moreover, state updates of agents are resulted from a linear implication from the old state to the current state .
+Temporal operators ( , and ) and their combinations help to specify the time of actions, of resource availability and express the time order of events .
+Particularly, precise time points are described by the use of operator or multiple copies of it .
+Based on this ability to specify correct time points for actions or events, time order or sequencing of them can also be captured .
+Also, a sense of duration is simulated by spreading copies of the resources or actions" formulas across multiple adjacent time points .
+Moreover, uncertainty in time can represented and reasoned about by the use of and and their combinations with .
+can be used to express outer non determinism while expresses inner non determinism .
+These time properties of resources, actions and events are correctly respected through out the agent reasoning process based on sequent calculus rules .
+Furthermore, the centrality of the notion of commitment in agent interaction has been recognized in many frameworks [11, 12, 1, 10, 4] .
+However, to the best of our knowledge, modeling commitments directly at the propositional level of such a resource conscious and time aware logic as TLL is The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 129 firstly investigated in our framework .
+Our framework models base commitments as negative formulas and conditional commitments via the use of linear implication and or negative formulas .
+The modeling of commitments has a number of advantages
+Existing logic connectives like ?, , ¡ò, are also readily available for describing the relationships among commitments .
+? Fulfillment of commitments then becomes deriving the corresponding positive formulas or condition formulas, which then simply reduces to a proof search task .
+Also, given the required formulas, fulfillment of commitments can be implemented easily and automatically as deduction (com ? com¡æ ¡æ) .
+The enforcement of commitments is also internal and? simply implemented via the assumption that agents are driven to remove all negative formulas for base commitments and via the use of linear implication for conditional commitments .
+Regarding making protocol specification more flexible, our approach has marked a number of significant points .
+Firstly, flexibility of protocol specifications in our framework comes from the expressive power of the connectives of TLL .
+and ¡ò refer to internal and external choices of agents on resources and actions while and refer to internal choices and external choices in time domain .
+Given that flexibility includes the ability to make a sensible choice, having the choices expressed explicitly in the specification of interaction protocols provides agents with an opportunity to reason about the right choices during interaction and hence explore the flexibility in them .
+Secondly, instead of being sequences of interactive actions, protocols are structured on commitments, which are more abstract than protocol actions .
+Execution of protocols is then based on fulfilling commitments .
+Hence, unnecessary constraints on which particular interactive actions to execute by which agents and on the order among them are now removed, which is a step forward to flexibility as compared to traditional approaches .
+On the other hand, in the presence of changes introduced externally, agents have the freedom to explore new sets of interactive actions or skip some interactive actions ahead as long as they still fulfill the protocol"s commitments .
+This brings more flexibility to the overall level of agents" interactive behaviors, and thus the protocol .
+Thirdly, the protocol is specified in a declarative manner essentially as sets of pre commitments at each participating agents .
+To achieve goals, agents use reasoning based on TLL sequent calculus to construct proofs of goals from pre commitments and state formulas .
+This essentially gives agents an autonomy in utilization of pre commitments and hence agents can adapt the ways they use these to flexibly deal with changing environments .
+In particular, as proof construction by agents selects a sequence of pre commitments for interaction, being able to select from all the possible combinations of pre commitments in proof search gives more chances and flexibility than selecting from only a few fixed and predefined sequences .
+It is then also more likely to allow agents to handle exceptions or explore opportunities that arise .
+Moreover, as the actual order of pre commitments is determined by the proof construction process rather than predefined, agents can flexibly change the order to suit new situations .
+Fourthly, changes in the environment can be regarded as removing or adding formulas onto the state formulas .
+Because the proof construction by agents takes into account the current state formulas when it picks up pre commitments, changes in the state formulas will be reflected in the choice of which relevant pre commitments to proceed .
+Hence, the agents have the flexibility in deciding what to do to deal with changes .
+Lastly, specifying protocols in our framework has a modular approach which adds ease and flexibility to the designing process of protocols .
+Protocols are specified by placing a set of pre commitments at each participating agent according to their roles .
+Each pre commitment can indeed be specified as a process in its own with condition formulas as its input and commitment part"s formulas as its output .
+Execution of each conditional commitment is a relatively independent thread and they are linked together by the proof search to fulfill agents" commitments .
+As a results, with such a design of pre commitments, one pre commitment can be added or removed without interfering the others and hence, achieving a modular design of the protocols .
+5.2 Limitations of TLL Framework on Modeling As all the temporal operators in TLL refer to concrete time points, we can not express durations in time faithfully .
+One major disadvantage of simulating a duration of an event by spreading copies of that event over adjacent time points A? 10 continuously (like A? 2 .
+.
+.
+A) is that it requires the time range to be provided explicitly .
+Hence, such notion like until can not be naturally expressed in TLL .
+Commitments of agents can be in conflict, especially when resolving all of them requires more resources or actions than what agents have .
+Our work has not covered handling commitments that are in conflict .
+Another troublesome aspect of this approach is that the rules for interaction require some detailed knowledge of the formulas of temporal linear logic .
+Clearly it would be beneficial to have a visually based tool similar to UML diagrams which would allow non experts to specify the appropriate rules without having to learn the details of the formulas themselves. .

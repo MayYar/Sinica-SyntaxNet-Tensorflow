@@ -1,0 +1,32 @@
+Apocrita uses a peer to peer distribution model in order to distribute files .
+Files are distributed solely from a serving node to a client node without regard for the availability of file pieces from other clients in the network .
+This means that the file transfers will be fast and efficient and should not severely affect the usability of serving nodes from the point of view of a local user .
+The JXTA framework [5] is used in order to implement peer to peer functionality .
+This has been decided due to the extremely shorttimeline of the project which allows us to take advantage of over five years of testing and development and support from many large organizations employing JXTA in their own products .
+We are not concerned with any potential quality problems because JXTA is considered to be the most mature and stable peer to peer framework available .
+Using JXTA terminology, there are three types of peers used in node classification .
+Edge peers are typically low bandwidth, non dedicated nodes .
+Due to these characteristics, edge peers are not used with Apocrita .
+Relay peers are typically higher bandwidth, dedicated nodes .
+This is the classification of all nodes in the Apocrita network, and, as such, are the default classification used .
+Rendezvous peers are used to coordinate message passing between nodes in the Apocrita network .
+This means that a minimum of one rendezvous peer per subnet is required .
+4.1 Peer Discovery The Apocrita server subsystem uses the JXTA Peer Discovery Protocol in order to find participating peers within the network as shown in Figure 2 .
+Figure 2 .
+Apocrita peer discovery process .
+176 The PDP listens for peer advertisements from other nodes in the Apocrita swarm .
+If a peer advertisement is detected, the server will attempt to join the peer group and start actively contributing to the network .
+If no peers are found by the discovery service, the server will create a new peer group and start advertising this peer group .
+This new peer group will be periodically advertised on the network; any new peers joining the network will attach to this peer group .
+A distinct advantage of using the JXTA PDP is that Apocrita does not have to be sensitive to particular networking nuances such as Maximum Transmission Unit .
+In addition, Apocrita does not have to support one to many packet delivery methods such as multicast and instead can rely on JXTA for this support .
+4.2 Index Query Operation All nodes in the Apocrita swarm have a complete and up to date copy of the network index stored locally .
+This makes querying the index for search results trivial .
+Unlike the Gnutella protocol, a query does not have to propagate throughout the network .
+This also means that the time to return query results is very fast much faster than protocols that rely on nodes in the network to pass the query throughout the network and then wait for results .
+This is demonstrated in Figure 3 .
+Figure 3 .
+Apocrita query operation .
+Each document in the swarm has a unique document identification number .
+A node will query the index and a result will be returned with both the document ID number as well as a list of peers with a copy of the matched document ID .
+It is then the responsibility of the searching peer to contact the peers in the list to negotiate file transfer between the client and server. .

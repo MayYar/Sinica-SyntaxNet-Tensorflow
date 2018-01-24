@@ -1,0 +1,461 @@
+The Role of Compatibility in the Diffusion of Technologies 
+content:
+1 ABSTRACT :
+1-1:In many settings, competing technologies for example, operating systems, instant messenger systems, or document formatscan be seen adopting a limited amount of compatibility with one another; in other words, the difficulty in using multiple technologies is balanced somewhere between the two extremes of impossibility and effortless interoperability .
+1-2:There are a range of reasons why this phenomenon occurs, many of which based on legal, social, or business considerations seem to defy concise mathematical models .
+1-3:Despite this, we show that the advantages of limited compatibility can arise in a very simple model of diffusion in social networks, thus offering a basic explanation for this phenomenon in purely strategic terms .
+1-4:Our approach builds on work on the diffusion of innovations in the economics literature, which seeks to model how a new technology A might spread through a social network of individuals who are currently users of technology B .
+1-5:We consider several ways of capturing the compatibility of A and B, focusing primarily on a model in which users can choose to adopt A, adopt B, or at an extra cost adopt both A and B .
+1-6:We characterize how the ability of A to spread depends on both its quality relative to B, and also this additional cost of adopting both, and find some surprising non monotonicity properties in the dependence on these parameters: in some cases, for one technology to survive the introduction of another, the cost of adopting both technologies must be balanced within a narrow, intermediate range .
+1-7:We also extend the framework to the case of multiple technologies, where we find that a simple This work has been supported in part by NSF grants CCF0325453, IIS 0329064, CNS 0403340, and BCS 0537606, a Google Research Grant, a Yahoo! Research Alliance Grant, the Institute for the Social Sciences at Cornell, and the John D .
+1-8:and Catherine T .
+1-9:MacArthur Foundation .
+1-10:model captures the phenomenon of two firms adopting a limited strategic alliance to defend against a new, third technology .
+1-11:J.4 [Social and Behavioral Sciences]: Economics .
+2 INTRODUCTION :
+2-1:Diffusion and Networked Coordination Games .
+2-2:A fundamental question in the social sciences is to understand the ways in which new ideas, behaviors, and practices diffuse through populations .
+2-3:Such issues arise, for example, in the adoption of new technologies, the emergence of new social norms or organizational conventions, or the spread of human languages [2, 14, 15, 16, 17] .
+2-4:An active line of research in economics and mathematical sociology is concerned with modeling these types of diffusion processes as a coordination game played on a social network [1, 5, 7, 13, 19] .
+2-5:We begin by discussing one of the most basic game theoretic diffusion models, proposed in an influential paper of Morris [13], which will form the starting point for our work here .
+2-6:We describe it in terms of the following technology adoption scenario, though there are many other examples that would serve the same purpose .
+2-7:Suppose there are two instant messenger systems A and B, which are not interoperable users must be on the same system in order to communicate .
+2-8:There is a social network G on the users, indicating who wants to talk to whom, and the endpoints of each edge (v, w) play a coordination game with possible strategies A or B: if v and w each choose IM system B, then they they each receive a payoff of q (since they can talk to each other using system B); if they each choose IM system A, then they they each receive a payoff of 1 − q; and if they choose opposite systems, then they each receive a payoff of 0 (reflecting the lack of interoperability) .
+2-9:Note that A is the better technology if q < 1 2 , in the sense that A A payoffs would then exceed B B payoffs, while A is the worse technology if q > 1 2 .
+2-10:75 A number of qualitative insights can be derived from a diffusion model even at this level of simplicity .
+2-11:Specifically, consider a network G, and let all nodes initially play B .
+2-12:Now suppose a small number of nodes begin adopting strategy A instead .
+2-13:If we apply best response updates to nodes in the network, then nodes in effect will be repeatedly applying the following simple rule: switch to A if enough of your network neighbors have already adopted A .
+2-14:(E.g .
+2-15:you begin using a particular IM system or social networking site, or electronic document format if enough of your friends are users of it.) As this unfolds, there can be a cascading sequence of nodes switching to A, such that a network wide equilibrium is reached in the limit: this equilibrium may involve uniformity, with all nodes adopting A; or it may involve coexistence, with the nodes partitioned into a set adopting A and a set adopting B, and edges yielding zero payoff connecting the two sets .
+2-16:Morris [13] provides a set of elegant graph theoretic characterizations for when these qualitatively different types of equilibria arise, in terms of the underlying network topology and the quality of A relative to B (i.e .
+2-17:the relative sizes of 1 − q and q) .
+2-18:Compatibility, Interoperability, and Bilinguality .
+2-19:In most of the settings that form the motivation for diffusion models, coexistence (however unbalanced) is the typical outcome: for example, human languages and social conventions coexist along geographic boundaries; it is a stable outcome for the financial industry to use Windows while the entertainment industry uses Mac OS .
+2-20:An important piece that is arguably missing from the basic game theoretic models of diffusion, however, is a more detailed picture of what is happening at the coexistence boundary, where the basic form of the model posits nodes that adopt A linked to nodes that adopt B .
+2-21:In these motivating settings for the models, of course, one very often sees interface regions in which individuals essentially become bilingual .
+2-22:In the case of human language diffusion, this bilinguality is meant literally: geographic regions where there is substantial interaction with speakers of two different languages tend to have inhabitants who speak both .
+2-23:But bilinguality is also an essential feature of technological interaction: in the end, many people have accounts on multiple IM systems, for example, and more generally many maintain the ability to work within multiple computer systems so as to collaborate with people embedded in each .
+2-24:Taking this view, it is natural to ask how diffusion models behave when extended so that certain nodes can be bilingual in this very general sense, adopting both strategies at some cost to themselves .
+2-25:What might we learn from such an extension? To begin with, it has the potential to provide a valuable perspective on the question of compatibility and incompatibility that underpins competition among technology companies .
+2-26:There is a large literature on how compatibility among technologies affects competition between firms, and in particular how incompatibility may be a beneficial strategic decision for certain participants in a market [3, 4, 8, 9, 12] .
+2-27:Whinston [18] provides an interesting taxonomy of different kinds of strategic incompatibility; and specific industry case studies (including theoretical perspectives) have recently been carried out for commercial banks [10], copying and imaging technology [11] and instant messenger systems [6] .
+2-28:While these existing models of compatibility capture network effects in the sense that the users in the market prefer to use technology that is more widespread, they do not capture the more finegrained network phenomenon represented by diffusion that each user is including its local view in the decision, based on what its own social network neighbors are doing .
+2-29:A diffusion model that incorporated such extensions could provide insight into the structure of boundaries in the network between technologies; it could potentially offer a graph theoretic basis for how incompatibility may benefit an existing technology, by strengthening these boundaries and preventing the incursion of a new, better technology .
+2-30:The present work: Diffusion with bilingual behavior .
+2-31:In this paper, we develop a set of diffusion models that incorporate notions of compatibility and bilinguality, and we find that some unexpected phenomena emerge even from very simple versions of the models .
+2-32:We begin with perhaps the simplest way of extending Morris"s model discussed above to incorporate bilingual behavior .
+2-33:Consider again the example of IM systems A and B, with the payoff structure as before, but now suppose that each node can adopt a third strategy, denoted AB, in which it decides to use both A and B .
+2-34:An adopter of AB gets to use, on an edge by edge basis, whichever of A or B yields higher payoffs in each interaction, and the payoff structure is defined according to this principle: if an adopter of AB interacts with an adopter of B, both receive q; with an adopter of A, both receive 1 − q; and with another adopter of AB, both receive max(q, 1 − q) .
+2-35:Finally, an adopter of AB pays a fixed cost penalty of c (i.e .
+2-36:−c is added to its total payoff) to represent the cost of having to maintain both technologies .
+2-37:Thus, in this model, there are two parameters that can be varied: the relative qualities of the two technologies (encoded by q), and the cost of being bilingual, which reflects a type of incompatibility (encoded by c) .
+2-38:Following [13] we assume the underlying graph G is infinite; we further assume that for some natural number Δ, each node has degree Δ.1 We are interested in the question posed at the outset, of whether a new technology A can spread through a network where almost everyone is initially using B .
+2-39:Formally, we say that strategy A can become epidemic if the following holds: starting from a state in which all nodes in a finite set S adopt A, and all other nodes adopt B, a sequence of best response updates (potentially with tiebreaking) in G − S causes every node to eventually adopt A .
+2-40:We also introduce one additional bit of notation that will be useful in the subsequent sections: we define r = c Δ, the fixed penalty for adopting AB, scaled so that it is a per edge cost .
+2-41:In the Morris model, where the only strategic options are A and B, a key parameter is the contagion threshold of G, denoted q∗ (G): this is the supremum of q for which A can become epidemic in G with parameter q in the payoff structure .
+2-42:A central result of [13] is that 1 2 is the maximum possible contagion threshold for any graph: supG q∗ = 1 2 .
+2-43:Indeed, there exist graphs in which the contagion threshold is as large as 1 2 (including the infinite line the unique infinite connected 2 regular graph); on the other hand, one can show there is no graph with a contagion threshold greater than 1 2 .
+2-44:In our model where the bilingual strategy AB is possible, we have a two dimensional parameter space, so instead of a contagion threshold q∗ we have an epidemic region Ω(G), which is the subset of the (q, r) plane for which A can become epidemic in G .
+2-45:And in place of the maximum possible contagion threshold supG q∗ (G), we must consider the general epidemic region Ω = ∪GΩ(G), where the union is taken over all infinite Δ regular graphs; this is the set of all (q, r) values for which A can become epidemic in some Δ regular network .
+2-46:1 We can obtain strictly analogous results by taking a sequence of finite graphs and expressing results asymptotically, but the use of an infinite bounded degree graph G makes it conceptually much cleaner to express the results (as it does in Morris"s paper [13]): less intricate quantification is needed to express the diffusion properties, and the qualitative phenomena remain the same .
+2-47:76 1 20 1 r q 0 1 2 1 Figure 1: The region of the (q, r) plane for which technology A can become epidemic on the infinite line .
+2-48:Our Results .
+2-49:We find, first of all, that the epidemic region Ω(G) can be unexpectedly complex, even for very simple graphs G .
+2-50:Figure 1 shows the epidemic region for the infinite line; one observes that neither the region Ω(G) nor its complement is convex in the positive quadrant, due to the triangular cut out shape .
+2-51:(We find analogous shapes that become even more complex for other simple infinite graph structures; see for example Figures 3 and 4.) In particular, this means that for values of q close to but less than 1 2 , strategy A can become epidemic on the infinite line if r is sufficiently small or sufficiently large, but not if r takes values in some intermediate interval .
+2-52:In other words, strategy B (which represents the worse technology, since q < 1 2 ) will survive if and only if the cost of being bilingual is calibrated to lie in this middle interval .
+2-53:This is a reflection of limited compatibility that it may be in the interest of an incumbent technology to make it difficult but not too difficult to use a new technology and we find it surprising that it should emerge from a basic model on such a simple network structure .
+2-54:It is natural to ask whether there is a qualitative interpretation of how this arises from the model, and in fact it is not hard to give such an interpretation, as follows .
+2-55:When r is very small, it is cheap for nodes to adopt AB as a strategy, and so AB spreads through the whole network .
+2-56:Once AB is everywhere, the best response updates cause all nodes to switch to A, since they get the same interaction benefits without paying the penalty of r .
+2-57:When r is very large, nodes at the interface, with one A neighbor and one B neighbor, will find it too expensive to choose AB, so they will choose A (the better technology), and hence A will spread step by step through the network .
+2-58:When r takes an intermediate value, a node v at the interface, with one A neighbor and one B neighbor, will find it most beneficial to adopt AB as a strategy .
+2-59:Once this happens, the neighbor of v who is playing B will not have sufficient incentive to switch, and the best response updates make no further progress .
+2-60:Hence, this intermediate value of r allows a boundary of AB to form between the adopters of A and the adopters of B .
+2-61:In short, the situation facing B is this: if it is too permissive, it gets invaded by AB followed by A; if it is too inflexible, forcing nodes to choose just one of A or B, it gets destroyed by a cascade of direct conversions to A .
+2-62:But if it has the right balance in the value of r, then the adoptions of A come to a stop at a bilingual boundary where nodes adopt AB .
+2-63:Moving beyond specific graphs G, we find that this non convexity holds in a much more general sense as well, by considering the general epidemic region Ω = ∪GΩ(G) .
+2-64:For any given value of Δ, the region Ω is a complicated union of bounded and unbounded polygons, and we do not have a simple closed form description for it .
+2-65:However, we can show via a potential function argument that no point (q, r) with q > 1 2 belongs to Ω .
+2-66:Moreover, we can show the existence of a point (q, r) ∈ Ω for which q < 1 2 .
+2-67:On the other hand, consideration of the epidemic region for the infinite line shows that (1 2 , r) ∈ Ω for r = 0 and for r sufficiently large .
+2-68:Hence, neither Ω nor its complement is convex in the positive quadrant .
+2-69:Finally, we also extend a characterization that Morris gave for the contagion threshold [13], producing a somewhat more intricate characterization of the region Ω(G) .
+2-70:In Morris"s setting, without an AB strategy, he showed that A cannot become epidemic with parameter q if and only if every cofinite set of nodes contains a subset S that functions as a well connected community: every node in S has at least a (1 − q) fraction of its neighbors in S .
+2-71:In other words, tightly knit communities are the natural obstacles to diffusion in his setting .
+2-72:With the AB strategy as a further option, a more complex structure becomes the obstacle: we show that A cannot become epidemic with parameters (q, r) if and only if every cofinite set contains a structure consisting of a tightly knit community with a particular kind of interface of neighboring nodes .
+2-73:We show that such a structure allows nodes to adopt AB at the interface and B inside the community itself, preventing the further spread of A; and conversely, this is the only way for the spread of A to be blocked .
+2-74:The analysis underlying the characterization theorem yields a number of other consequences; a basic one is, roughly speaking, that the outcome of best response updates is independent of the order in which the updates are sequenced (provided only that each node attempts to update itself infinitely often) .
+2-75:Further Extensions .
+2-76:Another way to model compatibility and interoperability in diffusion models is through the off diagonal terms representing the payoff for interactions between a node adopting A and a node adopting B .
+2-77:Rather than setting these to 0, we can consider setting them to a value x ≤ min(q, 1 − q) .
+2-78:We find that for the case of two technologies, the model does not become more general, in that any such instance is equivalent, by a re scaling of q and r, to one where x = 0 .
+2-79:Moreover, using our characterization of the region Ω(G) in terms of communities and interfaces, we show a monotonicty result: if A can become epidemic on a graph G with parameters (q, r, x), and then x is increased, then A can still become epidemic with the new parameters .
+2-80:We also consider the effect of these off diagonal terms in an extension to k > 2 competing technologies; for technologies X and Y , let qX denote the payoff from an X X interaction on an edge and qXY denote the payoff from an X Y interaction on an edge .
+2-81:We consider a setting in which two technologies B and C, which initially coexist with qBC = 0, face the introduction of a third, better technology A at a finite set of nodes .
+2-82:We show an example in which B and C both survive in equilibrium if they set qBC in a particular range of values, but not if they set qBC too low or too high to lie in this range .
+2-83:Thus, in even in a basic diffusion model with three technologies, one finds cases in which two firms have an incentive to adopt a limited strategic alliance, partially increasing their interoperability to defend against a new entrant in the market. .
+3 MODEL :
+3-1:We now develop some further notation and definitions that will be useful for expressing the model .
+3-2:Recall that we have an infinite Δ regular graph G, and strategies A, B, and AB that are used in a coordination game on each edge .
+3-3:For edge (v, w), the payoff 77 to each endpoint is 0 if one of the two nodes chooses strategy A and the other chooses strategy B; 1 − q if one chooses strategy A and the other chooses either A or AB; q if one chooses strategy B and the other chooses either B or AB; and max(q, 1 − q) if both choose strategy AB .
+3-4:The overall payoff of an agent v is the sum of the above values over all neighbors w of v, minus a cost which is 0 if v chooses A or B and c = rΔ if she chooses AB .
+3-5:We refer to the overall game, played by all nodes in G, as a contagion game, and denote it using the tuple (G, q, r) .
+3-6:This game can have many Nash equilibria .
+3-7:In particular, the two states where everybody uses technology A or everybody uses technology B are both equilibria of this game .
+3-8:As discussed in the previous section, we are interested in the dynamics of reaching an equilibrium in this game; in particular, we would like to know whether it is possible to move from an all B equilibrium to an all A equilibrium by changing the strategy of a finite number of agents, and following a sequence of best response moves .
+3-9:We provide a formal description of this question via the following two definitions .
+3-10:DEFINITION 2.1 .
+3-11:Consider a contagion game (G, q, r) .
+3-12:A state in this game is a strategy profile s : V → {A, B, AB} .
+3-13:For two states s and s and a vertex v ∈ V (G), if starting from state s and letting v play her best response move (breaking ties in favor of A and then AB) we get to the state s , we write s v → s .
+3-14:Similarly, for two states s and s and a finite sequence S = v1, v2, .
+3-15:.
+3-16:.
+3-17:, vk of vertices of G (where vi"s are not necessarily distinct), we say s S → s if there is a sequence of states s1, .
+3-18:.
+3-19:.
+3-20:, sk−1 such that s v1 → s1 v2 → s2 v3 → · · · sk−1 vk → s .
+3-21:For an infinite sequence S = v1, v2, .
+3-22:.
+3-23:.
+3-24:of vertices of G, we denote the subsequence v1, v2, .
+3-25:.
+3-26:.
+3-27:, vk by Sk .
+3-28:We say s S → s for two states s and s if for every vertex v ∈ V there exists a k0(v) such that for every k > k0(v), s Sk → sk for a state sk with sk(v) = s (v) .
+3-29:DEFINITION 2.2 .
+3-30:For T ⊆ V (G), we denote by sT the strategy profile that assigns A to every agent in T and B to every agent in V \ T .
+3-31:We say that technology A can become an epidemic in the game (G, q, r) if there is a finite set T of nodes in G (called the seed set) and a sequence S of vertices in V \ T (where each vertex can appear more than once) such that sT S → sV (G), i.e., endowing agents in T with technology A and letting other agents play their best response according to schedule S would lead every agent to eventually adopt strategy A.2 The above definition requires that the all A equilibrium be reachable from the initial state by at least one schedule S of best response moves .
+3-32:In fact, we will show in Section 4 that if A can become an epidemic in a game, then for every schedule of best response moves of the nodes in V \ T in which each node is scheduled an infinite number of times, eventually all nodes adopt strategy A.3 .
+4 EXAMPLES :
+4-1:We begin by considering some basic examples that yield epidemic regions with the kinds of non convexity properties discussed 2 Note that in our definition we assume that agents in T are endowed with the strategy A at the beginning .
+4-2:Alternatively, one can define the notion of epidemic by allowing agents in T to be endowed with any combination of AB and A, or with just AB .
+4-3:However, the difference between these definitions is rather minor and our results carry over with little or no change to these alternative models .
+4-4:3 Note that we assume agents in the seed set T cannot change their strategy .
+4-5:0−1 1 2 Figure 2: The thick line graph in Section 1 .
+4-6:We first discuss a natural Δ regular generalization of the infinite line graph, and for this one we work out the complete analysis that describes the region Ω(G), the set of all pairs (q, r) for which the technology A can become an epidemic .
+4-7:We then describe, without the accompanying detailed analysis, the epidemic regions for the infinite Δ regular tree and for the two dimensional grid .
+4-8:The infinite line and the thick line graph .
+4-9:For a given even integer Δ, we define the thick line graph LΔ as follows: the vertex set of this graph is Z × {1, 2, .
+4-10:.
+4-11:.
+4-12:, Δ 2}, where Z is the set of all integers .
+4-13:There is an edge between vertices (x, i) and (x , i ) if and only if |x − x | = 1 .
+4-14:For each x ∈ Z, we call the set of vertices {(x, i) : i ∈ {1, .
+4-15:.
+4-16:.
+4-17:, Δ 2} the x"th group of vertices .
+4-18:Figure 2 shows a picture of L6 Now, assume that starting from a position where every node uses the strategy B, we endow all agents in a group (say, group 0) with the strategy A .
+4-19:Consider the decision faced by the agents in group 1, who have their right hand neighbors using B and their left hand neighbors using A .
+4-20:For these agents, the payoffs of strategies A, B, and AB are (1 − q)Δ 2, qΔ 2, and Δ 2 − rΔ, respectively .
+4-21:Therefore, if q ≤ 1 2 and q ≤ 2r, the best response of such an agent is A .
+4-22:Hence, if the above inequality holds and we let agents in groups 1, −1, 2, −2, .
+4-23:.
+4-24:.
+4-25:play their best response in this order, then A will become an epidemic .
+4-26:Also, if we have q > 2r and q ≤ 1 − 2r, the best response of an agent with her neighbors on one side playing A and neighbors on the other side playing B is the strategy AB .
+4-27:Therefore, if we let agents in groups 1 and −1 change to their best response, they would switch their strategy to AB .
+4-28:After this, agents in group 2 will see AB on their left and B on their right .
+4-29:For these agents (and similarly for the agents in group −2), the payoff of strategies A, B, and AB are (1−q)Δ 2, qΔ, and (q+max(q, 1−q))Δ 2− rΔ, respectively .
+4-30:Therefore, if max(1, 2q) − 2r ≥ 1 − q and max(1, 2q) − 2r ≥ 2q, or equivalently, if 2r ≤ q and q + r ≤ 1 2 , the best response of such an agent is AB .
+4-31:Hence, if the above inequality holds and we let agents in groups 2, −2, 3, −3 .
+4-32:.
+4-33:.
+4-34:play their best response in this order, then every agent (except for agents in group 0) switches to AB .
+4-35:Next, if we let agents in groups 1, −1, 2, −2, .
+4-36:.
+4-37:.
+4-38:change their strategy again, for q ≤ 1 2, every agent will switch to strategy A, and hence A becomes an epidemic.4 4 Strictly speaking, since we defined a schedule of moves as a single infinite sequence of vertices in V \ T, the order 1, −1, 2, −2, .
+4-39:.
+4-40:.
+4-41:, 1, −1, 2, −2, .
+4-42:.
+4-43:.
+4-44:is not a valid schedule .
+4-45:However, since vertices of G have finite degree, it is not hard to see that any ordering of a multiset containing any (possibly infinite) 78 1 20 r q 0 1 4 3 16 1 12 1 4 Figure 3: Epidemic regions for the infinite grid 1 20 1 Δ r q 0 1 Δ Figure 4: Epidemic regions for the infinite Δ regular tree The above argument shows that for any combination of (q, r) parameters in the marked region in Figure 1, technology A can become an epidemic .
+4-46:It is not hard to see that for points outside this region, A cannot become epidemic .
+4-47:Further examples: trees and grids .
+4-48:Figures 3 and 4 show the epidemic regions for the infinite grid and the infinite Δ regular tree .
+4-49:Note they also exhibit non convexities. .
+5 CHARACTERIZATION :
+5-1:In this section, we characterize equilibrium properties of contagion games .
+5-2:To this end, we must first argue that contagion games in fact have well defined and stable equilibria .
+5-3:We then discuss some respects in which the equilibrium reached from an initial state is essentially independent of the order in which best response updates are performed .
+5-4:We begin with the following lemma, which proves that agents eventually converge to a fixed strategy, and so the final state of a game is well defined by its initial state and an infinite sequence of moves .
+5-5:Specifically, we prove that once an agent decides to adopt technology A, she never discards it, and once she decides to discard technology B, she never re adopts it .
+5-6:Thus, after an infinite number of best response moves, each agent converges to a single strategy .
+5-7:LEMMA 4.1 .
+5-8:Consider a contagion game (G, q, r) and a (possibly infinite) subset T ⊆ V of agents .
+5-9:Let sT be the strategy profile assigning A to every agent in T and B to every agent in V \ T .
+5-10:Let S = v1, v2, .
+5-11:.
+5-12:.
+5-13:be a (possibly infinite) sequence of number of copies of each vertex of V \ T can be turned into an equivalent schedule of moves .
+5-14:For example, the sequence 1, −1, 2, −2, 1, −1, 3, −3, 2, −2, .
+5-15:.
+5-16:.
+5-17:gives the same outcome as 1, −1, 2, −2, .
+5-18:.
+5-19:.
+5-20:, 1, −1, 2, −2, .
+5-21:.
+5-22:.
+5-23:in the thick line example .
+5-24:agents in V \ T and consider the sequence of states s1, s2, .
+5-25:.
+5-26:.
+5-27:obtained by allowing agents to play their best response in the order defined by S (i.e., s v1 → s1 v2 → s2 v3 → · · · ) .
+5-28:Then for every i, one of the following holds: • si(vi+1) = B and si+1(vi+1) = A, • si(vi+1) = B and si+1(vi+1) = AB, • si(vi+1) = AB and si+1(vi+1) = A, • si(vi+1) = si+1(vi+1) .
+5-29:PROOF .
+5-30:Let X >k v Y indicate that agent v (weakly) prefers strategy X to strategy Y in state sk .
+5-31:For any k let zk A, zk B, and zk AB be the number of neighbors of v with strategies A, B, and AB in state sk, respectively .
+5-32:Thus, for agent v in state sk, .
+6 A >k :
+6-1:v B if (1 − q)(zk A + zk AB) is greater than q(zk B + zk AB), .
+7 A >k :
+7-1:v AB if (1− q)(zk A + zk AB) is greater than (1− q)zk A + qzk B + max(q, 1 − q)zk AB − Δr, .
+8 and AB >k :
+8-1:v B if (1−q)zk A +qzk B +max(q, 1−q)zk AB −Δr is greater than q(zk B + zk AB) .
+8-2:Suppose the lemma is false and consider the smallest i such that the lemma is violated .
+8-3:Let v = vi+1 be the agent who played her best response at time i .
+8-4:Thus, either 1 .
+8-5:si(v) = A and si+1(v) = B, or 2 .
+8-6:si(v) = A and si+1(v) = AB, or 3 .
+8-7:si(v) = AB and si+1(v) = B .
+8-8:We show that in the third case, agent v could not have been playing a best response .
+8-9:The other cases are similar .
+8-10:In the third case, we have si(v) = AB and si+1(v) = B .
+8-11:As si(v) = AB, there must be a time j < i where sj v → sj+1 and sj+1(v) = AB .
+8-12:Since this was a best response move for v, inequality 3 implies that (1 − q)zj A + max(0, 1 − 2q)zj AB ≥ Δr .
+8-13:Furthermore, as i is the earliest time at which the lemma is violated, zi A ≥ zj A and zj AB − zi AB ≤ zi A − zj GRAPHS The characterization theorem in the previous section provides one way of thinking about the region Ω(G), the set of all (q, r) pairs for which A can become epidemic in the game (G, q, r) .
+8-14:We now consider the region Ω = ∪GΩ(G), where the union is taken over all infinite Δ regular graphs; this is the set of all (q, r) values for which A can become epidemic in some Δ regular network .
+8-15:The analysis here uses Lemma 4.1 and an argument based on an appropriately defined potential function .
+8-16:The first theorem shows that no point (q, r) with q > 1 2 belongs to Ω .
+8-17:Since q > 1 2 implies that the incumbent technology B is superior, it implies that in any network, a superior incumbent will survive for any level of compatibility .
+8-18:THEOREM 5.1 .
+8-19:For every Δ regular graph G and parameters q and r, the technology A cannot become an epidemic in the game (G, q, r) if q > 1 2 .
+8-20:PROOF .
+8-21:Assume, for contradiction, that there is a Δ regular graph G and values q > 1 2 and r, a set T of vertices of G that are initially endowed with the strategy A, and a schedule S of moves for vertices in V \ T such that this sequence leads to an all A equilibrium .
+8-22:We derive a contradiction by defining a non negative 80 potential function that starts with a finite value and showing that after each best response by some vertex the value of this function decreases by some positive amount bounded away from zero .
+8-23:At any state in the game, let XA,B denote the number of edges in G that have one endpoint using strategy A and the other endpoint using strategy B .
+8-24:Furthermore, let nAB denote the number of agents using the strategy AB .
+8-25:The potential function is the following: qXA,B + cnAB (recall c = Δr is the cost of adopting two technologies) .
+8-26:Since G has bounded degree and the initial set T is finite, the initial value of this potential function is finite .
+8-27:We now show that every best response move decreases the value of this function by some positive amount bounded away from zero .
+8-28:By Lemma 4.1, we only need to analyze the effect on the potential function for moves of the sort described by the lemma .
+8-29:Therefore we have three cases: a node u switches from strategy B to AB, a node u switches from strategy AB to A, or a node u switches from strategy B to A .
+8-30:We consider the first case here; the proofs for the other cases are similar .
+8-31:Suppose a node u with strategy B switches to strategy AB .
+8-32:Let zAB, zA, and zB denote the number of neighbors of u in partition piece AB, A, and B respectively .
+8-33:Thus, recalling that q > 1 2, we see u"s payoff with strategy B is q(zAB + zB) whereas his payoff with strategy AB is q(zAB + zB) + (1 − q)zA − c .
+8-34:In order for this strategic change to improve u"s payoff, it must be the case that (1 − q)zA ≥ c .
+8-35:(1) Now, notice that such a strategic change on the part of u induces a change in the potential function of −qzA + c as zA edges are removed from the XA,B edges between A and B and the size of partition piece AB is increased by one .
+8-36:This change will be negative so long as zA > c q which holds by inequality 1 as q > (1−q) for q > 1 2 .
+8-37:Furthermore, as zA can take only finitely many values (zA ∈ {0, 1, .
+8-38:.
+8-39:.
+8-40:, Δ}), this change is bounded away from zero .
+8-41:This next theorem shows that for any Δ, there is a point (q, r) ∈ Ω for which q < 1 2 .
+8-42:This means that there is a setting of the parameters q and r for which the new technology A is superior, but for which the incumbent technology is guaranteed to survive regardless of the underlying network .
+8-43:THEOREM 5.2 .
+8-44:There exist q < 1 2 and r such that for every contagion game (G, q, r), A cannot become epidemic .
+8-45:PROOF .
+8-46:The proof is based on the potential function from Theorem 5.1: qXA,B + cnAB .
+8-47:We first show that if q is close enough to 1 2 and r is chosen appropriately, this potential function is non increasing .
+8-48:Specifically, let q = 1 2 − 1 64Δ and c = rΔ = α, where α is any irrational number strictly between 3 64 and q .
+8-49:Again, there are three cases corresponding to the three possible strategy changes for a node u .
+8-50:Let zAB, zA, and zB denote the number of neighbors of node u in partition piece AB, A, and B respectively .
+8-51:Case 1: B → AB .
+8-52:Recalling that q < 1 2, we see u"s payoff with strategy B is q(zAB + zB) whereas his payoff with strategy AB is (1 − q)(zAB + zA) + qzB − c .
+8-53:In order for this strategic change to improve u"s payoff, it must be the case that (1 − 2q)zAB + (1 − q)zA ≥ c .
+8-54:(2) Now, notice that such a strategic change on the part of u induces a change in the potential function of −qzA + c as zA edges are removed from the XA,B edges between A and B and the size of partition piece AB is increased by one .
+8-55:This change will be nonpositive so long as zA ≥ c q .
+8-56:By inequality 2 and the fact that zA is an integer, zA ≥ ‰ c 1 − q − (1 − 2q)zAB 1 − q ı .
+8-57:Substituting our choice of parameters, (and noting that q ∈ [1 4, 1 2] and zAB ≤ Δ), we see that the term inside the ceiling is less than 1 and at least 3 64 3 4 − 1 32 1 2 > 0 .
+8-58:Thus, the ceiling is one, which is larger than c q .
+8-59:Case 2: AB → A .
+8-60:Recalling that q < 1 2, we see u"s payoff with strategy AB is (1 − q)(zAB + zA) + qzB − c whereas her payoff with strategy A is (1 − q)(zAB + zA) .
+8-61:In order for this strategic change to improve u"s payoff, it must be the case that qzB ≤ c .
+8-62:(3) Such a strategic change on the part of u induces a change in the potential function of qzB −c as zB edges are added to the XA,B edges between A and B and the size of partition piece AB is decreased by one .
+8-63:This change will be non positive so long as zB ≤ c q, which holds by inequality 3 .
+8-64:Case 3: B → A .
+8-65:Note u"s payoff with strategy B is q(zAB + zB) whereas his payoff with strategy A is (1 − q)(zAB + zA) .
+8-66:In order for this strategic change to improve u"s payoff, it must be the case that (1 − 2q)zAB ≥ qzB − (1 − q)zA .
+8-67:(4) Such a strategic change on the part of u induces a change in the potential function of q(zB − zA) as zA edges are removed and zB edges are added to the XA,B edges between A and B .
+8-68:This change will be negative so long as zB < zA .
+8-69:By inequality 4 and the fact that zA is an integer, zA ≥ qzB 1 − q + (1 − 2q)zAB 1 − q .
+8-70:Substituting our choice of parameters, it is easy to see that the term inside the floor is at most zB + 1 4, and so the floor is at most zB as zB is an integer .
+8-71:We have shown the potential function is non increasing for our choice of q and c .
+8-72:This implies the potential function is eventually constant .
+8-73:As c is irrational and the remaining terms are always rational, both nAB and XA,B must remain constant for the potential function as a whole to remain constant .
+8-74:Suppose A is epidemic in this region .
+8-75:As nAB is constant and A is epidemic, it must be that nAB = 0 .
+8-76:Thus, the only moves involve a node u switching from strategy B to strategy A .
+8-77:In order for XA,B to be constant for such moves, it must be that zA (the number of neighbors of u in A) equals zB (the number of neighbors of u in B) and, as nAB = 0, we have that zA = zB = Δ 2 .
+8-78:Thus, the payoff of u for strategy A is (1 − q)zA < Δ 4 whereas her payoff for strategy AB is (1−q)zA +qzB −c > Δ 2−q ≥ Δ 4 .
+8-79:This contradicts the assumption that u is playing her best response by switching to A. .
+9-1:We now consider some further ways of modeling compatibility and interoperability
+9-2:We first consider two technologies, as in the previous sections, and introduce off diagonal payoffs to capture a positive benefit in direct A B interactions
+9-3:We find that this is 81 in fact no more general than the model with zero payoffs for A B interactions
+9-4:We then consider extensions to three technologies, identifying situations in which two coexisting incumbent technologies may or may not want to increases their mutual compatibility in the face of a new, third technology
+9-5:Two technologies
+9-6:A natural relaxation of the two technology model is to introduce (small) positive payoffs for A B interaction; that is, cross technology communication yields some lesser value to both agents
+9-7:We can model this using a variable xAB representing the payoff gathered by an agent with technology A when her neighbor has technology B, and similarly, a variable xBA representing the payoff gathered by an agent with B when her neighbor has A
+9-8:Here we consider the special case in which these off diagonal entries are symmetric, i.e., xAB = xBA = x
+9-9:We also assume that x < q ≤ 1 − q
+9-10:We first show that the game with off diagonal entries is equivalent to a game without these entries, under a simple re scaling of q and r
+9-11:Note that if we re scale all payoffs by either an additive or a multiplicative constant, the behavior of the game is unaffected
+9-12:Given a game with off diagonal entries parameterized by q, r and x, consider subtracting x from all payoffs, and scaling up by a factor of 1 (1 − 2x)
+9-13:As can be seen by examining Table 1, the resulting payoffs are exactly those of a game without off diagonal entries, parameterized by q = (q − x) (1 − 2x) and r = r (1 − 2x)
+9-14:Thus the addition of symmetric off diagonal entries does not expand the class of games being considered
+9-15:Table 1 represents the payoffs in the coordination game in terms of these parameters
+9-16:Nevertheless, we can still ask how the addition of an off diagonal entry might affect the outcome of any particular game
+9-17:As the following example shows, increasing compatibility between two technologies can allow one technology that was not initially epidemic to become so
+9-18:EXAMPLE 6.1
+9-19:Consider the contagion game played on a thick line graph (see Section 3) with r = 5 32 and q = 3 8
+9-20:In this case, A is not epidemic, as can be seen by examining Figure 1, since 2r < q and q + r > 1 2
+9-21:However, if we insert symmetric off diagonal payoffs x = 1 4, we have a new game, equivalent to a game parameterized by r = 5 16 and q = 1 4
+9-22:Since q < 1 2 and q < 2r , A is epidemic in this game, and thus also in the game with limited compatibility
+9-23:We now show that generally, if A is the superior technology (i.e., q < 1 2), adding a compatibility term x can only help A spread
+9-24:THEOREM 6.2
+9-25:Let G be a game without compatibility, parameterized by r and q on a particular network
+9-26:Let G be that same game, but with an added symmetric compatibility term x
+9-27:If A is epidemic for G, then A is epidemic for G
+9-28:PROOF
+9-29:We will show that any blocking structure in G is also a blocking structure in G
+9-30:By our characterization theorem, Theorem 4.6, this implies the desired result
+9-31:We have that G is equivalent to a game without compatibility parameterized by q = (q − x) (1 − 2x) and r = r (1 − 2x)
+9-32:Consider a blocking structure (SB, SAB) for G
+9-33:We know that for any v ∈ SAB, q dSB (v) > r Δ
+9-34:Thus qdSB (v) > (q − x)dSB (v) = q (1 − 2x)dSB (v) > r (1 − 2x)Δ = rΔ, as required for a blocking structure in G
+9-35:Similarly, the two blocking structure constraints for v ∈ SB are only strengthened when we move from G to G
+9-36:More than two technologies
+9-37:Given the complex structure inherent in contagion games with two technologies, the understanding of contagion games with three or more technologies is largely open
+9-38:Here we indicate some of the technical issues that come up with multiple technologies, through a series of initial results
+9-39:The basic set up we study is one in which two incumbent technologies B and C are initially coexisting, and a third technology A, superior to both, is introduced initially at a finite set of nodes
+9-40:We first present a theorem stating that for any even Δ, there is a contagion game on a Δ−regular graph in which the two incumbent technologies B and C may find it beneficial to increase their compatibility so as to prevent getting wiped out by the new superior technology A
+9-41:In particular, we consider a situation in which initially, two technologies B and C with zero compatibility are at a stable state
+9-42:By a stable state, we mean that no finite perturbation of the current states can lead to an epidemic for either B or and can become epidemic by forcing a single node to choose A
+9-43:However, by increasing their compatibility, B and C can maintain their stability and resist an epidemic from A
+9-44:Let qA denote the payoffs to two adjacent nodes that both choose technology A, and define qB and qC analogously
+9-45:We will assume qA > qB > qC
+9-46:We also assume that r, the cost of selecting additional technologies, is sufficiently large so as to ensure that nodes never adopt more than one technology
+9-47:Finally, we consider a compatibility parameter qBC that represents the payoffs to two adjacent nodes when one selects B and the other selects (G, qA, qB, qC , qBC )
+9-48:THEOREM 6.3
+9-49:For any even Δ ≥ 12, there is a Δ regular graph G, an initial state s, and values qA, qB, qC , and qBC , such that • s is an equilibrium in both (G, qA, qB, qC , 0) and (G, qA, qB, qC , qBC ), • neither B nor C can become epidemic in either (G, qA, qB, qC , 0) or (G, qA, qB, qC , qBC ) starting from state s, • A can become epidemic (G, qA, qB, qC , 0) starting from state s, and • A can not become epidemic in (G, qA, qB, qC , qBC ) starting from state s
+9-50:PROOF
+9-51:(Sketch.) Given Δ, define G by starting with an infinite grid and connecting each node to its nearest Δ − 2 neighbors that are in the same row
+9-52:The initial state s assigns strategy B to even rows and strategy C to odd rows
+9-53:Let qA = 4k2 + 4k + 1 2, qB = 2k + 2, qC = 2k + 1, and qBC = 2k + 3 4
+9-54:The first, third, and fourth claims in the theorem can be verified by checking the corresponding inequalities
+9-55:The second claim follows from the first and the observation that the alternating rows contain any plausible epidemic from growing vertically
+9-56:The above theorem shows that two technologies may both be able to survive the introduction of a new technology by increasing their level of compatibility with each other
+9-57:As one might expect, 82 A B AB A (1 − q; 1 − q) (x; x) (1 − q; 1 − q − r) B (x; x) (q; q) (q; q − r) AB (1 − q − r; 1 − q) (q − r; q) (max(q, 1 − q) − r; max(q, 1 − q) − r) Table 1: The payoffs in the coordination game
+9-58:Entry (x, y) in row i, column j indicates that the row player gets a payoff of x and the column player gets a payoff of y when the row player plays strategy i and the column player plays strategy j
+9-59:there are cases when increased compatibility between two technologies helps one technology at the expense of the other
+9-60:Surprisingly, however, there are also instances in which compatibility is in fact harmful to both parties; the next example considers a fixed initial configuration with technologies A, B and C that is at equilibrium when qBC = 0
+9-61:However, if this compatibility term is increased sufficiently, equilibrium is lost, and A becomes epidemic
+9-62:EXAMPLE 6.4
+9-63:Consider the union of an infinite two dimensional grid graph with nodes u(x, y) and an infinite line graph with nodes v(y)
+9-64:Add an edge between u(1, y) and v(y) for all y
+9-65:For this network, we consider the initial configuration in which all v(y) nodes select A, and node u(x, y) selects B if x < 0 and selects C otherwise
+9-66:We now define the parameters of this game as follows
+9-67:Let qA = 3.95, qB = 1.25, qC = 1, and qBC = 0
+9-68:It is easily verified that for these values, the initial configuration given above is an equilibrium
+9-69:However, now suppose we increase the coordination term, setting qBC = 0.9
+9-70:This is not an equilibrium, since each node of the form u(0, y) now has an incentive to switch from C (generating a payoff of 3.9) to B (thereby generating a payoff of 3.95)
+9-71:However, once these nodes have adopted B, the best response for each node of the form u(1, y) is A (A generates a payoff of 4 where as B only generates a payoff of 3.95)
+9-72:From here, it is not hard to show that A spreads directly throughout the entire network.
+10-1:L
+10-2:Blume
+10-3:The statistical mechanics of strategic interaction
+10-4:Games and Economic Behavior, 5:387 424, 1993
+10-5:R
+10-6:L
+10-7:Cooper (editor)
+10-8:Language spread: Studies in diffusion and social change
+10-9:Indiana U
+10-10:Press, 1982
+10-11:N
+10-12:Economides
+10-13:Desirability of Compatibility in the Absence of Network Externalities
+10-14:American Economic Review, 79(1989), pp
+10-15:1165 1181
+10-16:N
+10-17:Economides
+10-18:Raising Rivals" Costs in Complementary Goods Markets: LECs Entering into Long Distance and Microsoft Bundling Internet Explorer
+10-19:NYU Center for Law and Business Working Paper 98 004, 1998
+10-20:G
+10-21:Ellison
+10-22:Learning, local interaction, and coordination
+10-23:Econometrica, 61:1047 1071, 1993
+10-24:G
+10-25:Faulhaber
+10-26:Network Effects and Merger Analysis: Instant Messaging and the AOL Time Warner Case
+10-27:Telecommunications Policy, Jun Jul 2002, 26, 311 333 M
+10-28:Jackson and L
+10-29:Yariv
+10-30:Diffusion on social networks
+10-31:EconomiePublique, 16:69 82, 2005
+10-32:M
+10-33:Katz and C
+10-34:Shapiro
+10-35:Network Externalities, Competition and Compatibility
+10-36:American Economic Review
+10-37:75(1985), 424 40
+10-38:M
+10-39:Kearns, L
+10-40:Ortiz
+10-41:Algorithms for Interdependent Security Games
+10-42:NIPS 2003
+10-43:C
+10-44:R
+10-45:Knittel and V
+10-46:Stango
+10-47:Strategic Incompatibility in ATM Markets
+10-48:NBER Working Paper No
+10-49:12604, October 2006
+10-50:J
+10-51:Mackie Mason and J
+10-52:Metzler
+10-53:Links Between Markets and Aftermarkets: Kodak (1997)
+10-54:In Kwoka and White eds., The Antitrust Revolution, Oxford, 2004
+10-55:C
+10-56:Matutes and P
+10-57:Regibeau
+10-58:Mix and Match: Product Compatibility without Network Externalities
+10-59:RAND Journal of Economics, 19(1988), pp
+10-60:221 234
+10-61:S
+10-62:Morris
+10-63:Contagion
+10-64:Review of Economic Studies, 67:57 78, 2000
+10-65:E
+10-66:Rogers
+10-67:Diffusion of innovations
+10-68:Free Press, fourth edition, 1995
+10-69:T
+10-70:Schelling
+10-71:Micromotives and Macrobehavior
+10-72:Norton, 1978
+10-73:D
+10-74:Strang and S
+10-75:Soule
+10-76:Diffusion in organizations and social movements: From hybrid corn to poison pills
+10-77:Annual Review of Sociology, 24:265 290, 1998
+10-78:T
+10-79:Valente
+10-80:Network Models of the Diffusion of Innovations
+10-81:Hampton Press, 1995
+10-82:M
+10-83:Whinston
+10-84:Tying, Foreclosure, and Exclusion
+10-85:American Economic Review 80(1990), 837 59
+10-86:H
+10-87:Peyton Young
+10-88:Individual Strategy and Social Structure: An Evolutionary Theory of Institutions
+10-89:Princeton University Press, 1998
+10-90:83
+picture:

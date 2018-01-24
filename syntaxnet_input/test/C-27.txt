@@ -1,0 +1,727 @@
+A High-Accuracy, Low-Cost Localization System for 
+content:
+1 ABSTRACT :
+1-1:The problem of localization of wireless sensor nodes has long been regarded as very difficult to solve, when considering the realities of real world environments .
+1-2:In this paper, we formally describe, design, implement and evaluate a novel localization system, called Spotlight .
+1-3:Our system uses the spatio temporal properties of well controlled events in the network (e.g., light), to obtain the locations of sensor nodes .
+1-4:We demonstrate that a high accuracy in localization can be achieved without the aid of expensive hardware on the sensor nodes, as required by other localization systems .
+1-5:We evaluate the performance of our system in deployments of Mica2 and XSM motes .
+1-6:Through performance evaluations of a real system deployed outdoors, we obtain a 20cm localization error .
+1-7:A sensor network, with any number of nodes, deployed in a 2500m2 area, can be localized in under 10 minutes, using a device that costs less than $1000 .
+1-8:To the best of our knowledge, this is the first report of a sub meter localization error, obtained in an outdoor environment, without equipping the wireless sensor nodes with specialized ranging hardware .
+1-9:C.2.4 [Computer Communications Networks]: Distributed .
+2 INTRODUCTION :
+2-1:Recently, wireless sensor network systems have been used in many promising applications including military surveillance, habitat monitoring, wildlife tracking etc .
+2-2:[12] [22] [33] [36] .
+2-3:While many middleware services, to support these applications, have been designed and implemented successfully, localization finding the position of sensor nodes remains one of the most difficult research challenges to be solved practically .
+2-4:Since most emerging applications based on networked sensor nodes require location awareness to assist their operations, such as annotating sensed data with location context, it is an indispensable requirement for a sensor node to be able to find its own location .
+2-5:Many approaches have been proposed in the literature [4] [6] [13] [14] [19] [20] [21] [23] [27] [28], however it is still not clear how these solutions can be practically and economically deployed .
+2-6:An on board GPS [23] is a typical high end solution, which requires sophisticated hardware to achieve high resolution time synchronization with satellites .
+2-7:The constraints on power and cost for tiny sensor nodes preclude this as a viable solution .
+2-8:Other solutions require per node devices that can perform ranging among neighboring nodes .
+2-9:The difficulties of these approaches are twofold .
+2-10:First, under constraints of form factor and power supply, the effective ranges of such devices are very limited .
+2-11:For example the effective range of the ultrasonic transducers used in the Cricket system is less than 2 meters when the sender and receiver are not facing each other [26] .
+2-12:Second, since most sensor nodes are static, i.e .
+2-13:the location is not expected to change, it is not cost effective to equip these sensors with special circuitry just for a one time localization .
+2-14:To overcome these limitations, many range free localization schemes have been proposed .
+2-15:Most of these schemes estimate the location of sensor nodes by exploiting the radio connectivity information among neighboring nodes .
+2-16:These approaches eliminate the need of high cost specialized hardware, at the cost of a less accurate localization .
+2-17:In addition, the radio propagation characteristics vary over time and are environment dependent, thus imposing high calibration costs for the range free localizations schemes .
+2-18:With such limitations in mind, this paper addresses the following research challenge: How to reconcile the need for high accuracy in location estimation with the cost to achieve it .
+2-19:Our answer to this challenge is a localization system called Spotlight .
+2-20:This system employs an asymmetric architecture, in which sensor nodes do not need any additional hardware, other than what they currently have .
+2-21:All the sophisticated hardware and computation reside on a single Spotlight device .
+2-22:The Spotlight device uses a steerable laser light source, illuminating the sensor nodes placed within a known terrain .
+2-23:We demonstrate that this localization is much more accurate (i.e., tens of centimeters) than the range based localization schemes and that it has a much longer effective range (i.e., thousands of meters) than the solutions based on ultra sound acoustic ranging .
+2-24:At the same time, since only a single sophisticated device is needed to localize the whole network, the amortized cost is much smaller than the cost to add hardware components to the individual sensors. .
+3 RELATED WORK :
+3-1:In this section, we discuss prior work in localization in two major categories: the range based localization schemes (which use either expensive, per node, ranging devices for high accuracy, or less accurate ranging solutions, as the Received Signal Strength Indicator (RSSI)), and the range free schemes, which use only connectivity information (hop by hop) as an indication of proximity among the nodes .
+3-2:The localization problem is a fundamental research problem in many domains .
+3-3:In the field of robotics, it has been studied extensively [9] [10] .
+3-4:The reported localization errors are on the order of tens of centimeters, when using specialized ranging hardware, i.e .
+3-5:laser range finder or ultrasound .
+3-6:Due to the high cost and non negligible form factor of the ranging hardware, these solutions can not be simply applied to sensor networks .
+3-7:The RSSI has been an attractive solution for estimating the distance between the sender and the receiver .
+3-8:The RADAR system [2] uses the RSSI to build a centralized repository of signal strengths at various positions with respect to a set of beacon nodes .
+3-9:The location of a mobile user is estimated within a few meters .
+3-10:In a similar approach, MoteTrack [17] distributes the reference RSSI values to the beacon nodes .
+3-11:Solutions that use RSSI and do not require beacon nodes have also been proposed [5] [14] [24] [26] [29] .
+3-12:They all share the idea of using a mobile beacon .
+3-13:The sensor nodes that receive the beacons, apply different algorithms for inferring their location .
+3-14:In [29], Sichitiu proposes a solution in which the nodes that receive the beacon construct, based on the RSSI value, a constraint on their position estimate .
+3-15:In [26], Priyantha et al .
+3-16:propose MAL, a localization method in which a mobile node (moving strategically) assists in measuring distances between node pairs, until the constraints on distances generate a rigid graph .
+3-17:In [24], Pathirana et al .
+3-18:formulate the localization problem as an on line estimation in a nonlinear dynamic system and proposes a Robust Extended Kalman Filter for solving it .
+3-19:Elnahrawy [8] provides strong evidence of inherent limitations of localization accuracy using RSSI, in indoor environments .
+3-20:A more precise ranging technique uses the time difference between a radio signal and an acoustic wave, to obtain pair wise distances between sensor nodes .
+3-21:This approach produces smaller localization errors, at the cost of additional hardware .
+3-22:The Cricket location support system [25] can achieve a location granularity of tens of centimeters with short range ultrasound transceivers .
+3-23:AHLoS, proposed by Savvides et al .
+3-24:[27], employs Time of Arrival (ToA) ranging techniques that require extensive hardware and solving relatively large nonlinear systems of equations .
+3-25:A similar ToA technique is employed in [3] .
+3-26:In [30], Simon et al .
+3-27:implement a distributed system (using acoustic ranging) which locates a sniper in an urban terrain .
+3-28:Acoustic ranging for localization is also used by Kwon et al .
+3-29:[15] .
+3-30:The reported errors in localization vary from 2.2m to 9.5m, depending on the type (centralized vs .
+3-31:distributed) of the Least Square Scaling algorithm used .
+3-32:For wireless sensor networks ranging is a difficult option .
+3-33:The hardware cost, the energy expenditure, the form factor, the small range, all are difficult compromises, and it is hard to envision cheap, unreliable and resource constraint devices make use of range based localization solutions .
+3-34:However, the high localization accuracy, achievable by these schemes is very desirable .
+3-35:To overcome the challenges posed by the range based localization schemes, when applied to sensor networks, a different approach has been proposed and evaluated in the past .
+3-36:This approach is called range free and it attempts to obtain location information from the proximity to a set of known beacon nodes .
+3-37:Bulusu et al .
+3-38:propose in [4] a localization scheme, called Centroid, in which each node localizes itself to the centroid of its proximate beacon nodes .
+3-39:In [13], He et al .
+3-40:propose APIT, a scheme in which each node decides its position based on the possibility of being inside or outside of a triangle formed by any three beacon nodes heard by the node .
+3-41:The Global Coordinate System [20], developed at MIT, uses apriori knowledge of the node density in the network, to estimate the average hop distance .
+3-42:The DV * family of localization schemes [21], uses the hop count from known beacon nodes to the nodes in the network to infer the distance .
+3-43:The majority of range free localization schemes have been evaluated in simulations, or controlled environments .
+3-44:Several studies [11] [32] [34] have emphasized the challenges that real environments pose .
+3-45:Langendoen and Reijers present a detailed, comparative study of several localization schemes in [16] .
+3-46:To the best of our knowledge, Spotlight is the first range free localization scheme that works very well in an outdoor environment .
+3-47:Our system requires a line of sight between a single device and the sensor nodes, and the map of the terrain where the sensor field is located .
+3-48:The Spotlight system has a long effective range (1000"s meters) and does not require any infrastructure or additional hardware for sensor nodes .
+3-49:The Spotlight system combines the advantages and does not suffer from the disadvantages of the two localization classes. .
+4 SPOTLIGHT SYSTEM DESIGN :
+4-1:The main idea of the Spotlight localization system is to generate controlled events in the field where the sensor nodes were deployed .
+4-2:An event could be, for example, the presence of light in an area .
+4-3:Using the time when an event is perceived by a sensor node and the spatio temporal properties of the generated events, spatial information (i.e .
+4-4:location) regarding the sensor node can be inferred .
+4-5:Figure 1 .
+4-6:Localization of a sensor network using the Spotlight system We envision, and depict in Figure 1, a sensor network deployment and localization scenario as follows: wireless sensor nodes are randomly deployed from an unmanned aerial vehicle .
+4-7:After deployment, the sensor nodes self organize into a network and execute a time synchronization protocol .
+4-8:An aerial vehicle (e.g .
+4-9:helicopter), equipped with a device, called Spotlight, flies over the network and generates light events .
+4-10:The sensor nodes detect the events and report back to the Spotlight device, through a base station, the timestamps when the events were detected .
+4-11:The Spotlight device computes the location of the sensor nodes .
+4-12:During the design of our Spotlight system, we made the following assumptions: the sensor network to be localized is connected and a middleware, able to forward data from the sensor nodes to the Spotlight device, is present .
+4-13:the aerial vehicle has a very good knowledge about its position and orientation (6 parameters: 3 translation and 3 rigid body rotation) and it possesses the map of the field where the network was deployed .
+4-14:a powerful Spotlight device is available and it is able to generate 14 spatially large events that can be detected by the sensor nodes, even in the presence of background noise (daylight) .
+4-15:a line of sight between the Spotlight device and sensor nodes exists .
+4-16:Our assumptions are simplifying assumptions, meant to reduce the complexity of the presentation, for clarity .
+4-17:We propose solutions that do not rely on these simplifying assumptions, in Section 6 .
+4-18:In order to formally describe and generalize the Spotlight localization system, we introduce the following definitions .
+4-19:3.1 Definitions and Problem Formulation Let"s assume that the space A ⊂R3 contains all sensor nodes N, and that each node Ni is positioned at pi(x, y, z) .
+4-20:To obtain pi(x, y, z), a Spotlight localization system needs to support three main functions, namely an Event Distribution Function E(t), an Event Detection Function D(e), and a Localization Function L(Ti) .
+4-21:They are formally defined as follows: Definition 1: An event e(t, p) is a detectable phenomenon that occurs at time t and at point p є A .
+4-22:Examples of events are light, heat, smoke, sound, etc .
+4-23:Let Ti={ti1, ti2, …, tin} be a set of n timestamps of events detected by a node i .
+4-24:Let T"={t1", t2", …, tm"} be the set of m timestamps of events generated in the sensor field .
+4-25:Definition 2: The Event Detection Function D(e) defines a binary detection algorithm .
+4-26:For a given event e: ⎩ ⎨ ⎧ = detectednotisEventfalse, detectedisEventtrue, )( e e eD (1) Definition 3: The Event Distribution Function E(t) defines the point distribution of events within A at time t: }{ truepteDApptE =∧∈= )),((|)( (2) Definition 4: The Localization Function L(Ti) defines a localization algorithm with input Ti, a sequence of timestamps of events detected by the node i: I iTt i tETL ∈ = )()( (3) Figure 2 .
+4-27:Spotlight system architecture As shown in Figure 2, the Event Detection Function D(e) is supported by the sensor nodes .
+4-28:It is used to determine whether an external event happens or not .
+4-29:It can be implemented through either a simple threshold based detection algorithm or other advanced digital signal processing techniques .
+4-30:The Event Distribution E(t) and Localization Functions L(Ti) are implemented by a Spotlight device .
+4-31:The Localization function is an aggregation algorithm which calculates the intersection of multiple sets of points .
+4-32:The Event Distribution Function E(t) describes the distribution of events over time .
+4-33:It is the core of the Spotlight system and it is much more sophisticated than the other two functions .
+4-34:Due to the fact that E(t) is realized by the Spotlight device, the hardware requirements for the sensor nodes remain minimal .
+4-35:With the support of these three functions, the localization process goes as follows: 1) A Spotlight device distributes events in the space A over a period of time .
+4-36:2) During the event distribution, sensor nodes record the time sequence Ti = {ti1, ti2, …, tin} at which they detect the events .
+4-37:3) After the event distribution, each sensor node sends the detection time sequence back to the Spotlight device .
+4-38:4) The Spotlight device estimates the location of a sensor node i, using the time sequence Ti and the known E(t) function .
+4-39:The Event Distribution Function E(t) is the core technique used in the Spotlight system and we propose three designs for it .
+4-40:These designs have different tradeoffs and the cost comparison is presented in Section 3.5 .
+4-41:3.2 Point Scan Event Distribution Function To illustrate the basic functionality of a Spotlight system, we start with a simple sensor system where a set of nodes are placed along a straight line (A = [0, l] R) .
+4-42:The Spotlight device generates point events (e.g .
+4-43:light spots) along this line with constant speed s .
+4-44:The set of timestamps of events detected by a node i is Ti={ti1} .
+4-45:The Event Distribution Function E(t) is: ⊂ }{ stpApptE *)( =∧∈= (4) where t ∈[0, l s] .
+4-46:The resulting localization function is: }{ sttETL iii ∗== 11 )()( (5) where D(e(ti1, pi)) = true for node i positioned at pi .
+4-47:The implementation of the Event Distribution Function E(t) is straightforward .
+4-48:As shown in Figure 3(a), when a light source emits a beam of light with the angular speed given by d s dt d S )(cos 2 αα α == , a light spot event with constant speed s is generated along the line situated at distance d .
+4-49:Figure 3 .
+4-50:The implementation of the Point Scan EDF The Point Scan EDF can be generalized to the case where nodes are placed in a two dimensional plane R2 .
+4-51:In this case, the Spotlight system progressively scans the plane to activate the sensor nodes .
+4-52:This scenario is depicted in Figure 3(b) .
+4-53:3.3 Line Scan Event Distribution Function Some devices, e.g .
+4-54:diode lasers, can generate an entire line of events simultaneously .
+4-55:With these devices, we can support the Line Scan Event Distributed Function easily .
+4-56:We assume that the 15 sensor nodes are placed in a two dimensional plane (A=[l x l] ⊂R2 ) and that the scanning speed is s .
+4-57:The set of timestamps of events detected by a node i is Ti={ti1, ti2} .
+4-58:Figure 4 .
+4-59:The implementation of the Line Scan EDF The Line Scan EDF is defined as follows: ( ){ ks,*tpl][0,kp(t)E kkx =∧∈= } for t ∈[0, l s] and: ({ ls*tk,pl][0,kp(t)E kky −=∧∈= )} (6) for t ∈[ l s, 2l s] .
+4-60:U )()()( tEtEtE yx= We can localize a node by calculating the intersection of the two event lines, as shown in Figure 4 .
+4-61:More formally: I )()()( 21 iii tEtETL = (7) where D(e(ti1, pi)) = true, D(e(ti2, pi)) = true for node i positioned at pi .
+4-62:3.4 Area Cover Event Distribution Function Other devices, such as light projectors, can generate events that cover an area .
+4-63:This allows the implementation of the Area Cover EDF .
+4-64:The idea of Area Cover EDF is to partition the space A into multiple sections and assign a unique binary identifier, called code, to each section .
+4-65:Let"s suppose that the localization is done within a plane (A R2 code k .
+4-66:The Area Cover EDF is then defined as follows: ⊂ ⎩ ⎨ ⎧ = 0iskofbitjthiffalse, 1iskofbitjthiftrue, ),( jkBIT (8) }{ truetkBITSpptE k =∧∈= ),()( and the corresponding localization algorithm is: { ∧∈=∧== )),(()(|)( iki TtiftruetkBITSCOGppTL (9)})`),(( iTTtiffalsetkBIT −∈= where COG(Sk) denotes the center of gravity of Sk .
+4-67:We illustrate the Area Cover EDF with a simple example .
+4-68:As shown in Figure 5, the plane A is divided in 16 sections .
+4-69:Each section Sk has a unique code k .
+4-70:The Spotlight device distributes the events according to these codes: at time j a section Sk is covered by an event (lit by light), if jth bit of k is 1 .
+4-71:A node residing anywhere in the section Sk is localized at the center of gravity of that section .
+4-72:For example, nodes within section 1010 detect the events at time T = {1, 3} .
+4-73:At t = 4 the section where each node resides can be determined A more accurate localization requires a finer partitioning of the plane, hence the number of bits in the code will increase .
+4-74:Considering the noise that is present in a real, outdoor environment, it is easy to observe that a relatively small error in detecting the correct bit pattern could result in a large localization error .
+4-75:Returning to the example shown in Figure 5, if a sensor node is located in the section with code 0000, and due to the noise, at time t = 3, it thinks it detected an event, it will incorrectly conclude that its code is 1000, and it positions itself two squares below its correct position .
+4-76:The localization accuracy can deteriorate even further, if multiple errors are present in the transmission of the code .
+4-77:A natural solution to this problem is to use error correcting codes, which greatly reduce the probability of an error, without paying the price of a re transmission, or lengthening the transmission time too much .
+4-78:Several error correction schemes have been proposed in the past .
+4-79:Two of the most notable ones are the Hamming (7, 4) code and the Golay (23, 12) code .
+4-80:Both are perfect linear error correcting codes .
+4-81:The Hamming coding scheme can detect up to 2 bit errors and correct 1 bit errors .
+4-82:In the Hamming (7, 4) scheme, a message having 4 bits of data (e.g .
+4-83:dddd, where d is a data bit) is transmitted as a 7 bit word by adding 3 error control bits (e.g .
+4-84:dddpdpp, where p is a parity bit) .
+4-85:Figure 5 .
+4-86:The steps of Area Cover EDF .
+4-87:The events cover the shaded areas .
+4-88:The steps of the Area Cover technique, when using Hamming (7, 4) scheme are shown in Figure 6 .
+4-89:Golay codes can detect up to 6 bit errors and correct up to 3 bit errors .
+4-90:Similar to Hamming (7, 4), Golay constructs a 23 bit codeword from 12 bit data .
+4-91:Golay codes have been used in satellite and spacecraft data transmission and are most suitable in cases where short codeword lengths are desirable .
+4-92:Figure 6 .
+4-93:The steps of Area Cover EDF with Hamming (7, 4) ECC .
+4-94:The events cover the shaded areas .
+4-95:Let"s assume a 1 bit error probability of 0.01, and a 12 bit message that needs to be transmitted .
+4-96:The probability of a failed transmission is thus: 0.11, if no error detection and correction is used; 0.0061 for the Hamming scheme (i.e .
+4-97:more than 1 bit error); and 0.000076 for the Golay scheme (i.e .
+4-98:more than 3 bit errors) .
+4-99:Golay is thus 80 times more robust that the Hamming scheme, which is 20 times more robust than the no error correction scheme .
+4-100:16 Considering that a limited number of corrections is possible by any coding scheme, a natural question arises: can we minimize the localization error when there are errors that can not be corrected? This can be achieved by a clever placement of codes in the grid .
+4-101:As shown in Figure 7, the placement A, in the presence of a 1 bit error has a smaller average localization error when compared to the placement B .
+4-102:The objective of our code placement strategy is to reduce the total Euclidean distance between all pairs of codes with Hamming distances smaller than K, the largest number of expected 1 bit errors .
+4-103:Figure 7 .
+4-104:Different code placement strategies Formally, a placement is represented by a function P: [0, l]d → C, which assigns a code to every coordinate in the d dimensional cube of size l (e.g., in the planar case, we place codes in a 2dimensional grid) .
+4-105:We denote by dE(i, j) the Euclidean distance and by dH(i, j) the Hamming distance between two codes i and j .
+4-106:In a noisy environment, dH(i,j) determines the crossover probability between the two codes .
+4-107:For the case of independent detections, the higher dH(i, j) is, the lower the crossover probability will be .
+4-108:The objective function is defined as follows: d Kjid E ljiwherejid H ],0[,}),(min{ ),( ∈∑≤ (10) Equation 10 is a non linear and non convex programming problem .
+4-109:In general, it is analytically hard to obtain the global minimum .
+4-110:To overcome this, we propose a Greedy Placement method to obtain suboptimal results .
+4-111:In this method we initialize the 2 dimensional grid with codes .
+4-112:Then we swap the codes within the grid repeatedly, to minimize the objective function .
+4-113:For each swap, we greedily chose a pair of codes, which can reduce the objective function (Equation 10) the most .
+4-114:The proposed Greedy Placement method ends when no swap of codes can further minimize the objective function .
+4-115:For evaluation, we compared the average localization error in the presence of K bit error for two strategies: the proposed Greedy Placement and the Row Major Placement (it places the codes consecutively in the array, in row first order) .
+4-116:0 0.5 1 1.5 2 2.5 3 3.5 4 4 9 16 25 36 49 64 81 Grid Size LocalizationError[gridunit] Row major Consecutive placement Greedy Placement Figure 8 .
+4-117:Localization error with code placement and no ECC As Figure 8 shows, if no error detection correction capability is present and 1 bit errors occur, then our Greedy Placement method can reduce the localization error by an average 23%, when compared to the Row Major Placement .
+4-118:If error detection and correction schemes are used (e.g .
+4-119:Hamming (12, 8) and if 3 bit errors occur (K=3) then the Greedy Placement method reduces localization error by 12%, when compared to the Row Major Placement, as shown in Figure 9 .
+4-120:If K=1, then there is no benefit in using the Greedy Placement method, since the 1 bit error can be corrected by the Hamming scheme .
+4-121:0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 4 9 16 25 36 49 64 81 Grid Size LocalizationError[gridunit] Row major Consecutive placement Greedy Placement Figure 9 .
+4-122:Localization error with code placement and Hamming ECC 3.5 Event Distribution Function Analysis Although all three aforementioned techniques are able to localize the sensor nodes, they differ in the localization time, communication overhead and energy consumed by the Event Distribution Function (let"s call it Event Overhead) .
+4-123:Let"s assume that all sensor nodes are located in a square with edge size D, and that the Spotlight device can generate N events (e.g .
+4-124:Point, Line and Area Cover events) every second and that the maximum tolerable localization error is r .
+4-125:Table 1 presents the execution cost comparison of the three different Spotlight techniques .
+4-126:Table 1 .
+4-127:Execution Cost Comparison Criterion Point Scan Line Scan Area Cover Localization Time NrD ) ( 22 NrD ) 2( NDlogr # Detections 1 2 logrD # Time Stamps 1 2 logrD Event Overhead D2 2D2 D2 logrD 2 Table 1 indicates that the Event Overhead for the Point Scan method is the smallest it requires a one time coverage of the area, hence the D2 .
+4-128:However the Point Scan takes a much longer time than the Area Cover technique, which finishes in logrD seconds .
+4-129:The Line Scan method trades the Event Overhead well with the localization time .
+4-130:By doubling the Event Overhead, the Line Scan method takes only r 2D percentage of time to complete, when compared with the Point Scan method .
+4-131:From Table 1, it can be observed that the execution costs do not depend on the number of sensor nodes to be localized .
+4-132:It is important to remark the ratio Event Overhead per unit time, which is indicative of the power requirement for the Spotlight device .
+4-133:This ratio is constant for the Point Scan (r2 *N) while it grows linearly with area, for the Area Cover (D2 *N 2) .
+4-134:If the deployment area is very large, the use of the Area Cover EDF is prohibitively expensive, if not impossible .
+4-135:For practical purposes, the Area Cover is a viable solution for small to medium size networks, while the Line Scan works well for large networks .
+4-136:We discuss the implications of the power requirement for the Spotlight device, and offer a hybrid solution in Section 6 .
+4-137:3.6 Localization Error Analysis The accuracy of localization with the Spotlight technique depends on many aspects .
+4-138:The major factors that were considered during the implementation of the system are discussed below: 17 Time Synchronization: the Spotlight system exchanges time stamps between sensor nodes and the Spotlight device .
+4-139:It is necessary for the system to reach consensus on global time through synchronization .
+4-140:Due to the uncertainty in hardware processing and wireless communication, we can only confine such errors within certain bounds (e.g .
+4-141:one jiffy) .
+4-142:An imprecise input to the Localization Function L(T) leads to an error in node localization .
+4-143:Uncertainty in Detection: the sampling rate of the sensor nodes is finite, consequently, there will be an unpredictable delay between the time when an event is truly present and when the sensor node detects it .
+4-144:Lower sampling rates will generate larger localizations errors .
+4-145:Size of the Event: the events distributed by the Spotlight device can not be infinitely small .
+4-146:If a node detects one event, it is hard for it to estimate the exact location of itself within the event .
+4-147:Realization of Event Distribution Function: EDF defines locations of events at time t .
+4-148:Due to the limited accuracy (e.g .
+4-149:mechanical imprecision), a Spotlight device might generate events which locate differently from where these events are supposed to be .
+4-150:It is important to remark that the localization error is independent of the number of sensor nodes in the network .
+4-151:This independence, as well as the aforementioned independence of the execution cost, indicate the very good scalability properties (with the number of sensor nodes, but not with the area of deployment) that the Spotlight system possesses. .
+5 SYSTEM IMPLEMENTATION :
+5-1:For our performance evaluation we implemented two Spotlight systems .
+5-2:Using these two implementations we were able to investigate the full spectrum of Event Distribution techniques, proposed in Section 3, at a reduced one time cost (less than $1,000) .
+5-3:The first implementation, called μSpotlight, had a short range (10 20 meters), however its capability of generating the entire spectrum of EDFs made it very useful .
+5-4:We used this implementation mainly to investigate the capabilities of the Spotlight system and tune its performance .
+5-5:It was not intended to represent the full solution, but only a scaled down version of the system .
+5-6:The second implementation, the Spotlight system, had a much longer range (as far as 6500m), but it was limited in the types of EDFs that it can generate .
+5-7:The goal of this implementation was to show how the Spotlight system works in a real, outdoor environment, and show correlations with the experimental results obtained from the μSpotlight system implementation .
+5-8:In the remaining part of this section, we describe how we implemented the three components (Event Distribution, Event Detection and Localization functions) of the Spotlight architecture, and the time synchronization protocol, a key component of our system .
+5-9:4.1 µSpotlight System The first system we built, called μSpotlight, used as the Spotlight device, an Infocus LD530 projector connected to an IBM Thinkpad laptop .
+5-10:The system is shown in Figure 10 .
+5-11:The Event Distribution Function was implemented as a Java GUI .
+5-12:Due to the stringent timing requirements and the delay caused by the buffering in the windowing system of a PC, we used the Full Screen Exclusive Mode API provided by Java2 .
+5-13:This allowed us to bypass the windowing system and more precisely estimate the time when an event is displayed by the projector, hence a higher accuracy of timestamps of events .
+5-14:Because of the 50Hz refresh rate of our projector, there was still an uncertainty in the time stamping of the events of 20msec .
+5-15:We explored the possibility of using and modifying the Linux kernel to expose the vertical synch interrupt, generated by the displaying device after each screen refresh, out of the kernel mode .
+5-16:The performance evaluation results showed, however, that this level of accuracy was not needed .
+5-17:The sensor nodes that we used were Berkeley Mica2 motes equipped with MTS310 multi sensor boards from Crossbow .
+5-18:This sensor board contains a CdSe photo sensor which can detect the light from the projector .
+5-19:Figure 10 .
+5-20:μSpotlight system implementation With this implementation of the Spotlight system, we were able to generate Point, Line and Area Scan events .
+5-21:4.2 Spotlight System The second Spotlight system we built used, as the Spotlight device, diode lasers, a computerized telescope mount (Celestron CG 5GT, shown in Figure 11), and an IBM Thinkpad laptop .
+5-22:The laptop was connected, through RS232 interfaces, to the telescope mount and to one XSM600CA [7] mote, acting as a base station .
+5-23:The diode lasers we used ranged in power from 7mW to 35mW .
+5-24:They emitted at 650nm, close to the point of highest sensitivity for CdSe photosensor .
+5-25:The diode lasers were equipped with lenses that allowed us to control the divergence of the beam .
+5-26:Figure 11 .
+5-27:Spotlight system implementation The telescope mount has worm gears for a smooth motion and high precision angular measurements .
+5-28:The two angular measures that we used were the, so called, Alt (from Altitude) and Az (from Azimuth) .
+5-29:In astronomy, the Altitude of a celestial object is its angular distance above or below the celestial horizon, and the Azimuth is the angular distance of an object eastwards of the meridian, along the horizon .
+5-30:18 The laptop computer, through a Java GUI, controls the motion of the telescope mount, orienting it such that a full Point Scan of an area is performed, similar to the one described in Figure 3(b) .
+5-31:For each turning point i, the 3 tuple (Alti and Azi angles and the timestamp ti) is recorded .
+5-32:The Spotlight system uses the timestamp received from a sensor node j, to obtain the angular measures Altj and Azj for its location .
+5-33:For the sensor nodes, we used XSM motes, mainly because of their longer communication range .
+5-34:The XSM mote has the photo sensor embedded in its main board .
+5-35:We had to make minor adjustments to the plastic housing, in order to expose the photo sensor to the outside .
+5-36:The same mote code, written in nesC, for TinyOS, was used for both µSpotlight and Spotlight system implementations .
+5-37:4.3 Event Detection Function D(t) The Event Detection Function aims to detect the beginning of an event and record the time when the event was observed .
+5-38:We implemented a very simple detection function based on the observed maximum value .
+5-39:An event i will be time stamped with time ti, if the reading from the photo sensor dti, fulfills the condition: itdd <Δ+max where dmax is the maximum value reported by the photo sensor before ti and Δ is a constant which ensures that the first large detection gives the timestamp of the event (i.e .
+5-40:small variations around the first large signal are not considered) .
+5-41:Hence Δ guarantees that only sharp changes in the detected value generate an observed event .
+5-42:4.4 Localization Function L(T) The Localization Function is implemented in the Java GUI .
+5-43:It matches the timestamps created by the Event Distribution Function with those reported by the sensor nodes .
+5-44:The Localization Function for the Point Scan EDF has as input a time sequence Ti = {t1}, as reported by node i .
+5-45:The function performs a simple search for the event with a timestamp closest to t1 .
+5-46:If t1 is constrained by: 11 + << nn ee ttt where en and en+1 are two consecutive events, then the obtained location for node i is: 11 , ++ == nn ee yyxx The case for the Line Scan is treated similarly .
+5-47:The input to the Localization Function is the time sequence Ti = {t1, t2} as reported by node i .
+5-48:If the reported timestamps are constrained by: 11 + << nn ee ttt , and 12 + << mm ee ttt where en and en+1 are two consecutive events on the horizontal scan and em and em+1 are two consecutive events on vertical scan, then the inferred location for node i is: 11 , ++ == mn ee yyxx The Localization Function for the Area Cover EDF has as input a timestamp set Ti={ti1, ti2, …, tin} of the n events, detected by node generated by the Spotlight device, T"={t1", t2", …, tm"} .
+5-49:A code di=di1di2…dim is then constructed for each node i, such that dij=1 if tj" ∈Ti and dij=0 if tj" ∉ Ti .
+5-50:The function performs a search for an event with an identical code .
+5-51:If the following condition is true: nei dd = where en is an event with code den, then the inferred location for node i is: nn ee yyxx == , 4.5 Time Synchronization The time synchronization in the Spotlight system consists of two parts: Synchronization between sensor nodes: This is achieved through the Flooding Time Synchronization Protocol [18] .
+5-52:In this protocol, synchronized nodes (the root node is the only synchronized node at the beginning) send time synchronization message to unsynchronized nodes .
+5-53:The sender puts the time stamp into the synchronization message right before the bytes containing the time stamp are transmitted .
+5-54:Once a receiver gets the message, it follows the sender's time and performs the necessary calculations to compensate for the clock drift .
+5-55:Synchronization between the sensor nodes and the Spotlight device: We implemented this part through a two way handshaking between the Spotlight device and one node, used as the base station .
+5-56:The sensor node is attached to the Spotlight device through a serial interface .
+5-57:Figure 12 .
+5-58:Two way synchronization As shown in Figure 12, let"s assume that the Spotlight device sends a synchronization message at local time T1, the sensor node receives it at its local time T2 and acknowledges it at local time T3 (both T2 and T3 are sent back through ACK) .
+5-59:After the Spotlight device receives the ACK, at its local time T4, the time synchronization can be achieved as follows: 2 )()( 4312 TTTT Offset −+− = (11) OffsetTTT spotlightnodeglobal +== We note that Equation 11 assumes that the one trip delays are the same in both directions .
+5-60:In practice this does not hold well enough .
+5-61:To improve the performance, we separate the handshaking process from the timestamp exchanges .
+5-62:The handshaking is done fast, through a 2 byte exchange between the Spotlight device and the sensor node (the timestamps are still recorded, but not sent) .
+5-63:After this fast handshaking, the recorded time stamps are exchanged .
+5-64:The result indicates that this approach can significantly improve the accuracy of time synchronization. .
+6 PERFORMANCE EVALUATION :
+6-1:In this section we present the performance evaluation of the Spotlight systems when using the three event distribution functions, i.e .
+6-2:Point Scan, Line Scan and Area Cover, described in Section 3 .
+6-3:19 For the µSpotlight system we used 10 Mica2 motes .
+6-4:The sensor nodes were attached to a vertically positioned Veltex board .
+6-5:By projecting the light to the sensor nodes, we are able to generate well controlled Point, Line and Area events .
+6-6:The Spotlight device was able to generate events, i.e .
+6-7:project light patterns, covering an area of approximate size 180x140cm2 .
+6-8:The screen resolution for the projector was 1024x768, and the movement of the Point Scan and Line Scan techniques was done through increments (in the appropriate direction) of 10 pixels between events .
+6-9:Each experimental point was obtained from 10 successive runs of the localization procedure .
+6-10:Each set of 10 runs was preceded by a calibration phase, aimed at estimating the total delays (between the Spotlight device and each sensor node) in detecting an event .
+6-11:During the calibration, we created an event covering the entire sensor field (illuminated the entire area) .
+6-12:The timestamp reported by each sensor node, in conjunction with the timestamp created by the Spotlight device were used to obtain the time offset, for each sensor node .
+6-13:More sophisticated calibration procedures have been reported previously [35] .
+6-14:In addition to the time offset, we added a manually configurable parameter, called bias .
+6-15:It was used to best estimate the center of an event .
+6-16:Figure 13 .
+6-17:Deployment site for the Spotlight system For the Spotlight system evaluation, we deployed 10 XSM motes in a football field .
+6-18:The site is shown in Figure 13 (laser beams are depicted with red arrows and sensor nodes with white dots) .
+6-19:Two sets of experiments were run, with the Spotlight device positioned at 46m and at 170m from the sensor field .
+6-20:The sensor nodes were aligned and the Spotlight device executed a Point Scan .
+6-21:The localization system computed the coordinates of the sensor nodes, and the Spotlight device was oriented, through a GoTo command sent to the telescope mount, towards the computed location .
+6-22:In the initial stages of the experiments, we manually measured the localization error .
+6-23:For our experimental evaluation, the metrics of interest were as follows: Localization error, defined as the distance, between the real location and the one obtained from the Spotlight system .
+6-24:Localization duration, defined as the time span between the first and last event .
+6-25:Localization range, defined as the maximum distance between the Spotlight device and the sensor nodes .
+6-26:A Localization Cost function Cost:{{localization accuracy}, {localization duration}} → [0,1] quantifies the trade off between the accuracy in localization and the localization duration .
+6-27:The objective is to minimize the Localization Cost function .
+6-28:By denoting with ei the localization error for the ith scenario, with di the localization duration for the ith scenario, with max(e) the maximum localization error, with max(d) the maximum localization duration, and with α the importance factor, the Localization Cost function is formally defined as: )max( )1( )max( ),( d d e e deCost ii ii ∗−+∗= αα Localization Bias .
+6-29:This metric is used to investigate the effectiveness of the calibration procedure .
+6-30:If, for example, all computed locations have a bias in the west direction, a calibration factor can be used to compensate for the difference .
+6-31:The parameters that we varied during the performance evaluation of our system were: the type of scanning (Point, Line and Area), the size of the event, the duration of the event (for Area Cover), the scanning speed, the power of the laser and the distance between the Spotlight device and sensor field, to estimate the range of the system .
+6-32:5.1 Point Scan μSpotlight system In this experiment, we investigated how the size of the event and the scanning speed affect the localization error .
+6-33:Figure 14 shows the mean localization errors with their standard deviations .
+6-34:It can be observed, that while the scanning speed, varying between 35cm sec and 87cm sec has a minor influence on the localization accuracy, the size of the event has a dramatic effect .
+6-35:0 2 4 6 8 10 12 14 7.0 10.5 14.0 17.5 21.0 24.5 Event Size [cm] Locationerror[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 14 .
+6-36:Localization Error vs .
+6-37:Event Size for the Point Scan EDF The obtained localization error varied from as little as 2cm to over 11cm for the largest event .
+6-38:This dependence can be explained by our Event Detection algorithm: the first detection above a threshold gave the timestamp for the event .
+6-39:The duration of the localization scheme is shown in Figure 15 .
+6-40:The dependency of the localization duration on the size of the event and scanning speed is natural .
+6-41:A bigger event allows a reduction in the total duration of up to 70% .
+6-42:The localization duration is directly proportional to the scanning speed, as expected, and depicted in Figure 15 .
+6-43:0 20 40 60 80 100 120 7.0 10.5 14.0 17.5 21.0 24.5 Event Size [cm] LocalizationDuration[sec] 87cm sec 58cm sec 43cm sec 35cm sec Figure 15 .
+6-44:Localization Duration vs .
+6-45:Event Size for the Point Scan EDF 20 An interesting trade off is between the localization accuracy (usually the most important factor), and the localization time (important in environments where stealthiness is paramount) .
+6-46:Figure 16 shows the Localization Cost function, for α = 0.5 (accuracy and duration are equally important) .
+6-47:As shown in Figure 16, it can be observed that an event size of approximately 10 15cm (depending on the scanning speed) minimizes our Cost function .
+6-48:For α = 1, the same graph would be a monotonically increasing function, while for α = 0, it would be monotonically decreasing function .
+6-49:0.40 0.45 0.50 0.55 0.60 0.65 0.70 5.0 10.0 15.0 20.0 25.0 30.0 Event Size [cm] LocalizationCost[%] 87cm sec 58cm sec 43cm sec 35cm sec Figure 16 .
+6-50:Localization Cost vs .
+6-51:Event Size for the Point Scan EDF 5.2 Line Scan μSpotlight system In a similar manner to the Point Scan EDF, for the Line Scan EDF we were interested in the dependency of the localization error and duration on the size of the event and scanning speed .
+6-52:We represent in Figure 17 the localization error for different event sizes .
+6-53:It is interesting to observe the dependency (concave shape) of the localization error vs .
+6-54:the event size .
+6-55:Moreover, a question that should arise is why the same dependency was not observed in the case of Point Scan EDF .
+6-56:0 1 2 3 4 5 6 7 8 9 10 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] Locationerror[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 17 .
+6-57:Localization Error vs .
+6-58:Event Size for the Line Scan EDF The explanation for this concave dependency is the existence of a bias in location estimation .
+6-59:As a reminder, a bias factor was introduced in order to best estimate the central point of events that have a large size .
+6-60:What Figure 17 shows is the fact that the bias factor was optimal for an event size of approximately 7cm .
+6-61:For events smaller and larger than this, the bias factor was too large, and too small, respectively .
+6-62:Thus, it introduced biased errors in the position estimation .
+6-63:The reason why we did not observe the same dependency in the case of the Point Scan EDF was that we did not experiment with event sizes below 7cm, due to the long time it would have taken to scan the entire field with events as small as 1.7cm .
+6-64:The results for the localization duration as a function of the size of the event are shown in Figure 18 .
+6-65:As shown, the localization duration is directly proportional to the scanning speed .
+6-66:The size of the event has a smaller influence on the localization duration .
+6-67:One can remark the average localization duration of about 10sec, much shorter then the duration obtained in the Point Scan experiment .
+6-68:The Localization Cost function dependency on the event size and scanning speed, for α=0.5, is shown in Figure 19 .
+6-69:The dependency on the scanning speed is very small (the Cost Function achieves a minimum in the same 4 6cm range) .
+6-70:It is interesting to note that this 4 6cm optimal event size is smaller than the one observed in the case of Point Scan EDF .
+6-71:The explanation for this is that the smaller localization duration observed in the Line Scan EDF, allowed a shift (towards smaller event sizes) in the total Localization Cost Function .
+6-72:0 5 10 15 20 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] LocalizationDuration[sec] 87cm sec 58cm sec 43cm sec 35cm sec Figure 18 .
+6-73:Localization Duration vs .
+6-74:Event Size for the Line Scan EDF 0.50 0.55 0.60 0.65 0.70 0.75 0.80 1.0 3.0 5.0 7.0 9.0 11.0 Event Size [cm] LocalizationCost[%] 87cm sec 58cm sec 43cm sec 35cm sec Figure 19 .
+6-75:Cost Function vs .
+6-76:Event Size for the Line Scan EDF During our experiments with the Line Scan EDF, we observed evidence of a bias in location estimation .
+6-77:The estimated locations for all sensor nodes exhibited different biases, for different event sizes .
+6-78:For example, for an event size of 17.5cm, the estimated location for sensor nodes was to the upper left size of the actual location .
+6-79:This was equivalent to an early detection, since our scanning was done from left to right and from top to bottom .
+6-80:The scanning speed did not influence the bias .
+6-81:In order to better understand the observed phenomena, we analyzed our data .
+6-82:Figure 20 shows the bias in the horizontal direction, for different event sizes (the vertical bias was almost identical, and we omit it, due to space constraints) .
+6-83:From Figure 20, one can observe that the smallest observed bias, and hence the most accurate positioning, was for an event of size 7cm .
+6-84:These results are consistent with the observed localization error, shown in Figure 17 .
+6-85:We also adjusted the measured localization error (shown in Figure 17) for the observed bias (shown in Figure 20) .
+6-86:The results of an ideal case of Spotlight Localization system with Line Scan EDF are shown in Figure 21 .
+6-87:The errors are remarkably small, varying between 0.1cm and 0.8cm, with a general trend of higher localization errors for larger event sizes .
+6-88:21 6 5 4 3 2 1 0 1 2 3 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] HorizontalBias[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 20 .
+6-89:Position Estimation Bias for the Line Scan EDF 0.0 0.2 0.4 0.6 0.8 1.0 1.2 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] LocalizationErrorw oBias[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 21 .
+6-90:Position Estimation w o Bias (ideal), for the Line Scan EDF 5.3 Area Cover μSpotlight system In this experiment, we investigated how the number of bits used to quantify the entire sensor field, affected the localization accuracy .
+6-91:In our first experiment we did not use error correcting codes .
+6-92:The results are shown in Figure 22 .
+6-93:0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 6 8 10 12 Number of Bits Locationerror[cm] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 22 .
+6-94:Localization Error vs .
+6-95:Event Size for the Area Cover EDF One can observe a remarkable accuracy, with localization error on the order of 0.3 0.6cm .
+6-96:What is important to observe is the variance in the localization error .
+6-97:In the scenario where 12 bits were used, while the average error was very small, there were a couple of cases, where an incorrect event detection generated a larger than expected error .
+6-98:An example of how this error can occur was described in Section 3.4 .
+6-99:The experimental results, presented in Figure 22, emphasize the need for error correction of the bit patterns observed and reported by the sensor nodes .
+6-100:The localization duration results are shown in Figure 23 .
+6-101:It can be observed that the duration is directly proportional with the number of bits used, with total durations ranging from 3sec, for the least accurate method, to 6 7sec for the most accurate .
+6-102:The duration of an event had a small influence on the total localization time, when considering the same scenario (same number of bits for the code) .
+6-103:The Cost Function dependency on the number of bits in the code, for α=0.5, is shown in Figure 24 .
+6-104:Generally, since the localization duration for the Area Scan can be extremely small, a higher accuracy in the localization is desired .
+6-105:While the Cost function achieves a minimum when 10 bits are used, we attribute the slight increase observed when 12 bits were used to the two 12bit scenarios where larger than the expected errors were observed, namely 6 7mm (as shown in Figure 22) .
+6-106:0 1 2 3 4 5 6 7 8 9 10 6 8 10 12 Number of Bits LocalizationDuration[sec] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 23 .
+6-107:Localization Duration vs .
+6-108:Event Size for the Area Cover EDF 0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 4 6 8 10 12 14 Number of Bits CostFunction[%] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 24 .
+6-109:Cost Function vs .
+6-110:Event Size for the Area Cover EDF 0.4 0.1 0.2 0.5 0.8 1.1 1.4 20 40 60 80 100 Event Duration [ms event] Locationerror[cm] w o ECC w ECC Figure 25 .
+6-111:Localization Error w and w o Error Correction The two problematic scenarios (shown in Figure 22, where for 12 bit codes we observed errors larger than the event size, due to errors in detection) were further explored by using error correction codes .
+6-112:As described in Section 3.3, we implemented an extended Golay (24, 12) error correction mechanism in our location estimation algorithm .
+6-113:The experimental results are depicted in Figure 25, and show a consistent accuracy .
+6-114:The scenario without error correction codes, is simply the same 12 bit code scenario, shown in Figure 22 .
+6-115:We only investigated the 12 bit scenario, due to its match with the 12bit data required by the Golay encoding scheme (extended Golay producing 24 bit codewords) .
+6-116:22 5.4 Point Scan Spotlight system In this section we describe the experiments performed at a football stadium, using our Spotlight system .
+6-117:The hardware that we had available allowed us to evaluate the Point Scan technique of the Spotlight system .
+6-118:In our evaluation, we were interested to see the performance of the system at different ranges .
+6-119:Figures 26 and 27 show the localization error versus the event size at two different ranges: 46m and 170m .
+6-120:Figure 26 shows a remarkable accuracy in localization .
+6-121:The errors are in the centimeter range .
+6-122:Our initial, manual measurements of the localization error were most of the time difficult to make, since the spot of the laser was almost perfectly covering the XSM mote .
+6-123:We are able to achieve localization errors of a few centimeters, which only range based localization schemes are able to achieve [25] .
+6-124:The observed dependency on the size of the event is similar to the one observed in the μSpotlight system evaluation, and shown in Figure 14 .
+6-125:This proved that the μSpotlight system is a viable alternative for investigating complex EDFs, without incurring the costs for the necessary hardware .
+6-126:0 5 10 15 20 25 0 5 10 15 20 25 30 Event Size [cm] LocalizationError[cm] 0.41m sec 0.81m sec 1.7m sec Figure 26 .
+6-127:Localization Error vs .
+6-128:Event Size for Spotlight system at 46m In the experiments performed over a much longer distance between the Spotlight device and sensor network, the average localization error remains very small .
+6-129:Localization errors of 510cm were measured, as Figure 27 shows .
+6-130:We were simply amazed by the accuracy that the system is capable of, when considering that the Spotlight system operated over the length of a football stadium .
+6-131:Throughout our experimentation with the Spotlight system, we have observed localization errors that were simply offsets of real locations .
+6-132:Since the same phenomenon was observed when experimenting with the μSpotlight system, we believe that with auto calibration, the localization error can be further reduced .
+6-133:0 5 10 15 20 25 6 12 18 Event Size [cm] LocalizationError[cm] 0.7m sec 1.4m sec 3m sec Figure 27 .
+6-134:Localization Error vs .
+6-135:Event Size for Spotlight system at 170m The time required for localization using the Spotlight system with a Point Scan EDF, is given by: t=(L*l) (s*Es), where L and l are the dimensions of the sensor network field, s is the scanning speed, and Es is the size of the event .
+6-136:Figure 28 shows the time for localizing a sensor network deployed in an area of size of a football field using the Spotlight system .
+6-137:Here we ignore the message propagation time, from the sensor nodes to the Spotlight device .
+6-138:From Figure 28 it can be observed that the very small localization errors are prohibitively expensive in the case of the Point Scan .
+6-139:When localization errors of up to 1m are tolerable, localization duration can be as low as 4 minutes .
+6-140:Localization durations of 5 10 minutes, and localization errors of 1m are currently state of art in the realm of range free localization schemes .
+6-141:And these results are achieved by using the Point Scan scheme, which required the highest Localization Time, as it was shown in Table 1 .
+6-142:0 5 10 15 20 25 30 35 40 0 25 50 75 100 125 150 Event Size [cm] LocalizationTime[min] 3m sec 6m sec 9m sec Figure 28 .
+6-143:Localization Time vs .
+6-144:Event Size for Spotlight system One important characteristic of the Spotlight system is its range .
+6-145:The two most important factors are the sensitivity of the photosensor and the power of the Spotlight source .
+6-146:We were interested in measuring the range of our Spotlight system, considering our capabilities (MTS310 sensor board and inexpensive, $12 $85, diode laser) .
+6-147:As a result, we measured the intensity of the laser beam, having the same focus, at different distances .
+6-148:The results are shown in Figure 29 .
+6-149:950 1000 1050 1100 0 50 100 150 200 Distance [m] Intensity[ADCcount] 35mW 7mW Figure 29 .
+6-150:Localization Range for the Spotlight system From Figure 29, it can be observed that only a minor decrease in the intensity occurs, due to absorption and possibly our imperfect focusing of the laser beam .
+6-151:A linear fit of the experimental data shows that distances of up to 6500m can be achieved .
+6-152:While we do not expect atmospheric conditions, over large distances, to be similar to our 200m evaluation, there is strong evidence that distances (i.e .
+6-153:altitude) of 1000 2000m can easily be achieved .
+6-154:The angle between the laser beam and the vertical should be minimized (less than 45°), as it reduces the difference between the beam cross section (event size) and the actual projection of the beam on the ground .
+6-155:In a similar manner, we were interested in finding out the maximum size of an event, that can be generated by a COTS laser and that is detectable by the existing photosensor .
+6-156:For this, we 23 varied the divergence of the laser beam and measured the light intensity, as given by the ADC count .
+6-157:The results are shown in Figure 30 .
+6-158:It can be observed that for the less powerful laser, an event size of 1.5m is the limit .
+6-159:For the more powerful laser, the event size can be as high as 4m .
+6-160:Through our extensive performance evaluation results, we have shown that the Spotlight system is a feasible, highly accurate, low cost solution for localization of wireless sensor networks .
+6-161:From our experience with sources of laser radiation, we believe that for small and medium size sensor network deployments, in areas of less than 20,000m2 , the Area Cover scheme is a viable solution .
+6-162:For large size sensor network deployments, the Line Scan, or an incremental use of the Area Cover are very good options .
+6-163:0 200 400 600 800 1000 1200 0 50 100 150 200 Event Size [cm] Intensity[ADCcount] 35mW 7mW Figure 30 .
+6-164:Detectable Event Sizes that can be generated by COTS lasers .
+7 OPTIMIZATIONS/LESSONS LEARNED :
+7-1:6.1 Distributed Spotlight System The proposed design and the implementation of the Spotlight system can be considered centralized, due to the gathering of the sensor data and the execution of the Localization Function L(t) by the Spotlight device .
+7-2:We show that this design can easily be transformed into a distributed one, by offering two solutions .
+7-3:One idea is to disseminate in the network, information about the path of events, generated by the EDF (similar to an equation, describing a path), and let the sensor nodes execute the Localization Function .
+7-4:For example, in the Line Scan scenario, if the starting and ending points for the horizontal and vertical scans, and the times they were reached, are propagated in the network, then any sensor in the network can obtain its location (assuming a constant scanning speed) .
+7-5:A second solution is to use anchor nodes which know their positions .
+7-6:In the case of Line Scan, if three anchors are present, after detecting the presence of the two events, the anchors flood the network with their locations and times of detection .
+7-7:Using the same simple formulas as in the previous scheme, all sensor nodes can infer their positions .
+7-8:6.2 Localization Overhead Reduction Another requirement imposed by the Spotlight system design, is the use of a time synchronization protocol between the Spotlight device and the sensor network .
+7-9:Relaxing this requirement and imposing only a time synchronization protocol among sensor nodes is a very desirable objective .
+7-10:The idea is to use the knowledge that the Spotlight device has about the speed with which the scanning of the sensor field takes place .
+7-11:If the scanning speed is constant (let"s call it s), then the time difference (let"s call it Δt) between the event detections of two sensor nodes is, in fact, an accurate measure of the range between them: d=s*Δt .
+7-12:Hence, the Spotlight system can be used for accurate ranging of the distance between any pair of sensor nodes .
+7-13:An important observation is that this ranging technique does not suffer from limitations of others: small range and directionality for ultrasound, or irregularity, fading and multipath for Received Signal Strength Indicator .
+7-14:After the ranges between nodes have been determined (either in a centralized or distributed manner) graph embedding algorithms can be used for a realization of a rigid graph, describing the sensor network topology .
+7-15:6.3 Dynamic Event Distribution Function E(t) Another system optimization is for environments where the sensor node density is not uniform .
+7-16:One disadvantage of the Line Scan technique, when compared to the Area Cover, is the localization time .
+7-17:An idea is to use two scans: one which uses a large event size (hence larger localization errors), followed by a second scan in which the event size changes dynamically .
+7-18:The first scan is used for identifying the areas with a higher density of sensor nodes .
+7-19:The second scan uses a larger event in areas where the sensor node density is low and a smaller event in areas with a higher sensor node density .
+7-20:A dynamic EDF can also be used when it is very difficult to meet the power requirements for the Spotlight device (imposed by the use of the Area Cover scheme in a very large area) .
+7-21:In this scenario, a hybrid scheme can be used: the first scan (Point Scan) is performed quickly, with a very large event size, and it is meant to identify, roughly, the location of the sensor network .
+7-22:Subsequent Area Cover scans will be executed on smaller portions of the network, until the entire deployment area is localized .
+7-23:6.4 Stealthiness Our implementation of the Spotlight system used visible light for creating events .
+7-24:Using the system during the daylight or in a room well lit, poses challenges due to the solar or fluorescent lamp radiation, which generate a strong background noise .
+7-25:The alternative, which we used in our performance evaluations, was to use the system in a dark room (μSpotlight system) or during the night (Spotlight system) .
+7-26:While using the Spotlight system during the night is a good solution for environments where stealthiness is not important (e.g .
+7-27:environmental sciences) for others (e.g .
+7-28:military applications), divulging the presence and location of a sensor field, could seriously compromise the efficacy of the system .
+7-29:Figure 31 .
+7-30:Fluorescent Light Spectra (top), Spectral Response for CdSe cells (bottom) A solution to this problem, which we experimented with in the µSpotlight system, was to use an optical filter on top of the light 24 sensor .
+7-31:The spectral response of a CdSe photo sensor spans almost the entire visible domain [37], with a peak at about 700nm (Figure 31 bottom) .
+7-32:As shown in Figure 31 top, the fluorescent light has no significant components above 700nm .
+7-33:Hence, a simple red filter (Schott RG 630), which transmits all light with wavelength approximately above 630nm, coupled with an Event Distribution Function that generates events with wavelengths above the same threshold, would allow the use of the system when a fluorescent light is present .
+7-34:A solution for the Spotlight system to be stealthy at night, is to use a source of infra red radiation (i.e .
+7-35:laser) emitting in the range [750, 1000]nm .
+7-36:For a daylight use of the Spotlight system, the challenge is to overcome the strong background of the natural light .
+7-37:A solution we are considering is the use of a narrow band optical filter, centered at the wavelength of the laser radiation .
+7-38:The feasibility and the cost effectiveness of this solution remain to be proven .
+7-39:6.5 Network Deployed in Unknown Terrain A further generalization is when the map of the terrain where the sensor network was deployed is unknown .
+7-40:While this is highly unlikely for many civil applications of wireless sensor network technologies, it is not difficult to imagine military applications where the sensor network is deployed in a hostile and unknown terrain .
+7-41:A solution to this problem is a system that uses two Spotlight devices, or equivalently, the use of the same device from two distinct positions, executing, from each of them, a complete localization procedure .
+7-42:In this scheme, the position of the sensor node is uniquely determined by the intersection of the two location directions obtained by the system .
+7-43:The relative localization (for each pair of Spotlight devices) will require an accurate knowledge of the 3 translation and 3 rigid body rotation parameters for Spotlight"s position and orientation (as mentioned in Section 3) .
+7-44:This generalization is also applicable to scenarios where, due to terrain variations, there is no single aerial point with a direct line of sight to all sensor nodes, e.g .
+7-45:hilly terrain .
+7-46:By executing the localization procedure from different aerial points, the probability of establishing a line of sight with all the nodes, increases .
+7-47:For some military scenarios [1] [12], where open terrain is prevalent, the existence of a line of sight is not a limiting factor .
+7-48:In light of this, the Spotlight system can not be used in forests or indoor environments. .
+8 CONCLUSIONS AND FUTURE WORK :
+8-1:In this paper we presented the design, implementation and evaluation of a localization system for wireless sensor networks, called Spotlight .
+8-2:Our localization solution does not require any additional hardware for the sensor nodes, other than what already exists .
+8-3:All the complexity of the system is encapsulated into a single Spotlight device .
+8-4:Our localization system is reusable, i.e .
+8-5:the costs can be amortized through several deployments, and its performance is not affected by the number of sensor nodes in the network .
+8-6:Our experimental results, obtained from a real system deployed outdoors, show that the localization error is less than 20cm .
+8-7:This error is currently state of art, even for range based localization systems and it is 75% smaller than the error obtained when using GPS devices or when the manual deployment of sensor nodes is a feasible option [31] .
+8-8:As future work, we would like to explore the self calibration and self tuning of the Spotlight system .
+8-9:The accuracy of the system can be further improved if the distribution of the event, instead of a single timestamp, is reported .
+8-10:A generalization could be obtained by reformulating the problem as an angular estimation problem that provides the building blocks for more general localization techniques. .
+9-1:This work was supported by the DARPA IXO office, under the NEST project (grant number F336616 01 C 1905) and by the NSF grant CCR 0098269
+9-2:We would like to thank S
+9-3:Cornwell for allowing us to run experiments in the stadium, M
+9-4:Klopf for his assistance with optics, and anonymous reviewers and our shepherd, Koen Langendoen, for their valuable feedback.
+10-1:A
+10-2:Arora, P
+10-3:Dutta, S
+10-4:Bapat, V
+10-5:Kulathumani, H
+10-6:Zhang, V
+10-7:Naik, V
+10-8:Mittal, H
+10-9:Cao, M
+10-10:Demirbas, M
+10-11:Gouda, Y
+10-12:Choi, T
+10-13:Herman, S
+10-14:Kulharni, U
+10-15:Arumugam, M
+10-16:Nesterenko, A
+10-17:Vora, M
+10-18:Miyashita, A Line in the Sand: A Wireless Sensor Network for Target Detection, Classification and Tracking, in Computer Networks 46(5), 2004
+10-19:P
+10-20:Bahl, V.N
+10-21:Padmanabhan, RADAR: An In Building RFbased User Location and Tracking System, in Proceedings of Infocom, 2000 M
+10-22:Broxton, J
+10-23:Lifton, J
+10-24:Paradiso, Localizing a Sensor Network via Collaborative Processing of Global Stimuli, in Proceedings of EWSN, 2005
+10-25:N
+10-26:Bulusu, J
+10-27:Heidemann, D
+10-28:Estrin, GPS less Low Cost Outdoor Localization for Very Small Devices, in IEEE Personal Communications Magazine, 2000
+10-29:P
+10-30:Corke, R
+10-31:Peterson, D
+10-32:Rus, Networked Robots: Flying Robot Navigation Using a Sensor Net, in ISSR, 2003
+10-33:L
+10-34:Doherty, L
+10-35:E
+10-36:Ghaoui, K
+10-37:Pister, Convex Position Estimation in Wireless Sensor Networks, in Proceedings of Infocom, 2001 P
+10-38:Dutta, M
+10-39:Grimmer, A
+10-40:Arora, S
+10-41:Bibyk, D
+10-42:Culler, Design of a Wireless Sensor Network Platform for Detecting Rare, Random, and Ephemeral Events, in Proceedings of IPSN, 2005
+10-43:E
+10-44:Elnahrawy, X
+10-45:Li, R
+10-46:Martin, The Limits of Localization using RSSI, in Proceedings of SECON, 2004
+10-47:D
+10-48:Fox, W
+10-49:Burgard, S
+10-50:Thrun, Markov Localization for Mobile Robots in Dynamic Environments, in Journal of Artificial Intelligence Research, 1999
+10-51:D
+10-52:Fox, W
+10-53:Burgard, F
+10-54:Dellaert, S
+10-55:Thrun, Monte Carlo Localization: Efficient Position Estimation for Mobile Robots, in Conference on Artificial Intelligence, 2000
+10-56:D
+10-57:Ganesan, B
+10-58:Krishnamachari, A
+10-59:Woo, D
+10-60:Culler, D
+10-61:Estrin, S
+10-62:Wicker, Complex Behaviour at Scale: An Experimental Study of Low Power Wireless Sensor Networks, in Technical Report, UCLA TR 01 0013, 2001
+10-63:T
+10-64:He, S
+10-65:Krishnamurthy, J
+10-66:A
+10-67:Stankovic, T
+10-68:Abdelzaher, L
+10-69:Luo, R
+10-70:Stoleru, T
+10-71:Yan, L
+10-72:Gu, J
+10-73:Hui, B
+10-74:Krogh, An Energy Efficient Surveillance System Using Wireless Sensor Networks, in Proceedings of Mobisys, 2004
+10-75:T
+10-76:He, C
+10-77:Huang, B
+10-78:Blum, J
+10-79:A
+10-80:Stankovic, T
+10-81:Abdelzaher, Range Free Localization Schemes for Large Scale Sensor Networks in Proceedings of Mobicom, 2003
+10-82:L
+10-83:Hu, D
+10-84:Evans, Localization for Mobile Sensor Networks, in Proceedings of Mobicom, 2004
+10-85:Y
+10-86:Kwon, K
+10-87:Mechitov, S
+10-88:Sundresh, W
+10-89:Kim, G
+10-90:Agha, Resilient Localization for Sensor Networks in Outdoor Environments, UIUC Technical Report, 2004
+10-91:25 K
+10-92:Langendoen, N
+10-93:Reijers, Distributed Localization in Wireless Sensor Networks, A Comparative Study, in Computer Networks vol
+10-94:43, 2003
+10-95:K
+10-96:Lorincz, M
+10-97:Welsh, MoteTrack: A Robust, Decentralized Approach to RF Based Location Tracking, in Proceedings of Intl
+10-98:Workshop on Location and Context Awareness, 2005
+10-99:M
+10-100:Maroti, B
+10-101:Kusy, G
+10-102:Simon, A
+10-103:Ledeczi, The Flooding Time Synchronization Protocol, in Proceedings of Sensys, 2004
+10-104:D
+10-105:Moore, J
+10-106:Leonard, D
+10-107:Rus, S
+10-108:Teller, Robust Distributed Network Localization with Noisy Range Measurements in Proceedings of Sensys, 2004
+10-109:R
+10-110:Nagpal, H
+10-111:Shrobe, J
+10-112:Bachrach, Organizing a Global Coordinate System for Local Information on an Adhoc Sensor Network, in A.I Memo 1666
+10-113:MIT A.I
+10-114:Laboratory, 1999
+10-115:D
+10-116:Niculescu, B
+10-117:Nath, DV based Positioning in Adhoc Networks in Telecommunication Systems, vol
+10-118:22, 2003
+10-119:E
+10-120:Osterweil, T
+10-121:Schoellhammer, M
+10-122:Rahimi, M
+10-123:Wimbrow, T
+10-124:Stathopoulos, L.Girod, M
+10-125:Mysore, A.Wu, D
+10-126:Estrin, The Extensible Sensing System, CENS UCLA poster, 2004
+10-127:B.W
+10-128:Parkinson, J
+10-129:Spilker, Global Positioning System: theory and applications, in Progress in Aeronautics and Astronautics, vol
+10-130:163, 1996
+10-131:P.N
+10-132:Pathirana, N
+10-133:Bulusu, A
+10-134:Savkin, S
+10-135:Jha, Node Localization Using Mobile Robots in Delay Tolerant Sensor Networks, in Transactions on Mobile Computing, 2004
+10-136:N
+10-137:Priyantha, A
+10-138:Chakaborty, H
+10-139:Balakrishnan, The Cricket Location support System, in Proceedings of MobiCom, 2000
+10-140:N
+10-141:Priyantha, H
+10-142:Balakrishnan, E
+10-143:Demaine, S
+10-144:Teller, Mobile Assisted Topology Generation for Auto Localization in Sensor Networks, in Proceedings of Infocom, 2005
+10-145:A
+10-146:Savvides, C
+10-147:Han, M
+10-148:Srivastava, Dynamic Fine grained localization in Adhoc Networks of Sensors, in Proceedings of MobiCom, 2001
+10-149:Y
+10-150:Shang, W
+10-151:Ruml, Improved MDS Based Localization, in Proceedings of Infocom, 2004
+10-152:M
+10-153:Sichitiu, V
+10-154:Ramadurai,Localization of Wireless Sensor Networks with a Mobile Beacon, in Proceedings of MASS, 2004
+10-155:G
+10-156:Simon, M
+10-157:Maroti, A
+10-158:Ledeczi, G
+10-159:Balogh, B
+10-160:Kusy, A
+10-161:Nadas, G
+10-162:Pap, J
+10-163:Sallai, Sensor Network Base Countersniper System, in Proceedings of Sensys, 2004
+10-164:R
+10-165:Stoleru, T
+10-166:He, J.A
+10-167:Stankovic, Walking GPS: A Practical Solution for Localization in Manually Deployed Wireless Sensor Networks, in Proceedings of EmNetS, 2004
+10-168:R
+10-169:Stoleru, J.A
+10-170:Stankovic, Probability Grid: A Location Estimation Scheme for Wireless Sensor Networks, in Proceedings of SECON, 2004
+10-171:R
+10-172:Szewczyk, A
+10-173:Mainwaring, J
+10-174:Polastre, J
+10-175:Anderson, D
+10-176:Culler, An Analysis of a Large Scale Habitat Monitoring Application, in Proceedings of Sensys, 2004
+10-177:K
+10-178:Whitehouse, A
+10-179:Woo, C
+10-180:Karlof, F
+10-181:Jiang, D
+10-182:Culler, The Effects of Ranging Noise on Multi hop Localization: An Empirical Study, in Proceedings of IPSN, 2005
+10-183:K
+10-184:Whitehouse, D
+10-185:Culler, Calibration as Parameter Estimation in Sensor Networks, in Proceedings of WSNA, 2002
+10-186:P
+10-187:Zhang, C
+10-188:Sadler, S
+10-189:A
+10-190:Lyon, M
+10-191:Martonosi, Hardware Design Experiences in ZebraNet, in Proceedings of Sensys, 2004
+10-192:Selco Products Co
+10-193:Construction and Characteristics of CdS Cells, product datasheet, 2004 26
+picture:

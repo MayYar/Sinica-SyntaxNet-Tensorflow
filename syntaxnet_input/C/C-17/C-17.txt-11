@@ -1,0 +1,50 @@
+We now analyze deployment issues associated with conference management .
+How are domains to be organized to maximize the number of participants able to join? To address this, we define some useful parameters .
+? Let d be the number of different domains in which there are active clients in a given conference .
+? Let Mi be the number of active clients present in domain i ( di ??1 ) in a given conference .
+The total number of active clients in the conference is thus ?= = d i iMM 1 .
+? Let C be the maximum number of audio streams a Conference Server can handle in a packet time, also called capacity .
+C is set according to the processing power of the weakest CS in the conference but as it cannot be assumed that we know it a priori, it can be set according to some minimum system requirement a machine must meet in order to take part in a conference .
+? Let NMax be the number of output streams a CS has to send to other CSs in remote domains (see section 6.1) .
+We will set NMax =3 (=|F|), according to [15] .
+The optimization problem is now to find the value of d that maximizes the total number of clients Mi served by one CS in a domain with capacity C .
+We first dispose the case where the capacity is not exceeded (the existing CS is not overloaded), and then proceed to the case where there exists a need to create more CSs when a single CS is overloaded .
+We assume that clients are equally distributed amongst the domains, as we may not have information to assume an a priori distribution of the clients .
+We can specify no more than an upper bound on the number of clients acceptable, given the number of active domains d .
+7.1 Conferencing with only One Level of CSs In this subsection, we consider that we have only one CS, i.e., a unique M CS in each domain .
+Thus it cannot be overloaded .
+We consider that the system works as outlined in section 6.1
+In parallel, it also receives NMax streams for every other CSs before taking a decision on which NMax streams will be selected, sent and played out at each individual clients .
+For system stability, any CS in the conference should be able to handle its local clients in addition to the audio packets from other domains .
+Clearly then, the following inequality must hold for every domain
+C d M 50 9 234 100 17 884 150 26 1950 200 34 3434 250 42 5334 300 51 7650 350 59 10384 400 67 13534 450 76 17100 500 84 21084 Table 1 .
+Values of d and M computed for some values of C with NMax = 3 .
+In Table 1, we give the values of d and M that were computed using (8) and (6) with NMax = 3 .
+We see that the values of d and M, being dependent of C, are therefore based on the weakest CS .
+We see that there is a trade off between M and d .
+We could admit more domains in the conference, but at the expense of restricting the total number of clients M in the conference .
+While implementing and testing the Conference Servers on a Pentium III 1.4 GHz running Windows NT, we were able to set C=300 .
+But with the advent of faster computers (> 3 GHz), one can easily set C to higher values and determine d and M accordingly .
+Fig .
+4 shows a contour plot and Fig .
+5, a 3D mesh showing optimized solutions for CSs of different capacities .
+These lead us to maximize the number of domains, and hence, to maximize the total number of clients based on the capacity of various CSs .
+In Fig .
+4, the individual curves represent the total number of clients targeted, and we select a lower value of d, for capacity C, for targeted M to reduce traffic on WAN .
+Fig .
+5 represents a different perspective of the same data in 3D .
+Fig .
+4 .
+Contour Plot of Capacity versus Optimum number of domains for various conference sizes 7.2 Conferencing with Two Levels of CSs Now considering the case where the number of clients in a particular domain is too large, i.e., d M Mi ? (9) one has to avoid the denial of service for new clients due to overloading of Conference Server .
+This problem can be solved by introducing a second level of CSs inside the given domain, as in Fig .
+6 .
+The existing M CS creates a Slave CS (S CS) that can handle up to C end users and to which it transfers all its active clients .
+Here, the system works differently as outlined in section 6.1
+Each newly created S CS must run on a separate machine .
+The M CS has to create more S CSs if the number of active clients exceeds C in the course of the conference after the transfer .
+With this mechanism, the M CS will be able to create utmost ?? ? ?? ? ??? = Max Max N dNC U )1( S CSs, (10) as it must handle 3 (= NMax) packets for each local S CSs and 3 (= NMax) packets from each other remote domains .
+We can then calculate the maximum theoretical number of active clients CUMi ?= in each domain as well as M, for the whole conference as CUdM ??= .
+Fig .
+5 .
+3D Plot of Capacity versus Optimum number of domains for various conference sizes Of course, one could further create a third level in the hierarchy, giving the possibility of accommodating even more clients .
+This may be unnecessary as the number of possible clients is large enough with two levels. .

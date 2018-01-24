@@ -1,0 +1,28 @@
+Sentences within each document can be re ordered so that sentences that are very likely to appear in snippets are at the front of the document, hence processed first at query time, while less likely sentences are relegated to the rear of the document .
+Then, during query time, if k sentences with a score exceeding some threshold are found before the entire document is processed, the remainder of the document is ignored .
+Further, to improve caching, only the head of each document can be stored in the cache, with the tail residing on disk .
+Note that we assume that the search engine is to provide cached copies of a document that is, the exact text of the document as it was indexed then this would be serviced by another sub system in Figure 1, and not from the altered copy we store in the Snippet Engine .
+We now introduce four sentence reordering approaches .
+document usually best describe the document content [12] .
+Thus simply processing a document in order should yield a quality snippet .
+Unfortunately, however, web documents are often not well authored, with little editorial or professional writing skills brought to bear on the creation of a work of literary merit .
+More importantly, perhaps, is that we are producing query biased snippets, and there is no guarantee that query terms will appear in sentences towards the front of a document .
+of a significant sentence as containing a cluster of significant terms [12], a concept found to work well by Tombros and Sanderson [20] .
+Let fd,t be the frequency of term t in document d, then term t is determined to be significant if fd,t ? 8 < 
+A bracketed section is defined as a group of terms where the leftmost and rightmost terms are significant terms, and no significant terms in the bracketed section are divided by more than four non significant terms .
+The score of a bracketed section is the square of the number of significant words falling in the section, divided by the total number of words in the entire sentence .
+The a priori score for a sentence is computed as the maximum of all scores for the bracketed sections of the sentence .
+We then sort the sentences by this score .
+and a small number of queries make up a large volume of total searches [9] .
+In order to take advantage of this bias, sentences that contain many past query terms should be promoted to the front of a document, while sentences that contain few query terms should be demoted .
+In this scheme, the sentences are sorted by the number of sentence terms that occur in the query log .
+To ensure that long sentences do not dominate over shorter qualitative sentences the score assigned to each sentence is divided by the number of terms in that sentence giving each sentence a score between 0 and 1 .
+but repeated terms in the sentence are only counted once .
+By re ordering sentences using schemes ST, QLt or QLu, we aim to terminate snippet generation earlier than if Natural Order is used, but still produce sentences with the same number of unique query terms (d in Figure 2), total number of query terms (c), the same positional score (h+ ) and the same maximum span (k) .
+Accordingly, we conducted experiments comparing the methods, the first 80% of the Excite query log was used to reorder sentences when required, and the final 20% for testing .
+Figure 6 shows the differences in snippet scoring components using each of the three methods over the Natural Order method .
+It is clear that sorting sentences using the Significant Terms method leads to the smallest change in the sentence scoring components .
+The greatest change over all methods is in the sentence position (h + ) component of the score, which is to be expected as their is no guarantee that leading and heading sentences are processed at all after sentences are re ordered .
+The second most affected component is the number of distinct query terms in a returned sentence, but if only the first 50% of the document is processed with the ST method, there is a drop of only 8% in the number of distinct query terms found in snippets .
+Depending how these various components are weighted to compute an overall snippet score, one can argue that there is little overall affect on scores when processing only half the document using the ST method .
+Span (k) Term Count (c) Sentence Position (h + l) Distinct Terms (d) 40% 50% 60% 70% ST QLt QLu ST QLt QLu ST QLt QLu ST QLt QLu ST QLt QLu RelativedifferencetoNaturalOrder Documents size used 90% 80% 70% 60% 50% 0% 10% 20% 30% Figure 6

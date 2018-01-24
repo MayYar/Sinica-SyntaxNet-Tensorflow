@@ -1,0 +1,61 @@
+While other researchers have evaluated the display of Web search results through user studies presenting users with a small number of different techniques and asking them to complete experimental tasks we approach the problem by extracting implicit feedback from search engine logs .
+Examining user behavior in situ allows us to consider many more queries and caption characteristics, with the volume of available data compensating for the lack of a controlled lab environment .
+The problem remains of interpreting the information in these logs as implicit indicators of user preferences, and in this matter we are guided by the work of Joachims et al .
+[9] .
+We consider caption pairs, which appear adjacent to one another in the result list .
+Our primary tool for examining the influence of caption features is a type of pattern observed with respect to these caption pairs, which we call a clickthrough inversion .
+A clickthrough inversion occurs at position N when the result at position N receives fewer clicks than the result at position N + 1 .
+Following Joachims et al .
+[9], we interpret a clickthrough inversion as indicating a preference for the lower ranking result, overcoming any trust bias .
+For simplicity, in the remainder of this paper we refer to the higher ranking caption in a pair as caption A and the lower ranking caption as caption B .
+3.1 Extracting clickthroughs For the experiments reported in this paper, we sampled a subset of the queries and clickthroughs from the logs of the Windows Live search engine over a period of 3 4 days on three separate occasions
+For simplicity we restricted our sample to queries submitted to the US English interface and ignored any queries containing complex or non alphanumeric terms (e.g .
+operators and phrases) .
+At the end of each sampling period, we downloaded captions for the queries associated with the clickthrough sample .
+When identifying clickthroughs in search engine logs, we consider only the first clickthrough action taken by a user after entering a query and viewing the result page .
+Users are identified by IP address, which is a reasonably reliable method of eliminating multiple results from a single user, at the cost of falsely eliminating results from multiple users sharing the same address .
+By focusing on the initial clickthrough, we hope to capture a user"s impression of the relative relevance within a caption pair when first encountered .
+If the user later clicks on other results or re issues the same query, we ignore these actions .
+Any preference captured by a clickthrough inversion is therefore a preference among a group of users issuing a particular query, rather than a preference on the part of a single user .
+In the remainder of the paper, we use the term clickthrough to refer only to this initial action .
+Given the dynamic nature of the Web and the volumes of data involved, search engine logs are bound to contain considerable noise .
+For example, even over a period of hours or minutes the order of results for a given query can change, with some results dropping out of the top ten and new ones appearing .
+For this reason, we retained clickthroughs for a specific combination of a query and a result only if this result appears in a consistent position for at least 50% of the clickthroughs .
+Clickthroughs for the same result when it appeared at other positions were discarded .
+For similar reasons, if we did not detect at least ten clickthroughs for a particular query during the sampling period, no clickthroughs for that query were retained .
+10 20 30 40 50 60 70 80 90 100 1 2 3 4 5 6 7 8 9 10 clickthroughpercent position a) craigslist 10 20 30 40 50 60 70 80 90 100 1 2 3 4 5 6 7 8 9 10 clickthroughpercent position b) periodic table of elements 10 20 30 40 50 60 70 80 90 100 1 2 3 4 5 6 7 8 9 10 clickthroughpercent position c) kids online games Figure 2
+The outcome at the end of each sampling period is a set of records, with each record describing the clickthroughs for a given query result combination .
+Each record includes a query, a result position, a title, a snippet, a URL, the number of clickthroughs for this result, and the total number of clickthroughs for this query .
+We then processed this set to generate clickthrough curves and identify inversions .
+3.2 Clickthrough curves It could be argued that under ideal circumstances, clickthrough inversions would not be present in search engine logs .
+A hypothetical perfect search engine would respond to a query by placing the result most likely to be relevant first in the result list .
+Each caption would appropriately summarize the content of the linked page and its relationship to the query, allowing users to make accurate judgments .
+Later results would complement earlier ones, linking to novel or supplementary material, and ordered by their interest to the greatest number of users .
+Figure 2 provides clickthrough curves for three example queries .
+For each example, we plot the percentage of clickthroughs against position for the top ten results .
+The first query (craigslist) is stereotypically navigational, showing a spike at the correct answer (www.craigslist.org) .
+The second query is informational in the sense of Lee et al .
+[10] (periodic table of elements) .
+Its curve is flatter and less skewed toward a single result .
+For both queries, the number of clickthroughs is consistent with the result positions, with the percentage of clickthroughs decreasing monotonically as position increases, the ideal behavior .
+Regrettably, no search engine is perfect, and clickthrough inversions are seen for many queries .
+For example, for the third query (kids online games) the clickthrough curve exhibits a number of clickthrough inversions, with an apparent preference for the result at position 4 .
+Several causes may be enlisted to explain the presence of an inversion in a clickthrough curve .
+The search engine may have failed in its primary goal, ranking more relevant results below less relevant results .
+Even when the relative ranking is appropriate, a caption may fail to reflect the content of the underlying page with respect to the query, leading the user to make an incorrect judgment .
+Before turning to the second case, we address the first, and examine the extent to which relevance alone may explain these inversions .
+3.3 Relevance The simplest explanation for the presence of a clickthrough inversion is a relevance difference between the higher ranking member of caption pair and the lower ranking member .
+In order to examine the extent to which relevance plays a role in clickthrough inversions, we conducted an initial experiment using a set of 1,811 queries with associated judgments created as part of on going work .
+Over a four day period, we sampled the search engine logs and extracted over one hundred thousand clicks involving these queries .
+From these clicks we identified 355 clickthrough inversions, satisfying the criteria of section 3.1, where relevance judgments existed for both pages .
+The relevance judgments were made by independent assessors viewing the pages themselves, rather than the captions .
+Relevance was assessed on a 6 point scale .
+The outcome is presented in figure 3, which shows the explicit judgments for the 355 clickthrough inversions .
+In all of these cases, there were more clicks on the lower ranked member of the Relationship Number Percent rel(A) < rel(B) 119 33.5% rel(A) = rel(B) 134 37.7% rel(A) > rel(B) 102 28.7% Figure 3
+Compares relevance between the higher ranking member of a caption pair (rel(A)) to the relevance of the lower ranking member (rel(B)), where caption A received fewer clicks than caption B .
+pair .
+The figure shows the corresponding relevance judgments .
+For example, the first row rel(A) < rel(B), indicates that the higher ranking member of pair was rated as less relevant than the lower ranking member of the pair .
+As we see in the figure, relevance alone appears inadequate to explain the majority of clickthrough inversions .
+For twothirds of the inversions (236), the page associated with caption A is at least as relevant as the page associated with caption B .
+For 28.7% of the inversions, A has greater relevance than B, which received the greater number of clickthroughs. .

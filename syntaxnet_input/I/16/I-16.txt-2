@@ -1,0 +1,32 @@
+Electronic displays are increasingly being used within public environments, such as airports, city centres and retail stores, in order to advertise commercial products, or to entertain and inform passersby .
+Recently, researchers have begun to investigate how the content of such displays may be varied dynamically over time in order to increase its variety, relevance and exposure [9] .
+Particular research attention has focused on the need to take into account the dynamic nature of the display"s audience, and to this end, a number of interactive public displays have been proposed .
+These displays have typically addressed the needs of a closed set of known users with pre defined interests and requirements, and have facilitated communication with these users through the active use of handheld devices such as PDAs or phones [3, 7] .
+As such, these systems assume prior knowledge about the target audience, and require either that a single user has exclusive access to the display, or that users carry specific tracking devices so that their presence can be identified [6, 11] .
+However, these approaches fail to work in public spaces, where no prior knowledge regarding the users who may view the display exists, and where such displays need to react to the presence of several users simultaneously .
+By contrast, Payne et al .
+have developed an intelligent public display system, named BluScreen, that detects and tracks users through the Bluetooth enabled devices that they carry with them everyday [8] .
+Within this system, a decentralised multi agent auction mechanism is used to efficiently allocate advertising time on each public display .
+Each advert is represented by an individual advertising agent that maintains a history of users who have already been exposed to the advert .
+This agent then seeks to acquire advertising cycles (during which it can display its advert on the public displays) by submitting bids to a marketplace agent who implements a sealed bid auction .
+The value of these bids is based upon the number of users who are currently present in front of the screen, the history of these users, and an externally derived estimate of the value of exposing an advert to a user .
+In this paper, we present an advanced bidding agent that significantly extends the sophistication of this approach .
+In particular, we consider the more general setting in which it is impossible to determine an a priori valuation for exposing an advert to a user .
+This is likely to be the case for BluScreen installations within private organisations where the items being advertised are forthcoming events or news items of interest to employees and visitors, and thus have no direct monetary value (indeed in this case bidding is likely to be conducted in some virtual currency) .
+In addition, it is also likely to be the case within new commercial installations where limited market experience makes estimating a valuation impossible .
+In both cases, it is more appropriate to assume that an advertising agents will be assigned a total advertising budget, and that it will have a limited period of time in which to spend this budget (particularly so where the adverts are for forthcoming events) .
+The advertising agent is then simply tasked with using this budget to maximum effect (i.e .
+to achieve the maximum possible advert exposure within this time period) .
+Now, in order to achieve this goal, the advertising agent must be capable of modelling the behaviour of the users in order to predict the number who will be present in any future advertising cycle .
+In addition, it must also understand the auction environment in which 263 978 81 904262 7 5 c 2007 IFAAMAS it competes, in order that it may make best use of its limited budget .
+Thus, in developing an advanced bidding agent that achieves this, we advance the state of the art in four key ways
+We show how these agents can then calculate the expected number of users who will be present during any future advertising cycle .
+advertising agents to model the probability of winning any given auction when a specific amount is bid .
+The cumulative form of the gamma distribution is used to represent this probability, and its parameters are fitted using observations of both the closing price of previous auctions, and the bids that that advertising agent itself submits .
+agent derives no additional benefit by showing an advert to a single user more than once, causes the expected utility of each future advertising cycle to be dependent on the expected outcome of all the auctions that precede it .
+We thus present a stochastic optimisation algorithm based upon simulated annealing that enables the advertising agent to calculate the optimal sequence of bids that maximises its expected utility .
+outperforms a simple strategy with none of these features (within an heterogenous population the advertising agents who use the advanced bidding strategy are able to expose their adverts to 25% more users than those using the simple bidding strategy), and we show that it performs within 7.5% of that of a centralised optimiser with perfect knowledge of the number of users who will arrival and depart in all future advertising cycles .
+The remainder of this paper is organised as follows
+Section 3 describes the prototype BluScreen system that motivates our work .
+In section 4 we present a detailed description of the auction allocation mechanism, and in section 5 we describe our advanced bidding strategy for the advertising agents .
+In section 6 we present an empirical validation of our approach, and finally, we conclude in section 7. .

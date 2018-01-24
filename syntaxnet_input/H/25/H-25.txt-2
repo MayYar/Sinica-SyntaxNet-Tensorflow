@@ -1,0 +1,29 @@
+In the language modeling approach to information retrieval, feedback is often modeled as estimating an improved query model or relevance model based on a set of feedback documents [25, 13] .
+This is in line with the traditional way of doing relevance feedback presenting a user with documents passages for relevance judgment and then extracting terms from the judged documents or passages to expand the initial query .
+It is an indirect way of seeking user"s assistance for query model construction, in the sense that the refined query model (based on terms) is learned through feedback documents passages, which are high level structures of terms .
+It has the disadvantage that irrelevant terms, which occur along with relevant ones in the judged content, may be erroneously used for query expansion, causing undesired effects .
+For example, for the TREC query Hubble telescope achievements, when a relevant document talks more about the telescope"s repair than its discoveries, irrelevant terms such as spacewalk can be added into the modified query .
+We can consider a more direct way to involve a user in query model improvement, without an intermediary step of document feedback that can introduce noise .
+The idea is to present a (reasonable) number of individual terms to the user and ask him her to judge the relevance of each term or directly specify their probabilities in the query model .
+This strategy has been discussed in [15], but to our knowledge, it has not been seriously studied in existing language modeling literature .
+Compared to traditional relevance feedback, this term based approach to interactive query model refinement has several advantages .
+First, the user has better control of the final query model through direct manipulation of terms
+This avoids the risk of bringing unwanted terms into the query model, although sometimes the user introduces low quality terms .
+Second, because a term takes less time to judge than a document"s full text or summary, and as few as around 20 presented terms can bring significant improvement in retrieval performance (as we will show later), term feedback makes it faster to gather user feedback .
+This is especially helpful for interactive adhoc search .
+Third, sometimes there are no relevant documents in the top N of the initially retrieved results if the topic is hard .
+This is often true when N is constrained to be small, which arises from the fact that the user is unwilling to judge too many documents .
+In this case, relevance feedback is useless, as no relevant document can be leveraged on, but term feedback is still often helpful, by allowing relevant terms to be picked from irrelevant documents .
+During our participation in the TREC 2005 HARD Track and continued study afterward, we explored how to exploit term feedback from the user to construct improved query models for information retrieval in the language modeling approach .
+We identified two key subtasks of term based feedback, i.e., pre feedback presentation term selection and post feedback query model construction, with effective algorithms developed for both .
+We imposed a secondary cluster structure on terms and found that a cluster view sheds additional insight into the user"s information need, and provides a good way of utilizing term feedback .
+Through experiments we found that term feedback improves significantly over the nonfeedback baseline, even though the user often makes mistakes in relevance judgment .
+Among our algorithms, the one with best retrieval performance is TCFB, the combination of TFB, the direct term feedback algorithm, and CFB, the cluster based feedback algorithm .
+We also varied the number of feedback terms and observed reasonable improvement even at low numbers .
+Finally, by comparing term feedback with document level feedback, we found it to be a viable alternative to the latter with competitive retrieval performance .
+The rest of the paper is organized as follows .
+Section 2 discusses some related work .
+Section 4 outlines our general approach to term feedback .
+We present our method for presentation term selection in Section 3 and algorithms for query model construction in Section 5 .
+The experiment results are given in Section 6 .
+Section 7 concludes this paper. .

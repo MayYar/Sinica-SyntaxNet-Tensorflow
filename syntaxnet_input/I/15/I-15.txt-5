@@ -1,0 +1,90 @@
+SHARING 4.1 Overall Method Given a network =( , ) of agents and a set of queries , each agent maintains indices for routing queries to the right agents, as well as acquaintances" profiles for advertising its information provision abilities to those interested .
+To capture information about pieces of information accessible by the agents, each agent maintains a routing index that is realized as a set of tuples of the form < , , > .
+Each such tuple specifies the number of information items in category that can be reached by , such that ( ) { } .
+This specifies the of to with respect to the information category .
+As it can be noticed, each tuple corresponds either to the agent itself (specifying the pieces of information classified in available to its local repository) or to an acquaintance of the agent (recording the pieces of information in category available to the acquaintance agent and to agents that can be reached through this acquaintance) .
+The routing index is exploited for the propagation of queries to the right agents
+Considering an agent , the profile model of some of its acquaintances , denoted by is a set of tuples < , >, maintained by .
+Such a tuple specifies the probability that the acquaintance is interested to pieces of information in category subsequently, such a probability is also denoted by ) .
+Formally, the profile model of an acquaintance of is { , >| ( ) and } .
+Profile models are exploited by the agents to decide where to ¡¥advertise" their information provision abilities .
+Given two acquaintances and in , the information searching and sharing process proceeds as it is depicted in Figure 1
+When that the query is sent to from the agent , then has to update the profile of concerning the category increasing the probability that is interested to information in When this probability is greater than a threshold value (due to the queries about that has sent to ), then assesses that it is highly Figure 1 .
+Typical pattern for information sharing between two acquaintances (numbers show the sequence of tasks) Aj Ai The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 249 probable for to be interested about information in category .
+This leads to inform about its information provision abilities as far as the category is concerned .
+This information is being used by to update its index about .
+This index is being exploited by to further propagate queries, and it is further propagated to those interested in .
+Moreover, the profile of maintained by guides to propagate changes concerning its information provision abilities to .
+The above method has the following features
+(b) It can be used by agents to adapt safely and effectively to dynamic networks .
+(c) It supports the acquisition and exploitation of different types of locally available information for the ¡¥tuning" process .
+(d) It extends the tokenbased method for information sharing (as it was originally proposed in [12,13]) in two respects
+Therefore, it paves the way for the use of token based methods for semantic peer to peer systems .
+This is further described in section 4.3 .
+(d) It provides a more sophisticated way for agents to update routing indices than that originally proposed in [2] .
+This is done by gathering and exploiting acquaintances" profiles for effective information sharing, avoiding unnecessary and cyclic updates that may result to misleading information about agents" information provision abilities .
+This is further described in the next sub section .
+4.2 Routing Indices As already specified, given a network of agents and the set of agent"s acquaintances, the routing index of (denoted by ) is a collection of at most | | indexing tuples < , > .
+The key idea is that given such an index and a request concerning , will forward this request to if the resources available (i.e .
+the information abilities of to ) can best serve this request .
+To compute the information abilities of to , all tuples < , > concerning all agents in ( ) { } must be aggregated .
+Crespo and Garcia Molina [2] examine various types of aggregations .
+In this paper, given some tuples < >,< , ¡K> maintained by the agent , their aggregation is the tuple < , > .
+This gives information concerning the pieces of information that can be provided through , but it does not distinguish what each of "s acquaintances can provide
+Without considering the interests of its acquaintances, may compute aggregations concerning agents in ( ) { } { } and advertise share its information provision abilities to each agent in ( ) .
+For instance, given the network configuration depicted in Figure 2 and a category , agent sends the aggregation of the tuples concerning agents in ( ) { } { } (denoted as ( , )) to agent , which records the tuple < > .
+Similarly the aggregation of the tuples concerning the agents in ( ) { } { } (denoted as ( )) is sent to the agent , which also records the tuple < > .
+It must be noticed that and record the information provision abilities of each from its own point of view .
+Every time the tuple that models the information provision abilities of an agent changes, the aggregation has to re compute and send the new aggregation to the appropriate neighbors in the way described above .
+Then, its neighbors have to propagate these updates to their acquaintances, and so on .
+Figure 2.Aggregating and sharing information provision indices .
+Routing indices may be misleading and lead to inefficiency in arbitrary graphs containing cycles .
+The exploitation of acquaintances" profiles can provide solutions to these deficiencies .
+Each agent propagates its information provision abilities concerning a category only to these acquaintances that have high interest in this category .
+As it has been mentioned, an agent expresses its interest in a category by propagating queries about it .
+Therefore, indices concerning a category are propagated in the inverse direction in the paths to which queries about are propagated .
+Indices are propagated as long as agents in the path have a high interest in .
+Queries can not be propagated in a cyclic fashion since an agent serves and propagates queries that have not been served by it in a previous time point .
+Therefore, due to their relation to queries, indices are not propagated in a cyclic fashion, as well .
+However, there is still a specific case where cycles can not be avoided .
+Such a case is shown in Figure 3
+Cyclic pattern for the sharing of indices .
+While the propagation of the query causes the propagation of information provision abilities of agents in a non cyclic way (since the agent A recognizes that has been served), the query causes the propagation of information abilities of A to other agents in the network, causing, in conjunction to the propagation of indices due to a cyclic update of indices .
+4.3 Profiles The key assumption behind the exploitation of acquaintances" profiles, as it was originally proposed in [12,13], is that for an agent to pass a specific information item, this agent has a high interest on it or to related information .
+As already said, in our case, acquaintances" profiles are created based on received queries and specify the interests of acquaintances to specific information categories .
+Given the query sent from to , has to record not only the interest of to , but Ak A2 A Notation Acquaintance relation Flow of query Flow of indices due to Flow of query Flow of indices due to 250 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) the interest of to all the related classes, given their semantic similarity to To measure the similarity between two ontology classes we use the similarity function [0,1] [7]
+and are parameters scaling the contribution of shortest path length and , respectively .
+Based on previous works we choose =0.2 and =0.6 as optimal values .
+It must be noticed that we measure similarity between sub concepts, assigning a very low similarity value between concepts that are not related by the sub concept relation .
+This is due to that, each query about information in category can be answered by information in any sub category of close enough to Given a threshold value 0.3, 0.3 indicates that an agent interested in is also interested in , while <0.3 indicates that an agent interested in is unlikely to be interested in .
+This threshold value was chosen after some empirical experiments with ontologies .
+The update of "s assessment on pc based on an incoming query from is computed by leveraging Bayes Rule as follows [12,13]
+The second case updates the interests of agents other than the requesting one, in a way that ensures that normalization works .
+It must be noticed that in contrast to [12,13], the computation has been changed in favour to the agent that passed the query .
+The profiles of acquaintances enable an agent to decide where and which advertisements to be sent .
+Specifically, for each and for which is greater than a threshold value (currently set to 0.5), the agent aggregates the vectors ( ) of each agent ( ) { } { }and sends the tuple ( , ) to .
+Also, given a high , when a change to an index concerning occurs (e.g .
+due to a change in "s local repository, or due to that the set of its acquaintances changed), sends the updated aggregated index entry to .
+Doing so, the agent which is highly interested to pieces of information in category updates its index so as to become aware of the information provision abilities of as far as the category is concerned .
+4.4 Tuning Tuning is performed seamlessly to searching
+As their profiles are getting updated, agents receive the aggregated indices of their acquaintances, becoming aware of their information provision abilities on information categories to which they are probably interested .
+Given these indices, agents further propagate queries to acquaintances that are more likely to serve queries, and so on .
+Concerning the routing index and the profiles maintained by an agent , it must be pointed that does not need to record all possible tuples, i.e .
+| | | { }|
+Initially, agents do not possess profiles of their acquaintances .
+For indices there are two alternatives
+Given a query, agents propagate this query to those acquaintances that have the highest information provision abilities .
+In the no initialization of indices case where an agent does not initially possess information about its acquaintances" abilities, it may initially propagate a query to all of them, resulting to a pure flooding approach; or it may propagate the query randomly to a percentage of them .
+In the initialization of indices case, where an agent initially possesses information about its acquaintances" local repository, it can propagate queries to all or to a percentage of those that can best serve the request .
+We considered both cases in our experiments .
+Given a static setting where agents do not shift their expertise, and the distribution of information pieces does not change, the network will eventually reach a state where no information concerning agents" information abilities will need to be propagated and no agents" profiles will need to be updated
+In a dynamic setting, agents may shift their expertise, their interests, they may leave the network at will, or welcome new agents that join the network and bring new information provision abilities, new interests and new types of queries .
+In this paper we study settings where agents may leave or join the network .
+This requires agents to adapt safely and effectively .
+Towards this goal, in case an agent does not receive a reply from one of its acquaintances within a time interval, then it retracts all the indices and the profile concerning the missing acquaintance and repropagates the queries that have been sent to the missing agent since the last successful handshake, to other agents .
+In case a new agent joins the network, then its acquaintances that are getting aware of its presence propagate all the queries that have processed by them in the last time points (currently is set to 6) to the newcomer .
+This is done so as to inform the newcomer about their interests and initiate information sharing. .

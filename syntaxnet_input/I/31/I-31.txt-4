@@ -1,0 +1,106 @@
+SYNTAX AND SEMANTICS The language of Judgment Aggregation Logic (jal) is parameterised by a set of agents £U = {1, 2, .
+.
+.
+, n} (we will assume that there are at least two agents) and an agenda A .
+The following atomic propositions are used
+This language will be formally interpreted in structures consisting of an agenda item, a judgment profile and a judgment aggregation function; informally, i means that the agenda item is in agent i"s judgment set in the current judgment profile; £m means that the agenda item is in the aggregated judgment set of the current judgment profile; hp means that the agenda item is p; £p means that £p is true in every judgment profile; £p means that £p is true in every agenda item .
+We define £r = ? ?£r, intuitively meaning £r is true for some judgment profile, and £r = ? ?£r, intuitively meaning £r is true for some agenda item, as usual, in addition to the usual derived propositional connectives .
+We now define the formal semantics of L(£U, A) .
+A model wrt .
+L(£U, A) and underlying logic L is a judgment aggregation rule f over A .
+Recall that J(A, L)n denotes the set of complete and Lconsistent judgment profiles over A .
+A table is a tuple T = f, £^, p such that f is a model, £^ ? J(A, L)n and p ? A .
+A formula is interpreted on a table as follows .
+f, £^, p |=L hq ? p = q f, £^, p |=L i ? p ? £^i f, £^, p |=L £m ? p ? f(£^) f, £^, p |=L £r ? ?£^ ? J(A, L)n f, £^ , p |=L £r f, £^, p |=L £r ? ?p ? A f, £^, p |=L £r f, £^, p |=L £p ? £r ? f, £^, p |=L £p and f, £^, p |=L £r f, £^, p |=L ?£p ? f, £^, p |=L £p So, e.g., we have that f, £^, p |=L i?£U i if everybody chooses p in £^ .
+Example 1 .
+A committee of three agents are voting on the following three propositions
+One possible voting scenario is illustrated in the left part of Table 1 .
+In the table, the results of proposition wise majority voting, i.e., the JAR fmaj accepting a proposition iff it is accepted by a majority of the agents, are also p p ¡÷ q q 1 yes yes yes 2 no yes yes 3 yes no no fmaj yes yes yes 1 mdc 2 mcd 3 cmd Fmaj mcd Table 1
+This example can be modelled by taking the agenda to be A = {p, p ¡÷ q, q, ?p, ?(p ¡÷ q), ?q} (recall that agendas are closed under single negation) and L to be propositional logic .
+The agents" votes can be modelled by the following judgment profile
+We then have that
+Note that this formula does not depend on which agenda item is on the table.) ? fmaj, £^, p |=L ((1 ? 2) ? (2 ? 3) ? (1 ? 3)) (there is some judgment profile on which all agents agree on p .
+Note that this formula does not depend on which judgment profile is on the table.) ? fmaj, £^, p |=L ((1 ? 2) ? (2 ? 3) ? (1 ? 3)) (there is some judgment profile on which all agents agree on all agenda items .
+Note that this formula does not depend on any of the elements on the table.) ? fmaj, £^, p |=L £m ? G?{1,2,3},|G|?2 i?G i (the JAR fmaj implements majority voting) We write f |=L £p iff f, £^, p |=L £p for every £^ over A and p ? A; |=L £p iff f |=L £p for all models f .
+Given a possible property of a JAR, such as, e.g., independence, we say that a formula expresses the property if the formula is true in an aggregation rule f iff f has the property .
+Note that when we are given a formula £p ? L(£U, A), validity, i.e., |=L £p, is defined with respect to models of the particular language L(£U, A) defined over the particular agenda A (and similar for validity with respect to a JAR, i.e., f |=L £p) .
+The agenda, like the set of agents £U, is given when we define the language, and is thus implicit in the interpretation of the language1 .
+Let an outcome o be a maximal conjunction of literals (?)1, .
+.
+.
+, (?)n .
+The set O is the set of all possible outcomes .
+Note that the decision of the society is not incorporated here
+3.1 Model Checking Model checking is currently one of the most active areas of research with respect to reasoning in modal logics [4], and it is natural to investigate the complexity of this problem for judgment aggregation logic .
+Intuitively, the model checking problem for judgment aggregation logic is as follows
+568 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) While this problem is easy to understand mathematically, it presents some difficulties if we want to analyse it from a computational point of view .
+Specifically, the problem lies in the representation of the judgment aggregation rule, f .
+Recall that this function maps judgment profiles to complete and consistent judgment sets .
+A JAR must be defined for all judgment profiles over some agenda, i.e., it must produce an output for all these possible inputs .
+But how are we to represent such a rule? The simplest representation of a function f 
+However, this is not a feasible representation for JARs, as there will be exponentially many judgment profiles in the size of the agenda, and so the representation would be unfeasibly large in practice .
+If we did assume this representation for JARs, then it is not hard to see that model checking for our logic would be decidable in polynomial time
+However, we emphasise that this result is of no practical significance, since it assumes an unreasonable representation for models a representation that simply could not be used in practice for examples of anything other than trivial size .
+So, what is a more realistic representation for JARs? Let us say a representation Rf of a JAR f is reasonable if
+There are, of course, many such representations Rf for JARs f .
+Here, we will look at one very general one
+The requirement that the Turing machine should be polynomially bounded roughly corresponds to the requirement that a JAR is reasonable to compute; if there is some JAR that cannot be represented by such a machine, then it is arguably of little value, since it could not be used in practice2 .
+With such a representation, we can investigate the complexity of our model checking problem .
+In modal logics, the usual source of complexity, over and above the classical logic connectives, is the modal operators .
+With respect to judgment aggregation logic, the operator quantifies over all judgment profiles, and hence over all consistent subsets of the agenda .
+It follows that this is a rather powerful operator
+In contrast, the operator quantifies over members of the agenda, and is hence much weaker, from a computational perspective (we can think of it as a conjunction over elements of the agenda) .
+The power of the quantifier suggests that the complexity of model checking judgment aggregation logic over relatively succinct representations of JAR is going to be relatively high; we now prove that the complexity of model checking judgment aggregation logic is as hard as solving a polynomial number of np hard problems [9, pp.424 429] .
+Theorem 2 .
+The model checking problem for judgment aggregation logic, assuming the representation of JARs described above, is £Gp 2 hard; it is np hard even if the formula to be checked is of the form £r, where £r contains no further or operators .
+Proof .
+For £Gp 2 hardness, we reduce snsat (sequentially nested 2 Of course, we have no general way of checking whether any given Turing machine is guaranteed to terminate in polynomial time; the problem is undecidable .
+As a consequence, we cannot always check whether a particular Turing machine representation of a JAR meets our requirements .
+However, this does not prevent specific JARs being so represented, with corresponding proofs that they terminate in polynomial time .
+satisfiability) .
+An instance is given by a series of equations of the form z1 = ?X1.£p1(X1) z2 = ?X2.£p2(X2, z1) z3 = ?X3.£p3(X3, z1, z2) .
+.
+.
+zk = ?Xk.£pk(Xk, z1, .
+.
+.
+, zk?1) where X1, .
+.
+.
+, Xk are disjoint sets of variables, and each £pi(Y) is a propositional logic formula over the variables Y; the idea is we first check whether £p1(X1) is satisfiable, and if it is, we assign z1 the value true, otherwise assign it false; we then check whether £p2 is satisfiable under the assumption that z1 takes the value just derived, and so on .
+Thus the result of each equation depends on the value of the previous one .
+The goal is to determine whether zk is true .
+To reduce this problem to judgment aggregation logic model checking, we first fix the JAR
+(Clearly this can be implemented by a polynomially bounded Turing machine.) The agenda is assumed to contain the variables X1 ¡å ¡P ¡P ¡P ¡å Xk ¡å {z1, .
+.
+.
+, zk} and their negations .
+We fix the initial judgment profile £^ to be X1 ¡å¡P ¡P ¡P¡åXk ¡å{z1, .
+.
+.
+, zk}, and fix p = x1 .
+Given a variable xi, define x? i to be (hxi ?1) .
+If £pi is one of the formulae £p1, .
+.
+.
+, £pk, define £p? i to be the formula obtained from £pi by systematically substituting x? i for each variable xi and z? i similarly .
+Now, we define the function £ii for natural numbers i > 0 as
+And we define the formula to be model checked as
+The proof of the latter half of the theorem is immediate from the special case where k = 1 .
+3.2 Some Properties We have thus defined a language which can be used to express properties of judgment aggregation rules .
+An interesting question is then
+In Section 5 we give a complete axiomatisation of all of them .
+Recall that we defined the set O of outcomes as the set of all conjunctions with exactly one, possibly negated, atom from £U .
+Let P = {o ? £m, o ? ?£m 
+Let denote exclusive or .
+We have that
+In fact this principle can be strengthened to |=L ( i ? ?j) ¡÷ (?i ? j) |=L x for any x ? {i, ?i, £m, ?£m 
+|=L (i ? j) there exist admissible judgment sets such that agents i and j always agree .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 569 The interpretation of formulae depends on the agenda A and the underlying logic L, in the quantification over the set J(A, L)n of admissible, e.g., complete and L consistent, judgment profiles .
+Note that this means that some jal formula might be valid under one underlying logic, while not under another .
+For example, if the agenda contains some formula which is inconsistent in the underlying logic (and, by implication, some tautology), then the following hold
+One such agenda and underlying logic will be discussed in Section 6. .

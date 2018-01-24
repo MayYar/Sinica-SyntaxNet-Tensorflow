@@ -1,0 +1,61 @@
+SAVINGS FROM A PRUNED INDEX Typically, a search engine downloads documents from the Web and maintains a local inverted index that is used to answer queries quickly .
+Inverted indexes .
+Assume that we have collected a set of documents D = {D1, .
+.
+.
+, DM } and that we have extracted all the terms T = {t1, .
+.
+.
+, tn} from the documents .
+For every single term ti ? T we maintain a list I(ti) of document IDs that contain ti .
+Every entry in I(ti) is called a posting and can be extended to include additional information, such as how many times ti appears in a document, the positions of ti in the document, whether ti is bold italic, etc .
+The set of all the lists I = {I(t1), .
+.
+.
+, I(tn)} is our inverted index .
+2.1 Two tier index architecture Search engines are accepting an enormous number of queries every day from eager users searching for relevant information .
+For example, Google is estimated to answer more than 250 million user queries per day .
+In order to cope with this huge query load, search engines typically replicate their index across a large cluster of machines as the following example illustrates
+The size of its full inverted index IF is larger than what can be stored in a single machine, so each copy of IF is stored across four different machines .
+We also suppose that one copy of IF can handle the query load of 1000 queries sec .
+Assuming that the search engine gets 5000 queries sec, it needs to replicate IF five times to handle the load .
+Overall, the search engine needs to maintain 4 กั 5 = 20 machines in its cluster .
+2 While fully replicating the entire index IF multiple times is a straightforward way to scale to a large number of queries, typical query loads at search engines exhibit certain localities, allowing for significant reduction in cost by replicating only a small portion of the full index .
+In principle, this is typically done by pruning a full index IF to create a smaller, pruned index (or p index) IP , which contains a subset of the documents that are likely to be returned as top results .
+Given the p index, search engines operate by employing a twotier index architecture as we show in Figure 1(b)
+In the cases where a p index cannot compute the answer (e.g .
+was unable to find enough documents to return to the user) the query is answered by redirecting it to the 2nd tier, where we maintain a full index IF .
+The following example illustrates the potential reduction in the query processing cost by employing this two tier index architecture .
+Example 2 Assume the same parameter settings as in Example 1 .
+That is, the search engine gets a query load of 5000 queries sec Algorithm 2.1 Computation of answer with correctness guarantee Input q = ({t1, .
+.
+.
+, tn}, [i, i + k]) where {t1, .
+.
+.
+, tn}
+and every copy of an index (both the full IF and p index IP ) can handle up to 1000 queries sec .
+Also assume that the size of IP is one fourth of IF and thus can be stored on a single machine .
+Finally, suppose that the p indexes can handle 80% of the user queries by themselves and only forward the remaining 20% queries to IF .
+Under this setting, since all 5000 sec user queries are first directed to a p index, five copies of IP are needed in the 1st tier .
+For the 2nd tier, since 20% (or 1000 queries sec) are forwarded, we need to maintain one copy of IF to handle the load .
+Overall we need a total of 9 machines (five machines for the five copies of IP and four machines for one copy of IF ) .
+Compared to Example 1, this is more than 50% reduction in the number of machines .
+2 The above example demonstrates the potential cost saving achieved by using a p index .
+However, the two tier architecture may have a significant drawback in terms of its result quality compared to the full replication of IF ; given the fact that the p index contains only a subset of the data of the full index, it is possible that, for some queries, the p index may not contain the top ranked document according to the particular ranking criteria used by the search engine and fail to return it as the top page, leading to noticeable quality degradation in search results .
+Given the fierce competition in the online search market, search engine operators desperately try to avoid any reduction in search quality in order to maximize user satisfaction .
+2.2 Correctness guarantee under two tier architecture How can we avoid the potential degradation of search quality under the two tier architecture? Our basic idea is straightforward
+The algorithm in Figure 2 formalizes this idea .
+In the algorithm, when we compute the result from IP (Step 1), we compute not only the top k result A, but also the correctness indicator function C defined as follows
+C is set to 1 if A is guaranteed to be identical (i.e .
+same results in the same order) to the result computed from the full index IF .
+If it is possible that A is different, C is set to 0 .
+2 Note that the algorithm returns the result from IP (Step 3) only when it is identical to the result from IF (condition C = 1 in Step 2) .
+Otherwise, the algorithm recomputes and returns the result from the full index IF (Step 5) .
+Therefore, the algorithm is guaranteed to return the same result as the full replication of IF all the time .
+Now, the real challenge is to find out (1) how we can compute the correctness indicator function C and (2) how we should prune the index to make sure that the majority of queries are handled by IP alone .
+Question 1 How can we compute the correctness indicator function C? A straightforward way to calculate C is to compute the top k answer both from IP and IF and compare them .
+This naive solution, however, incurs a cost even higher than the full replication of IF because the answers are computed twice
+Is there any way to compute the correctness indicator function C only from IP without computing the answer from IF ? Question 2 How should we prune IF to IP to realize the maximum cost saving? The effectiveness of Algorithm 2.1 critically depends on how often the correctness indicator function C is evaluated to be 1 .
+If C = 0 for all queries, for example, the answers to all queries will be computed twice, once from IP (Step 1) and once from IF (Step 5), so the performance will be worse than the full replication of IF .
+What will be the optimal way to prune IF to IP , such that C = 1 for a large fraction of queries? In the next few sections, we try to address these questions. .

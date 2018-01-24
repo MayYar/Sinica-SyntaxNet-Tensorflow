@@ -1,0 +1,23 @@
+In this section, we derive an analytical model for the cost of deployment .
+Let ed be the desired minimum exposure for the sensor network to be deployed when a maximum of M sensors are available for deployment .
+The position of sensors are random in the region of interest R and for a given num45 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.05 0.1 0.15 0.2 Minimum exposure Density 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.01 0.02 0.03 0.04 Minimum exposure Density 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 Minimum exposure Density 5 sensors 10 sensors 15 sensors Figure 4
+ber of sensors n, the least exposure e is a random variable .
+Let Fn(x) denote the cumulative distribution function of e, that is the probability that e is less than x, when n sensors are deployed .
+As mentioned in the previous section, there is no a priori guarantee that the exposure ed will be obtained when deploying the sensors .
+If M is the maximum number of sensors available, the confidence of obtaining a least exposure of ed or more is 1?FM (ed) .
+For the proposed solution, we assume that the position of the sensors obtained after a deployment is known so that additional sensors can be deployed if the minimum exposure ed is not reached .
+To evaluate the probability that the exposure ed is reached after additional sensor deployment, we make the following approximation
+This is an approximation since the exposure obtained with n sensors is always higher than the exposure obtained with only k of these n sensors, 1 ? k ? n ? 1 .
+We observed that the re deployment of just a few sensors can substantially modify the coverage of the region, for example when filling empty spaces .
+The approximation is also justified by the loose relation between exposure and sensors positions .
+Indeed, a given minimum exposure can correspond to many different deployment positions, some of which can be easily improved by deploying a few additional sensors (e.g .
+when there is a empty space in the region coverage), some of which can only be improved by deploying many additional sensors (e.g .
+when the sensors are evenly distributed on the region) .
+As the minimum exposure e is a random variable, the cost of deploying the sensors in steps until the desired exposure is reached is also a random variable C .
+We now derive the expression for the expected value of C .
+Let ni be the total number of sensors deployed after each step i for a maximum number of steps S so that nS = M .
+Note that ni ? ni?1 is the number of sensors deployed at step i .
+Also let Cd be the cost of deploying the sensors at each step and Cs be the cost of each sensor .
+If the desired exposure is obtained after the first step, the cost of deployment is Cd + n1Cs, and this 0 5 10 15 20 25 30 35 40 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Number of sensors Probability ed =95% ed =90% ed =85% ed =80% Figure 5
+event happens with probability 1 ? Fn1 (ed) .
+Considering all the possible events, the expected cost is given by E{C} = S?1 i=1 (i.Cd + ni.Cs) i?1 j=1 Fnj (ed) (1 ? Fni (ed)) + (S.Cd + M.Cs) S?1 j=1 Fnj (ed) (4) Note that a different expression is needed for the cost of step S since no additional sensors are deployed after this step even when the desired exposure is not obtained. .

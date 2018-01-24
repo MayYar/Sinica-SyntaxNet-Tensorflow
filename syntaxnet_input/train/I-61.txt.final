@@ -1,0 +1,366 @@
+Distributed Agent-Based Air Traffic Flow Management 
+content:
+1 ABSTRACT :
+1-1:Air traffic flow management is one of the fundamental challenges facing the Federal Aviation Administration today .
+1-2:The FAA estimates that in 2005 alone, there were over 322,000 hours of delays at a cost to the industry in excess of three billion dollars .
+1-3:Finding reliable and adaptive solutions to the flow management problem is of paramount importance if the Next Generation Air Transportation Systems are to achieve the stated goal of accommodating three times the current traffic volume .
+1-4:This problem is particularly complex as it requires the integration and or coordination of many factors including: new data (e.g., changing weather info), potentially conflicting priorities (e.g., different airlines), limited resources (e.g., air traffic controllers) and very heavy traffic volume (e.g., over 40,000 flights over the US airspace) .
+1-5:In this paper we use FACET an air traffic flow simulator developed at NASA and used extensively by the FAA and industry to test a multi agent algorithm for traffic flow management .
+1-6:An agent is associated with a fix (a specific location in 2D space) and its action consists of setting the separation required among the airplanes going though that fix .
+1-7:Agents use reinforcement learning to set this separation and their actions speed up or slow down traffic to manage congestion .
+1-8:Our FACET based results show that agents receiving personalized rewards reduce congestion by up to 45% over agents receiving a global reward and by up to 67% over a current industry approach (Monte Carlo estimation) .
+1-9:I.2.11 [Computing Methodologies]: Artificial .
+2 INTRODUCTION :
+2-1:The efficient, safe and reliable management of our ever increasing air traffic is one of the fundamental challenges facing the aerospace industry today .
+2-2:On a typical day, more than 40,000 commercial flights operate within the US airspace [14] .
+2-3:In order to efficiently and safely route this air traffic, current traffic flow control relies on a centralized, hierarchical routing strategy that performs flow projections ranging from one to six hours .
+2-4:As a consequence, the system is slow to respond to developing weather or airport conditions leading potentially minor local delays to cascade into large regional congestions .
+2-5:In 2005, weather, routing decisions and airport conditions caused 437,667 delays, accounting for 322,272 hours of delays .
+2-6:The total cost of these delays was estimated to exceed three billion dollars by industry [7] .
+2-7:Furthermore, as the traffic flow increases, the current procedures increase the load on the system, the airports, and the air traffic controllers (more aircraft per region) without providing any of them with means to shape the traffic patterns beyond minor reroutes .
+2-8:The Next Generation Air Transportation Systems initiative aims to address this issues and, not only account for a threefold increase in traffic, but also for the increasing heterogeneity of aircraft and decreasing restrictions on flight paths .
+2-9:Unlike many other flow problems where the increasing traffic is to some extent absorbed by improved hardware (e.g., more servers with larger memories and faster CPUs for internet routing) the air traffic domain needs to find mainly algorithmic solutions, as the infrastructure (e.g., number of the airports) will not change significantly to impact the flow problem .
+2-10:There is therefore a strong need to explore new, distributed and adaptive solutions to the air flow control problem .
+2-11:An adaptive, multi agent approach is an ideal fit to this naturally distributed problem where the complex interaction among the aircraft, airports and traffic controllers renders a pre determined centralized solution severely suboptimal at the first deviation from the expected plan .
+2-12:Though a truly distributed and adaptive solution (e.g., free flight where aircraft can choose almost any path) offers the most potential in terms of optimizing flow, it also provides the most radical departure from the current system .
+2-13:As a consequence, a shift to such a system presents tremendous difficulties both in terms of implementation (e.g., scheduling and airport capacity) and political fallout (e.g., impact on air traffic controllers) .
+2-14:In this paper, we focus on agent based system that can be implemented readily .
+2-15:In this approach, we assign an 342 978 81 904262 7 5 c 2007 IFAAMAS agent to a fix, a specific location in 2D .
+2-16:Because aircraft flight plans consist of a sequence of fixes, this representation allows localized fixes (or agents) to have direct impact on the flow of air traffic1 .
+2-17:In this approach, the agents" actions are to set the separation that approaching aircraft are required to keep .
+2-18:This simple agent action pair allows the agents to slow down or speed up local traffic and allows agents to a have significant impact on the overall air traffic flow .
+2-19:Agents learn the most appropriate separation for their location using a reinforcement learning algorithm [15] .
+2-20:In a reinforcement learning approach, the selection of the agent reward has a large impact on the performance of the system .
+2-21:In this work, we explore four different agent reward functions, and compare them to simulating various changes to the system and selecting the best solution (e.g, equivalent to a Monte Carlo search) .
+2-22:The first explored reward consisted of the system reward .
+2-23:The second reward was a personalized agent reward based on collectives [3, 17, 18] .
+2-24:The last two rewards were personalized rewards based on estimations to lower the computational burden of the reward computation .
+2-25:All three personalized rewards aim to align agent rewards with the system reward and ensure that the rewards remain sensitive to the agents" actions .
+2-26:Previous work in this domain fell into one of two distinct categories: The first principles based modeling approaches used by domain experts [5, 8, 10, 13] and the algorithmic approaches explored by the learning and or agents community [6, 9, 12] .
+2-27:Though our approach comes from the second category, we aim to bridge the gap by using FACET to test our algorithms, a simulator introduced and widely used (i.e., over 40 organizations and 5000 users) by work in the first category [4, 11] .
+2-28:The main contribution of this paper is to present a distributed adaptive air traffic flow management algorithm that can be readily implemented and test that algorithm using FACET .
+2-29:In Section 2, we describe the air traffic flow problem and the simulation tool, FACET .
+2-30:In Section 3, we present the agent based approach, focusing on the selection of the agents and their action space along with the agents" learning algorithms and reward structures .
+2-31:In Section 4 we present results in domains with one and two congestions, explore different trade offs of the system objective function, discuss the scaling properties of the different agent rewards and discuss the computational cost of achieving certain levels of performance .
+2-32:Finally, in Section 5, we discuss the implications of these results and provide and map the required work to enable the FAA to reach its stated goal of increasing the traffic volume by threefold. .
+3 AIR TRAFFIC FLOW MANAGEMENT :
+3-1:With over 40,000 flights operating within the United States airspace on an average day, the management of traffic flow is a complex and demanding problem .
+3-2:Not only are there concerns for the efficiency of the system, but also for fairness (e.g., different airlines), adaptability (e.g., developing weather patterns), reliability and safety (e.g., airport management) .
+3-3:In order to address such issues, the management of this traffic flow occurs over four hierarchical levels: 1 We discuss how flight plans with few fixes can be handled in more detail in Section 2. .
+4 National flow (1 8 hours); and :
+4-1:Because of the strict guidelines and safety concerns surrounding aircraft separation, we will not address that control level in this paper .
+4-2:Similarly, because of the business and political impact of dynamic airspace configuration, we will not address the outermost flow control level either .
+4-3:Instead, we will focus on the regional and national flow management problems, restricting our impact to decisions with time horizons between twenty minutes and eight hours .
+4-4:The proposed algorithm will fit between long term planning by the FAA and the very short term decisions by air traffic controllers .
+4-5:The continental US airspace consists of 20 regional centers (handling 200 300 flights on a given day) and 830 sectors (handling 10 40 flights) .
+4-6:The flow control problem has to address the integration of policies across these sectors and centers, account for the complexity of the system (e.g., over 5200 public use airports and 16,000 air traffic controllers) and handle changes to the policies caused by weather patterns .
+4-7:Two of the fundamental problems in addressing the flow problem are: (i) modeling and simulating such a large complex system as the fidelity required to provide reliable results is difficult to achieve; and (ii) establishing the method by which the flow management is evaluated, as directly minimizing the total delay may lead to inequities towards particular regions or commercial entities .
+4-8:Below, we discuss how we addressed both issues, namely, we present FACET a widely used simulation tool and discuss our system evaluation function .
+4-9:Figure 1: FACET screenshot displaying traffic routes and air flow statistics .
+4-10:2.1 FACET FACET (Future ATM Concepts Evaluation Tool), a physics based model of the US airspace was developed to accurately model the complex air traffic flow problem [4] .
+4-11:It is based on propagating the trajectories of proposed flights forward in time .
+4-12:FACET can be used to either simulate and display air traffic (a 24 hour slice with 60,000 flights takes 15 minutes to simulate on a 3 GHz, 1 GB RAM computer) or provide rapid statistics on recorded data (4D trajectories for 10,000 flights including sectors, airports, and fix statistics in 10 seconds on the same computer) [11] .
+4-13:FACET is extensively used by The Sixth Intl .
+4-14:Joint Conf .
+4-15:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 343 the FAA, NASA and industry (over 40 organizations and 5000 users) [11] .
+4-16:FACET simulates air traffic based on flight plans and through a graphical user interface allows the user to analyze congestion patterns of different sectors and centers (Figure 1) .
+4-17:FACET also allows the user to change the flow patterns of the aircraft through a number of mechanisms, including metering aircraft through fixes .
+4-18:The user can then observe the effects of these changes to congestion .
+4-19:In this paper, agents use FACET directly through batch mode, where agents send scripts to FACET asking it to simulate air traffic based on metering orders imposed by the agents .
+4-20:The agents then produce their rewards based on receive feedback from FACET about the impact of these meterings .
+4-21:2.2 System Evaluation The system performance evaluation function we select focuses on delay and congestion but does not account for fairness impact on different commercial entities .
+4-22:Instead it focuses on the amount of congestion in a particular sector and on the amount of measured air traffic delay .
+4-23:The linear combination of these two terms gives the full system evaluation function, G(z) as a function of the full system state z .
+4-24:More precisely, we have: G(z) = −((1 − α)B(z) + αC(z)) , (1) where B(z) is the total delay penalty for all aircraft in the system, and C(z) is the total congestion penalty .
+4-25:The relative importance of these two penalties is determined by the value of α, and we explore various trade offs based on α in Section 4 .
+4-26:The total delay, B, is a sum of delays over a set of sectors S and is given by: B(z) = X s∈S Bs(z) (2) where Bs(z) = X t Θ(t − τs)kt,s(t − τs) , (3) where ks,t is the number of aircraft in sector s at a particular time, τs is a predetermined time, and Θ(·) is the step function that equals 1 when its argument is greater or equal to zero, and has a value of zero otherwise .
+4-27:Intuitively, Bs(z) provides the total number of aircraft that remain in a sector s past a predetermined time τs, and scales their contribution to count by the amount by which they are late .
+4-28:In this manner Bs(z) provides a delay factor that not only accounts for all aircraft that are late, but also provides a scale to measure their lateness .
+4-29:This definition is based on the assumption that most aircraft should have reached the sector by time τs and that aircraft arriving after this time are late .
+4-30:In this paper the value of τs is determined by assessing aircraft counts in the sector in the absence of any intervention or any deviation from predicted paths .
+4-31:Similarly, the total congestion penalty is a sum over the congestion penalties over the sectors of observation, S: C(z) = X s∈S Cs(z) (4) where Cs(z) = a X t Θ(ks,t − cs)eb(ks,t−cs) , (5) where a and b are normalizing constants, and cs is the capacity of sector s as defined by the FAA .
+4-32:Intuitively, Cs(z) penalizes a system state where the number of aircraft in a sector exceeds the FAAs official sector capacity .
+4-33:Each sector capacity is computed using various metrics which include the number of air traffic controllers available .
+4-34:The exponential penalty is intended to provide strong feedback to return the number of aircraft in a sector to below the FAA mandated capacities. .
+5 AGENT BASED AIR TRAFFIC FLOW :
+5-1:The multi agent approach to air traffic flow management we present is predicated on adaptive agents taking independent actions that maximize the system evaluation function discussed above .
+5-2:To that end, there are four critical decisions that need to be made: agent selection, agent action set selection, agent learning algorithm selection and agent reward structure selection .
+5-3:3.1 Agent Selection Selecting the aircraft as agents is perhaps the most obvious choice for defining an agent .
+5-4:That selection has the advantage that agent actions can be intuitive (e.g., change of flight plan, increase or decrease speed and altitude) and offer a high level of granularity, in that each agent can have its own policy .
+5-5:However, there are several problems with that approach .
+5-6:First, there are in excess of 40,000 aircraft in a given day, leading to a massively large multi agent system .
+5-7:Second, as the agents would not be able to sample their state space sufficiently, learning would be prohibitively slow .
+5-8:As an alternative, we assign agents to individual ground locations throughout the airspace called fixes .
+5-9:Each agent is then responsible for any aircraft going through its fix .
+5-10:Fixes offer many advantages as agents: system can have as many agents as required for a given situation (e.g., agents coming live around an area with developing weather conditions) .
+5-11:matching behavior to reward is easier .
+5-12:have the ability to affect traffic flow patterns .
+5-13:routing procedures, and can be used as tools to help air traffic controllers rather than compete with or replace them .
+5-14:Figure 2 shows a schematic of this agent based system .
+5-15:Agents surrounding a congestion or weather condition affect the flow of traffic to reduce the burden on particular regions .
+5-16:3.2 Agent Actions The second issue that needs to be addressed, is determining the action set of the agents .
+5-17:Again, an obvious choice may be for fixes to bid on aircraft, affecting their flight plans .
+5-18:Though appealing from a free flight perspective, that approach makes the flight plans too unreliable and significantly complicates the scheduling problem (e.g., arrival at airports and the subsequent gate assignment process) .
+5-19:Instead, we set the actions of an agent to determining the separation (distance between aircraft) that aircraft have 344 The Sixth Intl .
+5-20:Joint Conf .
+5-21:on Autonomous Agents and Multi Agent Systems (AAMAS 07) to maintain, when going through the agent"s fix .
+5-22:This is known as setting the Miles in Trail or MIT .
+5-23:When an agent sets the MIT value to d, aircraft going towards its fix are instructed to line up and keep d miles of separation (though aircraft will always keep a safe distance from each other regardless of the value of d) .
+5-24:When there are many aircraft going through a fix, the effect of issuing higher MIT values is to slow down the rate of aircraft that go through the fix .
+5-25:By increasing the value of d, an agent can limit the amount of air traffic downstream of its fix, reducing congestion at the expense of increasing the delays upstream .
+5-26:Figure 2: Schematic of agent architecture .
+5-27:The agents corresponding to fixes surrounding a possible congestion become live and start setting new separation times .
+5-28:3.3 Agent Learning The objective of each agent is to learn the best values of d that will lead to the best system performance, G .
+5-29:In this paper we assume that each agent will have a reward function and will aim to maximize its reward using its own reinforcement learner [15] (though alternatives such as evolving neuro controllers are also effective [1]) .
+5-30:For complex delayed reward problems, relatively sophisticated reinforcement learning systems such as temporal difference may have to be used .
+5-31:However, due to our agent selection and agent action set, the air traffic congestion domain modeled in this paper only needs to utilize immediate rewards .
+5-32:As a consequence, simple table based immediate reward reinforcement learning is used .
+5-33:Our reinforcement learner is equivalent to an greedy Q learner with a discount rate of 0 [15] .
+5-34:At every episode an agent takes an action and then receives a reward evaluating that action .
+5-35:After taking action a and receiving reward R an agent updates its Q table (which contains its estimate of the value for taking that action [15]) as follows: Q (a) = (1 − l)Q(a) + l(R), (6) where l is the learning rate .
+5-36:At every time step the agent chooses the action with the highest table value with probability 1 − and chooses a random action with probability .
+5-37:In the experiments described in this paper, α is equal to 0.5 and is equal to 0.25 .
+5-38:The parameters were chosen experimentally, though system performance was not overly sensitive to these parameters .
+5-39:3.4 Agent Reward Structure The final issue that needs to be addressed is selecting the reward structure for the learning agents .
+5-40:The first and most direct approach is to let each agent receive the system performance as its reward .
+5-41:However, in many domains such a reward structure leads to slow learning .
+5-42:We will therefore also set up a second set of reward structures based on agent specific rewards .
+5-43:Given that agents aim to maximize their own rewards, a critical task is to create good agent rewards, or rewards that when pursued by the agents lead to good overall system performance .
+5-44:In this work we focus on difference rewards which aim to provide a reward that is both sensitive to that agent"s actions and aligned with the overall system reward [2, 17, 18] .
+5-45:3.4.1 Difference Rewards Consider difference rewards of the form [2, 17, 18]: Di ≡ G(z) − G(z − zi + ci) , (7) where zi is the action of agent i .
+5-46:All the components of z that are affected by agent i are replaced with the fixed constant ci 2 .
+5-47:In many situations it is possible to use a ci that is equivalent to taking agent i out of the system .
+5-48:Intuitively this causes the second term of the difference reward to evaluate the performance of the system without i and therefore D evaluates the agent"s contribution to the system performance .
+5-49:There are two advantages to using D: First, because the second term removes a significant portion of the impact of other agents in the system, it provides an agent with a cleaner signal than G .
+5-50:This benefit has been dubbed learnability (agents have an easier time learning) in previous work [2, 17] .
+5-51:Second, because the second term does not depend on the actions of agent i, any action by agent i that improves D, also improves G .
+5-52:This term which measures the amount of alignment between two rewards has been dubbed factoredness in previous work [2, 17] .
+5-53:3.4.2 Estimates of Difference Rewards Though providing a good compromise between aiming for system performance and removing the impact of other agents from an agent"s reward, one issue that may plague D is computational cost .
+5-54:Because it relies on the computation of the counterfactual term G(z − zi + ci) (i.e., the system performance without agent i) it may be difficult or impossible to compute, particularly when the exact mathematical form of G is not known .
+5-55:Let us focus on G functions in the following form: G(z) = Gf (f(z)), (8) where Gf is non linear with a known functional form and, f(z) = X i fi(zi) , (9) where each fi is an unknown non linear function .
+5-56:We assume that we can sample values from f(z), enabling us to compute G, but that we cannot sample from each fi(zi) .
+5-57:2 This notation uses zero padding and vector addition rather than concatenation to form full state vectors from partial state vectors .
+5-58:The vector zi in our notation would be ziei in standard vector notation, where ei is a vector with a value of 1 in the ith component and is zero everywhere else .
+5-59:The Sixth Intl .
+5-60:Joint Conf .
+5-61:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 345 In addition, we assume that Gf is much easier to compute than f(z), or that we may not be able to even compute f(z) directly and must sample it from a black box computation .
+5-62:This form of G matches our system evaluation in the air traffic domain .
+5-63:When we arrange agents so that each aircraft is typically only affected by a single agent, each agent"s impact of the counts of the number of aircraft in a sector, kt,s, will be mostly independent of the other agents .
+5-64:These values of kt,s are the f(z)s in our formulation and the penalty functions form Gf .
+5-65:Note that given aircraft counts, the penalty functions (Gf ) can be easily computed in microseconds, while aircraft counts (f) can only be computed by running FACET taking on the order of seconds .
+5-66:To compute our counterfactual G(z − zi + ci) we need to compute: Gf (f(z − zi + ci)) = Gf 0 @ X j=i fj(zj) + fi(ci) 1 A (10) = Gf (f(z) − fi(zi) + fi(ci)) .(11) Unfortunately, we cannot compute this directly as the values of fi(zi) are unknown .
+5-67:However, if agents take actions independently (it does not observe how other agents act before taking its own action) we can take advantage of the linear form of f(z) in the fis with the following equality: E(f−i(z−i)|zi) = E(f−i(z−i)|ci) (12) where E(f−i(z−i)|zi) is the expected value of all of the fs other than fi given the value of zi and E(f−i(z−i)|ci) is the expected value of all of the fs other than fi given the value of zi is changed to ci .
+5-68:We can then estimate f(z − zi + ci): f(z) − fi(zi) + fi(ci) = f(z) − fi(zi) + fi(ci) + E(f−i(z−i)|ci) − E(f−i(z−i)|zi) = f(z) − E(fi(zi)|zi) + E(fi(ci)|ci) + E(f−i(z−i)|ci) − E(f−i(z−i)|zi) = f(z) − E(f(z)|zi) + E(f(z)|ci) .
+5-69:Therefore we can evaluate Di = G(z) − G(z − zi + ci) as: Dest1 i = Gf (f(z)) − Gf (f(z) − E(f(z)|zi) + E(f(z)|ci)) , (13) leaving us with the task of estimating the values of E(f(z)|zi) and E(f(z)|ci)) .
+5-70:These estimates can be computed by keeping a table of averages where we average the values of the observed f(z) for each value of zi that we have seen .
+5-71:This estimate should improve as the number of samples increases .
+5-72:To improve our estimates, we can set ci = E(z) and if we make the mean squared approximation of f(E(z)) ≈ E(f(z)) then we can estimate G(z) − G(z − zi + ci) as: Dest2 i = Gf (f(z)) − Gf (f(z) − E(f(z)|zi) + E(f(z))) .
+5-73:(14) This formulation has the advantage in that we have more samples at our disposal to estimate E(f(z)) than we do to estimate E(f(z)|ci)). .
+6 SIMULATION RESULTS :
+6-1:In this paper we test the performance of our agent based air traffic optimization method on a series of simulations using the FACET air traffic simulator .
+6-2:In all experiments we test the performance of five different methods .
+6-3:The first method is Monte Carlo estimation, where random policies are created, with the best policy being chosen .
+6-4:The other four methods are agent based methods where the agents are maximizing one of the following rewards: can calculate counterfactuals .
+6-5:i (z), where agents estimate the counterfactual using E(f(z)|zi) and E(f(z)|ci) .
+6-6:i (z), where agents estimate the counterfactual using E(f(z)|zi) and E(f(z)) .
+6-7:These methods are first tested on an air traffic domain with 300 aircraft, where 200 of the aircraft are going through a single point of congestion over a four hour simulation .
+6-8:Agents are responsible for reducing congestion at this single point, while trying to minimize delay .
+6-9:The methods are then tested on a more difficult problem, where a second point of congestion is added with the 100 remaining aircraft going through this second point of congestion .
+6-10:In all experiments the goal of the system is to maximize the system performance given by G(z) with the parameters, a = 50, b = 0.3, τs1 equal to 200 minutes and τs1 equal to 175 minutes .
+6-11:These values of τ are obtained by examining the time at which most of the aircraft leave the sectors, when no congestion control is being performed .
+6-12:Except where noted, the trade off between congestion and lateness, α is set to 0.5 .
+6-13:In all experiments to make the agent results comparable to the Monte Carlo estimation, the best policies chosen by the agents are used in the results .
+6-14:All results are an average of thirty independent trials with the differences in the mean (σ √ n) shown as error bars, though in most cases the error bars are too small to see .
+6-15:Figure 3: Performance on single congestion problem, with 300 Aircraft , 20 Agents and α = .5 .
+6-16:4.1 Single Congestion In the first experiment we test the performance of the five methods when there is a single point of congestion, with twenty agents .
+6-17:This point of congestion is created by setting up a series of flight plans that cause the number of aircraft in 346 The Sixth Intl .
+6-18:Joint Conf .
+6-19:on Autonomous Agents and Multi Agent Systems (AAMAS 07) the sector of interest to be significantly more than the number allowed by the FAA .
+6-20:The results displayed in Figures 3 and 4 show the performance of all five algorithms on two different system evaluations .
+6-21:In both cases, the agent based methods significantly outperform the Monte Carlo method .
+6-22:This result is not surprising since the agent based methods intelligently explore their space, where as the Monte Carlo method explores the space randomly .
+6-23:Figure 4: Performance on single congestion problem, with 300 Aircraft , 20 Agents and α = .75 .
+6-24:Among the agent based methods, agents using difference rewards perform better than agents using the system reward .
+6-25:Again this is not surprising, since with twenty agents, an agent directly trying to maximize the system reward has difficulty determining the effect of its actions on its own reward .
+6-26:Even if an agent takes an action that reduces congestion and lateness, other agents at the same time may take actions that increase congestion and lateness, causing the agent to wrongly believe that its action was poor .
+6-27:In contrast agents using the difference reward have more influence over the value of their own reward, therefore when an agent takes a good action, the value of this action is more likely to be reflected in its reward .
+6-28:This experiment also shows that estimating the difference reward is not only possible, but also quite effective, when the true value of the difference reward cannot be computed .
+6-29:While agents using the estimates do not achieve as high of results as agents using the true difference reward, they still perform significantly better than agents using the system reward .
+6-30:Note, however, that the benefit of the estimated difference rewards are only present later in learning .
+6-31:Earlier in learning, the estimates are poor, and agents using the estimated difference rewards perform no better then agents using the system reward .
+6-32:4.2 Two Congestions In the second experiment we test the performance of the five methods on a more difficult problem with two points of congestion .
+6-33:On this problem the first region of congestion is the same as in the previous problem, and the second region of congestion is added in a different part of the country .
+6-34:The second congestion is less severe than the first one, so agents have to form different policies depending which point of congestion they are influencing .
+6-35:Figure 5: Performance on two congestion problem, with 300 Aircraft, 20 Agents and α = .5 .
+6-36:Figure 6: Performance on two congestion problem, with 300 Aircraft, 50 Agents and α = .5 .
+6-37:The results displayed in Figure 5 show that the relative performance of the five methods is similar to the single congestion case .
+6-38:Again agent based methods perform better than the Monte Carlo method and the agents using difference rewards perform better than agents using the system reward .
+6-39:To verify that the performance improvement of our methods is maintained when there are a different number of agents, we perform additional experiments with 50 agents .
+6-40:The results displayed in Figure 6 show that indeed the relative performances of the methods are comparable when the number of agents is increased to 50 .
+6-41:Figure 7 shows scaling results and demonstrates that the conclusions hold over a wide range of number of agents .
+6-42:Agents using Dest2 perform slightly better than agents using Dest1 in all cases but for 50 agents .
+6-43:This slight advantage stems from Dest2 providing the agents with a cleaner signal, since its estimate uses more data points .
+6-44:4.3 Penalty Tradeoffs The system evaluation function used in the experiments is G(z) = −((1−α)D(z)+αC(z)), which comprises of penalties for both congestion and lateness .
+6-45:This evaluation function The Sixth Intl .
+6-46:Joint Conf .
+6-47:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 347 Figure 7: Impact of number of agents on system performance .
+6-48:Two congestion problem, with 300 Aircraft and α = .5 .
+6-49:forces the agents to tradeoff these relative penalties depending on the value of α .
+6-50:With high α the optimization focuses on reducing congestion, while with low α the system focuses on reducing lateness .
+6-51:To verify that the results obtained above are not specific to a particular value of α, we repeat the experiment with 20 agents for α = .75 .
+6-52:Figure 8 shows that qualitatively the relative performance of the algorithms remain the same .
+6-53:Next, we perform a series of experiments where α ranges from 0.0 to 1.0 .
+6-54:Figure 9 shows the results which lead to three interesting observations: • First, there is a zero congestion penalty solution .
+6-55:This solution has agents enforce large MIT values to block all air traffic, which appears viable when the system evaluation does not account for delays .
+6-56:All algorithms find this solution, though it is of little interest in practice due to the large delays it would cause .
+6-57:• Second, if the two penalties were independent, an optimal solution would be a line from the two end points .
+6-58:Therefore, unless D is far from being optimal, the two penalties are not independent .
+6-59:Note that for α = 0.5 the difference between D and this hypothetical line is as large as it is anywhere else, making α = 0.5 a reasonable choice for testing the algorithms in a difficult setting .
+6-60:• Third, Monte Carlo and G are particularly poor at handling multiple objectives .
+6-61:For both algorithms, the performance degrades significantly for mid ranges of α .
+6-62:4.4 Computational Cost The results in the previous section show the performance of the different algorithms after a specific number of episodes .
+6-63:Those results show that D is significantly superior to the other algorithms .
+6-64:One question that arises, though, is what computational overhead D puts on the system, and what results would be obtained if the additional computational expense of D is made available to the other algorithms .
+6-65:The computation cost of the system evaluation, G (Equation 1) is almost entirely dependent on the computation of Figure 8: Performance on two congestion problem, with 300 Aircraft, 20 Agents and α = .75 .
+6-66:Figure 9: Tradeoff Between Objectives on two congestion problem, with 300 Aircraft and 20 Agents .
+6-67:Note that Monte Carlo and G are particularly bad at handling multiple objectives .
+6-68:the airplane counts for the sectors kt,s, which need to be computed using FACET .
+6-69:Except when D is used, the values of k are computed once per episode .
+6-70:However, to compute the counterfactual term in D, if FACET is treated as a black box, each agent would have to compute their own values of k for their counterfactual resulting in n + 1 computations of k per episode .
+6-71:While it may be possible to streamline the computation of D with some knowledge of the internals of FACET, given the complexity of the FACET simulation, it is not unreasonable in this case to treat it as a black box .
+6-72:Table 1 shows the performance of the algorithms after 2100 G computations for each of the algorithms for the simulations presented in Figure 5 where there were 20 agents, 2 congestions and α = .5 .
+6-73:All the algorithms except the fully computed D reach 2100 k computations at time step 2100 .
+6-74:D however computes k once for the system, and then once for each agent, leading to 21 computations per time step .
+6-75:It therefore reaches 2100 computations at time step 100 .
+6-76:We also show the results of the full D computation at t=2100, which needs 44100 computations of k as D44K .
+6-77:348 The Sixth Intl .
+6-78:Joint Conf .
+6-79:on Autonomous Agents and Multi Agent Systems (AAMAS 07) Table 1: System Performance for 20 Agents, 2 congestions and α = .5, after 2100 G evaluations (except for D44K which has 44100 G evaluations at t=2100) .
+6-80:Reward G σ √ n time Dest2 232.5 7.55 2100 Dest1 234.4 6.83 2100 D 277.0 7.8 100 D44K 219.9 4.48 2100 G 412.6 13.6 2100 MC 639.0 16.4 2100 Although D44K provides the best result by a slight margin, it is achieved at a considerable computational cost .
+6-81:Indeed, the performance of the two D estimates is remarkable in this case as they were obtained with about twenty times fewer computations of k .
+6-82:Furthermore, the two D estimates, significantly outperform the full D computation for a given number of computations of k and validate the assumptions made in Section 3.4.2 .
+6-83:This shows that for this domain, in practice it is more fruitful to perform more learning steps and approximate D, than few learning steps with full D computation when we treat FACET as a black box. .
+7-1:The efficient, safe and reliable management of air traffic flow is a complex problem, requiring solutions that integrate control policies with time horizons ranging from minutes up to a year
+7-2:The main contribution of this paper is to present a distributed adaptive air traffic flow management algorithm that can be readily implemented and to test that algorithm using FACET, a simulation tool widely used by the FAA, NASA and the industry
+7-3:Our method is based on agents representing fixes and having each agent determine the separation between aircraft approaching its fix
+7-4:It offers the significant benefit of not requiring radical changes to the current air flow management structure and is therefore readily deployable
+7-5:The agents use reinforcement learning to learn control policies and we explore different agent reward functions and different ways of estimating those functions
+7-6:We are currently extending this work in three directions
+7-7:First, we are exploring new methods of estimating agent rewards, to further speed up the simulations
+7-8:Second we are investigating deployment strategies and looking for modifications that would have larger impact
+7-9:One such modification is to extend the definition of agents from fixes to sectors, giving agents more opportunity to control the traffic flow, and allow them to be more efficient in eliminating congestion
+7-10:Finally, in cooperation with domain experts, we are investigating different system evaluation functions, above and beyond the delay and congestion dependent G presented in this paper
+7-11:Acknowledgments: The authors thank Banavar Sridhar for his invaluable help in describing both current air traffic flow management and NGATS, and Shon Grabbe for his detailed tutorials on FACET.
+8-1:A
+8-2:Agogino and K
+8-3:Tumer
+8-4:Efficient evaluation functions for multi rover systems
+8-5:In The Genetic and Evolutionary Computation Conference, pages 1 12, Seatle, WA, June 2004
+8-6:A
+8-7:Agogino and K
+8-8:Tumer
+8-9:Multi agent reward analysis for learning in noisy domains
+8-10:In Proceedings of the Fourth International Joint Conference on Autonomous Agents and Multi Agent Systems, Utrecht, Netherlands, July 2005
+8-11:A
+8-12:K
+8-13:Agogino and K
+8-14:Tumer
+8-15:Handling communiction restrictions and team formation in congestion games
+8-16:Journal of Autonous Agents and Multi Agent Systems, 13(1):97 115, 2006
+8-17:K
+8-18:D
+8-19:Bilimoria, B
+8-20:Sridhar, G
+8-21:B
+8-22:Chatterji, K
+8-23:S
+8-24:Shethand, and S
+8-25:R
+8-26:Grabbe
+8-27:FACET: Future ATM concepts evaluation tool
+8-28:Air Traffic Control Quarterly, 9(1), 2001
+8-29:Karl D
+8-30:Bilimoria
+8-31:A geometric optimization approach to aircraft conflict resolution
+8-32:In AIAA Guidance, Navigation, and Control Conf, Denver, CO, 2000
+8-33:Martin S
+8-34:Eby and Wallace E
+8-35:Kelly III
+8-36:Free flight separation assurance using distributed algorithms
+8-37:In Proc of Aerospace Conf, 1999, Aspen, CO, 1999
+8-38:FAA OPSNET data Jan Dec 2005
+8-39:US Department of Transportation website
+8-40:S
+8-41:Grabbe and B
+8-42:Sridhar
+8-43:Central east pacific flight routing
+8-44:In AIAA Guidance, Navigation, and Control Conference and Exhibit, Keystone, CO, 2006
+8-45:Jared C
+8-46:Hill, F
+8-47:Ryan Johnson, James K
+8-48:Archibald, Richard L
+8-49:Frost, and Wynn C
+8-50:Stirling
+8-51:A cooperative multi agent approach to free flight
+8-52:In AAMAS "05: Proceedings of the fourth international joint conference on Autonomous agents and multiagent systems, pages 1083 1090, New York, NY, USA, 2005
+8-53:ACM Press
+8-54:P
+8-55:K
+8-56:Menon, G
+8-57:D
+8-58:Sweriduk, and B
+8-59:Sridhar
+8-60:Optimal strategies for free flight air traffic conflict resolution
+8-61:Journal of Guidance, Control, and Dynamics, 22(2):202 211, 1999
+8-62:2006 NASA Software of the Year Award Nomination
+8-63:FACET: Future ATM concepts evaluation tool
+8-64:Case no
+8-65:ARC 14653 1, 2006
+8-66:M
+8-67:Pechoucek, D
+8-68:Sislak, D
+8-69:Pavlicek, and M
+8-70:Uller
+8-71:Autonomous agents for air traffic deconfliction
+8-72:In Proc of the Fifth Int Jt Conf on Autonomous Agents and Multi Agent Systems, Hakodate, Japan, May 2006
+8-73:B
+8-74:Sridhar and S
+8-75:Grabbe
+8-76:Benefits of direct to in national airspace system
+8-77:In AIAA Guidance, Navigation, and Control Conf, Denver, CO, 2000
+8-78:B
+8-79:Sridhar, T
+8-80:Soni, K
+8-81:Sheth, and G
+8-82:B
+8-83:Chatterji
+8-84:Aggregate flow model for air traffic management
+8-85:Journal of Guidance, Control, and Dynamics, 29(4):992 997, 2006
+8-86:R
+8-87:S
+8-88:Sutton and A
+8-89:G
+8-90:Barto
+8-91:Reinforcement Learning: An Introduction
+8-92:MIT Press, Cambridge, MA, 1998
+8-93:C
+8-94:Tomlin, G
+8-95:Pappas, and S
+8-96:Sastry
+8-97:Conflict resolution for air traffic management
+8-98:IEEE Tran on Automatic Control, 43(4):509 521, 1998
+8-99:K
+8-100:Tumer and D
+8-101:Wolpert, editors
+8-102:Collectives and the Design of Complex Systems
+8-103:Springer, New York, 2004
+8-104:D
+8-105:H
+8-106:Wolpert and K
+8-107:Tumer
+8-108:Optimal payoff functions for members of collectives
+8-109:Advances in Complex Systems, 4(2 3):265 279, 2001
+8-110:The Sixth Intl
+8-111:Joint Conf
+8-112:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 349
+picture:

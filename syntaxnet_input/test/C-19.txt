@@ -1,0 +1,372 @@
+Service Interface: A New Abstraction for Implementing and 
+content:
+1 ABSTRACT :
+1-1:Composing Protocols∗ Olivier R¨utti Paweł T .
+1-2:Wojciechowski Andr´e Schiper Ecole Polytechnique F´ed´erale de Lausanne 1015 Lausanne, Switzerland {Olivier.Rutti, Pawel.Wojciechowski, Andre.Schiper}@epfl.ch ABSTRACT In this paper we compare two approaches to the design of protocol frameworks tools for implementing modular network protocols .
+1-3:The most common approach uses events as the main abstraction for a local interaction between protocol modules .
+1-4:We argue that an alternative approach, that is based on service abstraction, is more suitable for expressing modular protocols .
+1-5:It also facilitates advanced features in the design of protocols, such as dynamic update of distributed protocols .
+1-6:We then describe an experimental implementation of a service based protocol framework in Java. .
+2 INTRODUCTION :
+2-1:C.2.4 [Computer Communication Networks]: Protocol frameworks, such Cactus [5, 2], Appia [1, 16], Ensemble [12, 17], Eva [3], SDL [8] and Neko[6, 20], are programming tools for developing modular network protocols .
+2-2:They allow complex protocols to be implemented by decomposing them into several modules cooperating together .
+2-3:This approach facilitates code reuse and customization of distributed protocols in order to fit the needs of different applications .
+2-4:Moreover, protocol modules can be plugged in to the system dynamically .
+2-5:All these features of protocol frameworks make them an interesting enabling technology for implementing adaptable systems [14] an important class of applications .
+2-6:Most protocol frameworks are based on events (all frameworks cited above are based on this abstraction) .
+2-7:Events are used for asynchronous communication between different modules on the same machine .
+2-8:However, the use of events raises some problems [4, 13] .
+2-9:For instance, the composition of modules may require connectors to route events, which introduces burden for a protocol composer [4] .
+2-10:Protocol frameworks such as Appia and Eva extend the event based approach with channels .
+2-11:However, in our opinion, this solution is not satisfactory since composition of complex protocol stacks becomes more difficult .
+2-12:In this paper, we propose a new approach for building modular protocols, that is based on a service abstraction .
+2-13:We compare this new approach with the common, event based approach .
+2-14:We show that protocol frameworks based on services have several advantages, e.g .
+2-15:allow for a fairly straightforward protocol composition, clear implementation, and better support of dynamic replacement of distributed protocols .
+2-16:To validate our claims, we have implemented SAMOA an experimental protocol framework that is purely based on the service based approach to module composition and implementation .
+2-17:The framework allowed us to compare the service and event based implementations of an adaptive group communication middleware .
+2-18:The paper is organized as follows .
+2-19:Section 2 defines general notions .
+2-20:Section 3 presents the main characteristics of event based frameworks, and features that are distinct for each framework .
+2-21:Section 4 describes our new approach, which is based on service abstraction .
+2-22:Section 5 discusses the advantages of a service based protocol framework compared to an event based protocol framework .
+2-23:The description of our experimental implementation is presented in Section 6 .
+2-24:Finally, we conclude in Section 7. .
+3 PROTOCOL FRAMEWORKS :
+3-1:In this section, we describe notions that are common to all protocol frameworks .
+3-2:Protocols and Protocol Modules .
+3-3:A protocol is a distributed algorithm that solves a specific problem in a distributed system, e.g .
+3-4:a TCP protocol solves the reliable channel problem .
+3-5:A protocol is implemented as a set of identical protocol modules located on different machines .
+3-6:Protocol Stacks .
+3-7:A stack is a set of protocol modules (of different protocols) that are located on the same machine .
+3-8:Note that, despite its name, a stack is not strictly layered, 691 i.e .
+3-9:a protocol module can interact with all other protocol modules in the same stack, not only with the protocol modules directly above and below .
+3-10:In the remainder of this paper, we use the terms machine and stack interchangeably .
+3-11:Stack 1 S1 Q1 R1 P1 Network Figure 1: Example of a protocol stack In Figure 1, we show an example protocol stack .
+3-12:We represent protocol modules by capital letters indexed with a natural number, e.g .
+3-13:P1, Q1, R1 and S1 .
+3-14:We write Pi to denote the protocol module of a protocol P in stack i .
+3-15:We use this notation throughout the paper .
+3-16:Modules are represented as white boxes .
+3-17:Arrows show module interactions .
+3-18:For instance, protocol module P1 interacts with the protocol module Q1 and conversely (See Fig .
+3-19:1) .
+3-20:Protocol Module Interactions .
+3-21:Below, we define the different kinds of interaction between protocol modules .
+3-22:• Requests are issued by protocol modules .
+3-23:A request by a protocol module Pi is an asynchronous call by Pi of another protocol module .
+3-24:• Replies are the results of a request .
+3-25:A single request can generate several replies .
+3-26:Only protocol modules belonging to the same protocol as the module that has issued the request are concerned by the corresponding replies .
+3-27:For example, a request by Pi generates replies that concern only protocol modules Pj .
+3-28:• Notifications can be used by a protocol module to inform (possibly many) protocol modules in the same stack about the occurrence of a specific event .
+3-29:Notifications may also be the results of a request. .
+4 EVENT BASED PROTOCOL  FRAMEWORK DESIGN :
+4-1:FRAMEWORK DESIGN Most existing protocol frameworks are event based .
+4-2:Examples are Cactus [5, 2], Appia [1, 16] and Ensemble [12, 17] .
+4-3:In this section, we define the notion of an event in protocol frameworks .
+4-4:We also explain how protocol modules are structured in event based frameworks .
+4-5:Events .
+4-6:An event is a special object for indirect communication between protocol modules in the same stack .
+4-7:Events may transport some information, e.g .
+4-8:a network message or some other data .
+4-9:With events, the communication is indirect, i.e .
+4-10:a protocol module that triggers an event is not aware of the module(s) that handle the event .
+4-11:Events enable one to many communication within a protocol stack .
+4-12:Triggering an event can be done either synchronously or asynchronously .
+4-13:In the former case, the thread that triggers an event e is blocked until all protocol modules that handle e have terminated handling of event e .
+4-14:In the latter case, the thread that triggers the event is not blocked .
+4-15:Protocol Modules .
+4-16:In event based protocol frameworks, a protocol module consists of a set of handlers .
+4-17:Each handler is dedicated to handling of a specific event .
+4-18:Handlers of the same protocol module may share data .
+4-19:Handlers can be dynamically bound to events .
+4-20:Handlers can also be unbound dynamically .
+4-21:Upon triggering some event e, all handlers bound to e are executed .
+4-22:If no handler is bound, the behavior is usually unspecified .
+4-23:Stack 1 P1 Q1 R1 S1 Network f e gg deliver send h Figure 2: Example of an event based protocol stack In Figure 2, we show an example of an event based stack .
+4-24:Events are represented by small letters, e.g .
+4-25:e, f, .. .
+4-26:The fact that a protocol module can trigger an event is represented by an arrow starting from the module .
+4-27:A white trapezoid inside a module box represents a handler defined by the protocol module .
+4-28:To mark that some handler is bound to event e, we use an arrow pointing to the handler (the label on the arrow represents the event e) .
+4-29:For example, the protocol module P1 triggers event e and handles event f (see Fig .
+4-30:2) .
+4-31:Note that the network is represented as a special protocol module that handles the send event (to send a message to another machine) and triggers the deliver event (upon receipt of a message from another machine) .
+4-32:Specific Features .
+4-33:Some protocol frameworks have unique features .
+4-34:Below, we present the features that influence composition and implementation of protocol modules .
+4-35:In Cactus [5, 2], the programmer can give a priority number to a handler upon binding it to an event .
+4-36:When an event is triggered, all handlers are executed following the order of priority .
+4-37:A handler h is also able to cancel the execution of an event trigger: all handlers that should be executed after h according to the priority are not executed .
+4-38:Appia [1, 16] and Eva [3] introduce the notion of channels .
+4-39:Channels allow to build routes of events in protocol stacks .
+4-40:Each protocol module has to subscribe to one or many channels .
+4-41:All events are triggered by specifying a channel they belong to .
+4-42:When a protocol module triggers an event e specifying channel c, all handlers bound to e that are part of a protocol that subscribes to c are executed (in the order prescribed by the definition of channel c). .
+5 SERVICE BASED PROTOCOL  FRAMEWORK :
+5-1:FRAMEWORK In this section, we describe our new approach for implementing and composing protocols that is based on services .
+5-2:692 We show in Section 5 the advantages of service based protocol frameworks over event based protocol frameworks .
+5-3:Service Interface .
+5-4:In our service based framework, protocol modules in the same stack communicate through objects called service interfaces .
+5-5:Requests, replies and notifications are all issued to service interfaces .
+5-6:Protocol Modules .
+5-7:A protocol module is a set of executers, listeners and interceptors .
+5-8:Executers handle requests .
+5-9:An executer can be dynamically bound to a service interface .
+5-10:It can be later unbound .
+5-11:A request issued to a service interface si leads to the execution of the executer bound to si .
+5-12:If no executer is bound to si, the request is delayed until some executer is bound to si .
+5-13:Contrary to events, at most one executer at any time can be bound to a service interface on every machine .
+5-14:Listeners handle replies and notifications .
+5-15:A listener can be dynamically bound and unbound to from a service interface si .
+5-16:A notification issued to a service interface si is handled by all listeners bound to si in the local stack .
+5-17:A reply issued to a service interface is handled by one single listener .
+5-18:To ensure that one single listener handles a reply, a module Pi has to identify, each time it issues a request, the listener to handle the possible reply .
+5-19:If the request and the reply occur respectively, in stack i and in stack j, the service interface si on i communicates to the service interface si on j the listener that must handle the reply .
+5-20:If the listener that must handle the reply does not exist, the reply is delayed until the listener is created .
+5-21:Stack 1 P1 Q1 R1 S1 Network t u nt Figure 3: Example of a service based protocol stack In Figure 3, we show an example of a service based stack .
+5-22:We denote a service interface by a small letter (e.g .
+5-23:t, u and nt) in a hexagonal box .
+5-24:The fact that a module Pi can generate a request to a service interface si is represented by a dashed black arrow going from Pi to si .
+5-25:Similarly, a dashed white arrow going from module Pi to service interface si represents the fact that Pi can generate a reply or a notification to si .
+5-26:We represent executers with white boxes inside protocol modules and listeners with white boxes with a gray border .
+5-27:A connecting line between a service interface si and an executer e (resp .
+5-28:a listener l) shows that e (resp .
+5-29:l) is bound to si .
+5-30:In Figure 3, module Q1 contains an executer bound to service interface t and a listener bound to service interface u .
+5-31:Module Q1 can generate replies and notifications to service interface t and requests to service interface u .
+5-32:Note that the service interface nt allows to access the network .
+5-33:P1 Q1 P1 Q1 T1T1 t t t Figure 4: Execution of protocol interactions with interceptors An interceptor plays a special rˆole .
+5-34:Similarly to executers, interceptors can be dynamically bound or unbound to a service interface .
+5-35:They are activated each time a request, a reply or a notification is issued to the service interface they are bound to .
+5-36:This is illustrated in Figure 4 .
+5-37:In the right part of the figure, the interceptor of the protocol module T1 is represented by a rounded box .
+5-38:The interceptor is bound to service interface t .
+5-39:The left part of the figure shows that an interceptor can be seen as an executer plus a listener .
+5-40:When P1 issues a request req to the service interface t, the executer interceptor of T1 is executed .
+5-41:Then, module T1 may forward a request req to the service interface t, where we can have req = req 1 .
+5-42:When module Q1 issues a reply or a notification, a similar mechanism is used, except that this time the listener interceptor of T1 is executed .
+5-43:Note that a protocol module Ti, that has an interceptor bound to a service interface, is able to modify requests, replies and notifications .
+5-44:Upon requests, if several interceptors are bound to the same service interface, they are executed in the order of binding .
+5-45:Upon replies and notifications, the order is reversed. .
+6 ADVANTAGES OF SERVICE BASED PROTOCOL FRAMEWORK DESIGN :
+6-1:PROTOCOL FRAMEWORK DESIGN We show in this section the advantages of service based protocol frameworks over event based protocol frameworks .
+6-2:We structure our discussion in three parts .
+6-3:Firstly, we present how protocol interactions are modeled in each of the protocol frameworks .
+6-4:Then, we discuss the composition of protocol modules in each of these frameworks .
+6-5:Finally, we present the problem of dynamic protocol replacement and the advantages of service interfaces in order to implement it .
+6-6:The discussion is summarized in Table 1 .
+6-7:5.1 Protocol Module Interactions A natural model of protocol interactions (as presented in Section 2) facilitates the implementation of protocol modules .
+6-8:For each protocol interaction, we show how it is modeled in both frameworks .
+6-9:We also explain that an inadequate model may lead to problems .
+6-10:Requests .
+6-11:In service based frameworks, a request is generated to a service interface .
+6-12:Each request is handled by at most one executer, since we allow only one executer to be bound to a service interface at any time .
+6-13:On the other hand, in event based frameworks, a protocol module emulates a request by triggering an event .
+6-14:There is no guarantee 1 The two service interfaces t in the left part of Figure 4 represent the same service interface t .
+6-15:The duplication is only to make the figure readable .
+6-16:693 that this event is bound to only one handler, which may lead to programming errors .
+6-17:Replies .
+6-18:When a protocol module generates a reply in a service based framework, only the correct listener (identified at the time the corresponding request was issued) is executed .
+6-19:This ensures that a request issued by some protocol module Qi, leads to replies handled by protocol modules Qj (i.e .
+6-20:protocol modules of the same protocol) .
+6-21:This is not the case in event based frameworks, as we now show .
+6-22:Consider protocol module Q1 in Figure 2 that triggers event g to emulate a request .
+6-23:Module S1 handles the request .
+6-24:When modules Si triggers event h to emulate a reply (remember that a reply can occur in many stacks), both modules Qi and Ri will handle the reply (they both contain a handler bound to h) .
+6-25:This behavior is not correct: only protocol modules Qi should handle the reply .
+6-26:Moreover, as modules Ri are not necessarily implemented to interact with modules Qi, this behavior may lead to errors .
+6-27:Solutions to solve this problem exist .
+6-28:However, they introduce an unnecessary burden on the protocol programmers and the stack composer .
+6-29:For instance, channels allow to route events to ensure that modules handle only events concerning them .
+6-30:However, the protocol programmer must take channels into account when implementing protocols .
+6-31:Moreover, the composition of complex stacks becomes more difficult due to the fact that the composer has to create many channels to ensure that modules handle events correctly .
+6-32:An addition of special protocol modules (named connectors) for routing events is also not satisfactory, since it requires additional work from the composer and introduces overhead .
+6-33:Notifications .
+6-34:Contrary to requests and replies, notifications are well modeled in event based frameworks .
+6-35:The reason is that notifications correspond to the one to many communication scheme provided by events .
+6-36:In service based frameworks, notifications are also well modeled .
+6-37:When a module generates a notification to a service interface si, all listeners bound to s are executed .
+6-38:Note that in this case, service interfaces provide the same pattern of communication as events .
+6-39:5.2 Protocol Module Composition Replies (and sometimes notifications) are the results of a request .
+6-40:Thus, there is a semantic link between them .
+6-41:The composer of protocol modules must preserve this link in order to compose correct stacks .
+6-42:We explain now that service based frameworks provide a mechanism to preserve this link, while in event based frameworks, the lack of such mechanism leads to error prone composition .
+6-43:In service based frameworks, requests, replies and notifications are issued to a service interface .
+6-44:Thus, a service interface introduces a link between these interactions .
+6-45:To compose a correct stack, the composer has to bound a listener to service interface si for each module that issues a request to si .
+6-46:The same must be done for one executer that is part of a module that issues replies or notifications .
+6-47:Applying this simple methodology ensures that every request issued to a service interface si eventually results in several replies or notifications issued to the same service interface si .
+6-48:In event based frameworks, all protocol interactions are issued through different events: there is no explicit link between an event triggered upon requests and an event triggered upon the corresponding replies .
+6-49:Thus, the composer of a protocol stack must know the meaning of each event in order to preserve the semantic link between replies (and notifications) and requests .
+6-50:Moreover, nothing prevents from binding a handler that should handle a request to an event used to issue a reply .
+6-51:Note that these problems can be partially solved by typing events and handlers .
+6-52:However, it does not prevent from errors if there are several instances of the same event type .
+6-53:Note that protocol composition is clearer in the protocol frameworks that are based on services, rather than on events .
+6-54:The reason is that several events that are used to model different protocol interactions can be modeled by a single service interface .
+6-55:5.3 Dynamic Replacement of Protocols Dynamic replacement of protocols consists in switching on the fly between protocols that solve the same problem .
+6-56:Replacement of a protocol P by a new protocol newP means that a protocol module Pi is replaced by newPi in every stack i .
+6-57:This replacement is problematic since the local replacements (within stacks) must be synchronized in order to guarantee protocol correctness [21, 18] .
+6-58:Q1 Q1 R1 P1 1P 1newP 1 Repl−P1 Repl−P1 R newP1 gg h h" g" t Figure 5: Dynamic replacement of protocol P For the synchronization algorithms to work, module interactions are intercepted in order to detect a time when Pi should be replaced by newPi .
+6-59:(Other solutions, e.g .
+6-60:in [11], are more complex.) In Fig .
+6-61:5, we show how this interception can be implemented in protocol frameworks that are based on services (in the left part of the figure) and events (in the right part of the figure) .
+6-62:The two sided arrows point to the protocol modules P1 and newP1 that are switched .
+6-63:It can be seen that the approach that uses the Service Interface mechanism has advantages .
+6-64:The intercepting module Repl P1 has an interceptor bound to service interface t that intercepts every request handled by modules P1 and all replies and notifications issued by P1 .
+6-65:The code of the module P1 can therefore remain unchanged .
+6-66:In event based frameworks, the solution is to add an intermediate module Repl P1 that intercepts the requests issued to P1 and also the replies and notifications issued by P1 .
+6-67:Although this ad hoc solution may seem similar to the servicebased approach, there is an important difference .
+6-68:The eventbased solution requires to slightly modify the module P1 since instead of handling event g and triggering event h, P1 must now handle different events g" and h" (see Fig .
+6-69:5). .
+7 IMPLEMENTATION :
+7-1:We have implemented an experimental service based protocol framework (called SAMOA) [7] .
+7-2:Our implementation is light weight: it consists of approximately 1200 lines of code in Java 1.5 (with generics) .
+7-3:In this section, we describe the main two classes of our implementation: Service (encoding the Service Interface) and 694 service based event based Protocol Interaction an adequate an inadequate representation representation Protocol Composition clear and safe complex and error prone Dynamic Replacement an integrated ad hoc solutions mechanism Table 1: Service based vs .
+7-4:event based Protocol (encoding protocol modules) .
+7-5:Finally, we present an example protocol stack that we have implemented to validate the service based approach .
+7-6:The Service Class .
+7-7:A Service object is characterized by the arguments of requests and the arguments of responses .
+7-8:A response is either a reply or a notification .
+7-9:A special argument, called message, determines the kind of interactions modeled by the response .
+7-10:A message represents a piece of information sent over the network .
+7-11:When a protocol module issues a request, it can give a message as an argument .
+7-12:The message can specify the listener that must handle the reply .
+7-13:When a protocol module issues a response to a service interface, a reply is issued if one of the arguments of the response is a message specifying a listener .
+7-14:Otherwise, a notification is issued .
+7-15:Executers, listeners and interceptors are encoded as innerclasses of the Service class .
+7-16:This allows to provide type safe protocol interactions .
+7-17:For instance, executers can only be bound to the Service object, they belong to .
+7-18:Thus, the parameters passed to requests (that are verified statically) always correspond to the parameters accepted by the corresponding executers .
+7-19:The type of a Service object is determined by the type of the arguments of requests and responses .
+7-20:A Service object t is compatible with another Service object s if the type of the arguments of requests (and responses) of t is a subtype of the arguments of requests (and responses) of s .
+7-21:In practice, if a protocol module Pi can issue a request to a protocol UDP, then it may also issue a request to TCP (compatible with UDP) due to the subtyping relation on parameters of communicating modules .
+7-22:The Protocol Class .
+7-23:A Protocol object consists of three sets of components, one set for each component type (a listener, an executer, and an interceptor) .
+7-24:Protocol objects are characterized by names to retrieve them easily .
+7-25:Moreover, we have added some features to bind and unbind all executers or interceptors to from the corresponding Service objects .
+7-26:Protocol objects can be loaded to a stack dynamically .
+7-27:All these features made it easy to implement dynamic replacement of network protocols .
+7-28:Protocol Stack Implementation .
+7-29:To validate our ideas, we have developed an Adaptive Group Communication middleware, adopting both the service and the event based approaches .
+7-30:Fig .
+7-31:6 shows the corresponding stacks of the AGC middleware .
+7-32:Both stacks allow the Consensus and Atomic Broadcast protocols to be dynamically updated .
+7-33:The architecture of our middleware, shown in Fig .
+7-34:6, builds on the group communication stack described in [15] .
+7-35:The UDP and RP2P modules provide respectively, unreliable and reliable point to point transport .
+7-36:The FD module implements a failure detector; we assume that it ensures the Stack 1 UDP1RP2P1 Repl CT1 1ABc .
+7-37:Repl CT1 ABc.1 Network FD1 GM1 rp2p nt udp d f abcast consensus Stack 1 Repl CT1 1ABc .
+7-38:Repl ABc.1 UDP1 FD1 RP2P1 CT1 Network 1GM send deliver Figure 6: Adaptive Group Communication Middleware: service based (left) vs .
+7-39:event based (right) properties of the 3S failure detector [9] .
+7-40:The CT module provides a distributed consensus service using the ChandraToueg algorithm [10] .
+7-41:The ABc .
+7-42:module implements atomic broadcast a group communication primitive that delivers messages to all processes in the same order .
+7-43:The GM module provides a group membership service that maintains consistent membership data among group members (see [19] for details) .
+7-44:The Repl ABc .
+7-45:and the Repl CT modules implement the replacement algorithms [18] for, respectively, the ABc .
+7-46:and the CT protocol modules .
+7-47:Note that each arrow in the event based architecture represents an event .
+7-48:We do not name events in the figure for readability .
+7-49:The left stack in Figure 6 shows the implementation of AGC with our service based framework .
+7-50:The right stack shows the same implementation with an event based framework .
+7-51:Performance Evaluation .
+7-52:To evaluate the overhead of service interfaces, we compared performance of the serviceand event based implementations of the AGC middleware .
+7-53:The latter implementation of AGC uses the Cactus protocol framework [5, 2] .
+7-54:In our experiment, we compared the average latency of Atomic Broadcast (ABcast), which is defined as follows .
+7-55:Consider a message m sent using ABcast .
+7-56:We denote by ti(m) the time between the moment of sending m and the moment of delivering m on a machine (stack) i .
+7-57:We define the average latency of m as the average of ti(m) for all machines (stacks) i within a group of stacks .
+7-58:Performance tests have been made using a cluster of PCs running Red Hat Linux 7.2, where each PC has a Pentium III 766 MHz processor and 128MB of RAM .
+7-59:All PCs are interconnected by a 100 Base TX duplex Ethernet hub .
+7-60:Our experiment has involved 7 machines (stacks) that ABcast messages of 4Mb under a constant load, where a load is a number of messages per second .
+7-61:In Figure 7, we show the results of our experiment for different loads .
+7-62:Latencies are shown on the vertical axis, while message loads are shown on the horizontal axis .
+7-63:The solid line shows the results obtained with our service based framework .
+7-64:The dashed line shows the results obtained with the Cactus framework .
+7-65:The 695 0 500 1000 1500 2000 10 20 30 40 50 60 70 80 90 100 Averagelatency[ms] Load [msg s] Service Based Framework Cactus Figure 7: Comparison between our service based framework and Cactus overhead of the service based framework is approximately 10% .
+7-66:This can be explained as follows .
+7-67:Firstly, the servicebased framework provides a higher level abstraction, which has a small cost .
+7-68:Secondly, the AGC middleware was initially implemented and optimized for the event based Cactus framework .
+7-69:However, it is possible to optimize the AGC middleware for the service based framework. .
+8-1:In the paper, we proposed a new approach to the protocol composition that is based on the notion of Service Interface, instead of events
+8-2:We believe that the service based framework has several advantages over event based frameworks
+8-3:It allows us to: (1) model accurately protocol interactions, (2) reduce the risk of errors during the composition phase, and (3) simply implement dynamic protocol updates
+8-4:A prototype implementation allowed us to validate our ideas.
+9-1:The Appia project
+9-2:Documentation available electronically at http:  appia.di.fc.ul.pt
+9-3:Nina T
+9-4:Bhatti, Matti A
+9-5:Hiltunen, Richard D
+9-6:Schlichting, and Wanda Chiu
+9-7:Coyote: a system for constructing fine grain configurable communication services
+9-8:ACM Transactions on Computer Systems, 16(4):321 366, November 1998
+9-9:Francisco Vilar Brasileiro, Fab´ıola Greve, Frederic Tronel, Michel Hurfin, and Jean Pierre Le Narzul
+9-10:Eva: An event based framework for developing specialized communication protocols
+9-11:In Proceedings of the 1st IEEE International Symposium on Network Computing and Applications (NCA "01), 2001
+9-12:Daniel C
+9-13:B¨unzli, Sergio Mena, and Uwe Nestmann
+9-14:Protocol composition frameworks
+9-15:A header driven model
+9-16:In Proceedings of the 4th IEEE International Symposium on Network Computing and Applications (NCA "05), July 2005
+9-17:The Cactus project
+9-18:Documentation available electronically at http:  www.cs.arizona.edu  cactus
+9-19:The Neko project
+9-20:Documentation available electronically at http:  lsrwww.epfl.ch neko
+9-21:The SAMOA project
+9-22:Documentation available electronically at http:  lsrwww.epfl.ch samoa
+9-23:The SDL project
+9-24:Documentation available electronically at http:  www.sdl forum.org SDL
+9-25:Tushar Deepak Chandra, Vassos Hadzilacos, and Sam Toueg
+9-26:The weakest failure detector for solving consensus
+9-27:Journal of the ACM, 43(4):685 722, 1996
+9-28:Tushar Deepak Chandra and Sam Toueg
+9-29:Unreliable failure detectors for reliable distributed systems
+9-30:Journal of the ACM, 43(2):225 267, 1996
+9-31:Wen Ke Chen, Matti A
+9-32:Hiltunen, and Richard D
+9-33:Schlichting
+9-34:Constructing adaptive software in distributed systems
+9-35:In Proceedings of the 21st IEEE International Conference on Distributed Computing System (ICDCS "01), April 2001
+9-36:The Ensemble project
+9-37:Documentation available electronically at http:  www.cs.cornell.edu Info  Projects Ensemble
+9-38:Richard Ekwall, Sergio Mena, Stefan Pleisch, and Andr´e Schiper
+9-39:Towards flexible finite state machine based protocol composition
+9-40:In Proceedings of the 3rd IEEE International Symposium on Network Computing and Applications (NCA "04), August 2004
+9-41:Philip K
+9-42:McKinley, Seyed Masoud Sadjadi, Eric P
+9-43:Kasten, and Betty H.C
+9-44:Cheng
+9-45:Composing adaptive software
+9-46:IEEE Computer, 37(7):56 64, 2004
+9-47:Sergio Mena, Andr´e Schiper, and Pawel T
+9-48:Wojciechowski
+9-49:A step towards a new generation of group communication systems
+9-50:In Proceedings of the 4th ACM IFIP USENIX International Middleware Conference (Middleware "03), LNCS 2672, June 2003
+9-51:Hugo Miranda, Alexandre Pinto, and Lu´ıs Rodrigues
+9-52:Appia, a flexible protocol kernel supporting multiple coordinated channels
+9-53:In Proceedings of the 21st IEEE International Conference on Distributed Computing Systems (ICDCS "01), April 2001
+9-54:Ohad Rodeh, Kenneth P
+9-55:Birman, Mark Hayden, Zhen Xiao, and Danny Dolev
+9-56:The architecture and performance of security protocols in the Ensemble group communication system
+9-57:Technical Report TR 98 1703, Computer Science Department, Cornell University, September 1998
+9-58:Olivier R¨utti, Pawel T
+9-59:Wojciechowski, and Andr´e Schiper
+9-60:Dynamic update of distributed agreement protocols
+9-61:TR IC 2005 12, School of Computer and Communication Sciences, Ecole Polytechnique F´ed´erale de Lausanne (EPFL), March 2005
+9-62:Andr´e Schiper
+9-63:Dynamic Group Communication
+9-64:Technical Report IC 2003 27, School of Computer and Communication Sciences, Ecole Polytechnique F´ed´erale de Lausanne (EPFL), April 2003
+9-65:To appear in ACM Distributed Computing
+9-66:P´eter Urb´an, Xavier D´efago, and Andr´e Schiper
+9-67:Neko: A single environment to simulate and prototype distributed algorithms
+9-68:In Proceedings of the 15th International Conference on Information Networking (ICOIN "01), February 2001
+9-69:Pawel T
+9-70:Wojciechowski and Olivier R¨utti
+9-71:On correctness of dynamic protocol update
+9-72:In Proceedings of the 7th IFIP Conference on Formal Methods for Open Object Based Distributed Systems (FMOODS "05), LNCS 3535
+9-73:Springer, June 2005
+9-74:696
+picture:

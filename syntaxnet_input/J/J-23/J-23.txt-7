@@ -1,0 +1,147 @@
+In this section we consider several desirable properties of payment bounds and evaluate the four payment bounds proposed in this paper with respect to them
+The particular properties that we are interested in are independence of the choice of S (Section 6.3), monotonicity (Section 6.4.1), computational hardness (Section 6.4.2), and the relationship with other reasonable bounds, such as the total cost of the cheapest set (Section 6.1), or the total VCG payment (Section 6.2)
+6.1 Comparison with total cost Our first requirement is that a payment bound should not be less than the total cost of the selected set
+Payment bounds are used to evaluate the performance of set system auctions
+The latter have to satisfy individual rationality, i.e., the payment to each agent must be at least as large as his incurred costs; it is only reasonable to require the payment bound to satisfy the same requirement
+Clearly, NTUmax(c) and NTUmin(c) satisfy this requirement due to condition (1), and so does TUmax(c), since TUmax(c) ? NTUmax(c)
+However, TUmin(c) fails this test
+The example of Proposition 4 shows that for path auctions, TUmin(c) can be smaller than the total cost by a factor of 2
+Moreover, there are set systems and cost vectors for which TUmin(c) is smaller than the cost of the cheapest set S by a factor of £[(n)
+Consider, for example, the vertex cover auction for the graph of Proposition 5 with the costs cX1 = ¡P ¡P ¡P = cXn?2 = cXn?1 = 1, cX0 = 0
+The cost of a cheapest vertex cover is n ? 2, and the lexicographically first vertex cover of cost n?2 is {X0, X1,
+, Xn?2}
+The constraints in (2) are bXi + bX0 ? cXn?1 = 1
+Clearly, we can satisfy conditions (2) and (3) by setting bX1 = ¡P ¡P ¡P = bXn?2 = 0, bX0 = 1, which means that TUmin(c) ? 1
+This observation suggests that the payment bound TUmin(c) is too strong to be realistic, since it can be substantially lower than the cost of the cheapest feasible set
+Nevertheless, some of the positive results that were proved in [16] for NTUmin(c) go through for TUmin(c) as well
+In particular, one can show that if the feasible sets are the bases of a monopolyfree matroid, then £pTUmin(VCG) = 1
+To show that £pTUmin(VCG) is at most 1, one must prove that the VCG payment is at most TUmin(c)
+This is shown for NTUmin(c) in the first paragraph of the proof of Theorem 5 in [16]
+Their argument does not use condition (1) at all, so it also applies to TUmin(c)
+On the other hand, £pTUmin(VCG) ? 1 since £pTUmin(VCG) ? £pNTUmin(VCG) and £pNTUmin(VCG) ? 1 by Proposition 7 of [16] (and also by Proposition 6 below)
+6.2 Comparison with VCG payments Another measure of suitability for payment bounds is that they should not result in frugality ratios that are less then 1 for wellknown truthful mechanisms
+If this is indeed the case, the payment bound may be too weak, as it becomes too easy to design mechanisms that perform well with respect to it
+It particular, a reasonable requirement is that a payment bound should not exceed the total payment of the classical VCG mechanism
+The following proposition shows that NTUmax(c), and therefore also NTUmin(c) and TUmin(c), do not exceed the VCG payment pVCG(c)
+The proof essentially follows the argument of Proposition 7 of [16] and can be found in the full version of this paper [8]
+PROPOSITION 6
+£pNTUmax(VCG) ? 1
+Proposition 6 shows that none of the payment bounds TUmin(c), NTUmin(c) and NTUmax(c) exceeds the payment of VCG
+However, the payment bound TUmax(c) can be larger that the total 343 VCG payment
+In particular, for the instance in Proposition 5, the VCG payment is smaller than TUmax(c) by a factor of n ? 2
+We have already seen that TUmax(c) ? n ? 2
+On the other hand, under VCG, the threshold bid of any Xi, i = 1,
+, n ? 2, is 0
+Similarly, the threshold bid of X0 is 1, because if X0 bids above 1, it can be replaced with Xn?1
+So the VCG payment is 1
+This result is not surprising
+Indeed, co operation enables the agents to extract higher payments under VCG
+That is, VCG is not groupstrategyproof
+This suggests that as a payment bound, TUmax(c) may be too liberal, at least in a context where there is little or no co operation between agents
+Perhaps TUmax(c) can be a good benchmark for measuring the performance of mechanisms designed for agents that can form coalitions or make side payments to each other, in particular, group strategyproof mechanisms
+Another setting in which bounding £pTUmax is still of some interest is when, for the underlying problem, the optimal allocation and VCG payments are NP hard to compute
+In this case, finding a polynomial time computable mechanism with good frugality ratio with respect to TUmax(c) is a non trivial task, while bounding the frugality ratio with respect to more challenging payment bounds could be too difficult
+To illustrate this point, compare the proofs of Lemma 6 and Lemma 7
+6.3 The choice of S All payment bounds defined in this paper correspond to the total bid of all elements in the cheapest feasible set, where ties are broken lexicographically
+While this definition ensures that our payment bounds are well defined, the particular choice of the drawresolution rule appears arbitrary, and one might wonder if our payment bounds are sufficiently robust to be independent of this choice
+It turns out that is indeed the case for NTUmin(c) and NTUmax(c), i.e., these bounds do not depend on the draw resolution rule
+To see this, suppose that two feasible sets S1 and S2 have the same cost
+In the computation of NTUmin(c, S1), all vertices in S1 \S2 would have to bid their true cost, since otherwise S2 would become cheaper than S1
+Hence, any bid vector for S1 can only have be = ce for e ? S1 ¡ä S2, and hence constitutes a valid bid vector for S2 and vice versa
+A similar argument applies to NTUmax(c)
+However, for TUmin(c) and TUmax(c) this is not the case
+For example, consider the set system E = {e1, e2, e3, e4, e5}, F = {S1 = {e1, e2}, S2 = {e2, e3, e4}, S3 = {e4, e5}} with the costs c1 = 2, c2 = c3 = c4 = 1, c5 = 3
+The cheapest sets are S1 and S2
+Now TUmax(c, S1) ? 4, as the total bid of the elements in S1 cannot exceed the total cost of S3
+On the other hand, TUmax(c, S2) ? 5, as we can set b2 = 3, b3 = 0, b4 = 2
+Similarly, TUmin(c, S1) = 4, because the inequalities in (2) are b1 ? 2 and b1 + b2 ? 4
+But TUmin(c, S2) ? 3 as we can set b2 = 1, b3 = 2, b4 = 0
+6.4 Negative results for NTUmin(c) and TUmin(c) The results in [16] and our vertex cover results are proved for the frugality ratio £pNTUmin
+Indeed, it can be argued that £pNTUmin is the best definition of frugality ratio, because among all reasonable payment bounds (i.e., ones that are at least as large as the cost of the cheapest feasible set), it is most demanding of the algorithm
+However, NTUmin(c) is not always the easiest or the most natural payment bound to work with
+In this subsection, we discuss several disadvantages of NTUmin(c) (and also TUmin(c)) as compared to NTUmax(c) and TUmax(c)
+6.4.1 Nonmonotonicity The first problem with NTUmin(c) is that it is not monotone with respect to F, i.e., it may increase when one adds a feasible set to F
+(It is, however, monotone in the sense that a losing agent cannot become a winner by raising his cost.) Intuitively, a good payment bound should satisfy this monotonicity requirement, as adding a feasible set increases the competition, so it should drive the prices down
+Note that this indeed the case for NTUmax(c) and TUmax(c) since a new feasible set adds a constraint in (2), thus limiting the solution space for the respective linear program
+PROPOSITION 7
+Adding a feasible set to F can increase the value of NTUmin(c) by a factor of £[(n)
+PROOF
+Let E = {x, xx, y1,
+, yn, z1,
+, zn}
+Set Y = {y1,
+, yn}, S = Y ¡å {x}, Ti = Y \ {yi} ¡å {zi}, i = 1,
+, n, and suppose that F = {S, T1,
+, Tn}
+The costs are cx = 0, cxx = 0, cyi = 0, czi = 1 for i = 1,
+, n
+Note that S is the cheapest feasible set
+Let F = F ¡å {T0}, where T0 = Y ¡å {xx}
+For F, the bid vector by1 = ¡P ¡P ¡P = byn = 0, bx = 1 satisfies (1), (2), and (3), so NTUmin(c) ? 1
+For F , S is still the lexicographically least cheapest set
+Any optimal solution has bx = 0 (by constraint in (2) with T0)
+Condition (3) for yi implies bx + byi = czi = 1, so byi = 1 and NTUmin(c) = n
+For path auctions, it has been shown [18] that NTUmin(c) is non monotone in a slightly different sense, i.e., with respect to adding a new edge (agent) rather than a new feasible set (a team of existing agents)
+REMARK 5
+We can also show that NTUmin(c) is non monotone for vertex cover
+In this case, adding a new feasible set corresponds to deleting edges from the graph
+It turns out that deleting a single edge can increase NTUmin(c) by a factor of n ? 2; the construction is similar to that of Proposition 5
+6.4.2 NP Hardness Another problem with NTUmin(c, S) is that it is NP hard to compute even if the number of feasible sets is polynomial in n
+Again, this puts it at a disadvantage compared to NTUmax(c, S) and TUmax(c, S) (see Remark 1)
+THEOREM 6
+Computing NTUmin(c) is NP hard, even when the lexicographically least feasible set S is given in the input
+PROOF
+We reduce EXACT COVER BY 3 SETS(X3C) to our problem
+An instance of X3C is given by a universe G = {g1,
+, gn} and a collection of subsets C1,
+, Cm, Ci ? G, |Ci| = 3, where the goal is to decide whether one can cover G by n 3 of these sets
+Observe that if this is indeed the case, each element of G is contained in exactly one set of the cover
+LEMMA 9
+Consider a minimisation problem P of the following form
+, n; (2) for any j = 1,
+, k we have P bi?Sj bi ? aj, where Sj ? {b1,
+, bn}; (3) for each bj , one of the constraints in (2) involving it is tight
+For any such P, one can construct a set system S and a vector of costs c such that NTUmin(c) is the optimal solution to P
+PROOF
+The construction is straightforward
+, bn}, or any set obtained from {b1,
+, bn} by replacing the elements in Sj by aj
+344 By this lemma, all we have to do to prove Theorem 6 is to show how to solve X3C by using the solution to a minimisation problem of the form given in Lemma 9
+We do this as follows
+For each Ci, we introduce 4 variables xi, ¡Âxi, ai, and bi
+Also, for each element gj of G there is a variable dj
+We use the following set of constraints
+, m, j = 1,
+, n
+? In (2), for all i = 1,
+, m, we have the following 5 constraints
+Also, for all j = 1,
+, n we have a constraint of the form xi1 + ¡P ¡P ¡P + xik + dj ? 1, where Ci1 ,
+, Cik are the sets that contain gj
+The goal is to minimize z = P i(xi + ¡Âxi + ai + bi) + P j dj
+Observe that for each j, there is only one constraint involving dj , so by condition (3) it must be tight
+Consider the two constraints involving ai
+One of them must be tight, and therefore xi +¡Âxi +ai +bi ? xi +¡Âxi +ai ? 1
+Hence, for any feasible solution to (1) (3) we have z ? m
+Now, suppose that there is an exact set cover
+Set dj = 0 for j = 1,
+, n
+Also, if Ci is included in this cover, set xi = 1, ¡Âxi = ai = bi = 0, otherwise set ¡Âxi = 1, xi = ai = bi = 0
+Clearly, all inequalities in (2) are satisfied (we use the fact that each element is covered exactly once), and for each variable, one of the constraints involving it is tight
+This assignment results in z = m
+Conversely, suppose there is a feasible solution with z = m
+As each addend of the form xi + ¡Âxi + ai + bi contributes at least 1, we have xi + ¡Âxi + ai + bi = 1 for all i, dj = 0 for all j
+We will now show that for each i, either xi = 1 and ¡Âxi = 0, or xi = 0 and ¡Âxi = 1
+For the sake of contradiction, suppose that xi = £_ < 1, ¡Âxi = £_ < 1
+As one of the constraints involving ai must be tight, we have ai ? min{1 ? £_, 1 ? £_ }
+Similarly, bi ? min{1 ? £_, 1 ? £_ }
+Hence, xi + ¡Âxi + ai + bi = 1 = £_ +£_ +2 min{1?£_, 1?£_ } > 1
+To finish the proof, note that for each j = 1,
+, m we have xi1 + ¡P ¡P ¡P + xik + dj = 1 and dj = 0, so the subsets that correspond to xi = 1 constitute a set cover
+REMARK 6
+In the proofs of Proposition 7 and Theorem 6 all constraints in (1) are of the form be ? 0
+Hence, the same results are true for TUmin(c)
+REMARK 7
+For shortest path auctions, the size of F can be superpolynomial
+However, there is a polynomial time separation oracle for constraints in (2) (to construct one, use any algorithm for finding shortest paths), so one can compute NTUmax(c) and TUmax(c) in polynomial time
+On the other hand, recently and independently it was shown [18] that computing NTUmin(c) for shortest path auctions is NP hard.

@@ -1,0 +1,30 @@
+the west the east and b Dijkstra"s algorithm 10 .
+Let w equal the total weight of P .
+11 .
+Return P as the least exposure path with an exposure equal to 10?w .
+Figure 2
+it need not be detected at any point u lying between any two adjacent grid points of P .
+We therefore subdivide any path P as a chain of grid segments .
+Let us consider two adjacent points, say v1 and v2 on the grid .
+Let l denote the line segment between v1 and v2 .
+Also, let ml denote the probability of not detecting a target traveling between v1 and v2 on the line segment l .
+Then, from the discussion above, log ml = u?l log(1 ? D(u))du (3) The probability ml can be evaluated by finding the detection probability D(u) at each point u ? l .
+Note that, ml lies between 0 and 1 and, therefore, log ml is negative .
+To find the least exposed path, a non negative weight equal to | log ml| is assigned to each segment l on this grid .
+Also, a fictitious point a is created and a line segment is added from a to each grid point on the west periphery of the sensor field .
+A weight equal to 0 is assigned to each of these line segments .
+Similarly, a fictitious point b is created and a line segment is added from b to each grid point on the east periphery of the sensor field .
+A weight equal to 0 is assigned to each of these line segments .
+The problem of finding the least exposed path from west periphery to east periphery is then equivalent to the problem of finding the least weight path from a to b on this grid .
+Such a path can be efficiently determined using the Dijkstra"s shortest path algorithm [1] .
+A pseudo code of the overall algorithm is shown in Figure 2 .
+Example
+Assume the noise process at each sensor is Additive White Gaussian with mean 0 and variance 1 .
+Further assume that the sensors use value fusion to arrive at a consensus decision .
+Then, from Equation 2, we chose a threshold £b = 3.0 to achieve a false alarm probability of 0.187% .
+The field has been divided into a 10 ¡Ñ 10 grid .
+The target emits an energy K = 12 and the energy decay factor is 2 .
+The figure shows the weight assigned to each line segment in the grid as described above .
+The least exposure path found by the Dijkstra"s algorithm for this weighted grid is highlighted .
+The probability of de44 Fictitious Fictitious Threshold = 3.0, Detection Probability of the Path = 0.926 Point A Point B0.090.921.651.610.860.08 0.860.355.1744.9 0.03 0.800.821.3640.5 1.051.503.4442.580.041.41.420.17 0.63 3.36 0.04 1.48 0.323.596.833.600.240.11 2.01 1.88 0.030.030.030.050.060.070.040.020.100.03 0.010.010.050.060.05 0.540.45 0.050.040.020.03 1.14 0.040.020.050.070.040.020.010.02 0.010.010.010.040.31 0.05 0.040.010.000.01 0.000.010.010.220.420.440.240.020.000.00 0.010.010.010.050.480.490.060.010.010.01 2.24 3.00 0.16 0.12 1.54 43.4 43.4 2.69 1.06 0.98 0.040.01 1.18 0.06 0.07 0.21 3.45 3.44 0.20 0.14 0.74 0.31 0.33 0.09 0.05 0.02 0.05 0.06 0.06 0.06 0.02 0.02 0.01 0.01 0.02 0.04 0.03 0.04 0.07 0.03 0.05 0.04 0.01 0.01 0.01 0.01 0.00 0.02 0.06 0.32 0.52 0.02 0.03 0.01 0.01 0.01 0.00 0.00 0.02 0.25 0.49 0.24 0.02 0.01 0.01 0.00 0.01 0.00 0.01 0.02 0.28 0.65 0.25 0.02 0.01 0.01 0.00 0.89 1.12 0.85 0.24 1.60 40.2 5.01 0.29 0.25 1.00 0.65 2.29 2.55 0.83 0.17 1.89 80.0 44.9 2.75 1.05 1.32 0.53 0.850.390.190.120.361.361.210.270.610.53 0.07 0.49 0.19 0.93 1.89 1.13 0.16 0.06 0.17 0.97 1.26 0.04 1.10 0.43 Sensor 0.00 Edge Weight 0.05 1.38 Figure 3
+tecting the target traversing the field using the highlighted path is 0.926. .

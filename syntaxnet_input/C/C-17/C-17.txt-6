@@ -1,0 +1,29 @@
+This section is dedicated to the description of the proposed system architecture .
+However, as this paper constitutes the continuation of our work started in [14] and furthered in [16], we will not present here all the details about the proposed entities and invite the readers to consult the papers mentioned above for a full and thorough description .
+First, we do not restrict our conferencing system to work on small conferences only, but rather on large audio VCEs that have hundreds (or even thousands) of users across a Wide Area Network such as the Internet .
+This view stems from an appraisal that VCEs will gain in importance in the future, as interactive audio conferences will be more popular because of the spread of the media culture around the world .
+Two issues must be taken care of when building a VoIP conferencing system
+The participating users are grouped into several domains .
+These domains are Local Area Networks (LANs), such as corporate or educational networks .
+This distributed assumption asks for distributed controlling and media handling solutions, as centralized systems would not scale for such very large conferences (vide Section 4) .
+More explicitly, in each domain, we can identify several relevant logical components of a conferencing facility (Fig .
+1)
+Every user is Fig .
+1 .
+Conference example 3 domains containing the necessary entities so that the conference can take place .
+included in one and only one domain at a given instant, but can move from domain to domain (nomadism) .
+In our conferencing environment, these clients are regular SIP User Agents (SIP UAs), as defined in [22] so to gain in interoperability with other existing SIP compatible systems .
+These clients are thus not aware of the complex setting that supports the conference and this is highlighted below .
+? One SIP Server per domain, taking care of all the signaling aspects of the conference (clients joining, leaving, etc.) [16] .
+In particular, it is considered as a physical implementation encompassing different logical roles, namely a SIP Proxy Server, a SIP Registrar Server, a SIP Redirect Server and a SIP B2BUA (Back to Back User Agent) [22] .
+This physical implementation enables the handling of incoming outgoing SIP messages by one or another logical entity according to the needs .
+SIPS is entrusted with maintaining total service and has many advantages such as (a) it works as a centralized entity that can keep track of the activities of the UAs in a conference; (b) it can do all the switching for providing PBX features; (c) it can locate the UAs and invite them for a conference; (d) it can do the billing as well .
+SIPSs in different domains communicate with each other using SIP messages as described in [16] .
+If the load on a particular SIPS is too heavy, it can create another SIPS in the same domain so that the load will be shared .
+? One Master Conference Server (M CS) (simply a Conference Server (CS)) for each conference is created by the local SIPS when a conference starts .
+This server will be used for handling media packets for the clients of the domain .
+Its mechanism will be described in the next section .
+The M CS will be able to create a hierarchy of CSs inside a domain by adding one or more Slave CSs (S CSs) to accommodate all the active clients and prevent its own flooding at the same time .
+We will see this mechanism in some detail in the sequel .
+The entities described here are exhaustive and conform to the SIP philosophy .
+Thus, the use of SIP makes this architecture more useful and interoperable with any other SIP clients or servers. .

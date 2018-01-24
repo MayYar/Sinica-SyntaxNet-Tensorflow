@@ -1,0 +1,55 @@
+In this section we provide a brief introduction to decentralised publish subscribe systems .
+We indicate our assumptions about multi domain publish subscribe systems, and describe how these assumptions influence the developments we have made from our previously published work .
+2.1 Decentralised Publish Subscribe Systems A publish subscribe system includes publishers, subscribers, and an event service .
+Publishers publish events, subscribers subscribe to events of interest to them, and the event service is responsible for delivering published events to all subscribers whose interests match the given event .
+The event service in a decentralised publish subscribe system is distributed over a number of broker nodes .
+Together these brokers form a network that is responsible for maintaining the necessary routing paths from publishers to subscribers .
+Clients (publishers and subscribers) connect to a local broker, which is fully trusted by the client .
+In our discussion we refer to the client hosting brokers as publisher hosting brokers or subscriber hosting brokers depending on whether the connected client is a publisher or 105 IB SHB Sub Pub Pub Sub Sub IB PHB IB IB PHB IB IB IB IB SHB SHB IBIB IB IB IB IB IB IBIB IB TO IB IB IB Metropolitan Police Domain Congestion Charge Service Domain PITO Domain Detective Smith Camera 1 Camera 2 Billing Office Statistics Office Sub Subscriber SHB Subscriber Hosting Broker Pub Publisher PHB Publisher Hosting Broker TO Type Owner IB Intermediate Broker KEY Figure 1
+A local broker is usually either part of the same domain as the client, or it is owned by a service provider trusted by the client .
+A broker network can have a static topology (e.g .
+Siena [3] and Gryphon [14]) or a dynamic topology (e.g .
+Scribe [4] and Hermes [13]) .
+Our proposed approach will work in both cases .
+A static topology enables the system administrator to build trusted domains and in that way improve the efficiency of routing by avoiding unnecessary encryptions (see Sect .
+3.4), which is very difficult with a dynamic topology .
+On the other hand, a dynamic topology allows the broker network to dynamically re balance itself when brokers join or leave the network either in a controlled fashion or as a result of a network or node failure .
+Our work is based on the Hermes system .
+Hermes is a content based publish subscribe middleware that includes strong event type support .
+In other words, each publication is an instance of a particular predefined event type .
+Publications are type checked at the local broker of each publisher .
+Our attribute level encryption scheme assumes that events are typed .
+Hermes uses a structured overlay network as a transport and therefore has a dynamic topology .
+A Hermes publication consists of an event type identifier and a set of attribute value pairs .
+The type identifier is the SHA 1 hash of the name of the event type .
+It is used to route the publication through the event broker network .
+It conveniently hides the type of the publication, i.e .
+brokers are prevented from seeing which events are flowing through them unless they are aware of the specific event type name and identifier .
+2.2 Secure Event Types Pesonen et al .
+introduced secure event types in [11], which can have their integrity and authenticity confirmed by checking their digital signatures .
+A useful side effect of secure event types are their globally unique event type and attribute names .
+These names can be referred to by access control policies .
+In this paper we use the secure name of the event type or attribute to refer to the encryption key used to encrypt the event or attribute .
+2.3 Capability Based Access Control Pesonen et al .
+proposed a capability based access control architecture for multi domain publish subscribe systems in [12] .
+The model treats event types as resources that publishers, subscribers, and event brokers want to access .
+The event type owner is responsible for managing access control for an event type by issuing Simple Public Key Infrastructure authorisation certificates that grant the holder access to the specified event type .
+For example, authorised publishers will have been issued an authorisation certificate that specifies that the publisher, identified by public key, is authorised to publish instances of the event type specified in the certificate .
+We leverage the above mentioned access control mechanism in this paper by controlling access to encryption keys using the same authorisation certificates .
+That is, a publisher who is authorised to publish a given event type, is also authorised 106 to access the encryption keys used to protect events of that type .
+We discuss this in more detail in Sect .
+4 .
+2.4 Threat model The goal of the proposed mechanism is to enforce access control for authorised participants in the system .
+In our case the first level of access control is applied when the participant tries to join the publish subscribe network .
+Unauthorised event brokers are not allowed to join the broker network .
+Similarly unauthorised event clients are not allowed to connect to an event broker .
+All the connections in the broker network between event brokers and event clients utilise Transport Layer Security [5] in order to prevent unauthorised access on the transport layer .
+The architecture of the publish subscribe system means that event clients must connect to event brokers in order to be able to access the publish subscribe system .
+Thus we assume that these clients are not a threat .
+The event client relies completely on the local event broker for access to the broker network .
+Therefore the event client is unable to access any events without the assistance of the local broker .
+The brokers on the other hand are able to analyse all events in the system that pass through them .
+A broker can analyse both the event traffic as well as the number and names of attributes that are populated in an event (in the case of attribute level encryption) .
+There are viable approaches to preventing traffic analysis by inserting random events into the event stream in order to produce a uniform traffic pattern .
+Similarly attribute content can be padded to a standard length in order to avoid leaking information to the adversary .
+While traffic analysis is an important concern we have not addressed it further in this paper. .

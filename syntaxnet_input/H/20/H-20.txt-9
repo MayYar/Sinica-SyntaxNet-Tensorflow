@@ -1,0 +1,46 @@
+7.1 Main Results To test the approaches proposed in the model, we implemented and tested five systems
+It is implemented based on the basic model described in section 3, i.e., using incremental TF IDF model to generate term weights, and using Hellinger distance to compute document similarity .
+Similarity score normalization is also employed [8] .
+S S detection procedure is used .
+System 2
+System 3
+System 4
+The new detection procedure is used .
+System 5
+The new detection procedure is used .
+The following are some other NED systems
+And employ Support Vector Machine to predict new or old using the similarity values as features .
+System 7
+System 8
+Table 3 and table 4 show topic weighted normalized costs and comparing times on TDT2 and TDT3 datasets respectively .
+Since no heldout data set for fine tuning the threshold £c new was available for experiments on TDT2, we only report minimum normalized costs for our systems in table 3 .
+System 5 outperforms all other systems including system 6, and it performs only 2.78e+8 comparing times in detection procedure which is only 13.4% of system 1 .
+Table 3 .
+NED results on TDT2 Systems Min Norm(CDet) Cmp times System 1 0.5749 2.08e+9 System 2? 0.6673 3.77e+8 System 3? 0.5765 2.81e+8 System 4? 0.5431 2.99e+8 System 5? 0.5089 2.78e+8 System 6 0.5300 ? £c new=0.13 ? £c init=0.13, £f =3,£_ =0.15 When evaluating on the normalized costs on TDT3, we use the optimal thresholds obtained from TDT2 data set for all systems .
+System 2 reduces comparing times to 1.29e+9 which is just 18.3% of system 1, but at the same time it also gets a deteriorated minimum normalized cost which is 0.0499 higher than system 1 .
+System 3 uses the new detection procedure based on news indexing tree .
+It requires even less comparing times than system 2 .
+This is because story story comparisons usually yield greater similarities than story cluster ones, so stories tend to be combined Location Person Date Organization Money Percentage NN JJ CD Elections 0.37 1 0.04 0.58 0.08 0.03 0.32 0.13 0.1 Scandals Hearings 0.66 0.62 0.28 1 0.11 0.02 0.27 0.13 0.05 Legal Criminal Cases 0.48 1 0.02 0.62 0.15 0 0.22 0.24 0.09 Natural Disasters 1 0.27 0 0.04 0.04 0 0.25 0.04 0.02 Violence or War 1 0.36 0.02 0.14 0.02 0.04 0.21 0.11 0.02 Science and Discovery 0.11 1 0.01 0.22 0.08 0.12 0.19 0.08 0.03 Finances 1 0.45 0.04 0.98 0.13 0.02 0.29 0.06 0.05 Sports 0.16 0.27 0.01 1 0.02 0 0.11 0.03 0.01 together in system 3 .
+And system 3 is basically equivalent to system 1 in accuracy results .
+System 4 adjusts term weights based on the distance of term distributions between the whole corpus and cluster story set, yielding a good improvement by 0.0468 compared to system 1 .
+The best system (system 5) has a minimum normalized cost 0.5012, which is 0.0797 better than system 1, and also better than any other results previously reported for this dataset [8, 13] .
+Further more, system 5 only needs 1.05e+8 comparing times which is 14.9% of system 1 .
+Table 4 .
+NED results on TDT3 Systems Norm(CDet) Min Norm(CDet) Cmp times System 1 0.6159 0.5809 7.04e+8 System 2? 0.6493 0.6308 1.29e+8 System 3? 0.6197 0.5868 1.03e+8 System 4? 0.5601 0.5341 1.03e+8 System 5? 0.5413 0.5012 1.05e+8 System 7 0.5783 System 8 0.5229 ? £c new=0.13 ? £c init=0.13, £f =3,£_ =0.15 Figure5 shows the five DET curves for our systems on data set TDT3 .
+System 5 achieves the minimum cost at a false alarm rate of 0.0157 and a miss rate of 0.4310 .
+We can observe that System4 and System 5 obtain lower miss probability at regions of low false alarm probabilities .
+The hypothesis is that, more weight value is transferred to key terms of topics from non key terms .
+Similarity score between two stories belonging to different topics are lower than before, because their overlapping terms are usually not key terms of their topics .
+7.2 Parameter selection for indexing tree detection Figure 3 shows the minimum normalized costs obtained by system 3 on TDT3 using different parameters .
+The£c init parameter is tested on six values spanning from 0.03 to 0.18 .
+And the £f parameter is tested on four values 1, 2, 3 and 4 .
+We can see that, when£c init is set to 0.12, which is the closest one to£c new, the costs are lower than others .
+This is easy to explain, because when stories belonging to the same topic are put in a cluster, it is more reasonable for the cluster to represent the stories in it .
+When parameter £f is set to 3 or 4, the costs are better than other cases, but there is no much difference between 3 and 4 .
+0 0.05 0.1 0.15 0.2 1 2 3 4 0.5 0.6 0.7 0.8 0.9 1 £c init£f MinCost 0.6 0.65 0.7 0.75 0.8 0.85 0.9 Figure 3 .
+Min Cost on TDT3 (£_ =0.15) 0 0.05 0.1 0.15 0.2 1 2 3 4 0 0.5 1 1.5 2 2.5 x 10 8 £c init £f Comparingtimes 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 x 10 8 Figure 4 .
+Comparing times on TDT3 (£_ =0.15) Figure 4 gives the comparing times used by system 3 on TDT3 with the same parameters as figure 3 .
+The comparing times are strongly dependent on£c init .
+Because the greater£c init is, the less stories combined together, the more comparing times are needed for new event decision .
+So we use£c init =0.13,£f =3,£_ =0.15 for system 3, 4, and 5 .
+In this parameter setting, we can get both low minimum normalized costs and less comparing times. .

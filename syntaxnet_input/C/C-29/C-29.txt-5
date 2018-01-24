@@ -1,0 +1,101 @@
+4.1 Grid Testbed The grid testbed was constructed by computing resources at the University of Tsukuba, the Toyohashi University of Technology and the National Institute of Advanced Industrial Science and Technology .
+Table 1 shows the computing resources used for the grid of the present study .
+The University of Tsukuba and AIST are connected by a 1 Gbps Tsukuba WAN, and the other PC clusters are connected by SINET, which is wide area network dedicated to academic research in Japan .
+Table 2 shows the performance of the measured network between the master node of the Dennis cluster and the master node of each PC cluster in the grid testbed .
+The communication throughput was measured using netperf, and the round trip time was measured by ping .
+4.2 Performance of CONFLEX G In all of the CONFLEX G experiments, the client program was executed on the master node of the Dennis cluster at the University of Tsukuba .
+The built in Round Robin scheduler of OmniRPC was used as a job scheduler .
+SSH was used for an authentication system, the OminRPC"s MXIO, which relays the I O communication between client program and worker programs by port forwarding of SSH was, not used .
+Note that one worker program is assigned and performed on one CPU of the calculation node in a PC cluster .
+That is, the number of workers is equal to the number of CPUs .
+These programs were compiled by the Intel Fortran Compiler 7.0 and gcc 2.95 .
+MPICH, Version 1.2.5, was used to compare the performance between CONFLEX MPI and CONFLEX G .
+In order to demonstrate the usability of the OmniRPC facility of the AIM, we implemented another version of CONFLEX G which did not utilize the OmniRPC facility .
+The worker program in this version of CONFLEXG must be initialized at each RPC because the worker does not hold the previous data set .
+In order to examine the performance of CONFLEX G, we selected two peptides and two small protein as test molecules
+The column trial structure loops in this table shows the Figure 7
+Figure 8
+Figure 9
+159 Table 3
+Molecular # of # of total trial trial structure Data transfer to Data transfer code atoms structures loop initialize a worker trial structure AlaX04 181 360 45 2033KB 17.00KB AlaX16 191 480 160 2063KB 18.14KB 1L2Y 315 331 331 2099KB 29.58KB 1BL1 519 519 519 2150KB 48.67KB Table 4
+Total Total Optimization Cluster # of Structures optimization time Elapsed Speed (# of workers) workers worker time (s) structure (s) time (s) up Dennis (sequential) 1 320.0 1786.21 4.96 1786.21 1.00 Toyo (16) 16 20.0 1497.08 4.16 196.32 9.10 Dennis (28) 28 11.4 1905.51 5.29 97.00 18.41 Alice (36) 36 8.9 2055.25 5.71 87.09 20.51 Ume (56) 56 5.7 2196.77 6.10 120.69 14.80 Dennis (28) + Toyo (16) 44 7.3 1630.09 4.53 162.35 11.00 Alice (36) + Toyo (16) 52 6.2 1774.53 4.93 178.24 10.02 Dennis (28) + Alice (36) 64 5.0 1999.02 5.55 81.52 21.91 Dennis (28) + Ume (56) 84 3.8 2085.84 5.79 92.22 19.37 Alice (36) + Ume (56) 92 3.5 2120.87 5.89 101.25 17.64 Table 5
+Cluster Total # of Structures Optimization time Elapsed Elapsed Speed (# of workers) workers worker structure (s) time (s) time up Toyo MPI (1) 1 331.0 867 286,967 79.71 1.00 Toyo MPI (16) 16 20.7 867 18,696 5.19 15.34 Dennis (28) 28 11.8 803 14,101 3.91 20.35 Dennis (28) + Ume(56) 84 3.9 1,064 8,316 2.31 34.50 Table 7
+Cluster Total # of Structures Optimization time Elapsed Elapsed Speed (# of workers) workers worker structure (s) time (s) time up Toyo MPI (1) 1 519.0 3,646 1892,210 525.61 1.00 Toyo MPI (16) 16 32.4 3,646 120,028 33.34 15.76 Dennis (28) 28 18.5 3,154 61,803 17.16 30.61 Dennis (28) + Ume (56) 84 6.1 4,497 33,502 9.30 56.48 160 number of trial structures generated in each iteration, indicating the degree of parallelism .
+Figure 3 also summarizes the amount of data transmission required for initialization of a worker program and for optimization of each trial structure .
+Note that the amount of data transmission, which is required in order to initialize a worker program and optimize a trial structure in the MPI version of CONFLEX, is equal to that of CONFLEX G .
+We used an improvement version of MM2 force field to assign a potential energy function to various geometric properties of a group of atoms .
+4.2.1 Performance in a Local Cluster We first compared the performance of CONFLEX G, the MPI version of CONFLEX, and the original sequential version of CONFLEX G using a local cluster .
+We investigated performance by varying the number of workers using the Dennis cluster .
+We chose AlaX04 as a test molecule for this experiment .
+Figure 7 compares the results for the CONFLEX MPI and CONFLEX G in a local PC cluster .
+The result of this experiment shows that CONFLEX G can reduce the execution time as the number of workers increases, as in the MPI version of CONFLEX .
+We found that CONFLEX G achieved efficiencies comparable to the MPI version .
+With 28 workers, CONFLEX G achieved an 18.00 times speedup compared to the CONFLEX sequential version .
+The performance of CONFLEX G without the OmniRPC AIM facility is worse than that of CONFLEXG using the facility, based on the increase in the number of workers .
+This indicates that the OmniRPC AIM enables the worker to calculate efficiently without other calculations, such initialization or invocation of worker programs .
+As the number of workers is increased, the performance of CONFLEX G is a slightly lower than that of the MPI version .
+This performance degradation is caused by differences in the worker initialization processes of CONFLEX G and CONFLEX MPI .
+In the case of CONFLEX MPI, all workers are initialized in advance of the optimization phase .
+In the case of OminRPC, the worker is invoked on demand when the RPC call is actually issued .
+Therefore, the initialization incurs this overhead .
+Since the objective of CONFLEX G is to explore the conformations of large bio molecules, the number of trial structures and the time to optimize the trial structure might be large .
+In such cases, the overhead to invoke and initialize the worker program can be small compared to the entire elapsed time .
+4.2.2 Performance for Peptides in The Grid Testbed First, the sample molecules (AlaX04 and AlaX16) were used to examine the CONFLEX G performance in a grid environment .
+Figure 8 shows the speedup achieved by using multiple clusters compared to using one worker in the Dennis cluster .
+Detailed results are shown in Table 4 and Table 5 .
+In both cases, the best performance was obtained using 64 workers of the combination of the Dennis and Alice clusters .
+CONFLEX G achieved a maximum speedup of 36.08 times for AlaX04 and a maximum speedup of 21.91 times for AlaX16 .
+In the case of AlaX04, the performance is improved only when the network performance between clusters is high .
+However, even if two or more clusters are used in a wide area network environment, the performance improvement was slight because the optimization time of one trial structure generated from AlaX04, a small molecule, is short .
+In addition, the overhead required for invocation of a worker program and network data transmission consume a large portion of the remaining processing time .
+In particular, the data transmission required for the initialization of a worker program is 2 MB .
+In the case of Toyo cluster, where the network performance between the client program and the worker programs is poor, the time of data transmission to the worker program required approximately 6.7 seconds .
+Since this transmission time was longer than the processing time of one structure optimization in CONFLEX G, most of the time was spent for this data transmission .
+Therefore, even if CONFLEX G uses a large number of calculation nodes in a wide area network environment, the benefit of using a grid resource is not obtained .
+In the case of AlaX16, CONFLEX G achieved a speedup by using two or more PC clusters in our grid testbed .
+This was because the calculation time on the worker program was long and the overhead, such as network latency and the invoking of worker programs, became relatively small and could be hidden .
+The best performance was obtained using 64 workers in the Dennis and Alice clusters .
+In the case of AaX16, the achieved performance was a speedup of 36.08 times .
+Figure 9 reveals the effect of using the facility of the OmniRPC AIM on CONFLEX G performance .
+In most cases, CONFLEX G with the OmniRPC AIM facility archived better performance than CONFLEX G without the facility .
+In particular, the OmniRPC AIM facility was advantageous when using two clusters connected by a low performance network .
+The results indicate that the OmniRPC AIM facility can improve performance in the grid environment .
+4.2.3 PerformanceforSmallProteininTheGridTestbed Finally, we explored the molecular conformation using CONFLEX G for large molecules .
+In a grid environment, this experiment was conducted using the Dennis and Ume clusters .
+In this experiment, we used two proteins, 1L2Y and 1BL1 .
+Table 6 and Table 7 show the performance of CONFLEX G in the grid environment and that of CONFLEX MPI in the Toyo cluster, respectively .
+The speedups in these tables were computed respectively based on the performance of one worker and 16 workers of the Toyo cluster using CONFLEX MPI .
+CONFLEX G with 84 workers in Dennis and Ume clusters obtained maximum speedups of 56.5 times for 1L2Y and 34.5 times for 1L2Y .
+Since the calculation time for structure optimization required a great deal of time, the ratio of overhead, including tasks such as the invocation of a worker program and data transmission for initialization, became very small, so that the performance of CONFLEX G was improved .
+We found that the load imbalance in the processing time of optimization for each trial structure caused performance degradation .
+When we obtained the best performance for 1L2Y using the Dennis and Ume clusters, the time for each structure optimization varied from 190 to 27,887 seconds, and the ratio between the longest and shortest times was 13.4 .
+For 1BL1, the ratio of minimum time over maximum time was 190 .
+In addition, in order that the worker program wait until the completion of optimization of all trial structures, all worker programs were found to wait in an idle state for approximately 6 hours .
+This has caused the performance degradation of CONFLEX G .
+161 4.3 Discussion In this subsection, we discuss the improvement of the performance reflected in our experiments .
+Exploiting parallelism In order to exploit more computational resources, it is necessary to increase the degree of parallelism .
+In this experiment, the degree of parallelism was not so large in the case of the sample molecules .
+When using a set of over 500 computing nodes for 1BL1, the number of one trial structures assigned to each worker will be only one or two .
+If over 100 trial structures are assigned to each worker program, calculation can be performed more efficiently due to the reduction of the overhead for worker invocation and initialization via the facility of the OmniRPC AIM .
+One idea for increasing parallelism is to overlap the execution of two or more sets of trial structures .
+In the current algorithm, a set of trial structures is generated from one initial structure and computed until optimizations for all structures in this set are calculated .
+Furthermore, this will help to improve load imbalance .
+By having other sets of trial structures overlap, even if some optimizations require a long time, the optimization for the structures in other sets can be executed to compensate for the idle workers for other optimizations .
+It is however unclear how such modification of the algorithm might affect the quality of the final results in terms of a conformation search .
+Improvement in load imbalance when optimizing each trial structure Table 8 lists the statistics for optimization times of trial structures generated for each sample molecule measured using 28 workers in the Dennis cluster .
+When two or more sets of PC clusters are used, the speedup in performance is hampered by the load imbalance of the optimization of the trial structures .
+The longest time for optimizing a trial structure was nearly 24 times longer than the shortest time .
+Furthermore, other workers must wait until the longest job has Finished, so that the entire execution time cannot be reduced .
+When CONFLEX G searched the conformers of 1BL1 by the Dennis cluster, the longest calculation time of the trial structure optimization made up approximately 80% of the elapsed time .
+Therefore, there are two possible solutions for the load Imbalance .
+? It is necessary to refine the algorithm used to generate the trial structure, which suppresses the time variation for optimizing a trial structure in CONFLEX .
+This enables CONFLEX G to achieve high throughput by using many computer resources .
+? One of the solutions is to overlap the executions for two or more sets of trial structures .
+In the current algorithms, a set of trial structures is generated from one initial structure and calculation continues until all structures in this set are calculated .
+By having other sets of trial structures, even if a structure search takes a long time, a job can be executed in order to compensate the load imbalance by other jobs .
+However, how such modification of the algorithms might affect the efficiency is not clear .
+? In this experiment, we used a simple build in roundrobbin scheduler of OmniRPC, which is necessary in order to apply the scheduler that allocates structures with long optimization times to a high performance Table 8
+Molecular Min Max Average Variance code (s) (s) (s) AlaX04 2.0 11.3 5.3 3 AlaX16 47.6 920.0 154.2 5404 1L2Y 114.2 13331.4 803.2 636782 1BL1 121.0 29641.8 3153.5 2734811 node and structures with short optimization times to low performance nodes .
+In general, however, it might be difficult to predict the time required for trial structure optimization .
+Parallelization of the worker program for speedup to optimize a trial structure In the current implementation, we do not parallelize the worker program .
+In order to speed up trial structures, hybrid programming using OmniRPC and OpenMP in an SMP (Symmetric Multiple Processor) machine may be one of the alternative methods by which to improve overall performance. .

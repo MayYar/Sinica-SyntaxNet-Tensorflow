@@ -1,0 +1,28 @@
+Communication is commonly associated with cooperation .
+Deliberative agents need communication to cooperate, whereas it is not necessarily the case for reactive agents [2, 41] .
+Gossip protocols [22, 24], or epidemic protocols, are used to share knowledge with multicast .
+Each agent selects a set of agents at a given time in order to share information .
+The speed of information transmission is contingent upon the length of the discussion round .
+4.1 The corridor metaphor The suggested protocol is inspired from what we name the corridor metaphor, which represents well the satellite swarm problem .
+Various agents go to and fro in a corridor where objects to collect appear from time to time .
+Two objects that are too close to each other cannot be collected by the same agent because the action takes some time and an agent cannot stop its movement .
+In order to optimize the collection, the agents can communicate when they meet .
+S 2 S ABel A 1 A 3S Figure 1
+Let us suppose three agents, s1, s2, s3 and an object A to be collected .
+At time t, s1 did not collect A and s2 does not know that A exists .
+When s1 meets s2, it communicates the list of the objects it knows, that is to say It is not certain that A is still there because another agent may have passed before s2, but it can take it into account in its plan .
+At time t , s3 collects A .
+In the vicinity of s2, s3 communicates its list of objects and A is not in the list .
+As both agents meet in a place where it is possible for s3 to have collected A, the object would have been in the list if it had not been collected .
+s2 can thus believe that A does not exist anymore and can withdraw it from its plan .
+4.2 Knowledge to communicate In order to build up their plans, agents need to know the current requests and the others agents" intentions .
+For each agent two kinds of knowledge to maintain are defined
+Definition 5 (Knowledge) .
+Knowledge K is a tuple < data(K), SK , tK >
+In the sequel, we will note Kt si the knowledge of agent si at time t ? T .
+4.3 An epidemic protocol From the corridor metaphor, we can define a communication protocol that benefits from all the communication opportunities .
+An agent notifies any change within its knowledge and each agent must propagate these changes to its vicinity who update their knowledge bases and reiterate the process .
+This protocol is a variant of epidemic protocols [22] inspired from the work on overhearing [27] .
+Protocol 1 (Communication) .
+Let si be an agent in S .
+?t ? T

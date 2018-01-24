@@ -1,0 +1,32 @@
+A fundamental feature of open, regulated multi agent systems in which autonomous agents interact, is that participating agents are meant to comply with the conventions of the system .
+Norms can be used to model such conventions and hence as a means to regulate the observable behaviour of agents [6, 29] .
+There are many contributions on the subject of norms from sociologists, philosophers and logicians (e.g., [15, 28]) .
+However, there are very few proposals for computational realisations of normative models the way norms can be integrated in the design and execution of MASs .
+The few that exist (e.g .
+[10, 13, 24]), operate in a centralised manner which creates bottlenecks and single points of failure .
+To our knowledge, no proposal truly supports the distributed enactment of normative environments .
+In our paper we approach that problem and propose means to handle conflicting commitments in open, regulated, multiagent systems in a distributed manner .
+The type of regulated MAS we envisage consists of multiple, concurrent, related activities where agents interact .
+Each agent may concurrently participate in several activities, and change from one activity to another .
+An agent"s actions within an activity may have consequences in the form of normative positions (i.e .
+obligations, permissions, and prohibitions) [26] that may constrain its future behaviour .
+For instance, a buyer agent who runs out of credit may be forbidden to make further offers, or a seller agent is obliged to deliver after closing a deal .
+We assume that agents may choose not to fulfill all their obligations and hence may be sanctioned by the MAS .
+Notice that, when activities are distributed, normative positions must flow from the activities in which they are generated to those in which they take effect .
+For instance, the seller"s obligation above must flow (or be propagated) from a negotiation activity to a delivery activity .
+Since in an open, regulated MAS one cannot embed normative aspects into the agents" design, we adopt the view that the MAS should be supplemented with a separate set of norms that further regulates the behaviour of participating agents .
+In order to model the separation of concerns between the coordination level (agents" interactions) and the normative level (propagation of normative positions), we propose an artifact called the Normative Structure .
+Within a NS conflicts may arise due to the dynamic nature of the MAS and the concurrency of agents" actions .
+For instance, an agent may be obliged and prohibited to do the 636 978 81 904262 7 5 c 2007 IFAAMAS very same action in an activity .
+Since the regulation of a MAS entails that participating agents need to be aware of the validity of those actions that take place within it, such conflicts ought to be identified and possibly resolved if a claim of validity is needed for an agent to engage in an action or be sanctioned .
+However, ensuring conflict freedom of a NS at design time is computationally intractable .
+We show this by formalising the notion of conflict, providing a mapping of NSs into Coloured Petri Nets (CPNs) and borrowing well known theoretical results from the field of CPNs .
+We believe that online conflict detection and resolution is required .
+Hence, we present a tractable algorithm for conflict resolution .
+This algorithm is paramount for the distributed enactment of a NS .
+The paper is organised as follows .
+In Section 2 we detail a scenario to serve as an example throughout the paper .
+Next, in Section 3 we formally define the normative structure artifact .
+Further on, in Section 4 we formalise the notion of conflict to subsequently analyse the complexity of conflict detection in terms of CPNs in Section 5 .
+Section 6 describes the computational management of NSs by describing their enactment and presenting an algorithm for conflict resolution .
+Finally, we comment on related work, draw conclusions and report on future work in Section 7. .

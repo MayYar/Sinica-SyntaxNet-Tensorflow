@@ -1,0 +1,35 @@
+MODELS As in previous studies, we exploit a set of documents already classified in each domain .
+These documents can be identified in two different ways
+In that case, a new query should be classified into the same domains either manually or automatically .
+2) A user can define his own domains .
+By assigning a domain to his queries, the system can gather a set of answers to the queries automatically, which are then considered to be in domain documents .
+The answers could be those that the user have read, browsed through, or judged relevant to an in domain query, or they can be simply the top ranked retrieval results .
+An earlier study [4] has compared the above two strategies using TREC queries 51 150, for which a domain has been manually assigned .
+These domains have been mapped to ODP categories .
+It is found that both approaches mentioned above are equally effective and result in comparable performance .
+Therefore, in this study, we only use the second approach .
+This choice is also motivated by the possibility to compare between manual and automatic assignment of domain to a new query .
+This will be explained in detail in our experiments .
+Whatever the strategy, we will obtain a set of documents for each domain, from which a language model can be extracted .
+If maximum likelihood estimation is used directly on these documents, the resulting domain model will contain both domain specific terms and general terms, and the former do not emerge .
+Therefore, we employ an EM process to extract the specific part of the domain as follows
+Then the likelihood of a document in the domain can be formulated as follows
+The EM algorithm is used to extract the domain model Dom£c that maximizes P(Dom| £c"Dom) (where Dom is the set of documents in the domain), that is
+It is able to extract the most specific words of the domain from the documents while filtering out the common words of the language .
+This can be observed in the following table, which shows some words in the domain model of Environment before and after EM iterations (50 iterations) .
+Table 1 .
+Term probabilities before after EM Term Initial Final change Term Initial Final change air 0.00358 0.00558 + 56% year 0.00357 0.00052 86% environment 0.00213 0.00340 + 60% system 0.00212 7.13*e 6 99% rain 0.00197 0.00336 + 71% program 0.00189 0.00040 79% pollution 0.00177 0.00301 + 70% million 0.00131 5.80*e 6 99% storm 0.00176 0.00302 + 72% make 0.00108 5.79*e 5 95% flood 0.00164 0.00281 + 71% company 0.00099 8.52*e 8 99% tornado 0.00072 0.00125 + 74% president 0.00077 2.71*e 6 99% greenhouse 0.00034 0.00058 + 72% month 0.00073 3.88*e 5 95% Given a set of domain models, the related ones have to be assigned to a new query .
+This can be done manually by the user or automatically by the system using query classification .
+We will compare both approaches .
+Query classification has been investigated in several studies [18][28] .
+In this study, we use a simple classification method
+The score depending on the domain model is then as follows
+Therefore, we only retain the top 100 strongest terms .
+The same strategy is used for Knowledge model .
+Although domain models are more refined than a single user profile, the topics in a single domain can still be very different, making the domain model too large .
+This is particularly true for large domains such as Science and technology defined in TREC queries .
+Using such a large domain model as the background can introduce much noise terms .
+Therefore, we further construct a sub domain model more related to the given query, by using a subset of in domain documents that are related to the query .
+These documents are the top ranked documents retrieved with the original query within the domain .
+This approach is indeed a combination of domain and feedback models .
+In our experiments, we will see that this further specification of sub domain is necessary in some cases, but not in all, especially when Feedback model is also used. .

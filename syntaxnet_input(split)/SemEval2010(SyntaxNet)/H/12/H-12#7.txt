@@ -1,0 +1,957 @@
+
+1
+Input: Sentences within each document can be re ordered so that sentences that are very likely to appear in snippets are at the front of the document , hence processed first at query time , while less likely sentences are relegated to the rear of the document .
+Parse:
+ordered VBN ROOT
+ +-- Sentences NNS nsubjpass
+ |   +-- within IN prep
+ |       +-- document NN pobj
+ |           +-- each DT det
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- re IN advmod
+ +-- are VBP advcl
+ |   +-- so IN mark
+ |   +-- that IN mark
+ |   +-- sentences NNS nsubj
+ |   |   +-- likely JJ rcmod
+ |   |       +-- that WDT nsubj
+ |   |       +-- are VBP cop
+ |   |       +-- very RB advmod
+ |   |       +-- appear VB xcomp
+ |   |           +-- to TO aux
+ |   |           +-- in IN prep
+ |   |               +-- snippets NNS pobj
+ |   +-- at IN prep
+ |       +-- front NN pobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- document NN pobj
+ |                   +-- the DT det
+ +-- , , punct
+ +-- processed VBN xcomp
+ |   +-- hence RB advmod
+ |   +-- first RB advmod
+ |   +-- at IN prep
+ |       +-- time NN pobj
+ |           +-- query NN nn
+ +-- relegated VBN advcl
+ |   +-- while IN mark
+ |   +-- sentences NNS nsubjpass
+ |   |   +-- likely JJ amod
+ |   |       +-- less RBR advmod
+ |   +-- are VBP auxpass
+ |   +-- to IN prep
+ |       +-- rear NN pobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- document NN pobj
+ |                   +-- the DT det
+ +-- . . punct
+
+2
+Input: Then , during query time , if k sentences with a score exceeding some threshold are found before the entire document is processed , the remainder of the document is ignored .
+Parse:
+ignored VBN ROOT
+ +-- Then RB advmod
+ +-- , , punct
+ +-- during IN prep
+ |   +-- time NN pobj
+ |       +-- query NN nn
+ +-- found VBN advcl
+ |   +-- if IN mark
+ |   +-- sentences NNS nsubjpass
+ |   |   +-- k CD num
+ |   |   +-- with IN prep
+ |   |   |   +-- score NN pobj
+ |   |   |       +-- a DT det
+ |   |   +-- exceeding VBG partmod
+ |   |       +-- threshold NN dobj
+ |   |           +-- some DT det
+ |   +-- are VBP auxpass
+ |   +-- processed VBN advcl
+ |       +-- before IN mark
+ |       +-- document NN nsubjpass
+ |       |   +-- the DT det
+ |       |   +-- entire JJ amod
+ |       +-- is VBZ auxpass
+ +-- remainder NN nsubjpass
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- document NN pobj
+ |           +-- the DT det
+ +-- is VBZ auxpass
+ +-- . . punct
+
+3
+Input: Further , to improve caching , only the head of each document can be stored in the cache , with the tail residing on disk .
+Parse:
+stored VBN ROOT
+ +-- Further RB advmod
+ +-- , , punct
+ +-- improve VB advcl
+ |   +-- to TO aux
+ |   +-- caching NN dobj
+ +-- head NN nsubjpass
+ |   +-- only RB advmod
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- document NN pobj
+ |           +-- each DT det
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- in IN prep
+ |   +-- cache NN pobj
+ |       +-- the DT det
+ +-- with IN prep
+ |   +-- residing VBG pcomp
+ |       +-- tail NN nsubj
+ |       |   +-- the DT det
+ |       +-- on IN prep
+ |           +-- disk NN pobj
+ +-- . . punct
+
+4
+Input: Note that we assume that the search engine is to provide cached copies of a document that is , the exact text of the document as it was indexed then this would be serviced by another sub system in Figure 1 , and not from the altered copy we store in the Snippet Engine .
+Parse:
+Note VB ROOT
+ +-- assume VBP ccomp
+ |   +-- that IN mark
+ |   +-- we PRP nsubj
+ |   +-- is VBZ ccomp
+ |       +-- that IN mark
+ |       +-- engine NN nsubj
+ |       |   +-- the DT det
+ |       |   +-- search NN nn
+ |       +-- provide VB xcomp
+ |           +-- to TO aux
+ |           +-- copies NNS dobj
+ |           |   +-- cached VBN amod
+ |           |   +-- of IN prep
+ |           |   |   +-- document NN pobj
+ |           |   |       +-- a DT det
+ |           |   |       +-- is VBZ rcmod
+ |           |   |           +-- that WDT nsubj
+ |           |   +-- , , punct
+ |           |   +-- text NN conj
+ |           |   |   +-- the DT det
+ |           |   |   +-- exact JJ amod
+ |           |   |   +-- of IN prep
+ |           |   |   |   +-- document NN pobj
+ |           |   |   |       +-- the DT det
+ |           |   |   +-- indexed VBN dep
+ |           |   |   |   +-- as IN mark
+ |           |   |   |   +-- it PRP nsubjpass
+ |           |   |   |   +-- was VBD auxpass
+ |           |   |   +-- serviced VBN rcmod
+ |           |   |       +-- then RB advmod
+ |           |   |       +-- this DT nsubjpass
+ |           |   |       +-- would MD aux
+ |           |   |       +-- be VB auxpass
+ |           |   |       +-- by IN prep
+ |           |   |       |   +-- system NN pobj
+ |           |   |       |       +-- another DT det
+ |           |   |       |       +-- sub NN nn
+ |           |   |       +-- in IN prep
+ |           |   |           +-- Figure NNP pobj
+ |           |   |               +-- 1 CD num
+ |           |   +-- and CC cc
+ |           |   +-- not RB conj
+ |           +-- from IN prep
+ |               +-- copy NN pobj
+ |                   +-- the DT det
+ |                   +-- altered VBN amod
+ |                   +-- store VBP rcmod
+ |                       +-- we PRP nsubj
+ |                       +-- in IN prep
+ |                           +-- Engine NNP pobj
+ |                               +-- the DT det
+ |                               +-- Snippet NNP nn
+ +-- . . punct
+
+5
+Input: We now introduce four sentence reordering approaches .
+Parse:
+introduce VBP ROOT
+ +-- We PRP nsubj
+ +-- now RB advmod
+ +-- approaches NNS dobj
+ |   +-- sentence NN nn
+ |   |   +-- four CD num
+ |   +-- reordering VBG nn
+ +-- . . punct
+
+6
+Input: document usually best describe the document content -LRB- 12 -RRB- .
+Parse:
+describe VBP ROOT
+ +-- document NN nsubj
+ +-- usually RB advmod
+ +-- best RBS advmod
+ +-- content NN dobj
+ |   +-- the DT det
+ |   +-- document NN nn
+ |   +-- 12 CD appos
+ |       +-- -LRB- -LRB- punct
+ |       +-- -RRB- -RRB- punct
+ +-- . . punct
+
+7
+Input: Thus simply processing a document in order should yield a quality snippet .
+Parse:
+yield VB ROOT
+ +-- Thus RB advmod
+ +-- processing VBG csubj
+ |   +-- simply RB advmod
+ |   +-- document NN dobj
+ |   |   +-- a DT det
+ |   +-- in IN prep
+ |       +-- order NN pobj
+ +-- should MD aux
+ +-- snippet NN dobj
+ |   +-- a DT det
+ |   +-- quality NN nn
+ +-- . . punct
+
+8
+Input: Unfortunately , however , web documents are often not well authored , with little editorial or professional writing skills brought to bear on the creation of a work of literary merit .
+Parse:
+authored VBN ROOT
+ +-- Unfortunately RB advmod
+ +-- , , punct
+ +-- however RB advmod
+ +-- documents NNS nsubjpass
+ |   +-- web NN nn
+ +-- are VBP auxpass
+ +-- often RB advmod
+ +-- not RB neg
+ +-- well RB advmod
+ +-- with IN prep
+ |   +-- editorial NN pobj
+ |       +-- little JJ amod
+ |       +-- or CC cc
+ |       +-- skills NNS conj
+ |       |   +-- professional JJ amod
+ |       |   +-- writing NN nn
+ |       +-- brought VBD partmod
+ |           +-- bear VB xcomp
+ |               +-- to TO aux
+ |               +-- on IN prep
+ |                   +-- creation NN pobj
+ |                       +-- the DT det
+ |                       +-- of IN prep
+ |                           +-- work NN pobj
+ |                               +-- a DT det
+ |                               +-- of IN prep
+ |                                   +-- merit NN pobj
+ |                                       +-- literary JJ amod
+ +-- . . punct
+
+9
+Input: More importantly , perhaps , is that we are producing query biased snippets , and there is no guarantee that query terms will appear in sentences towards the front of a document .
+Parse:
+is VBZ ROOT
+ +-- importantly RB advmod
+ |   +-- More RBR advmod
+ +-- , , punct
+ +-- perhaps RB advmod
+ +-- producing VBG ccomp
+ |   +-- that IN mark
+ |   +-- we PRP nsubj
+ |   +-- are VBP aux
+ |   +-- snippets NNS dobj
+ |       +-- biased JJ amod
+ |           +-- query NN dep
+ +-- and CC cc
+ +-- is VBZ conj
+ |   +-- there EX expl
+ |   +-- guarantee NN nsubj
+ |       +-- no DT det
+ |       +-- appear VB ccomp
+ |           +-- that IN mark
+ |           +-- terms NNS nsubj
+ |           |   +-- query NN nn
+ |           +-- will MD aux
+ |           +-- in IN prep
+ |               +-- sentences NNS pobj
+ |                   +-- towards IN prep
+ |                       +-- front NN pobj
+ |                           +-- the DT det
+ |                           +-- of IN prep
+ |                               +-- document NN pobj
+ |                                   +-- a DT det
+ +-- . . punct
+
+10
+Input: of a significant sentence as containing a cluster of significant terms -LRB- 12 -RRB- , a concept found to work well by Tombros and Sanderson -LRB- 20 -RRB- .
+Parse:
+found VBD ROOT
+ +-- of IN prep
+ |   +-- sentence NN pobj
+ |       +-- a DT det
+ |       +-- significant JJ amod
+ |       +-- as IN prep
+ |           +-- containing VBG pcomp
+ |               +-- cluster NN dobj
+ |                   +-- a DT det
+ |                   +-- of IN prep
+ |                       +-- terms NNS pobj
+ |                           +-- significant JJ amod
+ |                           +-- -LRB- -LRB- punct
+ |                           +-- 12 CD dep
+ |                           +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- concept NN nsubj
+ |   +-- a DT det
+ +-- work VB xcomp
+ |   +-- to TO aux
+ |   +-- well RB advmod
+ |   +-- by IN prep
+ |       +-- Tombros NNP pobj
+ |           +-- and CC cc
+ |           +-- Sanderson NNP conj
+ |               +-- -LRB- -LRB- punct
+ |               +-- 20 CD dep
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+
+11
+Input: Let fd , t be the frequency of term t in document d , then term t is determined to be significant if fd , t ? 8 <
+Parse:
+Let VB ROOT
+ +-- fd DT dobj
+ +-- , , punct
+ +-- frequency NN ccomp
+ |   +-- t NN nsubj
+ |   +-- be VB cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |   |   +-- t NN pobj
+ |   |       +-- term NN nn
+ |   +-- in IN prep
+ |       +-- d NN pobj
+ |           +-- document NN nn
+ +-- determined VBN ccomp
+ |   +-- then RB advmod
+ |   +-- t NN nsubjpass
+ |   |   +-- term NN nn
+ |   +-- is VBZ auxpass
+ |   +-- significant JJ xcomp
+ |       +-- to TO aux
+ |       +-- be VB cop
+ |       +-- if IN prep
+ |           +-- fd NNP pobj
+ |               +-- , , punct
+ |               +-- t NN appos
+ |                   +-- ? . punct
+ |                   +-- 8 CD num
+ +-- < -LRB- punct
+
+12
+Input: A bracketed section is defined as a group of terms where the leftmost and rightmost terms are significant terms , and no significant terms in the bracketed section are divided by more than four non significant terms .
+Parse:
+defined VBN ROOT
+ +-- section NN nsubjpass
+ |   +-- A DT det
+ |   +-- bracketed VBN amod
+ +-- is VBZ auxpass
+ +-- as IN prep
+ |   +-- group NN pobj
+ |       +-- a DT det
+ |       +-- of IN prep
+ |           +-- terms NNS pobj
+ |               +-- terms NNS rcmod
+ |                   +-- where WRB advmod
+ |                   +-- terms NNS nsubj
+ |                   |   +-- the DT det
+ |                   |   +-- leftmost NN nn
+ |                   |       +-- and CC cc
+ |                   |       +-- rightmost JJ conj
+ |                   +-- are VBP cop
+ |                   +-- significant JJ amod
+ +-- , , punct
+ +-- and CC cc
+ +-- divided VBN conj
+ |   +-- terms NNS nsubjpass
+ |   |   +-- no DT det
+ |   |   +-- significant JJ amod
+ |   |   +-- in IN prep
+ |   |       +-- section NN pobj
+ |   |           +-- the DT det
+ |   |           +-- bracketed VBN amod
+ |   +-- are VBP auxpass
+ |   +-- by IN prep
+ |       +-- terms NNS pobj
+ |           +-- four CD num
+ |           |   +-- than IN quantmod
+ |           |       +-- more JJR mwe
+ |           +-- significant JJ amod
+ |               +-- non FW advmod
+ +-- . . punct
+
+13
+Input: The score of a bracketed section is the square of the number of significant words falling in the section , divided by the total number of words in the entire sentence .
+Parse:
+square NN ROOT
+ +-- score NN nsubj
+ |   +-- The DT det
+ |   +-- of IN prep
+ |       +-- section NN pobj
+ |           +-- a DT det
+ |           +-- bracketed VBN amod
+ +-- is VBZ cop
+ +-- the DT det
+ +-- of IN prep
+ |   +-- number NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- words NNS pobj
+ |               +-- significant JJ amod
+ |               +-- falling VBG partmod
+ |               |   +-- in IN prep
+ |               |       +-- section NN pobj
+ |               |           +-- the DT det
+ |               +-- , , punct
+ |               +-- divided VBN partmod
+ |                   +-- by IN prep
+ |                       +-- number NN pobj
+ |                           +-- the DT det
+ |                           +-- total JJ amod
+ |                           +-- of IN prep
+ |                           |   +-- words NNS pobj
+ |                           +-- in IN prep
+ |                               +-- sentence NN pobj
+ |                                   +-- the DT det
+ |                                   +-- entire JJ amod
+ +-- . . punct
+
+14
+Input: The a priori score for a sentence is computed as the maximum of all scores for the bracketed sections of the sentence .
+Parse:
+computed VBN ROOT
+ +-- score NN nsubjpass
+ |   +-- The DT det
+ |   +-- a DT det
+ |   +-- priori JJS amod
+ |   +-- for IN prep
+ |       +-- sentence NN pobj
+ |           +-- a DT det
+ +-- is VBZ auxpass
+ +-- as IN prep
+ |   +-- maximum NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- scores NNS pobj
+ |               +-- all DT det
+ |               +-- for IN prep
+ |                   +-- sections NNS pobj
+ |                       +-- the DT det
+ |                       +-- bracketed VBN amod
+ |                       +-- of IN prep
+ |                           +-- sentence NN pobj
+ |                               +-- the DT det
+ +-- . . punct
+
+15
+Input: We then sort the sentences by this score .
+Parse:
+sort VB ROOT
+ +-- We PRP nsubj
+ +-- then RB advmod
+ +-- sentences NNS dobj
+ |   +-- the DT det
+ +-- by IN prep
+ |   +-- score NN pobj
+ |       +-- this DT det
+ +-- . . punct
+
+16
+Input: and a small number of queries make up a large volume of total searches -LRB- 9 -RRB- .
+Parse:
+make VBP ROOT
+ +-- and CC cc
+ +-- number NN nsubj
+ |   +-- a DT det
+ |   +-- small JJ amod
+ |   +-- of IN prep
+ |       +-- queries NNS pobj
+ +-- up RP prt
+ +-- volume NN dobj
+ |   +-- a DT det
+ |   +-- large JJ amod
+ |   +-- of IN prep
+ |       +-- searches NNS pobj
+ |           +-- total JJ amod
+ |           +-- 9 CD appos
+ |               +-- -LRB- -LRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+
+17
+Input: In order to take advantage of this bias , sentences that contain many past query terms should be promoted to the front of a document , while sentences that contain few query terms should be demoted .
+Parse:
+promoted VBN ROOT
+ +-- In IN prep
+ |   +-- order NN pobj
+ |       +-- take VB infmod
+ |           +-- to TO aux
+ |           +-- advantage NN dobj
+ |           +-- of IN prep
+ |               +-- bias NN pobj
+ |                   +-- this DT det
+ +-- , , punct
+ +-- sentences NNS nsubjpass
+ |   +-- contain VBP rcmod
+ |       +-- that WDT nsubj
+ |       +-- terms NNS dobj
+ |           +-- many JJ amod
+ |           +-- past JJ amod
+ |           +-- query NN nn
+ +-- should MD aux
+ +-- be VB auxpass
+ +-- to IN prep
+ |   +-- front NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- document NN pobj
+ |               +-- a DT det
+ +-- demoted VBN advcl
+ |   +-- while IN mark
+ |   +-- sentences NNS nsubjpass
+ |   |   +-- contain VBP rcmod
+ |   |       +-- that WDT nsubj
+ |   |       +-- terms NNS dobj
+ |   |           +-- few JJ amod
+ |   |           +-- query NN nn
+ |   +-- should MD aux
+ |   +-- be VB auxpass
+ +-- . . punct
+
+18
+Input: In this scheme , the sentences are sorted by the number of sentence terms that occur in the query log .
+Parse:
+sorted VBN ROOT
+ +-- In IN prep
+ |   +-- scheme NN pobj
+ |       +-- this DT det
+ +-- , , punct
+ +-- sentences NNS nsubjpass
+ |   +-- the DT det
+ +-- are VBP auxpass
+ +-- by IN prep
+ |   +-- number NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |       |   +-- terms NNS pobj
+ |       |       +-- sentence NN nn
+ |       +-- occur VBP rcmod
+ |           +-- that WDT nsubj
+ |           +-- in IN prep
+ |               +-- log NN pobj
+ |                   +-- the DT det
+ |                   +-- query NN nn
+ +-- . . punct
+
+19
+Input: To ensure that long sentences do not dominate over shorter qualitative sentences the score assigned to each sentence is divided by the number of terms in that sentence giving each sentence a score between 0 and 1 .
+Parse:
+ensure VB ROOT
+ +-- To TO aux
+ +-- dominate VB ccomp
+ |   +-- that IN mark
+ |   +-- sentences NNS nsubj
+ |   |   +-- long JJ amod
+ |   +-- do VBP aux
+ |   +-- not RB neg
+ |   +-- over RP prt
+ |   +-- sentences NNS dobj
+ |       +-- shorter JJR amod
+ |       +-- qualitative JJ amod
+ |       +-- divided VBN rcmod
+ |           +-- score NN nsubjpass
+ |           |   +-- the DT det
+ |           |   +-- assigned VBN partmod
+ |           |       +-- to IN prep
+ |           |           +-- sentence NN pobj
+ |           |               +-- each DT det
+ |           +-- is VBZ auxpass
+ |           +-- by IN prep
+ |               +-- number NN pobj
+ |                   +-- the DT det
+ |                   +-- of IN prep
+ |                   |   +-- terms NNS pobj
+ |                   |       +-- in IN prep
+ |                   |           +-- sentence NN pobj
+ |                   |               +-- that DT det
+ |                   +-- giving VBG partmod
+ |                       +-- sentence NN iobj
+ |                       |   +-- each DT det
+ |                       +-- score NN dobj
+ |                           +-- a DT det
+ |                           +-- between IN prep
+ |                               +-- 0 CD pobj
+ |                                   +-- and CC cc
+ |                                   +-- 1 CD conj
+ +-- . . punct
+
+20
+Input: but repeated terms in the sentence are only counted once .
+Parse:
+counted VBN ROOT
+ +-- but CC cc
+ +-- terms NNS nsubjpass
+ |   +-- repeated VBN amod
+ |   +-- in IN prep
+ |       +-- sentence NN pobj
+ |           +-- the DT det
+ +-- are VBP auxpass
+ +-- only RB advmod
+ +-- once RB advmod
+ +-- . . punct
+
+21
+Input: By re ordering sentences using schemes ST , QLt or QLu , we aim to terminate snippet generation earlier than if Natural Order is used , but still produce sentences with the same number of unique query terms -LRB- d in Figure 2 -RRB- , total number of query terms -LRB- c -RRB- , the same positional score -LRB- h+ -RRB- and the same maximum span -LRB- k -RRB- .
+Parse:
+aim VBP ROOT
+ +-- By IN prep
+ |   +-- re IN pcomp
+ |       +-- ordering VBG pcomp
+ |           +-- sentences NNS dobj
+ |           +-- using VBG partmod
+ |               +-- schemes NNS iobj
+ |               +-- ST NNP dobj
+ |                   +-- , , punct
+ |                   +-- QLt NFP conj
+ |                   +-- or CC cc
+ |                   +-- QLu NNP conj
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- terminate VB xcomp
+ |   +-- to TO aux
+ |   +-- generation NN dobj
+ |   |   +-- snippet NN nn
+ |   +-- earlier RBR advmod
+ |       +-- used VBN dep
+ |           +-- than IN mark
+ |           +-- if IN mark
+ |           +-- Order NNP nsubjpass
+ |           |   +-- Natural NNP nn
+ |           +-- is VBZ auxpass
+ +-- but CC cc
+ +-- produce VB conj
+ |   +-- still RB advmod
+ |   +-- sentences NNS dobj
+ |   +-- with IN prep
+ |       +-- number NN pobj
+ |           +-- the DT det
+ |           +-- same JJ amod
+ |           +-- of IN prep
+ |           |   +-- terms NNS pobj
+ |           |       +-- unique JJ amod
+ |           |       +-- query NN nn
+ |           +-- -LRB- -LRB- punct
+ |           +-- d NN dep
+ |           |   +-- in IN prep
+ |           |       +-- Figure NN pobj
+ |           |           +-- 2 CD num
+ |           +-- -RRB- -RRB- punct
+ |           +-- , , punct
+ |           +-- number NN conj
+ |           |   +-- total JJ amod
+ |           |   +-- of IN prep
+ |           |   |   +-- terms NNS pobj
+ |           |   |       +-- query NN nn
+ |           |   +-- -LRB- -LRB- punct
+ |           |   +-- c NN dep
+ |           |   +-- -RRB- -RRB- punct
+ |           +-- score NN conj
+ |           |   +-- the DT det
+ |           |   +-- same JJ amod
+ |           |   +-- positional JJ amod
+ |           |   +-- -LRB- -LRB- punct
+ |           |   +-- h+ NFP dep
+ |           |   +-- -RRB- -RRB- punct
+ |           +-- and CC cc
+ |           +-- span NN conj
+ |               +-- the DT det
+ |               +-- same JJ amod
+ |               +-- maximum JJ amod
+ |               +-- -LRB- -LRB- punct
+ |               +-- k NN dep
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+
+22
+Input: Accordingly , we conducted experiments comparing the methods , the first 80 % of the Excite query log was used to reorder sentences when required , and the final 20 % for testing .
+Parse:
+conducted VBD ROOT
+ +-- Accordingly RB advmod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- experiments NNS dobj
+ |   +-- comparing VBG partmod
+ |       +-- methods NNS dobj
+ |           +-- the DT det
+ |           +-- , , punct
+ |           +-- used VBN rcmod
+ |           |   +-- % NN nsubjpass
+ |           |   |   +-- the DT det
+ |           |   |   +-- first JJ amod
+ |           |   |   +-- 80 CD num
+ |           |   |   +-- of IN prep
+ |           |   |       +-- log NN pobj
+ |           |   |           +-- the DT det
+ |           |   |           +-- Excite NNP nn
+ |           |   |           +-- query NN nn
+ |           |   +-- was VBD auxpass
+ |           |   +-- reorder VB xcomp
+ |           |       +-- to TO aux
+ |           |       +-- sentences NNS dobj
+ |           |       +-- required VBN advcl
+ |           |           +-- when WRB advmod
+ |           +-- and CC cc
+ |           +-- % NN conj
+ |               +-- the DT det
+ |               +-- final JJ amod
+ |               +-- 20 CD num
+ |               +-- for IN prep
+ |                   +-- testing NN pobj
+ +-- . . punct
+
+23
+Input: Figure 6 shows the differences in snippet scoring components using each of the three methods over the Natural Order method .
+Parse:
+shows VBZ ROOT
+ +-- Figure NN nsubj
+ |   +-- 6 CD num
+ +-- differences NNS dobj
+ |   +-- the DT det
+ |   +-- in IN prep
+ |       +-- components NNS pobj
+ |           +-- scoring VBG nn
+ |           |   +-- snippet NN nn
+ |           +-- using VBG partmod
+ |               +-- each DT dobj
+ |                   +-- of IN prep
+ |                       +-- methods NNS pobj
+ |                           +-- the DT det
+ |                           +-- three CD num
+ |                           +-- over IN prep
+ |                               +-- method NN pobj
+ |                                   +-- the DT det
+ |                                   +-- Order NN nn
+ |                                       +-- Natural JJ amod
+ +-- . . punct
+
+24
+Input: It is clear that sorting sentences using the Significant Terms method leads to the smallest change in the sentence scoring components .
+Parse:
+clear JJ ROOT
+ +-- It PRP nsubj
+ +-- is VBZ cop
+ +-- leads VBZ ccomp
+ |   +-- that IN mark
+ |   +-- sorting VBG csubj
+ |   |   +-- sentences NNS dobj
+ |   |   +-- using VBG partmod
+ |   |       +-- method NN dobj
+ |   |           +-- the DT det
+ |   |           +-- Significant JJ amod
+ |   |           +-- Terms NNPS nn
+ |   +-- to IN prep
+ |       +-- change NN pobj
+ |           +-- the DT det
+ |           +-- smallest JJS amod
+ |           +-- in IN prep
+ |               +-- components NNS pobj
+ |                   +-- the DT det
+ |                   +-- scoring VBG nn
+ |                       +-- sentence NN nn
+ +-- . . punct
+
+25
+Input: The greatest change over all methods is in the sentence position -LRB- h + -RRB- component of the score , which is to be expected as their is no guarantee that leading and heading sentences are processed at all after sentences are re ordered .
+Parse:
+is VBZ ROOT
+ +-- change NN nsubj
+ |   +-- The DT det
+ |   +-- greatest JJS amod
+ |   +-- over IN prep
+ |       +-- methods NNS pobj
+ |           +-- all DT det
+ +-- in IN prep
+ |   +-- component NN pobj
+ |       +-- position NN nn
+ |       |   +-- the DT det
+ |       |   +-- sentence NN nn
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- + SYM dep
+ |       |   |   +-- h NNP nn
+ |       |   +-- -RRB- -RRB- punct
+ |       +-- of IN prep
+ |           +-- score NN pobj
+ |               +-- the DT det
+ |               +-- , , punct
+ |               +-- is VBZ rcmod
+ |                   +-- which WDT nsubj
+ |                   +-- expected VBN xcomp
+ |                       +-- to TO aux
+ |                       +-- be VB auxpass
+ |                       +-- guarantee NN advcl
+ |                           +-- as IN mark
+ |                           +-- their PRP$ nsubj
+ |                           +-- is VBZ cop
+ |                           +-- no DT det
+ |                           +-- processed VBN ccomp
+ |                               +-- that IN mark
+ |                               +-- sentences NNS nsubjpass
+ |                               |   +-- leading VBG amod
+ |                               |       +-- and CC cc
+ |                               |       +-- heading VBG conj
+ |                               +-- are VBP auxpass
+ |                               +-- all RB advmod
+ |                               |   +-- at RB advmod
+ |                               +-- ordered VBN advcl
+ |                                   +-- after IN mark
+ |                                   +-- sentences NNS nsubjpass
+ |                                   +-- are VBP auxpass
+ |                                   +-- re IN advmod
+ +-- . . punct
+
+26
+Input: The second most affected component is the number of distinct query terms in a returned sentence , but if only the first 50 % of the document is processed with the ST method , there is a drop of only 8 % in the number of distinct query terms found in snippets .
+Parse:
+number NN ROOT
+ +-- component NN nsubj
+ |   +-- The DT det
+ |   +-- second JJ amod
+ |   +-- affected JJ amod
+ |       +-- most RBS advmod
+ +-- is VBZ cop
+ +-- the DT det
+ +-- of IN prep
+ |   +-- terms NNS pobj
+ |       +-- distinct JJ amod
+ |       +-- query NN nn
+ +-- in IN prep
+ |   +-- sentence NN pobj
+ |       +-- a DT det
+ |       +-- returned VBN amod
+ +-- , , punct
+ +-- but CC cc
+ +-- is VBZ conj
+ |   +-- processed VBN advcl
+ |   |   +-- if IN mark
+ |   |   +-- % NN nsubjpass
+ |   |   |   +-- 50 CD num
+ |   |   |   |   +-- only RB quantmod
+ |   |   |   |   +-- the DT quantmod
+ |   |   |   |   +-- first JJ quantmod
+ |   |   |   +-- of IN prep
+ |   |   |       +-- document NN pobj
+ |   |   |           +-- the DT det
+ |   |   +-- is VBZ auxpass
+ |   |   +-- with IN prep
+ |   |       +-- method NN pobj
+ |   |           +-- the DT det
+ |   |           +-- ST NNP nn
+ |   +-- , , punct
+ |   +-- there EX expl
+ |   +-- drop NN nsubj
+ |       +-- a DT det
+ |       +-- of IN prep
+ |       |   +-- % NN pobj
+ |       |       +-- 8 CD num
+ |       |           +-- only RB quantmod
+ |       +-- in IN prep
+ |           +-- number NN pobj
+ |               +-- the DT det
+ |               +-- of IN prep
+ |                   +-- terms NNS pobj
+ |                       +-- distinct JJ amod
+ |                       +-- query NN nn
+ |                       +-- found VBN partmod
+ |                           +-- in IN prep
+ |                               +-- snippets NNS pobj
+ +-- . . punct
+
+27
+Input: Depending how these various components are weighted to compute an overall snippet score , one can argue that there is little overall affect on scores when processing only half the document using the ST method .
+Parse:
+argue VB ROOT
+ +-- Depending VBG prep
+ |   +-- weighted VBN pcomp
+ |       +-- how WRB advmod
+ |       +-- components NNS nsubjpass
+ |       |   +-- these DT det
+ |       |   +-- various JJ amod
+ |       +-- are VBP auxpass
+ |       +-- compute VB xcomp
+ |           +-- to TO aux
+ |           +-- score NN dobj
+ |               +-- an DT det
+ |               +-- overall JJ amod
+ |               +-- snippet NN nn
+ +-- , , punct
+ +-- one PRP nsubj
+ +-- can MD aux
+ +-- is VBZ ccomp
+ |   +-- that IN mark
+ |   +-- there EX expl
+ |   +-- affect VB ccomp
+ |       +-- overall JJ nsubj
+ |       |   +-- little JJ amod
+ |       +-- on IN prep
+ |       |   +-- scores NNS pobj
+ |       +-- processing VBG advcl
+ |           +-- when WRB advmod
+ |           +-- document NN dobj
+ |           |   +-- half PDT num
+ |           |   |   +-- only RB quantmod
+ |           |   +-- the DT det
+ |           +-- using VBG partmod
+ |               +-- method NN dobj
+ |                   +-- the DT det
+ |                   +-- ST NNP nn
+ +-- . . punct
+
+28
+Input: Span -LRB- k -RRB- Term Count -LRB- c -RRB- Sentence Position -LRB- h + l -RRB- Distinct Terms -LRB- d -RRB- 40 % 50 % 60 % 70 % ST QLt QLu ST QLt QLu ST QLt QLu ST QLt QLu ST QLt QLu RelativedifferencetoNaturalOrder Documents size used 90 % 80 % 70 % 60 % 50 % 0 % 10 % 20 % 30 % Figure 6
+Parse:
+used VBD ROOT
+ +-- Count NNP nsubj
+ |   +-- Span NNP nn
+ |   +-- k LS dep
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- Term NNP nn
+ |   +-- c LS appos
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- Position NNP dep
+ |   |   +-- Sentence NNP nn
+ |   +-- -LRB- -LRB- punct
+ |   +-- l NNP dep
+ |       +-- h NNP nn
+ |       +-- + SYM nn
+ |       +-- -RRB- -RRB- punct
+ |       +-- Terms NNS dep
+ |       |   +-- Distinct NNP nn
+ |       +-- d LS dep
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- -RRB- -RRB- punct
+ |       +-- % NN dep
+ |       |   +-- 70 CD num
+ |       +-- ST FW dep
+ |       +-- QLt $ dep
+ |       +-- ST NNP dep
+ |       |   +-- QLu NNP nn
+ |       +-- QLt , punct
+ |       +-- size NN dep
+ |           +-- QLu NNP nn
+ |           +-- RelativedifferencetoNaturalOrder NNP nn
+ |           +-- Documents NNS nn
+ +-- Figure NN dobj
+     +-- % NN nn
+     |   +-- 30 CD num
+     +-- 6 CD num

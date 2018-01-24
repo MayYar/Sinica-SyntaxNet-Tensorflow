@@ -1,0 +1,665 @@
+Network Monitors and Contracting Systems: 
+content:
+1 ABSTRACT :
+1-1:Today"s Internet industry suffers from several well known pathologies, but none is as destructive in the long term as its resistance to evolution .
+1-2:Rather than introducing new services, ISPs are presently moving towards greater commoditization .
+1-3:It is apparent that the network"s primitive system of contracts does not align incentives properly .
+1-4:In this study, we identify the network"s lack of accountability as a fundamental obstacle to correcting this problem: Employing an economic model, we argue that optimal routes and innovation are impossible unless new monitoring capability is introduced and incorporated with the contracting system .
+1-5:Furthermore, we derive the minimum requirements a monitoring system must meet to support first best routing and innovation characteristics .
+1-6:Our work does not constitute a new protocol; rather, we provide practical and specific guidance for the design of monitoring systems, as well as a theoretical framework to explore the factors that influence innovation .
+1-7:C.2.4 [Computer Communication Networks]: Distributed .
+2 INTRODUCTION :
+2-1:Many studies before us have noted the Internet"s resistance to new services and evolution .
+2-2:In recent decades, numerous ideas have been developed in universities, implemented in code, and even written into the routers and end systems of the network, only to languish as network operators fail to turn them on on a large scale .
+2-3:The list includes Multicast, IPv6, IntServ, and DiffServ .
+2-4:Lacking the incentives just to activate services, there seems to be little hope of ISPs devoting adequate resources to developing new ideas .
+2-5:In the long term, this pathology stands out as a critical obstacle to the network"s continued success (Ratnasamy, Shenker, and McCanne provide extensive discussion in [11]) .
+2-6:On a smaller time scale, ISPs shun new services in favor of cost cutting measures .
+2-7:Thus, the network has characteristics of a commodity market .
+2-8:Although in theory, ISPs have a plethora of routing policies at their disposal, the prevailing strategy is to route in the cheapest way possible [2] .
+2-9:On one hand, this leads directly to suboptimal routing .
+2-10:More importantly, commoditization in the short term is surely related to the lack of innovation in the long term .
+2-11:When the routing decisions of others ignore quality characteristics, ISPs are motivated only to lower costs .
+2-12:There is simply no reward for introducing new services or investing in quality improvements .
+2-13:In response to these pathologies and others, researchers have put forth various proposals for improving the situation .
+2-14:These can be divided according to three high level strategies: The first attempts to improve the status quo by empowering end users .
+2-15:Clark, et al., suggest that giving end users control over routing would lead to greater service diversity, recognizing that some payment mechanism must also be provided [5] .
+2-16:Ratnasamy, Shenker, and McCanne postulate a link between network evolution and user directed routing [11] .
+2-17:They propose a system of Anycast to give end users the ability to tunnel their packets to an ISP that introduces a desirable protocol .
+2-18:The extra traffic to the ISP, the authors suggest, will motivate the initial investment .
+2-19:The second strategy suggests a revision of the contracting system .
+2-20:This is exemplified by MacKie Mason and Varian, who propose a smart market to control access to network resources [10] .
+2-21:Prices are set to the market clearing level based on bids that users associate to their traffic .
+2-22:In another direction, Afergan and Wroclawski suggest that prices should be explicitly encoded in the routing protocols [2] .
+2-23:They argue that such a move would improve stability and align incentives .
+2-24:The third high level strategy calls for greater network accountability .
+2-25:In this vein, Argyraki, et al., propose a system of packet obituaries to provide feedback as to which ISPs drop packets [3] .
+2-26:They argue that such feedback would help reveal which ISPs were adequately meeting their contractual obligations .
+2-27:Unlike the first two strategies, we are not aware of any previous studies that have connected accountability with the pathologies of commoditization or lack of innovation .
+2-28:It is clear that these three strategies are closely linked to each other (for example, [2], [5], and [9] each argue that giving end users routing control within the current contracting system is problematic) .
+2-29:Until today, however, the relationship between them has been poorly understood .
+2-30:There is currently little theoretical foundation to compare the relative merits of each proposal, and a particular lack of evidence linking accountability with innovation and service differentiation .
+2-31:This paper will address both issues .
+2-32:We will begin by introducing an economic network model that relates accountability, contracts, competition, and innovation .
+2-33:Our model is highly stylized and may be considered preliminary: it is based on a single source sending data to a single destination .
+2-34:Nevertheless, the structure is rich enough to expose previously unseen features of network behavior .
+2-35:We will use our model for two main purposes: First, we will use our model to argue that the lack of accountability in today"s network is a fundamental obstacle to overcoming the pathologies of commoditization and lack of innovation .
+2-36:In other words, unless new monitoring capabilities are introduced, and integrated with the system of contracts, the network cannot achieve optimal routing and innovation characteristics .
+2-37:This result provides motivation for the remainder of the paper, in which we explore how accountability can be leveraged to overcome these pathologies and create a sustainable industry .
+2-38:We will approach this problem from a clean slate perspective, deriving the level of accountability needed to sustain an ideal competitive structure .
+2-39:When we say that today"s Internet has poor accountability, we mean that it reveals little information about the behavior or misbehavior of ISPs .
+2-40:This well known trait is largely rooted in the network"s history .
+2-41:In describing the design philosophy behind the Internet protocols, Clark lists accountability as the least important among seven second level goals .
+2-42:[4] Accordingly, accountability received little attention during the network"s formative years .
+2-43:Clark relates this to the network"s military context, and finds that had the network been designed for commercial development, accountability would have been a top priority .
+2-44:Argyraki, et al., conjecture that applying the principles of layering and transparency may have led to the network"s lack of accountability [3] .
+2-45:According to these principles, end hosts should be informed of network problems only to the extent that they are required to adapt .
+2-46:They notice when packet drops occur so that they can perform congestion control and retransmit packets .
+2-47:Details of where and why drops occur are deliberately concealed .
+2-48:The network"s lack of accountability is highly relevant to a discussion of innovation because it constrains the system of contracts .
+2-49:This is because contracts depend upon external institutions to function the judge in the language of incomplete contract theory, or simply the legal system .
+2-50:Ultimately, if a judge cannot verify that some condition holds, she cannot enforce a contract based on that condition .
+2-51:Of course, the vast majority of contracts never end up in court .
+2-52:Especially when a judge"s ruling is easily predicted, the parties will typically comply with the contract terms on their own volition .
+2-53:This would not be possible, however, without the judge acting as a last resort .
+2-54:An institution to support contracts is typically complex, but we abstract it as follows: We imagine that a contract is an algorithm that outputs a payment transfer among a set of ISPs (the parties) at every time .
+2-55:This payment is a function of the past and present behaviors of the participants, but only those that are verifiable .
+2-56:Hence, we imagine that a contract only accepts proofs as inputs .
+2-57:We will call any process that generates these proofs a contractible monitor .
+2-58:Such a monitor includes metering or sensing devices on the physical network, but it is a more general concept .
+2-59:Constructing a proof of a particular behavior may require readings from various devices distributed among many ISPs .
+2-60:The contractible monitor includes whatever distributed algorithmic mechanism is used to motivate ISPs to share this private information .
+2-61:Figure 1 demonstrates how our model of contracts fits together .
+2-62:We make the assumption that all payments are mediated by contracts .
+2-63:This means that without contractible monitors that attest to, say, latency, payments cannot be conditioned on latency .
+2-64:Figure 1: Relationship between monitors and contracts With this model, we may conclude that the level of accountability in today"s Internet only permits best effort contracts .
+2-65:Nodes cannot condition payments on either quality or path characteristics .
+2-66:Is there anything wrong with best effort contracts? The reader might wonder why the Internet needs contracts at all .
+2-67:After all, in non network industries, traditional firms invest in research and differentiate their products, all in the hopes of keeping their customers and securing new ones .
+2-68:One might believe that such market forces apply to ISPs as well .
+2-69:We may adopt this as our null hypothesis: Null hypothesis: Market forces are sufficient to maintain service diversity and innovation on a network, at least to the same extent as they do in traditional markets .
+2-70:There is a popular intuitive argument that supports this hypothesis, and it may be summarized as follows: Intuitive argument supporting null hypothesis: consumers .
+2-71:ISPs, and the second hops will therefore try to provide highquality service in order to secure traffic from access providers .
+2-72:Access providers try to select high quality transit because that increases their quality .
+2-73:ISP a competitive reason to increase quality .
+2-74:We are careful to model our network in continuous time, in order to capture the essence of this argument .
+2-75:We can, for example, specify equilibria in which nodes switch to a new next hop in the event of a quality drop .
+2-76:Moreover, our model allows us to explore any theoretically possible punishments against cheaters, including those that are costly for end users to administer .
+2-77:By contrast, customers in the real world rarely respond collectively, and often simply seek the best deal currently offered .
+2-78:These constraints limit their ability to punish cheaters .
+2-79:Even with these liberal assumptions, however, we find that we must reject our null hypothesis .
+2-80:Our model will demonstrate that identifying a cheating ISP is difficult under low accountability, limiting the threat of market driven punishment .
+2-81:We will define an index of commoditization and show that it increases without bound as data paths grow long .
+2-82:Furthermore, we will demonstrate a framework in which an ISP"s maximum research investment decreases hyperbolically with its distance from the end user .
+2-83:Network Behavior Monitor Contract Proof Payments 184 To summarize, we argue that the Internet"s lack of accountability must be addressed before the pathologies of commoditization and lack of innovation can be resolved .
+2-84:This leads us to our next topic: How can we leverage accountability to overcome these pathologies? We approach this question from a clean slate perspective .
+2-85:Instead of focusing on incremental improvements, we try to imagine how an ideal industry would behave, then derive the level of accountability needed to meet that objective .
+2-86:According to this approach, we first craft a new equilibrium concept appropriate for network competition .
+2-87:Our concept includes the following requirements: First, we require that punishing ISPs that cheat is done without rerouting the path .
+2-88:Rerouting is likely to prompt end users to switch providers, punishing access providers who administer punishments correctly .
+2-89:Next, we require that the equilibrium cannot be threatened by a coalition of ISPs that exchanges illicit side payments .
+2-90:Finally, we require that the punishment mechanism that enforces contracts does not punish innocent nodes that are not in the coalition .
+2-91:The last requirement is somewhat unconventional from an economic perspective, but we maintain that it is crucial for any reasonable solution .
+2-92:Although ISPs provide complementary services when they form a data path together, they are likely to be horizontal competitors as well .
+2-93:If innocent nodes may be punished, an ISP may decide to deliberately cheat and draw punishment onto itself and its neighbors .
+2-94:By cheating, the ISP may save resources, thereby ensuring that the punishment is more damaging to the other ISPs, which probably compete with the cheater directly for some customers .
+2-95:In the extreme case, the cheater may force the other ISPs out of business, thereby gaining a monopoly on some routes .
+2-96:Applying this equilibrium concept, we derive the monitors needed to maintain innovation and optimize routes .
+2-97:The solution is surprisingly simple: contractible monitors must report the quality of the rest of the path, from each ISP to the destination .
+2-98:It turns out that this is the correct minimum accountability requirement, as opposed to either end to end monitors or hop by hop monitors, as one might initially suspect .
+2-99:Rest of path monitors can be implemented in various ways .
+2-100:They may be purely local algorithms that listen for packet echoes .
+2-101:Alternately, they can be distributed in nature .
+2-102:We describe a way to construct a rest of path monitor out of monitors for individual ISP quality and for the data path .
+2-103:This requires a mechanism to motivate ISPs to share their monitor outputs with each other .
+2-104:The rest of path monitor then includes the component monitors and the distributed algorithmic mechanism that ensures that information is shared as required .
+2-105:This example shows that other types of monitors may be useful as building blocks, but must be combined to form rest of path monitors in order to achieve ideal innovation characteristics .
+2-106:Our study has several practical implications for future protocol design .
+2-107:We show that new monitors must be implemented and integrated with the contracting system before the pathologies of commoditization and lack of innovation can be overcome .
+2-108:Moreover, we derive exactly what monitors are needed to optimize routes and support innovation .
+2-109:In addition, our results provide useful input for clean slate architectural design, and we use several novel techniques that we expect will be applicable to a variety of future research .
+2-110:The rest of this paper is organized as follows: In section 2, we lay out our basic network model .
+2-111:In section 3, we present a lowaccountability network, modeled after today"s Internet .
+2-112:We demonstrate how poor monitoring causes commoditization and a lack of innovation .
+2-113:In section 4, we present verifiable monitors, and show that proofs, even without contracts, can improve the status quo .
+2-114:In section 5, we turn our attention to contractible monitors .
+2-115:We show that rest of path monitors can support competition games with optimal routing and innovation .
+2-116:We further show that rest of path monitors are required to support such competition games .
+2-117:We continue by discussing how such monitors may be constructed using other monitors as building blocks .
+2-118:In section 6, we conclude and present several directions for future research. .
+3 BASIC NETWORK MODEL :
+3-1:A source, S, wants to send data to destination, D .
+3-2:S and D are nodes on a directed, acyclic graph, with a finite set of intermediate nodes, { }NV ,...2,1= , representing ISPs .
+3-3:All paths lead to D, and every node not connected to D has at least two choices for next hop .
+3-4:We will represent quality by a finite dimensional vector space, Q, called the quality space .
+3-5:Each dimension represents a distinct network characteristic that end users care about .
+3-6:For example, latency, loss probability, jitter, and IP version can each be assigned to a dimension .
+3-7:To each node, i, we associate a vector in the quality space, Qqi ∈ .
+3-8:This corresponds to the quality a user would experience if i were the only ISP on the data path .
+3-9:Let N Q∈q be the vector of all node qualities .
+3-10:Of course, when data passes through multiple nodes, their qualities combine in some way to yield a path quality .
+3-11:We represent this by an associative binary operation, *: QQQ →× .
+3-12:For path ( )nvvv ,...,, 21 , the quality is given by nvvv qqq ∗∗∗ ...21 .
+3-13:The * operation reflects the characteristics of each dimension of quality .
+3-14:For example, * can act as an addition in the case of latency, multiplication in the case of loss probability, or a minimumargument function in the case of security .
+3-15:When data flows along a complete path from S to D, the source and destination, generally regarded as a single player, enjoy utility given by a function of the path quality, →Qu : .
+3-16:Each node along the path, i, experiences some cost of transmission, ci .
+3-17:2.1 Game Dynamics Ultimately, we are most interested in policies that promote innovation on the network .
+3-18:In this study, we will use innovation in a fairly general sense .
+3-19:Innovation describes any investment by an ISP that alters its quality vector so that at least one potential data path offers higher utility .
+3-20:This includes researching a new routing algorithm that decreases the amount of jitter users experience .
+3-21:It also includes deploying a new protocol that supports quality of service .
+3-22:Even more broadly, buying new equipment to decrease S D 185 latency may also be regarded as innovation .
+3-23:Innovation may be thought of as the micro level process by which the network evolves .
+3-24:Our analysis is limited in one crucial respect: We focus on inventions that a single ISP can implement to improve the end user experience .
+3-25:This excludes technologies that require adoption by all ISPs on the network to function .
+3-26:Because such technologies do not create a competitive advantage, rewarding them is difficult and may require intellectual property or some other market distortion .
+3-27:We defer this interesting topic to future work .
+3-28:At first, it may seem unclear how a large scale distributed process such as innovation can be influenced by mechanical details like networks monitors .
+3-29:Our model must draw this connection in a realistic fashion .
+3-30:The rate of innovation depends on the profits that potential innovators expect in the future .
+3-31:The reward generated by an invention must exceed the total cost to develop it, or the inventor will not rationally invest .
+3-32:This reward, in turn, is governed by the competitive environment in which the firm operates, including the process by which firms select prices, and agree upon contracts with each other .
+3-33:Of course, these decisions depend on how routes are established, and how contracts determine actual monetary exchanges .
+3-34:Any model of network innovation must therefore relate at least three distinct processes: innovation, competition, and routing .
+3-35:We select a game dynamics that makes the relation between these processes as explicit as possible .
+3-36:This is represented schematically in Figure 2 .
+3-37:The innovation stage occurs first, at time 2−=t .
+3-38:In this stage, each agent decides whether or not to make research investments .
+3-39:If she chooses not to, her quality remains fixed .
+3-40:If she makes an investment, her quality may change in some way .
+3-41:It is not necessary for us to specify how such changes take place .
+3-42:The agents" choices in this stage determine the vector of qualities, q, common knowledge for the rest of the game .
+3-43:Next, at time 1−=t , agents participate in the competition stage, in which contracts are agreed upon .
+3-44:In today"s industry, these contracts include prices for transit access, and peering agreements .
+3-45:Since access is provided on a best effort basis, a transit agreement can simply be represented by its price .
+3-46:Other contracting systems we will explore will require more detail .
+3-47:Finally, beginning at 0=t , firms participate in the routing stage .
+3-48:Other research has already employed repeated games to study routing, for example [1], [12] .
+3-49:Repetition reveals interesting effects not visible in a single stage game, such as informal collusion to elevate prices in [12] .
+3-50:We use a game in continuous time in order to study such properties .
+3-51:For example, we will later ask whether a player will maintain higher quality than her contracts require, in the hope of keeping her customer base or attracting future customers .
+3-52:Our dynamics reflect the fact that ISPs make innovation decisions infrequently .
+3-53:Although real firms have multiple opportunities to innovate, each opportunity is followed by a substantial length of time in which qualities are fixed .
+3-54:The decision to invest focuses on how the firm"s new quality will improve the contracts it can enter into .
+3-55:Hence, our model places innovation at the earliest stage, attempting to capture a single investment decision .
+3-56:Contracting decisions are made on an intermediate time scale, thus appearing next in the dynamics .
+3-57:Routing decisions are made very frequently, mainly to maximize immediate profit flows, so they appear in the last stage .
+3-58:Because of this ordering, our model does not allow firms to route strategically to affect future innovation or contracting decisions .
+3-59:In opposition, Afergan and Wroclawski argue that contracts are formed in response to current traffic patterns, in a feedback loop [2] .
+3-60:Although we are sympathetic to their observation, such an addition would make our analysis intractable .
+3-61:Our model is most realistic when contracting decisions are infrequent .
+3-62:Throughout this paper, our solution concept will be a subgame perfect equilibrium .
+3-63:An SPE is a strategy point that is a Nash equilibrium when restricted to each subgame .
+3-64:Three important subgames have been labeled in Figure 2 .
+3-65:The innovation game includes all three stages .
+3-66:The competition game includes only the competition stage and the routing stage .
+3-67:The routing game includes only the routing stage .
+3-68:An SPE guarantees that players are forward looking .
+3-69:This means, for example, that in the competition stage, firms must act rationally, maximizing their expected profits in the routing stage .
+3-70:They cannot carry out threats they made in the innovation stage if it lowers their expected payoff .
+3-71:Our schematic already suggests that the routing game is crucial for promoting innovation .
+3-72:To support innovation, the competition game must somehow reward ISPs with high quality .
+3-73:But that means that the routing game must tend to route to nodes with high quality .
+3-74:If the routing game always selects the lowest cost routes, for example, innovation will not be supported .
+3-75:We will support this observation with analysis later .
+3-76:2.2 The Routing Game The routing game proceeds in continuous time, with all players discounting by a common factor, r .
+3-77:The outputs from previous stages, q and the set of contracts, are treated as exogenous parameters for this game .
+3-78:For each time 0≥t , each node must select a next hop to route data to .
+3-79:Data flows across the resultant path, causing utility flow to S and D, and a flow cost to the nodes on the path, as described above .
+3-80:Payment flows are also created, based on the contracts in place .
+3-81:Relating our game to the familiar repeated prisoners" dilemma, imagine that we are trying to impose a high quality, but costly path .
+3-82:As we argued loosely above, such paths must be sustainable in order to support innovation .
+3-83:Each ISP on the path tries to maximize her own payment, net of costs, so she may not want to cooperate with our plan .
+3-84:Rather, if she can find a way to save on costs, at the expense of the high quality we desire, she will be tempted to do so .
+3-85:Innovation Game Competition Game Routing Game Innovation stage Competition stage Routing stageQualities (q) Contracts (prices) Profits t = 2 t = 1 t ∈ [ 0 , ) Figure 2: Game Dynamics 186 Analogously to the prisoners" dilemma, we will call such a decision cheating .
+3-86:A little more formally, Cheating refers to any action that an ISP can take, contrary to some target strategy point that we are trying to impose, that enhances her immediate payoff, but compromises the quality of the data path .
+3-87:One type of cheating relates to the data path .
+3-88:Each node on the path has to pay the next node to deliver its traffic .
+3-89:If the next node offers high quality transit, we may expect that a lower quality node will offer a lower price .
+3-90:Each node on the path will be tempted to route to a cheaper next hop, increasing her immediate profits, but lowering the path quality .
+3-91:We will call this type of action cheating in route .
+3-92:Another possibility we can model, is that a node finds a way to save on its internal forwarding costs, at the expense of its own quality .
+3-93:We will call this cheating internally to distinguish it from cheating in route .
+3-94:For example, a node might drop packets beyond the rate required for congestion control, in order to throttle back TCP flows and thus save on forwarding costs [3] .
+3-95:Alternately, a node employing quality of service could give high priority packets a lower class of service, thus saving on resources and perhaps allowing itself to sell more high priority service .
+3-96:If either cheating in route or cheating internally is profitable, the specified path will not be an equilibrium .
+3-97:We assume that cheating can never be caught instantaneously .
+3-98:Rather, a cheater can always enjoy the payoff from cheating for some positive time, which we label 0t .
+3-99:This includes the time for other players to detect and react to the cheating .
+3-100:If the cheater has a contract which includes a customer lock in period, 0t also includes the time until customers are allowed to switch to a new ISP .
+3-101:As we will see later, it is socially beneficial to decrease 0t , so such lock in is detrimental to welfare. .
+4 PATHOLOGIES OF A  LOWACCOUNTABILITY NETWORK :
+4-1:LOWACCOUNTABILITY NETWORK In order to motivate an exploration of monitoring systems, we begin in this section by considering a network with a poor degree of accountability, modeled after today"s Internet .
+4-2:We will show how the lack of monitoring necessarily leads to poor routing and diminishes the rate of innovation .
+4-3:Thus, the network"s lack of accountability is a fundamental obstacle to resolving these pathologies .
+4-4:3.1 Accountability in the Current Internet First, we reflect on what accountability characteristics the present Internet has .
+4-5:Argyraki, et al., point out that end hosts are given minimal information about packet drops [3] .
+4-6:Users know when drops occur, but not where they occur, nor why .
+4-7:Dropped packets may represent the innocent signaling of congestion, or, as we mentioned above, they may be a form of cheating internally .
+4-8:The problem is similar for other dimensions of quality, or in fact more acute .
+4-9:Finding an ISP that gives high priority packets a lower class of service, for example, is further complicated by the lack of even basic diagnostic tools .
+4-10:In fact, it is similarly difficult to identify an ISP that cheats in route .
+4-11:Huston notes that Internet traffic flows do not always correspond to routing information [8] .
+4-12:An ISP may hand a packet off to a neighbor regardless of what routes that neighbor has advertised .
+4-13:Furthermore, blocks of addresses are summarized together for distant hosts, so a destination may not even be resolvable until packets are forwarded closer .
+4-14:One might argue that diagnostic tools like ping and traceroute can identify cheaters .
+4-15:Unfortunately, Argyraki, et al., explain that these tools only reveal whether probe packets are echoed, not the fate of past packets [3] .
+4-16:Thus, for example, they are ineffective in detecting low frequency packet drops .
+4-17:Even more fundamentally, a sophisticated cheater can always spot diagnostic packets and give them special treatment .
+4-18:As a further complication, a cheater may assume different aliases for diagnostic packets arriving over different routes .
+4-19:As we will see below, this gives the cheater a significant advantage in escaping punishment for bad behavior, even if the data path is otherwise observable .
+4-20:3.2 Modeling Low Accountability As the above evidence suggests, the current industry allows for very little insight into the behavior of the network .
+4-21:In this section, we attempt to capture this lack of accountability in our model .
+4-22:We begin by defining a monitor, our model of the way that players receive external information about network behavior, A monitor is any distributed algorithmic mechanism that runs on the network graph, and outputs, to specific nodes, informational statements about current or past network behavior .
+4-23:We assume that all external information about network behavior is mediated in this way .
+4-24:The accountability properties of the Internet can be represented by the following monitors: E2E (End to End): A monitor that informs S D about what the total path quality is at any time (this is the quality they experience) .
+4-25:ROP (Rest of Path): A monitor that informs each node along the data path what the quality is for the rest of the path to the destination .
+4-26:PRc (Packets Received): A monitor that tells nodes how much data they accept from each other, so that they can charge by volume .
+4-27:It is important to note, however, that this information is aggregated over many source destination pairs .
+4-28:Hence, for the sake of realism, it cannot be used to monitor what the data path is .
+4-29:Players cannot measure the qualities of other, single nodes, just the rest of the path .
+4-30:Nodes cannot see the path past the next hop .
+4-31:This last assumption is stricter than needed for our results .
+4-32:The critical ingredient is that nodes cannot verify that the path avoids a specific hop .
+4-33:This holds, for example, if the path is generally visible, except nodes can use different aliases for different parents .
+4-34:Similar results also hold if alternate paths always converge after some integer number, m, of hops .
+4-35:It is important to stress that E2E and ROP are not the contractible monitors we described in the introduction they do not generate proofs .
+4-36:Thus, even though a player observes certain information, she generally cannot credibly share it with another player .
+4-37:For example, if a node after the first hop starts cheating, the first hop will detect the sudden drop in quality for the rest of the path, but the first hop cannot make the source believe this observation the 187 source will suspect that the first hop was the cheater, and fabricated the claim against the rest of the path .
+4-38:Typically, E2E and ROP are envisioned as algorithms that run on a single node, and listen for packet echoes .
+4-39:This is not the only way that they could be implemented, however; an alternate strategy is to aggregate quality measurements from multiple points in the network .
+4-40:These measurements can originate in other monitors, located at various ISPs .
+4-41:The monitor then includes the component monitors as well as whatever mechanisms are in place to motivate nodes to share information honestly as needed .
+4-42:For example, if the source has monitors that reveal the qualities of individual nodes, they could be combined with path information to create an ROP monitor .
+4-43:Since we know that contracts only accept proofs as input, we can infer that payments in this environment can only depend on the number of packets exchanged between players .
+4-44:In other words, contracts are best effort .
+4-45:For the remainder of this section, we will assume that contracts are also linear there is a constant payment flow so long as a node accepts data, and all conditions of the contract are met .
+4-46:Other, more complicated tariffs are also possible, and are typically used to generate lock in .
+4-47:We believe that our parameter t0 is sufficient to describe lock in effects, and we believe that the insights in this section apply equally to any tariffs that are bounded so that the routing game remains continuous at infinity .
+4-48:Restricting attention to linear contracts allows us to represent some node i"s contract by its price, pi .
+4-49:Because we further know that nodes cannot observe the path after the next hop, we can infer that contracts exist only between neighboring nodes on the graph .
+4-50:We will call this arrangement of contracts bilateral .
+4-51:When a competition game exclusively uses bilateral contracts, we will call it a bilateral contract competition game .
+4-52:We first focus on the routing game and ask whether a high quality route can be maintained, even when a low quality route is cheaper .
+4-53:Recall that this is a requirement in order for nodes to have any incentive to innovate .
+4-54:If nodes tend to route to low price next hops, regardless of quality, we say that the network is commoditized .
+4-55:To measure this tendency, we define an index of commoditization as follows: For a node on the data path, i, define its quality premium, minppd ji −= , where pj is the flow payment to the next hop in equilibrium, and pmin is the price of the lowest cost next hop .
+4-56:Definition: The index of commoditization, CI , is the average, over each node on the data path, i, of i"s flow profit as a fraction of i"s quality premium, ( ) ijii dpcp −− .
+4-57:CI ranges from 0, when each node spends all of its potential profit on its quality premium, to infinite, when a node absorbs positive profit, but uses the lowest price next hop .
+4-58:A high value for CI implies that nodes are spending little of their money inflow on purchasing high quality for the rest of the path .
+4-59:As the next claim shows, this is exactly what happens as the path grows long: Claim 1 .
+4-60:If the only monitors are E2E, ROP, and PRc, ∞→CI as ∞→n , where n is the number of nodes on the data path .
+4-61:To show that this is true, we first need the following lemma, which will establish the difficulty of punishing nodes in the network .
+4-62:First a bit of notation: Recall that a cheater can benefit from its actions for 00 >t before other players can react .
+4-63:When a node cheats, it can expect a higher profit flow, at least until it is caught and other players react, perhaps by diverting traffic .
+4-64:Let node i"s normal profit flow be iπ , and her profit flow during cheating be some greater value, yi .
+4-65:We will call the ratio, iiy π , the temptation to cheat .
+4-66:Lemma 1 .
+4-67:If the only monitors are E2E, ROP, and PRc, the discounted time, −nt rt e 0 , needed to punish a cheater increases at least as fast as the product of the temptations to cheat along the data path, ∏ −− ≥ 0 0 pathdataon 0 t rt i i i t rt e y e n π (1) Corollary .
+4-68:If nodes share a minimum temptation to cheat, π y , the discounted time needed to punish cheating increases at least exponentially in the length of the data path, n, −− ≥ 0 00 t rt nt rt e y e n π (2) Since it is the discounted time that increases exponentially, the actual time increases faster than exponentially .
+4-69:If n is so large that tn is undefined, the given path cannot be maintained in equilibrium .
+4-70:Proof .
+4-71:The proof proceeds by induction on the number of nodes on the equilibrium data path, n .
+4-72:For 1=n , there is a single node, say i .
+4-73:By cheating, the node earns extra profit ( ) − − 0 0 t rt ii ey π .
+4-74:If node i is then punished until time 1t , the extra profit must be cancelled out by the lost profit between time 0t and 1t , −1 0 t t rt i eπ .
+4-75:A little manipulation gives −− = 01 00 t rt i i t rt e y e π , as required .
+4-76:For 1>n , assume for induction that the claim holds for 1−n .
+4-77:The source does not know whether the cheater is the first hop, or after the first hop .
+4-78:Because the source does not know the data path after the first hop, it is unable to punish nodes beyond it .
+4-79:If it chooses a new first hop, it might not affect the rest of the data path .
+4-80:Because of this, the source must rely on the first hop to punish cheating nodes farther along the path .
+4-81:The first hop needs discounted time, ∏ −0 0 hopfirstafter t rt i i i e y π , to accomplish this by assumption .
+4-82:So the source must give the first hop this much discounted time in order to punish defectors further down the line (and the source will expect poor quality during this period) .
+4-83:Next, the source must be protected against a first hop that cheats, and pretends that the problem is later in the path .
+4-84:The first hop can 188 do this for the full discounted time, ∏ −0 0 hopfirstafter t rt i i i e y π , so the source must punish the first hop long enough to remove the extra profit it can make .
+4-85:Following the same argument as for 1=n , we can show that the full discounted time is ∏ −0 0 pathdataon t rt i i i e y π , which completes the proof .
+4-86:The above lemma and its corollary show that punishing cheaters becomes more and more difficult as the data path grows long, until doing so is impossible .
+4-87:To capture some intuition behind this result, imagine that you are an end user, and you notice a sudden drop in service quality .
+4-88:If your data only travels through your access provider, you know it is that provider"s fault .
+4-89:You can therefore take your business elsewhere, at least for some time .
+4-90:This threat should motivate your provider to maintain high quality .
+4-91:Suppose, on the other hand, that your data traverses two providers .
+4-92:When you complain to your ISP, he responds, yes, we know your quality went down, but it"s not our fault, it"s the next ISP .
+4-93:Give us some time to punish them and then normal quality will resume .
+4-94:If your access provider is telling the truth, you will want to listen, since switching access providers may not even route around the actual offender .
+4-95:Thus, you will have to accept lower quality service for some longer time .
+4-96:On the other hand, you may want to punish your access provider as well, in case he is lying .
+4-97:This means you have to wait longer to resume normal service .
+4-98:As more ISPs are added to the path, the time increases in a recursive fashion .
+4-99:With this lemma in hand, we can return to prove Claim 1 .
+4-100:Proof of Claim 1 .
+4-101:Fix an equilibrium data path of length n .
+4-102:Label the path nodes 1,2,…,n .
+4-103:For each node i, let i"s quality premium be '11 ++ −= iii ppd .
+4-104:Then we have, [ ] = − = − + + = − + ++ = + −=− −− −− = −− − = −− = n i i n i iii iii n i iii ii n i i iii C g npcp pcp n pcp pp nd pcp n I 1 1 1 1 1 1 1 1 1 11 1 1 1 1 1 '1 '11 , (3) where gi is node i"s temptation to cheat by routing to the lowest price next hop .
+4-105:Lemma 1 tells us that Tg n i i <∏ =1 , where ( )01 rt eT − −= .
+4-106:It requires a bit of calculus to show that IC is minimized by setting each gi equal to n T 1 .
+4-107:However, as ∞→n , we have 1 1 →n T , which shows that ∞→CI .
+4-108:According to the claim, as the data path grows long, it increasingly resembles a lowest price path .
+4-109:Since lowest price routing does not support innovation, we may speculate that innovation degrades with the length of the data path .
+4-110:Though we suspect stronger claims are possible, we can demonstrate one such result by including an extra assumption: Available Bargain Path: A competitive market exists for lowcost transit, such that every node can route to the destination for no more than flow payment, lp .
+4-111:Claim 2 .
+4-112:Under the available bargain path assumption, if node i , a distance n from S, can invest to alter its quality, and the source will spend no more than sP for a route including node i"s new quality, then the payment to node i, p, decreases hyperbolically with n, ( ) ( ) s n l P n T pp 1 1 1 − +≤ − , (4) where ( )01 rt eT − −= is the bound on the product of temptations from the previous claim .
+4-113:Thus, i will spend no more than ( ) ( )− + − s n l P n T p r 1 1 1 1 on this quality improvement, which approaches the bargain path"s payment, r pl , as ∞→n .
+4-114:The proof is given in the appendix .
+4-115:As a node gets farther from the source, its maximum payment approaches the bargain price, pl .
+4-116:Hence, the reward for innovation is bounded by the same amount .
+4-117:Large innovations, meaning substantially more expensive than rpl , will not be pursued deep into the network .
+4-118:Claim 2 can alternately be viewed as a lower bound on how much it costs to elicit innovation in a network .
+4-119:If the source S wants node i to innovate, it needs to get a motivating payment, p, to i during the routing stage .
+4-120:However, it must also pay the nodes on the way to i a premium in order to motivate them to route properly .
+4-121:The claim shows that this premium increases with the distance to i, until it dwarfs the original payment, p .
+4-122:Our claims stand in sharp contrast to our null hypothesis from the introduction .
+4-123:Comparing the intuitive argument that supported our hypothesis with these claims, we can see that we implicitly used an oversimplified model of market pressure (as either present or not) .
+4-124:As is now clear, market pressure relies on the decisions of customers, but these are limited by the lack of information .
+4-125:Hence, competitive forces degrade as the network deepens. .
+5 VERIFIABLE MONITORS :
+5-1:In this section, we begin to introduce more accountability into the network .
+5-2:Recall that in the previous section, we assumed that players couldn"t convince each other of their private information .
+5-3:What would happen if they could? If a monitor"s informational signal can be credibly conveyed to others, we will call it a verifiable monitor .
+5-4:The monitor"s output in this case can be thought of as a statement accompanied by a proof, a string that can be processed by any player to determine that the statement is true .
+5-5:A verifiable monitor is a distributed algorithmic mechanism that runs on the network graph, and outputs, to specific nodes, proofs about current or past network behavior .
+5-6:Along these lines, we can imagine verifiable counterparts to E2E and ROP .
+5-7:We will label these E2Ev and ROPv .
+5-8:With these monitors, each node observes the quality of the rest of the path and can also convince other players of these observations by giving them a proof .
+5-9:189 By adding verifiability to our monitors, identifying a single cheater is straightforward .
+5-10:The cheater is the node that cannot produce proof that the rest of path quality decreased .
+5-11:This means that the negative results of the previous section no longer hold .
+5-12:For example, the following lemma stands in contrast to Lemma 1 .
+5-13:Lemma 2 .
+5-14:With monitors E2Ev, ROPv, and PRc, and provided that the node before each potential cheater has an alternate next hop that isn"t more expensive, it is possible to enforce any data path in SPE so long as the maximum temptation is less than what can be deterred in finite time, − ≤ 0 0 max 1 t rt er y π (5) Proof .
+5-15:This lemma follows because nodes can share proofs to identify who the cheater is .
+5-16:Only that node must be punished in equilibrium, and the preceding node does not lose any payoff in administering the punishment .
+5-17:With this lemma in mind, it is easy to construct counterexamples to Claim 1 and Claim 2 in this new environment .
+5-18:Unfortunately, there are at least four reasons not to be satisfied with this improved monitoring system .
+5-19:The first, and weakest reason is that the maximum temptation remains finite, causing some distortion in routes or payments .
+5-20:Each node along a route must extract some positive profit unless the next hop is also the cheapest .
+5-21:Of course, if t0 is small, this effect is minimal .
+5-22:The second, and more serious reason is that we have always given our source the ability to commit to any punishment .
+5-23:Real world users are less likely to act collectively, and may simply search for the best service currently offered .
+5-24:Since punishment phases are generally characterized by a drop in quality, real world end users may take this opportunity to shop for a new access provider .
+5-25:This will make nodes less motivated to administer punishments .
+5-26:The third reason is that Lemma 2 does not apply to cheating by coalitions .
+5-27:A coalition node may pretend to punish its successor, but instead enjoy a secret payment from the cheating node .
+5-28:Alternately, a node may bribe its successor to cheat, if the punishment phase is profitable, and so forth .
+5-29:The required discounted time for punishment may increase exponentially in the number of coalition members, just as in the previous section! The final reason not to accept this monitoring system is that when a cheater is punished, the path will often be routed around not just the offender, but around other nodes as well .
+5-30:Effectively, innocent nodes will be punished along with the guilty .
+5-31:In our abstract model, this doesn"t cause trouble since the punishment falls off the equilibrium path .
+5-32:The effects are not so benign in the real world .
+5-33:When ISPs lie in sequence along a data path, they contribute complementary services, and their relationship is vertical .
+5-34:From the perspective of other source destination pairs, however, these same firms are likely to be horizontal competitors .
+5-35:Because of this, a node might deliberately cheat, in order to trigger punishment for itself and its neighbors .
+5-36:By cheating, the node will save money to some extent, so the cheater is likely to emerge from the punishment phase better off than the innocent nodes .
+5-37:This may give the cheater a strategic advantage against its competitors .
+5-38:In the extreme, the cheater may use such a strategy to drive neighbors out of business, and thereby gain a monopoly on some routes. .
+6 CONTRACTIBLE MONITORS :
+6-1:At the end of the last section, we identified several drawbacks that persist in an environment with E2Ev, ROPv, and PRc .
+6-2:In this section, we will show how all of these drawbacks can be overcome .
+6-3:To do this, we will require our third and final category of monitor: A contractible monitor is simply a verifiable monitor that generates proofs that can serve as input to a contract .
+6-4:Thus, contractible is jointly a property of the monitor and the institutions that must verify its proofs .
+6-5:Contractibility requires that a court, .
+7 Can verify the monitor"s proofs. :
+7-1:the extent required to police illegal activity .
+7-2:Understanding the agreements between companies has traditionally been a matter of reading contracts on paper .
+7-3:This may prove to be a harder task in a future network setting .
+7-4:Contracts may plausibly be negotiated by machine, be numerous, even per flow, and be further complicated by the many dimensions of quality .
+7-5:When a monitor (together with institutional infrastructure) meets these criteria, we will label it with a subscript c, for contractible .
+7-6:The reader may recall that this is how we labeled the packets received monitor, PRc, which allows ISPs to form contracts with per packet payments .
+7-7:Similarly, E2Ec and ROPc are contractible versions of the monitors we are now familiar with .
+7-8:At the end of the previous section, we argued for some desirable properties that we"d like our solution to have .
+7-9:Briefly, we would like to enforce optimal data paths with an equilibrium concept that doesn"t rely on re routing for punishment, is coalition proof, and doesn"t punish innocent nodes when a coalition cheats .
+7-10:We will call such an equilibrium a fixed route coalition proof protect theinnocent equilibrium .
+7-11:As the next claim shows, ROPc allows us to create a system of linear (price, quality) contracts under just such an equilibrium .
+7-12:Claim 3 .
+7-13:With ROPc, for any feasible and consistent assignment of rest of path qualities to nodes, and any corresponding payment schedule that yields non negative payoffs, these qualities can be maintained with bilateral contracts in a fixed route coalition proof protect the innocent equilibrium .
+7-14:Proof: Fix any data path consistent with the given rest of path qualities .
+7-15:Select some monetary punishment, P, large enough to prevent any cheating for time t0 (the discounted total payment from the source will work) .
+7-16:Let each node on the path enter into a contract with its parent, which fixes an arbitrary payment schedule so long as the rest of path quality is as prescribed .
+7-17:When the parent node, which has ROPc, submits a proof that the rest of path quality is less than expected, the contract awards her an instantaneous transfer, P, from the downstream node .
+7-18:Such proofs can be submitted every 0t for the previous interval .
+7-19:Suppose now that a coalition, C, decides to cheat .
+7-20:The source measures a decrease in quality, and according to her contract, is awarded P from the first hop .
+7-21:This means that there is a net outflow of P from the ISPs as a whole .
+7-22:Suppose that node i is not in C .
+7-23:In order for the parent node to claim P from i, it must submit proof that the quality of the path starting at i is not as prescribed .
+7-24:This means 190 that there is a cheater after i .
+7-25:Hence, i would also have detected a change in quality, so i can claim P from the next node on the path .
+7-26:Thus, innocent nodes are not punished .
+7-27:The sequence of payments must end by the destination, so the net outflow of P must come from the nodes in C .
+7-28:This establishes all necessary conditions of the equilibrium .
+7-29:Essentially, ROPc allows for an implementation of (price, quality) contracts .
+7-30:Building upon this result, we can construct competition games in which nodes offer various qualities to each other at specified prices, and can credibly commit to meet these performance targets, even allowing for coalitions and a desire to damage other ISPs .
+7-31:Example 1 .
+7-32:Define a Stackelberg price quality competition game as follows: Extend the partial order of nodes induced by the graph to any complete ordering, such that downstream nodes appear before their parents .
+7-33:In this order, each node selects a contract to offer to its parents, consisting of a rest of path quality, and a linear price .
+7-34:In the routing game, each node selects a next hop at every time, consistent with its advertised rest of path quality .
+7-35:The Stackelberg price quality competition game can be implemented in our model with ROPc monitors, by using the strategy in the proof, above .
+7-36:It has the following useful property: Claim 4 .
+7-37:The Stackelberg price quality competition game yields optimal routes in SPE .
+7-38:The proof is given in the appendix .
+7-39:This property is favorable from an innovation perspective, since firms that invest in high quality will tend to fall on the optimal path, gaining positive payoff .
+7-40:In general, however, investments may be over or under rewarded .
+7-41:Extra conditions may be given under which innovation decisions approach perfect efficiency for large innovations .
+7-42:We omit the full analysis here .
+7-43:Example 2 .
+7-44:Alternately, we can imagine that players report their private information to a central authority, which then assigns all contracts .
+7-45:For example, contracts could be computed to implement the cost minimizing VCG mechanism proposed by Feigenbaum, et al .
+7-46:in [7] .
+7-47:With ROPc monitors, we can adapt this mechanism to maximize welfare .
+7-48:For node, i, on the optimal path, L, the net payment must equal, essentially, its contribution to the welfare of S, D, and the other nodes .
+7-49:If L" is an optimal path in the graph with i removed, the profit flow to i is, ( ) ( ) ∈≠∈ +−− ', ' Lj j ijLj jLL ccququ , (6) where Lq and 'Lq are the qualities of the two paths .
+7-50:Here, (price, quality) contracts ensure that nodes report their qualities honestly .
+7-51:The incentive structure of the VCG mechanism is what motivates nodes to report their costs accurately .
+7-52:A nice feature of this game is that individual innovation decisions are efficient, meaning that a node will invest in an innovation whenever the investment cost is less than the increased welfare of the optimal data path .
+7-53:Unfortunately, the source may end up paying more than the utility of the path .
+7-54:Notice that with just E2Ec, a weaker version of Claim 3 holds .
+7-55:Bilateral (price, quality) contracts can be maintained in an equilibrium that is fixed route and coalition proof, but not protectthe innocent .
+7-56:This is done by writing contracts to punish everyone on the path when the end to end quality drops .
+7-57:If the path length is n, the first hop pays nP to the source, the second hop pays ( )Pn 1− to the first, and so forth .
+7-58:This ensures that every node is punished sufficiently to make cheating unprofitable .
+7-59:For the reasons we gave previously, we believe that this solution concept is less than ideal, since it allows for malicious nodes to deliberately trigger punishments for potential competitors .
+7-60:Up to this point, we have adopted fixed route coalition proof protect the innocent equilibrium as our desired solution concept, and shown that ROPc monitors are sufficient to create some competition games that are desirable in terms of service diversity and innovation .
+7-61:As the next claim will show, rest of path monitoring is also necessary to construct such games under our solution concept .
+7-62:Before we proceed, what does it mean for a game to be desirable from the perspective of service diversity and innovation? We will use a very weak assumption, essentially, that the game is not fully commoditized for any node .
+7-63:The claim will hold for this entire class of games .
+7-64:Definition: A competition game is nowhere commoditized if for each node, i, not adjacent to D, there is some assignment of qualities and marginal costs to nodes, such that the optimal data path includes i, and i has a positive temptation to cheat .
+7-65:In the case of linear contracts, it is sufficient to require that ∞<CI , and that every node make positive profit under some assignment of qualities and marginal costs .
+7-66:Strictly speaking, ROPc monitors are not the only way to construct these desirable games .
+7-67:To prove the next claim, we must broaden our notion of rest of path monitoring to include the similar ROPc" monitor, which attests to the quality starting at its own node, through the end of the path .
+7-68:Compare the two monitors below: ROPc: gives a node proof that the path quality from the next node to the destination is not correct .
+7-69:ROPc": gives a node proof that the path quality from that node to the destination is correct .
+7-70:We present a simplified version of this claim, by including an assumption that only one node on the path can cheat at a time (though conspirators can still exchange side payments) .
+7-71:We will discuss the full version after the proof .
+7-72:Claim 5 .
+7-73:Assume a set of monitors, and a nowhere commoditized bilateral contract competition game that always maintains the optimal quality in fixed route coalition proof protect the innocent equilibrium, with only one node allowed to cheat at a time .
+7-74:Then for each node, i, not adjacent to D, either i has an ROPc monitor, or i"s children each have an ROPc" monitor .
+7-75:Proof: First, because of the fixed route assumption, punishments must be purely monetary .
+7-76:Next, when cheating occurs, if the payment does not go to the source or destination, it may go to another coalition member, rendering it ineffective .
+7-77:Thus, the source must accept some monetary compensation, net of its normal flow payment, when cheating occurs .
+7-78:Since the source only contracts with the first hop, it must accept this money from the first hop .
+7-79:The source"s contract must therefore distinguish when the path quality is normal from when it is lowered by cheating .
+7-80:To do so, it can either accept proofs 191 from the source, that the quality is lower than required, or it can accept proofs from the first hop, that the quality is correct .
+7-81:These nodes will not rationally offer the opposing type of proof .
+7-82:By definition, any monitor that gives the source proof that the path quality is wrong is an ROPc monitor .
+7-83:Any monitor that gives the first hop proof that the quality is correct is a ROPc" monitor .
+7-84:Thus, at least one of these monitors must exist .
+7-85:By the protect the innocent assumption, if cheating occurs, but the first hop is not a cheater, she must be able to claim the same size reward from the next ISP on the path, and thus pass on the punishment .
+7-86:The first hop"s contract with the second must then distinguish when cheating occurs after the first hop .
+7-87:By argument similar to that for the source, either the first hop has a ROPc monitor, or the second has a ROPc" monitor .
+7-88:This argument can be iterated along the entire path to the penultimate node before D .
+7-89:Since the marginal costs and qualities can be arranged to make any path the optimal path, these statements must hold for all nodes and their children, which completes the proof .
+7-90:The two possibilities for monitor correspond to which node has the burden of proof .
+7-91:In one case, the prior node must prove the suboptimal quality to claim its reward .
+7-92:In the other, the subsequent node must prove that the quality was correct to avoid penalty .
+7-93:Because the two monitors are similar, it seems likely that they require comparable costs to implement .
+7-94:If submitting the proofs is costly, it seems natural that nodes would prefer to use the ROPc monitor, placing the burden of proof on the upstream node .
+7-95:Finally, we note that it is straightforward to derive the full version of the claim, which allows for multiple cheaters .
+7-96:The only complication is that cheaters can exchange side payments, which makes any money transfers between them redundant .
+7-97:Because of this, we have to further generalize our rest of path monitors, so they are less constrained in the case that there are cheaters on either side .
+7-98:5.1 Implementing Monitors Claim 5 should not be interpreted as a statement that each node must compute the rest of path quality locally, without input from other nodes .
+7-99:Other monitors, besides ROPc and ROPc" can still be used, loosely speaking, as building blocks .
+7-100:For instance, network tomography is concerned with measuring properties of the network interior with tools located at the edge .
+7-101:Using such techniques, our source might learn both individual node qualities and the data path .
+7-102:This is represented by the following two monitors: SHOPc i : (source based hop quality) A monitor that gives the source proof of what the quality of node i is .
+7-103:SPATHc: (source based path) A monitor that gives the source proof of what the data path is at any time, at least as far as it matches the equilibrium path .
+7-104:With these monitors, a punishment mechanism can be designed to fulfill the conditions of Claim 5 .
+7-105:It involves the source sharing the proofs it generates with nodes further down the path, which use them to determine bilateral payments .
+7-106:Ultimately however, the proof of Claim 5 shows us that each node i"s bilateral contracts require proof of the rest of path quality .
+7-107:This means that node i (or possibly its children) will have to combine the proofs that they receive to generate a proof of the rest of path quality .
+7-108:Thus, the combined process is itself a rest of path monitor .
+7-109:What we have done, all in all, is constructed a rest of path monitor using SPATHc and SHOPc i as building blocks .
+7-110:Our new monitor includes both the component monitors and whatever distributed algorithmic mechanism exists to make sure nodes share their proofs correctly .
+7-111:This mechanism can potentially involve external institutions .
+7-112:For a concrete example, suppose that when node i suspects it is getting poor rest of path quality from its successor, it takes the downstream node to court .
+7-113:During the discovery process, the court subpoenas proofs of the path and of node qualities from the source (ultimately, there must be some threat to ensure the source complies) .
+7-114:Finally, for the court to issue a judgment, one party or the other must compile a proof of what the rest of path quality was .
+7-115:Hence, the entire discovery process acts as a rest of path monitor, albeit a rather costly monitor in this case .
+7-116:Of course, mechanisms can be designed to combine these monitors at much lower cost .
+7-117:Typically, such mechanisms would call for automatic sharing of proofs, with court intervention only as a last resort .
+7-118:We defer these interesting mechanisms to future work .
+7-119:As an aside, intuition might dictate that SHOPc i generates more information than ROPc; after all, inferring individual node qualities seems a much harder problem .
+7-120:Yet, without path information, SHOPc i is not sufficient for our first best innovation result .
+7-121:The proof of this demonstrates a useful technique: Claim 6 .
+7-122:With monitors E2E, ROP, SHOPc i and PRc, and a nowhere commoditized bilateral contract competition game, the optimal quality cannot be maintained for all assignments of quality and marginal cost, in fixed route coalition proof protect theinnocent equilibrium .
+7-123:Proof: Because nodes cannot verify the data path, they cannot form a proof of what the rest of path quality is .
+7-124:Hence, ROPc monitors do not exist, and therefore the requirements of Claim 5 cannot hold. .
+8 CONCLUSIONS AND FUTURE WORK :
+8-1:It is our hope that this study will have a positive impact in at least three different ways .
+8-2:The first is practical: we believe our analysis has implications for the design of future monitoring protocols and for public policy .
+8-3:For protocol designers, we first provide fresh motivation to create monitoring systems .
+8-4:We have argued that the poor accountability of the Internet is a fundamental obstacle to alleviating the pathologies of commoditization and lack of innovation .
+8-5:Unless accountability improves, these pathologies are guaranteed to remain .
+8-6:Secondly, we suggest directions for future advances in monitoring .
+8-7:We have shown that adding verifiability to monitors allows for some improvements in the characteristics of competition .
+8-8:At the same time, this does not present a fully satisfying solution .
+8-9:This paper has suggested a novel standard for monitors to aspire to one of supporting optimal routes in innovative competition games under fixed route coalition proof protect the innocent equilibrium .
+8-10:We have shown that under bilateral contracts, this specifically requires contractible rest of path monitors .
+8-11:This is not to say that other types of monitors are unimportant .
+8-12:We included an example in which individual hop quality monitors and a path monitor can also meet our standard for sustaining competition .
+8-13:However, in order for this to happen, a mechanism must be included 192 to combine proofs from these monitors to form a proof of rest of path quality .
+8-14:In other words, the monitors must ultimately be combined to form contractible rest of path monitors .
+8-15:To support service differentiation and innovation, it may be easier to design rest of path monitors directly, thereby avoiding the task of designing mechanisms for combining component monitors .
+8-16:As far as policy implications, our analysis points to the need for legal institutions to enforce contracts based on quality .
+8-17:These institutions must be equipped to verify proofs of quality, and police illegal contracting behavior .
+8-18:As quality based contracts become numerous and complicated, and possibly negotiated by machine, this may become a challenging task, and new standards and regulations may have to emerge in response .
+8-19:This remains an interesting and unexplored area for research .
+8-20:The second area we hope our study will benefit is that of clean slate architectural design .
+8-21:Traditionally, clean slate design tends to focus on creating effective and elegant networks for a static set of requirements .
+8-22:Thus, the approach is often one of engineering, which tends to neglect competitive effects .
+8-23:We agree with Ratnasamy, Shenker, and McCanne, that designing for evolution should be a top priority [11] .
+8-24:We have demonstrated that the network"s monitoring ability is critical to supporting innovation, as are the institutions that support contracting .
+8-25:These elements should feature prominently in new designs .
+8-26:Our analysis specifically suggests that architectures based on bilateral contracts should include contractible rest of path monitoring .
+8-27:From a clean slate perspective, these monitors can be transparently and fully integrated with the routing and contracting systems .
+8-28:Finally, the last contribution our study makes is methodological .
+8-29:We believe that the mathematical formalization we present is applicable to a variety of future research questions .
+8-30:While a significant literature addresses innovation in the presence of network effects, to the best of our knowledge, ours is the first model of innovation in a network industry that successfully incorporates the actual topological structure as input .
+8-31:This allows the discovery of new properties, such as the weakening of market forces with the number of ISPs on a data path that we observe with lowaccountability .
+8-32:Our method also stands in contrast to the typical approach of distributed algorithmic mechanism design .
+8-33:Because this field is based on a principle agent framework, contracts are usually proposed by the source, who is allowed to make a take it or leave it offer to network nodes .
+8-34:Our technique allows contracts to emerge from a competitive framework, so the source is limited to selecting the most desirable contract .
+8-35:We believe this is a closer reflection of the industry .
+8-36:Based on the insights in this study, the possible directions for future research are numerous and exciting .
+8-37:To some degree, contracting based on quality opens a Pandora"s Box of pressing questions: Do quality based contracts stand counter to the principle of network neutrality? Should ISPs be allowed to offer a choice of contracts at different quality levels? What anti competitive behaviors are enabled by quality based contracts? Can a contracting system support optimal multicast trees? In this study, we have focused on bilateral contracts .
+8-38:This system has seemed natural, especially since it is the prevalent system on the current network .
+8-39:Perhaps its most important benefit is that each contract is local in nature, so both parties share a common, familiar legal jurisdiction .
+8-40:There is no need to worry about who will enforce a punishment against another ISP on the opposite side of the planet, nor is there a dispute over whose legal rules to apply in interpreting a contract .
+8-41:Although this benefit is compelling, it is worth considering other systems .
+8-42:The clearest alternative is to form a contract between the source and every node on the path .
+8-43:We may call these source contracts .
+8-44:Source contracting may present surprising advantages .
+8-45:For instance, since ISPs do not exchange money with each other, an ISP cannot save money by selecting a cheaper next hop .
+8-46:Additionally, if the source only has contracts with nodes on the intended path, other nodes won"t even be willing to accept packets from this source since they won"t receive compensation for carrying them .
+8-47:This combination seems to eliminate all temptation for a single cheater to cheat in route .
+8-48:Because of this and other encouraging features, we believe source contracts are a fertile topic for further study .
+8-49:Another important research task is to relax our assumption that quality can be measured fully and precisely .
+8-50:One possibility is to assume that monitoring is only probabilistic or suffers from noise .
+8-51:Even more relevant is the possibility that quality monitors are fundamentally incomplete .
+8-52:A quality monitor can never anticipate every dimension of quality that future applications will care about, nor can it anticipate a new and valuable protocol that an ISP introduces .
+8-53:We may define a monitor space as a subspace of the quality space that a monitor can measure, QM ⊂ , and a corresponding monitoring function that simply projects the full range of qualities onto the monitor space, MQm →: .
+8-54:Clearly, innovations that leave quality invariant under m are not easy to support they are invisible to the monitoring system .
+8-55:In this environment, we expect that path monitoring becomes more important, since it is the only way to ensure data reaches certain innovator ISPs .
+8-56:Further research is needed to understand this process. .
+9-1:We would like to thank the anonymous reviewers, Jens Grossklags, Moshe Babaioff, Scott Shenker, Sylvia Ratnasamy, and Hal Varian for their comments
+9-2:This work is supported in part by the National Science Foundation under ITR award ANI 0331659
+9-3:Proof of Claim 2
+9-4:Node i must fall on the equilibrium data path to receive any payment
+9-5:Let the prices along the data path be ppppP nS == ,..., 21 , with marginal costs, ncc ,...,1
+9-6:We may assume the prices on the path are greater than lp or the claim follows trivially
+9-7:Each node along the data path can cheat in route by giving data to the bargain path at price no more than lp
+9-8:So node j"s temptation to cheat is at least 11 ++ − − ≥ −− −− jj l jjj ljj pp pp pcp pcp
+9-9:Then Lemma 1 gives, 1 13221 1..
+9-10:− − − −> − − ⋅⋅ − − − − ≥ n S l n lll P pp n pp pp pp pp pp pp T (7) This can be rearranged to give ( ) ( ) s n l P n T pp 1 1 1 − +≤ − , as required
+9-11:The rest of the claim simply recognizes that rp   is the greatest reward node i can receive for its investment, so it will not invest sums greater than this
+9-12:Proof of Claim 4
+9-13:Label the nodes 1,2,.
+9-14:N in the order in which they select contracts
+9-15:Let subgame n be the game that begins with n choosing its contract
+9-16:Let Ln be the set of possible paths restricted to nodes n,…,N
+9-17:That is, Ln is the set of possible routes from S to reach some node that has already moved
+9-18:For subgame n, define the local welfare over paths nLl ∈ , and their possible next hops, nj < as follows, ( ) ( ) j li ipathjl pcqqujlV −−= ∈ *, , (8) where ql is the quality of path l in the set {n,…,N}, and pathjq and pj are the quality and price of the contract j has offered
+9-19:For induction, assume that subgame n + 1 maximizes local welfare
+9-20:We show that subgame n does as well
+9-21:If node n selects next hop k, we can write the following relation, ( ) ( )( ) ( )( ) nknn knlVpcpknlVnlV π−=++−= ,,,,, , (9) where n is node n"s profit if the path to n is chosen
+9-22:This path is chosen whenever ( )nlV , is maximal over Ln+1 and possible next hops
+9-23:If ( )( )knlV ,, is maximal over Ln, it is also maximal over the paths in Ln+1 that don"t lead to n
+9-24:This means that node n can choose some n small enough so that ( )nlV , is maximal over Ln+1, so the route will lead to k
+9-25:Conversely, if ( )( )knlV ,, is not maximal over Ln, either V is greater for another of n"s next hops, in which case n will select that one in order to increase n, or V is greater for some path in Ln+1 that don"t lead to n, in which case ( )nlV , cannot be maximal for any nonnegative n
+9-26:Thus, we conclude that subgame n maximizes local welfare
+9-27:For the initial case, observe that this assumption holds for the source
+9-28:Finally, we deduce that subgame 1, which is the entire game, maximizes local welfare, which is equivalent to actual welfare
+9-29:Hence, the Stackelberg price quality game yields an optimal route
+9-30:194
+10-1:Afergan, M
+10-2:Using Repeated Games to Design IncentiveBased Routing Systems
+10-3:In Proceedings of IEEE INFOCOM (April 2006)
+10-4:Afergan, M
+10-5:and Wroclawski, J
+10-6:On the Benefits and Feasibility of Incentive Based Routing Infrastructure
+10-7:In ACM SIGCOMM'04 Workshop on Practice and Theory of Incentives in Networked Systems (PINS) (August 2004)
+10-8:Argyraki, K., Maniatis, P., Cheriton, D., and Shenker, S
+10-9:Providing Packet Obituaries
+10-10:In Third Workshop on Hot Topics in Networks (HotNets) (November 2004)
+10-11:Clark, D
+10-12:D
+10-13:The Design Philosophy of the DARPA Internet Protocols
+10-14:In Proceedings of ACM SIGCOMM (1988)
+10-15:193 Clark, D
+10-16:D., Wroclawski, J., Sollins, K
+10-17:R., and Braden, R
+10-18:Tussle in cyberspace: Defining tomorrow's internet
+10-19:In Proceedings of ACM SIGCOMM (August 2002)
+10-20:Dang Nguyen, G
+10-21:and Pénard, T
+10-22:Interconnection Agreements: Strategic Behaviour and Property Rights
+10-23:In Brousseau, E
+10-24:and Glachant, J.M
+10-25:Eds
+10-26:The Economics of Contracts: Theories and Applications, Cambridge University Press, 2002
+10-27:Feigenbaum, J., Papadimitriou, C., Sami, R., and Shenker, S
+10-28:A BGP based Mechanism for Lowest Cost Routing
+10-29:Distributed Computing 18 (2005), pp
+10-30:61 72
+10-31:Huston, G
+10-32:Interconnection, Peering, and Settlements
+10-33:Telstra, Australia
+10-34:Liu, Y., Zhang, H., Gong, W., and Towsley, D
+10-35:On the Interaction Between Overlay Routing and Traffic Engineering
+10-36:In Proceedings of IEEE INFOCOM (2005)
+10-37:MacKie Mason, J
+10-38:and Varian, H
+10-39:Pricing the Internet
+10-40:In Kahin, B
+10-41:and Keller, J
+10-42:Eds
+10-43:Public access to the Internet
+10-44:Englewood Cliffs, NJ; Prentice Hall, 1995
+10-45:Ratnasamy, S., Shenker, S., and McCanne, S
+10-46:Towards an Evolvable Internet Architecture
+10-47:In Proceeding of ACM SIGCOMM (2005)
+10-48:Shakkottai, S., and Srikant, R
+10-49:Economics of Network Pricing with Multiple ISPs
+10-50:In Proceedings of IEEE INFOCOM (2005)
+picture:

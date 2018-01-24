@@ -1,0 +1,494 @@
+﻿Budget Optimization in Search-Based Advertising Auctions 
+content:
+1 ABSTRACT :
+1-1:Internet search companies sell advertisement slots based on users" search queries via an auction .
+1-2:While there has been previous work on the auction process and its game theoretic aspects, most of it focuses on the Internet company .
+1-3:In this work, we focus on the advertisers, who must solve a complex optimization problem to decide how to place bids on keywords to maximize their return (the number of user clicks on their ads) for a given budget .
+1-4:We model the entire process and study this budget optimization problem .
+1-5:While most variants are NP hard, we show, perhaps surprisingly, that simply randomizing between two uniform strategies that bid equally on all the keywords works well .
+1-6:More precisely, this strategy gets at least a 1 − 1 e fraction of the maximum clicks possible .
+1-7:As our preliminary experiments show, such uniform strategies are likely to be practical .
+1-8:We also present inapproximability results, and optimal algorithms for variants of the budget optimization problem .
+1-9:F.2 [Theory of Computation]: Analysis of Algorithms .
+2 INTRODUCTION :
+2-1:Online search is now ubiquitous and Internet search companies such as Google, Yahoo! and MSN let companies and individuals advertise based on search queries posed by users .
+2-2:Conventional media outlets, such as TV stations or newspapers, price their ad slots individually, and the advertisers buy the ones they can afford .
+2-3:In contrast, Internet search companies find it difficult to set a price explicitly for the advertisements they place in response to user queries .
+2-4:This difficulty arises because supply (and demand) varies widely and unpredictably across the user queries, and they must price slots for billions of such queries in real time .
+2-5:Thus, they rely on the market to determine suitable prices by using auctions amongst the advertisers .
+2-6:It is a challenging problem to set up the auction in order to effect a stable market in which all the parties (the advertisers, users as well as the Internet search company) are adequately satisfied .
+2-7:Recently there has been systematic study of the issues involved in the game theory of the auctions [5, 1, 2], revenue maximization [10], etc .
+2-8:The perspective in this paper is not of the Internet search company that displays the advertisements, but rather of the advertisers .
+2-9:The challenge from an advertiser"s point of view is to understand and interact with the auction mechanism .
+2-10:The advertiser determines a set of keywords of their interest and then must create ads, set the bids for each keyword, and provide a total (often daily) budget .
+2-11:When a user poses a search query, the Internet search company determines the advertisers whose keywords match the query and who still have budget left over, runs an auction amongst them, and presents the set of ads corresponding to the advertisers who win the auction .
+2-12:The advertiser whose ad appears pays the Internet search company if the user clicks on the ad .
+2-13:The focus in this paper is on how the advertisers bid .
+2-14:For the particular choice of keywords of their interest1 , an advertiser wants to optimize the overall effect of the advertising campaign .
+2-15:While the effect of an ad campaign in any medium is a complicated phenomenon to quantify, one commonly accepted (and easily quantified) notion in searchbased advertising on the Internet is to maximize the number of clicks .
+2-16:The Internet search companies are supportive to1 The choice of keywords is related to the domain knowledge of the advertiser, user behavior and strategic considerations .
+2-17:Internet search companies provide the advertisers with summaries of the query traffic which is useful for them to optimize their keyword choices interactively .
+2-18:We do not directly address the choice of keywords in this paper, which is addressed elsewhere [13] .
+2-19:40 wards advertisers and provide statistics about the history of click volumes and prediction about the future performance of various keywords .
+2-20:Still, this is a complex problem for the following reasons (among others): • Individual keywords have significantly different characteristics from each other; e.g., while fishing is a broad keyword that matches many user queries and has many competing advertisers, humane fishing bait is a niche keyword that matches only a few queries, but might have less competition .
+2-21:• There are complex interactions between keywords because a user query may match two or more keywords, since the advertiser is trying to cover all the possible keywords in some domain .
+2-22:In effect the advertiser ends up competing with herself .
+2-23:As a result, the advertisers face a challenging optimization problem .
+2-24:The focus of this paper is to solve this optimization problem .
+2-25:1.1 The Budget Optimization Problem We present a short discussion and formulation of the optimization problem faced by advertisers; a more detailed description is in Section 2 .
+2-26:A given advertiser sees the state of the auctions for searchbased advertising as follows .
+2-27:There is a set K of keywords of interest; in practice, even small advertisers typically have a large set K .
+2-28:There is a set Q of queries posed by the users .
+2-29:For each query q ∈ Q, there are functions giving the clicksq(b) and costq(b) that result from bidding a particular amount b in the auction for that query, which we model more formally in the next section .
+2-30:There is a bipartite graph G on the two vertex sets representing K and Q .
+2-31:For any query q ∈ Q, the neighbors of q in K are the keywords that are said to match the query q.2 The budget optimization problem is as follows .
+2-32:Given graph G together with the functions clicksq(·) and costq(·) on the queries, as well as a budget U, determine the bids bk for each keyword k ∈ K such that P q clicksq(bq) is maximized subject to P q costq(bq) ≤ U, where the effective bid bq on a query is some function of the keyword bids in the neighborhood of q .
+2-33:While we can cast this problem as a traditional optimization problem, there are different challenges in practice depending on the advertiser"s access to the query and graph information, and indeed the reliability of this information (e.g., it could be based on unstable historical data) .
+2-34:Thus it is important to find solutions to this problem that not only get many clicks, but are also simple, robust and less reliant on the information .
+2-35:In this paper we define the notion of a uniform strategy which is essentially a strategy that bids uniformly on all keywords .
+2-36:Since this type of strategy obviates the need to know anything about the particulars of the graph, and effectively aggregates the click and cost functions on the queries, it is quite robust, and thus desirable in practice .
+2-37:What is surprising is that uniform strategy actually performs well, which we will prove .
+2-38:2 The particulars of the matching rule are determined by the Internet search company; here we treat the function as arbitrary .
+2-39:1.2 Our Main Results and Technical Overview We present positive and negative results for the budget optimization problem .
+2-40:In particular, we show: • Nearly all formulations of the problem are NP Hard .
+2-41:In cases slightly more general than the formulation above, where the clicks have weights, the problem is inapproximable better than a factor of 1 − 1 e , unless P=NP .
+2-42:• We give a (1−1 e) approximation algorithm for the budget optimization problem .
+2-43:The strategy found by the algorithm is a two bid uniform strategy, which means that it randomizes between bidding some value b1 on all keywords, and bidding some other value b2 on all keywords until the budget is exhausted3 .
+2-44:We show that this approximation ratio is tight for uniform strategies .
+2-45:We also give a (1 2) approximation algorithm that offers a single bid uniform strategy, only using one value b1 .
+2-46:(This is tight for single bid uniform strategies.) These strategies can be computed in time nearly linear in |Q| + |K|, the input size .
+2-47:Uniform strategies may appear to be naive in first consideration because the keywords vary significantly in their click and cost functions, and there may be complex interaction between them when multiple keywords are relevant to a query .
+2-48:After all, the optimum can configure arbitrary bids on each of the keywords .
+2-49:Even for the simple case when the graph is a matching, the optimal algorithm involves placing different bids on different keywords via a knapsack like packing (Section 2) .
+2-50:So, it might be surprising that a simple two bid uniform strategy is 63% or more effective compared to the optimum .
+2-51:In fact, our proof is stronger, showing that this strategy is 63% effective against a strictly more powerful adversary who can bid independently on the individual queries, i.e., not be constrained by the interaction imposed by the graph G .
+2-52:Our proof of the 1 − 1 e approximation ratio relies on an adversarial analysis .
+2-53:We define a factor revealing LP (Section 4) where primal solutions correspond to possible instances, and dual solutions correspond to distributions over bidding strategies .
+2-54:By deriving the optimal solution to this LP, we obtain both the proof of the approximation ratio, and a tight worst case instance .
+2-55:We have conducted simulations using real auction data from Google .
+2-56:The results of these simulations, which are highlighted at the end of Section 4, suggest that uniform bidding strategies could be useful in practice .
+2-57:However, important questions remain about (among other things) alternate bidding goals, on line or stochastic bidding models [11], and game theoretic concerns [3], which we briefly discuss in Section 8. .
+3 MODELING A KEYWORD AUCTION :
+3-1:We describe an auction from an advertiser"s point of view .
+3-2:An advertiser bids on a keyword, which we can think of as a word or set of words .
+3-3:Users of the search engine submit queries .
+3-4:If the query matches a keyword that has been bid on by an advertiser, then the advertiser is entered into an auction for the available ad slots on the results page .
+3-5:What constitutes a match varies depending on the search engine .
+3-6:3 This type of strategy can also be interpreted as bidding one value (on all keywords) for part of the day, and a different value for the rest of the day .
+3-7:41 An advertiser makes a single bid for a keyword that remains in effect for a period of time, say one day .
+3-8:The keyword could match many different user queries throughout the day .
+3-9:Each user query might have a different set of advertisers competing for clicks .
+3-10:The advertiser could also bid different amounts on multiple keywords, each matching a (possibly overlapping) set of user queries .
+3-11:The ultimate goal of an advertiser is to maximize traffic to their website, given a certain advertising budget .
+3-12:We now formalize a model of keyword bidding and define an optimization problem that captures this goal .
+3-13:2.1 Landscapes We begin by considering the case of a single keyword that matches a single user query .
+3-14:In this section we define the notion of a query landscape that describes the relationship between the advertiser"s bid and what will happen on this query as a result of this bid[9] .
+3-15:This definition will be central to the discussion as we continue to more general cases .
+3-16:2.1.1 Positions, bids and click through rate The search results page for a query contains p possible positions in which our ad can appear .
+3-17:We denote the highest (most favorable) position by 1 and lowest by p .
+3-18:Associated with each position i is a value α[i] that denotes the click through rate (ctr) of the ad in position i .
+3-19:The ctr is a measure of how likely it is that our ad will receive a click if placed in position i .
+3-20:The ctr can be measured empirically using past history .
+3-21:We assume throughout this work that that α[i] ≤ α[j] if j < i, that is, higher positions receive at least as many clicks as lower positions .
+3-22:In order to place an ad on this page, we must enter the auction that is carried out among all advertisers that have submitted a bid on a keyword that matches the user"s query .
+3-23:We will refer to such an auction as a query auction, to emphasize that there is an auction for each query rather than for each keyword .
+3-24:We assume that the auction is a generalized second price auction [5, 7]: the advertisers are ranked in decreasing order of bid, and each advertiser is assigned a price equal to the amount bid by the advertiser below them in the ranking.4 In sponsored search auctions, this advertiser pays only if the user actually clicks on the ad .
+3-25:Let (b[1], .
+3-26:.
+3-27:.
+3-28:, b[p]) denote the bids of the top p advertisers in this query auction .
+3-29:For notational convenience, we assume that b[0] = ∞ and b[p] = α[p] = 0 .
+3-30:Since the auction is a generalized second price auction, higher bids win higher positions; i.e .
+3-31:b[i] ≥ b[i + 1] .
+3-32:Suppose that we bid b on some keyword that matches the user"s query, then our position is defined by the largest b[i] that is at most b, that is, pos(b) = arg max i (b[i] : b[i] ≤ b) .
+3-33:(1) Since we only pay if the user clicks (and that happens with probability α[i]), our expected cost for winning position i 4 Google, Yahoo! and MSN all use some variant of the GSP auction .
+3-34:In the Google auction, the advertisers" bids are multiplied by a quality score before they are ranked; our results carry over to this case as well, which we omit from this paper for clarity .
+3-35:Also, other auctions besides GSP have been considered; e.g., the Vickrey Clark Groves auction [14, 4, 7] .
+3-36:Each auction mechanism will result in a different sort of optimization problem .
+3-37:In the conclusion we point out that for the VCG auction, the bidding optimization problem becomes quite easy .
+3-38:would be cost[i] = α[i] · b[i], where i = pos(b) .
+3-39:We use costq(b) and clicksq(b) to denote the expected cost and clicks that result from having a bid b that qualifies for a query auction q, and thus costq(b) = α[i] · b[i] where i = pos(b), (2) clicksq(b) = α[i] where i = pos(b) .
+3-40:(3) The following observations about cost and clicks follow immediately from the definitions and equations (1), (2) and (3) .
+3-41:We use R+ to denote the nonnegative reals .
+3-42:Observation 1 .
+3-43:For b ∈ R+, set of values Vq = {(cost[1], α[1]), .
+3-44:.
+3-45:.
+3-46:, (cost[p], α[p])} .
+3-47:functions of b .
+3-48:Also, cost per click (cpc) costq(b) clicksq(b) is non decreasing in b. .
+4 costq(b)/clicksq(b) ≤ b. :
+4-1:For bids (b[1], .
+4-2:.
+4-3:.
+4-4:, b[p]) that correspond to the bids of other advertisers, we have: costq(b[i]) clicksq(b[i]) = b[i], i ∈ [p] .
+4-5:When the context is clear, we drop the subscript q .
+4-6:2.1.2 Query Landscapes We can summarize the data contained in the functions cost(b) and clicks(b) as a collection of points in a plot of cost vs .
+4-7:clicks, which we refer to as a landscape .
+4-8:For example, for a query with four slots, a landscape might look like Table 1 .
+4-9:bid range cost per click cost clicks [$2.60,∞) $2.60 $1.30 .5 [$2.00,$2.60) $2.00 $0.90 .45 [$1.60,$2.00) $1.60 $0.40 .25 [$0.50,$1.60) $0.50 $0.10 .2 [$0,$0.50) $0 $0 0 Table 1: A landscape for a query It is convenient to represent this data graphically as in Figure 1 (ignore the dashed line for now) .
+4-10:Here we graph clicks as a function of cost .
+4-11:Observe that in this graph, the cpc (cost(b) clicks(b)) of each point is the reciprocal of the slope of the line from the origin to the point .
+4-12:Since cost(b), clicks(b) and cost(b) clicks(b) are non decreasing, the slope of the line from the origin to successive points on the plot decreases .
+4-13:This condition is slightly weaker than concavity .
+4-14:Suppose we would like to solve the budget optimization problem for a single query landscape.5 As we increase our bid from zero, our cost increases and our expected number of clicks increases, and so we simply submit the highest bid such that we remain within our budget .
+4-15:One problem we see right away is that since there are only a finite set of points in this landscape, we may not be able to target arbitrary budgets efficiently .
+4-16:Suppose in the example from Table 1 and Figure 1 that we had a budget 5 Of course it is a bit unrealistic to imagine that an advertiser would have to worry about a budget if only one user query was being considered; however one could imagine multiple instances of the same query and the problem scales .
+4-17:42 $0.50 $1.00 $1.50 .1 .2 .3 .4 .5 Clicks Cost Figure 1: A bid landscape .
+4-18:of $1.00 .
+4-19:Bidding between $2.00 and $2.60 uses only $0.90, and so we are under spending .
+4-20:Bidding more than $2.60 is not an option, since we would then incur a cost of $1.30 and overspend our budget .
+4-21:2.1.3 Randomized strategies To rectify this problem and better utilize our available budget, we allow randomized bidding strategies .
+4-22:Let B be a distribution on bids b ∈ R+ .
+4-23:Now we define cost(B) = Eb∼B[cost(b)] and clicks(B) = Eb∼B[clicks(b)] .
+4-24:Graphically, the possible values of (cost(B), clicks(B)) lie in the convex hull of the landscape points .
+4-25:This is represented in Figure 1 by the dashed line .
+4-26:To find a bid distribution B that maximizes clicks subject to a budget, we simply draw a vertical line on the plot where the cost is equal to the budget, and find the highest point on this line in the convex hull .
+4-27:This point will always be the convex combination of at most two original landscape points which themselves lie on the convex hull .
+4-28:Thus, given the point on the convex hull, it is easy to compute a distribution on two bids which led to this point .
+4-29:Summarizing, Lemma 1 .
+4-30:If an advertiser is bidding on one keyword, subject to a budget U, then the optimal strategy is to pick a convex combination of (at most) two bids which are at the endpoints of the line on the convex hull at the highest point for cost U .
+4-31:There is one subtlety in this formulation .
+4-32:Given any bidding strategy, randomized or otherwise, the resulting cost is itself a random variable representing the expected cost .
+4-33:Thus if our budget constraint is a hard budget, we have to deal with the difficulties that arise if our strategy would be over budget .
+4-34:Therefore, we think of our budget constraint as soft, that is, we only require that our expected cost be less than the budget .
+4-35:In practice, the budget is often an average daily budget, and thus we don"t worry if we exceed it one day, as long as we are meeting the budget in expectation .
+4-36:Further, either the advertiser or the search engine (possibly both), monitor the cost incurred over the day; hence, the advertiser"s bid can be changed to zero for part of the day, so that the budget is not overspent.6 Thus in the remain6 See https: adwords.google.com support bin answer .
+4-37:py?answer=22183, for example .
+4-38:der of this paper, we will formulate a budget constraint that only needs to be respected in expectation .
+4-39:2.1.4 Multiple Queries: a Knapsack Problem As a warm up, we will consider next the case when we have a set of queries, each which its own landscape .
+4-40:We want to bid on each query independently subject to our budget: the resulting optimization problem is a small generalization of the fractional knapsack problem, and was solved in [9] .
+4-41:The first step of the algorithm is to take the convex hull of each landscape, as in Figure 1, and remove any landscape points not on the convex hull .
+4-42:Each piecewise linear section of the curve represents the incremental number of clicks and cost incurred by moving one"s bid from one particular value to another .
+4-43:We regard these pieces as items in an instance of fractional knapsack with value equal to the incremental number of clicks and size equal to the incremental cost .
+4-44:More precisely, for each piece connecting two consecutive bids b and b on the convex hull, we create a knapsack item with value [clicks(b ) − clicks(b )] and size [cost(b ) − cost(b )] .
+4-45:We then emulate the greedy algorithm for knapsack, sorting by value size (cost per click), and choosing greedily until the budget is exhausted .
+4-46:In this reduction to knapsack we have ignored the fact that some of the pieces come from the same landscape and cannot be treated independently .
+4-47:However, since each curve is concave, the pieces that come from a particular query curve are in increasing order of cost per click; thus from each landscape we have chosen for our knapsack a set of pieces that form a prefix of the curve .
+4-48:2.2 Keyword Interaction In reality, search advertisers can bid on a large set of keywords, each of them qualifying for a different (possibly overlapping) set of queries, but most search engines do not allow an advertiser to appear twice in the same search results page.7 Thus, if an advertiser has a bid on two different keywords that match the same query, this conflict must be resolved somehow .
+4-49:For example, if an advertiser has a bid out on the keywords shoes and high heel, then if a user issues the query high heel shoes, it will match on two different keywords .
+4-50:The search engine specifies, in advance, a rule for resolution based on the query the keyword and the bid .
+4-51:A natural rule is to take the keyword with the highest bid, which we adopt here, but our results apply to other resolution rules .
+4-52:We model the keyword interaction problem using an undirected bipartite graph G = (K ∪ Q, E) where K is a set of keywords and Q is a set of queries .
+4-53:Each q ∈ Q has an associated landscape, as defined by costq(b) and clicksq(b) .
+4-54:An edge (k, q) ∈ E means that keyword k matches query q .
+4-55:The advertiser can control their individual keyword bid vector a ∈ R |K| + specifying a bid ak for each keyword k ∈ K .
+4-56:(For now, we do not consider randomized bids, but we will introduce that shortly.) Given a particular bid vector a on the keywords, we use the resolution rule of taking the maximum to define the effective bid on query q as bq(a) = max k:(k,q)∈E ak .
+4-57:By submitting a bid vector a, the advertiser receives some 7 See https: adwords.google.com support bin answer .
+4-58:py?answer=14179, for example .
+4-59:43 number of clicks and pays some cost on each keyword .
+4-60:We use the term spend to denote the total cost; similarly, we use the term traffic to denote the total number of clicks: spend(a)= X q∈Q costq(bq(a)); traffic(a)= X q∈Q clicksq(bq(a)) We also allow randomized strategies, where an advertiser gives a distribution A over bid vectors a ∈ R |K| + .
+4-61:The resulting spend and traffic are given by spend(A)=Ea∼A[spend(a)]; traffic(A)=Ea∼A[traffic(a)] We can now state the problem in its full generality: Budget Optimization Input: a budget U, a keyword query graph G = (K ∪ Q, E), and landscapes (costq(·), clicksq(·)) for each q ∈ Q .
+4-62:Find: a distribution A over bid vectors a ∈ R |K| + such that spend(A) ≤ U and traffic(A) is maximized .
+4-63:We conclude this section with a small example to illustrate some feature of the budget optimization problem .
+4-64:Suppose you have two keywords K = {u, v} and two queries Q = {x, y} and edges E = {(u, x), (u, y), (v, y)} .
+4-65:Suppose query x has one position with ctr αx [1] = 1.0, and there is one bid bx 1 = $1 .
+4-66:Query y has two positions with ctrs αy [1] = αy [2] = 1.0, and bids by 1 = $ and by 2 = $1 To get any clicks from x, an advertiser must bid at least $1 on u .
+4-67:However, because of the structure of the graph, if the advertiser sets bu to $1, then his effective bid is $1 on both x and y .
+4-68:Thus he must trade off between getting the clicks from x and getting the bargain of a click for $ that would be possible otherwise. .
+5 UNIFORM BIDDING STRATEGIES :
+5-1:As we will show in Section 5, solving the Budget Optimization problem in its full generality is difficult .
+5-2:In addition, it may be difficult to reason about strategies that involve arbitrary distributions over arbitrary bid vectors .
+5-3:Advertisers generally prefer strategies that are easy to understand, evaluate and use within their larger goals .
+5-4:With this motivation, we look at restricted classes of strategies that we can easily compute, explain and analyze .
+5-5:We define a uniform bidding strategy to be a distribution A over bid vectors a ∈ R |K| + where each bid vector in the distribution is of the form (b, b, .
+5-6:.
+5-7:.
+5-8:, b) for some real valued bid b .
+5-9:In other words, each vector in the distribution bids the same value on every keyword .
+5-10:Uniform strategies have several advantages .
+5-11:First, they do not depend on the edges of the interaction graph, since all effective bids on queries are the same .
+5-12:Thus, they are effective in the face of limited or noisy information about the keyword interaction graph .
+5-13:Second, uniform strategies are also independent of the priority rule being used .
+5-14:Third, any algorithm that gives an approximation guarantee will then be valid for any interaction graph over those keywords and queries .
+5-15:We now show that we can compute the best uniform strategy efficiently .
+5-16:Suppose we have a set of queries Q, where the landscape Vq for each query q is defined by the set of points Vq = {(costq[1], αq[1]), .
+5-17:.
+5-18:.
+5-19:, (costq[p], αq[p])} .
+5-20:We define the set of interesting bids Iq = {costq[1] αq [1], .
+5-21:.
+5-22:.
+5-23:, costq[p] αq [p]}, let I = ∪q∈QIq, and let N = |I| .
+5-24:We can index the points in I as b1, .
+5-25:.
+5-26:.
+5-27:, bN in increasing order .
+5-28:The ith point in our aggregate landscape V is found by summing, over the queries, the cost and clicks associated with bid bi, that is, V = ∪N i=1( P q∈Q costq(bi), P q∈Q clicksq(bi)) .
+5-29:For any possible bid b, if we use the aggregate landscape just as we would a regular landscape, we exactly represent the cost and clicks associated with making that bid simultaneously on all queries associated with the aggregate landscape .
+5-30:Therefore, all the definitions and results of Section 2 about landscapes can be extended to aggregate landscapes, and we can apply Lemma 1 to compute the best uniform strategy (using the convex hull of the points in this aggregate landscape) .
+5-31:The running time is dominated by the time to compute the convex hull, which is O(N log N)[12] .
+5-32:The resulting strategy is the convex combination of two points on the aggregate landscape .
+5-33:Define a two bid strategy to be a uniform strategy which puts non zero weight on at most two bid vectors .
+5-34:We have shown Lemma 2 .
+5-35:Given an instance of Budget Optimization in which there are a total of N points in all the landscapes, we can find the best uniform strategy in O(N log N) time .
+5-36:Furthermore, this strategy will always be a two bid strategy .
+5-37:Putting these ideas together, we get an O(N log N) time algorithm for Budget Optimization, where N is the total number of landscape points (we later show that this is a (1 − 1 e ) approximation algorithm): landscapes into a single aggregate landscape .
+5-38:landscape .
+5-39:budget, which is the convex combination of two points α and β .
+5-40:combination of the uniform bid vectors corresponding to α and β .
+5-41:We will also consider a special case of two bid strategies .
+5-42:A single bid strategy is a uniform strategy which puts nonzero weight on at most one non zero vector, i.e .
+5-43:advertiser randomizes between bidding a certain amount b∗ on all keywords, and not bidding at all .
+5-44:A single bid strategy is even easier to implement in practice than a two bid strategy .
+5-45:For example, the search engines often allow advertisers to set a maximum daily budget .
+5-46:In this case, the advertiser would simply bid b∗ until her budget runs out, and the ad serving system would remove her from all subsequent auctions until the end of the day .
+5-47:One could also use an ad scheduling tool offered by some search companies8 to implement this strategy .
+5-48:The best single bid strategy can also be computed easily from the aggregate landscape .
+5-49:The optimal strategy for a budget U will either be the point x s.t .
+5-50:cost(x) is as large as possible without exceeding U, or a convex combination of zero and the point y, where cost(y) is as small as possible while larger than U .
+5-51:8 See https: adwords.google.com support bin answer .
+5-52:py?answer=33227, for example .
+5-53:44 B D A C clicks cost cpc A 2 $1 $0.50 B 5 $0.50 $0.10 C 3 $2 $0.67 D 4 $1 $0.25 cpc $0.67 $0.50 $0.25 $0.10 Total clicks: 5 9 11 14 Figure 2: Four queries and their click price curve. .
+6 APPROXIMATION ALGORITHMS :
+6-1:In the previous section we proposed using uniform strategies and gave an efficient algorithm to compute the best such strategy .
+6-2:In section we prove that there is always a good uniform strategy: Theorem 3 .
+6-3:There always exists a uniform bidding strategy that is (1 − 1 e ) optimal .
+6-4:Furthermore, for any > 0, there exists an instance for which all uniform strategies are at most (1 − 1 e + ) optimal .
+6-5:We introduce the notion of a click price curve, which is central to our analysis .
+6-6:This definition makes it simple to show that there is always a single bid strategy that is a 1 2 approximation (and this is tight); we then build on this to prove Theorem 3 .
+6-7:4.1 Click price curves Consider a set of queries Q, and for each query q ∈ Q, let (clicksq(·), costq(·)) be the corresponding bid landscape .
+6-8:Consider an adversarial bidder Ω with the power to bid independently on each query .
+6-9:Note that this bidder is more powerful than an optimal bidder, which has to bid on the keywords .
+6-10:Suppose this strategy bids b∗ q for each query q .
+6-11:Thus, Ω achieves traffic CΩ = P i clicks(b∗ i ), and incurs total spend UΩ = P i cost(b∗ i ) .
+6-12:Without loss of generality we can assume that Ω bids so that for each query q, the cost per click is equal to b∗ q , i.e .
+6-13:costq(b∗ q ) clicksq(b∗ q ) = b∗ q .
+6-14:We may assume this because for some query q, if costq(b∗ q) clicksq(b∗ q) < b∗ q , we can always lower b∗ q and without changing the cost and clicks .
+6-15:To aid our discussion, we introduce the notion of a clickprice curve (an example of which is shown in Figure 2), which describes the cpc distribution obtained by Ω .
+6-16:Formally the curve is a non decreasing function h : [0, CΩ] → R+ defined as h(r) = min{c | P q:b∗ q ≤c clicksq(b∗ q ) ≥ r} .
+6-17:Another way to construct this curve is to sort the queries in increasing order by b∗ q = costq(b∗ q) clicksq(b∗ q), then make a step function where the qth step has height b∗ q and width clicksq(b∗ q ) (see Figure 2) .
+6-18:Note that the area of each step is costq(b∗ q ) .
+6-19:The following claim follows immediately: Claim 1 .
+6-20:UΩ = R CΩ 0 h(r)dr .
+6-21:Suppose we wanted to buy some fraction r CΩ of the traffic that Ω is getting .
+6-22:The click price curve says that if we bid h(r ) on every keyword (and therefore every query), we get at least r traffic, since this bid would ensure that for all q such that b∗ q ≤ h(r ) we win as many clicks as Ω .
+6-23:Note that by bidding h(r ) on every keyword, we may actually get even more than r traffic, since for queries q where b∗ q is much less than h(r ) we may win more clicks than Ω .
+6-24:However, all of these extra clicks still cost at most h(r ) per click .
+6-25:Thus we see that for any r ∈ [0, CΩ], if we bid h(r ) on every keyword, we receive at least r traffic at a total spend of at most h(r ) per click .
+6-26:Note that by randomizing between bidding zero and bidding h(r ), we can receive exactly r traffic at a total spend of at most r · h(r ) .
+6-27:We summarize this discussion in the following lemma: Lemma 4 .
+6-28:For any r ∈ [0, CΩ], there exists a single bid strategy that randomizes between bidding h(r) and bidding zero, and this strategy receives exactly r traffic with total spend at most r · h(r) .
+6-29:Lemma 4 describes a landscape as a continuous function .
+6-30:For our lower bounds, we will need to show that given any continuous function, there exists a discrete landscape that approximates it arbitrarily well .
+6-31:Lemma 5 .
+6-32:For any C, U > 0 and non decreasing function f : [0, C] → R+ such that R C 0 f(r)dr = U, and any small > 0, there exists an instance of Budget Optimization with budget U + , where the optimal solution achieves C clicks at cost U + , and all uniform bidding strategies are convex combinations of single bid strategies that achieve exactly r clicks at cost exactly rf(r) by bidding f(r) on all keywords .
+6-33:Proof .
+6-34:Construct an instance as follows .
+6-35:Let > 0 be a small number that we will later define in terms of .
+6-36:Define r0 = 0, r1, r2, .
+6-37:.
+6-38:.
+6-39:, rm = C such that ri−1 < ri ≤ ri−1 + , f(ri−1) ≤ f(ri) ≤ f(ri−1)+ , and m ≤ (C +f(C)) .
+6-40:(This is possible by choosing ri"s spaced by min( , f(ri)−f(ri−1))) Now make a query qi for all i ∈ [m] with bidders bidding h(ri), h(ri+1), .
+6-41:.
+6-42:.
+6-43:, h(rm), and ctrs α[1] = α[2] = · · · = α[m− i+1] = ri −ri−1 .
+6-44:The graph is a matching with one keyword per query, and so we can imagine the optimal solution as bidding on queries .
+6-45:The optimal solution will always bid exactly h(ri) on query qi, and if it did so on all queries, it would spend U := Pm i=1(ri − ri−1)h(ri) .
+6-46:Define small enough so that U = U + , which is always possible since U ≤ Z C 0 f(r)dr + mX i=1 (ri − ri−1)(h(ri) − h(ri−1)) ≤ U + 2 m ≤ U + (C + f(C)) .
+6-47:Note that the only possible bids (i.e., all others have the same results as one of these) are f(r0), .
+6-48:.
+6-49:.
+6-50:, f(rm), and bidding uniformly with f(ri) results in Pi j=1 ri − ri−1 = ri clicks at cost h(ri)ri .
+6-51:4.2 A 1 2 approximation algorithm Using Lemma 4 we can now show that there is a uniform single bid strategy that is 1 2 optimal .
+6-52:In addition to being an interesting result in its own right, it also serves as a warm up for our main result .
+6-53:Theorem 6 .
+6-54:There always exists a uniform single bid strategy that is 1 2 optimal .
+6-55:Furthermore, for any > 0 there exists an instance for which all single bid strategies are at most (1 2 + ) optimal .
+6-56:45 Proof .
+6-57:Applying Lemma 4 with r = CΩ 2, we see that there is a strategy that achieves traffic CΩ 2 with spend CΩ 2·h(CΩ 2) .
+6-58:Now, using the fact that h is a non decreasing function combined with Claim 1, we have (CΩ 2)h(CΩ 2) ≤ Z CΩ CΩ 2 h(r)dr ≤ Z CΩ 0 h(r)dr = UΩ, (4) which shows that we spend at most UΩ .
+6-59:We conclude that there is a 1 2 optimal single bid strategy randomizing between bidding CΩ 2 and zero .
+6-60:For the second part of the theorem, we construct a tight example using two queries Q = {x, y}, two keywords K = {u, v}, and edges E = {(u, x), (v, y)} .
+6-61:Fix some α where 0 < α ≤ 1, and fix some very small > 0 .
+6-62:Query x has two positions, with bids of bx 1 = 1 α and bx 2 = , and with identical click through rates αx [1] = αx [2] = α .
+6-63:Query y has one position, with a bid of by 1 = 1 α and a click through rate of αy [1] = α .
+6-64:The budget is U = 1 + α .
+6-65:The optimal solution is to bid on u (and therefore x) and bid 1 α on v (and therefore y), both with probability exactly .
+6-66:The only useful bids are 0, and 1 α, since for both queries all other bids are identical in terms of cost and clicks to one of those three .
+6-67:Any single bid solution that uses as its non zero bid gets at most α clicks .
+6-68:Bidding 1 α on both keywords results in 2α clicks and total cost 2 .
+6-69:Thus, since the budget is U = 1 + α < 2, a single bid solution using 1 α can put weight at most (1+ α) 2 on the 1 α bid .
+6-70:This results in at most α(1 + α) clicks .
+6-71:This can be made arbitrarily close to α by lowering .
+6-72:4.3 A (1 − 1 e ) approximation algorithm The key to the proof of Theorem 3 is to show that there is a distribution over single bid strategies from Lemma 4 that obtains at least (1 − 1 e )CΩ clicks .
+6-73:In order to figure out the best distribution, we wrote a linear program that models the behavior of a player who is trying to maximize clicks and an adversary who is trying to create an input that is hard for the player .
+6-74:Then using linear programming duality, we were able to derive both an optimal strategy and a tight instance .
+6-75:After solving the LP numerically, we were also able to see that there is a uniform strategy for the player that always obtains (1 − 1 e )CΩ clicks; and then from the solution were easily able to guess the optimal distribution .
+6-76:This methodology is similar to that used in work on factor revealing LPs [8, 10] .
+6-77:4.3.1 An LP for the worst case click price curve .
+6-78:Consider the adversary"s problem of finding a click price curve for which no uniform bidding strategy can achieve αCΩ clicks .
+6-79:Recall that by Lemma 1 we can assume that a uniform strategy randomizes between two bids u and v .
+6-80:We also assume that the uniform strategy uses a convex combination of strategies from Lemma 4, which we can assume by Lemma 5 .
+6-81:Thus, to achieve αCΩ clicks, a uniform strategy must randomize between bids h(u) and h(v) where u ≤ αCΩ and v ≥ αCΩ .
+6-82:Call the set of such strategies S .
+6-83:Given a (u, v) ∈ S, the necessary probabilities in order to achieve αCΩ clicks are easily determined, and we denote them by p1(u, v) and p2(u, v) respectively .
+6-84:Note further that the advertiser is trying to figure out which of these strategies to use, and ultimately wants to compute a distribution over uniform strategies .
+6-85:In the LP, she is actually going to compute a distribution over pairs of strategies in S, which we will then interpret as a distribution over strategies .
+6-86:Using this set of uniform strategies as constraints, we can characterize a set of worst case click price curves by the constraints Z CΩ 0 h(r)dr ≤ U ∀(u, v) ∈ S p1(u, v)uh(u) + p2(u, v)vh(v) ≥ U A curve h that satisfies these constraints has the property that all uniform strategies that obtain αCΩ clicks spend more than U .
+6-87:Discretizing this set of inequalities, and pushing the first constraint into the objective function, we get the following LP over variables hr representing the curve: min X r∈{0, ,2 ,...,CΩ} · hr s.t .
+6-88:∀(u, v) ∈ S, p1(u, v)uhu + p2(u, v)vhv ≥ U In this LP, S is defined in the discrete domain as S = {(u, v) ∈ {0, , 2 , .
+6-89:.
+6-90:.
+6-91:, CΩ}2 : 0 ≤ u ≤ αCΩ ≤ v ≤ CΩ} .
+6-92:Solving this LP for a particular α, if we get an objective less than U, we know (up to some discretization) that an instance of Budget Optimization exists that cannot be approximated better than α .
+6-93:(The instance is constructed as in the proof of Lemma 5.) A binary search yields the smallest such α where the objective is exactly U .
+6-94:To obtain a strategy for the advertiser, we look at the dual, constraining the objective to be equal to U in order to get the polytope of optimum solutions: X (u,v)∈S wu,v = 1 ∀(u, v) ∈ S, X v :(u,v )∈S p1(u, v ) · u · wu,v ≤ and X u :(u ,v)∈S p2(u , v) · v · wu ,v ≤ .
+6-95:It is straightforward to show that the second set of constraints is equivalent to the following: ∀h ∈ RCΩ : X r hr = U, X (u,v)∈S wu,v(p1(u, v) · u · hu + p2(u, v) · v · hv) ≤ U .
+6-96:Here the variables can be interpreted as weights on strategies in S .
+6-97:A point in this polytope represents a convex combination over strategies in S, with the property that for any click price curve h, the cost of the mixed strategy is at most have a strategy that achieves an α approximation .
+6-98:Interestingly, the equivalence between this polytope and the LP dual above shows that there is a mixture over values r ∈ [0, C] that achieves an α approximation for any curve h .
+6-99:After a search for the appropriate α (which turned out to be 1 − 1 e ), we solved these two LPs and came up with the plots in Figure 3, which reveal not only the right approximation ratio, but also a picture of the worst case distribution and the approximation achieving strategy.9 From the pic9 The parameters U and CΩ can be set arbitrarily using scaling arguments .
+6-100:46 0 0 C e C 0 0 C e C Figure 3: The worst case click price curve and (1 − 1 e) approximate uniform bidding strategy, as found by linear programming .
+6-101:tures, we were able to quickly guess the optimal strategy and worst case example .
+6-102:4.3.2 Proof of Theorem 3 By Lemma 4, we know that for each r ≤ UΩ, there is a strategy that can obtain traffic r at cost r · h(r) .
+6-103:By mixing strategies for multiple values of r, we construct a uniform strategy that is guaranteed to achieve at least 1−e−1 = 0.63 fraction of Ω"s traffic and remain within budget .
+6-104:Note that the final resulting bid distribution will have some weight on the zero bid, since the single bid strategies from Lemma 4 put some weight on bidding zero .
+6-105:Consider the following probability density function over such strategies (also depicted in Figure 3): g(r) = j 0 for r < CΩ e, 1 r for r ≥ CΩ e .
+6-106:Note that R CΩ 0 g(r)dr = R CΩ CΩ e 1 r dr = 1, i.e .
+6-107:g is a probability density function .
+6-108:The traffic achieved by our strategy is equal to traffic = Z CΩ 0 g(r)·r dr = Z CΩ CΩ e 1 r ·r dr = „ 1 − 1 e « CΩ .
+6-109:The expected total spend of this strategy is at most spend = Z CΩ 0 g(r) · rh(r) dr = Z CΩ CΩ e h(r) dr ≤ Z CΩ 0 h(r) dr = UΩ .
+6-110:Thus we have shown that there exists a uniform bidding strategy that is (1 − 1 e ) optimal .
+6-111:We now show that no uniform strategy can do better .
+6-112:We will prove that for all > 0 there exists an instance for which all uniform strategies are at most (1 − 1 e + ) optimal .
+6-113:First we define the following click price curve over the domain [0, 1]: h(r) = 8 < : 0 for r < e−1 1 e − 2 „ e − 1 r « for r ≥ e−1 Note that h is non decreasing and non negative .
+6-114:Since the curve is over the domain [0, 1] it corresponds to an instance where CΩ = 1 .
+6-115:Note also that R 1 0 h(r) dr = 1 e−2 R 1 1 e e − 1 r dr = 1 .
+6-116:Thus, this curve corresponds to an instance where UΩ = 1 .
+6-117:Using Lemma 5, we construct an actual instance where the best uniform strategies are convex combinations of strategies that bid h(u) and achieve u clicks and u · h(u) cost .
+6-118:Suppose for the sake of contradiction that there exists a uniform bidding strategy that achieves α > 1−e−1 traffic on this instance .
+6-119:By Lemma 1 there is always a two bid optimal uniform bidding strategy and so we may assume that the strategy achieving α clicks randomizes over two bids .
+6-120:To achieve α clicks, the two bids must be on values h(u) and h(v) with probabilities pu and pv such that pu + pv = 1, 0 ≤ u ≤ α ≤ v and puu + pvv = α .
+6-121:To calculate the spend of this strategy consider two cases: if u = 0 then we are bidding h(v) with probability pv = α v .
+6-122:The spend in this case is: spend = pv · v · h(v) = αh(v) = αe − α v e − 2 .
+6-123:Using v ≥ α and then α > 1 − 1 e we get spend ≥ αe − 1 e − 2 > (1 − 1 e)e − 1 e − 2 = 1, contradicting the assumption .
+6-124:We turn to the case u > 0 .
+6-125:Here we have pu = v−α v−u and pv = α−u v−u .
+6-126:Note that for r ∈ (0, 1] we have h(r) ≥ 1 e−2 (e − 1 r By a reduction from vertex cover we can show the following (proof omitted): Theorem 7 .
+6-127:Budget Optimization is strongly NP hard .
+6-128:47 Query Bidding Uniform Bidding (randomized) Uniform Bidding (deterministic) Lower bound 0 0 0.5 0.5 1 1 Budget Clicks Figure 4: An example with real data .
+6-129:Now suppose we introduce weights on the queries that indicate the relative value of a click from the various search users .
+6-130:Formally, we have weights wq for all q ∈ Q and our goal is maximize the total weighted traffic given a budget .
+6-131:Call this the Weighted Keyword Bidding problem .
+6-132:With this additional generalization we can show hardness of approximation via a simple reduction from the Maximum Coverage problem, which is known to be (1−1 e) hard [6] (proof omitted) .
+6-133:Theorem 8 .
+6-134:The Weighted Keyword Bidding problem is hard to approximate to within (1 − 1 e). .
+7 EXACT ALGORITHMS FOR LAMINAR GRAPHS :
+7-1:GRAPHS If a graph has special structure, we can sometimes solve the budget optimization problem exactly .
+7-2:Note that the knapsack algorithm in Section 2 solves the problem for the case when the graph is a simple matching .
+7-3:Here we generalize this to the case when the graph has a laminar structure, which will allow us to impose a (partial) ordering on the possible bid values, and thereby give a pseudopolynomial algorithm via dynamic programming .
+7-4:We first show that to solve the Budget Optimization problem (for general graphs) optimally in pseudopolynomial time, it suffices to provide an algorithm that solves the deterministic case .
+7-5:The proof (omitted) uses ideas similar to Observation 1 and Lemma 1 .
+7-6:Lemma 9 .
+7-7:Let I be an input to the Budget Optimization problem and suppose that we find the optimal deterministic solution for every possible budget U ≤ U .
+7-8:Then we can find the optimal solution in time O(U log U) .
+7-9:A collection S of n sets S1, .
+7-10:.
+7-11:.
+7-12:, S2 is laminar if, for any two sets Si and Sj, if Si ∩ Sj = ∅ then either Si ⊆ Sj or Sj ⊆ Si .
+7-13:Given a keyword interaction graph G, we associate a set of neighboring queries Qk = {q : (k, q) ∈ E} with each keyword k .
+7-14:If this collection of sets if laminar, we say that the graph has the laminar property .
+7-15:Note that a laminar interaction graph would naturally fall out as a consequence of designing a hierarchical keyword set (e.g., shoes, highheel shoes, athletic shoes) .
+7-16:We call a solution deterministic if it consists of one bid vector, rather than a general distribution over bid vectors .
+7-17:The following lemma will be useful for giving a structure to the optimal solution, and will allow dynamic programming .
+7-18:Lemma 10 .
+7-19:For keywords i, j ∈ K, if Qi ⊆ Qj then there exists an optimal deterministic solution to the Budget Optimization problem with ai ≥ aj .
+7-20:We can view the laminar order as a tree with keyword j as a parent of keyword i if Qj is the minimal set containing Qi .
+7-21:In this case we say that j is a child of i .
+7-22:Given a keyword j with c children i1, .
+7-23:.
+7-24:.
+7-25:, ic, we now need to enumerate over all ways to allocate the budget among the children and also over all possible minimum bids for the children .
+7-26:A complication is that a node may have many children and thus a term of Uc would not even be pseudopolynomial .
+7-27:We can solve this problem by showing that given any laminar ordering, there is an equivalent one in which each keyword has at most 2 children .
+7-28:Lemma 11 .
+7-29:Let G be a graph with the laminar property .
+7-30:There exists another graph G with the same optimal solution to the Budget Optimization problem, where each node has at most two children in the laminar ordering .
+7-31:Furthermore, G has at most twice as many nodes as G .
+7-32:Given a graph with at most two children per node, we define F[i, b, U] to be the maximum number of clicks achievable by bidding at least b on each of keywords j s.t .
+7-33:Qj ⊆ Qi (and exactly b on keyword i) while spending at most U .
+7-34:For this definition, we use Z(b, U) to denote set of allowable bids and budgets over children: Z(b, U) = {b, b , U , U : b ≥ b, U ≤ U, b ≥ b, U ≤ U, U + U ≤ U} Given a keyword i and a bid ai, compute an incremental spend and traffic associated with bidding ai on keyword i, that is ˆt(i, ai) = X q∈Qi\Qi−1 clicksq(ai), and ˆs(i, ai) = X q∈Qi\Qi−1 costq(ai) .
+7-35:Now we define F[i, b, U] as max b, b ,U ,U ∈Z(b,U) j F[j , b , U ] + F[j , b , U ] + ˆt(i, b) ff (5) if (ˆs(i, b) ≤ U − U − U and i > 0), and F[i, b, U] = 0 otherwise .
+7-36:Lemma 12 .
+7-37:If the graph G has the laminar property, then, after applying Lemma 11, the dynamic programming recurrence in (5) finds an optimal deterministic solution to the Budget Optimization problem exactly in O(B3 U3 n) time .
+7-38:In addition, we can apply Lemma 9 to compute the optimal (randomized) solution .
+7-39:Observe that in the dynamic program, we have already solved the instance for every budget U ≤ U, so we can find the randomized solution with no additional asymptotic overhead .
+7-40:48 Lemma 13 .
+7-41:If the graph G has the laminar property, then, by applying Lemma 11, the dynamic programming recurrence in (5), and Lemma 9, we can find an optimal solution to the Budget Optimization problem in O(B3 U3 n) time .
+7-42:The bounds in this section make pessimistic assumptions about having to try every budget and every level .
+7-43:For many problems, you only need to choose from a discrete set of bid levels (e.g., multiples of one cent) .
+7-44:Doing so yields the obvious improvement in the bounds. .
+8 BID OPTIMIZATION UNDER VCG :
+8-1:The GSP auction is not the only possible auction one could use for sponsored search .
+8-2:Indeed the VCG auction and variants [14, 4, 7, 1] offer alternatives with compelling game theoretic properties .
+8-3:In this section we argue that the budget optimization problem is easy under the VCG auction .
+8-4:For a full definition of VCG and its application to sponsored search we refer the reader to [1, 2, 5] .
+8-5:For the sake of the budget optimization problem we can define VCG by just redefining costq(b) (replacing Equation (2)): costq(b) = p−1 X j=i (α[j] − α[j + 1]) · b[j] where i = pos(b) .
+8-6:Observation 1 still holds, and we can construct a landscape as before, where each landscape point corresponds to a particular bid b[i] .
+8-7:We claim that in the VCG auction, the landscapes are convex .
+8-8:To see this, consider two consecutive positions i,i + 1 .
+8-9:The slope of line segment between the points corresponding to those two positions is cost(b[i]) − cost(b[i + 1]) clicks(b[i]) − clicks(b[i + 1]) = (α[i] − α[i + 1]) · b[i] α[i] − α[i + 1] = b[i] .
+8-10:Since b[i] ≥ b[i + 1], the slopes of the pieces of the landscape decrease, and we get that the curve is convex .
+8-11:Now consider running the algorithm described in Section 2.1.4 for finding the optimal bids for a set of queries .
+8-12:In this algorithm we took all the pieces from the landscape curves, sorted them by incremental cpc, then took a prefix of those pieces, giving us bids for each of the queries .
+8-13:But, the equation above shows that each piece has its incremental cpc equal to the bid that achieves it; thus in the case of VCG the pieces are also sorted by bid .
+8-14:Hence we can obtain any prefix of the pieces via a uniform bid on all the keywords .
+8-15:We conclude that the best uniform bid is an optimal solution to the budget optimization problem. .
+9 ABSTRACT :
+9-1:Our algorithmic result presents an intriguing heuristic in practice: bid a single value b on all keywords; at the end of the day, if the budget is under spent, adjust b to be higher; if budget is overspent, adjust b to be lower; else, maintain simple strategy will have the same theoretical properties as our one bid strategy, and in practice, is likely to be much better
+9-2:Of course the scenario does change, however, and so coming up with a stochastic bidding strategy remains an important open direction, explored somewhat by [11, 13]
+9-3:Another interesting generalization is to consider weights on the clicks, which is a way to model conversions
+9-4:(A conversion corresponds to an action on the part of the user who clicked through to the advertiser site; e.g., a sale or an account sign up.) Finally, we have looked at this system as a black box returning clicks as a function of bid, whereas in reality it is a complex repeated game involving multiple advertisers
+9-5:In [3], it was shown that when a set of advertisers use a strategy similar to the one we suggest here, under a slightly modified first price auction, the prices approach a well understood market equilibrium
+9-6:Acknowledgments We thank Rohit Rao, Zoya Svitkina and Adam Wildavsky for helpful discussions.
+10 ABSTRACT :
+10-1:G
+10-2:Aggarwal, A
+10-3:Goel and R
+10-4:Motwani
+10-5:Truthful auctions for pricing search keywords
+10-6:ACM Conference on Electronic Commerce, 1 7, 2006
+10-7:G
+10-8:Aggarwal, J
+10-9:Feldman and S
+10-10:Muthukrishnan Bidding to the Top: VCG and Equilibria of Position Based Auctions Proc
+10-11:WAOA, 2006
+10-12:C
+10-13:Borgs, J
+10-14:Chayes, O
+10-15:Etesami, N
+10-16:Immorlica, K
+10-17:Jain, and M
+10-18:Mahdian
+10-19:Dynamics of bid optimization in online advertisement auctions
+10-20:Proc
+10-21:WWW 2007
+10-22:E
+10-23:Clarke
+10-24:Multipart pricing of public goods
+10-25:Public Choice, 11(1):17 33, 1971
+10-26:B
+10-27:Edelman, M
+10-28:Ostrovsky and M
+10-29:Schwarz
+10-30:Internet Advertising and the Generalized Second Price Auction: Selling Billions of Dollars Worth of Keywords
+10-31:Second workshop on sponsored search auctions, 2006
+10-32:U
+10-33:Feige
+10-34:A threshold of ln n for approximating set cover
+10-35:28th ACM Symposium on Theory of Computing, 1996, pp
+10-36:314 318
+10-37:T
+10-38:Groves
+10-39:Incentives in teams
+10-40:Econometrica, 41(4): 617 631, 1973
+10-41:K
+10-42:Jain, M
+10-43:Mahdian, E
+10-44:Markakis, A
+10-45:Sabieri and V
+10-46:Vazirani
+10-47:Greedy facility location algorithms analyzed using dual fitting with factor revealing LP
+picture:

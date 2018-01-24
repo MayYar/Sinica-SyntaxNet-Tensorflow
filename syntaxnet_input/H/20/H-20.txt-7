@@ -1,0 +1,79 @@
+In this section, two term reweighting methods are proposed to improve NED accuracy .
+In the first method, a new way is explored for better using of cluster (topic) information .
+The second one finds a better way to make use of named entities based on news classification .
+5.1 Term Reweighting Based on Distribution Distance TF IDF is the most prevalent model used in information retrieval systems .
+The basic idea is that the fewer documents a term appears in, the more important the term is in discrimination of documents (relevant or not relevant to a query containing the term) .
+Nevertheless, in TDT domain, we need to discriminate documents with regard to topics rather than queries .
+Intuitively, using cluster (topic) vectors to compare with subsequent news stories should outperform using story vectors .
+Unfortunately, the experimental results do not support this intuition [4][5] .
+Based on observation on data, we find the reason is that a news topic usually contains many directly or indirectly related events, while they all have their own sub subjects which are usually different with each other .
+Take the topic described in section 1 as an example, events like the explosion and salvage have very low similarities with events about criminal trial, therefore stories about trial would have low similarity with the topic vector built on its previous events .
+This section focuses on how to effectively make use of topic information and at the same time avoid the problem of content decentralization .
+At first, we classify terms into 5 classes to help analysis the needs of the modified model
+Terms of this class should be given low weights because they do not help much for topic discrimination .
+Term class B
+They are useful to distinguish two stories in different news categories .
+However, they cannot provide information to determine whether two stories are on the same or different topics .
+In another words, term election and term storm are not helpful in differentiate two election campaigns and two storm disasters .
+Therefore, terms of this class should be assigned lower weights .
+Term class C
+News stories that belong to different topics rarely have overlap terms in this class .
+The more frequently a term appears in a topic, the more important the term is for a story belonging to the topic, therefore the term should be set higher weight .
+Term class D
+For example, the name of a fireman who did very well in a salvage action, which may appears in only two or three stories but never appeared in other topics .
+Terms of this type should receive more weights than in TF IDF model .
+However, since they are not popular in the topic, it is not appropriate to give them too high weights .
+Term class E
+Terms of this class should receive lower weights .
+Now we analyze whether TF IDF model can give proper weights to the five classes of terms .
+Obviously, terms of class A are lowly weighted in TF IDF model, which is conformable with the requirement described above .
+In TF IDF model, terms of class B are highly dependant with the number of stories in a news class .
+TF IDF model cannot provide low weights if the story containing the term belongs to a relative small news class .
+For a term of class C, the more frequently it appears in a topic, the less weight TFIDF model gives to it .
+This strongly conflicts with the requirement of terms in class C .
+For terms of class D, TF IDF model gives them high weights correctly .
+But for terms of class E, TF IDF model gives high weights to them which are not conformable with the requirement of low weights .
+To sum up, terms of class B, C, E cannot be properly weighted in TF IDF model .
+So, we propose a modified model to resolve this problem .
+When £c init and£c new are set closely, we assume that most of the stories in a first level cluster (a direct child node of root node) are on the same topic .
+Therefore, we make use of a first level cluster to capture term distribution (df for all the terms within the cluster) within the topic dynamically .
+KL divergence of term distribution in a first level cluster and the whole story set is used to adjust term weights
+£^ is a const parameter, now is manually set 3 .
+KL divergence is defined as follows [17]
+Obviously, modified model can meet all the requirements of the five term classes listed above .
+5.2 Term Reweighting Based on Term Type and Story Class Previous work found that some classes of news stories could achieve good improvements by giving extra weight to named entities .
+But we find that terms of different types should be given different amount of extra weight for different classes of news stories .
+We use open NLP1 to recognize named entity types and part ofspeech tags for terms that appear in news stories .
+Named entity types include person name, organization name, location name, date, time, money and percentage, and five POSs are selected
+Statistical analysis shows topic level discriminative terms types for different classes of stories .
+For the sake of convenience, named entity type and part of speech tags are uniformly called term type in subsequent sections .
+Determining whether two stories are about the same topic is a basic component for NED task .
+So at first we use 2 £q statistic to compute correlations between terms and topics .
+For a term t and a topic T, a contingence table is derived
+A 2¡Ñ2 Contingence Table Doc Number belong to topic T not belong to topic T include t A B not include t C D The 2 £q statistic for a specific term t with respect to topic T is defined to be [16]
+The ROI can be seen as a higher level class of stories .
+The average correlation between a term type and a topic ROI is computed as
+M is the number news classes (ROIs, set 11 in the paper) .
+Pk represents the set of all terms of type k, and Rm represents the set of all topics of class m, p(t,T) means the probability that t occurs in topic T .
+Because of limitation of space, only parts of the term types (9 term types) and parts of news classes (8 classes) are listed in table 2 with the average correlation values between them .
+The statistics is derived from labeled data in TDT2 corpus .
+(Results in table 2 are already normalized for convenience in comparison.) The statistics in table 2 indicates the usefulness of different term types in topic discrimination with respect to different news classes .
+We can see that, location name is the most useful term type for three news classes
+And for three other categories Elections, Legal Criminal Cases, Science and Discovery, person name is the most discriminative term type .
+For Scandals Hearings, date is the most important information for topic discrimination .
+In addition, Legal Criminal Cases and Finance topics have higher correlation with money terms, while Science and Discovery have higher correlation with percentage terms .
+Non name terms are more stable for different classes .
+1 .
+http
+http
+New term weights are reweighted as follows
+In the work, we just simply use statistics in table 2 as the reweighting parameters .
+Even thought using the statistics directly may not the best choice, we do not discuss how to automatically obtain the best parameters .
+We will try to use machine learning techniques to obtain the best parameters in the future work .
+In the work, we use BoosTexter [20] to classify all stories into one of the 11 ROIs .
+BoosTexter is a boosting based machine learning program, which creates a series of simple rules for building a classifier for text or attribute value data .
+We use term weight generated using TF IDF model as feature for story classification .
+We trained the model on the 12000 judged English stories in TDT2, and classify the rest of the stories in TDT2 and all stories in TDT3 .
+Classification results are used for term reweighting in formula (11) .
+Since the class labels of topic off stories are not given in TDT datasets, we cannot give the classification accuracy here .
+Thus we do not discuss the effects of classification accuracy to NED performance in the paper. .

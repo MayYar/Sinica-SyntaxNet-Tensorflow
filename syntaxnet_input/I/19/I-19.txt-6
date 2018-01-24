@@ -1,0 +1,72 @@
+As argued in section 3.2, we expect a real world market to exhibit a mix of global and local bidders .
+Whereas so far we assumed a single global bidder, in this section we consider a setting where multiple global bidders interact with one another and with local bidders as well .
+The analysis of this problem is complex, however, as the optimal bidding strategy of a global bidder depends on the strategy of other global bidders .
+A typical analytical approach is to find the symmetric Nash equilibrium solution [9, 12], which occurs when all global bidders use the same strategy to produce their bids, and no (global) bidder has any incentive to unilaterally deviate from the chosen strategy .
+Due to the complexity of the problem, however, here we combine a computational simulation approach with analytical results .
+The simulation works by iteratively finding the best response to the optimal bidding strategies in the previous iteration .
+If this should result in a stable outcome (i.e., when the optimal bidding strategies remains unchanged for two subsequent iterations), the solution is by definition a (symmetric) Nash equilibrium .
+5.1 The Global Bidder"s Expected Utility In order to find a global bidder"s best response, we first need to calculate the expected utility given the global bid B and the strategies of both the other global bidders as well as the local bidders .
+In the following, let Ng denote the number of other global bidders .
+Furthermore, let the strategies of the other global bidders be represented by the set of functions £]k(v), 1 ? k ? M, producing a bid for each auction given a bidder"s valuation v .
+Note that all other global bidders use the same set of functions since we consider symmetric equilibria .
+However, we assume that the assignment of functions to auctions by each global bidder occurs in a random fashion without replacement (i.e., each function is assigned exactly once by each global bidder) .
+Let £[ denote the set of all possible assignments .
+Each such assignment £s ? £[ is a (M, Ng) matrix, where each entry £si,j identifies the function used by global bidder j in auction i .
+Note that the cardinality of £[, denoted by |£[|, is equal to M!Ng .
+Now, the expected utility is the average expected utility over all possible assignments and is given by
+Here, G(b) is the probability of winning an auction with only local bidders as described in Section 4.1, and f(y) is the probability density of the bidder valuations as before .
+5.2 The Simulation The simulation works by discretising the space of possible valuations and bids and then finding a best response to an initial set of bidding functions .
+The best response is found by maximising equation 14 for each discrete valuation, which, in turn, results in a new set of bidding functions .
+These functions then affect the probabilities of winning in the next iteration for which the new best response strategy is calculated .
+This process is then repeated for a fixed number of iterations or until a stable solution has been found6 .
+Clearly, due to the large search space, finding the utilitymaximising global bid quickly becomes infeasible as the number of auctions and global bidders increases .
+Therefore, we reduce the search space by limiting the global bid to two dimensions where a global bidder bids high in one of the auctions and low in all the others7 .
+This simplification is justified by the results in Section 4.3.1 which show that, for a large number of commonly used distributions, the optimal global bid consist of at most two different values .
+The results reported here are based on the following settings.8 In order to emphasize that the valuations are discrete, we use integer values ranging from 1 to 1000 .
+Each valuation occurs with equal probability, equivalent to a uniform valuation distribution in the continuous case .
+A bidder can select between 300 different equally spaced bid levels .
+Thus, a bidder with valuation v can place bids b ? {0, v 300, 2v 300, .
+.
+.
+, v} .
+The local bidders are static and bid their valuation as before .
+The initial set of functions can play an important role in the experiments .
+Therefore, to ensure our results are robust, experiments are repeated with different random initial functions .
+5.3 The Results First, we describe the results with no local bidders .
+For this case, we find that the simulation does not converge to a stable state .
+That is, when there is at least one other global bidder, the best response strategy keeps fluctuating, irrespective of the number of iterations and of the initial state .
+The fluctuations, however, show a distinct pattern and alternate between two states .
+Figure 2 depicts these two states for NG = 10 and M = 5 .
+The two states vary most when there are at least as many auctions as there are global bidders .
+In that case, one of the best response states is to bid truthfully in one auction and zero in all others .
+The best response to that, however, is to bid an equal positive amount close to zero in all auctions; this strategy guarantees at least one object at a very low payment .
+The best response is then again to bid truthfully in a single auction since this appropriates the object in that particular auction .
+As a result, there exists no stable solution .
+The same result is observed when the number of global bidders is less than the number of auctions .
+This oc6 This approach is similar to an alternating move bestresponse process with pure strategies [4], although here we consider symmetric strategies within a setting where an opponent"s best response depends on its valuation .
+7 Note that the number of possible allocations still increases with the number of auctions and global bids .
+However, by merging all utility equivalent permutations, we significantly increase computation speed, allowing experiments with relatively large numbers of auctions and bidders to be performed (e.g., a single iteration with 50 auctions and 10 global bidders takes roughly 30 seconds on a 3.00 Ghz PC) .
+8 We also performed experiments with different precision, other valuation distributions, and dynamic local bidders .
+We find that the prinicipal conclusions generalise to these different settings, and therefore we omit the results to avoid repetitiveness .
+284 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 0 200 400 600 800 1000 200 400 600 800 1000 valuation (v) bid(b) state 1 state 2 Figure 2
+5 10 15 0 1 2 3 4 x 10 4 number of static local bidders variance Ng = 5 Ng = 10 Ng = 15 Figure 3
+The errorbars show the (small) standard deviations .
+curs since global bidders randomise over auctions, and thus they cannot coordinate and choose to bid high in different auctions .
+As shown in Figure 2, a similar fluctuation is observed when the number of global bidders increases relative to the number of auctions .
+However, the bids in the equal bid state (state 2 in Figure 2), as well as the low bids of the other state, increase .
+Moreover, if the number of global bidders is increased even further, a bifurcation occurs in the equal bid state similar to the case without local bidders .
+We now consider the best response strategies when both local and global bidders participate and each auction contains the same number of local bidders .
+To this end, Figure 3 shows the average variance of the best response strategies .
+This is measured as the variance of an actual best response bid over different iterations, and then taking the average over the discrete bidder valuations .
+Here, the variance is a gauge for the amount of fluctuation and thus the instability of the strategy .
+As can be seen from this figure, local bidders have a large stabilising effect on the global bidder strategies .
+As a result, the best response strategy approximates a pure symmetric Nash equilibrium .
+We note that the results converge after only a few iterations .
+The results show that the principal conclusions in the case of a single global bidder carry over to the case of multiple global bidders .
+That is, the optimal strategy is to bid positive in all auctions (as long as there are at least as many bidders as auctions) .
+Furthermore, a similar bifurcation point is observed .
+These results are very robust to changes to the auction settings and the parameters of the simulation .
+To conclude, even though a theoretical analysis proves difficult in case of several global bidders, we can approximate a (symmetric) Nash equilibrium for specific settings using a discrete simulation in case the system consists of both local and global bidders .
+Thus, our simulation can be used as a tool to predict the market equilibrium and to find the optimal bidding strategy for practical settings where we expect a combination of local and global bidders. .

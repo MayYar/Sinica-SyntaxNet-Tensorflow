@@ -1,0 +1,49 @@
+P j Xijpij < P j xijpij + max{j
+Property 1 will be used to obtain truthfulness in expectation, and property 2 will allow us to prove an approximation guarantee .
+We first show that any algorithm that returns a fractional assignment having certain properties satisfies cycle monotonicity .
+Lemma 4.3 Let A be an algorithm that for any input p, outputs a (fractional) assignment x such that, if pij = Hj then xij ? 1 m, and if pij = Lj then xij ? 1 m .
+Then A satisfies cycle monotonicity .
+Proof .
+Fix a player i, and the vector of processing times of the other players p?i .
+We need to prove (3), that is, PK k=1 P j xk+1 ij ` pk ij ? pk+1 ij ? ? 0 for every p1 i , .
+.
+.
+, pK i , where index k = K + 1 is taken to be k = 1 .
+We will show that for every job j, PK k=1 xk+1 ij ` pk ij ? pk+1 ij ? ? 0 .
+If pk ij is the same for all k (either always Lj or always Hj), then the above inequality clearly holds .
+Otherwise we can 256 divide the indices 1, .
+.
+.
+, K, into maximal segments, where a maximal segment is a maximal set of consecutive indices k , k + 1, .
+.
+.
+, k ? 1, k (where K + 1 ¡Ý 1) such that pk ij = Hj ? pk +1 ij ? ¡P ¡P ¡P ? pk ij = Lj .
+This follows because there must be some k such that pk ij = Hj > pk?1 ij = Lj .
+We take k = k and then keep including indices in this segment till we reach a k such that pk ij = Lj and pk+1 ij = Hj .
+We set k = k, and then start a new maximal segment with index k + 1 .
+Note that k = k and k + 1 = k ? 1 .
+We now have a subset of indices and we can continue recursively .
+So all indices are included in some maximal segment .
+We will show that for every such maximal segment k , k +1, .
+.
+.
+, k ,P k ?1?k<k xk+1 ij ` pk ij ? pk+1 ij ? ? 0 .
+Adding this for each segment yields the desired inequality .
+So now focus on a maximal segment k , k + 1, .
+.
+.
+, k ? 1, k .
+Thus, there is some k? such that for k ? k < k? , we have pk ij = Hj, and for k? ? k ? k , we have pk ij = Lj .
+Now the left hand side of the above inequality for this segment is simply xk ij (Lj ?Hj)+xk? ij (Hj ?Lj) ? 0, since xk ij ? 1 m ? xk? ij as pk ij = Hj and pk? ij = Lj .
+We now describe how to use a c approximation algorithm to obtain an algorithm satisfying the property in Lemma 4.3 .
+For simplicity, first suppose that the approximation algorithm returns an integral schedule .
+The idea is to simply spread this schedule .
+We take each job j assigned to a high machine and assign it to an extent 1 m on all machines; for each job j assigned to a low machine, say i, we assign 1 m fraction of it to the other machines where it is low, and assign its remaining fraction (which is at least 1 m) to i .
+The resulting assignment clearly satisfies the desired properties .
+Also observe that the load on any machine has at most increased by 1 m ¡P (load on other machines) ? makespan, and hence the makespan has at most doubled .
+This spreading out can also be done if the initial schedule is fractional .
+We now describe the algorithm precisely .
+Algorithm 1 Let A be any algorithm that on any input p outputs a possibly fractional assignment x such that xij > 0 implies that pij ? T, where T is the makespan of x .
+(In particular, note that any algorithm that returns an integral assignment has these properties.) Our algorithm, which we call A , returns the following assignment xF .
+Initialize xF ij = 0 for all i, j .
+For every i, j, .

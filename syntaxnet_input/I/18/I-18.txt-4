@@ -1,0 +1,44 @@
+As each satellite is a single entity that is a piece of the global swarm, a multi agent system fits to model satellite constellations [39] .
+This approach has been developped through the ObjectAgent architecture [38], TeamAgent [31], DIPS [14] or Prospecting ANTS [12] .
+3.1 Satellite swarm An observation satellite swarm1 is a multi agent system where the requests do not have to be carried out in a fixed order and the agents (the satellites) do not have any physical interaction .
+Carrying out a request cannot prevent another agent from carrying out another one, even the same one .
+At most, there will be a waste of resources .
+Formally, a swarm is defined as follows
+A satellite swarm E is a triplet < S, T, Vicinity >
+.
+.
+sn}; T ? R+ or N+ is a set of dates with a total order <; Vicinity 
+In the sequel, we will assume that the agents share a common clock .
+For a given agent and a given time, the vicinity relation returns the set of agents with whom it can communicate at that time .
+As we have seen previously, this relation exists when the agents meet .
+1 This term will designate a satellite constellation with InterSatellite Links .
+3.2 Requests Requests are the observation tasks that the satellite swarm must achieve .
+As we have seen previously, the requests are generated both on the ground and on board .
+Each agent is allocated a set of initial requests .
+During the mission, new requests are sent to the agents by the ground or agents can generate new requests by themselves .
+Formally, a request is defined as follows
+A request R is defined as a tuple < idR, pos(R), prio(R), tbeg(R),bR >
+The priority prio(R) of a request represents how much it is important for the user, namely the request sender, that the request should be carried out .
+Thus a request with a high priority must be realized at all costs .
+In our application, priorities are comprised between 1 and 5 (the highest) .
+In the sequel, we will note Rt si the set of the requests that are known by agent si at time t ? T .
+For each request R in Rt si , there is a cost value, noted costsi ? R, representing how far from the desired date of observation tbeg(R) an agent si can realize R .
+So, the more an agent can carry out a request in the vicinity of the desired date of observation, the lower the cost value .
+3.3 Candidacy An agent may have several intentions about a request, i.e .
+for a request R, an agent si may
+We can notice that these four propositions are modalities of proposition C
+More formally
+A candidacy C is a tuple < idC , modC, sC , RC , obsC, dnlC >
+3.4 Problem formalization Then, our problem is the following
+More formally, Definition 4 (Problem) .
+Let E be a swarm .
+Agents si in E must build a set {At s1 .
+.
+.
+At sn } where At si ? Rt si such 288 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) as
+P si?S P R?At si costsi is minimal .
+Let us notice that these criteria are not necessarily compatible .
+As the choices of an agent will be influenced by the choices of the others, it is necessary that the agents should reason on a common knowledge about the requests .
+It is thus necessary to set up an effective communication protocol. .

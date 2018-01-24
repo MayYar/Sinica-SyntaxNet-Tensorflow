@@ -1,0 +1,385 @@
+On The Complexity of Combinatorial Auctions: 
+content:
+1 ABSTRACT :
+1-1:Georg Gottlob Computing Laboratory Oxford University OX1 3QD Oxford, UK georg.gottlob@comlab.ox.ac.uk Gianluigi Greco Dipartimento di Matematica University of Calabria I 87030 Rende, Italy ggreco@mat.unical.it ABSTRACT The winner determination problem in combinatorial auctions is the problem of determining the allocation of the items among the bidders that maximizes the sum of the accepted bid prices .
+1-2:While this problem is in general NPhard, it is known to be feasible in polynomial time on those instances whose associated item graphs have bounded treewidth (called structured item graphs) .
+1-3:Formally, an item graph is a graph whose nodes are in one to one correspondence with items, and edges are such that for any bid, the items occurring in it induce a connected subgraph .
+1-4:Note that many item graphs might be associated with a given combinatorial auction, depending on the edges selected for guaranteeing the connectedness .
+1-5:In fact, the tractability of determining whether a structured item graph of a fixed treewidth exists (and if so, computing one) was left as a crucial open problem .
+1-6:In this paper, we solve this problem by proving that the existence of a structured item graph is computationally intractable, even for treewidth 3 .
+1-7:Motivated by this bad news, we investigate different kinds of structural requirements that can be used to isolate tractable classes of combinatorial auctions .
+1-8:We show that the notion of hypertree decomposition, a recently introduced measure of hypergraph cyclicity, turns out to be most useful here .
+1-9:Indeed, we show that the winner determination problem is solvable in polynomial time on instances whose bidder interactions can be represented with (dual) hypergraphs having bounded hypertree width .
+1-10:Even more surprisingly, we show that the class of tractable instances identified by means of our approach properly contains the class of instances having a structured item graph. .
+2 INTRODUCTION :
+2-1:J.4 [Computer Applications]: Social and Behavioral Combinatorial auctions .
+2-2:Combinatorial auctions are well known mechanisms for resource and task allocation where bidders are allowed to simultaneously bid on combinations of items .
+2-3:This is desirable when a bidder"s valuation of a bundle of items is not equal to the sum of her valuations of the individual items .
+2-4:This framework is currently used to regulate agents" interactions in several application domains (cf., e.g., [21]) such as, electricity markets [13], bandwidth auctions [14], and transportation exchanges [18] .
+2-5:Formally, a combinatorial auction is a pair I, B , where I = {I1, ..., Im} is the set of items the auctioneer has to sell, and B = {B1, ..., Bn} is the set of bids from the buyers interested in the items in I .
+2-6:Each bid Bi has the form item(Bi), pay(Bi) , where pay(Bi) is a rational number denoting the price a buyer offers for the items in item(Bi) ⊆ I .
+2-7:An outcome for I, B is a subset b of B such that item(Bi)∩item(Bj) = ∅, for each pair Bi and Bj of bids in b with i = j .
+2-8:The winner determination problem .
+2-9:A crucial problem for combinatorial auctions is to determine the outcome b∗ that maximizes the sum of the accepted bid prices (i.e., Bi∈b∗ pay(Bi)) over all the possible outcomes .
+2-10:This problem, called winner determination problem (e.g., [11]), is known to be intractable, actually NP hard [17], and even not approximable in polynomial time unless NP = ZPP [19] .
+2-11:Hence, it comes with no surprise that several efforts have been spent to design practically efficient algorithms for general auctions (e.g., [20, 5, 2, 8, 23]) and to identify classes of instances where solving the winner determination problem is feasible in polynomial time (e.g., [15, 22, 12, 21]) .
+2-12:In fact, constraining bidder interaction was proven to be useful for identifying classes of tractable combinatorial auctions .
+2-13:Item graphs .
+2-14:Currently, the most general class of tractable combinatorial auctions has been singled out by modelling interactions among bidders with the notion of item graph, which is a graph whose nodes are in one to one correspondence with items, and edges are such that for any 152 Figure 1: Example MaxWSP problem: (a) Hypergraph H I0,B0 , and a packing h for it; (b) Primal graph for H I0,B0 ; and, (c,d) Two item graphs for H I0,B0 .
+2-15:bid, the items occurring in it induce a connected subgraph .
+2-16:Indeed, the winner determination problem was proven to be solvable in polynomial time if interactions among bidders can be represented by means of a structured item graph, i.e., a tree or, more generally, a graph having tree like structure [3] formally bounded treewidth [16] .
+2-17:To have some intuition on how item graphs can be built, we notice that bidder interaction in a combinatorial auction I, B can be represented by means of a hypergraph H I,B such that its set of nodes N(H I,B ) coincides with set of items I, and where its edges E(H I,B ) are precisely the bids of the buyers {item(Bi) | Bi ∈ B} .
+2-18:A special item graph for I, B is the primal graph of H I,B , denoted by G(H I,B ), which contains an edge between any pair of nodes in some hyperedge of H I,B .
+2-19:Then, any item graph for H I,B can be viewed as a simplification of G(H I,B ) obtained by deleting some edges, yet preserving the connectivity condition on the nodes included in each hyperedge .
+2-20:Example 1 .
+2-21:The hypergraph H I0,B0 reported in Figure 1.(a) is an encoding for a combinatorial auction I0, B0 , where I0 = {I1, ..., I5}, and item(Bi) = hi, for each 1 ≤ i ≤ 3 .
+2-22:The primal graph for H I0,B0 is reported in Figure 1.(b), while two example item graphs are reported in Figure 1.(c) and (d), where edges required for maintaining the connectivity for h1 are depicted in bold .
+2-23:¡ Open Problem: Computing structured item graphs efficiently .
+2-24:The above mentioned tractability result on structured item graphs turns out to be useful in practice only when a structured item graph either is given or can be efficiently determined .
+2-25:However, exponentially many item graphs might be associated with a combinatorial auction, and it is not clear how to determine whether a structured item graph of a certain (constant) treewidth exists, and if so, how to compute such a structured item graph efficiently .
+2-26:Polynomial time algorithms to find the best simplification of the primal graph were so far only known for the cases where the item graph to be constructed is a line [10], a cycle [4], or a tree [3], but it was an important open problem (cf .
+2-27:[3]) whether it is tractable to check if for a combinatorial auction, an item graph of treewidth bounded by a fixed natural number k exists and can be constructed in polynomial time, if so .
+2-28:Weighted Set Packing .
+2-29:Let us note that the hypergraph representation H I,B of a combinatorial auction I, B is also useful to make the analogy between the winner determination problem and the maximum weighted set packing problem on hypergraphs clear (e.g., [17]) .
+2-30:Formally, a packing h for a hypergraph H is a set of hyperedges of H such that for each pair h, h ∈ h with h = h , it holds that h ∩ h = ∅ .
+2-31:Letting w be a weighting function for H, i.e., a polynomially time computable function from E(H) to rational numbers, the weight of a packing h is the rational number w(h) = h∈h w(h), where w({}) = 0 .
+2-32:Then, the maximum weighted set packing problem for H w.r.t .
+2-33:w, denoted by MaxWSP(H, w), is the problem of finding a packing for H having the maximum weight over all the packings for H .
+2-34:To see that MaxWSP is just a different formulation for the winner determination problem, given a combinatorial auction I, B , it is sufficient to define the weighting function w I,B (item(Bi)) = pay(Bi) .
+2-35:Then, the set of the solutions for the weighted set packing problem for H I,B w.r.t .
+2-36:w I,B coincides with the set of the solutions for the winner determination problem on I, B .
+2-37:Example 2 .
+2-38:Consider again the hypergraph H I0,B0 reported in Figure 1.(a) .
+2-39:An example packing for H I0,B0 is h = {h1}, which intuitively corresponds to an outcome for I0, B0 , where the auctioneer accepted the bid B1 .
+2-40:By assuming that bids B1, B2, and B3 are such that pay(B1) = pay(B2) = pay(B3), the packing h is not a solution for the problem MaxWSP(H I0,B0 , w I0,B0 ITEM GRAPHS Let H be a hypergraph .
+2-41:A graph G = (V, E) is an item graph for H if V = N(H) and, for each h ∈ E(H), the subgraph of G induced over the nodes in h is connected .
+2-42:An important class of item graphs is that of structured item graphs, i.e., of those item graphs having bounded treewidth as formalized below .
+2-43:A tree decomposition [16] of a graph G = (V, E) is a pair T, χ , where T = (N, F) is a tree, and χ is a labelling function assigning to each vertex p ∈ N a set of vertices χ(p) ⊆ V , such that the following conditions are satisfied: (1) for each vertex b of G, there exists p ∈ N such that b ∈ χ(p); (2) for each edge {b, d} ∈ E, there exists p ∈ N such that {b, d} ⊆ χ(p); (3) for each vertex b of G, the set {p ∈ N | b ∈ χ(p)} induces a connected subtree of T .
+2-44:The width of T, χ is the number maxp∈N |χ(p) − 1| .
+2-45:The treewidth of G, denoted by tw(G), is the minimum width over all its tree decompositions .
+2-46:The winner determination problem can be solved in polynomial time on item graphs having bounded treewidth [3] .
+2-47:Theorem 1 (cf .
+2-48:[3]) .
+2-49:Assume a k width tree decomposition T, χ of an item graph for H is given .
+2-50:Then, MaxWSP(H, w) can be solved in time O(|T|2 ×(|E(H)|+1)k+1 ) .
+2-51:Many item graphs can be associated with a hypergraph .
+2-52:As an example, observe that the item graph in Figure 1.(c) has treewidth 1, while Figure 1.(d) reports an item graph whose treewidth is 2 .
+2-53:Indeed, it was an open question whether for a given constant k it can be checked in polynomial time if an item graph of treewidth k exists, and if so, whether such an item graph can be efficiently computed .
+2-54:Let C(ig, k) denote the class of all the hypergraphs having an item graph G such that tw(G) ≤ k .
+2-55:The main result of this section is to show that the class C(ig, k) is hard to recognize .
+2-56:Theorem 2 .
+2-57:Deciding whether a hypergraph H belongs to C(ig, 3) is NP hard .
+2-58:The proof of this result relies on an elaborate reduction from the Hamiltonian path problem HP(s, t) of deciding whether there is an Hamiltonian path from a node s to a node t in a directed graph G = (N, E) .
+2-59:To help the intuition, we report here a high level overview of the main ingredients exploited in the proof1 .
+2-60:The general idea it to build a hypergraph HG such that there is an item graph G for HG with tw(G ) ≤ 3 if and only if HP(s, t) over G has a solution .
+2-61:First, we discuss the way HG is constructed .
+2-62:See Figure 2.(a) for an illustration, where the graph G consists of the nodes s, x, y, and t, and the set of its edges is {e1 = (s, x), e2 = (x, y), e3 = (x, t), e4 = (y, t)} .
+2-63:From G to HG .
+2-64:Let G = (N, E) be a directed graph .
+2-65:Then, the set of the nodes in HG is such that: for each x ∈ N, N(HG) contains the nodes bsx, btx, bx, bx, bdx; for each e = (x, y) ∈ E, N(HG) contains the nodes nsx, nsx, nty, nty , nse x and nte DECOMPOSITIONS Since constructing structured item graphs is intractable, it is relevant to assess whether other structural restrictions can be used to single out classes of tractable MaxWSP instances .
+2-66:To this end, we focus on the notion of hypertree decomposition [7], which is a natural generalization of hypergraph acyclicity and which has been profitably used in other domains, e.g, constraint satisfaction and database query evaluation, to identify tractability islands for NP hard problems .
+2-67:A hypertree for a hypergraph H is a triple T, χ, λ , where T = (N, E) is a rooted tree, and χ and λ are labelling functions which associate each vertex p ∈ N with two sets χ(p) ⊆ N(H) and λ(p) ⊆ E(H) .
+2-68:If T = (N , E ) is a subtree of T, we define χ(T ) = v∈N χ(v) .
+2-69:We denote the set of vertices N of T by vertices(T) .
+2-70:Moreover, for any p ∈ N, Tp denotes the subtree of T rooted at p .
+2-71:Definition 1 .
+2-72:A hypertree decomposition of a hypergraph H is a hypertree HD = T, χ, λ for H which satisfies all the following conditions: such that h ⊆ χ(p) (we say that p covers h); 156 Figure 3: Example MaxWSP problem: (a) Hypergraph H1; (b) Hypergraph ¯H1; (b) A 2 width hypertree decomposition of ¯H1 .
+2-73:Y ∈ χ(p)} induces a (connected) subtree of T; The width of a hypertree decomposition T, χ, λ is maxp∈vertices(T )|λ(p)| .
+2-74:The HYPERTREE width hw(H) of H is the minimum width over all its hypertree decompositions .
+2-75:A hypergraph H is acyclic if hw(H) = 1 .
+2-76:P Example 3 .
+2-77:The hypergraph H I0,B0 reported in Figure 1.(a) is an example acyclic hypergraph .
+2-78:Instead, both the hypergraphs H1 and ¯H1 shown in Figure 3.(a) and Figure 3.(b), respectively, are not acyclic since their hypertree width is 2 .
+2-79:A 2 width hypertree decomposition for ¯H1 is reported in Figure 3.(c) .
+2-80:In particular, observe that H1 has been obtained by adding the two hyperedges h4 and h5 to H I0,B0 to model, for instance, that two new bids, B4 and B5, respectively, have been proposed to the auctioneer .
+2-81:¡ In the following, rather than working on the hypergraph H associated with a MaxWSP problem, we shall deal with its dual ¯H, i.e., with the hypergraph such that its nodes are in one to one correspondence with the hyperedges of H, and where for each node x ∈ N(H), {h | x ∈ h ∧ h ∈ E(H)} is in E( ¯H) .
+2-82:As an example, the reader may want to check again the hypergraph H1 in Figure 3.(a) and notice that the hypergraph in Figure 3.(b) is in fact its dual .
+2-83:The rationale for this choice is that issuing restrictions on the original hypergraph is a guarantee for the tractability only in very simple scenarios .
+2-84:Theorem 3 .
+2-85:On the class of acyclic hypergraphs, MaxWSP is (1) in P if each node occurs into two hyperedges at most; and, (2) NP hard, even if each node is contained into three hyperedges at most .
+2-86:3.1 Hypertree Decomposition on the Dual Hypergraph and Tractable Packing Problems For a fixed constant k, let C(hw, k) denote the class of all the hypergraphs whose dual hypergraphs have hypertree width bounded by k .
+2-87:The maximum weighted set packing problem can be solved in polynomial time on the class C(hw, k) by means of the algorithm ComputeSetPackingk, shown in Figure 4 .
+2-88:The algorithm receives in input a hypergraph H, a weighting function w, and a k width hypertree decomposition HD = T=(N, E), χ, λ of ¯H .
+2-89:For each vertex v ∈ N, let Hv be the hypergraph whose set of nodes N(Hv) ⊆ N(H) coincides with λ(v), and whose set of edges E(Hv) ⊆ E(H) coincides with χ(v) .
+2-90:In an initialization step, the algorithm equips each vertex v with all the possible packings for Hv, which are stored in the set Hv .
+2-91:Note that the size of Hv is bounded by (|E(H)| + 1)k , since each node in λ(v) is either left uncovered in a packing or is covered with precisely one of the hyperedges in χ(v) ⊆ E(H) .
+2-92:Then, ComputeSetPackingk is designed to filter these packings by retaining only those that conform with some packing for Hc, for each children c of v in T, as formalized next .
+2-93:Let hv and hc be two packings for Hv and Hc, respectively .
+2-94:We say that hv conforms with hc, denoted by hv ≈ hc if: for each h ∈ hc ∩ E(Hv), h is in hv; and, for each h ∈ (E(Hc) − hc), h is not in hv .
+2-95:Example 4 .
+2-96:Consider again the hypertree decomposition of ¯H1 reported in Figure 3.(c) .
+2-97:Then, the set of all the possible packings (which are build in the initialization step of ComputeSetPackingk), for each of its vertices, is reFigure 5: Example application of Algorithm ComputeSetPackingk .
+2-98:157 Input: H, w, and a k width hypertree decomposition HD = T =(N, E), χ, λ of ¯H; Output: A solution to MaxWSP(H, w); var Hv : set of packings for Hv, for each v ∈ N; h∗ : packing for H; v hv : rational number, for each partial packing hv for Hv; hhv,c : partial packing for Hc, for each partial packing hv for Hv, and for each (v, c) ∈ E; Procedure BottomUp; begin Done := the set of all the leaves of T ; while ∃v ∈ T such that (i) v ∈ Done, and (ii) {c | c is child of v} ⊆ Done do for each c such that (v, c) ∈ E do Hv := Hv − {hv | ∃hc ∈ Hc s.t .
+2-99:hv ≈ hc}; for each hv ∈ Hv do v hv := w(hv); for each c such that (v, c) ∈ E do ¯hc := arg maxhc∈Hc|hv≈ hc c hc − w(hc ∩ hv) ; hhv,c := ¯hc; (* set best packing *) v hv := v hv + c ¯hc − w(¯hc ∩ hv); end for end for Done := Done ∪ {v}; end while end; begin (* MAIN *) for each vertex v in T do Hv := {hv packing for Hv}; BottomUp; let r be the root of T ; ¯hr := arg maxhr∈Hr r hr ; h∗ := ¯hr; (* include packing *) T opDown(r, hr); return h∗ ; end .
+2-100:Procedure T opDown(v : vertex of N, ¯hv ∈ Hv); begin for each c ∈ N s.t .
+2-101:(v, c) ∈ E do ¯hc := h¯hv,c; h∗ := h∗ ∪ ¯hc; (* include packing *) T opDown(c, ¯hc); end for end; Figure 4: Algorithm ComputeSetPackingk .
+2-102:ported in Figure 5.(a) .
+2-103:For instance, the root v1 is such that Hv1 = { {}, {h1}, {h3}, {h5} } .
+2-104:Moreover, an arrow from a packing hc to hv denotes that hv conforms with hc .
+2-105:For instance, the reader may check that the packing {h3} ∈ Hv1 conforms with the packing {h2, h3} ∈ Hv3 , but do not conform with {h1} ∈ Hv3 .
+2-106:¡ ComputeSetPackingk builds a solution by traversing T in two phases .
+2-107:In the first phase, vertices of T are processed from the leaves to the root r, by means of the procedure BottomUp .
+2-108:For each node v being processed, the set Hv is preliminary updated by removing all the packings hv that do not conform with any packing for some of the children of v .
+2-109:After this filtering is performed, the weight hv is updated .
+2-110:Intuitively, v hv stores the weight of the best partial packing for H computed by using only the hyperedges occurring in χ(Tv) .
+2-111:Indeed, if v is a leaf, then v hv = w(hv) .
+2-112:Otherwise, for each child c of v in T, v hv is updated with the maximum of c hc − w(hc ∩ hv) over all the packings hc that conforms with hv (resolving ties arbitrarily) .
+2-113:The packing ¯hc for which this maximum is achieved is stored in the variable hhv,c .
+2-114:In the second phase, the tree T is processed starting from the root .
+2-115:Firstly, the packing h∗ is selected that maximizes the weight equipped with the packings in Hr .
+2-116:Then, procedure TopDown is used to extend h∗ to all the other partial packings for vertices of T .
+2-117:In particular, at each vertex v, h∗ is extended with the packing hhv,c, for each child c of v .
+2-118:Example 5 .
+2-119:Assume that, in our running example, w(h1) = w(h2) = w(h3) = w(h4) = 1 .
+2-120:Then, an execution of ComputeSetPackingk is graphically depicted in Figure 5.(b), where an arrow from a packing hc to a packing hv is used to denote that hc = hhv,c .
+2-121:Specifically, the choices made during the computation are such that the packing {h2, h3} is computed .
+2-122:In particular, during the bottom up phase, we have that: (1) v4 is processed, and we set v4 {h2} = v4 {h4} = 1 and v4 {} = 0; (2) v3 is processed, and we set v3 {h1} = v3 {h3} = 1 and v3 {} = 0; (3) v2 is processed, and we set v2 {h1} = v2 {h2} = v2 {h3} = v2 {h4} = 1, v2 {h2,h3} = 2 and v3 {} = 0; (4) v1 is processed and we set v1 {h1} = 1, v1 {h5} = v1 {h3} = 2 and v1 {} = 0 .
+2-123:For instance, note that v1 {h5} = 2 since {h5} conforms with the packing {h4} of Hv2 such that v2 {h4} = 1 .
+2-124:Then, at the beginning of the top down phase, ComputeSetPackingk selects {h3} as a packing for Hv1 and propagates this choice in the tree .
+2-125:Equivalently, the algorithm may have chosen {h5} .
+2-126:As a further example, the way the solution {h1} is obtained by the algorithm when w(h1) = 5 and w(h2) = w(h3) = w(h4) = 1 is reported in Figure 5.(c) .
+2-127:Notice that, this time, in the top down phase, ComputeSetPackingk starts selecting {h1} as the best packing for Hv1 .
+2-128:¡ Theorem 4 .
+2-129:Let H be a hypergraph and w be a weighting function for it .
+2-130:Let HD = T, χ, λ be a complete k width hypertree decomposition of ¯H .
+2-131:Then, ComputeSetPackingk on input H, w, and HD correctly outputs a solution for MaxWSP(H, w) in time O(|T| × (|E(H)| + 1)2k ) .
+2-132:Proof .
+2-133:[Sketch] We observe that h∗ (computed by ComputeSetPackingk) is a packing for H .
+2-134:Indeed, consider a pair of hyperedges h1 and h2 in h∗ , and assume, for the sake of contradiction, that h1 ∩ h2 = ∅ .
+2-135:Let v1 (resp., v2) be an arbitrary vertex of T, for which ComputeSetPackingk included h1 (resp., h2) in h∗ in the bottom down computation .
+2-136:By construction, we have h1 ∈ χ(v1) and h2 ∈ χ(v2) .
+2-137:158 Let I be an element in h1 ∩ h2 .
+2-138:In the dual hypergraph H, I is a hyperedge in E( ¯H) which covers both the nodes h1 and h2 .
+2-139:Hence, by condition (1) in Definition 1, there is a vertex v ∈ vertices(T) such that {h1, h2} ⊆ χ(v) .
+2-140:Note that, because of the connectedness condition in Definition 1, we can also assume, w.l.o.g., that v is in the path connecting v1 and v2 in T .
+2-141:Let hv ∈ Hv denote the element added by ComputeSetPackingk into h∗ during the bottom down phase .
+2-142:Since the elements in Hv are packings for Hv, it is the case that either h1 ∈ hv or h2 ∈ hv .
+2-143:Assume, w.l.o.g., that h1 ∈ hv, and notice that each vertex w in T in the path connecting v to v1 is such that h1 ∈ χ(w), because of the connectedness condition .
+2-144:Hence, because of definition of conformance, the packing hw selected by ComputeSetPackingk to be added at vertex w in h∗ must be such that h1 ∈ hw .
+2-145:This holds in particular for w = v1 .
+2-146:Contradiction with the definition of v1 .
+2-147:Therefore, h∗ is a packing for H .
+2-148:It remains then to show that it has the maximum weight over all the packings for H .
+2-149:To this aim, we can use structural induction on T to prove that, in the bottom up phase, the variable v hv is updated to contain the weight of the packing on the edges in χ(Tv), which contains hv and which has the maximum weight over all such packings for the edges in χ(Tv) .
+2-150:Then, the result follows, since in the top down phase, the packing hr giving the maximum weight over χ(Tr) = E(H) is first included in h∗ , and then extended at each node c with the packing hhv,c conformingly with hv and such that the maximum value of v hv is achieved .
+2-151:As for the complexity, observe that the initialization step requires the construction of the set Hv, for each vertex v, and each set has size (|E(H)| + 1)k at most .
+2-152:Then, the function BottomUp checks for the conformance between strategies in Hv with strategies in Hc, for each pair (v, c) ∈ E, and updates the weight v hv .
+2-153:These tasks can be carried out in time O((|E(H)| + 1)2k ) and must be repeated for each edge in T, i.e., O(|T|) times .
+2-154:Finally, the function TopDown can be implemented in linear time in the size of T, since it just requires updating h∗ by accessing the variable hhv,c .
+2-155:The above result shows that if a hypertree decomposition of width k is given, the MaxWSP problem can be efficiently solved .
+2-156:Moreover, differently from the case of structured item graphs, it is well known that deciding the existence of a k bounded hypertree decomposition and computing one (if any) are problems which can be efficiently solved in polynomial time [7] .
+2-157:Therefore, Theorem 4 witnesses that the class C(hw, k) actually constitutes a tractable class for the winner determination problem .
+2-158:As the following theorem shows, for large subclasses (that depend only on how the weight function is specified), MaxWSP(H, w) is even highly parallelizeable .
+2-159:Let us call a weighting function smooth if it is logspace computable and if all weights are polynomial (and thus just require O(log n) bits for their representation) .
+2-160:Recall that LOGCFL is a parallel complexity class contained in NC2, cf .
+2-161:[9] .
+2-162:The functional version of LOGCFL is LLOGCFL , which is obtained by equipping a logspace transducer with an oracle in LOGCFL .
+2-163:Theorem 5 .
+2-164:Let H be a hypergraph in C(hw, k), and let w be a smooth weighting function for it .
+2-165:Then, MaxWSP(H, w) is in LLOGCFL . .
+3 HYPERTREE DECOMPOSITIONS VS STRUCTURED ITEM GRAPHS :
+3-1:STRUCTURED ITEM GRAPHS Given that the class C(hw, k) has been shown to be an island of tractability for the winner determination problem, and given that the class C(ig, k) has been shown not to be efficiently recognizable, one may be inclined to think that there are instances having unbounded hypertree width, but admitting an item graph of bounded tree width (so that the intractability of structured item graphs would lie in their generality) .
+3-2:Surprisingly, we establish this is not the case .
+3-3:The line of the proof is to first show that structured item graphs are in one to one correspondence with a special kind of hypertree decompositions of the dual hypergraph, which we shall call strict .
+3-4:Then, the result will follow by proving that k width strict hypertree decompositions are less powerful than kwith hypertree decompositions .
+3-5:4.1 Strict Hypertree Decompositions Let H be a hypergraph, and let V ⊆ N(H) be a set of nodes and X, Y ∈ N(H) .
+3-6:X is [V ] adjacent to Y if there exists an edge h ∈ E(H) such that {X, Y } ⊆ (h − V ) .
+3-7:A [V ] path π from X to Y is a sequence X = X0, .
+3-8:.
+3-9:.
+3-10:, X = Y of variables such that: Xi is [V ] adjacent to Xi+1, for each i ∈ [0.. .
+3-11:1] .
+3-12:A set W ⊆ N(H) of nodes is [V ] connected if ∀X, Y ∈ W there is a [V ] path from X to Y .
+3-13:A [V ] component is a maximal [V ] connected non empty set of nodes W ⊆ (N(H) − V ) .
+3-14:For any [V ] component C, let E(C) = {h ∈ E(H) | h ∩ C = ∅} .
+3-15:Definition 2 .
+3-16:A hypertree decomposition HD = T, χ, λ of H is strict if the following conditions hold: such that s is a child of r, and for each [χ(r)] component Cr s.t .
+3-17:Cr ∩ χ(Ts) = ∅, Cr is a [χ(r) ∩ N(λ(r) ∩ λ(s))] component; h ∈ λ(p) and h ⊆ χ(p) (we say p strongly covers h); λ(p)} induces a (connected) subtree of T .
+3-18:The strict hypertree width shw(H) of H is the minimum width over all its strict hypertree decompositions .
+3-19:P The basic relationship between nice hypertree decompositions and structured item graphs is shown in the following theorem .
+3-20:Theorem 6 .
+3-21:Let H be a hypergraph such that for each node v ∈ N(H), {v} is in E(H) .
+3-22:Then, a k width tree decomposition of an item graph for H exists if and only if ¯H has a (k + 1) width strict hypertree decomposition2 .
+3-23:Note that, as far as the maximum weighted set packing problem is concerned, given a hypergraph H, we can always assume that for each node v ∈ N(H), {v} is in E(H) .
+3-24:In fact, if this hyperedge is not in the hypergraph, then it can be added without loss of generality, by setting w({v}) = 0 .
+3-25:Therefore, letting C(shw, k) denote the class of all the hypergraphs whose dual hypergraphs (associated with maximum 2 The term +1 only plays the technical role of taking care of the different definition of width for tree decompositions and hypertree decompositions .
+3-26:159 weighted set packing problems) have strict hypertree width bounded by k, we have that C(shw, k + 1) = C(ig, k) .
+3-27:By definition, strict hypertree decompositions are special hypertree decompositions .
+3-28:In fact, we are able to show that the additional conditions in Definition 2 induce an actual restriction on the decomposition power .
+3-29:Theorem 7 .
+3-30:C(ig, k) = C(shw, k + 1) ⊂ C(hw, k + 1) .
+3-31:A Game Theoretic View .
+3-32:We shed further lights on strict hypertree decompositions by discussing an interesting characterization based on the strict Robber and Marshals Game, defined by adapting the Robber and Marshals game defined in [6], which characterizes hypertree width .
+3-33:The game is played on a hypergraph H by a robber against k marshals which act in coordination .
+3-34:Marshals move on the hyperedges of H, while the robber moves on nodes of reacts by moving to another node which is connected with its current position and through a path in G(H) which does not use any node contained in a hyperedge that is occupied by the marshals before and after their move we say that these hyperedges are blocked .
+3-35:Note that in the basic game defined in [6], the robber is not allowed to move on vertices that are occupied by the marshals before and after their move, even if they do not belong to blocked hyperedges .
+3-36:Importantly, marshals are required to play monotonically, i.e., they cannot occupy an edge that was previously occupied in the game, and which is currently not .
+3-37:The marshals win the game if they capture the robber, by occupying an edge covering a node where the robber is .
+3-38:Otherwise, the robber wins .
+3-39:Theorem 8 .
+3-40:Let H be a hypergraph such that for each node v ∈ N(H), {v} is in E(H) .
+3-41:Then, ¯H has a k width strict hypertree decomposition if and only if k marshals can win the strict Robber and Marshals Game on ¯H, no matter of the robber"s moves. .
+4-1:We have solved the open question of determining the complexity of computing a structured item graph associated with a combinatorial auction scenario
+4-2:The result is bad news, since it turned out that it is NP complete to check whether a combinatorial auction has a structured item graph, even for treewidth 3
+4-3:Motivated by this result, we investigated the use of hypertree decomposition (on the dual hypergraph associated with the scenario) and we shown that the problem is tractable on the class of those instances whose dual hypergraphs have bounded hypertree width
+4-4:For some special, yet relevant cases, a highly parallelizable algorithm is also discussed
+4-5:Interestingly, it also emerged that the class of structured item graphs is properly contained in the class of instances having bounded hypertree width (hence, the reason of their intractability is not their generality)
+4-6:In particular, the latter result is established by showing a precise relationship between structured item graphs and restricted forms of hypertree decompositions (on the dual hypergraph), called query decompositions (see, e.g., [7])
+4-7:In the light of this observation, we note that proving some approximability results for structured item graphs requires a deep understanding of the approximability of query decompositions, which is currently missing in the literature
+4-8:As a further avenue of research, it would be relevant to enhance the algorithm ComputeSetPackingk, e.g., by using specialized data structures, in order to avoid the quadratic dependency from (|E(H)| + 1)k
+4-9:Finally, an other interesting question is to assess whether the structural decomposition techniques discussed in the paper can be used to efficiently deal with generalizations of the winner determination problem
+4-10:For instance, it might be relevant in several application scenarios to design algorithms that can find a selling strategy when several copies of the same item are available for selling, and when moreover the auctioneer is satisfied when at least a given number of copies is actually sold
+4-11:Acknowledgement Competence Center (Vienna) and by a Royal Society Wolfson Research Merit Award
+4-12:In particular, this Award allowed Gottlob to invite G
+4-13:Greco for a research visit to Oxford
+4-14:In addition, G
+4-15:Greco is supported by ICAR CNR, and by M.I.U.R
+4-16:under project TOCAI.IT.
+5-1:I
+5-2:Adler, G
+5-3:Gottlob, and M
+5-4:Grohe
+5-5:Hypertree Width and Related Hypergraph Invariants
+5-6:In Proc
+5-7:of EUROCOMB"05, pages 5 10, 2005
+5-8:C
+5-9:Boutilier
+5-10:Solving Concisely Expressed Combinatorial Auction Problems
+5-11:In Proc
+5-12:of AAAI"02, pages 359 366, 2002
+5-13:V
+5-14:Conitzer, J
+5-15:Derryberry, and T
+5-16:Sandholm
+5-17:Combinatorial auctions with structured item graphs
+5-18:In Proc
+5-19:of AAAI"04, pages 212 218, 2004
+5-20:E
+5-21:M
+5-22:Eschen and J
+5-23:P
+5-24:Sinrad
+5-25:An o(n2 ) algorithm for circular arc graph recognition
+5-26:In Proc
+5-27:of SODA"93, pages 128 137, 1993
+5-28:Y
+5-29:Fujishima, K
+5-30:Leyton Brown, and Y
+5-31:Shoham
+5-32:Taming the computational complexity of combinatorial auctions: Optimal and approximate
+5-33:In Proc
+5-34:of IJCAI"99, pages 548 553, 1999
+5-35:G
+5-36:Gottlob, N
+5-37:Leone, and F
+5-38:Scarcello
+5-39:Robbers, marshals, and guards: game theoretic and logical characterizations of hypertree width
+5-40:Journal of Computer and System Sciences, 66(4):775 808, 2003
+5-41:G
+5-42:Gottlob, N
+5-43:Leone, and S
+5-44:Scarcello
+5-45:Hypertree decompositions and tractable queries
+5-46:Journal of Computer and System Sciences, 63(3):579 627, 2002
+5-47:H
+5-48:H
+5-49:Hoos and C
+5-50:Boutilier
+5-51:Solving combinatorial auctions using stochastic local search
+5-52:In Proc
+5-53:of AAAI"00, pages 22 29, 2000
+5-54:D
+5-55:Johnson
+5-56:A Catalog of Complexity Classes
+5-57:In P
+5-58:Cramton, Y
+5-59:Shoham, and R
+5-60:Steinberg, editors, Handbook of Theoretical Computer Science, Volume A: Algorithms and Complexity, pages 67 161
+5-61:1990
+5-62:N
+5-63:Korte and R
+5-64:H
+5-65:Mohring
+5-66:An incremental linear time algorithm for recognizing interval graphs
+5-67:SIAM Journal on Computing, 18(1):68 81, 1989
+5-68:D
+5-69:Lehmann, R
+5-70:M¨uller, and T
+5-71:Sandholm
+5-72:The Winner Determination Problem
+5-73:In P
+5-74:Cramton, Y
+5-75:Shoham, and R
+5-76:Steinberg, editors, Combinatorial Auctions
+5-77:MIT Press, 2006
+5-78:D
+5-79:Lehmann, L
+5-80:I
+5-81:O"Callaghan, and Y
+5-82:Shoham
+5-83:Truth revelation in approximately efficient 160 combinatorial auctions
+5-84:J
+5-85:ACM, 49(5):577 602, 2002
+5-86:R
+5-87:McAfee and J
+5-88:McMillan
+5-89:Analyzing the airwaves auction
+5-90:Journal of Economic Perspectives, 10(1):159175, 1996
+5-91:J
+5-92:McMillan
+5-93:Selling spectrum rights
+5-94:Journal of Economic Perspectives, 8(3):145 62, 1994
+5-95:N
+5-96:Nisan
+5-97:Bidding and allocation in combinatorial auctions
+5-98:In Proc
+5-99:of EC"00, pages 1 12, 2000
+5-100:N
+5-101:Robertson and P
+5-102:Seymour
+5-103:Graph minors ii
+5-104:algorithmic aspects of tree width
+5-105:Journal of Algorithms, 7:309 322, 1986
+5-106:M
+5-107:H
+5-108:Rothkopf, A
+5-109:Pekec, and R
+5-110:M
+5-111:Harstad
+5-112:Computationally manageable combinatorial auctions
+5-113:Management Science, 44:1131 1147, 1998
+5-114:T
+5-115:Sandholm
+5-116:An implementation of the contract net protocol based on marginal cost calculations
+5-117:In Proc
+5-118:of AAAI"93, pages 256 262, 1993
+5-119:T
+5-120:Sandholm
+5-121:Algorithm for optimal winner determination in combinatorial auctions
+5-122:Artificial Intelligence, 135(1 2):1 54, 2002
+5-123:T
+5-124:Sandholm
+5-125:Winner determination algorithms
+5-126:In P
+5-127:Cramton, Y
+5-128:Shoham, and R
+5-129:Steinberg, editors, Combinatorial Auctions
+5-130:MIT Press, 2006
+5-131:T
+5-132:Sandholm and S
+5-133:Suri
+5-134:Bob: Improved winner determination in combinatorial auctions and generalizations
+5-135:Artificial Intelligence, 7:33 58, 2003
+5-136:M
+5-137:Tennenholtz
+5-138:Some tractable combinatorial auctions
+5-139:In Proc
+5-140:of AAAI"00, pages 98 103, 2000
+5-141:E
+5-142:Zurel and N
+5-143:Nisan
+5-144:An efficient approximate allocation algorithm for combinatorial auctions
+5-145:In Proc
+5-146:of EC"01, pages 125 136, 2001
+5-147:161
+picture:

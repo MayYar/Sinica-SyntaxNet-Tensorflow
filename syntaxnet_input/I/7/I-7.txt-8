@@ -1,0 +1,257 @@
+In the introduction, we argued informally how players could improve their position by conditionally committing .
+How well they can do, could be analyzed by means of an extensive game with the actions of each player being defined as the possible commitments he can make .
+Here, we introduce for each commitment type a corresponding notion of extortion, which is defined relative to a strategic game and an ordering of the players .
+Extortions are meant to capture the concept of a profile that contains, for each player, an optimal commitment given the commitments of the players that committed earlier .
+A complicating factor is that in finding a player"s optimal commitment, one should not only take into account how such a commitment affects other players" actions, but also how it enables them to make their commitments .
+Definition 4.1 .
+(Extortions) Let G be a strategic game, £k an ordering of its players, and £n a commitment type .
+Let £n(G, £k) be given by X£k1 , .
+.
+.
+, X£kn , £p .
+A £n extortion of order 0 is any commitment profile x ? X£k1 ¡Ñ ¡P ¡P ¡P ¡Ñ X£kn .
+For m > 0, a commitment profile x ? X£k1 ¡Ñ ¡P ¡P ¡P ¡Ñ X£kn is a £n extortion of order m in G given £k if x is an £n extortion of order m ? 1 with £p y£k1 , .
+.
+.
+, y£km , x£km+1 , .
+.
+.
+, x£kn £km £p x£k1 , .
+.
+.
+, x£km , x£km+1 , .
+.
+.
+, x£kn for all commitment profiles g in X with (y£k1 , .
+.
+.
+, y£km , x£km+1 , .
+.
+.
+, x£kn ) a £n extortion of order m ? 1 .
+A £n extortion is a commitment profile that is a £n extortion of order m for all m with 0 m n .
+Furthermore, we say that a (mixed) strategy profile £m is £n extortionable if there is some £n extortion x with £p(x) = s .
+Thus, an extortion of order 1 is a commitment profile in which player £k1, makes a commitment that maximizes his payoff, given fixed commitments of the other players .
+An extortion of order m is an extortion of order m ? 1 that maximizes player m"s payoff, given fixed commitments of the players £km+1 through £kn .
+For the type of conditional commitments we have that any conditional commitment profile f is an extortion of order 0 and an extortion of an order m greater than 0 is any extortion of order m ? 1 for which
+.
+.
+, g£km , f£km+1 , .
+.
+.
+, f£kn £km f£k1 , .
+.
+.
+, f£km , f£km+1 , .
+.
+.
+, f£kn , for each conditional commitment profile g such that g£k1 , .
+.
+.
+, g£km , f£km+1 , .
+.
+.
+, f£kn an extortion of order m ? 1 .
+To illustrate the concept of an extortion for conditional commitments consider the three player game in Figure 5 and assume ? ????? (1, 4, 0) (1, 4, 0) (3, 3, 2) (0, 0, 2) ? ????? ? ????? (4, 1, 1) (4, 0, 0) (3, 3, 2) (0, 0, 2) ? ????? Figure 5
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 111 ? ???????? 1 4 0 ? ???????? ? ???????? 3 3 2 ? ???????? ? ???????? 4 1 1 ? ???????? ? ???????? 3 3 2 ? ???????? Row Col Mat ? ???????? 1 4 0 ? ???????? ? ???????? 4 0 0 ? ???????? ? ???????? 0 0 2 ? ???????? ? ???????? 0 0 2 ? ???????? ? ???????? 1 4 0 ? ???????? ? ???????? 3 3 2 ? ???????? ? ???????? 4 1 1 ? ???????? ? ???????? 3 3 2 ? ???????? Row Col Mat ? ???????? 1 4 0 ? ???????? ? ???????? 4 0 0 ? ???????? ? ???????? 0 0 2 ? ???????? ? ???????? 0 0 2 ? ???????? Figure 6
+(Row, Col, Mat) to be the order in which the players commit .
+Figure 6 depicts the possible conditional commitments of the players in extensive forms, with the left branch corresponding to Row"s strategy of playing the top row .
+Let f and g be the conditional commitment strategies indicated by the thick lines in the left and right figures respectively .
+Both f and g are extortions of order 1 .
+In both f and g Row guarantees himself the higher payoff given the conditional commitments of Mat and Col .
+Only g, however, is also an extortion of order 2 .
+To appreciate that f is not, consider the conditional commitment profile h in which Row chooses top and Col chooses right no matter how Row decides, i.e., h is such that hRow = t and hCol(t) = hCol(b) = r .
+Then, (hRow, hCol, fMat) is also an extortion of order 1, but yields Col a higher payoff than f does .
+We leave it to the reader to check that, by contrast, g is an extortion of order 3, and therewith an extortion per se .
+4.1 Promises and Threats One way of understanding conditional extortions is by conceiving of them as combinations of precisely one promise and a number of threats .
+From the strategy profiles that can still be realized given the conditional commitments of players that have committed before him, a player tries to enforce the strategy profile that yields him as much payoff as possible .
+Hence, he chooses his commitment so as to render deviations from the path that leads to this strategy profile as unattractive as possible (¡¥threats") and the desired strategy profile as appealing as possible (¡¥promises") for the relevant players .
+If (s£k1 , .
+.
+.
+, s£kn ) is such a desirable strategy profile for player £ki and f£ki his conditional commitment, the value of f£ki (s£k1 , .
+.
+.
+, s£ki?1 ) could be taken as his promise, whereas the values of f£ki for all other (t£k1 , .
+.
+.
+, t£ki?1 ) could be seen as constituting his threats .
+The higher the payoff is to the other players in a strategy profile a player aims for, the easier it is for him to formulate an effective threat .
+However, making appropriate threats in this respect does not merely come down to minimizing the payoffs to players to commit later wherever possible .
+A player should also take into account the commitments, promises and threats the following players can make on the basis of his and his predecessors" commitments .
+This is what makes extortionate reasoning sometimes so complicated, especially in situations with more than two players .
+For example, in the game of Figure 5, there is no conditional extortion that ensures Mat a payoff of two .
+To appreciate this, consider the possible commitments Mat can make in case Row plays top and Col plays left (tl) and in case Row plays top and Col plays right (tr) .
+If Mat commits to the right matrix in both cases, he virtually promises Row a payoff of four, leaving himself with a payoff of at most one .
+Otherwise, he puts Col in a position to deter Row from choosing bottom by threatening to choose the right column if the latter does so .
+Again, Mat cannot expect a payoff higher than one .
+In short, no matter how Mat conditionally commits, he will either enable Col to threaten Row into playing top or fail to lure Row into playing the bottom row .
+4.2 Benign Backward Induction The solutions extortions provide can also be obtained by modeling the situation as an extensive form game and applying a backward inductive type of argument .
+The actions of the players in any such extensive form game are then given by their conditional commitments, which they then choose sequentially .
+For higher types of commitment, such as conditional commitments, such ¡¥metagames", however, grow exponentially in the number of strategies available to the players and are generally much larger than the original game .
+The correspondence between the backward induction solutions in the meta game and the extortions of the original strategic game rather signifies that the concept of an extortion is defined properly .
+First we define the concept of benign backward induction in general relative to a game in strategic form together with an ordering of the players .
+Intuitively it reflects the idea that each player chooses for each possible combination of actions of his predecessors the action that yields the highest payoff, given that his successors do similarly .
+The concept is called benign backward induction, because it implies that a player, when indifferent between a number of actions, chooses the one that benefits his predecessors most .
+For an ordering £k of the players, we have £kR denote its reversal (£kn, .
+.
+.
+, £k1) .
+Definition 4.2 .
+(Benign backward induction) Let G be a strategic game and £k an ordering of its players .
+A benign backward induction of order 0 is any conditional commitment profile f subject to £k .
+For m > 0, a conditional commitment strategy profile f is a benign backward induction (solution) of order m if f is a benign backward induction of order m ? 1 and (g£kR n , .
+.
+.
+, g£kR m+1 , g£kR m , .
+.
+.
+, g£kR 1 ) £kR m (g£kR n , .
+.
+.
+, g£kR m+1 , f£kR m , .
+.
+.
+, f£kR 1 ) for any backward induction (g£kR n ,..., g£kR m+1 , g£kR m ,..., g£kR 1 ) of order m?1 .
+A conditional commitment profile f is a benign backward induction if it is a benign backward induction of order k for each k with 0 k n .
+For games with a finite action set for each player, the following result follows straightforwardly from Kuhn"s Theorem (cf .
+[6, commitments of a finite type .
+Fact 4.3 .
+For each finite game and each ordering of the players, benign backward inductions exist .
+For each game, each ordering of its players and each commitment type, we can define another game G? with the the actions of each player i given by his £n commitments Xi in G .
+The utility 112 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) of a strategy profile (x£k1 , .
+.
+.
+, x£kn ) for a player i in G? can then be equated to his utility of the strategy profile £p(x£kn , .
+.
+.
+, x£k1 ) in G .
+We now find that the extortions of G can be retrieved as the paths of the benign backward induction solutions of the game G? for the ordering £kR of the players, provided that the commitment type is finite .
+Theorem 4.4 .
+Let G = (N, (Ai)i?N, (ui)i?N) be a game and £k an ordering of its players with which the finite commitment type £n associates the tuple X£k1 , .
+.
+.
+, X£kn , £p .
+Let further G? = N, (X£ki )i?N, (u? £ki )i?N , where u? £ki (x£kn , .
+.
+.
+, x£k1 ) = u£ki (£p(x£k1 , .
+.
+.
+, x£kn )), for each £n commitment profile (x£k1 , .
+.
+.
+, x£kn ) .
+Then, a £kcommitment profile (x£k1 , .
+.
+.
+, x£kn ) is a £n extortion in G given £k if and only if there is some benign backward induction f in G? given £kR with f = (x£kn , .
+.
+.
+, x£k1 ) .
+Proof .
+Assume that f is a benign backward induction in G? relative to £kR .
+Then, f = (x£kn , .
+.
+.
+, x£k1 ), for some commitment profile (x£k1 , .
+.
+.
+, x£kn ) of G relative to £k .
+We show by induction that (x£k1 , .
+.
+.
+, x£kn ) is an extortion of order m, for all m with 0 m n .
+For m = 0, the proof is trivial .
+For the induction step, consider an arbitrary commitment profile (y£k1 , .
+.
+.
+, y£kn ) such that (y£k1 , .
+.
+.
+, y£km , x£km+1 , .
+.
+.
+, x£kn ) is an extortion of order m ? 1 .
+In virtue of the induction hypothesis, there is a benign backward induction g of order m ? 1 in G? with g = (x£kn , .
+.
+.
+, x£km+1 , y£km , .
+.
+.
+, y£k1 Conditional and unconditional commitments are only two possible commitment types .
+The definition also provides for types of commitment that allow for committing on commitments, thus achieving a finer adjustment of promises and threats .
+Similarly, it subsumes commitments on and to mixed strategies .
+In this section we comment on some of these possibilities .
+5.1 Inductive Commitments Apart from making commitments conditional on the actions of the players to commit later, one could also commit on the commitments of the following players .
+Informally, such commitments would have the form of if you only dare to commit in such and such a way, then I do such and such, otherwise I promise to act so and so .
+For a strategic game G and an ordering £k of the players, we define the inductive commitments of the players inductively .
+The inductive commitments available to £k1 coincide with the actions that are available to him .
+An inductive commitment for player £ki+1 is a function mapping each profile of inductive commitments of players £k1 through £ki to one of his basic actions .
+Formally we define the type of inductive commitments F£k1 , .
+.
+.
+, F£kn , such that for each player £ki in a game G and given £k
+A£k1 , F£ki+1 =df .
+A F£k1 ¡Ñ¡P¡P¡P¡ÑF£ki £ki+1 .
+Let f£ki = f£ki f£k1 , .
+.
+.
+, f£ki?1 , for each player £ki and have f denote the pure strategy profile f£k1 , .
+.
+.
+, f£kn .
+Inductive commitments have a greater extortionate power than conditional commitments .
+To appreciate this, consider once more the game in Figure 5 .
+We found that the strategy profile in which Row chooses bottom and Col and Mat both choose left is not extortionable through conditional commitments .
+By means of inductive commitments, however, this is possible .
+Let f be the inductive commitment profile such that fRow is Row choosing the bottom row (b), fCol is the column player choosing the left column (l) no matter how Row decides, and fMat is defined such that
+Instead of showing formally that f is an inductive extortion of the strategy profile (b, l, l), we point out informally how this can be done .
+We argued that in order to exact a payoff of two by means of a conditional extortion, Mat would have to lure Row into choosing the bottom row without at the same time putting Col in a position to successfully threaten Row not to choose top .
+This, we found, is an impossibility if the players can only make conditional commitments .
+By contrast, if Mat can commit to commitments, he can undermine Col"s efforts to threaten Row by playing the right matrix, if Col were to do so .
+Yet, Mat can still force Row to choose the bottom row, in case Col desists form making this threat .
+As can readily be observed, in any game, the inductive commitments of the first two players to commit coincide with their conditional commitments .
+Hence, as an immediate consequence of Theorem 4.6, it can never harm to be the first to commit to an inductive commitment in the two player case .
+Similarly, we find that the game depicted in Figure 7 also serves as an example showing that, in case there are more than two players, it is not always better to commit to an inductive commitment early .
+In this example the strategic position of Mat is so weak if he is to commit first, that even the possibility to commit inductively does not strengthen it, whereas, in a similar fashion as with conditional commitments, Row can enforce a payoff of two to both himself and Mat if he is the first to commit .
+5.2 Mixed Commitments Types So far we have merely considered commitments to and on pure strategies .
+A natural extension would be also to consider commitments to and on mixed strategies .
+We distinguish between conditional, unconditional as well as inductive mixed commitments .
+We find that they are generally quite incomparable with their pure counterparts
+A complicating factor with mixed commitment types is that they 114 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) can result in a mixed strategy profile being played .
+This makes that the distinction between promises and threats, as delineated in Section 4.1, gets blurred for mixed commitment types .
+The type of mixed unconditional commitments associates with each game G and ordering £k of its players the tuple £U£k1 , .
+.
+.
+, £U£kn , id .
+The two player case has been extensively studied (e.g., [2, 16]) .
+As a matter of fact, von Neumann"s famous minimax theorem shows that for two player zero sum games, it does not matter which player commits first .
+If the second player to commit plays a mixed strategy that ensures his security level, the first player to commit can do no better than to do so as well [14] .
+In the game of Figure 5 we found that, with conditional commitments, Mat is unable to enforce an outcome that awards him a payoff of two .
+Recall that the reason of this failure is that any effort to deter Row from choosing the top row is flawed, as it would put Col in an excellent position to threaten Row not to choose the bottom row .
+If Mat has inductive commitments at his disposal, however, this is a possibility .
+We now find that in case the players can dispose of unconditional mixed strategies, Mat is in a much similar position .
+He could randomize uniformly between the left and right matrix .
+Then, Row"s expected utility is 21 2 if he plays the top row, no matter how Col randomizes .
+The expected payoff of Col does not exceed 21 2 , either, in case Row chooses top .
+By purely committing to the left column, Col player entices Row to play bottom, as his expected utility then amounts to 3 .
+This ensures an expected utility of three for Col as well .
+However, a player is not always better off with unconditional mixed commitments than with pure conditional commitments .
+For an example, consider the game in Figure 2 .
+Using pure conditional commitments, he can ensure a payoff of three, whereas with unconditional mixed commitments 21 2 would be the most he could achieve .
+Neither is it in general advantageous to commit first to a mixed strategy in a three player game .
+To appreciate this, consider once more the game in Figure 7 .
+Again committing to a mixed strategy will not achieve much for Mat if he is to move first, and as before the other players have no reason to commit to anything other than a pure strategy .
+This holds for all players if Row commits first, Col second and Mat last, be it that in this case Mat obtains the best payoff he can get .
+Analogous to conditional and inductive commitments one can also define the types of mixed conditional and mixed inductive commitments .
+With the former, a player can condition his mixed strategies on the mixed strategies of the players to commit after him .
+These tend to be very large objects and, knowing little about them yet, we shelve their formal analysis for future research .
+Conceptually, it might not be immediately clear how such mixed conditional commitments can be made with credibility .
+For one, when one"s commitments are conditional on a particular mixed strategy being played, how can it be recognized that it was in fact this mixed strategy that was played rather than another one? If this proves to be impossible, how can one know how his conditional commitments is to be effectuated? A possible answer would be, that all depends on the circumstances in which the commitments were made .
+E.g., if the different agents can submit their mixed conditional commitments to an independent party, the latter can execute the randomizations and determine the unique mixed strategy profile that their commitments induce. .

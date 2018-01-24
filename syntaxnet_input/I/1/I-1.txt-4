@@ -1,0 +1,69 @@
+As we have alluded to, failure and aborting are related concepts .
+They both cause the execution of existing plans to cease and, consequentially, the agent to reflect over its current tasks and intentions .
+Failure and aborting, however, differ in the way they arise .
+In the case of failure, the trigger to cease execution of a task or plan comes from below, that is, the failure of sub tasks or lower level plans .
+In the case of aborting, the trigger comes from above, that is, the tasks and the parent plans that initiated a plan .
+In BDI style systems such as JACK and SPARK, an agent"s domain knowledge includes a pre defined plan library of plan clauses .
+Each plan clause has a plan body, which is a program (i.e., combination of primitive actions, sub tasks, etc.) that can be executed in response to a task or other event should the plan clause"s context condition be satisfied .
+The agent selects and executes instances of plan clauses to perform its tasks .
+There can be more than one applicable plan clause and, in the event that one fails, another applicable one may be attempted .
+Plans may have sub tasks that must succeed 2 CALO needs only drop the TWA and TWP tasks to abort them
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 9 for the plan to succeed .
+In such systems, a plan failure occurs if one of the actions or sub tasks within the plan fails .
+The agent"s action upon plan failure depends on its nature
+Observe that, while task failure can follow from plan failure or a sequence of plan failures, plan failure need not lead to task failure provided the agent can successfully complete an alternate plan .
+Moreover, task failure can also arise separately from plan failure, if the agent decides to abort the task .
+Our approach associates an abort method with each plan .
+This enables the programmer to specify dedicated compensation actions according to how the agent is attempting to perform the task .
+Note that our abort methods can be arbitrary programs and so can invoke tasks that may be performed dynamically in the usual BDI fashion, i.e., the clean up is not limited to executing a predetermined set of actions .
+The question remains which abort method should be invoked, and in what manner .
+Given the complexity of agent action spaces, it is not possible nor desirable to enumerate a static set of rules .
+Rather, the agent will invoke its abort methods dynamically according to the state of execution and its own internal events .
+An alternative to attaching an abort method to each plan is to attach such methods to each atomic action .
+We choose the former because
+In order to understand how the agent"s abort processing should function, we consider three situations where it is sensible for an agent to consider aborting some of its tasks and plans
+For example, suppose company policy changes so that employees of Alice"s seniority automatically have clearance for publishing papers .
+Since Alice now has clearance for publishing her paper, CALO can abort the plan for Apply For Clearance .
+In doing so it must invoke the abort method, in this case thus performing Cancel Clearance Request.3 one fails then the others should be aborted, given that the failure of one branch leads to the failure of the overall task .
+For example, suppose that part way through writing the paper, Alice realizes that there is a fatal flaw in her results, and so notifies CALO that she will not be able to complete the paper by the deadline .
+The failure of the Track Writing Paper task should cause the Apply For Clearance task being executed in parallel to be aborted .
+task or intention, the agent should deliberate over whether the existing plan(s) should continue .
+For example, suppose that Alice tasks CALO with a new, high priority task to purchase a replacement laptop, but that Alice lacks enough funds to both purchase the laptop and to attend IJCAI .
+Reasoning over resource requirements [20, 10] will cause the agent to realize 3 If there is any difference between how to abort a task that is externally performed versus how to abort one that is now known to be impossible, the abort method can detect the circumstances and handle the situation as appropriate .
+that it cannot successfully complete both tasks .
+Given that the new task has greater importance, a rational agent will evaluate its best course of action and may decide to abortor at least suspend the existing task of submitting a paper and intentions derived from it [12] .
+The operational semantics we provide in Section 4 for aborting tasks and plans captures the first two situations above .
+The third situation involves deliberating over the importance of a task, which depends on various factors such as task priority .
+Although this deliberation is beyond the scope of this paper, it is a complementary topic of our future work .
+Note that the above situations apply to achievement goals, for which the task is completed when a particular state of the world is brought about (e.g., ensure we have clearance) .
+Different forms of reasoning apply to other goal types [4] such as maintenance goals [1], where the goal is satisfied by maintaining a state of the world for some period of time (e.g., maintain $100 in cash) .
+Abort Method Representation The intent of aborting a task or plan is that the task or plan and all its children cease to execute, and that appropriate clean up methods are performed as required .
+In contrast to offline planning systems, BDI agents are situated
+As a result, the effects of many actions cannot be simply undone .
+Moreover, the undo process may cause adverse effects .
+Therefore, the clean up methods that we specify are forward recovery procedures that attempt to ensure a stable state and that also may, if possible, recover resources .
+The common plan representation in BDI style systems such as JACK and SPARK includes a failure method, which is the designated clean up method invoked when the plan fails .
+To this, we add the abort method, which is invoked if the plan is to be aborted .
+In our example, the abort method for the plan for Support Meeting Submission consists of invoking the sub task Cancel Paper Number .
+The abort method need not explicitly abort Apply For Clearance, because the agent will invoke the abort method for the subtask appropriately, as we outline below .
+The assumption here is that, like the failure method, the programmer of the agent system has the opportunity to specify a sensible abort method that takes into consideration the point in the plan at which the abort is to be executed .
+For any plan, the abort method is optional
+However, the agent"s default behavioural rules still apply, for example, whether to retry an alternate plan for the parent task .
+Note that an explicit representation of the clean up methods for tasks is not required, since tasks are performed by executing some plan or plans .
+Hence, aborting a task means aborting the current plan that is executed to perform that task, as we next describe .
+Abort Method Invocation We now informally lay out the agent"s action upon aborting plans and tasks .
+When a plan P is aborted
+method of plan P .
+here that if the parent task TP is not to be aborted then the agent may choose another applicable plan to satisfy TP .
+10 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) When a task (or sub task) T is aborted
+is aborted, no other applicable plans to perform T should be tried as it is the task that is to be aborted .
+In order to prevent infinitely cascading clean up efforts, we assume that abort methods will never be aborted nor fail .
+In reality, however, an abort method may fail .
+In this case, lacking a more sophisticated handling mechanism, the agent simply stops executing the failed abort method with no further deliberation .
+The assumption we make is thus not a reflection of the full complexity of reality, but one that is pragmatic in terms of the agent execution cycle; the approach to failure handling of [21] makes the same assumption .
+In systems such as SPARK, the programmer can specify an alternative behaviour for a failed failure or abort method by means of meta level procedures .
+We also assume that failure and abort methods terminate in finite time. .

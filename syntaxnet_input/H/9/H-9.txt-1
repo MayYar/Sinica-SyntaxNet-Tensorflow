@@ -1,0 +1,55 @@
+Effective organization of search results is critical for improving the utility of any search engine .
+Clustering search results is an effective way to organize search results, which allows a user to navigate into relevant documents quickly .
+However, two deficiencies of this approach make it not always work well
+In this paper, we propose to address these two deficiencies by (1) learning interesting aspects of a topic from Web search logs and organizing search results accordingly; and (2) generating more meaningful cluster labels using past query words entered by users .
+We evaluate our proposed method on a commercial search engine log data .
+Compared with the traditional methods of clustering search results, our method can give better result organization and more meaningful labels .
+Categories and Subject Descriptors
+While the primary factor is the soundness of the underlying retrieval model and ranking function, how to organize and present search results is also a very important factor that can affect the utility of a search engine significantly .
+Compared with the vast amount of literature on retrieval models, however, there is relatively little research on how to improve the effectiveness of search result organization .
+The most common strategy of presenting search results is a simple ranked list .
+Intuitively, such a presentation strategy is reasonable for non ambiguous, homogeneous search results; in general, it would work well when the search results are good and a user can easily find many relevant documents in the top ranked results .
+However, when the search results are diverse (e.g., due to ambiguity or multiple aspects of a topic) as is often the case in Web search, the ranked list presentation would not be effective; in such a case, it would be better to group the search results into clusters so that a user can easily navigate into a particular interesting group .
+For example, the results in the first page returned from Google for the ambiguous query jaguar (as of Dec .
+2nd, 2006) contain at least four different senses of jaguar (i.e., car, animal, software, and a sports team); even for a more refined query such as jaguar team picture, the results are still quite ambiguous, including at least four different jaguar teams a wrestling team, a jaguar car team, Southwestern College Jaguar softball team, and Jacksonville Jaguar football team .
+Moreover, if a user wants to find a place to download a jaguar software, a query such as download jaguar is also not very effective as the dominating results are about downloading jaguar brochure, jaguar wallpaper, and jaguar DVD .
+In these examples, a clustering view of the search results would be much more useful to a user than a simple ranked list .
+Clustering is also useful when the search results are poor, in which case, a user would otherwise have to go through a long list sequentially to reach the very first relevant document .
+As a primary alternative strategy for presenting search results, clustering search results has been studied relatively extensively [9, 15, 26, 27, 28] .
+The general idea in virtually all the existing work is to perform clustering on a set of topranked search results to partition the results into natural clusters, which often correspond to different subtopics of the general query topic .
+A label will be generated to indicate what each cluster is about .
+A user can then view the labels to decide which cluster to look into .
+Such a strategy has been shown to be more useful than the simple ranked list presentation in several studies [8, 9, 26] .
+However, this clustering strategy has two deficiencies which make it not always work well
+For example, users are often interested in finding either phone codes or zip codes when entering the query area codes .
+But the clusters discovered by the current methods may partition the results into local codes and international codes .
+Such clusters would not be very useful for users; even the best cluster would still have a low precision .
+Second, the cluster labels generated are not informative enough to allow a user to identify the right cluster .
+There are two reasons for this problem
+(2) Even if a cluster really corresponds to an interesting aspect of the topic, the label may not be informative because it is usually generated based on the contents in a cluster, and it is possible that the user is not very familiar with some of the terms .
+For example, the ambiguous query jaguar may mean an animal or a car .
+A cluster may be labeled as panthera onca .
+Although this is an accurate label for a cluster with the animal sense of jaguar, if a user is not familiar with the phrase, the label would not be helpful .
+In this paper, we propose a different strategy for partitioning search results, which addresses these two deficiencies through imposing a user oriented partitioning of the search results .
+That is, we try to figure out what aspects of a search topic are likely interesting to a user and organize the results accordingly .
+Specifically, we propose to do the following
+For example, if the current query has occurred many times in the search logs, we can look at what kinds of pages viewed by the users in the results and what kind of words are used together with such a query .
+In case when the query is ambiguous such as jaguar we can expect to see some clear clusters corresponding different senses of jaguar .
+More importantly, even if a word is not ambiguous (e.g., car), we may still discover interesting aspects such as car rental and car pricing (which happened to be the two primary aspects discovered in our search log data) .
+Such aspects can be very useful for organizing future search results about car .
+Note that in the case of car, clusters generated using regular clustering may not necessarily reflect such interesting aspects about car from a user"s perspective, even though the generated clusters are coherent and meaningful in other ways .
+Second, we will generate more meaningful cluster labels using past query words entered by users .
+Assuming that the past search logs can help us learn what specific aspects are interesting to users given the current query topic, we could also expect that those query words entered by users in the past that are associated with the current query can provide meaningful descriptions of the distinct aspects .
+Thus they can be better labels than those extracted from the ordinary contents of search results .
+To implement the ideas presented above, we rely on search engine logs and build a history collection containing the past queries and the associated clickthroughs .
+Given a new query, we find its related past queries from the history collection and learn aspects through applying the star clustering algorithm [2] to these past queries and clickthroughs .
+We can then organize the search results into these aspects using categorization techniques and label each aspect by the most representative past query in the query cluster .
+We evaluate our method for result organization using logs of a commercial search engine .
+We compare our method with the default search engine ranking and the traditional clustering of search results .
+The results show that our method is effective for improving search utility and the labels generated using past query words are more readable than those generated using traditional clustering approaches .
+The rest of the paper is organized as follows .
+We first review the related work in Section 2 .
+In Section 3, we describe search engine log data and our procedure of building a history collection .
+In Section 4, we present our approach in details .
+We describe the data set in Section 5 and the experimental results are discussed in Section 6 .
+Finally, we conclude our paper and discuss future work in Section 7. .

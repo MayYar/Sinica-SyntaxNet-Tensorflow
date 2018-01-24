@@ -1,0 +1,126 @@
+In this section, we provide a theoretical analysis of the optimal bidding strategy for a global bidder, given that all other bidders are local and simply bid their true valuation .
+After we describe the global bidder"s expected utility in Section 4.1, we show in Section 4.2 that it is always optimal for a global bidder to participate in the maximum number of auctions available .
+In Section 4.3 we discuss how to significantly reduce the complexity of finding the optimal bids for the multi auction problem, and we then apply these methods to find optimal strategies for specific examples .
+Finally, in Section 4.4 we extend our analysis to sequential auctions .
+4.1 The Global Bidder"s Expected Utility In what follows, the number of sellers (auctions) is M ? 2 and the number of local bidders is N ? 1 .
+A bidder"s valuation v ? [0, vmax] is randomly drawn from a cumulative distribution F with probability density f, where f is continuous, strictly positive and has support [0, vmax] .
+F is assumed to be equal and common knowledge for all bidders .
+A global bid B is a set containing a bid bi ? [0, vmax] for each auction 1 ? i ? M (the bids may be different for different auctions) .
+For ease of exposition, we introduce the cumulative distribution function for the first order statistics G(b) = F(b)N ? [0, 1], denoting the probability of winning a specific auction conditional on placing bid b in this auction, and its probability density g(b) = dG(b) db = NF(b)N?1 f(b) .
+Now, the expected utility U for a global bidder with global bid B and valuation v is given by
+In more detail, note that 1 ? G(bi) is the probability of not winning auction i when bidding bi, bi?B(1 ? G(bi)) is the probability of not winning any auction, and thus 1 ? bi?B(1 ? G(bi)) is the probability of winning at least one auction .
+The right part of equation 1 corresponds to the total expected costs or payments .
+To see the latter, note that the expected payment of a single secondprice auction when bidding b equals b 0 yg(y)dy (see [6]) and is independent of the expected payments for other auctions .
+Clearly, equation 1 applies to the model with static local bidders, i.e., where the number of bidders is known and equal for each auction (see Section 3.2) .
+However, we can use the same equation to model dynamic local bidders in the following way
+Proof To prove this, we first show that G(¡P) and F(¡P) can be modified such that the number of bidders per auction is given by a binomial distribution (where a bidder"s decision to participate is given by a Bernoulli trial) as follows
+To see this, note that not participating is equivalent to bidding zero .
+As a result, F (0) = 1 ? p since there is a 1 ? p probability that a bidder bids zero at a specific auction, and F (y) = F (0) + p F(y) since there is a probability p that a bidder bids according to the original distribution F(y) .
+Now, the average number of participating bidders is given by N = p N .
+By replacing p with N N, equation 3 becomes G (y) = (1 ? N N + (N N)F(y))N .
+Note that a Poisson distribution is given by the limit of a binomial distribution .
+By keeping N constant and taking the limit N ¡÷ ¡Û, we then obtain G (y) = eN(F (y)?1) = ?G(y) .
+This concludes our proof .
+The results that follow apply to both the static and dynamic model unless stated otherwise .
+4.2 Participation in Multiple Auctions We now show that, for any valuation 0 < v < vmax, a utilitymaximising global bidder should always place non zero bids in all available auctions .
+To prove this, we show that the expected utility increases when placing an arbitrarily small bid compared to not participating in an auction .
+More formally, Theorem 1 Consider a global bidder with valuation 0 < v < vmax and global bid B, where bi ? v for all bi ? B .
+Suppose B contains no bid for auction j ? {1, 2, .
+.
+.
+, M}, then there exists a bj > 0 such that U(B¡å{bj }, v) > U(B, v) .
+Proof Using equation 1, the marginal expected utility for participating in an additional auction can be written as
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 281 Let bj = , where is an arbitrarily small strictly positive value .
+Clearly, G(bj) and bj 0 G(y)dy are then both strictly positive (since f(y) > 0) .
+Moreover, given that bi ? v < vmax for bi ? B and that v > 0, it follows that v bi?B(1 ? G(bi)) > 0 .
+Now, suppose bj = 1 2 v bi?B(1 ? G(bi)), then U(B ¡å {bj }, v) ? U(B, v) = G(bj ) 1 2 v bi?B(1 ? G(bi)) + bj 0 G(y)dy > 0 and thus U(B ¡å {bj }, v) > U(B, v) .
+This completes our proof .
+4.3 The Optimal Global Bid A general solution to the optimal global bid requires the maximisation of equation 1 in M dimensions, an arduous task, even when applying numerical methods .
+In this section, however, we show how to reduce the entire bid space to two dimensions in most cases (one continuous, and one discrete), thereby significantly simplifying the problem at hand .
+First, however, in order to find the optimal solutions to equation 1, we set the partial derivatives to zero
+In the dynamic model, g(bi) is always greater than zero, and can therefore be ignored (since g(0) = Nf(0)e?N and we assume f(y) > 0) .
+In the static model, g(bi) = 0 only when bi = 0 .
+However, theorem 1 shows that the optimal bid is non zero for 0 < v < vmax .
+Therefore, we can ignore the first part, and the second part yields
+It is straightforward to show that the second partial derivative is negative, confirming that the solution is indeed a maximum when keeping all other bids constant .
+Thus, equation 6 provides a means to derive the optimal bid for auction i, given the bids in all other auctions .
+4.3.1 Reducing the Search Space In what follows, we show that, for non decreasing probability density functions (such as the uniform and logarithmic distributions), the optimal global bid consists of at most two different values for any M ? 2 .
+That is, the search space for finding the optimal bid can then be reduced to two continuous values .
+Let these values be bhigh and blow, where bhigh ? blow .
+More formally
+Proof Using equation 6, we can produce M equations, one for each auction, with M unknowns .
+Now, by combining these equations, we obtain the following relationship
+.
+.
+= bm(1 ? G(bm)) .
+By defining H(b) = b(1 ? G(b)) we can rewrite the equation to
+.
+.
+= H(bm) = v bj ?B (1 ? G(bj )) (7) In order to prove that there exist at most two different bids, it is sufficient to show that b = H?1 (y) has at most two solutions that satisfy 0 ? b ? vmax for any y .
+To see this, suppose H?1 (y) has two solutions but there exists a third bid bj = blow = bhigh .
+From equation 7 it then follows that there exists a y such that H(bj) = H(blow) = H(bhigh) = y .
+Therefore, H?1 (y) must have at least three solutions, which is a contradiction .
+Now, note that, in order to prove that H?1 (y) has at most two solutions, it is necessary and sufficient to show that H(b) has at most one local maximum for 0 ? b ? vmax .
+A sufficient conditions, however, is for H(b) to be strictly concave4 .
+The function H is strictly concave if and only if the following condition holds
+By performing standard calculations, we obtain the following condition for the static model
+Since both f and F are positive, conditions 9 and 10 clearly hold for f (b) ? 0 .
+In other words, conditions 9 and 10 show that H(b) is strictly concave when the probability density function is non decreasing for 0 ? b ? vmax, completing our proof .
+Note from conditions 9 and 10 that the requirement of non decreasing density functions is sufficient, but far from necessary .
+Moreover, condition 8 requiring H(b) to be strictly concave is also stronger than necessary to guarantee only two solutions .
+As a result, in practice we find that the reduction of the search space applies to most cases .
+Given there are at most 2 possible bids, blow and bhigh, we can further reduce the search space by expressing one bid in terms of the other .
+Suppose the buyer places a bid of blow in Mlow auctions and bhigh for the remaining Mhigh = M?Mlow auctions, equation 6 then becomes
+Furthermore, note that, if Mlow = 1 or Mhigh = 1, equation 6 can be used directly to find the desired value .
+Using the above, we are able to reduce the bid search space to a single continuous dimension, given Mlow or Mhigh .
+However, we do not know the number of auctions in which to bid blow and bhigh, and thus we need to search M different combinations to find the optimal global bid .
+Moreover, for each 4 More precisely, H(b) can be either strictly convex or strictly concave .
+However, it is easy to see that H is not convex since H(0) = H(vmax) = 0, and H(b) ? 0 for 0 < b < vmax .
+282 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 0 0.5 1 0 0.2 0.4 0.6 0.8 1 valuation (v) bidfraction(x) 0 0.5 1 0 0.05 0.1 0.15 local M=2 M=4 M=6 valuation (v) expectedutility Figure 1
+In addition, for comparison, the dark solid line in the right figure depicts the expected utility when bidding locally in a randomly selected auction, given there are no global bidders (note that, in case of local bidders only, the expected utility is not affected by M) .
+combination, the optimal blow and bhigh can vary .
+Therefore, in order to find the optimal bid for a bidder with valuation v, it is sufficient to search along one continuous variable blow ? [0, v], and a discrete variable Mlow = M ? Mhigh ? {1, 2, .
+.
+.
+, M} .
+4.3.2 Empirical Evaluation In this section, we present results from an empirical study and characterise the optimal global bid for specific cases .
+Furthermore, we measure the actual utility improvement that can be obtained when using the global strategy .
+The results presented here are based on a uniform distribution of the valuations with vmax = 1, and the static local bidder model, but they generalise to the dynamic model and other distributions (not shown due to space limitations) .
+Figure 1 illustrates the optimal global bids and the corresponding expected utility for various M and N = 5, but again the bid curves for different values of M and N follow a very similar pattern .
+Here, the bid is normalised by the valuation v to give the bid fraction x = b v .
+Note that, when x = 1, a bidder bids its true value .
+As shown in Figure 1, for bidders with a relatively low valuation, the optimal strategy is to submit M equal bids at, or very close to, the true value .
+The optimal bid fraction then gradually decreases for higher valuations .
+Interestingly, in most cases, placing equal bids is no longer the optimal strategy after the valuation reaches a certain point .
+A socalled pitchfork bifurcation is then observed and the optimal bids split into two values
+This transition is smooth for M = 2, but exhibits an abrupt jump for M ? 3 .
+In all experiments, however, we consistently observe that the optimal strategy is always to place a high bid in one auction, and an equal or lower bid in all others .
+In case of a bifurcation and when the valuation approaches vmax, the optimal high bid goes to the true value and the low bids go to zero .
+As illustrated in Figure 1, the utility of a global bidder becomes progressively higher with more auctions .
+In absolute terms, the improvement is especially high for bidders that have an above average valuation, but not too close to vmax .
+The bidders in this range thus benefit most from bidding globally .
+This is because bidders with very low valuations have a very small chance of winning any auction, whereas bidders with a very high valuation have a high probability of winning a single auction and benefit less from participating in more auctions .
+In contrast, if we consider the utility relative to bidding in a single auction, this is much higher for bidders with relatively low valuations (this effect cannot be seen clearly in Figure 1 due to the scale) .
+In particular, we notice that a global bidder with a low valuation can improve its utility by up to M times the expected utility of bidding locally .
+Intuitively, this is because the chance of winning one of the auctions increases by up to a factor M, whereas the increase in the expected cost is negligible .
+For high valuation buyers, however, the benefit is not that obvious because the chances of winning are relatively high even in case of a single auction .
+4.4 Sequential and Concurrent Auctions In this section we extend our analysis of the optimal bidding strategy to sequential auctions .
+Specifically, the auction process consists of R rounds, and in each round any number of auctions are running simultaneously .
+Such a combination of sequential and concurrent auctions is very common in practice, especially online5 .
+It turns out that the analysis for the case of simultaneous auctions is quite general and can be easily extended to include sequential auctions .
+In the following, the number of simultaneous auctions in round r is denoted by Mr, and the set of bids in that round by Br .
+As before, the analysis assumes that all other bidders are local and bid in a single auction .
+Furthermore, we assume that the global bidders have complete knowledge about the number of rounds and the number of auctions in each round .
+The expected utility in round r, denoted by Ur, is similar to before (equation 1 in Section 4.1) except that now additional benefit can be obtained from future auctions if the desired item is not won in one of the current set of simultaneous auctions .
+For convenience, Ur(Br, Mr) is abbreviated to Ur in the following .
+The expected utility thus becomes
+Now, we take the partial derivative of equation 12 in order to find the optimal bid brj for auction j in round r
+In that case, however, it is optimal to wait and bid in the new auctions only after the outcome of the earlier auctions is known, thereby reducing the chance of unwittingly winning multiple items .
+Using this strategy, overlapping auctions effectively become sequential and can thus be analysed using the results in this section .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 283 Note that equation 13 is almost identical to equation 5 in Section 4.3, except that the valuation v is now replaced by v?Ur+1 .
+The optimal bidding strategy can thus be found by backward induction (where UR+1 = 0) using the procedure outlined in Section 4.3. .

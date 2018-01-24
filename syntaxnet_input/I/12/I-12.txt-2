@@ -1,0 +1,32 @@
+For many real world scenarios, autonomous agents need to operate in dynamic, uncertain environments in which they have only incomplete information about the results of their actions and characteristics of other agents or people with whom they need to cooperate or collaborate .
+In such environments, agents can benefit from sharing information they gather, pooling their individual experiences to improve their estimations of unknown parameters required for reasoning about actions under uncertainty .
+This paper addresses the problem of learning the distribution of the values of a probabilistic parameter that represents a characteristic of a person who is interacting with a computer agent .
+The characteristic to be learned is (or is clearly related to) an important factor in the agent"s decision making.1 The basic setting we consider is one in which an agent accumulates observations about a specific user characteristic and uses them to produce a timely estimate of some measure that depends on that characteristic"s distribution .
+The mechanisms we develop are designed to be useful in a range of application domains, such as disaster rescue, that are characterized by environments in which conditions may be rapidly changing, actions (whether of autonomous agents or of people) and the overall operations occur at a fast pace, and decisions must be made within tightly constrained time frames .
+Typically, agents must make decisions in real time, concurrent with task execution, and in the midst of great uncertainty .
+In the remainder of this paper, we use the term fast paced to refer to such environments .
+In fast paced environments, information gathering may be limited, and it is not possible to learn offline or to wait until large amounts of data are collected before making decisions .
+Fast paced environments impose three constraints on any mechanism for learning a distribution function (including the large range of Bayesian update techniques [23])
+Thus, the goal of the estimation methods presented in this paper is to minimize the average error over time, rather than to determine an accurate value at the end of a long period of interaction .
+That is, the agent is expected to work with the user for a limited time, and it attempts to minimize the overall error in its estimations .
+In such environments, an agent"s individually acquired data (its own observations) are too sparse for it to obtain good estimations in the requisite time frame .
+Given the no structure constraint of the environment, approaches that depend on structured distributions may result in a significantly high estimation bias .
+We consider this problem in the context of a multi agent distributed system in which computer agents support people who are carrying out complex tasks in a dynamic environment .
+The fact that agents are part of a multi agent setting, in which other agents may 1 Learning the distribution rather than just determining some value in the distribution is important whenever the overall shape of the distribution and not just such individual features as mean are important .
+also be gathering data to estimate a similar characteristic of their users, offers the possibility for an agent to augment its own observations with those of other agents, thus improving the accuracy of its learning process .
+Furthermore, in the environments we consider, agents are usually accumulating data at a relatively similar rate .
+Nonetheless, the extent to which the observations of other agents will be useful to a given agent depends on the extent to which their users" characteristics" distributions are correlated with that of this agent"s user .
+There is no guarantee that the distribution for two different agents is highly, positively correlated, let alone that they are the same .
+Therefore, to use a data sharing approach, a learning mechanism must be capable of effectively identifying the level of correlation between the data collected by different agents and to weigh shared data depending on the level of correlation .
+The design of a coordination autonomy module within a coordination manager system (as part of the DARPA Coordinators project [18]), in which agents support a distributed scheduling task, provided the initial motivation and a conceptual setting for this work .
+However, the mechanisms themselves are general and can be applied not only to other fast paced domains, but also in other multi agent settings in which agents are collecting data that overlaps to some extent, at approximately similar rates, and in which the environment imposes the no structure, limited and early use constraints defined above (e.g., exploration of remote planets) .
+In particular, our techniques would be useful in any setting in which a group of agents undertakes a task in a new environment, with each agent obtaining observations at a similar rate of individual parameters they need for their decision making .
+In this paper, we present a mechanism that was used for learning key user characteristics in fast paced environments .
+The mechanism provides relatively accurate estimations within short time frames by augmenting an individual agent"s direct observations with observations obtained by other agents with which it is coordinating .
+In particular, we focus on the related problems of estimating the cost of interrupting a person and estimating the probability that that person will have the information required by the system .
+Our adaptive approach, which we will refer to throughout the paper as selective sharing, allows our CA to improve the accuracy of its distribution based estimations in comparison to relying only on the interactions with a specific user (subsequently, self learning) or pooling all data unconditionally (average all), in particular when the number of available observations is relatively small .
+The mechanism was successfully tested using a system that simulates a Coordinators environment .
+The next section of the paper describes the problem of estimating user related parameters in fastpaced domains .
+Section 3 provides an overview of the methods we developed .
+The implementation, empirical setting, and results are given in Sections 4 and 5 .
+A comparison with related methods is given in Section 6 and conclusions in section 7. .

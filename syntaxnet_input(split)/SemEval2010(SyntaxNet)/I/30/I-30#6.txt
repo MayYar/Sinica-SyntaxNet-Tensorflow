@@ -1,0 +1,623 @@
+
+1
+Input: create an agent resource node ai , and an edge from s to this node with capacity equal to the amount of resources of type r agent a has available and with costs 0 .
+Parse:
+create VB ROOT
+ +-- node NN dobj
+ |   +-- an DT det
+ |   +-- agent NN nn
+ |   +-- resource NN nn
+ |   +-- ai NNP appos
+ |   +-- , , punct
+ |   +-- and CC cc
+ |   +-- edge NN conj
+ |       +-- an DT det
+ |       +-- from IN prep
+ |       |   +-- s POS pobj
+ |       +-- to IN prep
+ |       |   +-- node NN pobj
+ |       |       +-- this DT det
+ |       +-- with IN prep
+ |       |   +-- agent NN pobj
+ |       |       +-- capacity NN nn
+ |       |       |   +-- equal JJ amod
+ |       |       |       +-- to IN prep
+ |       |       |           +-- amount NN pobj
+ |       |       |               +-- the DT det
+ |       |       |               +-- of IN prep
+ |       |       |                   +-- resources NNS pobj
+ |       |       |                       +-- of IN prep
+ |       |       |                           +-- type NN pobj
+ |       |       +-- r NN nn
+ |       +-- has VBZ rcmod
+ |           +-- a DT nsubj
+ |           +-- available JJ dep
+ |               +-- and CC cc
+ |               +-- with IN conj
+ |                   +-- costs NNS pobj
+ |                       +-- 0 CD num
+ +-- . . punct
+
+2
+Input: create a task resource node ti , and an edge from this node to s with capacity equal to the amount of resources of type r task t requires and costs ? e -LRB- t -RRB- .
+Parse:
+create VB ROOT
+ +-- ti NNS dobj
+ |   +-- a DT det
+ |   +-- resource NN nn
+ |   |   +-- task NN nn
+ |   +-- node NN nn
+ +-- , , punct
+ +-- and CC cc
+ +-- edge NN conj
+ |   +-- an DT det
+ |   +-- from IN prep
+ |   |   +-- node NN pobj
+ |   |       +-- this DT det
+ |   +-- to IN prep
+ |   |   +-- s CD pobj
+ |   +-- with IN prep
+ |       +-- capacity NN pobj
+ |           +-- equal JJ amod
+ |               +-- to IN prep
+ |                   +-- amount NN pobj
+ |                       +-- the DT det
+ |                       +-- of IN prep
+ |                           +-- resources NNS pobj
+ |                               +-- of IN prep
+ |                                   +-- type NN pobj
+ +-- r VBP prep
+ |   +-- task NN pobj
+ |       +-- requires VBZ rcmod
+ |           +-- t NN nsubj
+ |           +-- and CC cc
+ |           +-- costs NNS conj
+ |               +-- ? . punct
+ |               +-- e UH discourse
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- t NN dep
+ |                   +-- -RRB- -RRB- punct
+ +-- . . punct
+
+3
+Input: connect the agent resource node ai to all task resource nodes ti for neighboring tasks t ? -LRB- t ? T | -LRB- a , loc -LRB- t -RRB- -RRB- ? AE or a = loc -LRB- t -RRB- -RRB- .
+Parse:
+ai VBZ ROOT
+ +-- connect VB csubj
+ |   +-- node NN dobj
+ |       +-- the DT det
+ |       +-- resource NN nn
+ |           +-- agent NN nn
+ +-- to IN prep
+ |   +-- nodes NNS pobj
+ |       +-- all DT det
+ |       +-- task NN nn
+ |       +-- resource NN nn
+ +-- ti NNS dobj
+ |   +-- for IN prep
+ |   |   +-- tasks NNS pobj
+ |   |       +-- neighboring VBG amod
+ |   +-- t NNP dep
+ |       +-- ? . prep
+ |           +-- t VB pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- ? . punct
+ |               +-- T NNP dep
+ |               |   +-- | , punct
+ |               |   +-- loc NN appos
+ |               |   |   +-- -LRB- -LRB- punct
+ |               |   |   +-- a DT det
+ |               |   |   +-- , , punct
+ |               |   |   +-- t NN dep
+ |               |   |   |   +-- -LRB- -LRB- punct
+ |               |   |   |   +-- -RRB- -RRB- punct
+ |               |   |   +-- -RRB- -RRB- punct
+ |               |   +-- ? . punct
+ |               |   +-- AE NNP dep
+ |               |       +-- or CC cc
+ |               |       +-- loc NN conj
+ |               |           +-- a DT det
+ |               |           +-- = SYM nn
+ |               |           +-- -LRB- -LRB- punct
+ |               |           +-- t NN dep
+ |               |           +-- -RRB- -RRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+
+4
+Input: Give this connection unlimited capacity and zero costs .
+Parse:
+Give VB ROOT
+ +-- connection NN iobj
+ |   +-- this DT det
+ +-- capacity NN dobj
+ |   +-- unlimited JJ amod
+ |   +-- and CC cc
+ |   +-- costs NNS conj
+ |       +-- zero CD num
+ +-- . . punct
+
+5
+Input: capacity and zero costs .
+Parse:
+capacity NN ROOT
+ +-- and CC cc
+ +-- costs NNS conj
+ |   +-- zero CD num
+ +-- . . punct
+
+6
+Input: Solve the minimum cost flow network problem for this network .
+Parse:
+Solve VB ROOT
+ +-- problem NN dobj
+ |   +-- the DT det
+ |   +-- minimum JJ amod
+ |   +-- flow NN nn
+ |   |   +-- cost NN nn
+ |   +-- network NN nn
+ |   +-- for IN prep
+ |       +-- network NN pobj
+ |           +-- this DT det
+ +-- . . punct
+
+7
+Input: The costs of the resulting network is an upper bound for the social task allocation problem .
+Parse:
+bound VBN ROOT
+ +-- costs NNS nsubj
+ |   +-- The DT det
+ |   +-- of IN prep
+ |       +-- network NN pobj
+ |           +-- the DT det
+ |           +-- resulting VBG amod
+ +-- is VBZ cop
+ +-- an DT det
+ +-- upper JJ amod
+ +-- for IN prep
+ |   +-- problem NN pobj
+ |       +-- the DT det
+ |       +-- allocation NN nn
+ |           +-- task NN nn
+ |               +-- social JJ amod
+ +-- . . punct
+
+8
+Input: problem is polynomially solvable by transforming it to a flow network problem .
+Parse:
+solvable JJ ROOT
+ +-- problem NN nsubj
+ +-- is VBZ cop
+ +-- polynomially RB advmod
+ +-- by IN prep
+ |   +-- transforming VBG pcomp
+ |       +-- it PRP dobj
+ |       +-- to IN prep
+ |           +-- problem NN pobj
+ |               +-- a DT det
+ |               +-- network NN nn
+ |                   +-- flow NN nn
+ +-- . . punct
+
+9
+Input: Our method for efficiently calculating an upper bound for STAP makes use of this special case by converting any given STAP instance P into a new problem P where each task only has one resource type .
+Parse:
+makes VBZ ROOT
+ +-- method NN nsubj
+ |   +-- Our PRP$ poss
+ |   +-- for IN prep
+ |       +-- calculating VBG pcomp
+ |           +-- efficiently RB advmod
+ |           +-- upper JJ dobj
+ |               +-- an DT det
+ |               +-- bound VBN partmod
+ |                   +-- for IN prep
+ |                       +-- STAP NNP pobj
+ +-- use NN dobj
+ |   +-- of IN prep
+ |       +-- case NN pobj
+ |           +-- this DT det
+ |           +-- special JJ amod
+ +-- by IN prep
+ |   +-- converting VBG pcomp
+ |       +-- P NN dobj
+ |       |   +-- any DT det
+ |       |   +-- given VBN amod
+ |       |   +-- instance NN nn
+ |       |       +-- STAP NN nn
+ |       +-- into IN prep
+ |           +-- problem NN pobj
+ |               +-- a DT det
+ |               +-- new JJ amod
+ |               +-- P NN appos
+ |               +-- has VBZ rcmod
+ |                   +-- where WRB advmod
+ |                   +-- task NN nsubj
+ |                   |   +-- each DT det
+ |                   +-- only RB advmod
+ |                   +-- type NN dobj
+ |                       +-- one CD num
+ |                       +-- resource NN nn
+ +-- . . punct
+
+10
+Input: More specifically , for every task t ? T with utility u -LRB- t -RRB- , we do the following .
+Parse:
+T NN ROOT
+ +-- specifically RB advmod
+ |   +-- More RBR advmod
+ +-- , , punct
+ +-- for IN prep
+ |   +-- t NN pobj
+ |       +-- every DT det
+ |       +-- task NN nn
+ +-- ? . punct
+ +-- do VBP rcmod
+ |   +-- with IN prep
+ |   |   +-- u PRP pobj
+ |   |       +-- utility NN nn
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- t NN dep
+ |   |       +-- -RRB- -RRB- punct
+ |   +-- , , punct
+ |   +-- we PRP nsubj
+ |   +-- following VBG dobj
+ |       +-- the DT det
+ +-- . . punct
+
+11
+Input: Let m be the number of resource types -LRB- r1 , .
+Parse:
+Let VB ROOT
+ +-- number NN ccomp
+ |   +-- m PRP nsubj
+ |   +-- be VB cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- types NNS pobj
+ |           +-- resource NN nn
+ |           +-- -LRB- -LRB- punct
+ |           +-- r1 CD dep
+ |           +-- , , punct
+ +-- . . punct
+
+12
+Input: .
+Parse:
+. . ROOT
+
+13
+Input: .
+Parse:
+. . ROOT
+
+14
+Input: , rm -RRB- required by t .
+Parse:
+rm NN ROOT
+ +-- , , punct
+ +-- -RRB- -RRB- punct
+ +-- required VBN partmod
+ |   +-- by IN prep
+ |       +-- t NN pobj
+ +-- . . punct
+
+15
+Input: We then split t into a set of m tasks T = -LRB- t1 , .
+Parse:
+split VBD ROOT
+ +-- We PRP nsubj
+ +-- then RB advmod
+ +-- t NN dobj
+ +-- into IN prep
+ |   +-- set NN pobj
+ |       +-- a DT det
+ |       +-- of IN prep
+ |           +-- tasks NNS pobj
+ |               +-- m CD num
+ |               +-- = SYM dep
+ |               |   +-- T NNP nn
+ |               +-- t1 CD dep
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- , , punct
+ +-- . . punct
+
+16
+Input: .
+Parse:
+. . ROOT
+
+17
+Input: .
+Parse:
+. . ROOT
+
+18
+Input: , tm -RRB- where each task ti only has one unique resource type -LRB- of -LRB- r1 , .
+Parse:
+has VBZ ROOT
+ +-- , , punct
+ +-- tm NNP nsubj
+ |   +-- -RRB- -RRB- punct
+ |   +-- ti NN rcmod
+ |       +-- where WRB advmod
+ |       +-- task NN nsubj
+ |           +-- each DT det
+ +-- only RB advmod
+ +-- type NN dobj
+ |   +-- one CD num
+ |   +-- unique JJ amod
+ |   +-- resource NN nn
+ |   +-- -LRB- -LRB- punct
+ |   +-- of IN prep
+ |       +-- r1 CD pobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- , , punct
+ +-- . . punct
+
+19
+Input: .
+Parse:
+. . ROOT
+
+20
+Input: .
+Parse:
+. . ROOT
+
+21
+Input: , rm -RRB- -RRB- and each task has a fair share of the utility , i.e. , the efficiency of t from Definition 5 times the amount of this resource type rsc -LRB- ti , ri -RRB- .
+Parse:
+has VBZ ROOT
+ +-- , , punct
+ +-- rm NNP nsubj
+ |   +-- -RRB- -RRB- punct
+ |   +-- and CC cc
+ |   +-- task NN conj
+ |       +-- each DT det
+ +-- share NN dobj
+ |   +-- a DT det
+ |   +-- fair JJ amod
+ |   +-- of IN prep
+ |       +-- utility NN pobj
+ |           +-- the DT det
+ +-- i.e. FW advmod
+ +-- efficiency NN dobj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |   |   +-- t NN pobj
+ |   +-- from IN prep
+ |   |   +-- Definition NNP pobj
+ |   +-- amount NN dep
+ |       +-- times NNS num
+ |       |   +-- 5 CD number
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- type NN pobj
+ |               +-- this DT det
+ |               +-- resource NN nn
+ |               +-- ri NNP dep
+ |                   +-- rsc NNP dep
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- ti NN dep
+ |                   +-- , , punct
+ |                   +-- -RRB- -RRB- punct
+ +-- . . punct
+
+22
+Input: After polynomially performing this conversion for every task in T , the original problem P becomes the special case P .
+Parse:
+case NN ROOT
+ +-- After IN prep
+ |   +-- performing VBG pcomp
+ |       +-- polynomially RB advmod
+ |       +-- conversion NN dobj
+ |       |   +-- this DT det
+ |       +-- for IN prep
+ |       |   +-- task NN pobj
+ |       |       +-- every DT det
+ |       +-- in IN prep
+ |           +-- T NNP pobj
+ +-- , , punct
+ +-- P NN nsubj
+ |   +-- the DT det
+ |   +-- problem NN nn
+ |       +-- original JJ amod
+ +-- becomes VBZ cop
+ +-- the DT det
+ +-- special JJ amod
+ +-- P NN dobj
+ +-- . . punct
+
+23
+Input: Note that the set of valid allocations in P is only a subset of the set of valid allocations in P , because it is now possible to partially allocate a task .
+Parse:
+Note VB ROOT
+ +-- subset NN ccomp
+ |   +-- that IN mark
+ |   +-- set NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- allocations NNS pobj
+ |   |           +-- valid JJ amod
+ |   |           +-- in IN prep
+ |   |               +-- P NN pobj
+ |   +-- is VBZ cop
+ |   +-- only RB advmod
+ |   +-- a DT det
+ |   +-- of IN prep
+ |   |   +-- set NN pobj
+ |   |       +-- the DT det
+ |   |       +-- of IN prep
+ |   |           +-- allocations NNS pobj
+ |   |               +-- valid JJ amod
+ |   |               +-- in IN prep
+ |   |                   +-- P NN pobj
+ |   +-- , , punct
+ |   +-- possible JJ advcl
+ |       +-- because IN mark
+ |       +-- it PRP nsubj
+ |       +-- is VBZ cop
+ |       +-- now RB advmod
+ |       +-- allocate VB xcomp
+ |           +-- to TO aux
+ |           +-- partially RB advmod
+ |           +-- task NN dobj
+ |               +-- a DT det
+ +-- . . punct
+
+24
+Input: From this it is easy to see that the solution of P gives an upper bound of the solution of the original problem P .
+Parse:
+easy JJ ROOT
+ +-- From IN prep
+ |   +-- this DT pobj
+ +-- it PRP nsubj
+ +-- is VBZ cop
+ +-- see VB xcomp
+ |   +-- to TO aux
+ |   +-- gives VBZ ccomp
+ |       +-- that IN mark
+ |       +-- solution NN nsubj
+ |       |   +-- the DT det
+ |       |   +-- of IN prep
+ |       |       +-- P NN pobj
+ |       +-- bound NN dobj
+ |           +-- an DT det
+ |           +-- upper JJ amod
+ |           +-- of IN prep
+ |               +-- solution NN pobj
+ |                   +-- the DT det
+ |                   +-- of IN prep
+ |                       +-- problem NN pobj
+ |                           +-- the DT det
+ |                           +-- original JJ amod
+ |                           +-- P NN appos
+ +-- . . punct
+
+25
+Input: To compute the optimal solution for P , we transform it to a minimum cost flow problem .
+Parse:
+transform VBP ROOT
+ +-- compute VB advcl
+ |   +-- To TO aux
+ |   +-- solution NN dobj
+ |       +-- the DT det
+ |       +-- optimal JJ amod
+ |       +-- for IN prep
+ |           +-- P NN pobj
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- it PRP dobj
+ +-- to IN prep
+ |   +-- problem NN pobj
+ |       +-- a DT det
+ |       +-- minimum JJ amod
+ |       +-- flow NN nn
+ |           +-- cost NN nn
+ +-- . . punct
+
+26
+Input: We model the cost in the flow network by the negation of the new task '' s utility .
+Parse:
+model VBP ROOT
+ +-- We PRP nsubj
+ +-- cost NN dobj
+ |   +-- the DT det
+ +-- in IN prep
+ |   +-- network NN pobj
+ |       +-- the DT det
+ |       +-- flow NN nn
+ +-- by IN prep
+ |   +-- negation NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- utility NN pobj
+ |               +-- task NN poss
+ |                   +-- the DT det
+ |                   +-- new JJ amod
+ |                   +-- '' '' punct
+ |                   +-- s POS possessive
+ +-- . . punct
+
+27
+Input: A polynomial time implementation of a scaling minimum cost flow algorithm -LRB- 9 -RRB- is used for the computation .
+Parse:
+used VBN ROOT
+ +-- implementation NN nsubjpass
+ |   +-- A DT det
+ |   +-- time NN nn
+ |   |   +-- polynomial JJ amod
+ |   +-- of IN prep
+ |   |   +-- algorithm UH pobj
+ |   |       +-- a DT det
+ |   |       +-- scaling VBG amod
+ |   |       +-- flow NN nn
+ |   |           +-- minimum JJ amod
+ |   |           +-- cost NN nn
+ |   +-- -LRB- -LRB- punct
+ |   +-- 9 CD dep
+ |   +-- -RRB- -RRB- punct
+ +-- is VBZ auxpass
+ +-- for IN prep
+ |   +-- computation NN pobj
+ |       +-- the DT det
+ +-- . . punct
+
+28
+Input: The resulting minimum cost flow represents a maximum allocation of the tasks for P .
+Parse:
+represents VBZ ROOT
+ +-- flow NN nsubj
+ |   +-- The DT det
+ |   +-- resulting VBG amod
+ |   +-- minimum JJ amod
+ |   +-- cost NN nn
+ +-- allocation NN dobj
+ |   +-- a DT det
+ |   +-- maximum JJ amod
+ |   +-- of IN prep
+ |       +-- tasks NNS pobj
+ |           +-- the DT det
+ |           +-- for IN prep
+ |               +-- P NN pobj
+ +-- . . punct
+
+29
+Input: The detailed modeling is described in Algorithm 3 .
+Parse:
+described VBN ROOT
+ +-- modeling NN nsubjpass
+ |   +-- The DT det
+ |   +-- detailed JJ amod
+ +-- is VBZ auxpass
+ +-- in IN prep
+ |   +-- Algorithm NNP pobj
+ |       +-- 3 CD num
+ +-- . . punct
+
+30
+Input: In the next section , we use this upper bound to estimate the quality of the GDAP for large scale instances. .
+Parse:
+use VBP ROOT
+ +-- In IN prep
+ |   +-- section NN pobj
+ |       +-- the DT det
+ |       +-- next JJ amod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- bound VBN dobj
+ |   +-- this DT det
+ |   +-- upper JJ amod
+ +-- estimate VB xcomp
+ |   +-- to TO aux
+ |   +-- quality NN dobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |       |   +-- GDAP NNP pobj
+ |       |       +-- the DT det
+ |       +-- for IN prep
+ |           +-- instances. NN pobj
+ |               +-- scale NN nn
+ |                   +-- large JJ amod
+ +-- . . punct

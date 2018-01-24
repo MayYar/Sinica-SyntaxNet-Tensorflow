@@ -1,0 +1,70 @@
+In order to perform realistic tests for our pruning policies, we implemented a search engine prototype .
+For the experiments in this paper, our search engine indexed about 130 million pages, crawled from the Web during March of 2004 .
+The crawl started from the Open Directory"s [10] homepage and proceeded in a breadth first manner .
+Overall, the total uncompressed size of our crawled Web pages is approximately 1.9 TB, yielding a full inverted index IF of approximately 1.2 TB .
+For the experiments reported in this section we used a real set of queries issued to Looksmart [22] on a daily basis during April of 2003 .
+After keeping only the queries containing keywords that were present in our inverted index, we were left with a set of about 462 million queries .
+Within our query set, the average number of terms per query is 2 and 98% of the queries contain at most 5 terms .
+Some experiments require us to use a particular ranking function .
+For these, we use the ranking function similar to the one used in [20] .
+More precisely, our ranking function r(D, q) is r(D, q) = prnorm(D) + trnorm(D, q) (3) where prnorm(D) is the normalized PageRank of D computed from the downloaded pages and trnorm(D, q) is the normalized TF.IDF cosine distance of D to q .
+This function is clearly simpler than the real functions employed by commercial search engines, but we believe for our evaluation this simple function is adequate, because we are not studying the effectiveness of a ranking function, but the effectiveness of pruning policies .
+5.1 Keyword pruning In our first experiment we study the performance of the keyword pruning, described in Section 4.2 .
+More specifically, we apply the algorithm HS of Figure 6 to our full index IF and create a keyword pruned p index IP of size s .
+For the construction of our keyword pruned p index we used the query frequencies observed during the first 10 days of our data set .
+Then, using the remaining 20 day query load, we measured f(s), the fraction of queries handled by IP .
+According to the algorithm of Figure 5, a query can be handled by IP (i.e., C = 1) if IP includes the inverted lists for all of the query"s keywords .
+We have repeated the experiment for varying values of s, picking the keywords greedily as discussed in Section 4.2.The result is shown in Figure 11 .
+The horizontal axis denotes the size s of the p index as a fraction of the size of IF .
+The vertical axis shows the fraction f(s) of the queries that the p index of size s can answer .
+The results of Figure 11, are very encouraging
+For example, approximately 73% of the queries can be answered using 30% of the original index .
+Also, we find that when we use the keyword pruning policy only, the optimal index size is s = 0.17 .
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Fractionofqueriesguaranteed f(s) Fraction of index s Fraction of queries guaranteed for top 20 per fraction of index fraction of queries guaranteed Figure 12
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Fractionofqueriesanswered index size s Fraction of queries answered for top 20 per fraction of index GPR LPR EKS Figure 13
+5.2 Document pruning We continue our experimental evaluation by studying the performance of the various document pruning policies described in Section 4.3 .
+For the experiments on document pruning reported here we worked with a 5.5% sample of the whole query set .
+The reason behind this is merely practical
+For our first experiment, we generate a document pruned p index of size s by using the Extended Keyword Specific pruning in Section 4 .
+Within the p index we measure the fraction of queries that can be guaranteed (according to Theorem 4) to be correct .
+We have performed the experiment for varying index sizes s and the result is shown in Figure 12 .
+Based on this figure, we can see that our document pruning algorithm performs well across the scale of index sizes s
+This implies that our EKS algorithm can successfully identify the necessary postings for calculating the top 20 results for 70% of the queries by using at least 40% of the full index size .
+From the figure, we can see that the optimal index size s = 0.20 when we use EKS as our pruning policy .
+We can compare the two pruning schemes, namely the keyword pruning and EKS, by contrasting Figures 11 and 12 .
+Our observation is that, if we would have to pick one of the two pruning policies, then the two policies seem to be more or less equivalent for the p index sizes s ? 20% .
+For the p index sizes s > 20%, keyword pruning does a much better job as it provides a higher number of guarantees at any given index size .
+Later in Section 5.3, we discuss the combination of the two policies .
+In our next experiment, we are interested in comparing EKS with the PR based pruning policies described in Section 4.3 .
+To this end, apart from EKS, we also generated document pruned pindexes for the Global pr based pruning and the Local prbased pruning policies .
+For each of the polices we created document pruned p indexes of varying sizes s .
+Since GPR and LPR cannot provide a correctness guarantee, we will compare the fraction of queries from each policy that are identical (i.e .
+the same results in the same order) to the top k results calculated from the full index .
+Here, we will report our results for k = 20; the results are similar for other values of k .
+The results are shown in Figure 13 .
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Averagefractionofdocsinanswer index size s Average fraction of docs in answer for top 20 per fraction of index GPR LPR EKS Figure 14
+Fraction of queries guaranteed for top 20 per fraction of index, using keyword and document 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Keyword fraction of index sh 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Document fraction of index sv 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Fraction of queries guaranteed f(s) Figure 15
+The horizontal axis shows the size s of the p index; the vertical axis shows the fraction f(s) of the queries whose top 20 results are identical to the top 20 results of the full index, for a given size s .
+By observing Figure 13, we can see that GPR performs the worst of the three policies .
+On the other hand EKS, picks up early, by answering a great fraction of queries (about 62%) correctly with only 10% of the index size .
+The fraction of queries that LPR can answer remains below that of EKS until about s = 37% .
+For any index size larger than 37%, LPR performs the best .
+In the experiment of Figure 13, we applied the strict definition that the results of the p index have to be in the same order as the ones of the full index .
+However, in a practical scenario, it may be acceptable to have some of the results out of order .
+Therefore, in our next experiment we will measure the fraction of the results coming from an p index that are contained within the results of the full index .
+The result of the experiment is shown on Figure 14 .
+The horizontal axis is, again, the size s of the p index; the vertical axis shows the average fraction of the top 20 results common with the top 20 results from the full index .
+Overall, Figure 14 depicts that EKS and LPR identify the same high (? 96%) fraction of results on average for any size s ? 30%, with GPR not too far behind .
+5.3 Combining keyword and document pruning In Sections 5.1 and 5.2 we studied the individual performance of our keyword and document pruning schemes .
+One interesting question however is how do these policies perform in combination? What fraction of queries can we guarantee if we apply both keyword and document pruning in our full index IF ? To answer this question, we performed the following experiment .
+We started with the full index IF and we applied keyword pruning to create an index Ih P of size sh ¡P 100% of IF .
+After that, we further applied document pruning to Ih P , and created our final pindex IP of size sv ¡P100% of Ih P .
+We then calculated the fraction of guaranteed queries in IP .
+We repeated the experiment for different values of sh and sv .
+The result is shown on Figure 15 .
+The x axis shows the index size sh after applying keyword pruning; the y axis shows the index size sv after applying document pruning; the z axis shows the fraction of guaranteed queries after the two prunings .
+For example the point (0.2, 0.3, 0.4) means that if we apply keyword pruning and keep 20% of IF , and subsequently on the resulting index we apply document pruning keeping 30% (thus creating a pindex of size 20%¡P30% = 6% of IF ) we can guarantee 40% of the queries .
+By observing Figure 15, we can see that for p index sizes smaller than 50%, our combined pruning does relatively well .
+For example, by performing 40% keyword and 40% document pruning (which translates to a pruned index with s = 0.16) we can provide a guarantee for about 60% of the queries .
+In Figure 15, we also observe a plateau for sh > 0.5 and sv > 0.5 .
+For this combined pruning policy, the optimal index size is at s = 0.13, with sh = 0.46 and sv = 0.29. .

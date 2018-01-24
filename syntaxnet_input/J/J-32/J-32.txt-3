@@ -1,0 +1,71 @@
+The algorithm of [9] is based on the following observation
+As long as, at each step of the downstream pass, the vertex under consideration can select a vector of strategies for all its children so that each child"s strategy is a potential best response to the parent"s strategy, the algorithm succeeds in producing a Nash equilibrium .
+This can be achieved if, at the beginning of the downstream pass, we have a data structure in which each vertex V with parent W stores a set ?B(W, V ) ? B(W, V ) (called a breakpoint policy) which covers every possible w ? [0, 1] .
+We will show later that a sufficient condition for the construction of such a data structure is the invariant that, at every level of the upstream pass, ?B(W, V ) contains a continuous path from w = 0 to w = 1 .
+In [9], it is suggested that we can select the breakpoint policy in a particular way .
+Namely, the paper uses the following definition
+(cf .
+[9]) A breakpoint policy for a node V with parent W consists of an ordered set of W breakpoints w0 = 0 < w1 < w2 < ¡P ¡P ¡P < wt?1 < wt = 1 and an associated set of V values v1, .
+.
+.
+, vt .
+The interpretation is that for any w ? [0, 1], if wi?1 < w < wi for some index i and W plays w, then V shall play vi; and if w = wi for some index i, then V shall play any value between vi and vi+1 .
+We say such a breakpoint policy has t ? 1 breakpoints .
+The paper then claims that any vertex V can compute its breakpoint policy with respect to its parent W given the breakpoint policies of its children U1, .
+.
+.
+, Uk .
+The proof proceeds by ordering the children"s breakpoints (i.e., the respective values of v) from left to right (it can be assumed without loss of generality that all these breakpoints are distinct) and considering them in turn; each such point vl ? {v1, .
+.
+.
+, vL} corresponds to a fixed choice of strategies for k ? 1 children and an interval of admissible strategies for one child .
+Assume for convenience that this child is U1 and its interval of admissible strategies at vl is [a, b]; assume also that for Uj , j = 2, .
+.
+.
+, k, their respective breakpoint policies prescribe them to play uj in response to vl .
+Let P i (u, w), i = 0, 1, be the expected payoff for V when V plays i, U1 plays u, each Uj , j = 2, .
+.
+.
+, k, plays uj, and W plays w, and consider the set Wl = {w ? [0, 1] | ?u ? [a, b] s.t .
+P 0 (u, w) = P1 (u, w)}; note that for any w ? Wl we have vl ? pbrV (w) .
+v1 v2 v3 v4 v5 v6 v7 V W Figure 1
+The authors show that for any breakpoint vl, the set Wl is either empty, a single interval, or a union of two non floating intervals (an interval is non floating if one of its endpoints is 0 or 1); moreover, the union of all sets Wl, l = 1, .
+.
+.
+, L, covers the interval [0, 1] .
+It follows easily that one can cover [0, 1] with at most L+2 intervals, each of which is a subset of some Wl .
+The authors then claim that any such cover can be transformed into a breakpoint policy for V .
+Namely, they say that for any two intervals Wl1 and Wl2 in the cover, Any overlap between Wl1 and Wl2 can be arbitrarily assigned coverage by Wl1 and Wl2 trimmed accordingly (cf .
+[9], as Figure 1 here .
+In the figure, the dashed horizontal lines represent the breakpoints v1, v2, .
+.
+.
+, v7 and the solid intervals along these breakpoints are the sets W1, W2, .
+.
+.
+, W7 .
+The thick connected path is the corresponding breakpoint policy .
+It is chosen as follows
+To see why this approach does not work in general, consider a path of length 4 consisting of an indifferent root R, its child W , W "s child V , and V "s child U .
+Suppose that U receives a payoff of 1 if it plays differently to V and 0 otherwise .
+Thus, if v denotes the mixed strategy of V (i.e., V plays 1 with probability v), then the expected payoff that U derives from playing 0 is given by P0 = v and the expected payoff that U derives from playing 1 is given by P1 = 1 ? v .
+Suppose that V derives no payoff from playing 1 (so P1 (V ) = 0) and that its payoff matrix for playing 0 is 1 ?9 9 ?1 , so if u denotes the mixed strategy of U and w denotes the mixed strategy of W , the expected payoff that V derives from playing 0 is given by P0 (V ) = (1 ? u)(1 ? w) + (1 ? u)w(?9) + u(1 ? w)9 + uw(?1) .
+Using the techniques of [8] (or, alternatively, those of Section 4), it is not hard to verify that the best response policies for U and V (as in Definition 1) are given by the graphs in Figure 2 .
+The best response policy for U is a breakpoint policy for U (as in Definition 2) with V breakpoints v0 = 0, v1 = 1 2 and v2 = 1 with associated values u1 = 1 and u2 = 0 .
+The best response policy for V is not a breakpoint policy (because of how the curve from w = 0 to w = 1 doubles back) .
+The LKS algorithm would trim to get a breakpoint policy such as the one in Figure 3 .
+Note that this breakpoint policy ?B(W, V ) is invalid in the sense that it does not satisfy ?B(W, V ) ? B(W, V ) .
+102 1 10.5 0.5 1 10.1 0.9 u v v w Figure 2
+0.1 0.9 1 0.5 1 v w Figure 3
+For example, suppose the payoffs are given so that P0 (W ) = v and P1 (W ) = (1?v)2 .
+The best response policy for W is a horizontal line at w = .1 (This is the value of w that allows v = 2 3 see Figure 2, which makes P0 (W ) = P1 (W ).) In the downward pass, the chosen values are w = .1, then, from the trimming, v = 0 and u = 1, which is not a Nash equilibrium since W prefers action 1 .
+The failure of the algorithm is not caused by the fact that the trimming policy goes as far to the right as possible .
+Any other trimming would be just as bad .
+For example, suppose the breakpoint policy for V has v = 0 until some point w? < .9 and then jumps to v = 1 .
+The algorithm is then defeated by the payoff matrix with P 0 (W ) = 2v and P1 (W ) = (1 ? v) in which the best response policy for W is a horizontal line at w = .9 .
+The algorithm then gives w = .9, v = 1, and u = 0, which is not a Nash equilibrium since W prefers action 0 .
+We conclude that the LKS algorithm does not always find a Nash equilibrium .
+In Sections 4 and 6 we show how to modify the algorithm so that it always finds a Nash equilibrium .
+For the modified algorithm, we have to extend the definition of breakpoint policy (see Definition 3) so that it includes breakpoint policies such as the best response policy for V in Figure 2 .
+Unfortunately, such a breakpoint policy may be exponential in size (see Figure 7) so the corrected algorithm does not run in polynomial time on all trees .
+In the next section, we show that it runs in polynomial time on a path. .

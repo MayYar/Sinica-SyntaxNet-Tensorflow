@@ -1,0 +1,67 @@
+There are many contextual factors in IR
+Among them, the user"s domain of interest and knowledge are considered to be among the most important ones [20][21] .
+In this section, we review some of the studies in IR concerning these aspects .
+Domain of interest and context around query A domain of interest specifies a particular background for the interpretation of a query .
+It can be used in different ways .
+Most often, a user profile is created to encompass all the domains of interest of a user [23] .
+In [5], a user profile contains a set of topic categories of ODP (Open Directory Project, http
+The documents (Web pages) classified in these categories are used to create a term vector, which represents the whole domains of interest of the user .
+On the other hand, [9][15][26][30], as well as Google Personalized Search [12] use the documents read by the user, stored on user"s computer or extracted from user"s search history .
+In all these studies, we observe that a single user profile (usually a statistical model or vector) is created for a user without distinguishing the different topic domains .
+The systematic application of the user profile can incorrectly bias the results for queries unrelated to the profile .
+This situation can often occur in practice as a user can search for a variety of topics outside the domains that he has previously searched in or identified .
+A possible solution to this problem is the creation of multiple profiles, one for a separate domain of interest .
+The domains related to a query are then identified according to the query .
+This will enable us to use a more appropriate query specific profile, instead of a user centric one .
+This approach is used in [18] in which ODP directories are used .
+However, only a small scale experiment has been carried out .
+A similar approach is used in [8], where domain models are created using ODP categories and user queries are manually mapped to them .
+However, the experiments showed variable results .
+It remains unclear whether domain models can be effectively used in IR .
+In this study, we also model topic domains .
+We will carry out experiments on both automatic and manual identification of query domains .
+Domain models will also be integrated with other factors .
+In the following discussion, we will call the topic domain of a query a context around query to contrast with another context within query that we will introduce .
+Knowledge and context within query Due to the unavailability of domain specific knowledge, general knowledge resources such as Wordnet and term relations extracted automatically have been used for query expansion [27][31] .
+In both cases, the relations are defined between two single terms such as t1¡÷t2 .
+If a query contains term t1, then t2 is always considered as a candidate for expansion .
+As we mentioned earlier, we are faced with the problem of relation ambiguity
+For example, program¡÷computer should not be applied to TV program even if the latter contains program .
+However, little information is available in the relation to help us determine if an application context is appropriate .
+To remedy this problem, approaches have been proposed to make a selection of expansion terms after the application of relations [24][31] .
+Typically, one defines some sort of global relation between the expansion term and the whole query, which is usually a sum of its relations to every query word .
+Although some inappropriate expansion terms can be removed because they are only weakly connected to some query terms, many others remain .
+For example, if the relation program¡÷computer is strong enough, computer will have a strong global relation to the whole query TV program and it still remains as an expansion term .
+It is possible to integrate stronger control on the utilization of knowledge .
+For example, [17] defined strong logical relations to encode knowledge of different domains .
+If the application of a relation leads to a conflict with the query (or with other pieces of evidence), then it is not applied .
+However, this approach requires encoding all the logical consequences including contradictions in knowledge, which is difficult to implement in practice .
+In our earlier study [1], a simpler and more general approach is proposed to solve the problem at its source, i.e .
+the lack of context information in term relations
+As a result, computer will be used to expand queries Java program or program algorithm, but not TV program .
+This principle is similar to that of [33] for word sense disambiguation .
+However, we do not explicitly assign a meaning to a word; rather we try to make differences between word usages in different contexts .
+From this point of view, our approach is more similar to word sense discrimination [27] .
+In this paper, we use the same approach and we will integrate it into a more global model with other context factors .
+As the context words added into relations allow us to exploit the word context within the query, we call such factors context within query .
+Within query context exists in many queries .
+In fact, users often do not use a single ambiguous word such as Java as query (if they are aware of its ambiguity) .
+Some context words are often used together with it .
+In these cases, contexts within query are created and can be exploited .
+Query profile and other factors Many attempts have been made in IR to create query specific profiles .
+We can consider implicit feedback or blind feedback [7][16][29][32][35] in this family .
+A short term feedback model is created for the given query from feedback documents, which has been proven to be effective to capture some aspects of the user"s intent behind the query .
+In order to create a good query model, such a query specific feedback model should be integrated .
+There are many other contextual factors ([26]) that we do not deal with in this paper .
+However, it seems clear that many factors are complementary .
+As found in [32], a feedback model creates a local context related to the query, while the general knowledge or the whole corpus defines a global context .
+Both types of contexts have been proven useful [32] .
+Domain model specifies yet another type of useful information
+for the domain of Environment .
+These terms are often presumed when a user issues a query such as waste cleanup in the domain .
+It is useful to add them into the query .
+We see a clear complementarity among these factors .
+It is then useful to combine them together in a single IR model .
+In this study, we will integrate all the above factors within a unified framework based on language modeling .
+Each component contextual factor will determines a different ranking score, and the final document ranking combines all of them .
+This is described in the following section. .

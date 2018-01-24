@@ -1,0 +1,102 @@
+3.1 Infrastructures In discussing Example 3 we observed how being entitled to make a bid does not imply being in state of making a bid .
+In other words, an institution can empower agents by means of appropriate rules but this empowerment can remain dead letter .
+Similar 4 This problem amounts to check whether a state description £^ is satisfiable w.r.t .
+a given TBox T, i.e., to check if there exists a model m of T such that ? ? I(£^) .
+Notice that language ALCH( ,?,?,id) contains negation and intersection of arbitrary state types .
+It is well known that if these operators are available then all most typical reasoning tasks at the TBox level can be reduced to the satisfiability problem .
+5 Notice therefore that EL is a seriously restricted fragment of ALC since it does not contain the negation operator for state types (operators and ? remain thus undefinable) .
+632 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) observations apply also to deontic notions
+We refer to this kind of problems as infrastructural .
+The implementation of an institution in a concrete system calls therefore for the design of appropriate infrastructures or artifacts ([19]) .
+The formal specification of an infrastructure amounts to the formal specification of interaction requirements, that is to say, the specification of which relevant transition types are executable and under what conditions .
+DEFINITION 4 .
+(Infrastructures as TBoxes) An infrastructure Inf = £Finf , Ainf for institution Ins is a TBox on Lbrute such that for all a ? L(Abridge) there exist terminological axioms in £Finf of the following form
+(a is executable exactly in £^ states) and £^ °› ??a .
+(the negation of a is executable exactly in £^ states) .
+In other words, an infrastructure specification states all and only the conditions under which an atomic brute transition type and its negation are executable, which occur in the brute alphabet of the bridge axioms of Ins .
+It states what can be in concrete done and under what conditions .
+EXAMPLE 6 .
+(Infrastructure specification) Consider the institution specified in Example 1 .
+A simple infrastructure Inf for that institution could contain for instance the following terminological axioms for any pair of different agents i, j and message type msg
+(20) The formula states that it is always in the possibilities of agent i to send message No .
+33 to agent j .
+It then follows on the grounds of Example 1 that agent i can always accept agent j .
+?ACCEPT(i, j) .
+(21) Notice that the executability condition is just .
+We call a concrete institution specification CIns an institution specification Ins coupled with an infrastructure specification Inf .
+DEFINITION 5 .
+(Concrete institution) A concrete institution obtained by joining the institution Ins = £Fins, Ains and the infrastructure Inf = £Finf , Ainf is a TBox CIns = £F, A such that £F = £Fins °Â £Finf and A = Ains °Â Ainf .
+Obviously, different infrastructures can be devised for a same institution giving rise to different concrete institutions which makes precise implementation choices explicit .
+Of particular relevance are the implementation choices concerning abstract norms like the one represented in Formula 13 .
+A designer can choose to regiment such norm ([15]), i.e., make violation states unreachable, via an appropriate infrastructure .
+EXAMPLE 7 .
+(Regimentation via infrastructure specification) Consider Example 3 and suppose the following translation rule to be also part of the institution
+In order to specify a regimentation at the infrastructural level it is enough to state that
+(24) ?condition pay(i, j, b) °› ??(BNK(i, j, b) CC(i, j, b)) .
+(25) In other words, in states of type condition pay(i, j, b) the only executable brute actions are BANK(i, j, b) or CC(i, j, b) and, therefore, PAY(i, j, b) would necessarily be executed .
+As a result, the following inclusion does not hold with respect to the corresponding concrete institution
+3.2 Organizational Structures This section briefly summarizes and adapts the perspective and results on organizational structures presented in [14, 11] .
+We refer to that work for a more comprehensive exposition .
+Organizational structures typically concern the way agents interact within organizations .
+These interactions can be depicted as the links of a graph defined on the set of roles of the organization .
+Such links are then to be labeled on the basis of the type of interaction they stand for .
+First of all, it should be clear whether a link denotes that a certain interaction between two roles can, or ought to, or may etc .
+take place .
+Secondly, links should be labeled according to the transition type £\ they refer to and the conditions £^ in which that transition can, ought to, may etc .
+take place .
+Links in a formal specification of an organizational structure stand therefore for statements of the kind
+role s if £^ is the case .
+For the sake of simplicity, the following definition will consider only the can and ought to interaction modalities .
+State and transition types in Lins °ÂLbrute will be used to label the links of the structure .
+Interaction modalities can therefore be of an institutional kind or of a brute kind .
+DEFINITION 6 .
+(Organizational structure) An organizational structure is a multi graph
+By the expressions (r, s) ? C£^
+As shown in [11] such formal representations of organizational structures are of use for investigating the structural properties (robustness, flexibility, etc.) that a given organization exhibits .
+At this point all the formal means are put in place which allow us to formally represent institutions as well as organizational structures .
+The next and final step of the work consists in providing a formal relation between the two frameworks .
+This formal relation will make explicit how institutions are related to organizational structures and vice versa .
+In particular, it will become clear how a normative conception of the notion of role relates to a structural one, that is, how the view of roles as a sets of norms (specifying how an agent can enact and deact the role, and what social status it obtains by doing that) relates to the view of roles as positions within social structures .
+3.3 Relating institutions to organizations The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 633 To translate a given concrete institution into a corresponding organizational structure we need a function t assigning pairs of roles to axioms .
+Let us denote with Sub the set of all state type inclusion statements £^1 £^2 that can be expressed on Lins °Â Lbrute .
+Function t is a partial function Sub Roles °— Roles such that, for any x ? Sub if x = rea(i, r) rea(j, s) £^ ?£\ .
+(executability) or x = rea(i, r) rea(j, s) £^ ??£\.viol(i) (obligation) then t(x) = (r, s), where £\ is an atomic transition type indexed with a pair (i, j) .
+That is to say, executability and obligation laws containing the enactment configuration rea(i, r) rea(j, s) as a premise and concerning transition of types £\, with i actor and j recipient of the £\ transition, are translated into role pairs (r, s) .
+DEFINITION 7 .
+(Correspondence of specifications) A concrete institution CIns = £F, A is said to correspond to an organizational structure OS (and vice versa) if, for every x ? £F
+iff t(x) ? C£^
+Definition 7 labels the yielded pairs accordingly to the syntactic form of the translated axioms .
+More concretely, axioms of the form rea(i, r) rea(j, s) £^ ?£\ .
+(executability laws) are translated into the pair (r, s) belonging to the executability dimension (i.e., C) of the organizational structure w.r.t .
+the execution of £\ under circumstances £^ .
+Analogously, axioms of the form rea(i, r) rea(j, s) £^ ??£\.viol(i) (obligation laws) are translated into the pair (r, s) belonging to the obligation dimension (i.e., O) of the organizational structure w.r.t .
+the execution of £\ under circumstances £^ .
+Leaving technicalities aside, function t distills thus the terminological and infrastructural constraints of CIns into structural ones .
+The institutive, terminative and status modules of roles are translated into definitions of positions within a OS .
+From a design perspective the interpretation of Definition 7 is twofold .
+On the one hand (from left to right), it can make explicit what the structural consequences are of a given institution supported by a given infrastructure .
+On the other hand (from right to left), it can make explicit what kind of institution is actually implemented by a given organizational structure .
+Let us see this in some more details .
+Given a concrete institution CIns, Definition 7 allows a designer to be aware of the impact that specific terminological choices (in particular, the choice of certain bridge axioms) and infrastructural ones have at a structural level .
+Notice that Definition 7 supports the inference of links in a structure .
+By checking whether a given inclusion statement of the relevant syntactic form follows from CIns (i.e., the so called subsumption problem of DL) it is possible, via t, to add new links to the corresponding organizational structure .
+This can be recursively done by just adding any new inferred inclusion x to the previous set of axioms £F, thus obtaining an updated institutional specification containing £F °Â {x} .
+This process can be thought of as the inference of structural links from institutional specifications .
+In other words, it is possible to use institution specifications as inference tools for structural specifications .
+For instance, the infrastructural choice formalized in Example 7 implies that for the pair of roles (buyer, seller), it is always the case that (buyer, seller) ? C 
+This link follows from links (buyer, seller) ? C 
+Suppose now a designer to be interested in a system which, besides implementing an institution, also incorporates an organizational structure enjoying desirable structural properties such as flexibility, or robustness6 .
+By relating structural links to state type inclusions it is therefore possible to check whether adding a link in OS results in a stronger institutional specification, that is, if the corresponding inclusion statement is not already implied by Ins .
+To draw a parallelism with what just said in the previous paragraph, this process can be thought of as the inference of norms and infrastructural constraints from the specification of organizational structures .
+To give a simple example consider again Example 6 but from a reversed perspective .
+Suppose a designer wants a fully connected graph in the dimension C 
+Exploiting Definition 7, we would obtain a number of executability laws in the fashion of Formula 20 for all roles in Roles (thus 2|Roles| axioms) .
+Definition 7 establishes a correspondence between two essentially different perspectives on the design of open systems allowing for feedbacks between the two to be formally analyzed .
+One last observation is in order .
+While given a concrete institution an organizational structure can be in principle fully specified (by checking for all finitely many relevant inclusion statements whether they are implied or not by the institution), it is not possible to obtain a full terminological specification from an organizational structure .
+This lies on the fact that in Definition 6 the strictly terminological information contained in the specification of an institution (eminently, the set of transition type axioms A and therefore the bridge axioms) is lost while moving to a structural description .
+This shows, in turn, that the added value of the specification of institutions lies precisely in the terminological link they establish between institutional and brute, i.e., system level notions. .

@@ -1,0 +1,118 @@
+This section details our proposed latent concept expansion technique .
+As mentioned previously, the technique is an extension of the MRF model for information retrieval [14] .
+Therefore, we begin by providing an overview of the MRF model and our proposed extensions .
+3.1 MRFs for IR 3.1.1 Basics Markov random fields, which are undirected graphical models, provide a compact, robust way of modeling a joint distribution .
+Here, we are interested in modeling the joint distribution over a query Q = q1, .
+.
+.
+, qn and a document documents and queries is a relevance distribution .
+That is, sampling from the distribution gives pairs of documents and queries, such that the document is relevant to the query .
+A MRF is defined by a graph G and a set of non negative potential functions over the cliques in G .
+The nodes in the graph represent the random variables and the edges define the independence semantics of the distribution .
+A MRF satisfies the Markov property, which states that a node is independent of all of its non neighboring nodes given observed values for its neighbors .
+Given a graph G, a set of potentials £ri, and a parameter vector £N, the joint distribution over Q and D is given by
+We follow common convention and parameterize the potentials as £ri(c; £N) = exp[£fifi(c)], where fi(c) is a real valued feature function .
+3.1.2 Constructing G Given a query Q, the graph G can be constructed in a number of ways .
+However, following previous work, we consider three simple variants [14] .
+These variants are full independence, where each query term is independent of each other given a document, sequential dependence, which assumes a dependence exists between adjacent query terms, and full dependence, which makes no independence assumptions .
+3.1.3 Parameterization MRFs are commonly parameterized based on the maximal cliques of G .
+However, such a parameterization is too coarse for our needs .
+We need a parameterization that allows us to associate feature functions with cliques on a more fine grained level, while keeping the number of features, and thus the number of parameters, reasonable .
+Therefore, we allow cliques to share feature functions and parameters based on clique sets .
+That is, all of the cliques within a clique set are associated with the same feature function and share a single parameter .
+This effectively ties together the parameters of the features associated with each set, which significantly reduces the number of parameters while still providing a mechanism for fine tuning on the level of clique sets .
+We propose seven clique sets for use with information retrieval .
+The first three clique sets consist of cliques that contain one or more query terms and the document node .
+Features over these cliques should encode how well the terms in the clique configuration describe the document .
+These sets are
+? OD set of cliques containing the document node and two or more query terms that appear in sequential order within the query .
+? UD set of cliques containing the document node and two or more query terms that appear in any order within the query .
+Note that UD is a superset of OD .
+By tying the parameters among the cliques within each set we can control how much influence each type gets .
+This also avoids the problem of trying to determine how to estimate weights for each clique within the sets .
+Instead, we now must only estimate a single parameter per set .
+Next, we consider cliques that only contain query term nodes .
+These cliques, which were not considered in [14], are defined in an analogous way to those just defined, except the the cliques are only made up of query term nodes and do not contain the document node .
+Feature functions over these cliques should capture how compatible query terms are to one another .
+These clique features may take on the form of language models that impose well formedness of the terms .
+Therefore, we define following query dependent clique sets
+? OQ set of cliques containing two or more query terms that appear in sequential order within the query .
+? UQ set of cliques containing two or more query terms that appear in any order within the query .
+Finally, there is the clique that only contains the document node .
+Features over this node can be used as a type of document prior, encoding document centric properties .
+This trivial clique set is then
+After tying the parameters in our clique sets together and using the exponential potential function form, we end up with the following simplified form of the joint distribution
+These will be used to simplify and clarify expressions derived throughout the remainder of the paper .
+3.1.4 Features Any arbitrary feature function over clique configurations can be used in the model .
+The correct choice of features depends largely on the retrieval task and the evaluation metric .
+Therefore, there is likely not to be a single, universally applicable set of features .
+To provide an idea of the range of features that can be used, we now briefly describe possible types of features that could be used .
+Possible query term dependent features include tf, idf, named entities, term proximity, and text style to name a few .
+Many types of document dependent features can be used, as well, including document length, PageRank, readability, and genre, among others .
+Since it is not our goal here to find optimal features, we use a simple, fixed set of features that have been shown to be effective in previous work [14] .
+See Table 1 for a list of features used .
+These features attempt to capture term occurrence and term proximity .
+Better feature selection in the future will likely lead to improved effectiveness .
+3.1.5 Ranking Given a query Q, we wish to rank documents in descending order according to PG,£N(D|Q) .
+After dropping document independent expressions from log PG,£N(Q, D), we derive the following ranking function
+3.1.6 Parameter Estimation Now that the model has been fully specified, the final step is to estimate the model parameters .
+Although MRFs are generative models, it is inappropriate to train them using Feature Value fTD (qi, D) log (1 ? £\) tfqi,D |D| + £\ cfqi |C| fOD (qi, qi+1 .
+.
+.
+, qi+k, D) log (1 ? £]) tf#1(qi...qi+k),D |D| + £] cf#1(qi...qi+k) |C| fUD (qi, ..., qj, D) log (1 ? £]) tf#uw(qi...qj ),D |D| + £] cf#uw(qi...qj ) |C| fTQ (qi) ? log cfqi |C| fOQ (qi, qi+1 .
+.
+.
+, qi+k) ? log cf#1(qi...qi+k) |C| fUQ (qi, ..., qj) ? log cf#uw(qi...qj ) |C| fD 0 Table 1
+Here, tfw,D is the number of times term w occurs in document D, tf#1(qi...qi+k),D denotes the number of times the exact phrase qi .
+.
+.
+qi+k occurs in document D, tf#uw(qi...qj ),D is the number of times the terms qi, .
+.
+.
+qj appear ordered or unordered within a window of N terms, and |D| is the length of document D .
+The cf and |C| values are analogously defined on the collection level .
+Finally, £\ and £] are model hyperparameters that control smoothing for single term and phrase features, respectively .
+conventional likelihood based approaches because of metric divergence [17] .
+That is, the maximum likelihood estimate is unlikely to be the estimate that maximizes our evaluation metric .
+For this reason, we discriminatively train our model to directly maximize the evaluation metric under consideration [14, 15, 25] .
+Since our parameter space is small, we make use of a simple hill climbing strategy, although other more sophisticated approaches are possible [10] .
+3.2 Latent Concept Expansion In this section we describe how this extended MRF model can be used in a novel way to generate single and multiterm concepts that are topically related to some original query .
+As we will show, the concepts generated using our technique can be used for query expansion or other tasks, such as suggesting alternative query formulations .
+We assume that when a user formulates their original query, they have some set of concepts in mind, but are only able to express a small number of them in the form of a query .
+We treat the concepts that the user has in mind, but did not explicitly express in the query, as latent concepts .
+These latent concepts can consist of a single term, multiple terms, or some combination of the two .
+It is, therefore, our goal to recover these latent concepts given some original query .
+This can be accomplished within our framework by first expanding the original graph G to include the type of concept we are interested in generating .
+We call this expanded graph H .
+In Figure 1, the middle graph provides an example of how to construct an expanded graph that can generate single term concepts .
+Similarly, the graph on the right illustrates an expanded graph that generates two term concepts .
+Although these two examples make use of the sequential dependence assumption (i.e .
+dependencies between adjacent query terms), it is important to note that both the original query and the expansion concepts can use any independence structure .
+After H is constructed, we compute PH,£N(E|Q), a probability distribution over latent concepts, according to
+Since it is not practical to compute this summation, we must approximate it .
+We notice that PH,£N(Q, E, D) is likely to be peaked around those documents D that are highly ranked according to query Q .
+Therefore, we approximate PH,£N(E|Q) by only summing over a small subset of relevant or pseudo relevant documents for query Q .
+This is computed as follows
+As we see, the likelihood contribution for each document in RQ is a combination of the original query"s score for the document (see Equation 2), concept E"s score for the document, and E"s document independent score .
+Therefore, this equation can be interpreted as measuring how well Q and E account for the top ranked documents and the goodness of E, independent of the documents .
+For maximum robustness, we use a different set of parameters for FQD(Q, D) and FQD(E, D), which allows us to weight the term, ordered, and unordered window features differently for the original query and the candidate expansion concept .
+3.2.1 Query Expansion To use this framework for query expansion, we first choose an expansion graph H that encodes the latent concept structure we are interested in expanding the query using .
+We then select the k latent concepts with the highest likelihood given by Equation 3 .
+A new graph G is constructed by augmenting the original graph G with the k expansion concepts E1, .
+.
+.
+, Ek .
+Finally, documents are ranked according to PG ,£N(D|Q, E1, .
+.
+.
+, Ek) using Equation 2 .
+3.2.2 Comparison to Relevance Models Inspecting Equations 1 and 3 reveals the close connection that exists between LCE and relevance models .
+Both Figure 1
+models essentially compute the likelihood of a term (or concept) in the same manner .
+It is easy to see that just as the MRF model can be viewed as a generalization of language modeling, so too can LCE be viewed as a generalization of relevance models .
+There are important differences between MRFs LCE and unigram language models relevance models .
+See Figure 1 for graphical model representations of both models .
+Unigram language models and relevance models are based on the multinomial distribution .
+This distributional assumption locks the model into the bag of words representation and the implicit use of term occurrence features .
+However, the distribution underlying the MRF model allows us to move beyond both of these assumptions, by modeling both dependencies between query terms and allowing arbitrary features to be explicitly used .
+Moving beyond the simplistic bag of words assumption in this way results in a general, robust model and, as we show in the next section, translates into significant improvements in retrieval effectiveness. .

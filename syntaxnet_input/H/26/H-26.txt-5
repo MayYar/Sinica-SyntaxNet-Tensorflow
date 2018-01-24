@@ -1,0 +1,52 @@
+For each dataset in Table 5, we performed 50 trials .
+For each trial, we train on 10 randomly selected queries, and select another 5 queries at random for a validation set .
+Models were trained using a wide range of C values .
+The model which performed best on the validation set was selected and tested on the remaining 35 queries .
+All queries were selected to be in the training, validation and test sets the same number of times .
+Using this setup, we performed the same experiments while using our method (SVM? map), an SVM optimizing for ROCArea (SVM? roc) [13], and a conventional classification SVM (SVMacc) [20] .
+All SVM methods used a linear kernel .
+We reported the average performance of all models over the 50 trials .
+5.1 Comparison with Base Functions In analyzing our results, the first question to answer is, can SVM? map learn a model which outperforms the best base TREC 9 TREC 10 Model MAP W L MAP W L SVM? map 0.290 0.287Best Func .
+0.280 28 22 0.283 29 21 2nd Best 0.269 30 20 0.251 36 14 ** 3rd Best 0.266 30 20 0.233 36 14 ** Table 7
+0.280 27 23 0.283 31 19 2nd Best 0.269 30 20 0.251 36 14 ** 3rd Best 0.266 30 20 0.233 35 15 ** Table 8
+(w o best) functions? Table 6 presents the comparison of SVM? map with the best Indri base functions .
+Each column group contains the macro averaged MAP performance of SVM? map or a base function .
+The W L columns show the number of queries where SVM? map achieved a higher MAP score .
+Significance tests were performed using the two tailed Wilcoxon signed rank test .
+Two stars indicate a significance level of 0.95 .
+All tables displaying our experimental results are structured identically .
+Here, we find that SVM? map significantly outperforms the best base functions .
+Table 7 shows the comparison when trained on TREC submissions .
+While achieving a higher MAP score than the best base functions, the performance difference between SVM? map the base functions is not significant .
+Given that many of these submissions use scoring functions which are carefully crafted to achieve high MAP, it is possible that the best performing submissions use techniques which subsume the techniques of the other submissions .
+As a result, SVM? map would not be able to learn a hypothesis which can significantly out perform the best submission .
+Hence, we ran the same experiments using a modified dataset where the features computed using the best submission were removed .
+Table 8 shows the results (note that we are still comparing against the best submission though we are not using it for training) .
+Notice that while the performance of SVM? map degraded slightly, the performance was still comparable with that of the best submission .
+5.2 Comparison w Previous SVM Methods The next question to answer is, does SVM? map produce higher MAP scores than previous SVM methods? Tables 9 and 10 present the results of SVM? map, SVM? roc, and SVMacc when trained on the Indri retrieval functions and TREC submissions, respectively .
+Table 11 contains the corresponding results when trained on the TREC submissions without the best submission .
+To start with, our results indicate that SVMacc was not competitive with SVM? map and SVM? roc, and at times underperformed dramatically .
+As such, we tried several approaches to improve the performance of SVMacc .
+5.2.1 Alternate SVMacc Methods One issue which may cause SVMacc to underperform is the severe imbalance between relevant and non relevant docTREC 9 TREC 10 Model MAP W L MAP W L SVM? map 0.242 0.236SVM? roc 0.237 29 21 0.234 24 26 SVMacc 0.147 47 3 ** 0.155 47 3 ** SVMacc2 0.219 39 11 ** 0.207 43 7 ** SVMacc3 0.113 49 1 ** 0.153 45 5 ** SVMacc4 0.155 48 2 ** 0.155 48 2 ** Table 9
+The vast majority of the documents are not relevant .
+SVMacc2 addresses this problem by assigning more penalty to false negative errors .
+For each dataset, the ratio of the false negative to false positive penalties is equal to the ratio of the number non relevant and relevant documents in that dataset .
+Tables 9, 10 and 11 indicate that SVMacc2 still performs significantly worse than SVM? map .
+Another possible issue is that SVMacc attempts to find just one discriminating threshold b that is query invariant .
+It may be that different queries require different values of (when one does not exist) may be detrimental .
+We took two approaches to address this issue .
+The first method, SVMacc3, converts the retrieval function scores into percentiles .
+For example, for document d, query q and retrieval function f, if the score f(d|q) is in the top 90% of the scores f(¡P|q) for query q, then the converted score is f (d|q) = 0.9 .
+Each Kf contains 50 evenly spaced values between 0 and 1 .
+Tables 9, 10 and 11 show that the performance of SVMacc3 was also not competitive with SVM? map .
+The second method, SVMacc4, normalizes the scores given by f for each query .
+For example, assume for query q that f outputs scores in the range 0.2 to 0.7 .
+Then for document d, if f(d|q) = 0.6, the converted score would be f (d|q) = (0.6 ? 0.2) (0.7 ? 0.2) = 0.8 .
+Each Kf contains 50 evenly spaced values between 0 and 1 .
+Again, Tables 9, 10 and 11 show that SVMacc4 was not competitive with SVM? map 5.2.2 MAP vs ROCArea SVM? roc performed much better than SVMacc in our experiments .
+When trained on Indri retrieval functions (see Table 9), the performance of SVM? roc was slight, though not significantly, worse than the performances of SVM? map .
+However, Table 10 shows that SVM? map did significantly outperform SVM? roc when trained on the TREC submissions .
+Table 11 shows the performance of the models when trained on the TREC submissions with the best submission removed .
+The performance of most models degraded by a small amount, with SVM? map still having the best performance .
+TREC 9 TREC 10 Model MAP W L MAP W L SVM? map 0.284 0.288SVM? roc 0.274 31 19 ** 0.272 38 12 ** SVMacc 0.215 49 1 ** 0.211 50 0 ** SVMacc2 0.267 35 15 ** 0.258 44 6 ** SVMacc3 0.133 50 0 ** 0.174 46 4 ** SVMacc4 0.228 46 4 ** 0.234 45 5 ** Table 11
+(w o Best) .

@@ -1,0 +1,32 @@
+Our approach is to organize search results by aspects learned from search engine logs .
+Given an input query, the general procedure of our approach is
+These aspects correspond to users" interests given the input query .
+Each aspect is labeled with a representative query .
+query according to the aspects learned above .
+We now give a detailed presentation of each step .
+4.1 Finding Related Past Queries Given a query q, a search engine will return a ranked list of Web pages .
+To know what the users are really interested in given this query, we first retrieve its past similar queries in our preprocessed history data collection .
+Formally, assume we have N pseudo documents in our history data set
+Each Qi corresponds to a unique query and is enriched with clickthrough information as discussed in Section 3 .
+To find q"s related queries in H, a natural way is to use a text retrieval algorithm .
+Here we use the OKAPI method [17], one of the state of the art retrieval methods .
+Specifically, we use the following formula to calculate the similarity between query q and pseudo document Qi
+Based on the similarity scores, we rank all the documents in H .
+The top ranked documents provide us a working set to learn the aspects that users are usually interested in .
+Each document in H corresponds to a past query, and thus the top ranked documents correspond to q"s related past queries .
+4.2 Learning Aspects by Clustering Given a query q, we use Hq = {d1, ..., dn} to represent the top ranked pseudo documents from the history collection are interested in .
+In this subsection, we propose to use a clustering method to discover these aspects .
+Any clustering algorithm could be applied here .
+In this paper, we use an algorithm based on graph partition
+A good property of the star clustering in our setting is that it can suggest a good label for each cluster naturally .
+We describe the star clustering algorithm below .
+4.2.1 Star Clustering Given Hq, star clustering starts with constructing a pairwise similarity graph on this collection based on the vector space model in information retrieval [18] .
+Then the clusters are formed by dense subgraphs that are star shaped .
+These clusters form a cover of the similarity graph .
+Formally, for each of the n pseudo documents {d1, ..., dn} in the collection Hq, we compute a TF IDF vector .
+Then, for each pair of documents di and dj (i = j), their similarity is computed as the cosine score of their corresponding vectors vi and vj , that is sim(di, dj ) = cos(vi, vj) = vi ¡P vj |vi| ¡P |vj | .
+A similarity graph G£m can then be constructed as follows using a similarity threshold parameter £m .
+Each document di is a vertex of G£m .
+If sim(di, dj) > £m, there would be an edge connecting the corresponding two vertices .
+After the similarity graph G£m is built, the star clustering algorithm clusters the documents using a greedy algorithm as follows
+the highest degree and let it be u. .

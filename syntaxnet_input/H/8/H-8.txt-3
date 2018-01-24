@@ -1,0 +1,64 @@
+Above we gave an intuitive definition of reusability
+By that we mean that if we have made some relevance judgments and have, for example, 75% confidence that system A is better than system B, we would like there to be no more than 25% chance that our assessment of the relative quality of the systems will change as we continue to judge documents .
+Our evaluation should be robust to missing judgments .
+In our previous work, we defined confidence as the probability that the difference in an evaluation measure calculated for two systems is less than zero [8] .
+This notion of confidence is defined in the context of a particular evaluation task that we call comparative evaluation
+Other evaluation tasks could be defined; estimating the magnitude of the difference or the values of the measures themselves are examples that entail different notions of confidence .
+We therefore see confidence as a probability estimate .
+One of the questions we must ask about a probability estimate is what it means .
+What does it mean to have 75% confidence that system A is better than system B? As described above, we want it to mean that if we continue to judge documents, there will only be a 25% chance that our assessment will change .
+If this is what it means, we can trust the confidence estimates .
+But do we know it has that meaning? Our calculation of confidence rested on an assumption about the probability of relevance of unjudged documents, specifically that each unjudged document was equally likely to be relevant or nonrelevant .
+This assumption is almost certainly not realistic in most IR applications .
+As it turns out, it is this assumption that determines whether the confidence estimates can eb trusted .
+Before elaborating on this, we formally define confidence .
+2.1 Estimating Confidence Average precision is a standard evaluation metric that captures both the ability of a system to rank relevant documents highly (precision) as well as its ability to retrieve relevant documents (recall) .
+It is typically written as the mean precision at the ranks of relevant documents
+Let Xi be a random variable indicating the relevance of document i .
+If documents are ordered by rank, we can express precision as prec@i = 1 i i j=1 Xj .
+Average precision then becomes the quadratic equation AP = 1 Xi n i=1 Xi i i j=1 Xj = 1 Xi n i=1 j?i aijXiXj where aij = 1 max{r(i), r(j)} .
+Using aij instead of 1 i allows us to number the documents arbitrarily .
+To see why this is true, consider a toy example
+Average precision will be 1 2 (1 1 x2 B+ 1 2 xBxA+ 1 3 xBxC + 1 2 x2 A+ 1 3 xAxC + 1 3 x2 C) = 1 2 1 + 2 3 because xA = 0, xB = 1, xC = 1 .
+Though the ordering B, A, C is different from the labeling A, B, C, it does not affect the computation .
+We can now see average precision itself is a random variable with a distribution over all possible assignments of relevance to all documents .
+This random variable has an expectation, a variance, confidence intervals, and a certain probability of being less than or equal to a given value .
+All of these are dependent on the probability that document i is relevant
+Suppose in our previous example we do not know the relevance judgments, but we believe pA = 0.4, pB = 0.8, pC = 0.7 .
+We can then compute e.g .
+P(AP = 0) = 0.2 ¡P 0.6 ¡P 0.3 = 0.036, or P(AP = 1 2 ) = 0.2 ¡P 0.4 ¡P 0.7 = 0.056 .
+Summing over all possibilities, we can compute expectation and variance
+As we showed in our previous work, £GAP has a closed form when documents are ordered arbitrarily
+Since AP is normal, £GAP is normal as well, meaning we can use the normal cumulative density function to determine the confidence that a difference in AP is less than zero .
+Since topics are independent, we can easily extend this to mean average precision .
+MAP is also normally distributed; its expectation and variance are
+2.2 Confidence and Robustness Having defined confidence, we turn back to the issue of trust in confidence estimates, and show how it ties into the robustness of the collection to missing judgments .
+1 These are actually approximations to the true expectation and variance, but the error is a negligible O(n2?n ) .
+Let Z be the set of all pairs of ranked results for a common set of topics .
+Suppose we have a set of m relevance judgments xm = {x1, x2, ..., xm} (using small x rather than capital X to distinguish between judged and unjudged documents); these are the judgments against which we compute confidence .
+Let Z£\ be the subset of pairs in Z for which we predict that £GMAP = ?1 with confidence £\ given the judgments xm .
+For the confidence estimates to be accurate, we need at least £\ ¡P |Z£\| of these pairs to actually have £GMAP = ?1 after we have judged every document .
+If they do, we can trust the confidence estimates; our evaluation will be robust to missing judgments .
+If our confidence estimates are based on unrealistic assumptions, we cannot expect them to be accurate .
+The assumptions they are based on are the probabilities of relevance pi .
+We need these to be realistic .
+We argue that the best possible distribution of relevance p(Xi) is the one that explains all of the data (all of the observations made about the retrieval systems) while at the same time making no unwarranted assumptions .
+This is known as the principle of maximum entropy [13] .
+The entropy of a random variable X with distribution p(X) is defined as H(p) = ? i p(X = i) log p(X = i) .
+This has found a wide array of uses in computer science and information retrieval .
+The maximum entropy distribution is the one that maximizes H .
+This distribution is unique and has an exponential form .
+The following theorem shows the utility of a maximum entropy distribution for relevance when estimating confidence .
+Theorem 1 .
+If p(Xn |I, xm ) = argmaxpH(p), confidence estimates will be accurate .
+where xm is the set of relevance judgments defined above, Xn is the full set of documents that we wish to estimate the relevance of, and I is some information about the documents (unspecified as of now) .
+We forgo the proof for the time being, but it is quite simple .
+This says that the better the estimates of relevance, the more accurate the evaluation .
+The task of creating a reusable test collection thus becomes the task of estimating the relevance of unjudged documents .
+The theorem and its proof say nothing whatsoever about the evaluation metric .
+The probability estimates are entirely indepedent of the measure we are interested in .
+This means the same probability estimates can tell us about average precision as well as precision, recall, bpref, etc .
+Furthermore, we could assume that the relevance of documents i and j is independent and achieve the same result, which we state as a corollary
+If p(Xi|I, xm ) = argmaxpH(p), confidence estimates will be accurate .
+The task therefore becomes the imputation of the missing values of relevance .
+The theorem implies that the closer we get to the maximum entropy distribution of relevance, the closer we get to robustness. .

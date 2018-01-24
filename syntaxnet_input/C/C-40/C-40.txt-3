@@ -1,0 +1,40 @@
+In this section we illustrate how the object popping problem can be associated with a typical view decision model .
+We then propose our own model, and finally we discuss its strengths and limitations .
+To begin with, we define the terminologies commonly used throughout this paper .
+Entities in a virtual space can be categorized into three types 403 based on their role autonomous entities, spectator entities, and avatars .
+The term autonomous entity refers to an ordinary moving or stationary geometric object that can be visible to other entities .
+The spectator entity corresponds to a player"s viewpoint, but is invisible to other entities .
+It has no shape and is represented only by a point location .
+It is designed to allow a game participant to see from a third person viewpoint .
+It functions similar to a camera control in the 3D graphics field .
+It also has a higher degree of mobility than other entities .
+The avatar represents a normal game user who can freely navigate in the space and interact with other entities .
+It possesses both features
+For the remainder we use the term object entity to refer to an autonomous entity or an avatar while we use user entity to denote an avatar or a spectator entity .
+The visible range of an entity refers to the spatial extent within which any other entity can recognize its existence .
+It is based on the assumptions that there always exists an optimal visible distance between a user and an object at any given time and every user possesses equal visibility .
+Thus, the user and the object, only when their current distance is smaller than or equal to the optimal, can see each other .
+To specify the visible range, much literature in the graphics area [5, 6] uses a circular Area Of Interest whose center is the location of an entity .
+Its omnidirectional nature allows rapid directional changes without any display disruptions at the periphery of the viewable area .
+However, we employ a squareshaped AOI at the expense of accuracy because the square shaped spatial extension is very simple and efficient to be indexed in a grid partitioned world .
+The traditional view model, which we call user initiated view model, assumes that a user entity has an AOI while an object entity does not .
+As the user navigates, she continuously searches for all the entities within her AOI .
+Due to its simple design and its low indexing overhead, many Location Based Services (LBSs) and game applications use this model .
+However, the user initiated model has a serious object popping problem during navigation .
+Recall, as shown in Figure 1, that the house that will have appeared at time t + £G does not appear at time t because the user cannot recognize objects that are outside of her AOI at time t .
+In fact, it turned out that the side length of her AOI was smaller than the optimal distance between the user and the house at the time t .
+Therefore, there is no other way but to increase the visible range of the user in this model to make such an experience unlikely .
+A large AOI, however, may lead to a significant system degradation .
+To overcome the object popping problem, we propose a new view model which we call object initiated view model .
+All object entities have their own AOI centered at their current location while all spectator entities have no AOI .
+Every user entity recognizes the objects whose AOIs cover its point location .
+The main strengths of the new model are that (1) it has no object popping problem as long as the underlying system can manage the optimal visible range of all object entities correctly and that (2) the content creators can produce an enriched expressiveness of various behavioral and temporal changes .
+A huge object may have a farther visible range than a small one; an object has a broader visible range during day time than at night; even during the night the visible range of an object that owns a light source will have a much wider visible area than a non illuminated object; if an object is located inside a building, its visible range would be constrained by the surrounding structure .
+One of the potential arguments against the object initiated view is that indexing of the spatial extension of an object is too complex to be practical, compared with the user initiated view .
+We agree E2 E1 A S Client S Client A Sub world Server Figure 2
+that existing spatial indexing methods are inefficient in supporting our view model .
+To refute this argument, we propose a novel spatial indexing solution detailed in Section 4.4 .
+Our spatial indexing solution offers a very promising performance even with a large number of mobile entities and visibility calculations in real time .
+For the rest of the paper our design scope is limited to a 2D space, although our application is targeted for 3D environments3 .
+Note that our view model is not intended to rival a sophisticated visibility decision algorithm such as visibility culling [6], but to efficiently filter out unnecessary entities that do not contribute to the final image .
+In Section 6.1 we evaluate both models through quantitatively measures such as the degree of expressiveness and the quality of the two view models and we discuss simulation results. .

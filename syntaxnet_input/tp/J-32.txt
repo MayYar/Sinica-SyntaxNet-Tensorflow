@@ -1,0 +1,631 @@
+﻿Nash Equilibria in Graphical Games on Trees Revisited ∗ 
+content:
+1 ABSTRACT :
+1-1:Graphical games have been proposed as a game theoretic model of large scale distributed networks of non cooperative agents .
+1-2:When the number of players is large, and the underlying graph has low degree, they provide a concise way to represent the players" payoffs .
+1-3:It has recently been shown that the problem of finding Nash equilibria in a general degree 3 graphical game with two actions per player is complete for the complexity class PPAD, indicating that it is unlikely that there is any polynomial time algorithm for this problem .
+1-4:In this paper, we study the complexity of graphical games with two actions per player on bounded degree trees .
+1-5:This setting was first considered by Kearns, Littman and Singh, who proposed a dynamic programming based algorithm that computes all Nash equilibria of such games .
+1-6:The running time of their algorithm is exponential, though approximate equilibria can be computed efficiently .
+1-7:Later, Littman, Kearns and Singh proposed a modification to this algorithm that can find a single Nash equilibrium in polynomial time .
+1-8:We show that this modified algorithm is incorrect the output is not always a Nash equilibrium .
+1-9:We then propose a new algorithm that is based on the ideas of Kearns et al .
+1-10:and computes all Nash equilibria in quadratic time if the input graph is a path, and in polynomial time if it is an arbitrary graph of maximum degree 2 .
+1-11:Moreover, our algorithm can be used to compute Nash equilibria of graphical games on arbitrary trees, but the running time can be exponential, even when the tree has bounded degree .
+1-12:We show that this is inevitable any algorithm of this type will take exponential time, even on bounded degree trees with pathwidth 2 .
+1-13:It is an open question whether our algorithm runs in polynomial time on graphs with pathwidth 1, but we show that finding a Nash equilibrium for a 2 action graphical game in which the underlying graph has maximum degree 3 and constant pathwidth is PPAD complete (so is unlikely to be tractable) .
+1-14:F.2 [Theory of Computation]: Analysis of Algorithms and .
+2 INTRODUCTION :
+2-1:Graphical games were introduced in the papers of Kearns et al .
+2-2:[8] and Littman et al .
+2-3:[9] as a succinct representation of games with a large number of players .
+2-4:The classical normal form (or matrix form) representation has a size that is exponential in the number of players, making it unsuitable for large scale distributed games .
+2-5:A graphical game associates each player with a vertex of an underlying graph G, and the payoff to that player is a function of the actions chosen by himself and his neighbours in G; if G has low degree, this is a concise way to represent a game with many players .
+2-6:The papers [8, 9] give a dynamic programming algorithm for finding Nash equilibria in graphical games where there are two actions per player and G is a tree .
+2-7:The first of these papers describes a generic algorithm for this problem that can be specialized in two ways: as an algorithm that computes approximations to all Nash equilibria in time polynomial in the input size and the approximation quality, or as an exponential time algorithm that allows the exact computation of all Nash equilibria in G .
+2-8:In [9], the authors propose a modification to the latter algorithm that aims to find a single Nash equilibrium in polynomial time .
+2-9:This does not quite work, as we show in Section 3, though it introduces a useful idea .
+2-10:1.1 Background The generic algorithm of [8] consists of two phases which we will refer to as the upstream pass and the downstream pass; 1 the former starts at the leaves of the tree and ends at the root, while the latter starts at the root and ends at the leaves .
+2-11:It is assumed that each player has two pure strategies (actions), which are denoted by 0 and 1; it follows that any mixed strategy can be represented as a single number x ∈ [0, 1], where x is the probability that the player selects 1 .
+2-12:During the upstream pass, each vertex V computes the set of its potential best responses to every mixed strategy w of its parent W ; a strategy v is a potential best response to w if 1 Note that the terminology upstream and downstream are reversed in [8, 9] our trees are rooted at the top .
+2-13:100 there is a Nash equilibrium in the graphical game downstream of V (inclusive) given that W plays w (for a more technical definition, the reader is referred to Section 2) .
+2-14:The output of this stage can be viewed as a (continuous) table T(w, v), where T(w, v) = 1 if and only if v is a potential best response to w; we refer to this table as the best response policy for V .
+2-15:The generic algorithm does not address the problem of representing the best response policy; in fact, the most important difference between the two instantiations of the generic algorithm described in [8] is in their approach to this issue .
+2-16:The computation is performed inductively: the best response policy for V is computed based on the best response policies of V "s children U1, .
+2-17:.
+2-18:.
+2-19:, Uk .
+2-20:By the end of the upstream pass, all children of the root have computed their best response policies .
+2-21:In the beginning of the downstream pass, the root selects its strategy and informs its children about its choice .
+2-22:It also selects a strategy for each child .
+2-23:A necessary and sufficient condition for the algorithm to proceed is that the strategy of the root is a best response to the strategies of its children and, for each child, the chosen strategy is one of the pre computed potential best responses to the chosen strategy of the root .
+2-24:The equilibrium then propagates downstream, with each vertex selecting its children"s actions .
+2-25:The action of the child is chosen to be any strategy from the pre computed potential best responses to the chosen strategy of the parent .
+2-26:To bound the running time of this algorithm, the paper [8] shows that any best response policy can be represented as a union of an exponential number of rectangles; the polynomial time approximation algorithm is obtained by combining this representation with a polynomial sized grid .
+2-27:The main idea of [9] is that it is not necessary to keep track of all rectangles in the best response policies; rather, at each step of the upstream pass, it is possible to select a polynomial size subset of the corresponding policy (in [9], this subset is called a breakpoint policy), and still ensure that the downstream pass can proceed successfully (a sufficient condition for this is that the subset of the best response policy for V stored by the algorithm contains a continuous path from w = 0 to w = 1) .
+2-28:1.2 Our Results One of the main contributions of our paper is to show that the algorithm proposed by [9] is incorrect .
+2-29:In Section 3 we describe a simple example for which the algorithm of [9] outputs a vector of strategies that does not constitute a Nash equilibrium of the underlying game .
+2-30:In Sections 4, 5 and 6 we show how to fix the algorithm of [9] so that it always produces correct output .
+2-31:Section 4 considers the case in which the underlying graph is a path of length n .
+2-32:For this case, we show that the number of rectangles in each of the best response policies is O(n2 We consider graphical games in which the underlying graph G is an n vertex tree .
+2-33:Each vertex has two actions, which are denoted by 0 and 1 .
+2-34:A mixed strategy is given by a single number x ∈ [0, 1], which denotes the probability that the player selects action 1 .
+2-35:Fur the purposes of the algorithm, the tree is rooted arbitrarily .
+2-36:For convenience, we assume without loss of generality that the root has a single child, and that its payoff is independent of the action chosen by the child .
+2-37:This can be achieved by first choosing an arbitrary root of the tree, and then adding a dummy parent of this root, giving the new parent a constant payoff function .
+2-38:Given an edge (V, W ) of the tree G, and a mixed strategy w for W , let G(V,W ),W =w be the instance obtained from G by (1) deleting all nodes Z which are separated from V by W (i.e., all nodes Z such that the path from Z to V passes through W ), and (2) restricting the instance so that W is required to play mixed strategy w .
+2-39:Definition 1 .
+2-40:Suppose that (V, W ) is an edge of the tree, that v is a mixed strategy for V and that w is a mixed strategy for W .
+2-41:101 We say that v is a potential best response to w (denoted by v ∈ pbrV (w)) if there is an equilibrium in the instance G(V,W ),W =w in which V has mixed strategy v .
+2-42:We define the best response policy for V , given W , as B(W, V ) = {(w, v) | v ∈ pbrV (w), w ∈ [0, 1]} .
+2-43:Typically, W is the parent of V , and this is just referred to as the best response policy for V .
+2-44:The expression B(W, V )|V =v is used to denote the set B(W, V ) ∩ [0, 1]×{v} .
+2-45:The upstream pass of the generic algorithm of [8] computes the best response policy for V for every node V other than the root .
+2-46:With the above assumptions about the root, the downstream pass is straightforward: Let W denote the root and V denote its child .
+2-47:The root selects any pair (w, v) from B(W, V ) .
+2-48:It decides to play mixed strategy w and it instructs V to play mixed strategy v .
+2-49:The remainder of the downward pass is recursive .
+2-50:When a node V is instructed by its parent to adopt mixed strategy v, it does the following for each child U It finds a pair (v, u) ∈ B(V, U) (with the same v value that it was given by its parent) and instructs U to play u. .
+3 ALGORITHM OF LITTMAN ET AL. :
+3-1:The algorithm of [9] is based on the following observation: to compute a single Nash equilibrium by a two pass algorithm, it is not necessary to construct the entire best response policy for each vertex .
+3-2:As long as, at each step of the downstream pass, the vertex under consideration can select a vector of strategies for all its children so that each child"s strategy is a potential best response to the parent"s strategy, the algorithm succeeds in producing a Nash equilibrium .
+3-3:This can be achieved if, at the beginning of the downstream pass, we have a data structure in which each vertex V with parent W stores a set ˆB(W, V ) ⊆ B(W, V ) (called a breakpoint policy) which covers every possible w ∈ [0, 1] .
+3-4:We will show later that a sufficient condition for the construction of such a data structure is the invariant that, at every level of the upstream pass, ˆB(W, V ) contains a continuous path from w = 0 to w = 1 .
+3-5:In [9], it is suggested that we can select the breakpoint policy in a particular way .
+3-6:Namely, the paper uses the following definition: Definition 2 .
+3-7:(cf .
+3-8:[9]) A breakpoint policy for a node V with parent W consists of an ordered set of W breakpoints w0 = 0 < w1 < w2 < · · · < wt−1 < wt = 1 and an associated set of V values v1, .
+3-9:.
+3-10:.
+3-11:, vt .
+3-12:The interpretation is that for any w ∈ [0, 1], if wi−1 < w < wi for some index i and W plays w, then V shall play vi; and if w = wi for some index i, then V shall play any value between vi and vi+1 .
+3-13:We say such a breakpoint policy has t − 1 breakpoints .
+3-14:The paper then claims that any vertex V can compute its breakpoint policy with respect to its parent W given the breakpoint policies of its children U1, .
+3-15:.
+3-16:.
+3-17:, Uk .
+3-18:The proof proceeds by ordering the children"s breakpoints (i.e., the respective values of v) from left to right (it can be assumed without loss of generality that all these breakpoints are distinct) and considering them in turn; each such point vl ∈ {v1, .
+3-19:.
+3-20:.
+3-21:, vL} corresponds to a fixed choice of strategies for k − 1 children and an interval of admissible strategies for one child .
+3-22:Assume for convenience that this child is U1 and its interval of admissible strategies at vl is [a, b]; assume also that for Uj , j = 2, .
+3-23:.
+3-24:.
+3-25:, k, their respective breakpoint policies prescribe them to play uj in response to vl .
+3-26:Let P i (u, w), i = 0, 1, be the expected payoff for V when V plays i, U1 plays u, each Uj , j = 2, .
+3-27:.
+3-28:.
+3-29:, k, plays uj, and W plays w, and consider the set Wl = {w ∈ [0, 1] | ∃u ∈ [a, b] s.t .
+3-30:P 0 (u, w) = P1 (u, w)}; note that for any w ∈ Wl we have vl ∈ pbrV (w) .
+3-31:v1 v2 v3 v4 v5 v6 v7 V W Figure 1: LKS: Trimming to find breakpoint policies .
+3-32:The authors show that for any breakpoint vl, the set Wl is either empty, a single interval, or a union of two non floating intervals (an interval is non floating if one of its endpoints is 0 or 1); moreover, the union of all sets Wl, l = 1, .
+3-33:.
+3-34:.
+3-35:, L, covers the interval [0, 1] .
+3-36:It follows easily that one can cover [0, 1] with at most L+2 intervals, each of which is a subset of some Wl .
+3-37:The authors then claim that any such cover can be transformed into a breakpoint policy for V .
+3-38:Namely, they say that for any two intervals Wl1 and Wl2 in the cover, Any overlap between Wl1 and Wl2 can be arbitrarily assigned coverage by Wl1 and Wl2 trimmed accordingly (cf .
+3-39:[9], as Figure 1 here .
+3-40:In the figure, the dashed horizontal lines represent the breakpoints v1, v2, .
+3-41:.
+3-42:.
+3-43:, v7 and the solid intervals along these breakpoints are the sets W1, W2, .
+3-44:.
+3-45:.
+3-46:, W7 .
+3-47:The thick connected path is the corresponding breakpoint policy .
+3-48:It is chosen as follows: begin on the left, and always jump to the interval allowing greatest progress to the right .
+3-49:To see why this approach does not work in general, consider a path of length 4 consisting of an indifferent root R, its child W , W "s child V , and V "s child U .
+3-50:Suppose that U receives a payoff of 1 if it plays differently to V and 0 otherwise .
+3-51:Thus, if v denotes the mixed strategy of V (i.e., V plays 1 with probability v), then the expected payoff that U derives from playing 0 is given by P0 = v and the expected payoff that U derives from playing 1 is given by P1 = 1 − v .
+3-52:Suppose that V derives no payoff from playing 1 (so P1 (V ) = 0) and that its payoff matrix for playing 0 is 1 −9 9 −1 , so if u denotes the mixed strategy of U and w denotes the mixed strategy of W , the expected payoff that V derives from playing 0 is given by P0 (V ) = (1 − u)(1 − w) + (1 − u)w(−9) + u(1 − w)9 + uw(−1) .
+3-53:Using the techniques of [8] (or, alternatively, those of Section 4), it is not hard to verify that the best response policies for U and V (as in Definition 1) are given by the graphs in Figure 2 .
+3-54:The best response policy for U is a breakpoint policy for U (as in Definition 2) with V breakpoints v0 = 0, v1 = 1 2 and v2 = 1 with associated values u1 = 1 and u2 = 0 .
+3-55:The best response policy for V is not a breakpoint policy (because of how the curve from w = 0 to w = 1 doubles back) .
+3-56:The LKS algorithm would trim to get a breakpoint policy such as the one in Figure 3 .
+3-57:Note that this breakpoint policy ˆB(W, V ) is invalid in the sense that it does not satisfy ˆB(W, V ) ⊆ B(W, V ) .
+3-58:102 1 10.5 0.5 1 10.1 0.9 u v v w Figure 2: Best response policies for U and V .
+3-59:0.1 0.9 1 0.5 1 v w Figure 3: A trimmed policy for V The point is that the payoff matrix of W can now be chosen to prevent the LKS algorithm from finding a Nash equilibrium .
+3-60:For example, suppose the payoffs are given so that P0 (W ) = v and P1 (W ) = (1−v)2 .
+3-61:The best response policy for W is a horizontal line at w = .1 (This is the value of w that allows v = 2 3 see Figure 2, which makes P0 (W ) = P1 (W ).) In the downward pass, the chosen values are w = .1, then, from the trimming, v = 0 and u = 1, which is not a Nash equilibrium since W prefers action 1 .
+3-62:The failure of the algorithm is not caused by the fact that the trimming policy goes as far to the right as possible .
+3-63:Any other trimming would be just as bad .
+3-64:For example, suppose the breakpoint policy for V has v = 0 until some point w∗ < .9 and then jumps to v = 1 .
+3-65:The algorithm is then defeated by the payoff matrix with P 0 (W ) = 2v and P1 (W ) = (1 − v) in which the best response policy for W is a horizontal line at w = .9 .
+3-66:The algorithm then gives w = .9, v = 1, and u = 0, which is not a Nash equilibrium since W prefers action 0 .
+3-67:We conclude that the LKS algorithm does not always find a Nash equilibrium .
+3-68:In Sections 4 and 6 we show how to modify the algorithm so that it always finds a Nash equilibrium .
+3-69:For the modified algorithm, we have to extend the definition of breakpoint policy (see Definition 3) so that it includes breakpoint policies such as the best response policy for V in Figure 2 .
+3-70:Unfortunately, such a breakpoint policy may be exponential in size (see Figure 7) so the corrected algorithm does not run in polynomial time on all trees .
+3-71:In the next section, we show that it runs in polynomial time on a path. .
+4 FINDING EQUILIBRIA ON A PATH :
+4-1:In this section, we focus on the case when the underlying graph is a path, i.e., its vertex set is {V1, .
+4-2:.
+4-3:.
+4-4:, Vn}, and its edge set is {(Vj , Vj+1) | j = 1, .
+4-5:.
+4-6:.
+4-7:, n − 1} .
+4-8:We show that in this case the best response policy for each vertex can be represented as a union of a polynomial number of rectangles, where a rectangle is defined by a pair of closed intervals (IV , IU ) and consists of all points in IV × IU ; it may be the case that one or both of the intervals IV and IU consists of a single point .
+4-9:THEOREM 5 .
+4-10:For any j = 1, .
+4-11:.
+4-12:.
+4-13:, n, the set B(Vj , Vj−1) can be represented as a disjoint union of at most (j + 4)2 rectangles .
+4-14:Moreover, given such representation of B(Vj , Vj−1), one can compute a representation of B(Vj+1, Vj) in time O(j2 ) .
+4-15:PROOF .
+4-16:For any set A ⊆ [0, 1]2 that is represented as a union of a finite number of rectangles, we say that a point u ∈ [0, 1] on the U axis is a U event point of A if u = 0 or u = 1 or A contains a rectangle of the form IV × IU and u is an endpoint of IU ; V event points are defined similarly .
+4-17:Observe that for any u ∈ [0, 1], the number of connected components of [0, 1]×{u} ∩ A is at most the number of V event points of A .
+4-18:We use induction on j to show that for each Vj the statement of the theorem holds and, additionally, each B(Vj , Vj−1) has at most 2j + 4 event points .
+4-19:To simplify the base case, we modify the graphical game by appending a dummy vertex V0 to the beginning of the path: the only neighbour of V0 is V1, the payoffs of V0 are always equal to 0, and the payoffs of all other vertices (including V1) are the same as in the original game .
+4-20:For j = 0, we have B(V1, V0) = [0, 1]2 , so the statement of the theorem is trivially true .
+4-21:Now, suppose that j > 0, set V = Vj and let U = Vj−1 and W = Vj+1 be the vertices that precede and follow V , respectively .
+4-22:The payoffs to V are described by a 2×2×2 matrix P: Pxyz is the payoff that V receives when U plays x, V plays y, and W plays z, where x, y, z ∈ {0, 1} .
+4-23:Suppose that U plays 1 with probability u and W plays 1 with probability w .
+4-24:Then V "s expected payoff from playing 0 is P0 =(1−u)(1−w)P000+(1−u)wP001+u(1−w)P100+uwP101, while its expected payoff from playing 1 is P1 =(1−u)(1−w)P010+(1−u)wP011+u(1−w)P110+uwP111 .
+4-25:If P 0 > P1 , V strictly prefers to play 0, if P0 < P1 , V strictly prefers to play 1, and if P0 = P1 , V is indifferent, i.e., can play any (mixed) strategy .
+4-26:Since P0 and P1 are linear in w and u, there exist some constants A1, A0, B1, and B0 that depend on the matrix P, but not on u and w, such that P0 − P1 = w(B1u + B0) − (A1u + A0) .
+4-27:(1) Depending on the values of A1, A0, B1, and B0, we subdivide the rest of the proof into the following cases .
+4-28:• B1 = 0, B0 = 0 .
+4-29:In this case, P0 > P1 if and only if A1u + A0 < 0 .
+4-30:If also A1 = 0, A0 = 0, clearly, B(W, V ) = [0, 1]2 , and the statement of the theorem is trivially true .
+4-31:Otherwise, the vertex V is indifferent between 0 and 1 if and only if A1 = 0 and u = −A0 A1 .
+4-32:Let V = {v | v ∈ (0, 1), −A0 A1 ∈ pbrU (v)} .
+4-33:By the inductive hypothesis, V consists of at most 2(j − 1) + 4 segments and isolated points .
+4-34:For any v ∈ V, we have B(W, V )|V =v = [0, 1]: no matter what W plays, as long as U is playing −A0 A1, V is content to play v .
+4-35:On the other hand, for any v ∈ (0, 1) \ V we have B(W, V )|V =v = ∅: when V plays v, U can only respond with u = −A0 A1, in which case V can benefit from switching to one of the pure strategies .
+4-36:To complete the description of B(W, V ), it remains to analyze the cases v = 0 and v = 1 .
+4-37:The vertex V prefers to play 0 if A1 > 0 and u ≤ −A0 A1, or A1 < 0 and u ≥ −A0 A1, or 103 A1 = 0 and A0 < 0 .
+4-38:Assume for now that A1 > 0; the other two cases can be treated similarly .
+4-39:In this case 0 ∈ pbrV (w) for some w ∈ [0, 1] if and only if there exists a u ∈ pbrU (0) such that u ≤ −A0 A1: if no such u exists, whenever V plays 0 either U"s response is not in pbrU (0) or V can improve its payoff by playing Similarly, B(W, V )|V =1 is equal to either [0, 1] or ∅, depending on pbrU (1) .
+4-40:Therefore, the set B(W, V ) consists of at most 2j + 4 ≤ (j + 4)2 rectangles: B(W, V ) ∩ [0, 1]×(0, 1) = [0, 1]×V contributes at most 2j + 2 rectangles, and each of the sets B(W, V )|V =0 and B(W, V )|V =1 contributes at most one rectangle .
+4-41:Similarly, its total number of event points is at most 2j + 4: the only W event points are 0 and 1, each V event point of B(W, V ) is a V event point of B(V, U), and there are at most 2j + 2 of them .
+4-42:• B1u + B0 ≡ 0, A1 = αB1, A0 = αB0 for some α ∈ R .
+4-43:In this case, V is indifferent between 0 and 1 if and only if w = α, or B1 = 0 and u = −B0 B1 = −A0 A1 .
+4-44:Similarly to the previous case, we can show that B(W, V )∩[0, 1]×(0, 1) consists of the rectangle {α}×[0, 1] and at most 2j + 2 rectangles of the form [0, 1]×IV , where each IV corresponds to a connected component of B(V, U)|U=−B0 B1 .
+4-45:Furthermore, V prefers to play 0 if B1u + B0 > 0 and w ≥ α or B1u + B0 < 0 and w ≤ α .
+4-46:Therefore, if B1u∗ + B0 > 0 for some u∗ ∈ pbrU (0), then B(W, V )|V =0 contains [α, +∞) ∩ [0, 1] and if B1u∗∗ + B0 < 0 for some u∗∗ ∈ pbrU (0), then B(W, V )|V =0 contains [−∞, α] ∩ [0, 1]; if both u∗ and u∗∗ exist, B(W, V )|V =0 = [0, 1] .
+4-47:The set B(W, V )|V =1 can be described in a similar manner .
+4-48:By the inductive hypothesis, B(V, U) has at most 2j + 2 event points; as at least two of these are U event points, it has at most 2j V event points .
+4-49:Since each V event point of B(W, V ) is a Vevent point of B(V, U) and B(W, V ) has at most 3 W event points (0, 1, and α), its total number of event points is at most 2j + 3 < 2j +4 .
+4-50:Also, similarly to the previous case it follows that B(W, V ) consists of at most 2j + 4 < (j + 4)2 rectangles .
+4-51:• B1u + B0 ≡ 0, α(B1u + B0) ≡ A1u + A0 .
+4-52:In this case, one can define the indifference function f(·) as f(u) = A(u) B(u) = A1u+A0 B1u+B0 , where A(u) and B(u) never turn into zero simultaneously .
+4-53:Observe that whenever w = f(u) and u, w ∈ [0, 1], V is indifferent between playing 0 and 1 .
+4-54:For any A ⊆ [0, 1]2 , we define a function ˆfV by ˆfV = {(f(u), v) | (v, u) ∈ A}; note that ˆfV maps subsets of [0, 1]2 to subsets of R×[0, 1] .
+4-55:Sometimes we drop the subscript V when it is clear from the context .
+4-56:LEMMA 1 .
+4-57:For any (w, v) ∈ [0, 1]×(0, 1) we have (w, v) ∈ B(W, V ) if and only if there exists a u ∈ [0, 1] such that (v, u) ∈ B(V, U) and w = f(u) .
+4-58:PROOF .
+4-59:Fix an arbitrary v ∈ (0, 1) .
+4-60:Suppose that U plays some u ∈ pbrU (v), w = f(u) satisfies w ∈ [0, 1], and W plays w .
+4-61:There exists a vector of strategies v1, .
+4-62:.
+4-63:.
+4-64:, vj−1 = u, vj = v such that for each Vk, k < j, its strategy is a best response to its neighbours" strategies .
+4-65:Since w = f(u), V is indifferent between playing 0 and 1; in particular, it can play v .
+4-66:Therefore, if we define vj+1 = w, the vector of strategies (v1, .
+4-67:.
+4-68:.
+4-69:, vj+1) will satisfy the conditions in the definition of potential best response, i.e., we have v ∈ pbrV (w) .
+4-70:Conversely, suppose v ∈ pbrV (w) for some w ∈ [0, 1], v = 0, 1 .
+4-71:Then there exists a vector of strategies v1, .
+4-72:.
+4-73:.
+4-74:, vj−1, vj = v, vj+1 = w such that for each Vk, k ≤ j, its strategy is a best response to its neighbours" strategies .
+4-75:As v = 0, 1, V is, in fact, indifferent between playing 0 and 1, which is only possible if w = f(vj−1) .
+4-76:Choose u = vj−1; by construction, u ∈ pbrU (v) .
+4-77:Lemma 1 describes the situations when V is indifferent between playing 0 and playing 1 .
+4-78:However, to fully characterize B(W, V ), we also need to know when V prefers a pure strategy .
+4-79:Define ˆf(0) = ∪u∈pbrU (0)Ru, where Ru = ´ [f(u), +∞)×{0} if B(u) > 0, (−∞, f(u)]×{0} if B(u) < 0 .
+4-80:and ˆf(1) = ∪u∈pbrU (1)Ru, where Ru = ´ [f(u), +∞)×{1} if B(u) < 0, (−∞, f(u)]×{1} if B(u) > 0 .
+4-81:LEMMA 2 .
+4-82:For any w ∈ [0, 1], we have (w, 0) ∈ ˆf(0) if and only if 0 ∈ pbrV (w) and (w, 1) ∈ ˆf(1) if and only if 1 ∈ pbrV (w) .
+4-83:PROOF .
+4-84:Consider an arbitrary u0 ∈ pbrU (0) .
+4-85:If B(u0) > 0, for u = u0 the inequality P0 ≥ P1 is equivalent to w ≥ f(u0) .
+4-86:Therefore, when U plays u0 and W plays w, w ≥ f(u0), V prefers to play 0; as u0 ∈ pbrU (u), it follows that 0 ∈ pbrV (w) .
+4-87:The argument for the case B(u0) < 0 is similar .
+4-88:Conversely, if 0 ∈ pbrV (w) for some w ∈ [0, 1], there exists a vector (v1, .
+4-89:.
+4-90:.
+4-91:, vj−1, vj = 0, vj+1 = w) such that for each Vk, k ≤ j, Vk plays vk, and this strategy is a best response to the strategies of Vk"s neighbours .
+4-92:Note that for any such vector we have vj−1 ∈ pbrU (0) .
+4-93:By way of contradiction, assume (w, 0) ∈ Ë u∈pbrU (0) Ru .
+4-94:Then it must be the case that for any u0 ∈ pbrU (0) either f(u0) < w and Ru0 = (−∞, f(u0)]×{0} or f(u0) > w and Ru0 = [f(u0), +∞)×{0} .
+4-95:In both cases, when V plays 0, U plays u0, and V plays w, the inequality between f(u0) and w is equivalent to P0 < P1 , i.e., V would benefit from switching to 1 .
+4-96:The argument for ˆf(1) is similar .
+4-97:Together, Lemma 1 and Lemma 2 completely describe the set B(W, V ): we have B(W, V ) = ˆf(0) ∪ ˆf(B(V, U)) ∪ ˆf(1) [0, 1]2 .
+4-98:It remains to show that B(W, V ) can be represented as a union of at most (j + 4)2 rectangles, has at most 2j + 4 event points, and can be computed in O(j2 ) time .
+4-99:Set u∗ = −B0 B1 .
+4-100:2 Consider an arbitrary rectangle R = [v1, v2]×[u1, u2] ⊆ B(V, U) .
+4-101:If u∗ ∈ [u1, u2], the function f(·) is continuous on [u1, u2] and hence ˆf(R) = [fmin, fmax]×[v1, v2], where fmin = min{f(u1), f(u2)}, fmax = max{f(u1), f(u2)}, i.e., in this case ˆf(R) ∩ [0, 1]2 consists of a single rectangle .
+4-102:Now, suppose that R is intersected by the line [0, 1]×{u∗ }; as was noted earlier, there are at most 2j+2 such rectangles .
+4-103:Suppose that limu→u∗− f(u) = +∞; as f(·) is a fractional linear function, this implies that limu→u∗+ f(u) = −∞ and also f(u1) > f(u2) .
+4-104:Since f(·) is continuous on [u1, u∗ ) and (u∗ , u2], it is easy to see that ˆf([v1, v2]×[u1, u∗ )) = [f(u1), +∞)×[v1, v2] 2 The case B1 = 0 causes no special problems .
+4-105:For completeness, set u∗ to be any value outside of [0, 1] in this case .
+4-106:104 v u v u* 1 f(0) f(a)f(b) f(1) a b (0, 0) w v 2 v (0, 0) 1 1 1 v 2 v 1 1 Figure 4: f is increasing on (−∞, u∗ ) and (u∗ , +∞) .
+4-107:and ˆf([v1, v2]×(u∗ , u2]) = (−∞, f(u2)]×[v1, v2], i.e., in this case ˆf(R) ∩ [0, 1]2 consists of at most two rectangles .
+4-108:The case limu→u∗− f(u) = −∞ is similar .
+4-109:As ˆf(B(V, U)) = Ë R⊂B(V,U) ˆf(R), it follows that ˆf(B(V, U)) consists of at most (j + 3)2 + 2j + 2 rectangles .
+4-110:Also, it is easy to see that both ˆf(0) and ˆf(1) consist of at most 2 line segments each .
+4-111:We conclude that B(W, V ) can be represented as a union of at most (j + 3)2 + 2j + 6 < (j + 4)2 rectangles .
+4-112:Moreover, if v is a V event point of B(W, V ), then v is a Vevent point of B(V, U) (this includes the cases v = 0 and v = 1, as 0 and 1 are V event points of B(V, U)) and if w is a W event point of B(W, V ), then either w = 0 or w = 1 or there exists some u ∈ [0, 1] such that w = f(u) and u is a U event point of B(V, U) .
+4-113:Hence, B(W, V ) has at most 2j + 4 event points .
+4-114:The O(j2 ) bound on the running time in Theorem 5 follows from our description of the algorithm .
+4-115:The O(n3 ) bound on the overall running time for finding a Nash equilibrium (and a representation of all Nash equilibria) follows .
+4-116:4.1 Finding a Single Nash Equilibrium in O(n2 ) Time The upper bound on the running time of our algorithm is tight, at least assuming the straightforward implementation, in which each B(Vj+1, Vj) is stored as a union of rectangles: it is not hard to construct an example in which the size of B(Vj+1, Vj) is Ω(j2 ) .
+4-117:However, in some cases it is not necessary to represent all Nash equilibria; rather, the goal is to find an arbitrary equilibrium of the game .
+4-118:In this section, we show that this problem can be solved in quadratic time, thus obtaining a proof of Theorem 1 .
+4-119:Our solution is based on the idea of [9], i.e., working with subsets of the best response policies rather than the best response policies themselves; following [9], we will refer to such subsets as breakpoint policies .
+4-120:While it is not always possible to construct a breakpoint policy as defined in [9], we show how to modify this definition so as to ensure that a breakpoint policy always exists; moreover, we prove that for a path graph, the breakpoint policy of any vertex can be stored in a data structure whose size is linear in the number of descendants this vertex has .
+4-121:Definition 3 .
+4-122:A breakpoint policy ˆB(V, U) for a vertex U whose parent is V is a non self intersecting curve of the form X1 ∪ Y1 ∪ · · · ∪ Ym−1 ∪ Xm, where Xi = [vi−1, vi]×{ui}, Yi = {vi}×[ui, ui+1] and ui, vi ∈ [0, 1] for i = 0, .
+4-123:.
+4-124:.
+4-125:, m .
+4-126:We say that a breakpoint policy is valid if v0 = 0, vm = 1, and ˆB(V, U) ⊆ B(V, U) .
+4-127:We will sometimes abuse notation by referring to ˆB(V, U) as a collection of segments Xi, Yi rather than their union .
+4-128:Note that we do not require that vi ≤ vi+1 or ui ≤ ui+1; consequently, in any argument involving breakpoint policies, all segments are to be treated as directed segments .
+4-129:Observe that any valid breakpoint policy ˆB(V, U) can be viewed as a continuous 1 1 mapping γ(t) = (γv(t), γu(t)), γ : [0, 1] → [0, 1]2 , where γ(0) = (0, u1), γ(1) = (1, um) and there exist some t0 = 0, t1, .
+4-130:.
+4-131:.
+4-132:, t2m−2 = 1 such that {γ(t) | t2k ≤ t ≤ t2k+1} = Xk+1, {γ(t) | t2k+1 ≤ t ≤ t2k+2} = Yk+1 .
+4-133:As explained in Section 3, we can use a valid breakpoint policy instead of the best response policy during the downstream pass, and still guarantee that in the end, we will output a Nash equilibrium .
+4-134:Theorem 6 shows that one can inductively compute valid breakpoint policies for all vertices on the path; the proof of this theorem can be found in the full version of this paper [6] .
+4-135:THEOREM 6 .
+4-136:For any V = Vj, one can find in polynomial time a valid breakpoint policy ˆB(W, V ) that consists of at most 2j + 1 segments. .
+5 NASH EQUILIBRIA ON GRAPHS WITH MAXIMUM DEGREE 2 :
+5-1:MAXIMUM DEGREE 2 In this section we show how the algorithm for paths can be applied to solve a game on any graph whose vertices have degree at most 2 .
+5-2:A graph having maximum degree 2 is, of course, a union of paths and cycles .
+5-3:Since each connected component can be handled independently, to obtain a proof of Theorem 2, we only need to show how to deal with cycles .
+5-4:Given a cycle with vertices V1, .
+5-5:.
+5-6:.
+5-7:, Vk (in cyclic order), we make two separate searches for a Nash equilibrium: first we search for a Nash equilibrium where some vertex plays a pure strategy, then we search for a fully mixed Nash equilibrium, where all vertices play mixed strategies .
+5-8:For i ≤ k let vi denote the probability that Vi plays 1 .
+5-9:The first search can be done as follows .
+5-10:For each i ∈ {1, .
+5-11:.
+5-12:.
+5-13:, k} and each b ∈ {0, 1}, do the following .
+5-14:only on vi+1 and vi+2.) .
+6 Apply the upstream pass to P :
+6-1:keep track of all possible mixed strategies vj with vi = b; if so we have a Nash equilibrium .
+6-2:(Otherwise, there is no Nash equilibrium of the desired form.) For the second search, note that if Vi plays a mixed strategy, then vi+1 and vi−1 satisfy an equation of the form vi+1 = (A0 + A1vi−1) (B0 + B1vi−1) .
+6-3:Since all vertices in the cycle play mixed strategies, we have vi+3 = (A0 +A1vi+1) (B0 +B1vi+1) .
+6-4:Composing the two linear fractional transforms, we obtain vi+3 = (A0 +A1 vi−1) (B0 +B1 vi−1) .
+6-5:for some new constants A0 , A1 , B0 , B1 .
+6-6:Choose any vertex Vi .
+6-7:We can express vi in terms of vi+2, then vi+4, vi+6 etc .
+6-8:and ultimately vi itself to obtain a quadratic equation (for vi) that is simple to derive from the payoffs in the game .
+6-9:If the equation is non trivial it has at most 2 solutions in (0, 1) .
+6-10:For an odd length cycle all other vj "s are derivable from those solutions, and if a fully mixed Nash equilibrium exists, all the vj should turn out to be real numbers in the range (0, 1) .
+6-11:For an even length cycle, we obtain two quadratic equations, one for vi and another for 105 vi+1, and we can in the same way test whether any solutions to these yield values for the other vj , all of which lie in (0, 1) .
+6-12:If the quadratic equation is trivial, there is potentially a continuum of fully mixed equilibria .
+6-13:The values for vi that may occur in a Nash equilibrium are those for which all dependent vj values lie in (0, 1); the latter condition is easy to check by computing the image of the interval (0, 1) under respective fractional linear transforms. .
+7 FINDING EQUILIBRIA ON AN  (ARBITRARY) TREE :
+7-1:TREE For arbitrary trees, the general structure of the algorithm remains the same, i.e., one can construct a best response policy (or, alternatively, a breakpoint policy) for any vertex based on the best response policies of its children .
+7-2:We assume that the degree of each vertex is bounded by a constant K, i.e., the payoff matrix for each vertex is of size O(2K ) .
+7-3:Consider a vertex V whose children are U1, .
+7-4:.
+7-5:.
+7-6:, Uk and whose parent is W ; the best response policy of each Uj is B(V, Uj) .
+7-7:Similarly to the previous section, we can compute V "s expected payoffs P0 and P1 from playing 0 or 1, respectively .
+7-8:Namely, when each of the Uj plays uj and W plays w, we have P0 = L0 (u1, .
+7-9:.
+7-10:.
+7-11:, uk, w), P 1 = L1 (u1, .
+7-12:.
+7-13:.
+7-14:, uk, w), where the functions L0 (·, .
+7-15:.
+7-16:.
+7-17:, ·), L1 (·, .
+7-18:.
+7-19:.
+7-20:, ·) are linear in all of their arguments .
+7-21:Hence, the inequality P0 > P1 can be rewritten as wB(u1, .
+7-22:.
+7-23:.
+7-24:, uk) > A(u1, .
+7-25:.
+7-26:.
+7-27:, uk), where both A(·, .
+7-28:.
+7-29:.
+7-30:, ·) and B(·, .
+7-31:.
+7-32:.
+7-33:, ·) are linear in all of their arguments .
+7-34:Set u = (u1, .
+7-35:.
+7-36:.
+7-37:, uk) and define the indifference function f : [0, 1]k → [0, 1] as f(u) = A(u) B(u); clearly, if each Uj plays uj, W plays w and w = f(u), V is indifferent between playing 0 and 1 .
+7-38:For any X = X1 × · · · × Xk, where Xi ⊆ [0, 1]2 define ˆf(X) = {(f(u), v) | (v, ui) ∈ Xi, i = 1, .
+7-39:.
+7-40:.
+7-41:, k} Also, set ˆf(0) = {(w, 0) | ∃u s.t .
+7-42:ui ∈ pbrUi (0) and wB(u) ≥ A(u)} and ˆf(1) = {(w, 1) | ∃u s.t .
+7-43:ui ∈ pbrUi (1) and wB(u) ≤ A(u)} .
+7-44:As in previous section, we can show that B(W, V ) is equal to ˆf(0) ∪ ˆf(B(V, U1) × · · · × B(V, Uk)) ∪ ˆf(1) [0, 1]2 ; also, any path from w = 0 to w = 1 that is a subset of B(W, V ) constitutes a valid breakpoint policy .
+7-45:6.1 Exponential Size Breakpoint Policy While the algorithm of Section 4 can be generalized for bounded degree trees, its running time is no longer polynomial .
+7-46:In fact, the converse is true: we can construct a family of trees and payoff matrices for all players so that the best response policies for some of the players consist of an exponential number of segments .
+7-47:Moreover, in our example the breakpoint policies coincide with the best response policies, which means that even finding a single Nash equilibrium using the approach of [8, 9] is going to take exponentially long time .
+7-48:In fact, a stronger statement is true: for any polynomial time two pass algorithm (defined later) that works with subsets of best response policies for this graph, we can choose the payoffs of the vertices so that the downstream pass of this algorithm will fail .
+7-49:S 1 1 T S n−1 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 0 00 1 11 0 00 1 11 0 00 1 11 0 00 1 11 0 00 1 11 0 00 1 11 0 00 1 11 00 0000 11 1111 00 0000 11 1111 0 00 1 11 0000 00000000 00000000 0000 1111 11111111 11111111 1111 000 000000 000000 000 111 111111 111111 111 S S T T T 2 n−1 n 2 n 1 n−12 n VVVVV 0 Figure 5: The tree Tn that corresponds to exponential size breakpoint policy .
+7-50:In the rest of this subsection, we describe this construction .
+7-51:Consider the tree Tn given by Figure 5; let Vn be the root of this tree .
+7-52:For every k = 1, .
+7-53:.
+7-54:.
+7-55:, n, let the payoffs of Sk and Tk be the same as those for the U and V described in Section 3; recall that the breakpoint policies for U and V are shown in Figure 2 .
+7-56:It is not hard to see that the indifference function for Tk is given by f(s) = .8s+.1 .
+7-57:The payoff of V0 is 1 if V1 selects the same action as V0 and 0 otherwise; V0"s best response policy is given by Figure 6 .
+7-58:LEMMA 3 .
+7-59:Fix k < n, and let u, t, v, and w denote the strategies of Vk−1, Tk, Vk, and Vk+1, respectively .
+7-60:Suppose that Vk prefers playing 0 to playing 1 if and only if .5t + .1u + .2 > w .
+7-61:Then B(Vk+1, Vk) consists of at least 3k segments .
+7-62:Moreover, {(v, w) | (v, w) ∈ B(Vk+1, Vk), 0 ≤ w ≤ .2} = [0, .2]×{0} and {(v, w) | (v, w) ∈ B(Vk+1, Vk), .8 ≤ w ≤ 1} = [.8, 1]×{1} .
+7-63:PROOF .
+7-64:The proof proceeds by induction on k .
+7-65:For k = 0, the statement is obvious .
+7-66:Now, suppose it is true for B(Vk, Vk−1) .
+7-67:One can view B(Vk+1, Vk) as a union of seven components: ˆf(0) ∩ [0, 1]×{0}, ˆf(1) ∩ [0, 1]×{1}, and five components that correspond to the segments of B(Vk, Tk) .
+7-68:Let us examine them in turn .
+7-69:To describe ˆf(0)∩[0, 1]×{0}, note that f(u, t) = .5t+.1u+.2 is monotone in t and u and satisfies f(0, 0) = .2 .
+7-70:Also, we have pbrVk−1 (0) = {0} and pbrTk (0) = {0} .
+7-71:For any w ∈ [0, 1] we have f(0, 0) ≥ w if and only if w ∈ [0, .2] .
+7-72:We conclude that ˆf(0) ∩ [0, 1]×{0} = [0, .2]×{0} .
+7-73:Similarly, it follows that ˆf(1) ∩ [0, 1]×{1} = [.8, 1]×{1} .
+7-74:Define S1 = {(f(u, 0), v) | (v, u) ∈ B(Vk, Vk−1) ∩ [0, .9]×[0, 1]}, S2 = {(f(u, .5), v) | (v, u) ∈ B(Vk, Vk−1) ∩ [.1, .9]×[0, 1]}, S3 = {(f(u, 1), v) | (v, u) ∈ B(Vk, Vk−1) ∩ [.1, 1]×[0, 1]}; these sets correspond to horizontal segments of B(Vk, Tk) .
+7-75:It is easy to see that S1, S2, S3 ⊂ B(Vk+1, Vk) .
+7-76:Since f is a continuous function, the number of segments in each Si is at least the number of segments in B(Vk, Vk−1)∩[.1, .9]×[0, 1], which is at least 3k−1 by induction hypothesis .
+7-77:Moreover, as f is monotone in u and f(1, 0) < f(0, .5) < f(1, .5) < f(0, 1), all Si, i = 1, 2, 3, are disjoint .
+7-78:Finally, the set B(Vk+1, Vk) contains two segments that correspond to the vertical segments of B(Vk, Tk), i.e., S4 = {(f(0, t), .1) | t ∈ [.5, 1]) = [.45, .7]×{.1} and S5 = {(f(1, t), .9) | t ∈ [0, .5]) = [.3, .55]×{.9} .
+7-79:Clearly, S4 connects S2 and S3, S5 connects S1 and S2, and S4 and S5 do not intersect each other .
+7-80:We conclude that B(Vk+1, Vk) 106 0 00 00 00 00 00 00 00 00 00 0 1 11 11 11 11 11 11 11 11 11 1 00000000001111111111 1 1 10.8 1 1 0.9 0.1 V V0.5 0.2 V V 21 10 Figure 6: Breakpoint policies for V0 and V1 .
+7-81:is a continuous line that consist of at least 3k segments and satisfies the condition of the lemma .
+7-82:To complete the construction, we need to show that we can design the payoff matrix for Vk so that it prefers playing 0 to playing 1 if and only if .5t + .1u + .2 > w .
+7-83:To this end, we prove a more general statement, namely, that the indifference function of a vertex can be an arbitrary fractional multilinear function of its descendants" strategies .
+7-84:We say that a function of k variables is multilinear if it can be represented as a sum of monomials and each of these monomials is linear in all of its variables .
+7-85:Note that this definition is different from a more standard one in that we do not require that all of the monomials have the same degree .
+7-86:Recall that the payoffs of a vertex with k + 1 neighbours are described by matrices P0 and P1 , where Pj i0i1...ik is the payoff that V gets when it plays j, and its neighbours play i0, .
+7-87:.
+7-88:.
+7-89:, ik, and j, i0, .
+7-90:.
+7-91:.
+7-92:, ik ∈ {0, 1} .
+7-93:Let P[j] = P[j](w, u1, .
+7-94:.
+7-95:.
+7-96:, uk) be the expected payoff obtained by this vertex when it plays j and the (mixed) strategies of its neighbours are given by a vector (w, u1, .
+7-97:.
+7-98:.
+7-99:, uk), i.e., P[j] = E[P j i0i1...ik ] where i0, .
+7-100:.
+7-101:.
+7-102:, ik are independent Bernoulli random variables, each of which is 1 with the respective probabilities w, u1, .
+7-103:.
+7-104:.
+7-105:, uk .
+7-106:LEMMA 4 .
+7-107:Given a tree vertex V whose parent is W and whose children are U1, .
+7-108:.
+7-109:.
+7-110:, Uk, for any function f = f(u1, .
+7-111:.
+7-112:.
+7-113:, uk) that can be represented as a ratio of two multilinear functions f1, f2, i.e., f = f1(u1,...,uk) f2(u1,...,uk) , there exist payoff matrices P0 and P1 for V such that P[0] − P[1] = wf2(u1, .
+7-114:.
+7-115:.
+7-116:, uk) − f1(u1, .
+7-117:.
+7-118:.
+7-119:, uk) .
+7-120:The proof of this lemma is based on the fact that every monomial of the form as(u0)s0 .
+7-121:.
+7-122:.
+7-123:(uk)sk , s1, .
+7-124:.
+7-125:.
+7-126:, sk ∈ {0, 1}, can be represented as t=t0...tk∈Σk+1 Ct(u0)t0 (1 − u0)1−t0 .
+7-127:.
+7-128:.
+7-129:(uk)tk (1 − uk)1−tk for some Ct, t ∈ {0, 1}k+1 .
+7-130:The details can be found in the full version of this paper [6] .
+7-131:6.2 Irreducibility of the Best Response Policy for Tn While the best response policy constructed in the previous subsection has exponential size, it is not clear `a priori that it is necessary to keep track of all of its line segments rather than to focus on a small subset of these segments .
+7-132:However, it turns out that for two pass algorithms such as the algorithm of [8], the best response policy cannot be simplified .
+7-133:More precisely, we say that an algorithm A is a two pass algorithm if 0 0 0 00 0 0 0 0 00 0 0 0 0 00 0 0 0 0 1 1 1 11 1 1 1 1 11 1 1 1 1 11 1 1 1 1 0000000000000000000000000000011111111111111111111111111111 0.2 0.8 0.9 1 0.1 1 V V 2 3 S 1 S S S S 1 T 0 T 2 3 4 5 Figure 7: Breakpoint policy for V2 .
+7-134:• A consists of an upstream pass and a downstream pass .
+7-135:• During the upstream pass, for each vertex V with parent W , A constructs a set BB(W, V ) ⊆ B(W, V ) .
+7-136:This set is produced from the sets {BB(V, U) | U is a child of V } by applying the procedure from the beginning of Section 6 (substituting BB(V, Uj ) for B(V, Uj) for all children Uj of V ) , and then possibly omitting some of the points of the resulting set (which is then stored explicitly) .
+7-137:• The downstream pass is identical to the downstream pass of [8] as described in Section 2 except that it operates on the sets BB(W, V ) rather than on the sets B(W, V ) .
+7-138:Theorem 7 demonstrates that any two pass algorithm will fail during the downstream pass on Tn if there is an index j such that the set BB(Vj+1, Vj) omits any interior point of any of the (at least 3j ) segments of B(Vj+1, Vj) .
+7-139:This implies Theorem 3 .
+7-140:THEOREM 7 .
+7-141:For any two pass algorithm A for which there exists an index j, j ∈ [1, n 4], a segment S of B(Vj , Vj−1), and an interior point (x, y) of S such that BB(Vj, Vj−1) does not contain (x, y), we can choose payoff matrices of the vertices Vj, .
+7-142:.
+7-143:.
+7-144:, Vn so that the downstream pass of A will fail, and, additionally, payoffs to V4j , .
+7-145:.
+7-146:.
+7-147:, Vn are identically 0 .
+7-148:We sketch the proof of Theorem 7; the details can be found in the full version of this paper [6] .
+7-149:We proceed by induction .
+7-150:For j = 1, the argument is similar to that in Section 3 .
+7-151:For the inductive step, the main idea is that we can zoom in on any part of a best response policy (including the part that was omitted!) by using an appropriate indifference function; this allows us to reduce the case j = j0 to j = j0 − 1. .
+8 PPAD COMPLETENESS OF BOUNDED PATHWIDTH GRAPHICAL GAMES :
+8-1:PATHWIDTH GRAPHICAL GAMES In the previous section, we showed that for graphical games on trees that are almost but not quite paths, two pass algorithms fail to find Nash equilibria in polynomial time .
+8-2:We next show that a milder path like graph property allows us to construct graphical games for which it is unlikely that any polynomial time algorithm will find Nash equilibria .
+8-3:7.1 Pathwidth A path decomposition of a graph G = (V, E) is a sequence of subset Si(V ) ⊆ V such that for each edge (v, v ) ∈ E, v, v ∈ Si(V ) for some i, and furthermore, for each v ∈ V , if v ∈ Si(V ) and v ∈ Sj(V ) for j > i, then v ∈ Sk(V ) for all i ≤ k ≤ j .
+8-4:The path decomposition has width k if all sets Si(V ) have cardinality at most k + 1 .
+8-5:The pathwidth of G is the minimum width of any path decomposition of G .
+8-6:107 Pathwidth is a restriction of treewidth (in which one would seek a tree whose vertices were the sets Si(V ), and the sets containing some vertex would have to form a subtree) .
+8-7:For any constant k it can be decided in polynomial time whether a graph has pathwidth (or treewidth) k .
+8-8:Furthermore many graph theoretic problems seem easier to solve in polynomial time, when restricted to fixed treewidth, or pathwidth, graphs, see [1] for an overview .
+8-9:Note that a path has pathwidth 1 and a cycle has pathwidth 2 .
+8-10:7.2 PPAD completeness We review some basic definitions from the computational complexity theory of search problems .
+8-11:A search problem associates any input (here, a graphical game) with a set of solutions (here, the Nash equilibria of the input game), where the description length of any solution should be polynomially bounded as a function of the description length of its input .
+8-12:In a total search problem, there is a guarantee that at least one solution exists for any input .
+8-13:Nash"s theorem assures us that the problem of finding Nash equilibria is total .
+8-14:A reduction from search problem S to problem S is a mechanism that shows that any polynomial time algorithm for S implies a polynomial time algorithm for S .
+8-15:It consists of functions f and g, computable in polynomial time, where f maps inputs of S to inputs of S , and g maps solutions of S to solutions of S, in such a way that if IS is an input to S, and SS is a solution to f(IS), then g(SS ) is a solution to IS .
+8-16:Observe that total search problems do not allow the above reductions from problems such as CIRCUIT SAT (where the input is a boolean circuit, and solutions are input vectors that make the output true) due to the fact that CIRCUIT SAT and other NP complete problems have inputs with empty solution sets .
+8-17:Instead, recent work on the computational complexity of finding a Nash equilibrium [7, 4, 5, 2, 3] has related it to the following problem .
+8-18:Definition 4 .
+8-19:END OF THE LINE .
+8-20:Input: boolean circuits S and P, each having n input and n output bits, where P(0n ) = 0n and S(0n ) = 0n .
+8-21:Solution: x ∈ {0, 1}n such that S(x) = x, or alternatively x ∈ {0, 1}n such that P(S(x)) = x .
+8-22:S and P can be thought of as standing for successor and predecessor .
+8-23:Observe that by computing Si (0n ) (for i = 0, 1, 2, .
+8-24:.
+8-25:.) and comparing with P(Si+1 (0n )), we must eventually find a solution to END OF THE LINE .
+8-26:END OF THE LINE characterizes the complexity class PPAD (standing for parity argument on a graph, directed version), introduced in Papadimitriou [11], and any search problem S is PPAD complete if END OF THE LINE reduces to sandwich hyperplane, and finding market equilibria in an exchange economy (see [11] for more detailed descriptions of these problems) .
+8-27:3 GRAPHICAL NASH is the problem of finding a Nash equilibrium for a graphical game whose graph has degree 3 .
+8-28:Daskalakis et al .
+8-29:[4] show PPAD completeness of 3 GRAPHICAL NASH by a reduction from 3 DIMENSIONAL BROUWER, introduced in [4] and defined as follows .
+8-30:Definition 5 .
+8-31:3 DIMENSIONAL BROUWER .
+8-32:Input: a circuit C having 3n input bits and 2 output bits .
+8-33:The input bits define a cubelet of the unit cube, consisting of the 3 coordinates of its points, given to n bits of precision .
+8-34:The output represents one of four colours assigned by C to a cubelet .
+8-35:C is restricted so as to assign colour 1 to cubelets adjacent to the (y, z) plane, colour 2 to remaining cubelets adjacent to the (x, z) plane, colour 3 to remaining cubelets on the (x, y) plane, and colour 0 to all other cubelets on the surface of the unit cube .
+8-36:A solution is a panchromatic vertex, a vertex adjacent to cubelets that have 4 distinct colours .
+8-37:The reason why a solution is guaranteed to exist, is that an associated Brouwer function φ can be constructed, i.e .
+8-38:a continuous function from the unit cube to itself, such that panchromatic vertices correspond to fixpoints of φ .
+8-39:Brouwer"s Fixpoint Theorem promises the existence of a fixpoint .
+8-40:The proof of Theorem 4 uses a modification of the reduction of [4] from 3 DIMENSIONAL BROUWER to 3 GRAPHICAL NASH .
+8-41:To prove the theorem, we begin with some preliminary results as follows .
+8-42:Each player has 2 actions, denoted 0 and 1 .
+8-43:For a player at vertex V let p[V ] denote the probability that the player plays 1 .
+8-44:LEMMA 5 .
+8-45:[7] There exists a graphical game Gshift of fixed size having vertices V , V where p[V ] is the fractional part of 2p[V ] .
+8-46:COROLLARY 1 .
+8-47:There exists a graphical game Gn−shift of size Θ(n) of constant pathwidth, having vertices V , Vn where p[Vn] is the fractional part of 2n .p[V ] .
+8-48:PROOF .
+8-49:Make a chain of n copies of Gshift in Lemma 5 .
+8-50:Each subset of vertices in the path decomposition is the vertices in a copy of Gshift .
+8-51:Let In(x) denote the n th bit of the binary expansion of x, where we interpret 1 as true and 0 as false .
+8-52:The following uses gadgets from [7, 4] .
+8-53:COROLLARY 2 .
+8-54:There exists k such that for all n, and for all n1, n2, n3 ≤ n, there exists a graphical game of size O(n) with pathwidth k, having vertices V1, V2, V3 where p[V3] = p[V1] + 2−n3 (In1 p[V1] ∧ In2 p[V2]) .
+8-55:PROOF OF THEOREM 4 .
+8-56:Let C be the boolean circuit describing an instance of 3 DIMENSIONAL BROUWER .
+8-57:Let g1, .
+8-58:.
+8-59:.
+8-60:, gp(n) be the gates of C indexed in such a way that the input(s) to any gate are the output(s) of lower indexed gates .
+8-61:g1, .
+8-62:.
+8-63:.
+8-64:, g3n will be the 3n inputs to C .
+8-65:All players in the graphical game G constructed in [4] have 2 actions denoted 0 and 1 .
+8-66:The probability that V plays 1 is denoted p[V ] .
+8-67:G has 3 players Vx, Vy and Vz for which p[Vx], p[Vy] and p[Vz] represent the coordinates of a point in the unit cube .
+8-68:G is designed to incentivize Vx, Vy and Vz to adjust their probabilities in directions given by a Brouwer function which is itself specified by the circuit C .
+8-69:In a Nash equilibrium, p[Vx], p[Vy] and p[Vz] represent coordinates of a fixpoint of a function that belongs to the class of functions represented by 3 DIMENSIONAL BROUWER .
+8-70:For 1 ≤ i ≤ p(n) we introduce a vertex V (i) C such that for 1 ≤ j ≤ i, Ij(p[V (i) C ]) is the output of gate gj; for i < j ≤ p(n), Ij(p[V (i) C ]) is 0 .
+8-71:Construct V (i) C from V (i−1) C using Corollary 2 .
+8-72:Let G(i) be the graphical game that does this .
+8-73:Let S1(G(i) ), .
+8-74:.
+8-75:.
+8-76:, Sn(G(i) ) be a length n path decomposition of G(i) , where V (i−1) C ∈ S1(G(i) ) and V (i) C ∈ Sn(G(i) ) .
+8-77:Then, a path decomposition of ∪1≤i≤p(n)G(i) is obtained by taking the union of the separate path decompositions, together with Sn(G(i−1) ) ∪ S1(G(i) ) for 2 ≤ i ≤ p(n) .
+8-78:Let GC be the above graphical game that simulates C .
+8-79:GC has 3n inputs, consisting of the first n bits of the binary expansions of p[Vx], p[Vy] and p[Vz] .
+8-80:Similarly to [4], the output of GC affects Vx, Vy and Vz as follows .
+8-81:Colour 0 incentivizes Vx, Vy and Vz 108 to adjust their probabilities p[Vx], p[Vy] and p[Vz] in the direction (−1, −1, −1); colour 2 incentivizes them to move in direction (1, 0, 0); colour 2, direction (0, 1, 0); colour 3, direction (0, 0, 1) .
+8-82:We need to ensure that at points at the boundaries of adjacent cubelets, the change of direction will be approximately the average of directions of surrounding points .
+8-83:That way, all four colors directions must be nearby so that they can cancel each other out (and we are at a panchromatic vertex) .
+8-84:This is achieved using the same trick as [4], in which we make a constant number M of copies of GC, which differ in that each copy adds a tiny displacement vector to its copies of p[Vx], p[Vy] and p[Vz] (which are derived from the original using the addition gadget of [7]) .
+8-85:Using the addition and multiplication gadgets of [7] we average the directions and add a small multiple of this average to (p[Vx], p[Vy], p[Vz]) .
+8-86:At a Nash equilibrium the outputs of each copy will cancel each other out .
+8-87:The pathwidth of the whole game is at most M times the pathwidth GC. .
+9 ABSTRACT :
+9-1:The most important problem left open by this paper is whether it is possible to find a Nash equilibrium of a graphical game on a bounded degree tree in polynomial time
+9-2:Our construction shows that any two pass algorithm that explicitly stores breakpoint policies needs exponential time and space
+9-3:However, it does not preclude the existence of an algorithm that is based on a similar idea, but, instead of computing the entire breakpoint policy for each vertex, uses a small number of additional passes through the graph to decide which (polynomial sized) parts of each breakpoint policy should be computed
+9-4:In particular, such an algorithm may be based on the approximation algorithm of [8], where the value of is chosen adaptively
+9-5:Another intriguing question is related to the fact that the graph for which we constructed an exponential sized breakpoint policy has pathwidth 2, while our positive results are for a path, i.e., a graph of pathwidth 1
+9-6:It is not clear if for any bounded degree graph of pathwidth 1 the running time of (the breakpoint policybased version of) our algorithm will be polynomial
+9-7:In particular, it is instructive to consider a caterpillar graph, i.e., the graph that can be obtained from Tn by deleting the vertices S1,
+9-8:
+9-9:
+9-10:, Sn
+9-11:For this graph, the best response policy of a vertex Vk in the spine of the caterpillar is obtained by combining the best response policy of its predecessor on the spine Vk−1 and its other child Tk; since the latter is a leaf, its best response policy is either trivial (i.e., [0, 1]2 , [0, 1]×{0}, or [0, 1]×{1}) or consists of two horizontal segments and one vertical segment of the form {α}×[0, 1] that connects them
+9-12:Assuming for convenience that B(Vk, Tk) = [0, α]×{0} ∪ {α}×[0, 1] ∪ [α, 1]×{1}, and f is the indifference function for Vk, we observe that the best response policy for Vk consists of 5 components: ˆf(0), ˆf(1), and three components that correspond to [0, α]×{0}, {α}×[0, 1], and [α, 1]×{1}
+9-13:Hence, one can think of constructing B(Vk+1, Vk) as the following process: turn B(Vk, Vk−1) by π 2, cut it along the (now horizontal) line vk = α, apply a fractional linear transform to the horizontal coordinate of both parts, and reconnect them using the image of the segment {α}×[0, 1] under f
+9-14:This implies that the problem of bounding the size of the best response policy (or, alternatively, the breakpoint policy), can be viewed as a generalization of the following computational geometry problem, which we believe may be of independent interest: PROBLEM 1
+9-15:Given a collection of axis parallel segments in R2 , consider the following operation: pick an axis parallel line li (either vertical or horizontal), cut the plane along this line, and shift one of the resulting two parts by an arbitrary amount δi; as a result, some segments will be split into two parts
+9-16:Reconnect these parts, i.e., for each segment of the form [a, b] × {c} that was transformed into [a, t] × {c + δi} and [t, b] × {c}, introduce a segment {t}×[c, c+δi]
+9-17:Is it possible to start with the segment [0, 1] and after n operations obtain a set that cannot be represented as a union of poly(n) line segments? If yes, can it be the case that in this set, there is no path with a polynomial number of turns that connects the endpoints of the original segment? It turns out that in general, the answer to the first question is positive, i.e., after n steps, it is possible to obtain a set that consists of Θ(cn ) segments for some c > 0
+9-18:This implies that even for a caterpillar, the best response policy can be exponentially large
+9-19:However, in our example (which is omitted from this version of the paper due to space constraints), there exists a polynomial size path through the best response policy, i.e., it does not prove that the breakpoint policy is necessarily exponential in size
+9-20:If one can prove that this is always the case, it may be possible to adapt this proof to show that there can be an exponential gap between the sizes of best response policies and breakpoint policies.
+10 ABSTRACT :
+10-1:H
+10-2:Bodlaender and T
+10-3:Kloks
+10-4:Efficient and constructive algorithms for the pathwidth and treewidth of graphs
+10-5:Journal of Algorithms, 21:358 402, 1996
+10-6:X
+10-7:Chen and X
+10-8:Deng
+10-9:3 NASH is PPAD complete
+10-10:Technical Report TR 05 134, Electronic Colloquium in Computational Complexity, 2005
+10-11:X
+10-12:Chen and X
+10-13:Deng
+10-14:Settling the complexity of 2 player Nash equilibrium
+10-15:Technical Report TR 05 140, Electronic Colloquium in Computational Complexity, 2005
+10-16:C
+10-17:Daskalakis, P
+10-18:Goldberg, and C
+10-19:Papadimitriou
+10-20:The complexity of computing a Nash equilibrium
+10-21:In Proceedings of the 38th ACM Symposium on Theory of Computing, 2006
+10-22:C
+10-23:Daskalakis and C
+10-24:Papadimitriou
+10-25:Three player games are hard
+10-26:Technical Report TR 05 139, Electronic Colloquium in Computational Complexity, 2005
+10-27:E
+10-28:Elkind, L
+10-29:Goldberg, and P
+10-30:Goldberg
+10-31:Nash equilibria in graphical games on trees revisited
+10-32:Technical Report TR 06 005, Electronic Colloquium in Computational Complexity, 2006
+10-33:P
+10-34:Goldberg and C
+10-35:Papadimitriou
+10-36:Reducibility among equilibrium problems
+10-37:In Proceedings of the 38th ACM Symposium on Theory of Computing, 2006
+10-38:M
+10-39:Kearns, M
+10-40:Littman, and S
+10-41:Singh
+10-42:Graphical models for game theory
+10-43:In Proceedings of the 17th Conference on Uncertainty in Artificial Intelligence, 2001
+10-44:M
+10-45:Littman, M
+10-46:Kearns, and S
+10-47:Singh
+10-48:An efficient exact algorithm for singly connected graphical games
+10-49:In Proceedings of the 15th Annual Conference on Neural Information Processing Systems, 2001
+10-50:L
+10-51:Ortiz and M
+10-52:Kearns
+10-53:Nash propagation for loopy graphical games
+10-54:In Proceedings of the 17th Annual Conference on Neural Information Processing Systems, 2003
+10-55:C
+10-56:Papadimitriou
+10-57:On the complexity of the parity argument and other inefficient proofs of existence
+10-58:J
+10-59:Comput
+10-60:Syst
+10-61:Sci., 48(3):498 532, 1994
+10-62:109
+picture:

@@ -1,0 +1,48 @@
+We describe an auction from an advertiser"s point of view .
+An advertiser bids on a keyword, which we can think of as a word or set of words .
+Users of the search engine submit queries .
+If the query matches a keyword that has been bid on by an advertiser, then the advertiser is entered into an auction for the available ad slots on the results page .
+What constitutes a match varies depending on the search engine .
+3 This type of strategy can also be interpreted as bidding one value (on all keywords) for part of the day, and a different value for the rest of the day .
+41 An advertiser makes a single bid for a keyword that remains in effect for a period of time, say one day .
+The keyword could match many different user queries throughout the day .
+Each user query might have a different set of advertisers competing for clicks .
+The advertiser could also bid different amounts on multiple keywords, each matching a (possibly overlapping) set of user queries .
+The ultimate goal of an advertiser is to maximize traffic to their website, given a certain advertising budget .
+We now formalize a model of keyword bidding and define an optimization problem that captures this goal .
+2.1 Landscapes We begin by considering the case of a single keyword that matches a single user query .
+In this section we define the notion of a query landscape that describes the relationship between the advertiser"s bid and what will happen on this query as a result of this bid[9] .
+This definition will be central to the discussion as we continue to more general cases .
+2.1.1 Positions, bids and click through rate The search results page for a query contains p possible positions in which our ad can appear .
+We denote the highest (most favorable) position by 1 and lowest by p .
+Associated with each position i is a value £\[i] that denotes the click through rate (ctr) of the ad in position i .
+The ctr is a measure of how likely it is that our ad will receive a click if placed in position i .
+The ctr can be measured empirically using past history .
+We assume throughout this work that that £\[i] ? £\[j] if j < i, that is, higher positions receive at least as many clicks as lower positions .
+In order to place an ad on this page, we must enter the auction that is carried out among all advertisers that have submitted a bid on a keyword that matches the user"s query .
+We will refer to such an auction as a query auction, to emphasize that there is an auction for each query rather than for each keyword .
+We assume that the auction is a generalized second price auction [5, 7]
+Let (b[1], .
+.
+.
+, b[p]) denote the bids of the top p advertisers in this query auction .
+For notational convenience, we assume that b[0] = ¡Û and b[p] = £\[p] = 0 .
+Since the auction is a generalized second price auction, higher bids win higher positions; i.e .
+b[i] ? b[i + 1] .
+Suppose that we bid b on some keyword that matches the user"s query, then our position is defined by the largest b[i] that is at most b, that is, pos(b) = arg max i (b[i] 
+(1) Since we only pay if the user clicks (and that happens with probability £\[i]), our expected cost for winning position i 4 Google, Yahoo! and MSN all use some variant of the GSP auction .
+In the Google auction, the advertisers" bids are multiplied by a quality score before they are ranked; our results carry over to this case as well, which we omit from this paper for clarity .
+Also, other auctions besides GSP have been considered; e.g., the Vickrey Clark Groves auction [14, 4, 7] .
+Each auction mechanism will result in a different sort of optimization problem .
+In the conclusion we point out that for the VCG auction, the bidding optimization problem becomes quite easy .
+would be cost[i] = £\[i] ¡P b[i], where i = pos(b) .
+We use costq(b) and clicksq(b) to denote the expected cost and clicks that result from having a bid b that qualifies for a query auction q, and thus costq(b) = £\[i] ¡P b[i] where i = pos(b), (2) clicksq(b) = £\[i] where i = pos(b) .
+(3) The following observations about cost and clicks follow immediately from the definitions and equations (1), (2) and (3) .
+We use R+ to denote the nonnegative reals .
+Observation 1 .
+For b ? R+, set of values Vq = {(cost[1], £\[1]), .
+.
+.
+, (cost[p], £\[p])} .
+functions of b .
+Also, cost per click (cpc) costq(b) clicksq(b) is non decreasing in b. .

@@ -1,0 +1,22 @@
+State of the art information retrieval systems commonly use machine learning techniques to learn ranking functions .
+However, most current approaches do not optimize for the evaluation measure most often used, namely Mean Average Precision .
+Instead, current algorithms tend to take one of two general approaches .
+The first approach is to learn a model that estimates the probability of a document being relevant given a query (e.g., [18, 14]) .
+If solved effectively, the ranking with best MAP performance can easily be derived from the probabilities of relevance .
+However, achieving high MAP only requires finding a good ordering of the documents .
+As a result, finding good probabilities requires solving a more difficult problem than necessary, likely requiring more training data to achieve the same MAP performance .
+The second common approach is to learn a function that maximizes a surrogate measure .
+Performance measures optimized include accuracy [17, 15], ROCArea [1, 5, 10, 11, 13, 21] or modifications of ROCArea [4], and NDCG [2, 3] .
+Learning a model to optimize for such measures might result in suboptimal MAP performance .
+In fact, although some previous systems have obtained good MAP performance, it is known that neither achieving optimal accuracy nor ROCArea can guarantee optimal MAP performance[7] .
+In this paper, we present a general approach for learning ranking functions that maximize MAP performance .
+Specifically, we present an SVM algorithm that globally optimizes a hinge loss relaxation of MAP .
+This approach simplifies the process of obtaining ranking functions with high MAP performance by avoiding additional intermediate steps and heuristics .
+The new algorithm also makes it conceptually just as easy to optimize SVMs for MAP as was previously possible only for accuracy and ROCArea .
+In contrast to recent work directly optimizing for MAP performance by Metzler & Croft [16] and Caruana et al .
+[6], our technique is computationally efficient while finding a globally optimal solution .
+Like [6, 16], our method learns a linear model, but is much more efficient in practice and, unlike [16], can handle many thousands of features .
+We now describe the algorithm in detail and provide proof of correctness .
+Following this, we provide an analysis of running time .
+We finish with empirical results from experiments on the TREC 9 and TREC 10 Web Track corpus .
+We have also developed a software package implementing our algorithm that is available for public use1 . .

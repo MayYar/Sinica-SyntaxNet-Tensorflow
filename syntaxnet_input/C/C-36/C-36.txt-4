@@ -1,0 +1,123 @@
+We propose enforcing access control in a decentralised broker network by encrypting the contents of published events and controlling access to the encryption keys .
+Effectively we move the responsibility for access control from the broker network to the key managers .
+It is assumed that all clients have access to a broker that they can trust and that is authorised to access the event content required by the client .
+This allows us to implement the event content encryption within the broker network without involving the clients .
+By delegating the encryption tasks to the brokers, we lower the number of nodes required to have access to a given encryption key1 .
+The benefits are three fold
+This is discussed in Sect .
+4.2 having to decrypt the same event .
+Delegating encryption tasks to the local broker is appropriate, because encryption is a middleware feature used to enforce access control within the middleware system .
+If applications need to handle encrypted data in the application layer, they are free to publish encrypted data over the publish subscribe system .
+We can implement encryption either at the event level or the attribute level .
+Event encryption is simpler, requires fewer keys, fewer independent cryptographic operations, and thus is usually faster .
+Attribute encryption enables access control at the attribute level, which means that we have a more expressive and powerful access control mechanism, while usually incurring a larger performance penalty .
+In this section we discuss encrypting event content both at the event level and the attribute level; avoiding leaking information to unauthorised brokers by encrypting subscription filters; avoiding unnecessary encryptions between authorised brokers; and finally, how event content encryption was implemented in our prototype .
+Note that since no publish subscribe client is ever given access to encryption keys, any encryption performed by the brokers is necessarily completely transparent to all clients .
+3.1 Event Encryption In event encryption all the event attributes are encrypted as a single block of plaintext .
+The event type identifier is left intact (i.e .
+in plaintext) in order to facilitate event routing in the broker network .
+The globally unique event type identifier specifies the encryption key used to encrypt the event content .
+Each event type in the system will have its own individual encryption key .
+Keys are refreshed, as discussed in Sect .
+4.2 .
+While in transit the event will consist of a tuple containing the type identifier, a publication timestamp, ciphertext, and a message authentication tag
+Event brokers that are authorised to access the event, and thus have access to the encryption key, can decrypt the event and implement content based routing .
+Event brokers that do not have access to the encryption key will be forced to route the event based only on its type .
+That is, they will not be able to make intelligent decisions about whether events need not be transmitted down their outgoing links .
+Event encryption results in one encryption at the publisher hosting broker, and one decryption at each filtering intermediate broker and subscriber hosting broker that the event passes through, regardless of the number of attributes .
+This results in a significant performance advantage compared to attribute encryption .
+3.2 Attribute Encryption In attribute encryption each attribute value in an event is encrypted separately with its own encryption key .
+The encryption key is identified by the attribute"s globally unique identifier (the globally unique event identifier defines a namespace inside which the attribute identifier is a fully qualified name) .
+107 The event type identifier is left intact to facilitate event routing for unauthorised brokers .
+The attribute identifiers are also left intact to allow authorised brokers to decrypt the attribute values with the correct keys .
+Brokers that are authorised to access some of the attributes in an event, can implement content based routing over the attributes that are accessible to them .
+An attribute encrypted event in transit consists of the event type identifier, a publication timestamp, and a set of attribute tuples
+Attribute tuples consist of an attribute identifier, ciphertext, and a message authentication tag
+The attribute identifier is the SHA 1 hash of the attribute name used in the event type definition .
+Using the attribute identifier in the published event instead of the attribute name prevents unauthorised parties from learning which attributes are included in the publication .
+Compared with event encryption, attribute encryption usually results in larger processing overheads, because each attribute is encrypted separately .
+In the encryption process the initialisation of the encryption algorithm takes a significant portion of the total running time of the algorithm .
+Once the algorithm is initialised, increasing the amount of data to be encrypted does not affect the running time very much .
+This disparity is emphasised in attribute encryption, where an encryption algorithm must be initialised for each attribute separately, and the amount of data encrypted is relatively small .
+As a result attribute encryption incurs larger processing overheads when compared with event encryption which can be clearly seen from the performance results in Sect .
+5 .
+The advantage of attribute encryption is that the type owner is able to control access to the event type at the attribute level .
+The event type owner can therefore allow clients to have different levels of access to the same event type .
+Also, attribute level encryption enables content based routing in cases where an intermediate broker has access only to some of the attributes of the event, thus reducing the overall impact of event delivery on the broker network .
+Therefore the choice between event and attribute encryption is a trade off between expressiveness and performance, and depends on the requirements of the distributed application .
+The expressiveness provided by attribute encryption can be emulated by introducing a new event type for each group of subscribers with the same authorisation .
+The publisher would then publish an instance of each of these types instead of publishing just a combined event .
+For example, in our London police network, the congestion control cameras would have to publish one event for the CCS and another for the detective .
+This approach could become difficult to manage if the attributes have a variety of security properties, since a large number of event types would be required and policies and subscriptions may change dynamically .
+This approach creates a large number of extra events that must be routed through the network, as is shown in Sect .
+5.3 .
+3.3 Encrypting Subscriptions In order to fully protect the confidentiality of event content we must also encrypt subscriptions .
+Encrypted subscriptions guarantee
+For example, in the first case an unauthorised broker can create subscriptions with appropriately chosen filters, route them towards the root of the event dissemination tree, and monitor which events were delivered to it as matching the subscription .
+The fact that the event matched the subscription would leak information to the broker about the event content even if the event was still encrypted .
+In the second case, even if an unauthorised broker was unable to create subscriptions itself, it could still look at subscriptions that were routed through it, take note of the filters on those subscriptions, and monitor which events are delivered to it by upstream brokers as matching the subscription filters .
+This would again reveal information about the event content to the unauthorised broker .
+In the case of encrypting complete events, we also encrypt the complete subscription filter .
+The event type identifier in the subscription must be left intact to allow brokers to route events based on their topic when they are not authorised to access the filter .
+In such cases the unauthorised broker is required to assume that events of such a type match all filter expressions .
+Each attribute filter is encrypted individually, much as when encrypting a publication .
+In addition to the event type identifier the attribute identifiers are also left intact to allow authorised brokers to decrypt those filters that they have access to, and route the event based on its matching the decrypted filters .
+3.4 Avoiding Unnecessary Cryptographic Operations Encrypting the event content is not necessary if the current broker and the next broker down the event dissemination tree have the same credentials with respect to the event type at hand .
+For example, one can assume that all brokers inside an organisation would share the same credentials and therefore, as long as the next broker is a member of the same domain, the event can be routed to it in plaintext .
+With attribute encryption it is possible that the neighbouring broker is authorised to access a subset of the decrypted attributes, in which case those attributes that the broker is not authorised to access would be passed to it encrypted .
+In order to know when it is safe to pass the event in plaintext form, the brokers exchange credentials as part of a handshake when they connect to each other .
+In cases when the brokers are able to verify each others" credentials, they will add them to the routing table for future reference .
+If a broker acquires new credentials after the initial handshake, it will present these new credentials to its neighbours while in session .
+Regardless of its neighbouring brokers, the PHB will always encrypt the event content, because it is cheaper to encrypt the event once at the root of the event dissemination tree .
+In Hermes the rendezvous node for each event type is selected uniformly randomly (the event type name is hashed with the SHA 1 hash algorithm to produce the event type 108 PHB IBIB IB SHB RN IB SHB Figure 2
+Therefore it is probable that the rendezvous node will reside outside the current domain .
+This situation is illustrated in the event dissemination tree in Fig .
+2 .
+So even with domain internal applications, where the event can be routed from the publisher to all subscribers in plaintext form, the event content will in most cases have to be encrypted for it to be routed to the rendezvous node .
+To avoid unnecessary decryptions, we attach a plaintext content cache to encrypted events .
+A broker fills the cache with content that it has decrypted, for example, in order to filter on the content .
+The cache is accessed by the broker when it delivers an event to a local subscriber after first seeing if the event matches the subscription filter, but the broker also sends the cache to the next broker with the encrypted event .
+The next broker can look the attribute up from the cache instead of having to decrypt it .
+If the event is being sent to an unauthorised broker, the cache will be discarded before the event is sent .
+Obviously sending the cache with the encrypted event will add to the communication cost, but this is outweighed by the saving in encryption decryption processing .
+In Fig .
+3 we see two separate cached plaintext streams accompanying an event depending on the inter broker relationships in two different domains .
+We show in Sect .
+5.2 that the overhead of sending encrypted messages with a full plaintext cache incurs almost no overhead compared to sending plaintext messages .
+3.5 Implementation In our implementation we have used the EAX mode [2] of operation when encrypting events, attributes, and subscription filters .
+EAX is a mode of operation for block ciphers, also called an Authenticated Encryption with Associated Data algorithm that provides simultaneously both data confidentiality and integrity protection .
+The algorithm implements a two pass scheme where during the first pass the plain text is encrypted, and on the second pass a message authentication code is generated for the encrypted data .
+The EAX mode is compatible with any block cipher .
+We decided to use the Advanced Encryption Standard [9] algorithm in our implementation, because of its standard status and the fact that the algorithm has gone through thorough cryptanalysis during its existence and no serious vulnerabilities have been found thus far .
+In addition to providing both confidentiality and integrity protection, the EAX mode uses the underlying block cipher in counter mode (CTR mode) [21] .
+A block cipher in counter mode is used to produce a stream of key bits that are then XORed with the plaintext .
+Effectively CTR mode transforms a block cipher into a stream cipher .
+The advantage of stream ciphers is that the ciphertext is the same length as the plaintext, whereas with block ciphers the plaintext must be padded to a multiple of the block cipher"s block length (e.g .
+the AES block size is 128 bits) .
+Avoiding padding is very important in attribute encryption, because the padding might increase the size of the attribute disproportionally .
+For example, a single integer might be 32 bits in length, which would be padded to 128 bits if we used a block cipher .
+With event encryption the message expansion is not that relevant, since the length of padding required to reach the next 16 byte multiple will probably be a small proportion of the overall plaintext length .
+In encryption mode the EAX algorithm takes as input a nonce (a number used once), an encryption key and the plaintext, and it returns the ciphertext and an authentication tag .
+In decryption mode the algorithm takes as input the encryption key, the ciphertext and the authentication tag, and it returns either the plaintext, or an error if the authentication check failed .
+The nonce is expanded to the block length of the underlying block cipher by passing it through an OMAC construct (see [7]) .
+It is important that particular nonce values are not reused, otherwise the block cipher in CTR mode would produce an identical key stream .
+In our implementation we used the PHB defined event timestamp (64 bit value counting the milliseconds since January 1, 1970 UTC) appended by the PHB"s identity (i.e .
+public key) as the nonce .
+The broker is responsible for ensuring that the timestamps increase monotonically .
+The authentication tag is appended to the produced cipher text to create a two tuple .
+With event encryption a single tag is created for the encrypted event .
+With attribute 109 encryption each attribute is encrypted and authenticated separately, and they all have their individual tags .
+The tag length is configurable in EAX without restrictions, which allows the user to make a trade off between the authenticity guarantees provided by EAX and the added communication overhead .
+We used a tag length of 16 bytes in our implementation, but one could make the tag length a publisher subscriber defined parameter for each publication subscription or include it in the event type definition to make it a type specific parameter .
+EAX also supports including unencrypted associated data in the tag calculation .
+The integrity of this data is protected, but it is still readable by everyone .
+This feature could be used with event encryption in cases where some of the event content is public and thus would be useful for content based routing .
+The integrity of the data would still be protected against changes, but unauthorised brokers would be able to apply filters .
+We have included the event type identifier as associated data in order to protect its integrity .
+Other AEAD algorithms include the offset codebook mode [17] and the counter with CBC MAC mode [22] .
+Contrarily to the EAX mode the OCB mode requires only one pass over the plaintext, which makes it roughly twice as fast as EAX .
+Unfortunately the OCB mode has a patent application in place in the USA, which restricts its use .
+The CCM mode is the predecessor of the EAX mode .
+It was developed in order to provide a free alternative to OCB .
+The EAX was developed later to address some issues with CCM [18] .
+Similarly to EAX, CCM is also a two pass mode. .

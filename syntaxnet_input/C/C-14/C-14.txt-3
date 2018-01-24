@@ -1,0 +1,66 @@
+In this section, a model for sensor network target detection is proposed, a definition of path exposure is presented and expressions for evaluating this path exposure are developed .
+2.1 Model Consider a rectangular sensor field with n sensors de42 ployed at locations si, i = 1, .
+.
+.
+, n .
+A target at location u emits a signal which is measured by the sensors .
+The signal from the target decays as a polynomial of the distance .
+If the decay coefficient is k, the signal energy of a target at location u measured by the sensor at si is given by Si(u) = K ||u ? si||k (1) where K is the energy emitted by the target and ||u ? si|| is the geometric distance between the target and the sensor .
+Depending on the environment the value k typically ranges from 2.0 to 5.0 [4] .
+Energy measurements at a sensor are usually corrupted by noise .
+If Ni denotes the noise energy at sensor i during a particular measurement, then the total energy measured at sensor i, when the target is at location u, is Ei(u) = Si(u) + Ni = K ||u ? si||k + Ni .
+The sensors collaborate to arrive at a consensus decision as to whether a target is present in the region .
+We consider two basic approaches for reaching this consensus
+In value fusion, one of the sensors gathers the energy measurements from the other sensors, totals up the energy and compares the sum to a threshold to decide whether a target is present .
+If the sum exceeds the threshold, then the consensus decision is that a target is present .
+In contrast, in decision fusion, each individual sensor compares its energy measurement to a threshold to arrive at a local decision as to whether a target is present .
+The local decisions (1 for target present and 0 otherwise) from the sensors are totaled at a sensor and the sum is compared to another threshold to arrive at the consensus decision .
+In some situations, value fusion outperforms decision fusion and vice versa .
+2.1.1 Value Fusion .
+The probability of consensus target detection when the target is at location u is Dv(u) = Prob n i=1 K ||u ? si||k + Ni ? £b = Prob n i=1 Ni ? £b ? n i=1 K ||u ? si||k , where £b is the value fusion threshold .
+If the noise processes at the sensors are independent, then the probability density function of n i=1 Ni equals the convolution of the probability density function of Ni, i = 1, .
+.
+.
+, n .
+In particular, if the noise process at each sensor is Additive White Gaussian Noise (AWGN), then n i=1 Ni has a Chi square distribution of degree n .
+Due to the presence of noise, the sensors may incorrectly decide that a target is present even though there is no target in the field .
+The probability of a consensus false target detection is Fv = Prob n i=1 Ni ? £b .
+(2) As above, if the noise processes at the sensors are independent and AWGN, then the false alarm probability can be computed from the Chi square distribution of degree n .
+2.1.2 Decision Fusion .
+For decision fusion, the probability of consensus target detection when the target is located at u is Dd(u) = Prob n i=1 hd,i(u) ? £b2 = n j=£b2 n j ¡P P1 j ¡P P0 (n?j) where P1 = Prob [hd,i(u) = 1] = Prob Ni ? £b1 ? K ||u ? si||k and P0 = Prob [hd,i(u) = 0] = 1 ? Prob [hd,i(u) = 1] .
+can be computed from Chi square distribution of degree 1 for AWGN noise process .
+The probability of false target detection at sensor i is Prob[gd,i = 1] = Prob[Ni ? £b1] and Prob[gd,i = 0] = 1 ? Prob[gd,i = 1] .
+Therefore, the probability of consensus false target detection is Fd = Prob n i=1 gd,i ? £b2 = n j=£b2 n j ¡P (Prob [gd,i = 1])j ¡P (Prob [gd,i = 0])(n?j) The above equations serve as an analytic basis for evaluating exposure as defined in the following subsection .
+Note that in value and decision fusion the knowledge of the sensors location can be used to make the detection decision .
+For example, a sensor can report values that differ substantially from its neighbors values .
+This discrepancy can be analyzed to avoid false alarms or misses and therefore improve the detection performance .
+However, such algorithms are not considered in this paper .
+2.2 De?nition of exposure We define exposure to be the probability of detecting the target or an intruder carrying out the unauthorized activity, where the activity depends on the problem under consideration .
+In this paper, the activity considered is the Unauthorized Traversal as defined below .
+Unauthorized Traversal Problem
+.
+.
+, sn (see Figure 1) .
+We are also given the stochastic characterization of the noise at each sensor and a tolerable bound, £\, on the false alarm probability .
+Let P denote a path from the west to the east periphery of the sensor field .
+A target traversing the sensor field using path P is detected if it is detected at some point u ? P .
+The exposure of path P is the net probability of detecting a target that traverses the field using P .
+The target is assumed to be able to follow any path through the field and the problem is to find the path P with the least exposure .
+43 Sensor Figure 1
+2.3 Solution to the UT problem Let P denote a path from the west to the east periphery through the sensor field .
+A target that traverses the field using P is not detected if and only if it is not detected at any time while it is on that path .
+Since detection attempts by the sensor network occur at a fixed frequency, we can associate each detection attempt with a point u ? P when assuming that the target traverses the field at a constant speed .
+The detection attempts are based on energy measured over a period of time T during which the target is moving .
+Therefore, the detection probability associated with each point u reflects the measurements performed during time T .
+Considering the path, the net probability of not detecting a target traversing the field using P is the product of the probabilities of no detection at each point u ? P .
+That is, if G(P) denotes the net probability of not detecting a target as it traverses over path P, then, log G(P) = u?P log(1 ? D(u))du, where D(u) is either Dv(u) of Dd(u) depending on whether the sensors use value or decision fusion to arrive at a consensus decision .
+Since the exposure of P is (1 ? G(P)), the problem is to find the path which minimizes (1 ? G(P)) or equivalently the path that minimizes | log G(P)|1 .
+In general, the path P that minimizes | log G(P)| can be fairly arbitrary in shape .
+The proposed solution does not exactly compute this path .
+Instead, we rely on the following approximation .
+We first divide the sensor field into a fine grid and then assume that the target only moves along this grid .
+The problem then is to find the path P on this grid that minimizes | log G(P)| .
+Note that, the finer the grid the closer the approximation .
+Also, one can use higher order grids such as in [5] instead of the rectangular grid we use in this paper .
+The higher order grids change the runtime of the algorithm but the approach is the same as with the rectangular grid .
+For the target not to be detected at any point u ? P, 1 Note that, G(P) lies between 0 and 1 and thus log G(P) is negative. .

@@ -1,0 +1,52 @@
+The comparison between MTC and RTC is shown in Table 2 .
+With MTC and uniform probabilities of relevance, the results are far from robust .
+We cannot reuse the relevance judgments with much confidence .
+But with RTC, the results are very robust .
+There is a slight dip in accuracy when confidence gets above 0.95; nonetheless, the confidence predictions are trustworthy .
+Mean Wi shows that RTC is much closer to 0 than MTC .
+The distribution of confidence scores shows that at least 80% confidence is achieved more than 35% of the time, indicating that neither algorithm is being too conservative in its confidence estimates .
+The confidence estimates are rather low overall; that is because we have built a test collection from only two initial systems .
+Recall from Section 1 that we cannot require (or even expect) a minimum level of confidence when we generalize to new systems .
+More detailed results for both algorithms are shown in Figure 2 .
+The solid line is the ideal result that would give W = 0 .
+RTC is on or above this line at all points until confidence reaches about 0.97 .
+After that there is a slight dip in accuracy which we discuss below .
+Note that both MTC RTC confidence % in bin accuracy % in bin accuracy 0.5 ? 0.6 33.7% 61.7% 28.6% 61.9% 0.6 ? 0.7 18.1% 73.1% 20.1% 76.3% 0.7 ? 0.8 10.4% 70.1% 15.5% 78.0% 0.8 ? 0.9 9.4% 69.0% 12.1% 84.9% 0.9 ? 0.95 7.3% 78.0% 6.6% 93.1% 0.95 ? 0.99 17.9% 70.4% 12.4% 93.4% 1.0 3.3% 68.3% 4.7% 98.9% W ?5.34 ?0.39 median judged 251 235 mean £n 0.393 0.555 Table 2
+Each bin contains over 1,000 trials from the adhoc 3, 5 8 sets .
+RTC is much more robust than MTC .
+W is defined in Section 4.4; closer to 0 is better .
+Median judged is the number of judgments to reach 95% confidence on the first two systems .
+Mean £n is the average rank correlation for all 10 systems .
+0.5 0.6 0.7 0.8 0.9 1 0.5 0.6 0.7 0.8 0.9 1 accuracy confidence breakeven RTC MTC Figure 2
+accuracy of MTC and RTC .
+The solid line is the perfect result that would give W = 0; performance should be on or above this line .
+Each point represents at least 500 pairwise comparisons .
+algorithms are well above the line up to around confidence 0.7 .
+This is because the baseline performance on these data sets is high; it is quite easy to achieve 75% accuracy doing very little work [7] .
+Number of Judgments
+The median required by RTC is 235, about 4.7 per topic .
+Although the numbers are close, RTC"s median is significantly lower by a paired Wilcoxon test (p < 0.0001) .
+For comparison, a pool of depth 100 would result in a minimum of 5,000 judgments for each pair .
+The difference in means is much greater .
+MTC required a mean of 823 judgments, 16 per topic, while RTC required a mean of 502, 10 per topic .
+(Recall that means are strongly skewed by a few pairs that take thousands of judgments.) This difference is significant by a paired t test (p < 0.0001) .
+Ten percent of the sets resulted in 100 or fewer judgments (less than two per topic) .
+Performance on these is very high
+This shows that even tiny collections can be reusable .
+For the 50% of sets with more than 235 judgments, accuracy is 93% when confidence is at least 0.9 .
+Rank Correlation
+(1)) calculated using their respective probability estimates .
+The mean £n rank correlation between true MAP and EMAP is 0.393 for MTC and 0.555 for RTC .
+This difference is significant by a paired t test (p < 0.0001) .
+Note that we do not expect the £n correlations to be high, since we are ranking the systems with so few relevance judgments .
+It is more important that we estimate confidence in each pairwise comparison correctly .
+We ran IP for the same number of judgments that MTC took for each pair, then ranked the systems by MAP using only those judgments (all unjudged documents assumed nonrelevant) .
+We calculated the £n correlation to the true ranking .
+The mean £n correlation is 0.398, which is not significantly different from MTC, but is significantly lower than RTC .
+Using uniform estimates of probability is indistinguishable from the baseline, whereas estimating relevance by expert aggregation boosts performance a great deal
+Overfitting
+We saw this in Table 2 and Figure 2 where RTC exhibits a dip in accuracy when confidence is around 97% .
+In fact, the number of judgments made prior to a wrong prediction is over 50% greater than the number made prior to a correct prediction .
+Overfitting is difficult to quantify exactly, because making more relevance judgments does not always cause it
+Obviously having more relevance judgments should increase both confidence and accuracy; the difference seems to be when one system has a great deal more judgments than the other .
+Pairwise Comparisons

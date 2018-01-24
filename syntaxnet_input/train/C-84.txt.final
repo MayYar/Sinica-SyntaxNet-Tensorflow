@@ -1,0 +1,468 @@
+Selfish Caching in Distributed Systems: 
+content:
+1 ABSTRACT :
+1-1:We analyze replication of resources by server nodes that act selfishly, using a game theoretic approach .
+1-2:We refer to this as the selfish caching problem .
+1-3:In our model, nodes incur either cost for replicating resources or cost for access to a remote replica .
+1-4:We show the existence of pure strategy Nash equilibria and investigate the price of anarchy, which is the relative cost of the lack of coordination .
+1-5:The price of anarchy can be high due to undersupply problems, but with certain network topologies it has better bounds .
+1-6:With a payment scheme the game can always implement the social optimum in the best case by giving servers incentive to replicate .
+1-7:C.2.4 [Computer Communication Networks]: Distributed .
+2 INTRODUCTION :
+2-1:Wide area peer to peer file systems [2,5,22,32,33], peer to peer caches [15, 16], and web caches [6, 10] have become popular over the last few years .
+2-2:Caching1 of files in selected servers is widely used to enhance the performance, availability, and reliability of these systems .
+2-3:However, most such systems assume that servers cooperate with one another by following protocols optimized for overall system performance, regardless of the costs incurred by each server .
+2-4:In reality, servers may behave selfishly seeking to maximize their own benefit .
+2-5:For example, parties in different administrative domains utilize their local resources (servers) to better support clients in their own domains .
+2-6:They have obvious incentives to cache objects2 that maximize the benefit in their domains, possibly at the expense of globally optimum behavior .
+2-7:It has been an open question whether these caching scenarios and protocols maintain their desirable global properties (low total social cost, for example) in the face of selfish behavior .
+2-8:In this paper, we take a game theoretic approach to analyzing the problem of caching in networks of selfish servers through theoretical analysis and simulations .
+2-9:We model selfish caching as a non cooperative game .
+2-10:In the basic model, the servers have two possible actions for each object .
+2-11:If a replica of a requested object is located at a nearby node, the server may be better off accessing the remote replica .
+2-12:On the other hand, if all replicas are located too far away, the server is better off caching the object itself .
+2-13:Decisions about caching the replicas locally are arrived at locally, taking into account only local costs .
+2-14:We also define a more elaborate payment model, in which each server bids for having an object replicated at another site .
+2-15:Each site now has the option of replicating an object and collecting the related bids .
+2-16:Once all servers have chosen a strategy, each game specifies a configuration, that is, the set of servers that replicate the object, and the corresponding costs for all servers .
+2-17:Game theory predicts that such a situation will end up in a Nash equilibrium, that is, a set of (possibly randomized) strategies with the property that no player can benefit by changing its strategy while the other players keep their strategies unchanged [28] .
+2-18:Foundational considerations notwithstanding, it is not easy to accept randomized strategies as the behavior of rational agents in a distributed system (see [28] for an extensive discussion) but this is what classical game theory can guarantee .
+2-19:In certain very fortunate situations, however (see [9]), the existence of pure (that is, deterministic) Nash equilibria can be predicted .
+2-20:With or without randomization, however, the lack of coordination inherent in selfish decision making may incur costs well beyond what would be globally optimum .
+2-21:This loss of efficiency is 1 We will use caching and replication interchangeably .
+2-22:2 We use the term object as an abstract entity that represents files and other data objects .
+2-23:21 quantified by the price of anarchy [21] .
+2-24:The price of anarchy is the ratio of the social (total) cost of the worst possible Nash equilibrium to the cost of the social optimum .
+2-25:The price of anarchy bounds the worst possible behavior of a selfish system, when left completely on its own .
+2-26:However, in reality there are ways whereby the system can be guided, through seeding or incentives, to a preselected Nash equilibrium .
+2-27:This optimistic version of the price of anarchy [3] is captured by the smallest ratio between a Nash equilibrium and the social optimum .
+2-28:In this paper we address the following questions : • Do pure strategy Nash equilibria exist in the caching game? • If pure strategy Nash equilibria do exist, how efficient are they (in terms of the price of anarchy, or its optimistic counterpart) under different placement costs, network topologies, and demand distributions? • What is the effect of adopting payments? Will the Nash equilibria be improved? We show that pure strategy Nash equilibria always exist in the caching game .
+2-29:The price of anarchy of the basic game model can be O(n), where n is the number of servers; the intuitive reason is undersupply .
+2-30:Under certain topologies, the price of anarchy does have tighter bounds .
+2-31:For complete graphs and stars, it is O(1) .
+2-32:For D dimensional grids, it is O(n D D+1 ) .
+2-33:Even the optimistic price of anarchy can be O(n) .
+2-34:In the payment model, however, the game can always implement a Nash equilibrium that is same as the social optimum, so the optimistic price of anarchy is one .
+2-35:Our simulation results show several interesting phases .
+2-36:As the placement cost increases from zero, the price of anarchy increases .
+2-37:When the placement cost first exceeds the maximum distance between servers, the price of anarchy is at its highest due to undersupply problems .
+2-38:As the placement cost further increases, the price of anarchy decreases, and the effect of replica misplacement dominates the price of anarchy .
+2-39:The rest of the paper is organized as follows .
+2-40:In Section 2 we discuss related work .
+2-41:Section 3 discusses details of the basic game and analyzes the bounds of the price of anarchy .
+2-42:In Section 4 we discuss the payment game and analyze its price of anarchy .
+2-43:In Section 5 we describe our simulation methodology and study the properties of Nash equilibria observed .
+2-44:We discuss extensions of the game and directions for future work in Section 6. .
+3 RELATED WORK :
+3-1:There has been considerable research on wide area peer to peer file systems such as OceanStore [22], CFS [5], PAST [32], FARSITE [2], and Pangaea [33], web caches such as NetCache [6] and SummaryCache [10], and peer to peer caches such as Squirrel [16] .
+3-2:Most of these systems use caching for performance, availability, and reliability .
+3-3:The caching protocols assume obedience to the protocol and ignore participants" incentives .
+3-4:Our work starts from the assumption that servers are selfish and quantifies the cost of the lack of coordination when servers behave selfishly .
+3-5:The placement of replicas in the caching problem is the most important issue .
+3-6:There is much work on the placement of web replicas, instrumentation servers, and replicated resources .
+3-7:All protocols assume obedience and ignore participants" incentives .
+3-8:In [14], Gribble et al .
+3-9:discuss the data placement problem in peer to peer systems .
+3-10:Ko and Rubenstein propose a self stabilizing, distributed graph coloring algorithm for the replicated resource placement [20] .
+3-11:Chen, Katz, and Kubiatowicz propose a dynamic replica placement algorithm exploiting underlying distributed hash tables [4] .
+3-12:Douceur and Wattenhofer describe a hill climbing algorithm to exchange replicas for reliability in FARSITE [8] .
+3-13:RaDar is a system that replicates and migrates objects for an Internet hosting service [31] .
+3-14:Tang and Chanson propose a coordinated en route web caching that caches objects along the routing path [34] .
+3-15:Centralized algorithms for the placement of objects, web proxies, mirrors, and instrumentation servers in the Internet have been studied extensively [18,19,23,30] .
+3-16:The facility location problem has been widely studied as a centralized optimization problem in theoretical computer science and operations research [27] .
+3-17:Since the problem is NP hard, approximation algorithms based on primal dual techniques, greedy algorithms, and local search have been explored [17, 24, 26] .
+3-18:Our caching game is different from all of these in that the optimization process is performed among distributed selfish servers .
+3-19:There is little research in non cooperative facility location games, as far as we know .
+3-20:Vetta [35] considers a class of problems where the social utility is submodular (submodularity means decreasing marginal utility) .
+3-21:In the case of competitive facility location among corporations he proves that any Nash equilibrium gives an expected social utility within a factor of 2 of optimal plus an additive term that depends on the facility opening cost .
+3-22:Their results are not directly applicable to our problem, however, because we consider each server to be tied to a particular location, while in their model an agent is able to open facilities in multiple locations .
+3-23:Note that in that paper the increase of the price of anarchy comes from oversupply problems due to the fact that competing corporations can open facilities at the same location .
+3-24:On the other hand, the significant problems in our game are undersupply and misplacement .
+3-25:In a recent paper, Goemans et al .
+3-26:analyze content distribution on ad hoc wireless networks using a game theoretic approach [12] .
+3-27:As in our work, they provide monetary incentives to mobile users for caching data items, and provide tight bounds on the price of anarchy and speed of convergence to (approximate) Nash equilibria .
+3-28:However, their results are incomparable to ours because their payoff functions neglect network latencies between users, they consider multiple data items (markets), and each node has a limited budget to cache items .
+3-29:Cost sharing in the facility location problem has been studied using cooperative game theory [7, 13, 29] .
+3-30:Goemans and Skutella show strong connections between fair cost allocations and linear programming relaxations for facility location problems [13] .
+3-31:P´al and Tardos develop a method for cost sharing that is approximately budget balanced and group strategyproof and show that the method recovers 1 3 of the total cost for the facility location game [29] .
+3-32:Devanur, Mihail, and Vazirani give a strategyproof cost allocation for the facility location problem, but cannot achieve group strategyproofness [7]. .
+4 BASIC GAME :
+4-1:The caching problem we study is to find a configuration that meets certain objectives (e.g., minimum total cost) .
+4-2:Figure 1 shows examples of caching among four servers .
+4-3:In network (a), A stores an object .
+4-4:Suppose B wants to access the object .
+4-5:If it is cheaper to access the remote replica than to cache it, B accesses the remote replica as shown in network (b) .
+4-6:In network (c), C wants to access the object .
+4-7:If C is far from A, C caches the object instead of accessing the object from A .
+4-8:It is possible that in an optimal configuration it would be better to place replicas in A and B .
+4-9:Understanding the placement of replicas by selfish servers is the focus of our study .
+4-10:The caching problem is abstracted as follows .
+4-11:There is a set N of n servers and a set M of m objects .
+4-12:The distance between servers can be represented as a distance matrix D (i.e., dij is the distance 22 Server Server Server Server A B C D (a) Server Server Server Server A B C D (b) Server Server Server Server A B C D (c) Figure 1: Caching .
+4-13:There are four servers labeled A, B, C, and D .
+4-14:The rectangles are object replicas .
+4-15:In (a), A stores an object .
+4-16:If B incurs less cost accessing A"s replica than it would caching the object itself, it accesses the object from A as in (b) .
+4-17:If the distance cost is too high, the server caches the object itself, as C does in (c) .
+4-18:This figure is an example of our caching game model .
+4-19:from server i to server j) .
+4-20:D models an underlying network topology .
+4-21:For our analysis we assume that the distances are symmetric and the triangle inequality holds on the distances (for all servers i, j, k: dij + djk ≥ dik) .
+4-22:Each server has demand from clients that is represented by a demand matrix W (i.e., wij is the demand of server i for object j) .
+4-23:When a server caches objects, the server incurs some placement cost that is represented by a matrix α (i.e., αij is a placement cost of server i for object j) .
+4-24:In this study, we assume that servers have no capacity limit .
+4-25:As we discuss in the next section, this fact means that the caching behavior with respect to each object can be examined separately .
+4-26:Consequently, we can talk about configurations of the system with respect to a given object: DEFINITION 1 .
+4-27:A configuration X for some object O is the set of servers replicating this object .
+4-28:The goal of the basic game is to find configurations that are achieved when servers optimize their cost functions locally .
+4-29:3.1 Game Model We take a game theoretic approach to analyzing the uncapacitated caching problem among networked selfish servers .
+4-30:We model the selfish caching problem as a non cooperative game with n players (servers nodes) whose strategies are sets of objects to cache .
+4-31:In the game, each server chooses a pure strategy that minimizes its cost .
+4-32:Our focus is to investigate the resulting configuration, which is the Nash equilibrium of the game .
+4-33:It should be emphasized that we consider only pure strategy Nash equilibria in this paper .
+4-34:The cost model is an important part of the game .
+4-35:Let Ai be the set of feasible strategies for server i, and let Si ∈ Ai be the strategy chosen by server i .
+4-36:Given a strategy profile S = (S1, S2, ..., Sn), the cost incurred by server i is defined as: Ci(S) = j∈Si αij + j ∈Si wij di (i,j) .
+4-37:(1) where αij is the placement cost of object j, wij is the demand that server i has for object j, (i, j) is the closest server to i that caches object j, and dik is the distance between i and k .
+4-38:When no server caches the object, we define distance cost di (i,j) to be dM large enough that at least one server will choose to cache the object .
+4-39:The placement cost can be further divided into first time installation cost and maintenance cost: αij = k1i + k2i UpdateSizej ObjectSizej 1 T Pj k wkj , (2) where k1i is the installation cost, k2i is the relative weight between the maintenance cost and the installation cost, Pj is the ratio of the number of writes over the number of reads and writes, UpdateSizej is the size of an update, ObjectSizej is the size of the object, and T is the update period .
+4-40:We see tradeoffs between different parameters in this equation .
+4-41:For example, placing replicas becomes more expensive as UpdateSizej increases, Pj increases, or T decreases .
+4-42:However, note that by varying αij itself we can capture the full range of behaviors in the game .
+4-43:For our analysis, we use only αij .
+4-44:Since there is no capacity limit on servers, we can look at each single object as a separate game and combine the pure strategy equilibria of these games to obtain a pure strategy equilibrium of the multi object game .
+4-45:Fabrikant, Papadimitriou, and Talwar discuss this existence argument: if two games are known to have pure equilibria, and their cost functions are cross monotonic, then their union is also guaranteed to have pure Nash equilibria, by a continuity argument [9] .
+4-46:A Nash equilibrium for the multi object game is the cross product of Nash equilibria for single object games .
+4-47:Therefore, we can focus on the single object game in the rest of this paper .
+4-48:For single object selfish caching, each server i has two strategies to cache or not to cache .
+4-49:The object under consideration is j .
+4-50:We define Si to be 1 when server i caches j and 0 otherwise .
+4-51:The cost incurred by server i is Ci(S) = αij Si + wij di (i,j)(1 − Si) .
+4-52:(3) We refer to this game as the basic game .
+4-53:The extent to which Ci(S) represents actual cost incurred by server i is beyond the scope of this paper; we will assume that an appropriate cost function of the form of Equation 3 can be defined .
+4-54:3.2 Nash Equilibrium Solutions In principle, we can start with a random configuration and let this configuration evolve as each server alters its strategy and attempts to minimize its cost .
+4-55:Game theory is interested in stable solutions called Nash equilibria .
+4-56:A pure strategy Nash equilibrium is reached when no server can benefit by unilaterally changing its strategy .
+4-57:A Nash equilibrium3 (S∗ i , S∗ −i) for the basic game specifies a configuration X such that ∀i ∈ N, i ∈ X ⇔ S∗ i = 1 .
+4-58:Thus, we can consider a set E of all pure strategy Nash equilibrium configurations: X ∈ E ⇔ ∀i ∈ N, ∀Si ∈ Ai, Ci(S∗ i , S∗ −i) ≤ Ci(Si, S∗ −i) (4) By this definition, no server has incentive to deviate in the configurations since it cannot reduce its cost .
+4-59:For the basic game, we can easily see that: X ∈ E ⇔ ∀i ∈ N, ∃j ∈ X s.t .
+4-60:dji ≤ α and ∀j ∈ X, ¬∃k ∈ X s.t .
+4-61:dkj < α (5) The first condition guarantees that there is a server that places the replica within distance α of each server i .
+4-62:If the replica is not placed 3 The notation for strategy profile (S∗ i , S∗ −i) separates node i s strategy (S∗ i ) from the strategies of other nodes (S∗ −i) .
+4-63:23 A B1−α 0 0 0 0 0 0 0 0 0 0 2 n nodes 2 n nodes (a) A B1−α 0 0 0 0 0 0 0 0 0 0 2 n nodes 2 n nodes (b) A B1−α 2 n nodes 2 n nodes n2 n2 n2 n2 n2 n2 n2 n2 n2 n2 (c) Figure 2: Potential inefficiency of Nash equilibria illustrated by two clusters of n 2 servers .
+4-64:The intra cluster distances are all zero and the distance between clusters is α − 1, where α is the placement cost .
+4-65:The dark nodes replicate the object .
+4-66:Network (a) shows a Nash equilibrium in the basic game, where one server in a cluster caches the object .
+4-67:Network (b) shows the social optimum where two replicas, one for each cluster, are placed .
+4-68:The price of anarchy is O(n) and even the optimistic price of anarchy is O(n) .
+4-69:This high price of anarchy comes from the undersupply of replicas due to the selfish nature of servers .
+4-70:Network (c) shows a Nash equilibrium in the payment game, where two replicas, one for each cluster, are placed .
+4-71:Each light node in each cluster pays 2 n to the dark node, and the dark node replicates the object .
+4-72:Here, the optimistic price of anarchy is one .
+4-73:at i, then it is placed at another server within distance α of i, so i has no incentive to cache .
+4-74:If the replica is placed at i, then the second condition ensures there is no incentive to drop the replica because no two servers separated by distance less than α both place replicas .
+4-75:3.3 Social Optimum The social cost of a given strategy profile is defined as the total cost incurred by all servers, namely: C(S) = n−1 i=0 Ci(S) (6) where Ci(S) is the cost incurred by server i given by Equation 1 .
+4-76:The social optimum cost, referred to as C(SO) for the remainder of the paper, is the minimum social cost .
+4-77:The social optimum cost will serve as an important base case against which to measure the cost of selfish caching .
+4-78:We define C(SO) as: C(SO) = min S C(S) (7) where S varies over all possible strategy profiles .
+4-79:Note that in the basic game, this means varying configuration X over all possible configurations .
+4-80:In some sense, C(SO) represents the best possible caching behavior if only nodes could be convinced to cooperate with one another .
+4-81:The social optimum configuration is a solution of a mini sum facility location problem, which is NP hard [11] .
+4-82:To find such configurations, we formulate an integer programming problem: minimize Èi Èj ¢αij xij + Èk wij dikyijk £ subject to ∀i, j Èk yijk = I(wij) ∀i, j, k xij − ykji ≥ 0 ∀i, j xij ∈ {0, 1} ∀i, j, k yijk ∈ {0, 1} (8) Here, xij is 1 if server i replicates object j and 0 otherwise; yijk is 1 if server i accesses object j from server k and 0 otherwise; I(w) returns 1 if w is nonzero and 0 otherwise .
+4-83:The first constraint specifies that if server i has demand for object j, then it must access j from exactly one server .
+4-84:The second constraint ensures that server i replicates object j if any other server accesses j from i .
+4-85:3.4 Analysis To analyze the basic game, we first give a proof of the existence of pure strategy Nash equilibria .
+4-86:We discuss the price of anarchy in general and then on specific underlying topologies .
+4-87:In this analysis we use simply α in place of αij , since we deal with a single object and we assume placement cost is the same for all servers .
+4-88:In addition, when we compute the price of anarchy, we assume that all nodes have the same demand (i.e., ∀i ∈ N wij = 1) .
+4-89:THEOREM 1 .
+4-90:Pure strategy Nash equilibria exist in the basic game .
+4-91:PROOF .
+4-92:We show a constructive proof .
+4-93:First, initialize the set V to N .
+4-94:Then, remove all nodes with zero demand from V .
+4-95:Each node x defines βx, where βx = α wxj .
+4-96:Furthermore, let Z(y) = {z : dzy ≤ βz, z ∈ V }; Z(y) represents all nodes z for which y lies within βz from z .
+4-97:Pick a node y ∈ V such that βy ≤ βx for all x ∈ V .
+4-98:Place a replica at y and then remove y and all z ∈ Z(y) from V .
+4-99:No such z can have incentive to replicate the object because it can access y"s replica at lower (or equal) cost .
+4-100:Iterate this process of placing replicas until V is empty .
+4-101:Because at each iteration y is the remaining node with minimum β, no replica will be placed within distance βy of any such y by this process .
+4-102:The resulting configuration is a pure strategy Nash equilibrium of the basic game .
+4-103:The Price of Anarchy (POA): To quantify the cost of lack of coordination, we use the price of anarchy [21] and the optimistic price of anarchy [3] .
+4-104:The price of anarchy is the ratio of the social costs of the worst case Nash equilibrium and the social optimum, and the optimistic price of anarchy is the ratio of the social costs of the best case Nash equilibrium and the social optimum .
+4-105:We show general bounds on the price of anarchy .
+4-106:Throughout our discussion, we use C(SW ) to represent the cost of worst case Nash equilibrium, C(SO) to represent the cost of social optimum, and PoA to represent the price of anarchy, which is C(SW ) C(SO) .
+4-107:The worst case Nash equilibrium maximizes the total cost under the constraint that the configuration meets the Nash condition .
+4-108:Formally, we can define C(SW ) as follows .
+4-109:C(SW ) = max X∈E (α|X| + i min j∈X dij) (9) where minj∈X dij is the distance to the closest replica (including i itself) from node i and X varies through Nash equilibrium configurations .
+4-110:Bounds on the Price of Anarchy: We show bounds of the price of anarchy varying α .
+4-111:Let dmin = min(i,j)∈N×N,i=j dij and dmax = max(i,j)∈N×N dij .
+4-112:We see that if α ≤ dmin, PoA = 1 24 Topology PoA Complete graph 1 Star ≤ 2 Line O( √ n) D dimensional grid O(n D D+1 ) Table 1: PoA in the basic game for specific topologies trivially, since every server caches the object for both Nash equilibrium and social optimum .
+4-113:When α > dmax, there is a transition in Nash equilibria: since the placement cost is greater than any distance cost, only one server caches the object and other servers access it remotely .
+4-114:However, the social optimum may still place multiple replicas .
+4-115:Since α ≤ C(SO) ≤ α+minj∈N Èi dij when α > dmax, we obtain α+maxj∈N Èi dij α+minj∈N Èi dij ≤ PoA ≤ α+maxj∈N Èi dij α .
+4-116:Note that depending on the underlying topology, even the lower bound of PoA can be O(n) .
+4-117:Finally, there is a transition when α > maxj∈N Èi dij .
+4-118:In this case, PoA = α+maxj∈N Èi dij α+minj∈N Èi dij and it is upper bounded by 2 .
+4-119:Figure 2 shows an example of the inefficiency of a Nash equilibrium .
+4-120:In the network there are two clusters of servers whose size is n 2 .
+4-121:The distance between two clusters is α − 1 where α is the placement cost .
+4-122:Figure 2(a) shows a Nash equilibrium where one server in a cluster caches the object .
+4-123:In this case, C(SW ) = α + (α − 1)n 2 , since all servers in the other cluster accesses the remote replica .
+4-124:However, the social optimum places two replicas, one for each cluster, as shown in Figure 2(b) .
+4-125:Therefore, C(SO) = 2α .
+4-126:PoA = α+(α−1) n 2 2α , which is O(n) .
+4-127:This bad price of anarchy comes from an undersupply of replicas due to the selfish nature of the servers .
+4-128:Note that all Nash equilibria have the same cost; thus even the optimistic price of anarchy is O(n) .
+4-129:In Appendix A, we analyze the price of anarchy with specific underlying topologies and show that PoA can have tighter bounds than O(n) for the complete graph, star, line, and D dimensional grid .
+4-130:In these topologies, we set the distance between directly connected nodes to one .
+4-131:We describe the case where α > 1, since PoA = 1 trivially when α ≤ 1 .
+4-132:A summary of the results is shown in Table 1. .
+5 PAYMENT GAME :
+5-1:In this section, we present an extension to the basic game with payments and analyze the price of anarchy and the optimistic price of anarchy of the game .
+5-2:4.1 Game Model The new game, which we refer to as the payment game, allows each player to offer a payment to another player to give the latter incentive to replicate the object .
+5-3:The cost of replication is shared among the nodes paying the server that replicates the object .
+5-4:The strategy for each player i is specified by a triplet (vi, bi, ti) ∈ {N, Ê+, Ê+} .
+5-5:vi specifies the player to whom i makes a bid, bi ≥ 0 is the value of the bid, and ti ≥ 0 denotes a threshold for payments beyond which i will replicate the object .
+5-6:In addition, we use Ri to denote the total amount of bids received by a node i (Ri = Èj:vj =i bj) .
+5-7:A node i replicates the object if and only if Ri ≥ ti, that is, the amount of bids it receives is greater than or equal to its threshold .
+5-8:Let Ii denote the corresponding indicator variable, that is, Ii equals 1 if i replicates the object, and 0 otherwise .
+5-9:We make the rule that if a node i makes a bid to another node j and j replicates the object, then i must pay j the amount bi .
+5-10:If j does not replicate the object, i does not pay j .
+5-11:Given a strategy profile, the outcome of the game is the set of tuples {(Ii, vi, bi, Ri)} .
+5-12:Ii tells us whether player i replicates the object or not, bi is the payment player i makes to player vi, and Ri is the total amount of bids received by player i .
+5-13:To compute the payoffs given the outcome, we must now take into account the payments a node makes, in addition to the placement costs and access costs of the basic game .
+5-14:By our rules, a server node i pays bi to node vi if vi replicates the object, and receives a payment of Ri if it replicates the object itself .
+5-15:Its net payment is biIvi − RiIi .
+5-16:The total cost incurred by each node is the sum of its placement cost, access cost, and net payment .
+5-17:It is defined as Ci(S) = αij Ii + wij di (i,j)(1 − Ii) + biIvi − RiIi .
+5-18:(10) The cost of social optimum for the payment game is same as that for the basic game, since the net payments made cancel out .
+5-19:4.2 Analysis In analyzing the payment model, we first show that a Nash equilibrium in the basic game is also a Nash equilibrium in the payment game .
+5-20:We then present an important positive result in the payment game the socially optimal configuration can always be implemented by a Nash equilibrium .
+5-21:We know from the counterexample in Figure 2 that this is not guaranteed in the the basic game .
+5-22:In this analysis we use α to represent αij .
+5-23:THEOREM 2 .
+5-24:Any configuration that is a pure strategy Nash equilibrium in the basic game is also a pure strategy Nash equilibrium in the payment game .
+5-25:Therefore, the price of anarchy of the payment game is at least that of the basic game .
+5-26:PROOF .
+5-27:Consider any Nash equilibrium configuration in the basic game .
+5-28:For each node i replicating the object, set its threshold ti to 0; everyone else has threshold α .
+5-29:Also, for all i, bi = 0 .
+5-30:A node that replicates the object does not have incentive to change its strategy: changing the threshold does not decrease its cost, and it would have to pay at least α to access a remote replica or incentivize a nearby node to cache .
+5-31:Therefore it is better off keeping its threshold and bid at 0 and replicating the object .
+5-32:A node that is not replicating the object can access the object remotely at a cost less than or equal to α .
+5-33:Lowering its threshold does not decrease its cost, since all bi are zero .
+5-34:The payment necessary for another server to place a replica is at least α .
+5-35:No player has incentive to deviate, so the current configuration is a Nash equilibrium .
+5-36:In fact, Appendix B shows that the PoA of the payment game can be more than that of the basic game in a given topology .
+5-37:Now let us look at what happens to the example shown in Figure 2 in the best case .
+5-38:Suppose node B"s neighbors each decide to pay node B an amount 2 n .
+5-39:B does not have an incentive to deviate, since accessing the remote replica does not decrease its cost .
+5-40:The same argument holds for A because of symmetry in the graph .
+5-41:Since no one has an incentive to deviate, the configuration is a Nash equilibrium .
+5-42:Its total cost is 2α, the same as in the socially optimal configuration shown in Figure 2(b) .
+5-43:Next we prove that indeed the payment game always has a strategy profile that implements the socially optimal configuration as a Nash equilibrium .
+5-44:We first present the following observation, which is used in the proof, about thresholds in the payment game .
+5-45:OBSERVATION 1 .
+5-46:If node i replicates the object, j is the nearest node to i among the other nodes that replicate the object, and dij < α in a Nash equilibrium, then i should have a threshold at 25 least (α − dij) .
+5-47:Otherwise, it cannot collect enough payment to compensate for the cost of replicating the object and is better off accessing the replica at j .
+5-48:THEOREM 3 .
+5-49:In the payment game, there is always a pure strategy Nash equilibrium that implements the social optimum configuration .
+5-50:The optimistic price of anarchy in the payment game is therefore always one .
+5-51:PROOF .
+5-52:Consider the socially optimal configuration φopt .
+5-53:Let No be the set of nodes that replicate the object and Nc = N − No be the rest of the nodes .
+5-54:Also, for each i in No, let Qi denote the set of nodes that access the object from i, not including i itself .
+5-55:In the socially optimal configuration, dij ≤ α for all j in Qi .
+5-56:We want to find a set of payments and thresholds that makes this configuration implementable .
+5-57:The idea is to look at each node i in No and distribute the minimum payment needed to make i replicate the object among the nodes that access the object from i .
+5-58:For each i in No, and for each j in Qi, we define δj = min{α, min k∈No−{i} djk} − dji (11) Note that δj is the difference between j"s cost for accessing the replica at i and j"s next best option among replicating the object and accessing some replica other than i .
+5-59:It is clear that δj ≥ 0 .
+5-60:CLAIM 1 .
+5-61:For each i ∈ No, let be the nearest node to i in No .
+5-62:Then, Èj∈Qi δj ≥ α − di .
+5-63:PROOF .
+5-64:(of claim) Assume the contrary, that is, Èj∈Qi δj < α − di .
+5-65:Consider the new configuration φnew wherein i does not replicate and each node in Qi chooses its next best strategy (either replicating or accessing the replica at some node in No − {i}) .
+5-66:In addition, we still place replicas at each node in No − {i} .
+5-67:It is easy to see that cost of φopt minus cost of φnew is at least: (α + j∈Qi dij) − (di + j∈Qi min{α, min k∈No−{i} dik}) = α − di − j∈Qi δj > 0, which contradicts the optimality of φopt .
+5-68:We set bids as follows .
+5-69:For each i in No, bi = 0 and for each j in Qi, j bids to i (i.e., vj = i) the amount: bj = max{0, δj − i (|Qi| + 1)}, j ∈ Qi (12) where i = Èj∈Qi δj − α + di ≥ 0 and |Qi| is the cardinality of Qi .
+5-70:For the thresholds, we have: ti = α if i ∈ Nc;Èj∈Qi bj if i ∈ No .
+5-71:(13) This fully specifies the strategy profile of the nodes, and it is easy to see that the outcome is indeed the socially optimal configuration .
+5-72:Next, we verify that the strategies stipulated constitute a Nash equilibrium .
+5-73:Having set ti to α for i in Nc means that any node in N is at least as well off lowering its threshold and replicating as bidding α to some node in Nc to make it replicate, so we may disregard the latter as a profitable strategy .
+5-74:By observation 1, to ensure that each i in No does not deviate, we require that if is the nearest node to i in No, then Èj∈Qi bj is at least (α − di ) .
+5-75:Otherwise, i will raise ti above Èj∈Qi bj so that it does not replicate and instead accesses the replica at .
+5-76:We can easily check that j∈Qi bj ≥ j∈Qi δj − |Qi| i |Qi| + 1 = α − di + i |Qi| + 1 ≥ α − di .
+5-77:1 1.5 2 2.5 3 3.5 4 4.5 5 5.5 0 20 40 60 80 100 120 140 160 180 200 1 10 100 C(NE) C(SO) AverageNumberofReplicas alpha PoA Ratio OPoA Replica Replica Figure 3: We present P oA, Ratio, and OP oA results for the basic game, varying α on a 100 node line topology, and we show number of replicas placed by the Nash equilibria and by the optimal solution .
+5-78:We see large peaks in P oA and OP oA at α = 100, where a phase transition causes an abrupt transition in the lines .
+5-79:Therefore, each node i ∈ No does not have incentive to change ti since i loses its payments received or there is no change, and i does not have incentive to bi since it replicates the object .
+5-80:Each node j in Nc has no incentive to change tj since changing tj does not reduce its cost .
+5-81:It also does not have incentive to reduce bj since the node where j accesses does not replicate and j has to replicate the object or to access the next closest replica, which costs at least the same from the definition of bj .
+5-82:No player has incentive to deviate, so this strategy profile is a Nash equilibrium. .
+6 SIMULATION :
+6-1:We run simulations to compare Nash equilibria for the singleobject caching game with the social optimum computed by solving the integer linear program described in Equation 8 using Mosek [1] .
+6-2:We examine price of anarchy (PoA), optimistic price of anarchy (OPoA), and the average ratio of the costs of Nash equilibria and social optima (Ratio), and when relevant we also show the average numbers of replicas placed by the Nash equilibrium (Replica(NE)) and the social optimum (Replica(SO)) .
+6-3:The PoA and OPoA are taken from the worst and best Nash equilibria, respectively, that we observe over the runs .
+6-4:Each data point in our figures is based on 1000 runs, randomly varying the initial strategy profile and player order .
+6-5:The details of the simulations including protocols and a discussion of convergence are presented in Appendix C .
+6-6:In our evaluation, we study the effects of variation in four categories: placement cost, underlying topology, demand distribution, and payments .
+6-7:As we vary the placement cost α, we directly influence the tradeoff between caching and not caching .
+6-8:In order to get a clear picture of the dependency of PoA on α in a simple case, we first analyze the basic game with a 100 node line topology whose edge distance is one .
+6-9:We also explore transit stub topologies generated using the GTITM library [36] and power law topologies (Router level BarabasiAlbert model) generated using the BRITE topology generator [25] .
+6-10:For these topologies, we generate an underlying physical graph of 3050 physical nodes .
+6-11:Both topologies have similar minimum, average, and maximum physical node distances .
+6-12:The average distance is 0.42 .
+6-13:We create an overlay of 100 server nodes and use the same overlay for all experiments with the given topology .
+6-14:In the game, each server has a demand whose distribution is Bernoulli(p), where p is the probability of having demand for the object; the default unless otherwise specified is p = 1.0 .
+6-15:26 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3 0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 1 10 100 C(NE) C(SO) AverageNumberofReplicas alpha PoA Ratio OPoA Replica Replica (a) 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3 0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 1 10 100 C(NE) C(SO) AverageNumberofReplicas alpha PoA Ratio OPoA Replica Replica (b) Figure 4: Transit stub topology: (a) basic game, (b) payment game .
+6-16:We show the P oA, Ratio, OP oA, and the number of replicas placed while varying α between 0 and 2 with 100 servers on a 3050 physical node transit stub topology .
+6-17:0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 1 10 100 C(NE) C(SO) AverageNumberofReplicas alpha PoA Ratio OPoA Replica Replica (a) 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 1 10 100 C(NE) C(SO) AverageNumberofReplicas alpha PoA Ratio OPoA Replica Replica (b) Figure 5: Power law topology: (a) basic game, (b) payment game .
+6-18:We show the P oA, Ratio, OP oA, and the number of replicas placed while varying α between 0 and 2 with 100 servers on a 3050 physical node power law topology .
+6-19:5.1 Varying Placement Cost Figure 3 shows PoA, OPoA, and Ratio, as well as number of replicas placed, for the line topology as α varies .
+6-20:We observe two phases .
+6-21:As α increases the PoA rises quickly to a peak at 100 .
+6-22:After 100, there is a gradual decline .
+6-23:OPoA and Ratio show behavior similar to PoA .
+6-24:These behaviors can be explained by examining the number of replicas placed by Nash equilibria and by optimal solutions .
+6-25:We see that when α is above one, Nash equilibrium solutions place fewer replicas than optimal on average .
+6-26:For example, when α is 100, the social optimum places four replicas, but the Nash equilibrium places only one .
+6-27:The peak in PoA at α = 100 occurs at the point for a 100 node line where the worst case cost of accessing a remote replica is slightly less than the cost of placing a new replica, so selfish servers will never place a second replica .
+6-28:The optimal solution, however, places multiple replicas to decrease the high global cost of access .
+6-29:As α continues to increase, the undersupply problem lessens as the optimal solution places fewer replicas .
+6-30:5.2 Different Underlying Topologies In Figure 4(a) we examine an overlay graph on the more realistic transit stub topology .
+6-31:The trends for the PoA, OPoA, and Ratio are similar to the results for the line topology, with a peak in PoA at α = 0.8 due to maximal undersupply .
+6-32:In Figure 5(a) we examine an overlay graph on the power law topology .
+6-33:We observe several interesting differences between the power law and transit stub results .
+6-34:First, the PoA peaks at a lower level in the power law graph, around 2.3 (at α = 0.9) while the peak PoA in the transit stub topology is almost 3.0 (at α = 0.8) .
+6-35:After the peak, PoA and Ratio decrease more slowly as α increases .
+6-36:OPoA is close to one for the whole range of α values .
+6-37:This can be explained by the observation in Figure 5(a) that there is no significant undersupply problem here like there was in the transit stub graph .
+6-38:Indeed the high PoA is due mostly to misplacement problems when α is from 0.7 to 2.0, since there is little decrease in PoA when the number of replicas in social optimum changes from two to one .
+6-39:The OPoA is equal to one in the figure when the same number of replicas are placed .
+6-40:5.3 Varying Demand Distribution Now we examine the effects of varying the demand distribution .
+6-41:The set of servers with demand is random for p < 1, so we calculate the expected PoA by averaging over 5 trials (each data point is based on 5000 runs) .
+6-42:We run simulations for demand levels of p ∈ {0.2, 0.6, 1.0} as α is varied on the 100 servers on top of the transit stub graph .
+6-43:We observe that as demand falls, so does expected PoA .
+6-44:As p decreases, the number of replicas placed in the social optimum decreases, but the number in Nash equilibria changes little .
+6-45:Furthermore, when α exceeds the overlay diameter, the number in Nash equilibria stays constant when p varies .
+6-46:Therefore, lower p leads to a lesser undersupply problem, agreeing with intuition .
+6-47:We do not present the graph due to space limitations and redundancy; the PoA for p = 1.0 is identical to PoA in Figure 4(a), and the lines for p = 0.6 and p = 0.2 are similar but lower and flatter .
+6-48:27 5.4 Effects of Payment Finally, we discuss the effects of payments on the efficiency of Nash equilibria .
+6-49:The results are presented in Figure 4(b) and Figure 5(b) .
+6-50:As shown in the analysis, the simulations achieve OPoA close to one (it is not exactly one because of randomness in the simulations) .
+6-51:The Ratio for the payment game is much lower than the Ratio for the basic game, since the protocol for the payment game tends to explore good regions in the space of Nash equilibria .
+6-52:We observe in Figure 4 that for α ≥ 0.4, the average number of replicas of Nash equilibria gets closer with payments to that of the social optimum than it does without .
+6-53:We observe in Figure 5 that more replicas are placed with payments than without when α is between 0.7 and 1.3, the only range of significant undersupply in the power law case .
+6-54:The results confirm that payments give servers incentive to replicate the object and this leads to better equilibria. .
+7 DISCUSSION AND FUTURE WORK :
+7-1:We suggest several interesting extensions and directions .
+7-2:One extension is to consider multiple objects in the capacitated caching game, in which servers have capacity limits when placing objects .
+7-3:Since caching one object affects the ability to cache another, there is no separability of a multi object game into multiple single object games .
+7-4:As studied in [12], one way to formulate this problem is to find the best response of a server by solving a knapsack problem and to compute Nash equilibria .
+7-5:In our analyses, we assume that all nodes have the same demand .
+7-6:However, nodes could have different demand depending on objects .
+7-7:We intend to examine the effects of heterogeneous demands (or heterogeneous placement costs) analytically .
+7-8:We also want to look at the following aggregation effect .
+7-9:Suppose there are n − 1 clustered nodes with distance of α−1 from a node hosting a replica .
+7-10:All nodes have demands of one .
+7-11:In that case, the price of anarchy is O(n) .
+7-12:However, if we aggregate n − 1 nodes into one node with demand n − 1, the price of anarchy becomes O(1), since α should be greater than (n − 1)(α − 1) to replicate only one object .
+7-13:Such aggregation can reduce the inefficiency of Nash equilibria .
+7-14:We intend to compute the bounds of the price of anarchy under different underlying topologies such as random graphs or growthrestricted metrics .
+7-15:We want to investigate whether there are certain distance constraints that guarantee O(1) price of anarchy .
+7-16:In addition, we want to run large scale simulations to observe the change in the price of anarchy as the network size increases .
+7-17:Another extension is to consider server congestion .
+7-18:Suppose the distance is the network distance plus γ × (number of accesses) where γ is an extra delay when an additional server accesses the replica .
+7-19:Then, when α > γ, it can be shown that PoA is bounded by α γ .
+7-20:As γ increases, the price of anarchy bound decreases, since the load of accesses is balanced across servers .
+7-21:While exploring the caching problem, we made several observations that seem counterintuitive .
+7-22:First, the PoA in the payment game can be worse than the PoA in the basic game .
+7-23:Another observation we made was that the number of replicas in a Nash equilibrium can be more than the number of replicas in the social optimum even without payments .
+7-24:For example, a graph with diameter slightly more than α may have a Nash equilibrium configuration with two replicas at the two ends .
+7-25:However, the social optimum may place one replica at the center .
+7-26:We leave the investigation of more examples as an open issue. .
+8 CONCLUSIONS :
+8-1:In this work we introduce a novel non cooperative game model to characterize the caching problem among selfish servers without any central coordination .
+8-2:We show that pure strategy Nash equilibria exist in the game and that the price of anarchy can be O(n) in general, where n is the number of servers, due to undersupply problems .
+8-3:With specific topologies, we show that the price of anarchy can have tighter bounds .
+8-4:More importantly, with payments, servers are incentivized to replicate and the optimistic price of anarchy is always one .
+8-5:Non cooperative caching is a more realistic model than cooperative caching in the competitive Internet, hence this work is an important step toward viable federated caching systems. .
+9-1:We thank Kunal Talwar for enlightening discussions regarding this work.
+10-1:http:  www.mosek.com
+10-2:A
+10-3:Adya et al
+10-4:FARSITE: Federated, Available, and Reliable Storage for an Incompletely Trusted Environment
+10-5:In Proc
+10-6:of USENIX OSDI, 2002
+10-7:E
+10-8:Anshelevich, A
+10-9:Dasgupta, E
+10-10:Tardos, and T
+10-11:Wexler
+10-12:Near optimal Network Design with Selfish Agents
+10-13:In Proc
+10-14:of ACM STOC, 2003
+10-15:Y
+10-16:Chen, R
+10-17:H
+10-18:Katz, and J
+10-19:D
+10-20:Kubiatowicz
+10-21:SCAN: A Dynamic, Scalable, and Efficient Content Distribution Network
+10-22:In Proc
+10-23:of Intl
+10-24:Conf
+10-25:on Pervasive Computing, 2002
+10-26:F
+10-27:Dabek et al
+10-28:Wide area Cooperative Storage with CFS
+10-29:In Proc
+10-30:of ACM SOSP, Oct
+10-31:2001
+10-32:P
+10-33:B
+10-34:Danzig
+10-35:NetCache Architecture and Deploment
+10-36:In Computer Networks and ISDN Systems, 1998
+10-37:N
+10-38:Devanur, M
+10-39:Mihail, and V
+10-40:Vazirani
+10-41:Strategyproof cost sharing Mechanisms for Set Cover and Facility Location Games
+10-42:In Proc
+10-43:of ACM EC, 2003
+10-44:J
+10-45:R
+10-46:Douceur and R
+10-47:P
+10-48:Wattenhofer
+10-49:Large Scale Simulation of Replica Placement Algorithms for a Serverless Distributed File System
+10-50:In Proc
+10-51:of MASCOTS, 2001
+10-52:A
+10-53:Fabrikant, C
+10-54:H
+10-55:Papadimitriou, and K
+10-56:Talwar
+10-57:The Complexity of Pure Nash Equilibria
+10-58:In Proc
+10-59:of ACM STOC, 2004
+10-60:L
+10-61:Fan, P
+10-62:Cao, J
+10-63:Almeida, and A
+10-64:Z
+10-65:Broder
+10-66:Summary Cache: A Scalable Wide area Web Cache Sharing Protocol
+10-67:IEEE ACM Trans
+10-68:on Networking, 8(3):281 293, 2000
+10-69:M
+10-70:R
+10-71:Garey and D
+10-72:S
+10-73:Johnson
+10-74:Computers and Intractability: A Guide to the Theory of NP Completeness
+picture:

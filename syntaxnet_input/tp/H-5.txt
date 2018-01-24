@@ -1,0 +1,373 @@
+﻿Utility-based Information Distillation Over 
+content:
+1 ABSTRACT :
+1-1:This paper examines a new approach to information distillation over temporally ordered documents, and proposes a novel evaluation scheme for such a framework .
+1-2:It combines the strengths of and extends beyond conventional adaptive filtering, novelty detection and non redundant passage ranking with respect to long lasting information needs (‘tasks" with multiple queries) .
+1-3:Our approach supports fine grained user feedback via highlighting of arbitrary spans of text, and leverages such information for utility optimization in adaptive settings .
+1-4:For our experiments, we defined hypothetical tasks based on news events in the TDT4 corpus, with multiple queries per task .
+1-5:Answer keys (nuggets) were generated for each query and a semiautomatic procedure was used for acquiring rules that allow automatically matching nuggets against system responses .
+1-6:We also propose an extension of the NDCG metric for assessing the utility of ranked passages as a combination of relevance and novelty .
+1-7:Our results show encouraging utility enhancements using the new approach, compared to the baseline systems without incremental learning or the novelty detection components .
+1-8:H.3.3 [Information Search and Retrieval]: Information .
+2 INTRODUCTION :
+2-1:Tracking new and relevant information from temporal data streams for users with long lasting needs has been a challenging research topic in information retrieval .
+2-2:Adaptive filtering is one such task of online prediction of the relevance of each new document with respect to pre defined topics .
+2-3:Based on the initial query and a few positive examples (if available), an AF system maintains a profile for each such topic of interest, and constantly updates it based on feedback from the user .
+2-4:The incremental learning nature of AF systems makes them more powerful than standard search engines that support ad hoc retrieval (e.g .
+2-5:Google and Yahoo) in terms of finding relevant information with respect to long lasting topics of interest, and more attractive for users who are willing to provide feedback to adapt the system towards their specific information needs, without having to modify their queries manually .
+2-6:A variety of supervised learning algorithms (Rocchio style classifiers, Exponential Gaussian models, local regression and logistic regression approaches) have been studied for adaptive settings, examined with explicit and implicit relevance feedback, and evaluated with respect to utility optimization on large benchmark data collections in TREC (Text Retrieval Conferences) and TDT (Topic Detection and Tracking) forums [1, 4, 7, 15, 16, 20, 24, 23] .
+2-7:Regularized logistic regression [21] has been found representative for the state of the art approaches, and highly efficient for frequent model adaptations over large document collections such as the TREC 10 corpus (over 800,000 documents and 84 topics) .
+2-8:Despite substantial achievements in recent adaptive filtering research, significant problems remain unsolved regarding how to leverage user feedback effectively and efficiently .
+2-9:Specifically, the following issues may seriously limit the true utility of AF systems in real world applications: adaptive filtering setup he or she reacts to the system only when the system makes a ‘yes" decision on a document, by confirming or rejecting that decision .
+2-10:A more ‘active" alternative would be to allow the user to issue multiple queries for a topic, review a ranked list of candidate documents (or passages) per query, and provide feedback on the ranked list, thus refining their information need and requesting updated ranked lists .
+2-11:The latter form of user interaction has been highly effective in standard retrieval for ad hoc queries .
+2-12:How to deploy such a strategy for long lasting information needs in AF settings is an open question for research .
+2-13:‘no") is restricted to the document level in conventional AF .
+2-14:However, a real user may be willing to provide more informative, fine grained feedback via highlighting some pieces of text in a retrieved document as relevant, instead of labeling the entire document as relevant .
+2-15:Effectively leveraging such fine grained feedback could substantially enhance the quality of an AF system .
+2-16:For this, we need to enable supervised learning from labeled pieces of text of arbitrary span instead of just allowing labeled documents .
+2-17:redundant .
+2-18:A major news event, for example, would be reported by multiple sources repeatedly for a while, making most of the information content in those articles redundant with each other .
+2-19:A conventional AF system would select all these redundant news stories for user feedback, wasting the user"s time while offering little gain .
+2-20:Clearly, techniques for novelty detection can help in principle [25, 2, 22] for improving the utility of the AF systems .
+2-21:However, the effectiveness of such techniques at passage level to detect novelty with respect to user"s (fine grained) feedback and to detect redundancy in ranked lists remains to be evaluated using a measure of utility that mimics the needs of a real user .
+2-22:To address the above limitations of current AF systems, we propose and examine a new approach in this paper, combining the strengths of conventional AF (incremental learning of topic models), multi pass passage retrieval for long lasting queries conditioned on topic, and novelty detection for removal of redundancy from user interactions with the system .
+2-23:We call the new process utility based information distillation .
+2-24:Note that conventional benchmark corpora for AF evaluations, which have relevance judgments at the document level and do not define tasks with multiple queries, are insufficient for evaluating the new approach .
+2-25:Therefore, we extended a benchmark corpus the TDT4 collection of news stories and TV broadcasts with task definitions, multiple queries per task, and answer keys per query .
+2-26:We have conducted our experiments on this extended TDT4 corpus and have made the additionally generated data publicly available for future comparative evaluations 1 .
+2-27:To automatically evaluate the system returned arbitrary spans of text using our answer keys, we further developed an evaluation scheme with semi automatic procedure for 1 URL: http: nyc.lti.cs.cmu.edu downloads acquiring rules that can match nuggets against system responses .
+2-28:Moreover, we propose an extension of NDCG (Normalized Discounted Cumulated Gain) [9] for assessing the utility of ranked passages as a function of both relevance and novelty .
+2-29:The rest of this paper is organized as follows .
+2-30:Section 2 outlines the information distillation process with a concrete example .
+2-31:Section 3 describes the technical cores of our system called CAF´E CMU Adaptive Filtering Engine .
+2-32:Section 4 discusses issues with respect to evaluation methodology and proposes a new scheme .
+2-33:Section 5 describes the extended TDT4 corpus .
+2-34:Section 6 presents our experiments and results .
+2-35:Section 7 concludes the study and gives future perspectives. .
+3 A SAMPLE TASK :
+3-1:Consider a news event the escape of seven convicts from a Texas prison in December 2000 and their capture a month later .
+3-2:Assuming a user were interested in this event since its early stage, the information need could be: ‘Find information about the escape of convicts from Texas prison, and information related to their recapture" .
+3-3:The associated lower level questions could be: .
+4 How many prisoners escaped? :
+4-1:.
+5 Where and when were they sighted? :
+5-1:prison? .
+6 How are they armed? :
+6-1:.
+7 Do they have any vehicles? :
+7-1:.
+8 What steps have been taken so far? :
+8-1:We call such an information need a task, and the associated questions as the queries in this task .
+8-2:A distillation system is supposed to monitor the incoming documents, process them chunk by chunk in a temporal order, select potentially relevant and novel passages from each chunk with respect to each query, and present a ranked list of passages to the user .
+8-3:Passage ranking here is based on how relevant a passage is with respect to the current query, how novel it is with respect to the current user history (of his or her interactions with the system), and how redundant it is compared to other passages with a higher rank in the list .
+8-4:When presented with a list of passages, the user may provide feedback by highlighting arbitrary spans of text that he or she found relevant .
+8-5:These spans of text are taken as positive examples in the adaptation of the query profile, and also added to the user"s history .
+8-6:Passages not marked by the user are taken as negative examples .
+8-7:As soon as the query profile is updated, the system re issues a search and returns another ranked list of passages where the previously seen passages are either removed or ranked low, based on user preference .
+8-8:For example, if the user highlights ‘...officials have posted a $100,000 reward for their capture..." as relevant answer to the query What steps have been taken so far?, then the highlighted piece is used as an additional positive training example in the adaptation of the query profile .
+8-9:This piece of feedback is also added to the user history as a seen example, so that in future, the system will not place another passage mentioning ‘$100,000 reward" at the top of the ranked list .
+8-10:However, an article mentioning ‘...officials have doubled the reward money to $200,000..." might be ranked high since it is both relevant to the (updated) query profile and novel with respect to the (updated) user history .
+8-11:The user may modify the original queries or add a new query during the process; the query profiles will be changed accordingly .
+8-12:Clearly, novelty detection is very important for the utility of such a system because of the iterative search .
+8-13:Without novelty detection, the old relevant passages would be shown to the user repeatedly in each ranked list .
+8-14:Through the above example, we can see the main properties of our new framework for utility based information distillation over temporally ordered documents .
+8-15:Our framework combines and extends the power of adaptive filtering (AF), ad hoc retrieval and novelty detection .
+8-16:Compared to standard IR, our approach has the power of incrementally learning long term information needs and modeling a sequence of queries within a task .
+8-17:Compared to conventional AF, it enables a more active role of the user in refining his or her information needs and requesting new results by allowing relevance and novelty feedback via highlighting of arbitrary spans of text in passages returned by the system .
+8-18:Compared to past work, this is the first evaluation of novelty detection integrated with adaptive filtering for sequenced queries that allows flexible user feedback over ranked passages .
+8-19:The combination of AF, IR and ND with the new extensions raises an important research question regarding evaluation methodology: how can we measure the utility of such an information distillation system? Existing metrics in standard IR, AF and ND are insufficient, and new solutions must be explored, as we will discuss in Section 4, after describing the technical cores of our system in the next section. .
+9 TECHNICAL CORES :
+9-1:The core components of CAF´E are 1) AF for incremental learning of query profiles, 2) IR for estimating relevance of passages with respect to query profiles, 3) ND for assessing novelty of passages with respect to user"s history, and 4) anti redundancy component to remove redundancy from ranked lists .
+9-2:3.1 Adaptive Filtering Component We use a state of the art algorithm in the field the regularized logistic regression method which had the best results on several benchmark evaluation corpora for AF [21] .
+9-3:Logistic regression is a supervised learning algorithm for statistical classification .
+9-4:Based on a training set of labeled instances, it learns a class model which can then by used to predict the labels of unseen instances .
+9-5:Its performance as well as efficiency in terms of training time makes it a good candidate when frequent updates of the class model are required, as is the case in adaptive filtering, where the system must learn from each new feedback provided by the user .
+9-6:(See [21] and [23] for computational complexity and implementation issues) .
+9-7:In adaptive filtering, each query is considered as a class and the probability of a passage belonging to this class corresponds to the degree of relevance of the passage with respect to the query .
+9-8:For training the model, we use the query itself as the initial positive training example of the class, and the user highlighted pieces of text (marked as Relevant or Not relevant) during feedback as additional training examples .
+9-9:To address the cold start issue in the early stage before any user feedback is obtained, the system uses a small sample from a retrospective corpus as the initial negative examples in the training set .
+9-10:The details of using logistic regression for adaptive filtering (assigning different weights to positive and negative training instances, and regularizing the objective function to prevent over fitting on training data) are presented in [21] .
+9-11:The class model w∗ learned by Logistic Regression, or the query profile, is a vector whose dimensions are individual terms and whose elements are the regression coefficients, indicating how influential each term is in the query profile .
+9-12:The query profile is updated whenever a new piece of user feedback is received .
+9-13:A temporally decaying weight can be applied to each training example, as an option, to emphasize the most recent user feedback .
+9-14:3.2 Passage Retrieval Component We use standard IR techniques in this part of our system .
+9-15:Incoming documents are processed in chunks, where each chunk can be defined as a fixed span of time or as a fixed number of documents, as preferred by the user .
+9-16:For each incoming document, corpus statistics like the IDF (Inverted Document Frequency) of each term are updated .
+9-17:We use a state of the art named entity identifier and tracker [8, 12] to identify person and location names, and merge them with co referent named entities seen in the past .
+9-18:Then the documents are segmented into passages, which can be a whole document, a paragraph, a sentence, or any other continuous span of text, as preferred .
+9-19:Each passage is represented using a vector of TF IDF (Term FrequencyInverse Document Frequency) weights, where term can be a word or a named entity .
+9-20:Given a query profile, i.e .
+9-21:the logistic regression solution w∗ as described in Section 3.1, the system computes the posterior probability of relevance for each passage x as fRL(x) ≡ P(y = 1|x, w∗ ) = 1 (1 + e−w∗·x) (1) Passages are ordered by their relevance scores, and the ones with scores above a threshold (tuned on a training set) comprise the relevance list that is passed on to the novelty detection step .
+9-22:3.3 Novelty Detection Component CAF´E maintains a user history H(t), which contains all the spans of text hi that the user highlighted (as feedback) during his or her past interactions with the system, up to the current time t .
+9-23:Denoting the history as H(t) = n h1, h2, ..., ht o , (2) the novelty score of a new candidate passage x is computed as: fND(x) = 1 − max i∈1..t {cos(x, hi)} (3) where both candidate passage x and highlighted spans of text hi are represented as TF IDF vectors .
+9-24:The novelty score of each passage is compared to a prespecified threshold (also tuned on a training set), and any passage with a score below this threshold is removed from the relevance list .
+9-25:3.4 Anti redundant Ranking Component Although the novelty detection component ensures that only novel (previously unseen) information remains in the relevance list, this list might still contain the same novel information at multiple positions in the ranked list .
+9-26:Suppose, for example, that the user has already read about a $100,000 reward for information about the escaped convicts .
+9-27:A new piece of news that the award has been increased to $200,000 is novel since the user hasn"t read about it yet .
+9-28:However, multiple news sources would report this news and we might end up showing (redundant) articles from all these sources in a ranked list .
+9-29:Hence, a ranked list should also be made non redundant with respect to its own contents .
+9-30:We use a simplified version of the Maximal Marginal Relevance method [5], originally developed for combining relevance and novelty in text retrieval and summarization .
+9-31:Our procedure starts with the current list of passages sorted by relevance (section 3.2), filtered by Novelty Detection component (section 3.3), and generates a new non redundant list as follows: in the new list .
+9-32:list only if fAR(x) > t where fAR(x) = 1 − max pi∈Lnew {cos(x, pi)} and Lnew is the set of passages already selected in the new list .
+9-33:have been examined .
+9-34:After applying the above mentioned algorithm, each passage in the new list is sufficiently dissimilar to others, thus favoring diversity rather than redundancy in the new ranked list .
+9-35:The anti redundancy threshold t is tuned on a training set. .
+10 EVALUATION METHODOLOGY :
+10-1:The approach we proposed above for information distillation raises important issues regarding evaluation methodology .
+10-2:Firstly, since our framework allows the output to be passages at different levels of granularity (e.g .
+10-3:k sentence windows where k may vary) instead of a fixed length, it is not possible to have pre annotated relevance judgments at all such granularity levels .
+10-4:Secondly, since we wish to measure the utility of the system output as a combination of both relevance and novelty, traditional relevance only based measures must be replaced by measures that penalize the repetition of the same information in the system output across time .
+10-5:Thirdly, since the output of the system is ranked lists, we must reward those systems that present useful information (both relevant and previously unseen) using shorter ranked lists, and penalize those that present the same information using longer ranked lists .
+10-6:None of the existing measures in ad hoc retrieval, adaptive filtering, novelty detection or other related areas (text summarization and question answering) have desirable properties in all the three aspects .
+10-7:Therefore, we must develop a new evaluation methodology .
+10-8:4.1 Answer Keys To enable the evaluation of a system whose output consists of passages of arbitrary length, we borrow the concept of answer keys from the Question Answering community, where systems are allowed to return arbitrary spans of text as answers .
+10-9:Answer keys define what should be present in a system response to receive credit, and are comprised of a collection of information nuggets, i.e .
+10-10:factoid units about which human assessors can make binary decisions of whether or not a system response contains them .
+10-11:Defining answer keys and making the associated binary decisions are conceptual tasks that require semantic mapping [19], since system returned passages can contain the same information expressed in many different ways .
+10-12:Hence, QA evaluations have relied on human assessors for the mapping between various expressions, making the process costly, time consuming, and not scalable to large query and document collections, and extensive system evaluations with various parameter settings .
+10-13:4.1.1 Automating Evaluation based on Answer Keys Automatic evaluation methods would allow for faster system building and tuning, as well as provide an objective and affordable way of comparing various systems .
+10-14:Recently, such methods have been proposed, more or less, based on the idea of n gram co occurrences .
+10-15:Pourpre [10] assigns a fractional recall score to a system response based on its unigram overlap with a given nugget"s description .
+10-16:For example, a system response ‘A B C" has recall 3 4 with respect to a nugget with description ‘A B C D" .
+10-17:However, such an approach is unfair to systems that present the same information but using words other than A, B, C, and D .
+10-18:Another open issue is how to weight individual words in measuring the closeness of a match .
+10-19:For example, consider the question How many prisoners escaped? .
+10-20:In the nugget ‘Seven prisoners escaped from a Texas prison", there is no indication that ‘seven" is the keyword, and that it must be matched to get any relevance credit .
+10-21:Using IDF values does not help, since ‘seven" will generally not have a higher IDF than words like ‘texas" and ‘prison" .
+10-22:Also, redefining the nugget as just ‘seven" does not solve the problem since now it might spuriously match any mention of ‘seven" out of context .
+10-23:Nuggeteer [13] works on similar principles but makes binary decisions about whether a nugget is present in a given system response by tuning a threshold .
+10-24:However, it is also plagued by ‘spurious relevance" since not all words contained in the nugget description (or known correct responses) are central to the nugget .
+10-25:4.1.2 Nugget Matching Rules We propose a reliable automatic method for determining whether a snippet of text contains a given nugget, based on nugget matching rules, which are generated using a semiautomatic procedure explained below .
+10-26:These rules are essentially Boolean queries that will only match against snippets that contain the nugget .
+10-27:For instance, a candidate rule for matching answers to How many prisoners escaped? is (Texas AND seven AND escape AND (convicts OR prisoners)), possibly with other synonyms and variants in the rule .
+10-28:For a corpus of news articles, which usually follow a typical formal prose, it is fairly easy to write such simple rules to match expected answers using a bootstrap approach, as described below .
+10-29:We propose a two stage approach, inspired by Autoslog [14], that combines the strength of humans in identifying semantically equivalent expressions and the strength of the system in gathering statistical evidence from a humanannotated corpus of documents .
+10-30:In the first stage, human subjects annotated (using a highlighting tool) portions of ontopic documents that contained answers to each nugget 2 .
+10-31:In the second stage, subjects used our rule generation tool to create rules that would match the annotations for each nugget .
+10-32:The tool allows users to enter a Boolean rule as a disjunction of conjunctions (e.g .
+10-33:((a AND b) OR (a AND c AND d) OR (e))) .
+10-34:Given a candidate rule, our tool uses it as a Boolean query over the entire set of on topic documents and calculates its recall and precision with respect to the annotations that it is expected to match .
+10-35:Hence, the subjects can start with a simple rule and iteratively refine it until they are satisfied with its recall and precision .
+10-36:We observed that it was very easy for humans to improve the precision of a rule by tweaking its existing conjunctions (adding more ANDs), and improving the recall by adding more conjunctions to the disjunction (adding more ORs) .
+10-37:As an example, let"s try to create a rule for the nugget which says that seven prisoners escaped from the Texas prison .
+10-38:We start with a simple rule (seven) .
+10-39:When we input this into the rule generation tool, we realize that this rule matches many spurious occurrences of seven (e.g .
+10-40:‘...seven states...") and thus gets a low precision score .
+10-41:We can further qualify our rule Texas AND seven AND convicts .
+10-42:Next, by looking at the ‘missed annotations", we realize that some news articles mentioned ...seven prisoners escaped... .
+10-43:We then replace convicts with the disjunction (convicts OR prisoners) .
+10-44:We continue tweaking the rule in this manner until we achieve a sufficiently high recall and precision i.e .
+10-45:the (small number of) misses and false alarms can be safely ignored .
+10-46:Thus we can create nugget matching rules that succinctly capture various ways of expressing a nugget, while avoiding matching incorrect (or out of context) responses .
+10-47:Human involvement in the rule creation process ensures high quality generic rules which can then be used to evaluate arbitrary system responses reliably .
+10-48:4.2 Evaluating the Utility of a Sequence of Ranked Lists The utility of a retrieval system can be defined as the difference between how much the user gained in terms of useful information, and how much the user lost in terms of time and energy .
+10-49:We calculate this utility from the utilities of individual passages as follows .
+10-50:After reading each passage returned by the system, the user derives some gain depending on the presence of relevant and novel information, and incurs a loss in terms of the time and energy spent in going through the passage .
+10-51:However, the likelihood that the user would actually read a passage depends on its position in the ranked list .
+10-52:Hence, for a query q, the expected utility 2 LDC [18] already provides relevance judgments for 100 topics on the TDT4 corpus .
+10-53:We further ensured that these judgments are exhaustive on the entire corpus using pooling .
+10-54:of a passage pi at rank i can be defined as U(pi, q) = P(i) ∗ (Gain(pi, q) − Loss(pi, q)) (4) where P(i) is the probability that the user would go through a passage at rank i .
+10-55:The expected utility for an entire ranked list of length n can be calculated simply by adding the expected utility of each passage: U(q) = nX i=1 P(i) ∗ (Gain(pi, q) − Loss(pi, q)) (5) Note that if we ignore the loss term and define P(i) as P(i) ∝ 1 logb(b + i − 1) (6) then we get the recently popularized metric called Discounted Cumulated Gain [9], where Gain(pi, q) is defined as the graded relevance of passage pi .
+10-56:However, without the loss term, DCG is a purely recall oriented metric and not suitable for an adaptive filtering setting, where the system"s utility depends in part on its ability to limit the number of items shown to the user .
+10-57:Although P(i) could be defined based on empirical studies of user behavior, for simplicity, we use P(i) exactly as defined in equation 6 .
+10-58:The gain G(pi, q) of passage pi with respect to the query q is a function of 1) the number of relevant nuggets present in pi, and 2) the novelty of each of these nuggets .
+10-59:We combine these two factors as follows .
+10-60:For each nugget Nj, we assign an initial weight wj, and also keep a count nj of the number of times this nugget has been seen by the user in the past .
+10-61:The gain derived from each subsequent occurrence of the same nugget is assumed to reduce by a dampening factor γ .
+10-62:Thus, G(pi, q) is defined as G(pi, q) = X Nj ∈C(pi,q) wj ∗ γnj (7) where C(pi, q) is the set of all nuggets that appear in passage pi and also belong to the answer key of query q .
+10-63:The initial weights wj are all set of be 1.0 in our experiments, but can also be set based on a pyramid approach [11] .
+10-64:The choice of dampening factor γ determines the user"s tolerance for redundancy .
+10-65:When γ = 0, a nugget will only receive credit for its first occurrence i.e .
+10-66:when nj is zero3 .
+10-67:For 0 < γ < 1, a nugget receives smaller credit for each successive occurrence .
+10-68:When γ = 1, no dampening occurs and repeated occurrences of a nugget receive the same credit .
+10-69:Note that the nugget occurrence counts are preserved between evaluation of successive ranked lists returned by the system, since the users are expected to remember what the system showed them in the past .
+10-70:We define the loss L(pi, q) as a constant cost c (we use 0.1) incurred when reading a system returned passage .
+10-71:Thus, our metric can be re written as U(q) = nX i=1 Gain(pi, q) logb(b + i − 1) − L(n) (8) where L(n) is the loss associated with a ranked list of length n: L(n) = c · nX i=1 1 logb(b + i − 1) (9) 3 Note that 00 = 1 Due to the similarity with Discounted Cumulated Gain (DCG), we call our metric Discounted Cumulated Utility .
+10-72:The DCU score obtained by the system is converted to a Normalized DCU score by dividing it by the DCU score of the ideal ranked list, which is created by ordering passages by their decreasing utility scores U(pi, q) and stopping when U(pi, q) ≤ 0 i.e .
+10-73:when the gain is less than or equal to the cost of reading the passage. .
+11 DATA :
+11-1:TDT4 was the benchmark corpus used in TDT2002 and TDT2003 evaluations .
+11-2:The corpus consists of over 90, 000 news articles from multiple sources (AP, NYT, CNN, ABC, NBC, MSNBC, Xinhua, Zaobao, Voice of America, PRI the World, etc.) published between October 2000 and January 2001, in the languages of Arabic, English, and Mandarin .
+11-3:Speech recognized and machine translated versions of the non English articles were provided as well .
+11-4:LDC [18] has annotated the corpus with 100 topics, that correspond to various news events in this time period .
+11-5:Out of these, we selected a subset of 12 actionable events, and defined corresponding tasks for them4 .
+11-6:For each task, we manually defined a profile consisting of an initial set of (5 to 10) queries, a free text description of the user history, i.e., what the user already knows about the event, and a list of known on topic and off topic documents (if available) as training examples .
+11-7:For each query, we generated answer keys and corresponding nugget matching rules using the procedure described in section 4.1.2, and produced a total of 120 queries, with an average of 7 nuggets per query. .
+12 EXPERIMENTS AND RESULTS :
+12-1:6.1 Baselines We used Indri [17], a popular language model based retrieval engine, as a baseline for comparison with CAF´E .
+12-2:Indri supports standard search engine functionality, including pseudo relevance feedback [3, 6], and is representative of a typical query based retrieval system .
+12-3:Indri does not support any kind of novelty detection .
+12-4:We compare Indri with PRF turned on and off, against CAF´E with user feedback, novelty detection and antiredundant ranking turned on and off .
+12-5:6.2 Experimental Setup We divided the TDT4 corpus spanning 4 months into 10 chunks, each defined as a period of 12 consecutive days .
+12-6:At any given point of time in the distillation process, each system accessed the past data up to the current point, and returned a ranked list of up 50 passages per query .
+12-7:The 12 tasks defined on the corpus were divided into a training and test set with 6 tasks each .
+12-8:Each system was allowed to use the training set to tune its parameters for optimizing NDCU (equation 8), including the relevance threshold for both Indri and CAF´E, and the novelty and antiredundancy thresholds for CAF´E .
+12-9:The NDCU for each system run is calculated automatically .
+12-10:User feedback was also simulated relevance judgments for each system returned passage (as determined by the nugget matching rules described in section 4.1.2) were 4 URL: http: nyc.lti.cs.cmu.edu downloads Figure 1: Performance of Indri across chunks Figure 2: Performance of CAF´E across chunks used as user feedback in the adaptation of query profiles and user histories .
+12-11:6.3 Results In Table 1, we show the NDCU scores of the two systems under various settings .
+12-12:These scores are averaged over the six tasks in the test set, and are calculated with two dampening factors (see section 4.2): γ = 0 and 0.1, to simulate no tolerance and small tolerance for redundancy, respectively .
+12-13:Using γ = 0 creates a much more strict metric since it does not give any credit to a passage that contains relevant but redundant information .
+12-14:Hence, the improvement obtained from enabling user feedback is smaller with γ = 0 than the improvement obtained from feedback with γ = 0.1 .
+12-15:This reveals a shortcoming of contemporary retrieval systemswhen the user gives positive feedback on a passage, the systems gives higher weights to the terms present in that passage and tends to retrieve other passages containing the same terms and thus usually the same information .
+12-16:However, the user does not benefit from seeing such redundant passages, and is usually interested in other passages containing related information .
+12-17:It is informative to evaluate retrieval systems using our utility measure (with γ = 0) which accounts for novelty and thus gives a more realistic picture of how well a system can generalize from user feedback, rather than using traditional IR measures like recall and precision which give an incomplete picture of improvement obtained from user feedback .
+12-18:Sometimes, however, users might indeed be interested in seeing the same information from multiple sources, as an Table 1: NDCU Scores of Indri and CAF´E for two dampening factors (γ), and various settings (F: Feedback, N: Novelty Detection, A: Anti Redundant Ranking) Indri CAF´E γ Base +PRF Base +F +F+N +F+A +F+N+A 0 0.19 0.19 0.22 0.23 0.24 0.24 0.24 0.1 0.28 0.29 0.24 0.35 0.35 0.36 0.36 indicator of its importance or reliability .
+12-19:In such a case, we can simply choose a higher value for γ which corresponds to a higher tolerance for redundancy, and hence let the system tune its parameters accordingly .
+12-20:Since documents were processed chunk by chunk, it would be interesting to see how the performance of systems improves over time .
+12-21:Figures 1 and 2 show the performance trends for both the systems across chunks .
+12-22:While the performance with and without feedback on the first few chunks is expected to be close, for subsequent chunks, the performance curve with feedback enabled rises above the one with the no feedback setting .
+12-23:The performance trends are not consistent across all chunks because on topic documents are not uniformly distributed over all the chunks, making some queries ‘easier" than others in certain chunks .
+12-24:Moreover, since Indri uses pseudo relevance feedback while CAF´E uses feedback based on actual relevance judgments, the improvement in case of Indri is less dramatic than that of CAF´E. .
+13 CONCLUDING REMARKS :
+13-1:This paper presents the first investigation on utility based information distillation with a system that learns the longlasting information needs from fine grained user feedback over a sequence of ranked passages .
+13-2:Our system, called CAF´E, combines adaptive filtering, novelty detection and antiredundant passage ranking in a unified framework for utility optimization .
+13-3:We developed a new scheme for automated evaluation and feedback based on a semi automatic procedure for acquiring rules that allow automatically matching nuggets against system responses .
+13-4:We also proposed an extension of the NDCG metric for assessing the utility of ranked passages as a weighted combination of relevance and novelty .
+13-5:Our experiments on the newly annotated TDT4 benchmark corpus show encouraging utility enhancement over Indri, and also over our own system with incremental learning and novelty detection turned off. .
+14 ACKNOWLEDGMENTS :
+14-1:We would like to thank Rosta Farzan, Jonathan Grady, Jaewook Ahn, Yefei Peng, and the Qualitative Data Analysis Program at the University of Pittsburgh lead by Dr .
+14-2:Stuart Shulman for their help with collecting and processing the extended TDT4 annotations used in our experiments .
+14-3:This work is supported in parts by the National Science Foundation under grant IIS0434035, and the Defense Advanced Research Project Agency under contracts NBCHD030010 and W0550432 .
+14-4:Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the sponsors. .
+15 ABSTRACT :
+15-1:Jian Zhang (jianzhan@stat.purdue.edu)∗ , Jaime Carbonell (jgc@cs.cmu.edu)† , Peter Brusilovsky (peterb+@pitt.edu)‡ , Daqing He(dah44@pitt.edu)‡ 10
+15-2:REFERENCES
+16 ABSTRACT :
+16-1:J
+16-2:Allan
+16-3:Incremental Relevance Feedback for Information Filtering
+16-4:Proceedings of the 19th annual international ACM SIGIR conference on Research and development in information retrieval, pages 270 278, 1996
+16-5:J
+16-6:Allan, C
+16-7:Wade, and A
+16-8:Bolivar
+16-9:Retrieval and Novelty Detection at the Sentence Level
+16-10:Proceedings of the ACM SIGIR conference on research and development in information retrieval, 2003
+16-11:C
+16-12:Buckley, G
+16-13:Salton, and J
+16-14:Allan
+16-15:Automatic Retrieval with Locality Information using SMART
+16-16:NIST special publication, (500207):59 72, 1993
+16-17:J
+16-18:Callan
+16-19:Learning While Filtering Documents
+16-20:Proceedings of the 21st annual international ACM SIGIR conference on Research and development in information retrieval, pages 224 231, 1998
+16-21:J
+16-22:Carbonell and J
+16-23:Goldstein
+16-24:The use of MMR, Diversity based Reranking for Reordering Documents and Producing Summaries
+16-25:Proceedings of the 21st annual international ACM SIGIR conference on Research and development in information retrieval, pages 335 336, 1998
+16-26:E
+16-27:Efthimiadis
+16-28:Query Expansion
+16-29:Annual Review of Information Science and Technology (ARIST), 31:p121 87, 1996
+16-30:J
+16-31:Fiscus and G
+16-32:Duddington
+16-33:Topic Detection and Tracking Overview
+16-34:Topic Detection and Tracking: Event based Information Organization, pages 17 31
+16-35:R
+16-36:Florian, H
+16-37:Hassan, A
+16-38:Ittycheriah, H
+16-39:Jing, N
+16-40:Kambhatla, X
+16-41:Luo, N
+16-42:Nicolov, and S
+16-43:Roukos
+16-44:A Statistical Model for Multilingual Entity Detection and Tracking
+16-45:NAACL HLT, 2004
+16-46:K
+16-47:J¨arvelin and J
+16-48:Kek¨al¨ainen
+16-49:Cumulated Gain based Evaluation of IR Techniques
+16-50:ACM Transactions on Information Systems (TOIS), 20(4):422 446, 2002
+16-51:J
+16-52:Lin and D
+16-53:Demner Fushman
+16-54:Automatically Evaluating Answers to Definition Questions
+16-55:Proceedings of the 2005 Human Language Technology Conference and Conference on Empirical Methods in Natural Language Processing (HLT EMNLP 2005), 2005
+16-56:∗ Statistics Dept., Purdue University, West Lafayette, USA † Language Technologies Inst., Carnegie Mellon University, Pittsburgh, USA ‡ School of Information Sciences, Univ
+16-57:of Pittsburgh, Pittsburgh, USA J
+16-58:Lin and D
+16-59:Demner Fushman
+16-60:Will Pyramids Built of nUggets Topple Over
+16-61:Proceedings of HLT NAACL, 2006
+16-62:X
+16-63:Luo, A
+16-64:Ittycheriah, H
+16-65:Jing, N
+16-66:Kambhatla, and S
+16-67:Roukos
+16-68:A Mention synchronous Coreference Resolution Algorithm based on the Bell Tree
+16-69:Proc
+16-70:of ACL, 4:136 143, 2004
+16-71:G
+16-72:Marton
+16-73:Nuggeteer: Automatic Nugget Based Evaluation Using Descriptions and Judgments
+16-74:HLT NAACL, 2006
+16-75:E
+16-76:Riloff
+16-77:Automatically Constructing a Dictionary for Information Extraction Tasks
+16-78:Proceedings of the Eleventh National Conference on Artificial Intelligence, pages 811 816, 1993
+16-79:S
+16-80:Robertson and S
+16-81:Walker
+16-82:Microsoft Cambridge at TREC 9: Filtering track
+16-83:The Ninth Text REtrieval Conference (TREC 9), pages 361 368
+16-84:R
+16-85:Schapire, Y
+16-86:Singer, and A
+16-87:Singhal
+16-88:Boosting and Rocchio Applied to Text Filtering
+16-89:Proceedings of the 21st annual international ACM SIGIR conference on Research and development in information retrieval, pages 215 223, 1998
+16-90:T
+16-91:Strohman, D
+16-92:Metzler, H
+16-93:Turtle, and W
+16-94:Croft
+16-95:Indri: A Language Model based Search Engine for Complex Queries
+16-96:Proceedings of the International Conference on Intelligence Analysis, 2004
+16-97:The Linguistic Data Consortium
+16-98:http:  www.ldc.upenn.edu
+16-99:E
+16-100:Voorhees
+16-101:Overview of the TREC 2003 Question Answering Track
+16-102:Proceedings of the Twelfth Text REtrieval Conference (TREC 2003), 2003
+16-103:Y
+16-104:Yang and B
+16-105:Kisiel
+16-106:Margin based Local Regression for Adaptive Filtering
+16-107:Proceedings of the twelfth international conference on Information and knowledge management, pages 191 198, 2003
+16-108:Y
+16-109:Yang, S
+16-110:Yoo, J
+16-111:Zhang, and B
+16-112:Kisiel
+16-113:Robustness of Adaptive Filtering Methods in a Cross benchmark Evaluation
+16-114:Proceedings of the 28th annual international ACM SIGIR conference on Research and development in information retrieval, pages 98 105, 2005
+16-115:C
+16-116:Zhai, W
+16-117:Cohen, and J
+16-118:Lafferty
+16-119:Beyond Independent Relevance: Methods and Evaluation Metrics for Subtopic Retrieval
+16-120:Proceedings of the 26th annual international ACM SIGIR conference on Research and development in information retrieval, pages 10 17, 2003
+16-121:J
+16-122:Zhang and Y
+16-123:Yang
+16-124:Robustness of Regularized Linear Classification Methods in Text Categorization
+16-125:Proceedings of the 26th annual international ACM SIGIR conference on Research and development in information retrieval, pages 190 197, 2003
+16-126:Y
+16-127:Zhang
+16-128:Using Bayesian Priors to Combine Classifiers for Adaptive Filtering
+16-129:Proceedings of the 27th annual international conference on Research and development in information retrieval, pages 345 352, 2004
+16-130:Y
+16-131:Zhang, J
+16-132:Callan, and T
+16-133:Minka
+16-134:Novelty and Redundancy Detection in Adaptive Filtering
+16-135:Proceedings of the 25th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, 2002
+picture:

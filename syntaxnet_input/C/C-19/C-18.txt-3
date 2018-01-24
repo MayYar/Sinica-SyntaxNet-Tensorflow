@@ -1,0 +1,75 @@
+In order to study the behavior of swarm worms in general, it is necessary to create a model that realistically reflects the structure of worms and it is not necessarily tied to a specific instance .
+In this section, we described such a model where a general worm is describe as having four (4) basic components or subfunctions .
+By definition, a worm is a selfcontained, self propagating program .
+Thus, in simple terms, it has two main functions
+We propose that there is a third broad functionality of a worm, that of self preservation .
+We also propose that the other functionality of a worm may be more appropriately categorized as Goal Based Actions (GBA), as whatever functionality included in a worm will naturally be dependent on whatever goals (and subgoals) the author has .
+The work presented by Weaver et .
+al .
+in [5] provides us with mainly an action and technique based taxonomy of computer worms, which we utilize and further extend here .
+2.1 Propagation The propagation function itself may be broken down into three actions
+Acquiring the target simply means picking a host to attack next .
+Sending a scan involves checking to see if that host is receptive to an infection attempt, since IP space is sparsely populated .
+This may involve a simple ping to check if the host is alive or a full out vulnerability assessment .
+Infecting the target is the actual method used to send the worm code to the new host .
+In algorithm form
+Depending on the authors needs or requirements, these become limiting factors in what may be included in the worm"s actions .
+This is discussed further after expanding upon these actions below .
+2.2 Target Acquisition
+Weaver et .
+al .
+taxonomize this task into 5 separate categories .
+Here, we further extend their work through parameterization .
+Scanning
+Any type of equation may be used to arrive at an IP address, but there are three main types seen thus far
+Sequential scanning is exactly as it sounds
+This could carry with it the options of which IP to start with (user chosen value, random, or based on IP of infected host) and 324 how many times to increment (continuous, chosen value, or subnet based) .
+Random scanning is completely at random (depending on the chosen PRNG method and its seed value) .
+Local preference scanning is a variance of either Sequential or Random, whereby it has a greater probability of choosing a local IP address over a remote one (for example, the traditional 80 20 split) .
+Pre generated Target Lists
+Implicit to this type is the fact that the list is divided among a parent and its children, avoiding the problem of every instance hitting the exact same machines .
+Externally Generated Target Lists
+This will involve either servers that are normally publicly available, such as gaming meta servers, or ones explicitly setup by the worm or worm author .
+The normally available meta servers could have parameters for rates of change, such as many popping up at night or leaving in the morning .
+Each server could also have a maximum queries second that it would be able to handle .
+The worm would also need a way of finding these servers, either hard coded or through scanning .
+Internal Target Lists
+This method could parameterize the choice of how much info is on the host, such as all machines in subnet, all windows boxes in subnet, particular servers, number of internal external, or some combination .
+Passive
+Parameters may include a rate of interaction with particular machines, internal external rate of interaction, or subnet based rate of interaction .
+Any of these methods may also be combined to produce different types of target acquisition strategies .
+For example, the a worm may begin with an initial hit list of 100 different hosts or subnets .
+Once it has exhausted its search using the hit list, it may then proceed to perform random scanning with a 50% local bias .
+It is important to note, however, that the resource consumption of each method is not the same .
+Different methods may require the worm to be large, such as the extra bytes required by a hit list, or to take more processing time, such as by searching the host for addresses of other vulnerable hosts .
+Further research and analysis should be performed in this area to determine associated costs for using each method .
+The costs could then be used in determining design tradeoffs that worm authors engage at .
+For example, hit lists provide a high rate of infection, but at a high cost of worm payload size .
+2.2.1 Sending a Scan The send scan function tests to see if the host is available for infection .
+This can be as simple as checking if the host is up on the network or as complex as checking if the host is vulnerable to the exploit which will be used .
+The sending of a scan before attempted infection can increase¡¥ the scanning rate if the cost for failing an infection is greater than the cost of failing a scan or sending a scan plus infection; and failures are more frequent than successes .
+One important parameter to this would be the choice of transport protocol (TCP UDP) or just simply the time for one successful scan and time for one failed scan .
+Also, whether or not it tests for the host to be up or if it is a full test for the vulnerability (or for multiple vulnerabilities) .
+2.2.2 Infection Vector The particular infection vector used to access the remote host is mainly dependent on the particular vulnerability chosen to exploit .
+In a non specific sense, it is dependent on the transport protocol chosen to use and the message size to be sent .
+Section 3 of [5] also proposes three particular classes of IV
+2.3 Self Preservation The Self Preservation actions of a worm may take many forms .
+In the wild, worms have been observed to disable anti virus software or prevent sending itself to certain antivirusknown addresses .
+They have also been seen to attempt disabling of other worms which may be contending for the same system .
+We also believe that a time based throttled scanning may help the worm to slip under the radar .
+We also propose a decoy method, whereby a worm will release a few children that cause a lot of noise so that the parent is not noticed .
+It has also been proposed [5] that a worm cause damage to its host if, and only if, it is disturbed in some way .
+This module could contain parameters for
+2.4 Goal Based Actions A worm"s GBA functionality depends on the author"s goal list .
+The Payloads section of [5] provides some useful suggestions for such a module .
+The opening of a back door can make the host susceptible to more attacks .
+This would involve a probability of the back door being used and any associated traffic utilization .
+It could also provide a list of other worms this host is now susceptible to or a list of vulnerabilities this host now has .
+Spam relays and HTTP Proxies of course have an associated bandwidth consumption or traffic pattern .
+Internet DoS attacks would have a set time of activation, a target, and a traffic pattern .
+Data damage would have an associated probability that the host dies because of the damage .
+In Figure 1, this general model of a worm is summarized .
+Please note that in this model there is no learning, no, or very little, sharing of information between worm instances, and certainly no coordination of actions .
+In the next section we expand the model to include such mechanisms, and hence, arrive at the general model of a swarm worm .
+2.5 Swarms General Model As described in section 1, the basic characteristics that distinguished swarm behavior from simply what appears to be collective coordinated behaviors are four basic attributes .
+These are

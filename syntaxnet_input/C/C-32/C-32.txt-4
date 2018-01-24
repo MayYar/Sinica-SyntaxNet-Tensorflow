@@ -1,0 +1,62 @@
+High network latency imposes performance penalty for transactional applications accessing shared persistent objects in wide area network environment .
+This section describes the BuddyCache approach for reducing the network latency penalty in collaborative applications and explains the main design decisions .
+We consider a system in which a distributed transactional object repository stores objects in highly reliable servers, perhaps outsourced in data centers connected via high bandwidth reliable networks .
+Collaborating clients interconnected via a fast local network, connect via high latency, possibly satellite, links to the servers at the data centers to access shared persistent objects .
+The servers provide disk storage for the persistent objects .
+A persistent object is owned by a single server .
+Objects may be small (order of 100 bytes for programming language objects [23]) .
+To amortize the cost of disk and network transfer objects are grouped into physical pages .
+To improve object access latency, clients fetch the objects from the servers and cache and access them locally .
+A transactional cache coherence protocol runs at clients and servers to ensure that client caches remain consistent when objects are modified .
+The performance problem facing the collaborating client group is the high latency of coordinating consistent access to the shared objects .
+BuddyCache architecture is based on a request redirection server, interposed between the clients and the remote servers .
+The interposed server (the redirector) runs on the same network as the collaborative group and, when possible, replaces the function of the remote servers .
+If the client request can be served locally, the interaction with the server is avoided .
+If the client request can not be served locally, redirector forwards it to a remote server .
+Redirection approach has been used to improve the performance of web caching protocols .
+BuddyCache redirector supports the correctness, availability and fault tolerance properties of transactional caching protocol [19] .
+The correctness property ensures onecopy serializability of the objects committed by the client transactions .
+The availability and fault tolerance properties ensure that a crashed or slow client does not disrupt any other client"s access to persistent objects .
+The three types of client server interactions in a transactional caching protocol are the commit of a transaction, the fetch of an object missing in a client cache, and the exchange of cache coherence information .
+BuddyCache avoids interactions with the server when a missing object, or cache coherence information needed by a client is available within the collaborating group .
+The redirector always interacts with the servers at commit time because only storage servers provide transaction durability in a way that ensures committed Client Redirector Client Client Buddy Group Client Redirector Client Client Buddy Group Servers Figure 1
+data remains available in the presence of client or redirector failures .
+Figure 1 shows the overall BuddyCache architecture .
+3.1 Cache Coherence The redirector maintains a directory of pages cached at each client to provide cooperative caching [20, 16, 13, 2, 28], redirecting a client fetch request to another client that caches the requested object .
+In addition, redirector manages cache coherence .
+Several efficient transactional cache coherence protocols [19] exist for persistent object storage systems .
+Protocols make different choices in granularity of data transfers and granularity of cache consistency .
+The current best performing protocols use page granularity transfers when clients fetch missing objects from a server and object granularity coherence to avoid false (page level) conflicts .
+The transactional caching taxonomy [19] proposed by Carey, Franklin and Livny classifies the coherence protocols into two main categories according to whether a protocol avoids or detects access to stale objects in the client cache .
+The BuddyCache approach could be applied to both categories with different performance costs and benefits in each category .
+We chose to investigate BuddyCache in the context of OCC [3], the current best performing detection based protocol .
+We chose OCC because it is simple, performs well in high latency networks, has been implemented and we had access to the implementation .
+We are investigating BuddyCache with PSAA [33], the best performing avoidancebased protocol .
+Below we outline the OCC protocol [3] .
+The OCC protocol uses object level coherence .
+When a client requests a missing object, the server transfers the containing page .
+Transaction can read and update locally cached objects without server intervention .
+However, before a transaction commits it must be validated; the server must make sure the validating transaction has not read a stale version of some object that was updated by a successfully committed or validated transaction .
+If validation fails, the transaction is aborted .
+To reduce the number and cost of aborts, 28 Helper Requester A
+When clients receive invalidations they remove stale objects from the cache and send background acknowledgments to let server know about this .
+Since invalidations remove stale objects from the client cache, invalidation acknowledgment indicates to the server that a client with no outstanding invalidations has read upto date objects .
+An unacknowledged invalidation indicates a stale object may have been accessed in the client cache .
+The validation procedure at the server aborts a client transaction if a client reads an object while an invalidation is outstanding .
+The acknowledged invalidation mechanism supports object level cache coherence without object based directories or per object version numbers .
+Avoiding per object overheads is very important to reduce performance penalties [3] of managing many small objects, since typical objects are small .
+An important BuddyCache design goal is to maintain this benefit .
+Since in BuddyCache a page can be fetched into a client cache without server intervention (as illustrated in figure 2), cache directories at the servers keep track of pages cached in each collaborating group rather than each client .
+Redirector keeps track of pages cached in each client in a group .
+Servers send to the redirector invalidations for pages cached in the entire group .
+The redirector propagates invalidations from servers to affected clients .
+When all affected clients acknowledge invalidations, redirector can propagate the group acknowledgment to the server .
+3.2 Light weight Peer Update When one of the clients in the collaborative group creates or modifies shared objects, the copies cached by any other client become stale but the new data is likely to be of potential interest to the group members .
+The goal in BuddyCache is to provide group members with efficient and consistent access to updates committed within the group without imposing extra overhead on other parts of the storage system .
+The two possible approaches to deal with stale data are cache invalidations and cache updates .
+Cache coherence studies in web systems (e.g .
+[7]) DSM systems (e.g .
+[5]), and transactional object systems (e.g .
+[19]) compare the benefits of update and invalidation .
+The studies show the Committing Client Server Redirector x2 .
+Store x .

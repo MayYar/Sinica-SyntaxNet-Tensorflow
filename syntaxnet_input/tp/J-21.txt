@@ -1,0 +1,440 @@
+﻿A Strategic Model for Information Markets 
+content:
+1 ABSTRACT :
+1-1:Information markets, which are designed specifically to aggregate traders" information, are becoming increasingly popular as a means for predicting future events .
+1-2:Recent research in information markets has resulted in two new designs, market scoring rules and dynamic parimutuel markets .
+1-3:We develop an analytic method to guide the design and strategic analysis of information markets .
+1-4:Our central contribution is a new abstract betting game, the projection game, that serves as a useful model for information markets .
+1-5:We demonstrate that this game can serve as a strategic model of dynamic parimutuel markets, and also captures the essence of the strategies in market scoring rules .
+1-6:The projection game is tractable to analyze, and has an attractive geometric visualization that makes the strategic moves and interactions more transparent .
+1-7:We use it to prove several strategic properties about the dynamic parimutuel market .
+1-8:We also prove that a special form of the projection game is strategically equivalent to the spherical scoring rule, and it is strategically similar to other scoring rules .
+1-9:Finally, we illustrate two applications of the model to analysis of complex strategic scenarios: we analyze the precision of a market in which traders have inertia, and a market in which a trader can profit by manipulating another trader"s beliefs .
+1-10:J.4 [Computer Applications]: Social and Behavioral .
+2 INTRODUCTION :
+2-1:Markets have long been used as a medium for trade .
+2-2:As a side effect of trade, the participants in a market reveal something about their preferences and beliefs .
+2-3:For example, in a financial market, agents would buy shares which they think are undervalued, and sell shares which they think are overvalued .
+2-4:It has long been observed that, because the market price is influenced by all the trades taking place, it aggregates the private information of all the traders .
+2-5:Thus, in a situation in which future events are uncertain, and each trader might have a little information, the aggregated information contained in the market prices can be used to predict future events .
+2-6:This has motivated the creation of information markets, which are mechanisms for aggregating the traders" information about an uncertain event .
+2-7:Information markets can be modeled as a game in which the participants bet on a number of possible outcomes, such as the results of a presidential election, by buying shares of the outcomes and receiving payoffs when the outcome is realized .
+2-8:As in financial markets, the participants aim to maximize their profit by buying low and selling high .
+2-9:In this way, the players" behavior transmits their personal information and beliefs about the possible outcomes, and can be used to predict the event more accurately .
+2-10:The benefit of well designed information markets goes beyond information aggregation; they can also be used as a hedging instrument, to allow traders to insure against risk .
+2-11:Recently, researchers have turned to the problem of designing market structures specifically to achieve better information aggregation properties than traditional markets .
+2-12:Two designs for information markets have been proposed: the Dynamic Parimutuel Market by Pennock [10] and the Market Scoring Rules by Hanson [6] .
+2-13:Both the DPM and the MSR were designed with the goal of giving informed traders an incentive to trade, and to reveal their information as soon as possible, while also controlling the subsidy that the market designer needs to pump into the market .
+2-14:The DPM was created as a combination of a pari mutuel market (which is commonly used for betting on horses) and a continuous double auction, in order to simultaneously obtain the first one"s infinite buy in liquidity and the latter"s ability to react continuously to new information .
+2-15:One version of the DPM was implemented in the Yahoo! Buzz market [8] to experimentally test the market"s prediction properties .
+2-16:The foundations of the MSR lie in the idea of a proper scoring rule, which is a technique to reward forecasters in a way that encourages them to give their best prediction .
+2-17:316 The innovation in the MSR is to use these scoring rules as instruments that can be traded, thus providing traders who have new information an incentive to trade .
+2-18:The MSR was to be used in a policy analysis market in the Middle East [15], which was subsequently withdrawn .
+2-19:Information markets rely on informed traders trading for their own profit, so it is critical to understand the strategic properties of these markets .
+2-20:This is not an easy task, because markets are complex, and traders can influence each other"s beliefs through their trades, and hence, can potentially achieve long term gains by manipulating the market .
+2-21:For the MSR, it has been shown that, if we exclude the possibility of achieving gain through misleading other traders, it is optimal for each trader to honestly reflect her private belief in her trades .
+2-22:For the DPM, we are not aware of any prior strategic analysis of this nature; in fact, a strategic hole was discovered while testing the DPM in the Yahoo! Buzz market [8] .
+2-23:1.1 Our Results In this paper, we seek to develop an analytic method to guide the design and strategic analysis of information markets .
+2-24:Our central contribution is a new abstract betting game, the projection 1 game, that serves as a useful model for information markets .
+2-25:The projection game is conceptually simpler than the MSR and DPM, and thus it is easier to analyze .
+2-26:In addition it has an attractive geometric visualization, which makes the strategic moves and interactions more transparent .
+2-27:We present an analysis of the optimal strategies and profits in this game .
+2-28:We then undertake an analysis of traders" costs and profits in the dynamic parimutuel market .
+2-29:Remarkably, we find that the cost of a sequence of trades in the DPM is identical to the cost of the corresponding moves in the projection game .
+2-30:Further, if we assume that the traders beliefs at the end of trading match the true probability of the event being predicted, the traders" payoffs and profits in the DPM are identical to their payoffs and profits in a corresponding projection game .
+2-31:We use the equivalence between the DPM and the projection game to prove that the DPM is arbitrage free, deduce profitable strategies in the DPM, and demonstrate that constraints on the agents" trades are necessary to prevent a strategic breakdown .
+2-32:We also prove an equivalence between the projection game and the MSR: We show that play in the MSR is strategically equivalent to play in a restricted projection game, at least for myopic strategies and small trades .
+2-33:In particular, the profitability of any move under the spherical scoring rule is exactly proportional to the profitability of the corresponding move in the projection game restricted to a circle, with slight distortion of the prior probabilities .
+2-34:This allows us to use the projection game as a conceptual model for market scoring rules .
+2-35:We note that while the MSR with the spherical scoring rule somewhat resembles the projection game, due to the mathematical similarity of their profit expressions, the DPM model is markedly different and thus its equivalence to the projection game is especially striking .
+2-36:Further, because the restricted projection game corresponds to a DPM with a natural trading constraint, this sheds light on an intriguing connection between the MSR and the DPM .
+2-37:1 In an earlier version of this paper, we called this the segment game .
+2-38:Lastly, we illustrate how the projection game model can be used to analyze the potential for manipulation of information markets for long term gain.2 We present an example scenario in which such manipulation can occur, and suggest additional rules that might mitigate the possibility of manipulation .
+2-39:We also illustrate another application to analyzing how a market maker can improve the prediction accuracy of a market in which traders will not trade unless their expected profit is above a threshold .
+2-40:1.2 Related Work Numerous studies have demonstrated empirically that market prices are good predictors of future events, and seem to aggregate the collected wisdom of all the traders [2, 3, 12, 1, 5, 16] .
+2-41:This effect has also been demonstrated in laboratory studies [13, 14], and has theoretical support in the literature of rational expectations [9] .
+2-42:A number of recent studies have addressed the design of the market structure and trading rules for information markets, as well as the incentive to participate and other strategic issues .
+2-43:The two papers most closely related to our work are the papers by Hanson [6] and Pennock [10] .
+2-44:However, strategic issues in information markets have also been studied by Mangold et al .
+2-45:[8] and by Hanson, Oprea and Porter [7] .
+2-46:An upcoming survey paper [11] discusses costfunction formulations of automated market makers .
+2-47:Organization of the paper The rest of this paper is organized as follows: In Section 2, we describe the projection game, and analyze the players" costs, profits, and optimal strategies in this game .
+2-48:In Section 3, we study the dynamic parimutuel market, and show that trade in a DPM is equivalent to a projection game .
+2-49:We establish a connection between the projection game and the MSR in Section 4 .
+2-50:In Section 5, we illustrate how the projection game can be used to analyze non myopic, and potentially manipulative, actions .
+2-51:We present our conclusions, and suggestions for future work, in Section 6. .
+3 THE PROJECTION GAME :
+3-1:In this section, we describe an abstract betting game, the projection game; in the following sections, we will argue that both the MSR and the DPM are strategically similar to the projection game .
+3-2:The projection game is conceptually simpler than MSR and DPM, and hence should prove easier to analyze .
+3-3:For clarity of exposition, here and in the rest of the paper we assume the space is two dimensional, i.e., there are only two possible events .
+3-4:Our results easily generalize to more than two dimensions .
+3-5:We also assume throughout that players are risk neutral .
+3-6:Suppose there are two mutually exclusive and exhaustive events, A and B .
+3-7:(In other words, B is the same as not A.) There are n agents who may have information about the likelihood of A and B, and we (the designers) would like to aggregate their information .
+3-8:We invite them to play the game described below: At any point in the game, there is a current state described by a pair of parameters, (x, y), which we sometimes write in vector form as x .
+3-9:Intuitively, x corresponds to the 2 Here, we are referring only to manipulation of the information market for later gain from the market itself; we do not consider the possibility of traders having vested interests in the underlying events .
+3-10:317 total holding of shares in A, and y corresponds to the holding of shares in B .
+3-11:In each move of the game, one player (say i) plays an arrow (or segment) from (x, y) to (x , y ) .
+3-12:We use the notation [(x, y) → (x , y )] or [x, x ] to denote this move .
+3-13:The game starts at (0, 0), but the market maker makes the first move; without loss of generality, we can assume the move is to (1, 1) .
+3-14:All subsequent moves are made by players, in an arbitrary (and potentially repeating) sequence .
+3-15:Each move has a cost associated with it, given by C[x, x ] = |x | − |x|, where | · | denotes the Euclidean norm, |x| = p x2 + y2 .
+3-16:Note that none of the variables are constrained to be nonnegative, and hence, the cost of a move can be negative .
+3-17:The cost can be expressed in an alternative form, that is also useful .
+3-18:Suppose player i moves from (x, y) to (x , y ) .
+3-19:We can write (x , y ) as (x + lex, y + ley), such that l ≥ 0 and |ex|2 + |ey|2 = 1 .
+3-20:We call l the volume of the move, and (ex, ey) the direction of the move .
+3-21:At any point (ˆx, ˆy), there is an instantaneous price charged, defined as follows: c((ˆx, ˆy), (ex, ey)) = ˆxex + ˆyey |(ˆx, ˆy)| = ˆx · e |ˆx| .
+3-22:Note that the price depends only on the angle between the line joining the vector (ˆx, ˆy) and the segment [(x, y), (x , y )], and not the lengths .
+3-23:The total cost of the move is the price integrated over the segment [(x, y) → (x , y )], i.e., C[(x, y) → (x , y )] = Z l w=0 c((x+wex, y +wey), (ex, ey))dw We assume that the game terminates after a finite number of moves .
+3-24:At the end of the game, the true probability p of event A is determined, and the agents receive payoffs for the moves they made .
+3-25:Let q = (qx, qy) = (p,1−p) |(p,1−p)| .
+3-26:The payoff to agent i for a segment [(x, y) → (x , y )] is given by: P([(x, y) → (x , y )]) = qx(x − x) + qy(y − y) = q.(x − x) We call the line through the origin with slope (1 − p) p = qy qx the p line .
+3-27:Note that the payoff, too, may be negative .
+3-28:One drawback of the definition of a projection game is that implementing the payoffs requires us to know the actual probability p .
+3-29:This is feasible if the probability can eventually be determined statistically, such as when predicting the relative frequency of different recurring events, or vote shares .
+3-30:It is also feasible for one off events in which there is reason to believe that the true probability is either 0 or 1 .
+3-31:For other one off events, it cannot be implemented directly (unlike scoring rules, which can be implemented in expectation) .
+3-32:However, we believe that even in these cases, the projection game can be useful as a conceptual and analytical tool .
+3-33:The moves, costs and payoffs have a natural geometric representation, which is shown in Figure 1 for three players with one move each .
+3-34:The players append directed line segments in turn, and the payoff player i finally receives for a move is the projection of her segment onto the line with slope (1 − p) p .
+3-35:Her cost is the difference of distances of the endpoints of her move to the origin .
+3-36:2.1 Strategicproperties oftheprojectiongame We begin our strategic analysis of the projection game by observing the following simple path independence property .
+3-37:1−p p 3"s m ove 1"s payoff M M m ove 1"s move 2"smove 3"s payoff 2"s payoff x y Figure 1: A projection game with three players Lemma 1 .
+3-38:[Path Independence] Suppose there is a sequence of moves leading from (x, y) to (x , y ) .
+3-39:Then, the total cost of all the moves is equal to the cost of the single move [(x, y) → (x , y )], and the total payoff of all the moves is equal to the payoff of the single move [(x, y) → (x , y )] .
+3-40:Proof .
+3-41:The proof follows trivially from the definition of the costs and payoffs: If we consider a path from point x to point x , both the net change in the vector lengths and the net projection onto the p line are completely determined by x and x .
+3-42:Although simple, path independence of profits is vitally important, because it implies (and is implied by) the absence of arbitrage in the market .
+3-43:In other words, there is no sequence of moves that start and end at the same point, but result in a positive profit .
+3-44:On the other hand, if there were two paths from (x, y) to (x , y ) with different profits, there would be a cyclic path with positive profit .
+3-45:For ease of reference, we summarize some more useful properties of the cost and payoff functions in the projection game .
+3-46:Lemma 2 .
+3-47:the origin is 1 or −1, when the move is away or toward the origin respectively .
+3-48:The instantaneous price along a circle centered at the origin is 0 .
+3-49:point ¯x on the positive p line, the corresponding payoff is P(x, ¯x) = |x| − x · q, and the cost is C[x, ¯x] = 0 .
+3-50:C[x, x ] = Z l w=0 cos(x + we, e)dw = |x |−|x| ∀x, x , where e is the unit vector giving the direction of move .
+3-51:In addition, when x moves along the positive p line, the payoff is equal to the cost, P(x, x ) = |x | − |x| .
+3-52:Proof .
+3-53:1 .
+3-54:The instantaneous price is c(x, e) = x · e |x| = cos(x, e), where e is the direction of movement, and the result follows .
+3-55:P(x, ¯x) = q · (¯x − x) = |x| − x · q; the cost is 0 from the definition .
+3-56:318 is C[x, 0] = Z l w=0 cos(x + we, e)dw = Z l w=0 (−1)dw = −|x|, where l = |x|, e = x |x| .
+3-57:By the path independence property, C[x, x ] = C[x, 0] + C[0, x ] = |x | − |x| .
+3-58:Finally, a point on the positive p line gets projected to itself, namely q · x = |x| so when the movement is along the positive p line, P(x, x ) = q · (x − x) = |x | − |x| = C[x, x ] .
+3-59:We now consider the question of which moves are profitable in this game .
+3-60:The eventual profit of a move [x, x ], where x = x + l.(ex, ey), is profit[x, x ] = P[x, x ] − C[x, x ] = lq.e − C[x, x ] Differentiating with respect to l, we get d(profit) dl = q.e − c(x + le, e) = q.e − x + le |x + le| .e We observe that this is 0 if p(y + ley) = (1 − p)(x + lex), in other words, when the vectors q and (x + le) are exactly aligned .
+3-61:Further, we observe that the price is non decreasing with increasing l .
+3-62:Thus, along the direction e, the profit is maximized at the point of intersection with the p line .
+3-63:By Lemma 2, there is always a path from x to the positive p line with 0 cost, which is given by an arc of the circle with center at the origin and radius |x| .
+3-64:Also, any movement along the p line has 0 additional profit .
+3-65:Thus, for any point x, we can define the profit potential φ(x, p) by φ(x, p) = |x| − x · q .
+3-66:Note, the potential is positive for x off the positive p line and zero for x on the line .
+3-67:Next we show that a move to a lower potential is always profitable .
+3-68:Lemma 3 .
+3-69:The profit of a move [x, x ] is equal to the difference in potential φ(x, p) − φ(x , p) .
+3-70:Proof .
+3-71:Denote z = |x|q and z = |x |q, i.e., these are the points of intersection of the positive p line with the circles centered at the origin with radii |x| and |x | respectively .
+3-72:By the path independence property and Lemma 2, the profit of move [x, x ] is profit(x, x ) = profit(x, z) + profit(z, z ) + profit(z , x ) = (|x| − x · q) + 0 + (x · q − |x |) = φ(x, p) − φ(x , p) .
+3-73:Thus, the profit of the move is equal to the change in profit potential between the endpoints .
+3-74:This lemma offers another way of seeing that it is optimal to move to the point of lowest potential, namely to the p line .
+3-75:p y 1−p x x x" z z" profit = |x|−x.q profit = x".q−|x"| profit = 0 Figure 2: The profit of move [x, x ] is equal to the change in profit potential from x to x . .
+4 DYNAMIC PARIMUTUEL MARKETS :
+4-1:The dynamic parimutuel market was introduced by Pennock [10] as an information market structure that encourages informed traders to trade early, has guaranteed liquidity, and requires a bounded subsidy .
+4-2:This market structure was used in the Yahoo! Buzz market [8] .
+4-3:In this section, we show that the dynamic parimutuel market is also remarkably similar to the projection game .
+4-4:Coupled with section 4, this also demonstrates a strong connection between the DPM and MSR .
+4-5:In a two event DPM, users can place bets on either event A or B at any time, by buying a share in the appropriate event .
+4-6:The price of a share is variable, determined by the total amount of money in the market and the number of shares currently outstanding .
+4-7:Further, existing shares can be sold at the current price .
+4-8:After it is determined which event really happens, the shares are liquidated for cash .
+4-9:In the total money redistributed variant of DPM, which is the variant used in the Yahoo! market, the total money is divided equally among the shares of the winning event; shares of the losing event are worthless .
+4-10:Note that the payoffs are undefined if the event has zero outstanding shares; the DPM rules should preclude this possibility .
+4-11:We use the following notation: Let x be the number of outstanding shares of A (totalled over all traders), and y be the number of outstanding shares in B .
+4-12:Let M denote the total money currently in the market .
+4-13:Let cA and cB denote the prices of shares in A and B respectively .
+4-14:The price of a share in the Yahoo! DPM is determined by the share ratio principle: cA cB = x y (1) The form of the prices can be fully determined by stipulating that, for any given value of M, x, and y, there must be some probability pA such that, if a trader believes that pA is the probability that A will occur and the market will liquidate in the current state, she cannot expect to profit from either buying or selling either share .
+4-15:This gives us cA = pA hM x i cB = pB hM y i 319 Since pA + pB = 1, we have: xcA + ycB = M (2) Finally, combining Equations 1 and 2, we get cA = x M x2 + y2 cB = y M x2 + y2 Cost of a trade in the DPM Consider a trader who comes to a DPM in state (M, x, y), and buys or sells shares such that the eventual state is (M , x , y ) .
+4-16:What is the net cost, M − M, of her move? Theorem 4 .
+4-17:The cost of the move from (x, y) to (x , y ) is M − M = M0[ p x 2 + y 2 − p x2 + y2] for some constant M0 .
+4-18:In other words, it is a constant multiple of the corresponding cost in the projection game .
+4-19:Proof .
+4-20:Consider the function G(x, y) = M0[ p x2 + y2] .
+4-21:The function G is differentiable for all x, y = 0, and it"s partial derivatives are: ∂G ∂x = M0[ x p x2 + y2 ] = x G(x, y) x2 + y2 ∂G ∂y = M0[ y p x2 + y2 ] = y G(x, y) x2 + y2 Now, compare these equations to the prices in the DPM, and observe that, as a trader buys or sells in the DPM, the instantaneous price is the derivative of the money .
+4-22:It follows that, if at any point of time the DPM is in a state (M, x, y) such that M = G(x, y), then, at all subsequent points of time, the state (M , x , y ) of the DPM will satisfy M = G(x , y ) .
+4-23:Finally, note that we can pick the constant M0 such that the equation is satisfied for the initial state of the DPM, and hence, it will always be satisfied .
+4-24:One important consequence of Theorem 4 is that the dynamic parimutuel market is arbitrage free (using Lemma 1) .
+4-25:It is interesting to note that the original Yahoo! Buzz market used a different pricing rule, which did permit arbitrage; the price rule was changed to the share ratio rule after traders started exploiting the arbitrage opportunities [8] .
+4-26:Another somewhat surprising consequence is that the numbers of outstanding shares x, y completely determines the total capitalization M of the DPM .
+4-27:Constraints in the DPM Although it might seem, based on the costs, that any move in the projection game has an equivalent move in the DPM, the DPM places some constraints on trades .
+4-28:Firstly, no trader is allowed to have a net negative holding in either share .
+4-29:This is important, because it ensures that the total holdings in each share are always positive .
+4-30:However, this is a boundary constraint, and does not impact the strategic choices for a player with a sufficiently large positive holding in each share .
+4-31:Thus, we can ignore this constraint from a first order strategic analysis of the DPM .
+4-32:Secondly, for practical reasons a DPM will probably have a minimum unit of trade, but we assume here that arbitrarily small quantities can be traded .
+4-33:Payoffs in the DPM At some point, trading in the DPM ceases and shares are liquidated .
+4-34:We assume here that the true probability becomes known at liquidation time, and describe the payoffs in terms of the probability; however, if the probability is not revealed, only the event that actually occurs, these payoffs can be implemented in expectation .
+4-35:Suppose the DPM terminates in a state (M, x, y), and the true probability of event A is p .
+4-36:When the dynamic parimutuel market is liquidated, the shares are paid off in the following way: Each owner of a share of A receives pM x , and each owner of a share of B receives (1 − p)M y , for each share owned .
+4-37:The payoffs in the DPM, although given by a fairly simple form, are conceptually complex, because the payoff of a move depends on the subsequent moves before the market liquidates .
+4-38:Thus, a fully rational choice of move in the DPM for player i should take into account the actions of subsequent players, including player i himself .
+4-39:Here, we restrict the analysis to myopic, infinitesimal strategies: Given the market position is (M, x, y), in which direction should a player make an infinitesimal move in order to maximize her profit? We show that the infinitesimal payoffs and profits of a DPM with true probability p correspond strategically to the infinitesimal payoffs and profits of a projection game with odds p p (1 − p), in the following sense: Lemma 5 .
+4-40:Suppose player i is about to make a move in a dynamic parimutuel market in a state (M, x, y), and the true probability of event A is p .
+4-41:Then, assuming the market is liquidated after i"s move, • If x y < q p 1−p , player i profits by buying shares in A , or selling shares in B .
+4-42:• If x y > q p 1−p , player i profits by selling shares in A, or buying shares in B .
+4-43:Proof .
+4-44:Consider the cost and payoff of buying a small quantity Δx of shares in A .
+4-45:The cost is C[(x, y) → (x + Δx, y)] = Δx · x M x2+y2 , and the payoff is Δx · pM x .
+4-46:Thus, buying the shares is profitable iff Δx · x M x2 + y2 < Δx · p M x ⇔ x2 x2 + y2 < p ⇔ x2 + y2 x2 > 1 p ⇔ 1 + ( y x )2 > 1 p ⇔ y x > r 1 − p p ⇔ x y < r p 1 − p Thus, buying A is profitable if x y < q p 1−p , and selling A is profitable if x y > q p 1−p .
+4-47:The analysis for buying or selling B is similar, with p and (1 − p) interchanged .
+4-48:It follows from Lemma 5 that it is myopically profitable for players to move towards the line with slope q 1−p p .
+4-49:Note that there is a one to one mapping between 1−p p and q 1−p p 320 in their respective ranges, so this line is uniquely defined, and each such line also corresponds to a unique p .
+4-50:However, because the actual payoff of a move depends on the future moves, players must base their decisions on some belief about the final state of the market .
+4-51:In the light of Lemma 5, one natural, rational expectation style assumption is that the final state (M, x∗ , y∗ ) will satisfy x∗ y∗ = q p 1−p .
+4-52:(In other words, one might assume that the traders" beliefs will ultimately converge to the true probability p; knowing p, the traders will drive the market state to satisfy x y = q p 1−p .) This is very plausible in markets (such as the Yahoo! Buzz market) in which trading is permitted right until the market is liquidated, at which point there is no remaining uncertainty about the relevant frequencies .
+4-53:Under this assumption, we can prove an even tighter connection between payoffs in the DPM (where the true probability is p) and payoffs in the projection game, with odds q p 1−p : Theorem 6 .
+4-54:Suppose that the DPM ultimately terminates in a state (M, X, Y ) satisfying X Y = q p 1−p .
+4-55:Assume without loss of generality that the constant M0 = 1, so M =√ X2 + Y 2 .
+4-56:Then, the final payoff for any move [x → x ] made in the course of trading is (x − x) · ( √ p, √ 1 − p), i.e., it is the same as the payoff in the projection game with oddsq p 1−p .
+4-57:Proof .
+4-58:First, observe that X M = √ p and Y M = √ 1 − p .
+4-59:The final payoff is the liquidation value of (x − x) shares of A and (y − y) shares of B, which is PayoffDP M [x − x] = p M X (x − x) + (1 − p) M Y (y − y) = p 1 √ p (x − x) + (1 − p) 1 √ 1 − p (y − y) = √ p(x − x) + p 1 − p(y − y) .
+4-60:Strategic Analysis for the DPM Theorems 4 and 6 give us a very strong equivalence between the projection game and the dynamic parimutuel market, under the assumption that the DPM converges to the optimal value for the true probability .
+4-61:A player playing in a DPM with true odds p (1 − p), can imagine himself playing in the projection game with odds q p 1−p , because both the costs and the payoffs of any given move are identical .
+4-62:Using this equivalence, we can transfer all the strategic properties proven for the projection game directly to the analysis of the dynamic parimutuel market .
+4-63:One particularly interesting conclusion we can draw is as follows: In the absence of any constraint that disallows it, it is always profitable for an agent to move towards the origin, by selling shares in both A and B while maintaining the ratio x y .
+4-64:In the DPM, this is limited by forbidding short sales, so players can never have negative holdings in either share .
+4-65:As a result, when their holding in one share (say A) is 0, they can"t use the strategy of moving towards the origin .
+4-66:We can conclude that a rational player should never hold shares of both A and B simultaneously, regardless of her beliefs and the market position .
+4-67:This discussion leads us to consider a modified DPM, in which this strategic loophole is addressed directly: Instead of disallowing all short sales, we place a constraint that no agent ever reduce the total market capitalization M (or, alternatively, that any agent"s total investment in the market is always non negative) .
+4-68:We call this the nondecreasing market capitalization constraint for the DPM .
+4-69:This corresponds to a restriction that no move in the projection game reduces the radius .
+4-70:However, we can conclude from the preceding discussion that players have no incentive to ever increase the radius .
+4-71:Thus, the moves of the projection game would all lie on the quarter circle in the positive quadrant, with radius determined by the market maker"s move .
+4-72:In section 4, we show that the projection game on this quarter circle is strategically equivalent (at least myopically) to trade in a Market Scoring Rule .
+4-73:Thus, the DPM and MSR appear to be deeply connected to each other, like different interfaces to the same underlying game. .
+5 MARKET SCORING RULES :
+5-1:The Market Scoring Rule was introduced by Hanson [6] .
+5-2:It is based on the concept of a proper scoring rule, a technique which rewards forecasters to give their best prediction .
+5-3:Hanson"s innovation was to turn the scoring rules into instruments that can be traded, thereby providing traders who have new information an incentive to trade .
+5-4:One positive effect of this design is that a single trader would still have incentive to trade, which is equivalent to updating the scoring rule report to reflect her information, thereby eliminating the problem of thin markets and illiquidity .
+5-5:In this section, we show that, when the scoring rule used is the spherical scoring rule [4], there is a strong strategic equivalence between the projection game and the market scoring rule .
+5-6:Proper scoring rules are tools used to reward forecasters who predict the probability distribution of an event .
+5-7:We describe this in the simple setting of two exhaustive, mutually exclusive events A and B .
+5-8:In the simple setting of two exhaustive, mutually exclusive events A and B, proper scoring rules are defined as follows .
+5-9:Suppose the forecaster predicts that the probabilities of the events are r = (rA, rB), with rA + rB = 1 .
+5-10:The scoring rule is specified by functions sA(rA, rB) and sB(rA, rB), which are applied as follows: If the event A occurs, the forecaster is paid sA(rA, rB), and if the event B occurs, the forecaster is paid sB(rA, rB) .
+5-11:The key property that a proper scoring rule satisfies is that the expected payment is maximized when the report is identical to the true probability distribution .
+5-12:4.1 Equivalence with Spherical Scoring Rule In this section, we focus on one specific scoring rule: the spherical scoring rule [4] .
+5-13:Definition 1 .
+5-14:The spherical scoring rule [4] is defined by si(r) def = ri ||r|| .
+5-15:For two events, this can be written as: sA(rA, rB) = rA p r2 A + r2 B ; sB(rA, rB) = rB p r2 A + r2 B The spherical scoring rule is known to be a proper scoring rule .
+5-16:The definition generalizes naturally to higher dimensions .
+5-17:We now demonstrate a close connection between the projection game restricted to a circular arc and a market scoring rule that uses the spherical scoring rule .
+5-18:At this point, it is 321 convenient to use vector notation .
+5-19:Let x = (x, y) denote a position in the projection game .
+5-20:We consider the projection game restricted to the circle |x| = 1 .
+5-21:Restricted projection game Consider a move in this restricted projection game from x to x .
+5-22:Recall that q = ( p √ p2+(1−p)2 , 1−p √ p2+(1−p)2 ), where p is the true probability of the event .
+5-23:Then, the projection game profit of a move [x, x ] is q · [x − x] (noting that |x| = |x |) .
+5-24:We can extend this to an arbitrary collection3 of (not necessarily contiguous) moves X = {[x1, x1], [x2, x2], · · · , [xl, xl]} .
+5-25:SEG PROFITp(X ) = X [x,x ]∈X q · [x − x] = q · 2 4 X [x,x ]∈X [x − x] 3 5 Spherical scoring rule profit We now turn our attention to the MSR with the spherical scoring rule .
+5-26:Consider a player who changes the report from r to r .
+5-27:Then, if the true probability of A is p, her expected profit is SSR PROFIT([r, r ]) = p(sA(r )−sA(r))+(1−p)(sB(r )−sB(r)) Now, let us represent the initial and final position in terms of circular coordinates .
+5-28:For r = (rA, rB), define the corresponding coordinates x = ( rA√ r2 A+r2 B , rB√ r2 A+r2 B The chief advantages of the projection game are that it is analytically tractable, and also easy to visualize .
+5-29:In Section 3, we used the projection game model of the DPM to prove the absence of arbitrage, and to infer strategic properties that might have been difficult to deduce otherwise .
+5-30:In this section, we provide two examples that illustrate the power of projection game analysis for gaining insight about more complex strategic settings .
+5-31:323 5.1 Traders with inertia The standard analysis of the trader behavior in any of the market forms we have studied asserts that traders who disagree with the market probabilities will expect to gain from changing the probability, and thus have a strict incentive to trade in the market .
+5-32:The expected gain may, however, be very small .
+5-33:A plausible model of real trader behavior might include some form of inertia or optimality: We assume that traders will trade if their expected profit is greater than some constant .
+5-34:We do not attempt to justify this model here; rather, we illustrate how the projection game may be used to analyze such situations, and shed some light on how to modify the trading rules to alleviate this problem .
+5-35:Consider the simple projection game restricted to a circular arc with unit radius; as we have seen, this corresponds closely to the spherical market scoring rule, and to the dynamic parimutuel market under a reasonable constraint .
+5-36:Now, suppose the market probability is p, and a trader believes the true probability is p .
+5-37:Then, his expected gain can be calculated, as follows: Let q and q be the unit vectors in the directions of p and p respectively .
+5-38:The expected profit is given by E = φ(q, p ) = 1− q ·q .
+5-39:Thus, the trader will trade only if 1−q·q > .
+5-40:If we let θ and θ be the angles of the p line and p line respectively (from the x axis), we get E = 1 − cos(θ − θ ); when θ is close to θ , a Taylor series approximation gives us that E ≈ (θ − θ )2 2 .
+5-41:Thus, we can derive a bound on the limit of the market accuracy: The market price will not change as long as (θ − θ )2 ≤ 2 .
+5-42:Now, suppose a market operator faced with this situation wanted to sharpen the accuracy of the market .
+5-43:One natural approach is simply to multiply all payoffs by a constant .
+5-44:This corresponds to using a larger circle in the projection game, and would indeed improve the accuracy .
+5-45:However, it will also increase the market maker"s exposure to loss: the market maker would have to pump in more money to achieve this .
+5-46:The projection game model suggests a natural approach to improving the accuracy while retaining the same bounds on the market maker"s loss .
+5-47:The idea is that, instead of restricting all moves to being on the unit circle, we force each move to have a slightly larger radius than the previous move .
+5-48:Suppose we insist that, if the current radius is r, the next trader has to move to r + 1 .
+5-49:Then, the trader"s expected profit would be E = r(1 − cos(θ − θ )) .
+5-50:Using the same approximation as above, the trader would trade as long as (θ − θ )2 > 2 r .
+5-51:Now, even if the market maker seeded the market with r = 1, it would increase with each trade, and the incentives to sharpen the estimate increase with every trade .
+5-52:5.2 Analyzing long term strategies Up to this point, our analysis has been restricted to trader strategies that are myopic in the sense that traders do not consider the impact of their trades on other traders" beliefs .
+5-53:In practice, an informed trader can potentially profit by playing a suboptimal strategy to mislead other traders, in a way that allows her to profit later .
+5-54:In this section, we illustrate how the projection game can be used to analyze an instance of this phenomenon, and to design market rules that mitigate this effect .
+5-55:The scenario we consider is as follows .
+5-56:There are two traders speculating on the probability of an event E, who each get a 1 bit signal .
+5-57:The optimal probability for each 2bit signal pair is as follows .
+5-58:If trader 1 gets the signal 0, and trader 2 gets signal 0, the optimal probability is 0.3 .
+5-59:If trader 1 got a 0, but trader 2 got a 1, the optimal probability is 0.9 .
+5-60:If trader 1 gets 1, and trader 2 gets signal 0, the optimal probability is 0.7 .
+5-61:If trader 1 got a 0, but trader 2 got a 1, the optimal probability is 0.1 .
+5-62:(Note that the impact of trader 2"s signal is in a different direction, depending on trader 1"s signal) .
+5-63:Suppose that the prior distribution of the signals is that trader 1 is equally likely to get a 0 or a 1, but trader 2 gets a 0 with probability 0.55 and a 1 with probability 0.45 .
+5-64:The traders are playing the projection game restricted to a circular arc .
+5-65:This setup is depicted in Figure 4 .
+5-66:A B D C X Y Signals Opt .
+5-67:Pt 00 C D11 10 01 Event does not happenEventhappens B A Figure 4: Example illustrating non myopic deception Suppose that, for some exogenous reason, trader 1 has the opportunity to trade, followed by trader 2 .
+5-68:Then, trader 1 has the option of placing a last minute trade just before the market closes .
+5-69:If traders were playing their myopically optimal strategies, here is how the market should run: If trader 1 sees a 0, he would move to some point Y that is between A and C, but closer to C .
+5-70:Trader 2 would then infer that trader 1 received a 0 signal and move to A or C if she got 1 or 0 respectively .
+5-71:Trader 1 has no reason to move again .
+5-72:If trader 1 had got a 1, he would move to a different point X instead, and trader 2 would move to D if she saw 1 and B if she saw 0 .
+5-73:Again, trader 1 would not want to move again .
+5-74:Using the projection game, it is easy to show that, if traders consider non myopic strategies, this set of strategies is not an equilibrium .
+5-75:The exact position of the points does not matter; all we need is the relative position, and the observation that, because of the perfect symmetry in the setup, segments XY, BC, and AD are all parallel to each other .
+5-76:Now, suppose trader 1 got a 0 .
+5-77:He could move to X instead of Y , to mislead trader 2 into thinking he got a correct the rating to A .
+5-78:To show that this is a profitable deviation, observe that this strategy is equivalent to playing two additional moves over trader 1"s myopic strategy of moving to Y .
+5-79:The first move, Y X may either move toward or away from the optimal final position .
+5-80:The second move, DA or BC, is always in the correct direction .
+5-81:Further, because DA and BC are longer than XY , and parallel to XY , their projection on the final p line will always be greater 324 in absolute value than the projection of XY , regardless of what the true p line is! Thus, the deception would result in a strictly higher expected profit for trader 1 .
+5-82:Note that this problem is not specific to the projection game form: Our equivalence results show that it could arise in the MSR or DPM (perhaps with a different prior distribution and different numerical values) .
+5-83:Observe also that a strategy profile in which neither trader moved in the first two rounds, and trader 1 moved to either X or Y would be a subgame perfect equilibrium in this setup .
+5-84:We suggest that one approach to mitigating this problem might be by reducing the radius at every move .
+5-85:This essentially provides a form of discounting that motivates trader 1 to take his profit early rather than mislead trader 2 .
+5-86:Graphically, the right reduction factor would make the segments AD and BC shorter than XY (as they are chords on a smaller circle), thus making the myopic strategy optimal. .
+6 ABSTRACT :
+6-1:We have presented a simple geometric game, the projection game, that can serve as a model for strategic behavior in information markets, as well as a tool to guide the design of new information markets
+6-2:We have used this model to analyze the cost, profit, and strategies of a trader in a dynamic parimutuel market, and shown that both the dynamic parimutuel market and the spherical market scoring rule are strategically equivalent to the restricted projection game under slight distortion of the prior probabilities
+6-3:The general analysis was based on the assumption that traders do not actively try to mislead other traders for future profit
+6-4:In section 5, however, we analyze a small example market without this assumption
+6-5:We demonstrate that the projection game can be used to analyze traders" strategies in this scenario, and potentially to help design markets with better strategic properties
+6-6:Our results raise several very interesting open questions
+6-7:Firstly, the payoffs of the projection game cannot be directly implemented in situations in which the true probability is not ultimately revealed
+6-8:It would be very useful to have an automatic transformation of a given projection game into another game in which the payoffs can be implemented in expectation without knowing the probability, and preserves the strategic properties of the projection game
+6-9:Second, given the tight connection between the projection game and the spherical market scoring rule, it is natural to ask if we can find as strong a connection to other scoring rules or if not, to understand what strategic differences are implied by the form of the scoring rule used in the market
+6-10:Finally, the existence of long range manipulative strategies in information markets is of great interest
+6-11:The example we studied in section 5 merely scratches the surface of this area
+6-12:A general study of this class of manipulations, together with a characterization of markets in which it can or cannot arise, would be very useful for the design of information markets.
+7 ABSTRACT :
+7-1:S
+7-2:Debnath, D
+7-3:M
+7-4:Pennock, S
+7-5:Lawrence, E
+7-6:J
+7-7:Glover, and C
+7-8:L
+7-9:Giles
+7-10:Information incorporation in online in game sports betting markets
+7-11:In Proceedings of the Fourth Annual ACM Conference on Electronic Commerce (EC"03), pages 258 259, June 2003
+7-12:R
+7-13:Forsythe, F
+7-14:Nelson, G
+7-15:R
+7-16:Neumann, and J
+7-17:Wright
+7-18:Anatomy of an experimental political stock market
+7-19:American Economic Review, 82(5):1142 1161, 1992
+7-20:R
+7-21:Forsythe, T
+7-22:A
+7-23:Rietz, and T
+7-24:W
+7-25:Ross
+7-26:Wishes, expectations, and actions: A survey on price formation in election stock markets
+7-27:Journal of Economic Behavior and Organization, 39:83 110, 1999
+7-28:D
+7-29:Friedman
+7-30:Effective scoring rules for probabilistic forecasts
+7-31:Management Science, 29(4):447 454, 1983
+7-32:J
+7-33:M
+7-34:Gandar, W
+7-35:H
+7-36:Dare, C
+7-37:R
+7-38:Brown, and R
+7-39:A
+7-40:Zuber
+7-41:Informed traders and price variations in the betting market for professional basketball games
+7-42:Journal of Finance, LIII(1):385 401, 1998
+7-43:R
+7-44:Hanson
+7-45:Combinatorial information market design
+7-46:Information Systems Frontiers, 5(1):107 119, 2003
+7-47:R
+7-48:Hanson, R
+7-49:Oprea, and D
+7-50:Porter
+7-51:Information aggregation and manipulation in an experimental market
+7-52:Journal of Economic Behavior and Organization, page to appear, 2006
+7-53:B
+7-54:Mangold, M
+7-55:Dooley, G
+7-56:W
+7-57:Flake, H
+7-58:Hoffman, T
+7-59:Kasturi, D
+7-60:M
+7-61:Pennock, and R
+7-62:Dornfest
+7-63:The tech buzz game
+7-64:IEEE Computer, 38(7):94 97, July 2005
+7-65:J
+7-66:A
+7-67:Muth
+7-68:Rational expectations and the theory of price movements
+7-69:Econometrica, 29(6):315 335, 1961
+7-70:D
+7-71:Pennock
+7-72:A dynamic parimutuel market for information aggregation
+7-73:In Proceedings of the Fourth Annual ACM Conference on Electronic Commerce (EC "04), June 2004
+7-74:D
+7-75:Pennock and R
+7-76:Sami
+7-77:Computational aspects of prediction markets
+7-78:In N
+7-79:Nisan, T
+7-80:Roughgarden, E
+7-81:Tardos, and V
+7-82:V
+7-83:Vazirani, editors, Algorithmic Game Theory
+7-84:Cambridge University Press, 2007
+7-85:(to appear)
+7-86:D
+7-87:M
+7-88:Pennock, S
+7-89:Debnath, E
+7-90:J
+7-91:Glover, and C
+7-92:L
+7-93:Giles
+7-94:Modeling information incorporation in markets, with application to detecting and explaining events
+7-95:In Proceedings of the Eighteenth Conference on Uncertainty in Artificial Intelligence, pages 405 413, 2002
+7-96:C
+7-97:R
+7-98:Plott and S
+7-99:Sunder
+7-100:Rational expectations and the aggregation of diverse information in laboratory security markets
+7-101:Econometrica, 56(5):1085 1118, 1988
+7-102:C
+7-103:R
+7-104:Plott, J
+7-105:Wit, and W
+7-106:C
+7-107:Yang
+7-108:Parimutuel betting markets as information aggregation devices: Experimental results
+7-109:Technical Report Social Science Working Paper 986, California Institute of Technology, Apr
+7-110:1997
+7-111:C
+7-112:Polk, R
+7-113:Hanson, J
+7-114:Ledyard, and T
+7-115:Ishikida
+7-116:Policy analysis market: An electronic commerce application of a combinatorial information market
+7-117:In Proceedings of the Fourth Annual ACM Conference on Electronic Commerce (EC"03), pages 272 273, June 2003
+7-118:C
+7-119:Schmidt and A
+7-120:Werwatz
+7-121:How accurate do markets predict the outcome of an event? the Euro 2000 soccer championships experiment
+7-122:Technical Report 09 2002, Max Planck Institute for Research into Economic Systems, 2002
+7-123:325
+picture:

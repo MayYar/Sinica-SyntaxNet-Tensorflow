@@ -1,0 +1,70 @@
+Once a conflict (as defined in Section 4) has been detected, we propose to employ the unifier to resolve the conflict .
+In our example, if the variables in prh(inform(a1, r1, a2, r2, p(Y, d), T )) do not get the values specified in substitution £m then there will not be a conflict .
+However, rather than computing the complement set of a substitution (which can be an infinite set) we propose to annotate the prohibition with the unifier itself and use it to determine what the variables of that prohibition cannot be in future unifications in order to avoid a conflict .
+We therefore denote annotated prohibitions as prh(¡ÂI) £U, where £U = {£m1, .
+.
+.
+, £mn}, is a set of unifiers .
+Annotated norms3 are interpreted as deontic constructs with curtailed influences, that is, their effect (on agents, roles and illocutions) has been limited by the set £U of unifiers .
+A prohibition may be in conflict with various obligations in a given normative scene s = id, £G and we need to record (and possibly avoid) all these conflicts .
+We define below an algorithm which ensures that a normative position will be added to a normative scene in such a way that it will not cause any conflicts .
+3 Although we propose to curtail prohibitions, the same machinery can be used to define the curtailment of obligations instead .
+These different policies are dependent on the intended deontic semantics and requirements of the systems addressed .
+For instance, some MASs may require that their agents should not act in the presence of conflicts, that is, the obligation should be curtailed .
+6.1 Conflict Resolution We propose a fine grained way of resolving normative conflicts via unification .
+We detect the overlapping of the influences of norms , i.e .
+how they affect the behaviour of the concerned agents, and we curtail the influence of the normative position, by appropriately using the annotations when checking if the norm applies to illocutions .
+The algorithm shown in Figure 4 depicts how we maintain a conflict free set of norms .
+It adds a given norm N to an existing, conflictfree normative state £G, obtaining a resulting new normative state £G which is conflict free, that is, its prohibitions are annotated with a set of conflict sets indicating which bindings for variables have to be avoided for conflicts not to take place .
+algorithm addNorm(N, £G) begin 1 timestamp(N) 2 case N of 3 per(¡ÂI)
+conflict(N, N , £m) then £G 
+Line 3 addresses the case when the given norm is a permission
+Lines 4 5 address the case when we attempt to add a ground prohibition to a normative state
+Lines 6 12 describe the situation when the normative position to be added is a nonground prohibition .
+In this case, the algorithm initialises £U to an empty set and loops (line 9 10) through the norms N in the old normative state £G .
+Upon finding one that conflicts with N, the algorithm updates £U by adding the newly found conflict set £m to it (line 10) .
+By looping through £G, we are able to check any conflicts between the new prohibition and the existing obligations, adequately building the annotation £U to be used when adding N to £G in line 11 .
+Lines 13 27 describe how a new obligation is accommodated to an existing normative state .
+We make use of two initially empty, temporary sets, £G1, £G2 .
+The algorithm loops through £G (lines 16 25) picking up those annotated prohibitions N £U which conflict with the new obligation .
+There are, however, two cases to deal with
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 641 prohibition is found (line 17), and its exception, covering non ground prohibitions (line 20) .
+In both cases, the old prohibition is stored in £G1 (lines 18 and 23) to be later removed from £G (line 26) .
+However, in the case of a nonground prohibition, the algorithm updates its annotation of conflict sets (line 24) .
+The loop guarantees that an exhaustive (linear) search through a normative state takes place, checking if the new obligation is in conflict with any existing prohibitions, possibly updating the annotations of these conflicting prohibitions .
+In line 26 the algorithm builds the new updated £G by removing the old prohibitions stored in £G1 and adding the updated prohibitions stored in £G2 (if any), as well as the new obligation N .
+Our proposed algorithm is correct in that, for a given normative position N and a normative state £G, it provides a new normative state £G in which all prohibitions have annotations recording how they unify with existing obligations .
+The annotations can be empty, though
+Permissions do not affect our algorithm and they are appropriately dealt with (line 3) .
+Any attempt to insert a ground prohibition which conflicts, yields the same normative state (line 4) .
+When a new obligation is being added then the algorithm guarantees that all prohibitions are considered (lines 14 27), leading to the removal of conflicting ground prohibitions or the update of annotations of non ground prohibitions .
+The algorithm always terminates
+The complexity of the algorithm is linear
+When managing normative states we may also need to remove normative positions .
+This is straightforward
+When an obligation is to be removed, we must check it against all annotated prohibitions in order to update their annotations .
+We apply the conflict check and obtain a unifier, then remove this unifier from the prohibition"s annotation .
+We invoke the removal algorithm as removeNorm(N, £G)
+6.2 Enactment of a Normative Structure The enactment of a normative structure amounts to the parallel, distributed execution of normative scenes and normative transitions .
+For illustrative purposes, hereafter we shall describe the interplay between the payment and delivery normative scenes and the normative transition nt linking them in the upper half of figure 2 .
+With this aim, consider for instance that obl(inform(jules, client, rod, acc, pay(copper, 400, 350), T) ? £Gpayment and that £Gdelivery holds prh(inform(rod,wm, jules, client, delivered(Z, Q), T)) .
+Such states indicate that client Jules is obliged to pay ?400 for 350kg of copper to accountant Rod according to the payment normative scene, whereas Rod, taking up the role of warehouse manager this time, is prohibited to deliver anything to client Jules according to the delivery normative scene .
+For each normative scene, the enactment process goes as follows .
+Firstly, it processes its incoming message queue that contains three types of messages
+For instance, in our example, the payment normative scene collects the illocution I = utt((inform(jules, client, rod, acc, pay(copper, 400, 350), 35)) standing for client Jules" pending payment for copper (via arrow A in figure 2) .
+Utterances are timestamped and subsequently added to the normative state .
+We would have £Gpayment = £Gpayment ¡å {I}, in our example .
+Upon receiving normative commands to either add or remove a normative position, the normative scene invokes the corresponding addition or removal algorithm described in Section 6.1 .
+Secondly, the normative scene acknowledges its state change by sending a trigger message to every outgoing normative transition it is connected to .
+In our example, the payment normative scene would be signalling its state change to normative transition nt .
+For normative transitions, the process works differently .
+Because each normative transition controls the operation of a single rule, upon receiving a trigger message, it polls every incoming normative scene for substitutions for the relevant illocution schemata on the LHS of its rule .
+In our example, nt (being responsible for the rule described in Section 3.4), would poll the payment normative scene (via arrow B) for substitutions .
+Upon receiving replies from them (in the form of sets of substitutions together with time stamps), it has to unify substitutions from each of these normative scenes .
+For each unification it finds, the rule is fired, and hence the corresponding normative command is sent along to the output normative scene .
+The normative transition then keeps track of the firing message it sent on and of the time stamps of the normative positions that triggered the firing .
+This is done to ensure that the very same normative positions in the LHS of a rule only trigger its firing once .
+In our example, nt would be receiving £m = {X jules, Y rod, Z copper, Q 350} from the payment normative scene .
+Since the substitions in £m unify with nt"s rule, the rule is fired, and the normative command add(delivery 
+After that, the delivery normative scene would invoke the addNorm algorithm from figure 4 with £Gdelivery and N = obl(rod, wm, jules, client, delivered(copper, 350)) as arguments. .

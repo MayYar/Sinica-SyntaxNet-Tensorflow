@@ -1,0 +1,42 @@
+Following the standard machine learning setup, our goal is to learn a function h 
+In order to quantify the quality of a prediction, ?y = h(x), we will consider a loss function ? 
+?(y, ?y) quantifies the penalty for making prediction ?y if the correct output is y .
+The loss function allows us to incorporate specific performance measures, which we will exploit 1 http
+We restrict ourselves to the supervised learning scenario, where input output pairs (x, y) are available for training and are assumed to come from some fixed distribution P(x, y) .
+The goal is to find a function h such that the risk (i.e., expected loss), R? P (h) = Z X¡ÑY ?(y, h(x))dP(x, y), is minimized .
+Of course, P(x, y) is unknown .
+But given a finite set of training pairs, S = {(xi, yi) ? X ¡Ñ Y 
+.
+.
+, n}, the performance of h on S can be measured by the empirical risk, R? S (h) = 1 n nX i=1 ?(yi, h(xi)) .
+In the case of learning a ranked retrieval function, X denotes a space of queries, and Y the space of (possibly weak) rankings over some corpus of documents C = {d1, .
+.
+.
+,d|C|} .
+We can define average precision loss as ?map(y, ?y) = 1 ? MAP(rank(y), rank(?y)), where rank(y) is a vector of the rank values of each document in C .
+For example, for a corpus of two documents, {d1, d2}, with d1 having higher rank than d2, rank(y ) = (1, 0) .
+We assume true rankings have two rank values, where relevant documents have rank value 1 and non relevant documents rank value 0 .
+We further assume that all predicted rankings are complete rankings (no ties) .
+Let p = rank(y) and ?p = rank(?y) .
+The average precision score is defined as MAP(p, ?p) = 1 rel X j
+MAP is the mean of the average precision scores of a group of queries .
+2.1 MAP vs ROCArea Most learning algorithms optimize for accuracy or ROCArea .
+While optimizing for these measures might achieve good MAP performance, we use two simple examples to show it can also be suboptimal in terms of MAP .
+ROCArea assigns equal penalty to each misordering of a relevant non relevant pair .
+In contrast, MAP assigns greater penalties to misorderings higher up in the predicted ranking .
+Using our notation, ROCArea can be defined as ROC(p, ?p) = 1 rel ¡P (|C| ? rel) X i
+Doc ID 1 2 3 4 5 6 7 8 p 1 0 0 0 0 1 1 0 rank(h1(x)) 8 7 6 5 4 3 2 1 rank(h2(x)) 1 2 3 4 5 6 7 8 Table 1
+These two hypotheses predict a ranking for query x over a corpus of eight documents .
+Hypothesis MAP ROCArea h1(x) 0.59 0.47 h2(x) 0.51 0.53 Table 2
+Here, a learning method which optimizes for ROCArea would choose h2 since that results in a higher ROCArea score, but this yields a suboptimal MAP score .
+2.2 MAP vs Accuracy Using a very similar example, we now demonstrate how optimizing for accuracy might result in suboptimal MAP .
+Models which optimize for accuracy are not directly concerned with the ranking .
+Instead, they learn a threshold such that documents scoring higher than the threshold can be classified as relevant and documents scoring lower as nonrelevant .
+Doc ID 1 2 3 4 5 6 7 8 9 10 11 p 1 0 0 0 0 1 1 1 1 0 0 rank(h1(x)) 11 10 9 8 7 6 5 4 3 2 1 rank(h2(x)) 1 2 3 4 5 6 7 8 9 10 11 Table 3
+Table 3 shows the predictions of the two hypotheses on a single query x .
+Hypothesis MAP Best Acc .
+h1(q) 0.70 0.64 h2(q) 0.64 0.73 Table 4
+The best accuracy refers to the highest achievable accuracy on that ranking when considering all possible thresholds .
+For instance, with h1(q), a threshold between documents 1 and 2 gives 4 errors (documents 6 9 incorrectly classified as non relevant), yielding an accuracy of 0.64 .
+Similarly, with h2(q), a threshold between documents 5 and 6 gives 3 errors (documents 10 11 incorrectly classified as relevant, and document 1 as non relevant), yielding an accuracy of 0.73 .
+A learning method which optimizes for accuracy would choose h2 since that results in a higher accuracy score, but this yields a suboptimal MAP score. .

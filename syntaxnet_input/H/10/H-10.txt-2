@@ -1,0 +1,30 @@
+Document clustering has been receiving more and more attentions as an important and fundamental technique for unsupervised document organization, automatic topic extraction, and fast information retrieval or filtering .
+A good document clustering approach can assist the computers to automatically organize the document corpus into a meaningful cluster hierarchy for efficient browsing and navigation, which is very valuable for complementing the deficiencies of traditional information retrieval technologies .
+As pointed out by [8], the information retrieval needs can be expressed by a spectrum ranged from narrow keyword matching based search to broad information browsing such as what are the major international events in recent months .
+Traditional document retrieval engines tend to fit well with the search end of the spectrum, i.e .
+they usually provide specified search for documents matching the user"s query, however, it is hard for them to meet the needs from the rest of the spectrum in which a rather broad or vague information is needed .
+In such cases, efficient browsing through a good cluster hierarchy will be definitely helpful .
+Generally, document clustering methods can be mainly categorized into two classes
+The hierarchical methods group the data points into a hierarchical tree structure using bottom up or top down approaches .
+For example, hierarchical agglomerative clustering [13] is a typical bottom up hierarchical clustering method .
+It takes each data point as a single cluster to start off with and then builds bigger and bigger clusters by grouping similar data points together until the entire dataset is encapsulated into one final cluster .
+On the other hand, partitioning methods decompose the dataset into a number of disjoint clusters which are usually optimal in terms of some predefined criterion functions .
+For instance, K means [13] is a typical partitioning method which aims to minimize the sum of the squared distance between the data points and their corresponding cluster centers .
+In this paper, we will focus on the partitioning methods .
+As we know that there are two main problems existing in partitioning methods (like Kmeans and Gaussian Mixture Model [16])
+the Expectation Maximization algorithm) for optimizing the criterions usually makes the final solutions heavily depend on the initializations .
+In the last decades, many methods have been proposed to overcome the above problems of the partitioning methods [19][28] .
+Recently, another type of partitioning methods based on clustering on data graphs have aroused considerable interests in the machine learning and data mining community .
+The basic idea behind these methods is to first model the whole dataset as a weighted graph, in which the graph nodes represent the data points, and the weights on the edges correspond to the similarities between pairwise points .
+Then the cluster assignments of the dataset can be achieved by optimizing some criterions defined on the graph .
+For example Spectral Clustering is one kind of the most representative graph based clustering approaches, it generally aims to optimize some cut value (e.g .
+Normalized Cut [22], Ratio Cut [7], Min Max Cut [11]) defined on an undirected graph .
+After some relaxations, these criterions can usually be optimized via eigen decompositions, which is guaranteed to be global optimal .
+In this way, spectral clustering efficiently avoids the problems of the traditional partitioning methods as we introduced in last paragraph .
+In this paper, we propose a novel document clustering algorithm that inherits the superiority of spectral clustering, i.e .
+the final cluster results can also be obtained by exploit the eigen structure of a symmetric matrix .
+However, unlike spectral clustering, which just enforces a smoothness constraint on the data labels over the whole data manifold [2], our method first construct a regularized linear label predictor for each data point from its neighborhood as in [25], and then combine the results of all these local label predictors with a global label smoothness regularizer .
+So we call our method Clustering with Local and Global Regularization .
+The idea of incorporating both local and global information into label prediction is inspired by the recent works on semi supervised learning [31], and our experimental evaluations on several real document datasets show that CLGR performs better than many state of the art clustering methods .
+The rest of this paper is organized as follows
+The experimental results on several datasets are presented in section 3, followed by the conclusions and discussions in section 4. .

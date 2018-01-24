@@ -1,0 +1,401 @@
+Controlling Overlap in Content-Oriented XML Retrieval 
+content:
+1 ABSTRACT :
+1-1:The direct application of standard ranking techniques to retrieve individual elements from a collection of XML documents often produces a result set in which the top ranks are dominated by a large number of elements taken from a small number of highly relevant documents .
+1-2:This paper presents and evaluates an algorithm that re ranks this result set, with the aim of minimizing redundant content while preserving the benefits of element retrieval, including the benefit of identifying topic focused components contained within relevant documents .
+1-3:The test collection developed by the INitiative for the Evaluation of XML Retrieval forms the basis for the evaluation .
+1-4:H.3.3 [Information Systems]: Information Storage and .
+2 <abs><p><b>Abstract</b> For ...</p></abs> :
+2-1:The representation of documents in XML provides an opportunity for information retrieval systems to take advantage of document structure, returning individual document components when appropriate, rather than complete documents in all circumstances .
+2-2:In response to a user query, an XML information retrieval system might return a mixture of paragraphs, sections, articles, bibliographic entries and other components .
+2-3:This facility is of particular benefit when a collection contains very long documents, such as product manuals or books, where the user should be directed to the most relevant portions of these documents .
+2-4:<article> <fm> <atl>Text Compression for Dynamic Document Databases< atl> <au>Alistair Moffat< au> <au>Justin Zobel< au> <au>Neil Sharman< au> <abs><p><b>Abstract< b> For ...< p>< abs> < fm> <bdy> <sec><st>INTRODUCTION< st> <ip1>Modern document databases...< ip1> <p>There are good reasons to compress...< p> < sec> <sec><st>REDUCING MEMORY REQUIREMENTS< st>.. .
+2-5:<ss1><st>2.1 Method A< st>.. .
+2-6:< sec> .. .
+2-7:< bdy> < article> Figure 1: A journal article encoded in XML .
+2-8:Figure 1 provides an example of a journal article encoded in XML, illustrating many of the important characteristics of XML documents .
+2-9:Tags indicate the beginning and end of each element, with elements varying widely in size, from one word to thousands of words .
+2-10:Some elements, such as paragraphs and sections, may be reasonably presented to the user as retrieval results, but others are not appropriate .
+2-11:Elements overlap each other articles contain sections, sections contain subsections, and subsections contain paragraphs .
+2-12:Each of these characteristics affects the design of an XML IR system, and each leads to fundamental problems that must be solved in an successful system .
+2-13:Most of these fundamental problems can be solved through the careful adaptation of standard IR techniques, but the problems caused by overlap are unique to this area [4,11] and form the primary focus of this paper .
+2-14:The article of figure 1 may be viewed as an XML tree, as illustrated in figure 2 .
+2-15:Formally, a collection of XML documents may be represented as a forest of ordered, rooted trees, consisting of a set of nodes N and a set of directed edges E connecting these nodes .
+2-16:For each node x ∈ N , the notation x.parent refers to the parent node of x, if one exists, and the notation x.children refers to the set of child nodes sec bdyfm atl au au au abs p b st ip1 sec st ss1 st article p Figure 2: Example XML tree .
+2-17:of x .
+2-18:Since an element may be represented by the node at its root, the output of an XML IR system may be viewed as a ranked list of the top m nodes .
+2-19:The direct application of a standard relevance ranking technique to a set of XML elements can produce a result in which the top ranks are dominated by many structurally related elements .
+2-20:A high scoring section is likely to contain several high scoring paragraphs and to be contained in an high scoring article .
+2-21:For example, many of the elements in figure 2 would receive a high score on the keyword query text index compression algorithms .
+2-22:If each of these elements are presented to a user as an individual and separate result, she may waste considerable time reviewing and rejecting redundant content .
+2-23:One possible solution is to report only the highest scoring element along a given path in the tree, and to remove from the lower ranks any element containing it, or contained within it .
+2-24:Unfortunately, this approach destroys some of the possible benefits of XML IR .
+2-25:For example, an outer element may contain a substantial amount of information that does not appear in an inner element, but the inner element may be heavily focused on the query topic and provide a short overview of the key concepts .
+2-26:In such cases, it is reasonable to report elements which contain, or are contained in, higher ranking elements .
+2-27:Even when an entire book is relevant, a user may still wish to have the most important paragraphs highlighted, to guide her reading and to save time [6] .
+2-28:This paper presents a method for controlling overlap .
+2-29:Starting with an initial element ranking, a re ranking algorithm adjusts the scores of lower ranking elements that contain, or are contained within, higher ranking elements, reflecting the fact that this information may now be redundant .
+2-30:For example, once an element representing a section appears in the ranking, the scores for the paragraphs it contains and the article that contains it are reduced .
+2-31:The inspiration for this strategy comes partially from recent work on structured documents retrieval, where terms appearing in different fields, such as the title and body, are given different weights [20] .
+2-32:Extending that approach, the re ranking algorithm varies weights dynamically as elements are processed .
+2-33:The remainder of the paper is organized as follows: After a discussion of background work and evaluation methodology, a baseline retrieval method is presented in section 4 .
+2-34:This baseline method represents a reasonable adaptation of standard IR technology to XML .
+2-35:Section 5 then outlines a strategy for controlling overlap, using the baseline method as a starting point .
+2-36:A re ranking algorithm implementing this strategy is presented in section 6 and evaluated in section 7 .
+2-37:Section 8 discusses an extended version of the algorithm. .
+3 BACKGROUND :
+3-1:This section provides a general overview of XML information retrieval and discusses related work, with an emphasis on the fundamental problems mentioned in the introduction .
+3-2:Much research in the area of XML retrieval views it from a traditional database perspective, being concerned with such problems as the implementation of structured query languages [5] and the processing of joins [1] .
+3-3:Here, we take a content oriented IR perceptive, focusing on XML documents that primarily contain natural language data and queries that are primarily expressed in natural language .
+3-4:We assume that these queries indicate only the nature of desired content, not its structure, and that the role of the IR system is to determine which elements best satisfy the underlying information need .
+3-5:Other IR research has considered mixed queries, in which both content and structural requirements are specified [2,6,14,17,23] .
+3-6:2.1 Term and Document Statistics In traditional information retrieval applications the standard unit of retrieval is taken to be the document .
+3-7:Depending on the application, this term might be interpreted to encompass many different objects, including web pages, newspaper articles and email messages .
+3-8:When applying standard relevance ranking techniques in the context of XML IR, a natural approach is to treat each element as a separate document, with term statistics available for each [16] .
+3-9:In addition, most ranking techniques require global statistics (e.g .
+3-10:inverse document frequency) computed over the collection as a whole .
+3-11:If we consider this collection to include all elements that might be returned by the system, a specific occurrence of a term may appear in several different documents, perhaps in elements representing a paragraph, a subsection, a section and an article .
+3-12:It is not appropriate to compute inverse document frequency under the assumption that the term is contained in all of these elements, since the number of elements that contain a term depends entirely on the structural arrangement of the documents [13,23] .
+3-13:2.2 Retrievable Elements While an XML IR system might potentially retrieve any element, many elements may not be appropriate as retrieval results .
+3-14:This is usually the case when elements contain very little text [10] .
+3-15:For example, a section title containing only the query terms may receive a high score from a ranking algorithm, but alone it would be of limited value to a user, who might prefer the actual section itself .
+3-16:Other elements may reflect the document"s physical, rather than logical, structure, which may have little or no meaning to a user .
+3-17:An effective XML IR system must return only those elements that have sufficient content to be usable and are able to stand alone as independent objects [15,18] .
+3-18:Standard document components such as paragraphs, sections, subsections, and abstracts usually meet these requirements; titles, italicized phrases, and individual metadata fields often do not .
+3-19:2.3 Evaluation Methodology Over the past three years, the INitiative for the Evaluation of XML Retrieval has encouraged research into XML information retrieval technology [7,8] .
+3-20:INEX is an experimental conference series, similar to TREC, with groups from different institutions completing one or more experimental tasks using their own tools and systems, and comparing their results at the conference itself .
+3-21:Over 50 groups participated in INEX 2004, and the conference has become as influential in the area of XML IR as TREC is in other IR areas .
+3-22:The research described in this paper, as well as much of the related work it cites, depends on the test collections developed by INEX .
+3-23:Overlap causes considerable problems with retrieval evaluation, and the INEX organizers and participants have wrestled with these problems since the beginning .
+3-24:While substantial progress has been made, these problem are still not completely solved .
+3-25:Kazai et al .
+3-26:[11] provide a detailed exposition of the overlap problem in the context of INEX retrieval evaluation and discuss both current and proposed evaluation metrics .
+3-27:Many of these metrics are applied to evaluate the experiments reported in this paper, and they are briefly outlined in the next section. .
+4 INEX 2004 :
+4-1:Space limitations prevent the inclusion of more than a brief summary of INEX 2004 tasks and evaluation methodology .
+4-2:For detailed information, the proceedings of the conference itself should be consulted [8] .
+4-3:3.1 Tasks For the main experimental tasks, INEX 2004 participants were provided with a collection of 12,107 articles taken from the IEEE Computer Societies magazines and journals between 1995 and 2002 .
+4-4:Each document is encoded in XML using a common DTD, with the document of figures 1 and 2 providing one example .
+4-5:At INEX 2004, the two main experimental tasks were both adhoc retrieval tasks, investigating the performance of systems searching a static collection using previously unseen topics .
+4-6:The two tasks differed in the types of topics they used .
+4-7:For one task, the content only or CO task, the topics consist of short natural language statements with no direct reference to the structure of the documents in the collection .
+4-8:For this task, the IR system is required to select the elements to be returned .
+4-9:For the other task, the contentand structure or CAS task, the topics are written in an XML query language [22] and contain explicit references to document structure, which the IR system must attempt to satisfy .
+4-10:Since the work described in this paper is directed at the content only task, where the IR system receives no guidance regarding the elements to return, the CAS task is ignored in the remainder of our description .
+4-11:In 2004, 40 new CO topics were selected by the conference organizers from contributions provided by the conference participants .
+4-12:Each topic includes a short keyword query, which is executed over the collection by each participating group on their own XML IR system .
+4-13:Each group could submit up to three experimental runs consisting of the top m = 1500 elements for each topic .
+4-14:3.2 Relevance Assessment Since XML IR is concerned with locating those elements that provide complete coverage of a topic while containing as little extraneous information as possible, simple relevant vs .
+4-15:not relevant judgments are not sufficient .
+4-16:Instead, the INEX organizers adopted two dimensions for relevance assessment: The exhaustivity dimension reflects the degree to which an element covers the topic, and the specificity dimension reflects the degree to which an element is focused on the topic .
+4-17:A four point scale is used in both dimensions .
+4-18:Thus, a (3,3) element is highly exhaustive and highly specific, a (1,3) element is marginally exhaustive and highly specific, and a (0,0) element is not relevant .
+4-19:Additional information on the assessment methodology may be found in Piwowarski and Lalmas [19], who provide a detailed rationale .
+4-20:3.3 Evaluation Metrics The principle evaluation metric used at INEX 2004 is a version of mean average precision (MAP), adjusted by various quantization functions to give different weights to different elements, depending on their exhaustivity and specificity values .
+4-21:One variant, the strict quantization function gives a weight of 1 to (3,3) elements and a weight of 0 to all others .
+4-22:This variant is essentially the familiar MAP value, with (3,3) elements treated as relevant and all other elements treated as not relevant .
+4-23:Other quantization functions are designed to give partial credit to elements which are near misses, due to a lack or exhaustivity and or specificity .
+4-24:Both the generalized quantization function and the specificity oriented generalization (sog) function credit elements according to their degree of relevance [11], with the second function placing greater emphasis on specificity .
+4-25:This paper reports results of this metric using all three of these quantization functions .
+4-26:Since this metric was first introduced at INEX 2002, it is generally referred as the inex 2002 metric .
+4-27:The inex 2002 metric does not penalize overlap .
+4-28:In particular, both the generalized and sog quantization functions give partial credit to a near miss even when a (3,3) element overlapping it is reported at a higher rank .
+4-29:To address this problem, Kazai et al .
+4-30:[11] propose an XML cumulated gain metric, which compares the cumulated gain [9] of a ranked list to an ideal gain vector .
+4-31:This ideal gain vector is constructed from the relevance judgments by eliminating overlap and retaining only best element along a given path .
+4-32:Thus, the XCG metric rewards retrieval runs that avoid overlap .
+4-33:While XCG was not used officially at INEX 2004, a version of it is likely to be used in the future .
+4-34:At INEX 2003, yet another metric was introduced to ameliorate the perceived limitations of the inex 2002 metric .
+4-35:This inex 2003 metric extends the definitions of precision and recall to consider both the size of reported components and the overlap between them .
+4-36:Two versions were created, one that considered only component size and another that considered both size and overlap .
+4-37:While the inex 2003 metric exhibits undesirable anomalies [11], and was not used in 2004, values are reported in the evaluation section to provide an additional instrument for investigating overlap. .
+5 BASELINE RETRIEVAL METHOD :
+5-1:This section provides an overview of baseline XML information retrieval method currently used in the MultiText IR system, developed by the Information Retrieval Group at the University of Waterloo [3] .
+5-2:This retrieval method results from the adaptation and tuning of the Okapi BM25 measure [21] to the XML information retrieval task .
+5-3:The MultiText system performed respectably at INEX 2004, placing in the top ten under all of the quantization functions, and placing first when the quantization function emphasized exhaustivity .
+5-4:To support retrieval from XML and other structured document types, the system provides generalized queries of the form: rank X by Y where X is a sub query specifying a set of document elements to be ranked and Y is a vector of sub queries specifying individual retrieval terms .
+5-5:For our INEX 2004 runs, the sub query X specified a list of retrievable elements as those with tag names as follows: abs app article bb bdy bm fig fm ip1 li p sec ss1 ss2 vt This list includes bibliographic entries (bb) and figure captions (fig) as well as paragraphs, sections and subsections .
+5-6:Prior to INEX 2004, the INEX collection and the INEX 2003 relevance judgments were manually analyzed to select these tag names .
+5-7:Tag names were selected on the basis of their frequency in the collection, the average size of their associated elements, and the relative number of positive relevance judgments they received .
+5-8:Automating this selection process is planned as future work .
+5-9:For INEX 2004, the term vector Y was derived from the topic by splitting phrases into individual words, eliminating stopwords and negative terms (those starting with ), and applying a stemmer .
+5-10:For example, keyword field of topic 166 +"tree edit distance" + XML image became the four term query "$tree" "$edit" "$distance" "$xml" where the $ operator within a quoted string stems the term that follows it .
+5-11:Our implementation of Okapi BM25 is derived from the formula of Robertson et al .
+5-12:[21] by setting parameters k2 = 0 and k3 = ∞ .
+5-13:Given a term set Q, an element x is assigned the score   t∈Q w(1) qt (k1 + 1)xt K + xt (1) where w(1) = log ¡ D − Dt + 0.5 Dt + 0.5 ¢ D = number of documents in the corpus Dt = number of documents containing t qt = frequency that t occurs in the topic xt = frequency that t occurs in x K = k1((1 − b) + b · lx lavg) lx = length of x lavg = average document length 0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.14 0.15 0 2 4 6 8 10 12 14 16 MeanAveragePrecision(inex 2002) k1 strict generalized sog Figure 3: Impact of k1 on inex 2002 mean average precision with b = 0.75 (INEX 2003 CO topics) .
+5-14:Prior to INEX 2004, the INEX 2003 topics and judgments were used to tune the b and k1 parameters, and the impact of this tuning is discussed later in this section .
+5-15:For the purposes of computing document level statistics (D, Dt and lavg) a document is defined to be an article .
+5-16:These statistics are used for ranking all element types .
+5-17:Following the suggestion of Kamps et al .
+5-18:[10], the retrieval results are filtered to eliminate very short elements, those less than 25 words in length .
+5-19:The use of article statistics for all element types might be questioned .
+5-20:This approach may be justified by viewing the collection as a set of articles to be searched using standard document oriented techniques, where only articles may be returned .
+5-21:The score computed for an element is essentially the score it would receive if it were added to the collection as a new document, ignoring the minor adjustments needed to the document level statistics .
+5-22:Nonetheless, we plan to examine this issue again in the future .
+5-23:In our experience, the performance of BM25 typically benefits from tuning the b and k1 parameters to the collection, whenever training queries are available for this purpose .
+5-24:Prior to INEX 2004, we trained the MultiText system using the INEX 2003 queries .
+5-25:As a starting point we used the values b = 0.75 and k1 = 1.2, which perform well on TREC adhoc collections and are used as default values in our system .
+5-26:The results were surprising .
+5-27:Figure 3 shows the result of varying k1 with b = 0.75 on the MAP values under three quantization functions .
+5-28:In our experience, optimal values for k1 are typically in the range 0.0 to 2.0 .
+5-29:In this case, large values are required for good performance .
+5-30:Between k1 = 1.0 and k1 = 6.0 MAP increases by over 15% under the strict quantization .
+5-31:Similar improvements are seen under the generalized and sog quantizations .
+5-32:In contrast, our default value of b = 0.75 works well under all quantization functions (figure 4) .
+5-33:After tuning over a wide range of values under several quantization functions, we selected values of k = 10.0 and b = 0.80 for our INEX 2004 experiments, and these values are used for the experiments reported in section 7 .
+5-34:0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.14 0.15 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 MeanAveragePrecision(inex 2002) b strict generalized sog Figure 4: Impact of b on inex 2002 mean average precision with k1 = 10 (INEX 2003 CO topics). .
+6 CONTROLLING OVERLAP :
+6-1:Starting with an element ranking generated by the baseline method described in the previous section, elements are re ranked to control overlap by iteratively adjusting the scores of those elements containing or contained in higher ranking elements .
+6-2:At a conceptual level, re ranking proceeds as follows: .
+7 Report the highest ranking element. :
+7-1:One approach to adjusting the scores of unreported elements in step 2 might be based on the Okapi BM25 scores of the involved elements .
+7-2:For example, assume a paragraph with score p is reported in step 1 .
+7-3:In step 2, the section containing the paragraph might then have its score s lowered by an amount α · p to reflect the reduced contribution the paragraph should make to the section"s score .
+7-4:In a related context, Robertson et al .
+7-5:[20] argue strongly against the linear combination of Okapi scores in this fashion .
+7-6:That work considers the problem of assigning different weights to different document fields, such as the title and body associated with Web pages .
+7-7:A common approach to this problem scores the title and body separately and generates a final score as a linear combination of the two .
+7-8:Robertson et al .
+7-9:discuss the theoretical flaws in this approach and demonstrate experimentally that it can actually harm retrieval effectiveness .
+7-10:Instead, they apply the weights at the term frequency level, with an occurrence of a query term t in the title making a greater contribution to the score than an occurrence in the body .
+7-11:In equation 1, xt becomes α0 · yt + α1 · zt, where yt is the number of times t occurs in the title and zt is the number of times t occurs in the body .
+7-12:Translating this approach to our context, the contribution of terms appearing in elements is dynamically reduced as they are reported .
+7-13:The next section presents and analysis a simple re ranking algorithm that follows this strategy .
+7-14:The algorithm is evaluated experimentally in section 7 .
+7-15:One limitation of the algorithm is that the contribution of terms appearing in reported elements is reduced by the same factor regardless of the number of reported elements in which it appears .
+7-16:In section 8 the algorithm is extended to apply increasing weights, lowering the score, when a term appears in more than one reported element. .
+8 RE RANKING ALGORITHM :
+8-1:The re ranking algorithm operates over XML trees, such as the one appearing in figure 2 .
+8-2:Input to the algorithm is a list of n elements ranked according to their initial BM25 scores .
+8-3:During the initial ranking the XML tree is dynamically re constructed to include only those nodes with nonzero BM25 scores, so n may be considerably less than |N | .
+8-4:Output from the algorithm is a list of the top m elements, ranked according to their adjusted scores .
+8-5:An element is represented by the node x ∈ N at its root .
+8-6:Associated with this node are fields storing the length of element, term frequencies, and other information required by the re ranking algorithm, as follows: x.f term frequency vector x.g term frequency adjustments x.l element length x.score current Okapi BM25 score x.reported boolean flag, initially false x.children set of child nodes x.parent parent node, if one exists These fields are populated during the initial ranking process, and updated as the algorithm progresses .
+8-7:The vector x.f contains term frequency information corresponding to each term in the query .
+8-8:The vector x.g is initially zero and is updated by the algorithm as elements are reported .
+8-9:The score field contains the current BM25 score for the element, which will change as the values in x.g change .
+8-10:The score is computed using equation 1, with the xt value for each term determined by a combination of the values in x.f and x.g .
+8-11:Given a term t ∈ Q, let ft be the component of x.f corresponding to t, and let gt be the component of x.g corresponding to t, then: xt = ft − α · gt (2) For processing by the re ranking algorithm, nodes are stored in priority queues, ordered by decreasing score .
+8-12:Each priority queue PQ supports three operations: PQ.front() returns the node with greatest score PQ.add (x) adds node x to the queue PQ.remove(x) removes node x from the queue When implemented using standard data structures, the front operation requires O(1) time, and the other operations require O(log n) time, where n is the size of the queue .
+8-13:The core of the re ranking algorithm is presented in figure 5 .
+8-14:The algorithm takes as input the priority queue S containing the initial ranking, and produces the top m reranked nodes in the priority queue F .
+8-15:After initializing F to be empty on line 1, the algorithm loops m times over lines 215, transferring at least one node from S to F during each iteration .
+8-16:At the start of each iteration, the unreported node at the front of S has the greatest adjusted score, and it is removed and added to F .
+8-17:The algorithm then traverses the 1 F ← ∅ 2 for i ← 1 to m do 3 x ← S.front() 4 S.remove(x) 5 x.reported ← true 6 F.add(x) 7 8 foreach y ∈ x.children do 9 Down (y) 10 end do 11 12 if x is not a root node then 13 Up (x, x.parent) 14 end if 15 end do Figure 5: Re Ranking Algorithm As input, the algorithm takes a priority queue S, containing XML nodes ranked by their initial scores, and returns its results in priority queue F, ranked by adjusted scores .
+8-18:1 Up(x, y) ≡ 2 S.remove(y) 3 y.g ← y.g + x.f − x.g 4 recompute y.score 5 S.add(y) 6 if y is not a root node then 7 Up (x, y.parent) 8 end if 9 10 Down(x) ≡ 11 if not x.reported then 12 S.remove(x) 14 x.g ← x.f 15 recompute x.score 16 if x.score > 0 then 17 F.add(x) 18 end if 19 x.reported ← true 20 foreach y ∈ x.children do 21 Down (y) 22 end do 23 end if Figure 6: Tree traversal routines called by the reranking algorithm .
+8-19:0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.25 0.26 0.27 0.28 0.29 0.30 0.31 0.32 0.33 0.34 0.35 0.36 MeanAveragePrecision(inex 2002) XMLCumulatedGain(XCG) alpha MAP (strict) MAP (generalized) MAP (sog) XCG (sog2) Figure 7: Impact of α on XCG and inex 2002 MAP (INEX 2004 CO topics; assessment set I) .
+8-20:node"s ancestors (lines 8 10) and descendants (lines 12 14) adjusting the scores of these nodes .
+8-21:The tree traversal routines, Up and Down are given in figure 6 .
+8-22:The Up routine removes each ancestor node from S, adjusts its term frequency values, recomputes its score, and adds it back into S .
+8-23:The adjustment of the term frequency values (line 3) adds to y.g only the previously unreported term occurrences in x .
+8-24:Re computation of the score on line 4 uses equations 1 and 2 .
+8-25:The Down routine performs a similar operation on each descendant .
+8-26:However, since the contents of each descendant are entirely contained in a reported element its final score may be computed, and it is removed from S and added to F .
+8-27:In order to determine the time complexity of the algorithm, first note that a node may be an argument to Down at most once .
+8-28:Thereafter, the reported flag of its parent is true .
+8-29:During each call to Down a node may be moved from S to F, requiring O(log n) time .
+8-30:Thus, the total time for all calls to Down is O(n log n), and we may temporarily ignore lines 8 10 of figure 5 when considering the time complexity of the loop over lines 2 15 .
+8-31:During each iteration of this loop, a node and each of its ancestors are removed from a priority queue and then added back into a priority queue .
+8-32:Since a node may have at most h ancestors, where h is the maximum height of any tree in the collection, each of the m iterations requires O(h log n) time .
+8-33:Combining these observations produces an overall time complexity of O((n + mh) log n) .
+8-34:In practice, re ranking an INEX result set requires less than 200ms on a three year old desktop PC. .
+9 EVALUATION :
+9-1:None of the metrics described in section 3.3 is a close fit with the view of overlap advocated by this paper .
+9-2:Nonetheless, when taken together they provide insight into the behaviour of the re ranking algorithm .
+9-3:The INEX evaluation packages (inex_eval and inex_eval_ng) were used to compute values for the inex 2002 and inex 2003 metrics .
+9-4:Values for the XCG metrics were computed using software supplied by its inventors [11] .
+9-5:Figure 7 plots the three variants of inex 2002 MAP metric together with the XCG metric .
+9-6:Values for these metrics 0.0 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.18 0.20 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 MeanAveragePrecision(inex 2003) alpha strict, overlap not considered strict, overlap considered generalized, overlap not considered generalized, overlap considered Figure 8: Impact of α on inex 2003 MAP (INEX 2004 CO topics; assessment set I) .
+9-7:are plotted for values of α between 0.0 and 1.0 .
+9-8:Recalling that the XCG metric is designed to penalize overlap, while the inex 2002 metric ignores overlap, the conflict between the metrics is obvious .
+9-9:The MAP values at one extreme (α = 0.0) and the XCG value at the other extreme (α = 1.0) represent retrieval performance comparable to the best systems at INEX 2004 [8,12] .
+9-10:Figure 8 plots values of the inex 2003 MAP metric for two quantizations, with and without consideration of overlap .
+9-11:Once again, conflict is apparent, with the influence of α substantially lessened when overlap is considered. .
+10 EXTENDED ALGORITHM :
+10-1:One limitation of the re ranking algorithm is that a single weight α is used to adjust the scores of both the ancestors and descendants of reported elements .
+10-2:An obvious extension is to use different weights in these two cases .
+10-3:Furthermore, the same weight is used regardless of the number of times an element is contained in a reported element .
+10-4:For example, a paragraph may form part of a reported section and then form part of a reported article .
+10-5:Since the user may now have seen this paragraph twice, its score should be further lowered by increasing the value of the weight .
+10-6:Motivated by these observations, the re ranking algorithm may be extended with a series of weights 1 = β0 ≥ β1 ≥ β2 ≥ .. .
+10-7:≥ βM ≥ 0 .
+10-8:where βj is the weight applied to a node that has been a descendant of a reported node j times .
+10-9:Note that an upper bound on M is h, the maximum height of any XML tree in the collection .
+10-10:However, in practice M is likely to be relatively small (perhaps 3 or 4) .
+10-11:Figure 9 presents replacements for the Up and Down routines of figure 6, incorporating this series of weights .
+10-12:One extra field is required in each node, as follows: x.j down count The value of x.j is initially set to zero in all nodes and is incremented each time Down is called with x as its argument .
+10-13:When computing the score of node, the value of x.j selects 1 Up(x, y) ≡ 2 if not y.reported then 3 S.remove(y) 4 y.g ← y.g + x.f − x.g 5 recompute y.score 6 S.add(y) 8 if y is not a root node then 9 Up (x, y.parent) 10 end if 11 end if 12 13 Down(x) ≡ 14 if x.j < M then 15 x.j ← x.j + 1 16 if not x.reported then 17 S.remove(x) 18 recompute x.score 19 S.add(x) 20 end if 21 foreach y ∈ x.children do 22 Down (y) 23 end do 24 end if Figure 9: Extended tree traversal routines .
+10-14:the weight to be applied to the node by adjusting the value of xt in equation 1, as follows: xt = βx.j · (ft − α · gt) (3) where ft and gt are the components of x.f and x.g corresponding to term t .
+10-15:A few additional changes are required to extend Up and Down .
+10-16:The Up routine returns immediately (line 2) if its argument has already been reported, since term frequencies have already been adjusted in its ancestors .
+10-17:The Down routine does not report its argument, but instead recomputes its score and adds it back into S .
+10-18:A node cannot be an argument to Down more than M +1 times, which in turn implies an overall time complexity of O((nM + mh) log n) .
+10-19:Since M ≤ h and m ≤ n, the time complexity is also O(nh log n). .
+11-1:When generating retrieval results over an XML collection, some overlap in the results should be tolerated, and may be beneficial
+11-2:For example, when a highly exhaustive and fairly specific (3,2) element contains a much smaller (2,3) element, both should be reported to the user, and retrieval algorithms and evaluation metrics should respect this relationship
+11-3:The algorithm presented in this paper controls overlap by weighting the terms occurring in reported elements to reflect their reduced importance
+11-4:Other approaches may also help to control overlap
+11-5:For example, when XML retrieval results are presented to users it may be desirable to cluster structurally related elements together, visually illustrating the relationships between them
+11-6:While this style of user interface may help a user cope with overlap, the strategy presented in this paper continues to be applicable, by determining the best elements to include in each cluster
+11-7:At Waterloo, we continue to develop and test our ideas for INEX 2005
+11-8:In particular, we are investigating methods for learning the α and βj weights
+11-9:We are also re evaluating our approach to document statistics and examining appropriate adjustments to the k1 parameter as term weights change [20]
+11-10:10
+11-11:ACKNOWLEDGMENTS Thanks to Gabriella Kazai and Arjen de Vries for providing an early version of their software for computing the XCG metric, and thanks to Phil Tilker and Stefan B¨uttcher for their help with the experimental evaluation
+11-12:In part, funding for this project was provided by IBM Canada through the National Institute for Software Research
+11-13:11
+11-14:REFERENCES
+12-1:N
+12-2:Bruno, N
+12-3:Koudas, and D
+12-4:Srivastava
+12-5:Holistic twig joins: Optimal XML pattern matching
+12-6:In Proceedings of the 2002 ACM SIGMOD International Conference on the Management of Data, pages 310 321, Madison, Wisconsin, June 2002
+12-7:D
+12-8:Carmel, Y
+12-9:S
+12-10:Maarek, M
+12-11:Mandelbrod, Y
+12-12:Mass, and A
+12-13:Soffer
+12-14:Searching XML documents via XML fragments
+12-15:In Proceedings of the 26th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 151 158, Toronto, Canada, 2003
+12-16:C
+12-17:L
+12-18:A
+12-19:Clarke and P
+12-20:L
+12-21:Tilker
+12-22:MultiText experiments for INEX 2004
+12-23:In INEX 2004 Workshop
+12-24:A
+12-25:P
+12-26:de Vries, G
+12-27:Kazai, and M
+12-28:Lalmas
+12-29:Tolerance to irrelevance: A user effort oriented evaluation of retrieval systems without predefined retrieval unit
+12-30:In RIAO 2004 Conference Proceedings, pages 463 473, Avignon, France, April 2004
+12-31:D
+12-32:DeHaan, D
+12-33:Toman, M
+12-34:P
+12-35:Consens, and M
+12-36:T
+12-37:¨Ozsu
+12-38:A comprehensive XQuery to SQL translation using dynamic interval encoding
+12-39:In Proceedings of the 2003 ACM SIGMOD International Conference on the Management of Data, San Diego, June 2003
+12-40:N
+12-41:Fuhr and K
+12-42:Großjohann
+12-43:XIRQL: A query language for information retrieval in XML documents
+12-44:In Proceedings of the 24th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 172 180, New Orleans, September 2001
+12-45:N
+12-46:Fuhr, M
+12-47:Lalmas, and S
+12-48:Malik, editors
+12-49:Initiative for the Evaluation of XML Retrieval
+12-50:Proceedings of the Second Workshop (INEX 2003), Dagstuhl, Germany, December 2003
+12-51:N
+12-52:Fuhr, M
+12-53:Lalmas, S
+12-54:Malik, and Zolt´an Szl´avik, editors
+12-55:Initiative for the Evaluation of XML Retrieval
+12-56:Proceedings of the Third Workshop (INEX 2004), Dagstuhl, Germany, December 2004
+12-57:Published as Advances in XML Information Retrieval, Lecture Notes in Computer Science, volume 3493, Springer, 2005
+12-58:K
+12-59:J¨avelin and J
+12-60:Kek¨al¨ainen
+12-61:Cumulated gain based evaluation of IR techniques
+12-62:ACM Transactions on Information Systems, 20(4):422 446, 2002
+12-63:J
+12-64:Kamps, M
+12-65:de Rijke, and B
+12-66:Sigurbj¨ornsson
+12-67:Length normalization in XML retrieval
+12-68:In Proceedings of the 27th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 80 87, Sheffield, UK, July 2004
+12-69:G
+12-70:Kazai, M
+12-71:Lalmas, and A
+12-72:P
+12-73:de Vries
+12-74:The overlap problem in content oriented XML retrieval evaluation
+12-75:In Proceedings of the 27th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 72 79, Sheffield, UK, July 2004
+12-76:G
+12-77:Kazai, M
+12-78:Lalmas, and A
+12-79:P
+12-80:de Vries
+12-81:Reliability tests for the XCG and inex 2002 metrics
+12-82:In INEX 2004 Workshop Proceedings, 2004
+12-83:Published in LNCS
+12-84:J
+12-85:Kek¨al¨ainen, M
+12-86:Junkkari, P
+12-87:Arvola, and T
+12-88:Aalto
+12-89:TRIX 2004  Struggling with the overlap
+12-90:In INEX 2004 Workshop Proceedings, 2004
+12-91:Published in LNCS
+12-92:S
+12-93:Liu, Q
+12-94:Zou, and W
+12-95:W
+12-96:Chu
+12-97:Configurable indexing and ranking for XML information retrieval
+12-98:In Proceedings of the 27th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 88 95, Sheffield, UK, July 2004
+12-99:Y
+12-100:Mass and M
+12-101:Mandelbrod
+12-102:Retrieving the most relevant XML components
+12-103:In INEX 2003 Workshop Proceedings, Dagstuhl, Germany, December 2003
+12-104:Y
+12-105:Mass and M
+12-106:Mandelbrod
+12-107:Component ranking and automatic query refinement for XML retrieval
+12-108:In INEX 2004 Workshop Proceedings, 2004
+12-109:Published in
+12-110:P
+12-111:Ogilvie and J
+12-112:Callan
+12-113:Hierarchical language models for XML component retrieval
+12-114:In INEX 2004 Workshop Proceedings, 2004
+12-115:Published in LNCS
+12-116:J
+12-117:Pehcevski, J
+12-118:A
+12-119:Thom, and A
+12-120:Vercoustre
+12-121:Hybrid XML retrieval re visited
+12-122:In INEX 2004 Workshop
+12-123:B
+12-124:Piwowarski and M
+12-125:Lalmas
+12-126:Providing consistent and exhaustive relevance assessments for XML retrieval evaluation
+12-127:In Proceedings of the 13th ACM Conference on Information and Knowledge Management, pages 361 370, Washington, DC, November 2004
+12-128:S
+12-129:Robertson, H
+12-130:Zaragoza, and M
+12-131:Taylor
+12-132:Simple BM25 extension to multiple weighted fields
+12-133:In Proceedings of the 13th ACM Conference on Information and Knowledge Management, pages 42 50, Washington, DC, November 2004
+12-134:S
+12-135:E
+12-136:Robertson, S
+12-137:Walker, and M
+12-138:Beaulieu
+12-139:Okapi at TREC 7: Automatic ad hoc, filtering, VLC and interactive track
+12-140:In Proceedings of the Seventh Text REtrieval Conference, Gaithersburg, MD, November 1998
+12-141:A
+12-142:Trotman and B
+12-143:Sigurbj¨ornsson
+12-144:NEXI, now and next
+12-145:In INEX 2004 Workshop Proceedings, 2004
+12-146:
+12-147:J
+12-148:Vittaut, B
+12-149:Piwowarski, and P
+12-150:Gallinari
+12-151:An algebra for structured queries in bayesian networks
+12-152:In INEX 2004 Workshop Proceedings, 2004
+12-153:Published in
+picture:

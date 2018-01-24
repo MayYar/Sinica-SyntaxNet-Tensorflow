@@ -1,0 +1,82 @@
+In MASs agents interact according to protocols which naturally are distributed .
+We advocate that actions in one such protocol may have an effect on the enactment of other protocols .
+Certain actions can become prohibited or obligatory, for example .
+We take normative positions to be obligations, prohibitions and permissions akin to work described in [26] .
+The intention of adding or removing a normative position we call normative command .
+Occurrences of normative positions in one protocol may also have consequences for other protocols1 .
+In order to define our norm language and specify how normative positions are propagated, we have been inspired by multi context systems [14] .
+These systems allow the structuring of knowledge into distinct formal theories and the definition of relationships between them .
+The relationships are expressed as bridge rules deducibility of formulae in some contexts leads to the deduction of other formulae in other contexts .
+Recently, these systems have been successfully used to define agent architectures [11, 23] .
+The metaphor translates to our current work as follows
+We are concerned with the propagation and distribution of normative positions within a network of distributed, normative scenes as a consequence of agents" actions .
+We take normative scenes to be sets of normative positions and utterances that are associated with an underlying interaction protocol corresponding to an activity .
+In this section, we first present a simple language capturing these aspects and formally introduce the notions of normative scene, normative transition rule and normative structure .
+We give the intended semantics of these rules and show how to control a MAS via norms in an example .
+3.1 Basic Concepts The building blocks of our language are terms and atomic formulae
+1 .
+A term, denoted as t, is (i) any constant expressed using lowercase (with or without subscripts), e.g .
+a, b0, c or (ii) any variable expressed using uppercase (with or without subscripts), e.g .
+X, Y, Zb or (iii) any function f(t1, .
+.
+.
+, tn), where f is an n ary function symbol and t1, .., tn are terms .
+Some examples of terms and functions are Credit, price or offer(bible, 30) being respectively a variable, a constant and a function .
+We will be making use of identifiers throughout the paper, which are constant terms and also need the following definition
+2 .
+An atomic formula is any construct p(t1, .
+.
+.
+, tn), where p is an n ary predicate symbol and t1, .
+.
+.
+, tn are terms .
+The set of all atomic formulae is denoted as £G .
+We focus on an expressive class of MASs in which interaction is carried out by means of illocutionary speech acts exchanged among participating agents
+3 .
+Illocutions I are ground atomic formulae which have the form p(ag, r, ag , r , £_, t) where p is an element of 1 Here, we abstract from protocols and refer to them generically as activities .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 637 a set of illocutionary particles (e.g .
+inform, request, offer); ag, ag are agent identifiers; r, r are role identifiers; £_, an arbitrary ground term, is the content of the message, built from a shared content language; t ? N is a time stamp .
+The intuitive meaning of p(ag, r, ag , r , m, t) is that agent ag playing role r sent message m to agent ag playing role r at time t .
+An example of an illocution is inform(ag4, supp, ag3, client, offer(wire, 12), 10) .
+Sometimes it is useful to refer to illocutions that are not fully grounded, that is, those that may contain uninstantiated (free) variables .
+In the description of a protocol, for instance, the precise values of the message exchanged can be left unspecified .
+During the enactment of the protocol agents will produce the actual values which will give rise to a ground illocution .
+We can thus define illocution schemata
+4 .
+An illocution schema ¡ÂI is any atomic formula p(ag, r, ag , r , £_, t) in which some of the terms may either be variables or may contain variables .
+3.2 Formal Definition of the Notion of NS We first define normative scenes as follows
+5 .
+A normative scene is a tuple s = ids, £Gs where ids is a scene identifier and £Gs is the set of atomic formulae £_ (i.e .
+utterances and normative positions) that hold in s .
+We will also refer to £Gs as the state of normative scene s .
+For instance, a snapshot of the state of the delivery normative scene of our scenario could be represented as
+Note that the state of a normative scene £Gs evolves over time .
+These normative scenes are connected to one another via normative transitions that specify how utterances and normative positions in one scene affect other normative scenes .
+As mentioned above, activities are not independent since illocutions uttered in some of them may have an effect on other ones .
+Normative transition rules define the conditions under which a normative command is generated .
+These conditions are either utterances or normative positions associated with a given protocol (denoted e.g .
+activity 
+the addition or removal of another normative position, possibly related to a different activity .
+Our transition rules are thus defined
+6 .
+A normative transition rule R is of the form
+permission, prohibition or obligation), ids is an identifier for activity s and C is a normative command .
+We endow our language with the usual semantics of rulebased languages [19] .
+Rules map an existing normative structure to a new normative structure where only the state of the normative scenes change .
+In the definitions below we rely on the standard concept of substitution [9] .
+Def .
+7 .
+A normative transition is a tuple b = idb, rb where idb is an identifier and rb is a normative transition rule .
+We are proposing to extend the notion of MAS, regulated by protocols, with an extra layer consisting of normative scenes and normative transitions .
+This layer is represented as a bi partite graph that we term normative structure .
+A normative structure relates normative scenes and normative transitions specifying which normative positions are to be generated or removed in which normative scenes .
+Def .
+8 .
+A normative structure is a labelled bi partite graph NS = Nodes, Edges, Lin , Lout .
+Nodes is a set S¡åB where S is a set of normative scenes and B is a set of normative transitions .
+Edges is a set Ain ¡å Aout where Ain ? S ¡Ñ B is a set of input arcs labelled with an atomic formula using the labelling function Lin 
+The following must hold
+must be of the form add(ids 

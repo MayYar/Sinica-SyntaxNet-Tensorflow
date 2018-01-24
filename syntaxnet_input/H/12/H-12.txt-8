@@ -1,0 +1,30 @@
+In this paper we have described the algorithms and compression scheme that would make a good Snippet Engine sub system for generating text snippets of the type shown on the results pages of well known Web search engines
+Our experiments not only show that our scheme is over 50% faster than the obvious baseline, but also reveal some very important aspects of the snippet generation problem
+Primarily, caching documents avoids seek costs to secondary memory for each document that is to be summarized, and is vital for fast snippet generation
+Our caching simulations show that if as little as 1% of the documents can be cached in RAM as part of the Snippet Engine, possibly distributed over many machines, then around 75% of seeks can be avoided
+Our second major result is that keeping only half of each document in RAM, effectively doubling the cache size, has little affect on the quality of the final snippets generated from those half documents, provided that the sentences that are kept in memory are chosen using the Significant Term algorithm of Luhn [12]
+Both our document compression and compaction schemes dramatically reduce the time taken to generate snippets
+Note that these results are generated using a 100Gb subset of the Web, and the Excite query log gathered from the same period as that subset was created
+We are assuming, as there is no evidence to the contrary, that this collection and log is representative of search engine input in other domains
+In particular, we can scale our results to examine what resources would be required, using our scheme, to provide a Snippet Engine for the entire World Wide Web
+We will assume that the Snippet Engine is distributed across M machines, and that there are N web pages in the collection to be indexed and served by the search engine
+We also assume a balanced load for each machine, so each machine serves about N M documents, which is easily achieved in practice
+Each machine, therefore, requires RAM to hold the following
+? The CTS model, which should be 1 1000 of the size of the uncompressed collection (using results in Figure 5 and Williams et al
+[23])
+Assuming an average uncompressed document size of 8 Kb [11], this would require N M กั 8.192 bytes of memory
+? A cache of 1% of all N M documents
+Each document requires 2 Kb when compressed with CTS (Table 1), and only half of each document is required using ST sentence reordering, requiring a total of N M กั0.01กั 1024 bytes
+? The offset array that gives the start position of each document in the single, compressed file
+The total amount of RAM required by a single machine, therefore, would be N M(8.192 + 10.24 + 8) bytes
+Assuming that each machine has 8 Gb of RAM, and that there are 20 billion pages to index on the Web, a total of M = 62 machines would be required for the Snippet Engine
+Of course in practice, more machines may be required to manage the distributed system, to provide backup services for failed machines, and other networking services
+These machines would also need access to 37 Tb of disk to store the compressed document representations that were not in cache
+In this work we have deliberately avoided committing to one particular scoring method for sentences in documents
+Rather, we have reported accuracy results in terms of the four components that have been previously shown to be important in determining useful snippets [20]
+The CTS method can incorporate any new metrics that may arise in the future that are calculated on whole words
+The document compaction techniques using sentence re ordering, however, remove the spatial relationship between sentences, and so if a scoring technique relies on the position of a sentence within a document, the aggressive compaction techniques reported here cannot be used
+A variation on the semi static compression approach we have adopted in this work has been used successfully in previous search engine design [24], but there are alternate compression schemes that allow direct matching in compressed text (see Navarro and M?akinen [15] for a recent survey.) As seek time dominates the snippet generation process, we have not focused on this portion of the snippet generation in detail in this paper
+We will explore alternate compression schemes in future work
+Acknowledgments This work was supported in part by ARC Discovery Project DP0558916 (AT)
+Thanks to Nick Lester and Justin Zobel for valuable discussions.

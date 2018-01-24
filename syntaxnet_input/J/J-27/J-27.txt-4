@@ -1,0 +1,96 @@
+A sequence of prices and demands (p1, x1), .
+.
+.
+, (pn, xn) is rationalizable if there exists a utility function u such that xi = fu(pi) for i = 1, .
+.
+.
+, n .
+We begin with a trivial observation, if pi ¡P xj ? pi ¡P xi and xi = f(pi) then xi is preferred over xj since the latter is in the budget set when the former was chosen .
+It is therefore revealed that u(xj) ? u(xi) implying pj ¡P xj ? pj ¡P xi .
+Suppose there is a sequence (pi1 , xi1 ), .
+.
+.
+, (pik , xik ) such that pij ¡P (xij ? xij+1 ) ? 0 for j = 1 .
+.
+.
+k ? 1 and pik ¡P (xik ? xi1 ) ? 0 .
+Then the same reasoning shows that u(xi1 ) = u(xi2 ) = .
+.
+.
+= u(xik ) implying pi1 ¡P (xi1 ? xi2 ) = pi2 ¡P (xi2 ? xi3 ) = .
+.
+.
+= pik?1 ¡P(xik?1 ?xik ) = 0 .
+We call the latter condition the Afriat condition .
+This argument shows that AC is necessary for rationalizability; the surprising result in Afriat"s theorem is that this condition is also sufficient .
+Let A be an n ¡Ñ n matrix with entries aij = pi ¡P (xj ? xi) (aij and aji are independent), aii = 0 and let D(A) be the weighted digraph associated with A .
+The matrix satisfies AC if every cycle with negative total weight includes at least one edge with positive weight .
+Theorem 1 .
+There exists y = (y1, .
+.
+.
+, yn) ? Rn and s = (s1, .
+.
+.
+, sn) ? Rn + satisfying the set of inequalities L(A), yj ? yi + siaij i = j 1 ? i, j ? n iff D(A) satisfies AC .
+Proof 
+In the other direction it is shown by explicit construction that Afriat"s condition for D(A) implies L(A) is feasible .
+The construction provides a utility function that is consistent with the observations .
+Teo and Vohra [17] give a strongly polynomial time algorithm for this construction which will be the heart of our learning algorithm .
+The construction is executed in two steps .
+First, the algorithm finds s ? Rn + such that the weighted digraph D(A, s) defined by the matrix ?aij = siaij has no cycle with negative total weight if D(A) satisfies AC and returns a negative cycle otherwise .
+The dual of a shortest path problem is given by the constraints
+Thus, in the second step, if D(A) satisfies AC, the algorithm calls a SHORTEST PATH algorithm to find y ? Rn satisfying the constraints .
+Now we describe how to choose the si"s .
+Define S = {(i, j) 
+D(A) has no negative cycles, hence G is acyclic and breadth first search can assign potentials £pi such that £pj ? £pi + wij for (i, j) ? S ¡å E .
+We relabel the vertices so that £p1 ? £p2 ? .
+.
+.
+? £pn .
+Let £_i = (n ? 1) max(i,j)?S(?aij) min(i,j)?T aij if £pi < £pi?1 and £_i = 1 otherwise, and define si = iY j=2 £_j = £_i ¡P si?1 .
+We show that for this choice of s, D(A, s) contains no negative weight cycle .
+Suppose C = (i1, .
+.
+.
+, ik) is a cycle in D(A, s) .
+If £p is constant on C then aij ij+1 = 0 for j = 1, .
+.
+.
+, k and we are done .
+Otherwise let iv ? C be the vertex with smallest potential satisfying w.l.o.g .
+£p(iv) < £p(iv+1) .
+For any cycle C in the digraph D(A, s), let (v, u) be an edge in C such that (i) v has the smallest potential among all vertices in C, and (ii) £pu > £pv .
+Such an edge exists, otherwise £pi is identical for all vertices i in C .
+In this case, all edges in C have non negative edge weight in D(A, s) .
+If (iv, iv+1) ? S ¡å E, then we have £p(iv+1) ? £p(iv) + wiv,iv+1 ? £p(iv) a contradiction .
+Hence (iv, iv+1) ? T .
+Now, note that all vertices q in C with the same potential as iv must be incident to an edge (q, t) in C such that £p(t) ? £p(q) .
+Hence the edge (q, t) must have non negative weight .
+i.e., aq,t ? 0 .
+Let p denote a vertex in C with the second smallest potential .
+Now, C has weight svavu+ X (k,l)?C\(v,u) skak,l ? svav,u+sp(n?1) max (i,j)?S {aij } ? 0, i.e., C has non negative weight ? Algorithm 1 returns in polynomial time a hypothesis that is a piecewise linear function and agrees with the labeling of the observation namely sample error zero .
+To use this function to forecast demand for unobserved prices we need algorithm 2 which maximizes the function on a given budget set .
+Since u(x) = mini{yi + sipi(x ? xi)} this is a linear program and can be solved in time polynomial in d, n as well as the size of the largest number in the input .
+38 Algorithm 1 Utility Algorithm Input (x1, p1), .
+.
+.
+, (xn, pn) S ¡ö {(i, j) 
+.
+.
+? £pn for all 1 ? i ? n do £_i ¡ö (n ? 1) max(i,j)?S (?aij ) min(i,j)?T aij si ¡ö Qi j=2 £_j end for SHORTEST PATH(yj ? yi ? siaij) Return y1, .
+.
+.
+, yn ? Rd and s1, .
+.
+.
+, sn ? R+ Algorithm 2 Evaluation Input y1, .
+.
+.
+, yn ? Rd and s1, .
+.
+.
+, sn ? R+ max z z ? yi + sipi(x ? xi) for i = 1, .
+.
+.
+, n px ? 1 Return x for which z is maximized .

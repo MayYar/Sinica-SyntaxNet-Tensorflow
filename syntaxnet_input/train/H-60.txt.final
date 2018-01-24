@@ -1,0 +1,328 @@
+A Frequency-based and a Poisson-based Definition of the 
+content:
+1 ABSTRACT :
+1-1:This paper reports on theoretical investigations about the assumptions underlying the inverse document frequency (idf ) .
+1-2:We show that an intuitive idf based probability function for the probability of a term being informative assumes disjoint document events .
+1-3:By assuming documents to be independent rather than disjoint, we arrive at a Poisson based probability of being informative .
+1-4:The framework is useful for understanding and deciding the parameter estimation and combination in probabilistic retrieval models .
+1-5:H.3.3 [Information Search and Retrieval]: Retrieval .
+2 INTRODUCTION AND BACKGROUND :
+2-1:The inverse document frequency (idf ) is one of the most successful parameters for a relevance based ranking of retrieved objects .
+2-2:With N being the total number of documents, and n(t) being the number of documents in which term t occurs, the idf is defined as follows: idf(t) := − log n(t) N , 0 <= idf(t) < ∞ Ranking based on the sum of the idf values of the query terms that occur in the retrieved documents works well, this has been shown in numerous applications .
+2-3:Also, it is well known that the combination of a document specific term weight and idf works better than idf alone .
+2-4:This approach is known as tf idf , where tf(t, d) (0 <= tf(t, d) <= 1) is the so called term frequency of term t in document d .
+2-5:The idf reflects the discriminating power (informativeness) of a term, whereas the tf reflects the occurrence of a term .
+2-6:The idf alone works better than the tf alone does .
+2-7:An explanation might be the problem of tf with terms that occur in many documents; let us refer to those terms as noisy terms .
+2-8:We use the notion of noisy terms rather than frequent terms since frequent terms leaves open whether we refer to the document frequency of a term in a collection or to the so called term frequency (also referred to as withindocument frequency) of a term in a document .
+2-9:We associate noise with the document frequency of a term in a collection, and we associate occurrence with the withindocument frequency of a term .
+2-10:The tf of a noisy term might be high in a document, but noisy terms are not good candidates for representing a document .
+2-11:Therefore, the removal of noisy terms (known as stopword removal) is essential when applying tf .
+2-12:In a tf idf approach, the removal of stopwords is conceptually obsolete, if stopwords are just words with a low idf .
+2-13:From a probabilistic point of view, tf is a value with a frequency based probabilistic interpretation whereas idf has an informative rather than a probabilistic interpretation .
+2-14:The missing probabilistic interpretation of idf is a problem in probabilistic retrieval models where we combine uncertain knowledge of different dimensions (e.g.: informativeness of terms, structure of documents, quality of documents, age of documents, etc.) such that a good estimate of the probability of relevance is achieved .
+2-15:An intuitive solution is a normalisation of idf such that we obtain values in the interval [0; 1] .
+2-16:For example, consider a normalisation based on the maximal idf value .
+2-17:Let T be the set of terms occurring in a collection .
+2-18:Pfreq (t is informative) := idf(t) maxidf maxidf := max({idf(t)|t ∈ T}), maxidf <= − log(1 N) minidf := min({idf(t)|t ∈ T}), minidf >= 0 minidf maxidf ≤ Pfreq (t is informative) ≤ 1.0 This frequency based probability function covers the interval [0; 1] if the minimal idf is equal to zero, which is the case if we have at least one term that occurs in all documents .
+2-19:Can we interpret Pfreq , the normalised idf , as the probability that the term is informative? When investigating the probabilistic interpretation of the 227 normalised idf , we made several observations related to disjointness and independence of document events .
+2-20:These observations are reported in section 3 .
+2-21:We show in section 3.1 that the frequency based noise probability n(t) N used in the classic idf definition can be explained by three assumptions: binary term occurrence, constant document containment and disjointness of document containment events .
+2-22:In section 3.2 we show that by assuming independence of documents, we obtain 1 − e−1 ≈ 1 − 0.37 as the upper bound of the noise probability of a term .
+2-23:The value e−1 is related to the logarithm and we investigate in section 3.3 the link to information theory .
+2-24:In section 4, we link the results of the previous sections to probability theory .
+2-25:We show the steps from possible worlds to binomial distribution and Poisson distribution .
+2-26:In section 5, we emphasise that the theoretical framework of this paper is applicable for both idf and tf .
+2-27:Finally, in section 6, we base the definition of the probability of being informative on the results of the previous sections and compare frequency based and Poisson based definitions. .
+3 BACKGROUND :
+3-1:The relationship between frequencies, probabilities and information theory (entropy) has been the focus of many researchers .
+3-2:In this background section, we focus on work that investigates the application of the Poisson distribution in IR since a main part of the work presented in this paper addresses the underlying assumptions of Poisson .
+3-3:[4] proposes a 2 Poisson model that takes into account the different nature of relevant and non relevant documents, rare terms (content words) and frequent terms (noisy terms, function words, stopwords) .
+3-4:[9] shows experimentally that most of the terms (words) in a collection are distributed according to a low dimension n Poisson model .
+3-5:[10] uses a 2 Poisson model for including term frequency based probabilities in the probabilistic retrieval model .
+3-6:The non linear scaling of the Poisson function showed significant improvement compared to a linear frequency based probability .
+3-7:The Poisson model was here applied to the term frequency of a term in a document .
+3-8:We will generalise the discussion by pointing out that document frequency and term frequency are dual parameters in the collection space and the document space, respectively .
+3-9:Our discussion of the Poisson distribution focuses on the document frequency in a collection rather than on the term frequency in a document .
+3-10:[7] and [6] address the deviation of idf and Poisson, and apply Poisson mixtures to achieve better Poisson based estimates .
+3-11:The results proved again experimentally that a onedimensional Poisson does not work for rare terms, therefore Poisson mixtures and additional parameters are proposed .
+3-12:[3], section 3.3, illustrates and summarises comprehensively the relationships between frequencies, probabilities and Poisson .
+3-13:Different definitions of idf are put into context and a notion of noise is defined, where noise is viewed as the complement of idf .
+3-14:We use in our paper a different notion of noise: we consider a frequency based noise that corresponds to the document frequency, and we consider a term noise that is based on the independence of document events .
+3-15:[11], [12], [8] and [1] link frequencies and probability estimation to information theory .
+3-16:[12] establishes a framework in which information retrieval models are formalised based on probabilistic inference .
+3-17:A key component is the use of a space of disjoint events, where the framework mainly uses terms as disjoint events .
+3-18:The probability of being informative defined in our paper can be viewed as the probability of the disjoint terms in the term space of [12] .
+3-19:[8] address entropy and bibliometric distributions .
+3-20:Entropy is maximal if all events are equiprobable and the frequency based Lotka law (N iλ is the number of scientists that have written i publications, where N and λ are distribution parameters), Zipf and the Pareto distribution are related .
+3-21:The Pareto distribution is the continuous case of the Lotka and Lotka and Zipf show equivalences .
+3-22:The Pareto distribution is used by [2] for term frequency normalisation .
+3-23:The Pareto distribution compares to the Poisson distribution in the sense that Pareto is fat tailed, i .
+3-24:e .
+3-25:Pareto assigns larger probabilities to large numbers of events than Poisson distributions do .
+3-26:This makes Pareto interesting since Poisson is felt to be too radical on frequent events .
+3-27:We restrict in this paper to the discussion of Poisson, however, our results show that indeed a smoother distribution than Poisson promises to be a good candidate for improving the estimation of probabilities in information retrieval .
+3-28:[1] establishes a theoretical link between tf idf and information theory and the theoretical research on the meaning of tf idf clarifies the statistical model on which the different measures are commonly based .
+3-29:This motivation matches the motivation of our paper: We investigate theoretically the assumptions of classical idf and Poisson for a better understanding of parameter estimation and combination. .
+4 FROM DISJOINT TO INDEPENDENT :
+4-1:We define and discuss in this section three probabilities: The frequency based noise probability (definition 1), the total noise probability for disjoint documents (definition 2) .
+4-2:and the noise probability for independent documents (definition 3) .
+4-3:3.1 Binary occurrence, constant containment and disjointness of documents We show in this section, that the frequency based noise probability n(t) N in the idf definition can be explained as a total probability with binary term occurrence, constant document containment and disjointness of document containments .
+4-4:We refer to a probability function as binary if for all events the probability is either 1.0 or 0.0 .
+4-5:The occurrence probability P(t|d) is binary, if P(t|d) is equal to 1.0 if t ∈ d, and P(t|d) is equal to 0.0, otherwise .
+4-6:P(t|d) is binary : ⇐⇒ P(t|d) = 1.0 ∨ P(t|d) = 0.0 We refer to a probability function as constant if for all events the probability is equal .
+4-7:The document containment probability reflect the chance that a document occurs in a collection .
+4-8:This containment probability is constant if we have no information about the document containment or we ignore that documents differ in containment .
+4-9:Containment could be derived, for example, from the size, quality, age, links, etc .
+4-10:of a document .
+4-11:For a constant containment in a collection with N documents, 1 N is often assumed as the containment probability .
+4-12:We generalise this definition and introduce the constant λ where 0 ≤ λ ≤ N .
+4-13:The containment of a document d depends on the collection c, this is reflected by the notation P(d|c) used for the containment 228 of a document .
+4-14:P(d|c) is constant : ⇐⇒ ∀d : P(d|c) = λ N For disjoint documents that cover the whole event space, we set λ = 1 and obtain Èd P(d|c) = 1.0 .
+4-15:Next, we define the frequency based noise probability and the total noise probability for disjoint documents .
+4-16:We introduce the event notation t is noisy and t occurs for making the difference between the noise probability P(t is noisy|c) in a collection and the occurrence probability P(t occurs|d) in a document more explicit, thereby keeping in mind that the noise probability corresponds to the occurrence probability of a term in a collection .
+4-17:Definition 1 .
+4-18:The frequency based term noise probability: Pfreq (t is noisy|c) := n(t) N Definition 2 .
+4-19:The total term noise probability for disjoint documents: Pdis (t is noisy|c) := d P(t occurs|d) · P(d|c) Now, we can formulate a theorem that makes assumptions explicit that explain the classical idf .
+4-20:Theorem 1 .
+4-21:IDF assumptions: If the occurrence probability P(t|d) of term t over documents d is binary, and the containment probability P(d|c) of documents d is constant, and document containments are disjoint events, then the noise probability for disjoint documents is equal to the frequency based noise probability .
+4-22:Pdis (t is noisy|c) = Pfreq (t is noisy|c) Proof .
+4-23:The assumptions are: ∀d : (P(t occurs|d) = 1 ∨ P(t occurs|d) = 0) ∧ P(d|c) = λ N ∧ d P(d|c) = 1.0 We obtain: Pdis (t is noisy|c) = d|t∈d 1 N = n(t) N = Pfreq (t is noisy|c) The above result is not a surprise but it is a mathematical formulation of assumptions that can be used to explain the classical idf .
+4-24:The assumptions make explicit that the different types of term occurrence in documents (frequency of a term, importance of a term, position of a term, document part where the term occurs, etc.) and the different types of document containment (size, quality, age, etc.) are ignored, and document containments are considered as disjoint events .
+4-25:From the assumptions, we can conclude that idf (frequencybased noise, respectively) is a relatively simple but strict estimate .
+4-26:Still, idf works well .
+4-27:This could be explained by a leverage effect that justifies the binary occurrence and constant containment: The term occurrence for small documents tends to be larger than for large documents, whereas the containment for small documents tends to be smaller than for large documents .
+4-28:From that point of view, idf means that P(t ∧ d|c) is constant for all d in which t occurs, and P(t ∧ d|c) is zero otherwise .
+4-29:The occurrence and containment can be term specific .
+4-30:For example, set P(t∧d|c) = 1 ND(c) if t occurs in d, where ND(c) is the number of documents in collection c (we used before just N) .
+4-31:We choose a document dependent occurrence P(t|d) := 1 NT (d), i .
+4-32:e .
+4-33:the occurrence probability is equal to the inverse of NT (d), which is the total number of terms in document d .
+4-34:Next, we choose the containment P(d|c) := NT (d) NT (c)·NT (c) ND(c) where NT (d) NT (c) is a document length normalisation (number of terms in document d divided by the number of terms in collection c), and NT (c) ND(c) is a constant factor of the collection (number of terms in collection c divided by the number of documents in collection c) .
+4-35:We obtain P(t∧d|c) = 1 ND(c) .
+4-36:In a tf idf retrieval function, the tf component reflects the occurrence probability of a term in a document .
+4-37:This is a further explanation why we can estimate the idf with a simple P(t|d), since the combined tf idf contains the occurrence probability .
+4-38:The containment probability corresponds to a document normalisation (document length normalisation, pivoted document length) and is normally attached to the tf component or the tf idf product .
+4-39:The disjointness assumption is typical for frequency based probabilities .
+4-40:From a probability theory point of view, we can consider documents as disjoint events, in order to achieve a sound theoretical model for explaining the classical idf .
+4-41:But does disjointness reflect the real world where the containment of a document appears to be independent of the containment of another document? In the next section, we replace the disjointness assumption by the independence assumption .
+4-42:3.2 The upper bound of the noise probability for independent documents For independent documents, we compute the probability of a disjunction as usual, namely as the complement of the probability of the conjunction of the negated events: P(d1 ∨ .
+4-43:.
+4-44:.
+4-45:∨ dN ) = 1 − P(¬d1 ∧ .
+4-46:.
+4-47:.
+4-48:∧ ¬dN ) = 1 − d (1 − P(d)) The noise probability can be considered as the conjunction of the term occurrence and the document containment .
+4-49:P(t is noisy|c) := P(t occurs ∧ (d1 ∨ .
+4-50:.
+4-51:.
+4-52:∨ dN )|c) For disjoint documents, this view of the noise probability led to definition 2 .
+4-53:For independent documents, we use now the conjunction of negated events .
+4-54:Definition 3 .
+4-55:The term noise probability for independent documents: Pin (t is noisy|c) := d (1 − P(t occurs|d) · P(d|c)) With binary occurrence and a constant containment P(d|c) := λ N, we obtain the term noise of a term t that occurs in n(t) documents: Pin (t is noisy|c) = 1 − 1 − λ N n(t) 229 For binary occurrence and disjoint documents, the containment probability was 1 N .
+4-56:Now, with independent documents, we can use λ as a collection parameter that controls the average containment probability .
+4-57:We show through the next theorem that the upper bound of the noise probability depends on λ .
+4-58:Theorem 2 .
+4-59:The upper bound of being noisy: If the occurrence P(t|d) is binary, and the containment P(d|c) is constant, and document containments are independent events, then 1 − e−λ is the upper bound of the noise probability .
+4-60:∀t : Pin (t is noisy|c) < 1 − e−λ Proof .
+4-61:The upper bound of the independent noise probability follows from the limit limN→∞(1 + x N )N = ex (see any comprehensive math book, for example, [5], for the convergence equation of the Euler function) .
+4-62:With x = −λ, we obtain: lim N→∞ 1 − λ N N = e−λ For the term noise, we have: Pin (t is noisy|c) = 1 − 1 − λ N n(t) Pin (t is noisy|c) is strictly monotonous: The noise of a term tn is less than the noise of a term tn+1, where tn occurs in n documents and tn+1 occurs in n + 1 documents .
+4-63:Therefore, a term with n = N has the largest noise probability .
+4-64:For a collection with infinite many documents, the upper bound of the noise probability for terms tN that occur in all documents becomes: lim N→∞ Pin (tN is noisy) = lim N→∞ 1 − 1 − λ N N = 1 − e−λ By applying an independence rather a disjointness assumption, we obtain the probability e−1 that a term is not noisy even if the term does occur in all documents .
+4-65:In the disjoint case, the noise probability is one for a term that occurs in all documents .
+4-66:If we view P(d|c) := λ N as the average containment, then λ is large for a term that occurs mostly in large documents, and λ is small for a term that occurs mostly in small documents .
+4-67:Thus, the noise of a term t is large if t occurs in n(t) large documents and the noise is smaller if t occurs in small documents .
+4-68:Alternatively, we can assume a constant containment and a term dependent occurrence .
+4-69:If we assume P(d|c) := 1, then P(t|d) := λ N can be interpreted as the average probability that t represents a document .
+4-70:The common assumption is that the average containment or occurrence probability is proportional to n(t) .
+4-71:However, here is additional potential: The statistical laws (see [3] on Luhn and Zipf) indicate that the average probability could follow a normal distribution, i .
+4-72:e .
+4-73:small probabilities for small n(t) and large n(t), and larger probabilities for medium n(t) .
+4-74:For the monotonous case we investigate here, the noise of a term with n(t) = 1 is equal to 1 − (1 − λ N) = λ N and the noise of a term with n(t) = N is close to 1− e−λ .
+4-75:In the next section, we relate the value e−λ to information theory .
+4-76:3.3 The probability of a maximal informative signal The probability e−1 is special in the sense that a signal with that probability is a signal with maximal information as derived from the entropy definition .
+4-77:Consider the definition of the entropy contribution H(t) of a signal t .
+4-78:H(t) := P(t) · − ln P(t) We form the first derivation for computing the optimum .
+4-79:∂H(t) ∂P(t) = − ln P(t) + −1 P(t) · P(t) = −(1 + ln P(t)) For obtaining optima, we use: 0 = −(1 + ln P(t)) The entropy contribution H(t) is maximal for P(t) = e−1 .
+4-80:This result does not depend on the base of the logarithm as we see next: ∂H(t) ∂P(t) = − logb P(t) + −1 P(t) · ln b · P(t) = − 1 ln b + logb P(t) = − 1 + ln P(t) ln b We summarise this result in the following theorem: Theorem 3 .
+4-81:The probability of a maximal informative signal: The probability Pmax = e−1 ≈ 0.37 is the probability of a maximal informative signal .
+4-82:The entropy of a maximal informative signal is Hmax = e−1 .
+4-83:Proof .
+4-84:The probability and entropy follow from the derivation above .
+4-85:The complement of the maximal noise probability is e−λ and we are looking now for a generalisation of the entropy definition such that e−λ is the probability of a maximal informative signal .
+4-86:We can generalise the entropy definition by computing the integral of λ+ ln P(t), i .
+4-87:e .
+4-88:this derivation is zero for e−λ .
+4-89:We obtain a generalised entropy: −(λ + ln P(t)) d(P(t)) = P(t) · (1 − λ − ln P(t)) The generalised entropy corresponds for λ = 1 to the classical entropy .
+4-90:By moving from disjoint to independent documents, we have established a link between the complement of the noise probability of a term that occurs in all documents and information theory .
+4-91:Next, we link independent documents to probability theory. .
+5 THE LINK TO PROBABILITY THEORY :
+5-1:We review for independent documents three concepts of probability theory: possible worlds, binomial distribution and Poisson distribution .
+5-2:4.1 Possible Worlds Each conjunction of document events (for each document, we consider two document events: the document can be true or false) is associated with a so called possible world .
+5-3:For example, consider the eight possible worlds for three documents (N = 3) .
+5-4:230 world w conjunction w7 d1 ∧ d2 ∧ d3 w6 d1 ∧ d2 ∧ ¬d3 w5 d1 ∧ ¬d2 ∧ d3 w4 d1 ∧ ¬d2 ∧ ¬d3 w3 ¬d1 ∧ d2 ∧ d3 w2 ¬d1 ∧ d2 ∧ ¬d3 w1 ¬d1 ∧ ¬d2 ∧ d3 w0 ¬d1 ∧ ¬d2 ∧ ¬d3 With each world w, we associate a probability µ(w), which is equal to the product of the single probabilities of the document events .
+5-5:world w probability µ(w) w7  λ N ¡3 ·  1 − λ N ¡0 w6  λ N ¡2 ·  1 − λ N ¡1 w5  λ N ¡2 ·  1 − λ N ¡1 w4  λ N ¡1 ·  1 − λ N ¡2 w3  λ N ¡2 ·  1 − λ N ¡1 w2  λ N ¡1 ·  1 − λ N ¡2 w1  λ N ¡1 ·  1 − λ N ¡2 w0  λ N ¡0 ·  1 − λ N ¡3 The sum over the possible worlds in which k documents are true and N −k documents are false is equal to the probability function of the binomial distribution, since the binomial coefficient yields the number of possible worlds in which k documents are true .
+5-6:4.2 Binomial distribution The binomial probability function yields the probability that k of N events are true where each event is true with the single event probability p .
+5-7:P(k) := binom(N, k, p) := N k pk (1 − p)N −k The single event probability is usually defined as p := λ N, events .
+5-8:With this definition of p, we obtain for an infinite number of documents the following limit for the product of the binomial coefficient and pk : lim N→∞ N k pk = = lim N→∞ N · (N −1) · .
+5-9:.
+5-10:.
+5-11:· (N −k +1) k! λ N k = λk k! The limit is close to the actual value for k << N .
+5-12:For large k, the actual value is smaller than the limit .
+5-13:The limit of (1−p)N −k follows from the limit limN→∞(1+ x N )N = ex .
+5-14:lim N→∞ (1 − p)N−k = lim N→∞ 1 − λ N N −k = lim N→∞ e−λ · 1 − λ N −k = e−λ Again, the limit is close to the actual value for k << N .
+5-15:For large k, the actual value is larger than the limit .
+5-16:4.3 Poisson distribution For an infinite number of events, the Poisson probability function is the limit of the binomial probability function .
+5-17:lim N→∞ binom(N, k, p) = λk k! · e−λ P(k) = poisson(k, λ) := λk k! · e−λ The probability poisson(0, 1) is equal to e−1 , which is the probability of a maximal informative signal .
+5-18:This shows the relationship of the Poisson distribution and information theory .
+5-19:After seeing the convergence of the binomial distribution, we can choose the Poisson distribution as an approximation of the independent term noise probability .
+5-20:First, we define the Poisson noise probability: Definition 4 .
+5-21:The Poisson term noise probability: Ppoi (t is noisy|c) := e−λ · n(t) k=1 λk k! For independent documents, the Poisson distribution approximates the probability of the disjunction for large n(t), since the independent term noise probability is equal to the sum over the binomial probabilities where at least one of n(t) document containment events is true .
+5-22:Pin (t is noisy|c) = n(t) k=1 n(t) k pk (1 − p)N −k Pin (t is noisy|c) ≈ Ppoi (t is noisy|c) We have defined a frequency based and a Poisson based probability of being noisy, where the latter is the limit of the independence based probability of being noisy .
+5-23:Before we present in the final section the usage of the noise probability for defining the probability of being informative, we emphasise in the next section that the results apply to the collection space as well as to the the document space. .
+6 THE COLLECTION SPACE AND THE DOCUMENT SPACE :
+6-1:DOCUMENT SPACE Consider the dual definitions of retrieval parameters in table 1 .
+6-2:We associate a collection space D × T with a collection c where D is the set of documents and T is the set of terms in the collection .
+6-3:Let ND := |D| and NT := |T| be the number of documents and terms, respectively .
+6-4:We consider a document as a subset of T and a term as a subset of D .
+6-5:Let nT (d) := |{t|d ∈ t}| be the number of terms that occur in the document d, and let nD(t) := |{d|t ∈ d}| be the number of documents that contain the term t .
+6-6:In a dual way, we associate a document space L × T with a document d where L is the set of locations (also referred to as positions, however, we use the letters L and l and not P and p for avoiding confusion with probabilities) and T is the set of terms in the document .
+6-7:The document dimension in a collection space corresponds to the location (position) dimension in a document space .
+6-8:The definition makes explicit that the classical notion of term frequency of a term in a document (also referred to as the within document term frequency) actually corresponds to the location frequency of a term in a document .
+6-9:For the 231 space collection document dimensions documents and terms locations and terms document location frequency nD(t, c): Number of documents in which term t occurs in collection c nL(t, d): Number of locations (positions) at which term t occurs in document d ND(c): Number of documents in collection c NL(d): Number of locations (positions) in document d term frequency nT (d, c): Number of terms that document d contains in collection c nT (l, d): Number of terms that location l contains in document d NT (c): Number of terms in collection c NT (d): Number of terms in document d noise occurrence P(t|c) (term noise) P(t|d) (term occurrence) containment P(d|c) (document) P(l|d) (location) informativeness − ln P(t|c) − ln P(t|d) conciseness − ln P(d|c) − ln P(l|d) P(informative) ln(P(t|c)) ln(P(tmin, c)) ln(P(t|d)) ln(P(tmin, d)) P(concise) ln(P(d|c)) ln(P(dmin|c)) ln(P(l|d)) ln(P(lmin|d)) Table 1: Retrieval parameters actual term frequency value, it is common to use the maximal occurrence (number of locations; let lf be the location frequency) .
+6-10:tf(t, d):=lf(t, d):= Pfreq (t occurs|d) Pfreq (tmax occurs|d) = nL(t, d) nL(tmax , d) A further duality is between informativeness and conciseness (shortness of documents or locations): informativeness is based on occurrence (noise), conciseness is based on containment .
+6-11:We have highlighted in this section the duality between the collection space and the document space .
+6-12:We concentrate in this paper on the probability of a term to be noisy and informative .
+6-13:Those probabilities are defined in the collection space .
+6-14:However, the results regarding the term noise and informativeness apply to their dual counterparts: term occurrence and informativeness in a document .
+6-15:Also, the results can be applied to containment of documents and locations. .
+7 THE PROBABILITY OF BEING  INFORMATIVE :
+7-1:INFORMATIVE We showed in the previous sections that the disjointness assumption leads to frequency based probabilities and that the independence assumption leads to Poisson probabilities .
+7-2:In this section, we formulate a frequency based definition and a Poisson based definition of the probability of being informative and then we compare the two definitions .
+7-3:Definition 5 .
+7-4:The frequency based probability of being informative: Pfreq (t is informative|c) := − ln n(t) N − ln 1 N = − logN n(t) N = 1 − logN n(t) = 1 − ln n(t) ln N We define the Poisson based probability of being informative analogously to the frequency based probability of being informative (see definition 5) .
+7-5:Definition 6 .
+7-6:The Poisson based probability of being informative: Ppoi (t is informative|c) := − ln e−λ · Èn(t) k=1 λk k! − ln(e−λ · λ) = λ − ln Èn(t) k=1 λk k! λ − ln λ For the sum expression, the following limit holds: lim n(t)→∞ n(t) k=1 λk k! = eλ − 1 For λ >> 1, we can alter the noise and informativeness Poisson by starting the sum from 0, since eλ >> 1 .
+7-7:Then, the minimal Poisson informativeness is poisson(0, λ) = e−λ .
+7-8:We obtain a simplified Poisson probability of being informative: Ppoi (t is informative|c) ≈ λ − ln Èn(t) k=0 λk k! λ = 1 − ln Èn(t) k=0 λk k! λ The computation of the Poisson sum requires an optimisation for large n(t) .
+7-9:The implementation for this paper exploits the nature of the Poisson density: The Poisson density yields only values significantly greater than zero in an interval around λ .
+7-10:Consider the illustration of the noise and informativeness definitions in figure 1 .
+7-11:The probability functions displayed are summarised in figure 2 where the simplified Poisson is used in the noise and informativeness graphs .
+7-12:The frequency based noise corresponds to the linear solid curve in the noise figure .
+7-13:With an independence assumption, we obtain the curve in the lower triangle of the noise figure .
+7-14:By changing the parameter p := λ N of the independence probability, we can lift or lower the independence curve .
+7-15:The noise figure shows the lifting for the value λ := ln N ≈ 9.2 .
+7-16:The setting λ = ln N is special in the sense that the frequency based and the Poisson based informativeness have the same denominator, namely ln N, and the Poisson sum converges to λ .
+7-17:Whether we can draw more conclusions from this setting is an open question .
+7-18:We can conclude, that the lifting is desirable if we know for a collection that terms that occur in relatively few doc232 0 0.2 0.4 0.6 0.8 1 0 2000 4000 6000 8000 10000 Probabilityofbeingnoisy n(t): Number of documents with term t frequency independence: 1 N independence: ln(N) N poisson: 1000 poisson: 2000 poisson: 1000,2000 0 0.2 0.4 0.6 0.8 1 0 2000 4000 6000 8000 10000 Probabilityofbeinginformative n(t): Number of documents with term t frequency independence: 1 N independence: ln(N) N poisson: 1000 poisson: 2000 poisson: 1000,2000 Figure 1: Noise and Informativeness Probability function Noise Informativeness Frequency Pfreq Def n(t) N ln(n(t) N) ln(1 N) Interval 1 N ≤ Pfreq ≤ 1.0 0.0 ≤ Pfreq ≤ 1.0 Independence Pin Def 1 − (1 − p)n(t) ln(1 − (1 − p)n(t) ) ln(p) Interval p ≤ Pin < 1 − e−λ ln(p) ≤ Pin ≤ 1.0 Poisson Ppoi Def e−λ Èn(t) k=1 λk k! (λ − ln Èn(t) k=1 λk k! ) (λ − ln λ) Interval e−λ · λ ≤ Ppoi < 1 − e−λ (λ − ln(eλ − 1)) (λ − ln λ) ≤ Ppoi ≤ 1.0 Poisson Ppoi simplified Def e−λ Èn(t) k=0 λk k! (λ − ln Èn(t) k=0 λk k! ) λ Interval e−λ ≤ Ppoi < 1.0 0.0 < Ppoi ≤ 1.0 Figure 2: Probability functions uments are no guarantee for finding relevant documents, the opposite, we could lower the curve when assuming that frequent terms are not too noisy, i .
+7-19:e .
+7-20:they are considered as being still significantly discriminative .
+7-21:The Poisson probabilities approximate the independence probabilities for large n(t); the approximation is better for larger λ .
+7-22:For n(t) < λ, the noise is zero whereas for n(t) > λ the noise is one .
+7-23:This radical behaviour can be smoothened by using a multi dimensional Poisson distribution .
+7-24:Figure 1 shows a Poisson noise based on a two dimensional Poisson: poisson(k, λ1, λ2) := π · e−λ1 · λk 1 k! + (1 − π) · e−λ2 · λk 2 k! The two dimensional Poisson shows a plateau between λ1 = 1000 and λ2 = 2000, we used here π = 0.5 .
+7-25:The idea behind this setting is that terms that occur in less than 1000 documents are considered to be not noisy (i.e .
+7-26:they are informative), that terms between 1000 and 2000 are half noisy, and that terms with more than 2000 are definitely noisy .
+7-27:For the informativeness, we observe that the radical behaviour of Poisson is preserved .
+7-28:The plateau here is approximately at 1 6, and it is important to realise that this plateau is not obtained with the multi dimensional Poisson noise using π = 0.5 .
+7-29:The logarithm of the noise is normalised by the logarithm of a very small number, namely 0.5 · e−1000 + 0.5 · e−2000 .
+7-30:That is why the informativeness will be only close to one for very little noise, whereas for a bit of noise, informativeness will drop to zero .
+7-31:This effect can be controlled by using small values for π such that the noise in the interval [λ1; λ2] is still very little .
+7-32:The setting π = e−2000 6 leads to noise values of approximately e−2000 6 in the interval [λ1; λ2], the logarithms lead then to 1 6 for the informativeness .
+7-33:The indepence based and frequency based informativeness functions do not differ as much as the noise functions do .
+7-34:However, for the indepence based probability of being informative, we can control the average informativeness by the definition p := λ N whereas the control on the frequencybased is limited as we address next .
+7-35:For the frequency based idf , the gradient is monotonously decreasing and we obtain for different collections the same distances of idf values, i .
+7-36:e .
+7-37:the parameter N does not affect the distance .
+7-38:For an illustration, consider the distance between the value idf(tn+1) of a term tn+1 that occurs in n+1 documents, and the value idf(tn) of a term tn that occurs in n documents .
+7-39:idf(tn+1) − idf(tn) = ln n n + 1 The first three values of the distance function are: idf(t2) − idf(t1) = ln(1 (1 + 1)) = 0.69 idf(t3) − idf(t2) = ln(1 (2 + 1)) = 0.41 idf(t4) − idf(t3) = ln(1 (3 + 1)) = 0.29 For the Poisson based informativeness, the gradient decreases first slowly for small n(t), then rapidly near n(t) ≈ λ and then it grows again slowly for large n(t) .
+7-40:In conclusion, we have seen that the Poisson based definition provides more control and parameter possibilities than 233 the frequency based definition does .
+7-41:Whereas more control and parameter promises to be positive for the personalisation of retrieval systems, it bears at the same time the danger of just too many parameters .
+7-42:The framework presented in this paper raises the awareness about the probabilistic and information theoretic meanings of the parameters .
+7-43:The parallel definitions of the frequency based probability and the Poisson based probability of being informative made the underlying assumptions explicit .
+7-44:The frequency based probability can be explained by binary occurrence, constant containment and disjointness of documents .
+7-45:Independence of documents leads to Poisson, where we have to be aware that Poisson approximates the probability of a disjunction for a large number of events, but not for a small number .
+7-46:This theoretical result explains why experimental investigations on Poisson (see [7]) show that a Poisson estimation does work better for frequent (bad, noisy) terms than for rare (good, informative) terms .
+7-47:In addition to the collection wide parameter setting, the framework presented here allows for document dependent settings, as explained for the independence probability .
+7-48:This is in particular interesting for heterogeneous and structured collections, since documents are different in nature (size, quality, root document, sub document), and therefore, binary occurrence and constant containment are less appropriate than in relatively homogeneous collections. .
+8-1:The definition of the probability of being informative transforms the informative interpretation of the idf into a probabilistic interpretation, and we can use the idf based probability in probabilistic retrieval approaches
+8-2:We showed that the classical definition of the noise (document frequency) in the inverse document frequency can be explained by three assumptions: the term within document occurrence probability is binary, the document containment probability is constant, and the document containment events are disjoint
+8-3:By explicitly and mathematically formulating the assumptions, we showed that the classical definition of idf does not take into account parameters such as the different nature (size, quality, structure, etc.) of documents in a collection, or the different nature of terms (coverage, importance, position, etc.) in a document
+8-4:We discussed that the absence of those parameters is compensated by a leverage effect of the within document term occurrence probability and the document containment probability
+8-5:By applying an independence rather a disjointness assumption for the document containment, we could establish a link between the noise probability (term occurrence in a collection), information theory and Poisson
+8-6:From the frequency based and the Poisson based probabilities of being noisy, we derived the frequency based and Poisson based probabilities of being informative
+8-7:The frequency based probability is relatively smooth whereas the Poisson probability is radical in distinguishing between noisy or not noisy, and informative or not informative, respectively
+8-8:We showed how to smoothen the radical behaviour of Poisson with a multidimensional Poisson
+8-9:The explicit and mathematical formulation of idf  and Poisson assumptions is the main result of this paper
+8-10:Also, the paper emphasises the duality of idf and tf , collection space and document space, respectively
+8-11:Thus, the result applies to term occurrence and document containment in a collection, and it applies to term occurrence and position containment in a document
+8-12:This theoretical framework is useful for understanding and deciding the parameter estimation and combination in probabilistic retrieval models
+8-13:The links between indepence based noise as document frequency, probabilistic interpretation of idf , information theory and Poisson described in this paper may lead to variable probabilistic idf and tf definitions and combinations as required in advanced and personalised information retrieval systems
+8-14:Acknowledgment: I would like to thank Mounia Lalmas, Gabriella Kazai and Theodora Tsikrika for their comments on the as they said heavy pieces
+8-15:My thanks also go to the meta reviewer who advised me to improve the presentation to make it less formidable and more accessible for those without a theoretic bent
+8-16:This work was funded by a research fellowship from Queen Mary University of London.
+9-1:A
+9-2:Aizawa
+9-3:An information theoretic perspective of tf idf measures
+9-4:Information Processing and Management, 39:45 65, January 2003
+9-5:G
+9-6:Amati and C
+9-7:J
+9-8:Rijsbergen
+9-9:Term frequency normalization via Pareto distributions
+9-10:In 24th BCS IRSG European Colloquium on IR Research, Glasgow, Scotland, 2002
+9-11:R
+9-12:K
+9-13:Belew
+9-14:Finding out about
+9-15:Cambridge University Press, 2000
+9-16:A
+9-17:Bookstein and D
+9-18:Swanson
+9-19:Probabilistic models for automatic indexing
+9-20:Journal of the American Society for Information Science, 25:312 318, 1974
+9-21:I
+9-22:N
+9-23:Bronstein
+9-24:Taschenbuch der Mathematik
+9-25:Harri Deutsch, Thun, Frankfurt am Main, 1987
+9-26:K
+9-27:Church and W
+9-28:Gale
+9-29:Poisson mixtures
+9-30:Natural Language Engineering, 1(2):163 190, 1995
+9-31:K
+9-32:W
+9-33:Church and W
+9-34:A
+9-35:Gale
+9-36:Inverse document frequency: A measure of deviations from poisson
+9-37:In Third Workshop on Very Large Corpora, ACL Anthology, 1995
+9-38:T
+9-39:Lafouge and C
+9-40:Michel
+9-41:Links between information construction and information gain: Entropy and bibliometric distribution
+9-42:Journal of Information Science, 27(1):39 49, 2001
+9-43:E
+9-44:Margulis
+9-45:N poisson document modelling
+9-46:In Proceedings of the 15th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 177 189, 1992
+9-47:S
+9-48:E
+9-49:Robertson and S
+9-50:Walker
+9-51:Some simple effective approximations to the 2 poisson model for probabilistic weighted retrieval
+9-52:In Proceedings of the 17th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 232 241, London, et al., 1994
+9-53:Springer Verlag
+9-54:S
+9-55:Wong and Y
+9-56:Yao
+9-57:An information theoric measure of term specificity
+9-58:Journal of the American Society for Information Science, 43(1):54 61, 1992
+9-59:S
+9-60:Wong and Y
+9-61:Yao
+9-62:On modeling information retrieval with probabilistic inference
+9-63:ACM Transactions on Information Systems, 13(1):38 68, 1995
+9-64:234
+picture:

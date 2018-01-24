@@ -1,0 +1,61 @@
+STRATEGY Dynamic co allocation, described above, is the most efficient approach to reducing the influence of network variations between clients and servers .
+However, the idle time of faster servers awaiting the slowest server to deliver the last block is still a major factor affecting overall efficiency, which Conservative Load Balancing and Aggressive Load Balancing [17] cannot effectively avoid .
+The approach proposed in the present paper, a dynamic allocation mechanism called Recursive Adjustment CoAllocation can overcome this, and thus, improve data transfer performance .
+5.1 Recursive Adjustment Co Allocation Recursive Adjustment Co Allocation works by continuously adjusting each replica server"s workload to correspond to its realtime bandwidth during file transfers .
+The goal is to make the expected finish time of all servers the same .
+As Figure 2 shows, when an appropriate file section is first selected, it is divided into proper block sizes according to the respective server bandwidths .
+The co allocator then assigns the blocks to servers for transfer .
+At this moment, it is expected that the transfer finish time will be consistent at E(T1) .
+However, since server bandwidths may fluctuate during segment deliveries, actual completion time may be dissimilar (solid line, in Figure 2) .
+Once the quickest server finishes its work at time T1, the next section is assigned to the servers again .
+This allows each server to finish its assigned workload by the expected time at E(T2) .
+These adjustments are repeated until the entire file transfer is finished .
+Server 1 Server 2 Server 3 Round 1 Round 2 E(T1) E(T2)T1 File A Section 1 Section 2 .. .
+.. .
+.. .
+Figure 2 .
+The adjustment process The Recursive Adjustment Co Allocation process is illustrated in Figure 3 .
+When a user requests file A, the replica selection service responds with the subset of all available servers defined by the maximum performance matrix .
+The co allocation service gets this list of selected replica servers .
+Assuming n replica servers are selected, Si denotes server i such that 1 i n .
+A connection for file downloading is then built to each server .
+The RecursiveAdjustment Co Allocation process is as follows .
+A new section of a file to be allocated is first defined .
+The section size, SEj, is
+And thus, there are k sections, while Tj denotes the time section j allocated .
+UnassignedFileSize is the portion of file A not yet distributed for downloading; initially, UnassignedFileSize is equal to the total size of file A .
+is the rate that determines how much of the section remains to be assigned .
+Figure 3 .
+The Recursive Adjustment Co Allocation process .
+In the next step, SEj is divided into several blocks and assigned to n servers .
+Each server has a real time transfer rate to the client of Bi, which is measured by the Network Weather Service [18] .
+The block size per flow from SEj for each server i at time Tj is
+UnFinishSizei is equal to zero in first round .
+Ideally, depending to the real time bandwidth at time Tj, every flow is expected to finish its workload in future .
+This fulfills our requirement to minimize the time faster servers must wait for the slowest server to finish .
+If, in some cases, network variations greatly degrade transfer rates, UnFinishSizei may exceed n i ii n i ij BBzeUnFinishSiSE 11 *)( , which is the total block size expected to be transferred after Tj .
+In such cases, the co allocator eliminates the servers in advance and assigns SEj to other servers .
+After allocation, all channels continue transferring data blocks .
+When a faster channel finishes its assigned data blocks, the co allocator begins allocating an unassigned section of file A again .
+The process of allocating data 801 blocks to adjust expected flow finish time continues until the entire file has been allocated .
+5.2 Determining When to Stop Continuous Adjustment Our approach gets new sections from whole files by dividing unassigned file ranges in each round of allocation .
+These unassigned portions of the file ranges become smaller after each allocation .
+Since adjustment is continuous, it would run as an endless loop if not limited by a stop condition .
+However, when is it appropriate to stop continuous adjustment? We provide two monitoring criteria, LeastSize and ExpectFinishedTime, to enable users to define stop thresholds .
+When a threshold is reached, the co allocation server stopped dividing the remainder of the file and assigns that remainder as the final section .
+The LeastSize criterion specifies the smallest file we want to process, and when the unassigned portion of UnassignedFileSize drops below the LeastSize specification, division stops .
+ExpectFinishedTime criterion specifies the remaining time transfer is expected to take .
+When the expected transfer time of the unassigned portion of a file drops below the time specified by ExpectFinishedTime, file division stops .
+The expected rest time value is determined by
+Higher threshold values will induce fewer divisions and yield lower co allocation costs, which include establishing connections, negotiation, reassembly, etc .
+However, although the total coallocation adjustment time may be lower, bandwidth variations may also exert more influence .
+By contrast, lower threshold values will induce more frequent dynamic server workload adjustments and, in the case of greater network fluctuations, result in fewer differences in server transfer finish time .
+However, lower values will also increase co allocation times, and hence, increase co allocation costs .
+Therefore, the internet environment, transferred file sizes, and co allocation costs should all be considered in determining optimum thresholds .
+5.3 Reducing the Reassembly Overhead The process of reassembling blocks after data transfers using coallocation technology results in additional overhead and decreases overall performance .
+The reassembly overhead is related to total block size, and could be reduced by upgrading hardware capabilities or using better software algorithms .
+We propose an efficient alternative reassembly mechanism to reduce the added combination overhead after all block transmissions are finished .
+It differs from the conventional method in which the software starts assembly after all blocks have been delivered by starting to assemble blocks once the first deliveries finish .
+Of course, this makes it necessary to maintain the original splitting order .
+Co allocation strategies such as Conservative Load Balancing and Recursive Adjustment Co Allocation produce additional blocks during file transfers and can benefit from enabling reassembly during data transfers .
+If some blocks are assembled in advance, the time cost for assembling the blocks remaining after all transfers finish can be reduced. .

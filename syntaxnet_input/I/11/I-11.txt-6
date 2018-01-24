@@ -1,0 +1,60 @@
+We have tested BEE in a series of experiments in which human wargamers make decisions that are played out in a battlefield simulator .
+The commander for each side (Red and Blue) has at his disposal a team of pucksters, human operators who set waypoints for individual units in the simulator .
+Each puckster is responsible for four to six units .
+The simulator moves the units, determines firing actions, and resolves the outcome of conflicts .
+It is important to emphasize that this simulator is simply a surrogate for a sensor feed from a real world battlefield 4.1 Fitting Dispositions To test our ability to fit personalities based on behavior, one Red puckster responsible for four units is designated the emotional puckster .
+He selects two of his units to be cowardly (chickens) and two to be irritable (Rambos) .
+He does not disclose this assignment during the run .
+He moves each unit according to the commander"s orders until the unit encounters circumstances that would trigger the emotion associated with the unit"s disposition .
+Then he manipulates chickens as though they are fearful (avoiding combat and moving away from Blue), and moves Rambos into combat as quickly as possible .
+Our software receives position reports on all units, every twenty seconds .
+1 This process, known as SAD (Statistical Anomaly Detection), is developed by our colleagues Rafael Alonso, Hua Li, and John Asmuth at Sarnoff Corporation .
+Alonso and Li are now at SET Corporation .
+2 This process, known as KIP (Knowledge based Intention Projection), is developed by our colleagues Paul Nielsen, Jacob Crossman, and Rich Frederiksen at Soar Technology .
+1430 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) The difference between the two disposition values (Irritability Cowardice) of the fittest ghosts proves a better indicator of the emotional state of the corresponding entity than either value by itself .
+Figure 4 shows the delta disposition for each of the eight fittest ghosts at each time step, plotted against the time in seconds, for a unit played as a chicken .
+The values clearly trend negative .
+Figure 5 shows a similar plot for a Rambo .
+Rambos tend to die early, and often do not give their ghosts enough time to evolve a clear picture of their personality, but in this case the positive Delta Disposition is evident before the unit"s demise .
+To characterize a unit"s personality, we maintain a 800 second exponentially weighted moving average of the Delta Disposition, and declare the unit to be a chicken or Rambo if this value passes a negative or positive threshold, respectively .
+Currently, this threshold is set at 0.25 .
+We are exploring additional filters .
+For example, a rapid rate of increase enhances the likelihood of calling a Rambo; units that seek to avoid detection and avoid combat are more readily called chicken .
+Table 1 shows the detection results for emotional units in a recent series of experiments .
+We never called a Rambo a chicken .
+In the one case where we called a chicken a Rambo, logs show that in fact the unit was being played aggressively, rushing toward oncoming Blue forces .
+The brave die young, so we almost never detect units played intentionally as Rambos .
+Figure 6 shows a comparison on a separate series of experiments of our emotion detector compared with humans .
+Two cowards were played in each of eleven games .
+Human observers in each game were able to detect a total of 13 of the cowards .
+BEE was able to detect cowards (= chickens) much earlier than the human, while missing only one chicken that the humans detected .
+In addition to these results on units intentionally played as emotional, BEE sometimes detects other units as cowardly or brave .
+Analysis of these units shows that these characterizations were appropriate
+4.2 Integrated Predictions Each ghost that runs into the future generates a possible path that its unit might follow .
+The paths in the resulting set over all ghosts vary in how likely they are, the risk they pose to their own or the opposite side, and so forth .
+In the experiments reported here, we select the future whose ghost receives the most guidance from pheromones in the environment at each step along the way .
+In this sense, it is the most likely future .
+In these experiments, we receive position reports only on units that have actually come within visual range of Blue units, or on average fewer than half of the live Red units at any time .
+We evaluate predictions spatially, comparing an entity"s actual location with the location predicted for it 15 minutes earlier .
+We compare BEE with two baselines
+In both cases, we use a CEP (circular error probable) measure of accuracy, the radius of the circle that one would have to draw around each prediction to capture 50% of the actual unit locations .
+The higher the CEP measure, the worse the accuracy .
+Figure 7 compares our accuracy with that of the gametheoretic predictor .
+Each point gives the median CEP measure over all predictions in a single run .
+Points above the diagonal favor BEE, while points below the line favor the game theoretic predictor .
+In all but two missions, BEE is more accurate .
+In one mission, the two systems are comparable, while in one, the gameTable 1
+Figure 5
+Cowards Found vs Percent of Run Time 0 2 4 6 8 10 12 14 0% 20% 40% 60% 80% 100% Percent of Run Time (Wall Clock) CowardsFound(outof22) Human ARM A Figure 6
+Human .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1431 theoretic predictor is more accurate .
+In 18 RAID runs, BEE generated 1405 predictions at each of two time horizons (0 and 15 minutes), while in 18 non RAID runs, staff generated 102 predictions .
+Figure .
+8 shows a box andwhisker plot of the CEP measures, in meters, of these predictions .
+The box covers the inter quartile range with a line at the median, whiskers extend to the most distant data points within 1.5 of the interquartile range from the edge of the box, squares show outliers within 3 interquartile ranges, and stars show more distant outliers .
+BEE"s median score even at 15 minutes is lower than either Staff median .
+The Wilcoxon test shows that the difference between the H15 scores is significant at the 99.76% level, while that between the H0 scores is significant at more than 99.999%. .

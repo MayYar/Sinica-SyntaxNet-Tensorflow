@@ -1,0 +1,29 @@
+ DECENTRALIZED ADAPTIVE SERVICE MODEL 
+MODEL In EDAS a decentralized, adaptive service normally matches a traditional service accessed by users like a web server, an instant messaging server or a source code repository .
+Such a service is represented by a fragmented object .
+This object expands or shrinks in the scope spanned by the associated service environment depending on the service demands and for fault tolerance reasons .
+Usually every part of the object is mobile and can be migrated if necessary .
+Each service has at least two interfaces one for management tasks and another service specific for the end user .
+The management interface offers methods to start, stop, and configure service instances .
+As this set of features requires an enormous implementation effort to do it anew for each service implementation we support the development of decentralized adaptive services through a framework and an extended version of IDL in combination with a special IDL compiler [] .
+The core idea is to develop a service in usual client server fashion as it is done in plain CORBA .
+This service then can be started and executed on the grid as a common servant .
+Additionally it should be possible to migrate the service .
+This can be achieved by using value type based approach to describe the service state as done in [] or using the language supplied serialization mechanisms .
+As we would like to tolerate node crashes and the service should be available during migration we support the active replication of the service .
+This is achieved by generating special client side stubs that communicate with one of the replicas .
+To keep the connection between clients and the replicated object we use time bounded references [] that restrict the migration but make the usage of location services (to cope with outdate references) obsolete .
+The replicas are synchronized via a group communication framework .
+The IDL extension consists of additional modifiers that affect code generation for client and server side .
+These are retain to mark non modifying operations which allows faster responses and load balancing of those requests .
+Furthermore one can mark methods as local which indicates that they can be locally processed .
+In this case the IDLcompiler creates placeholder for local execution .
+Apart form methods that are usual static this is useful to implement client side contribution and interaction .
+For example if a client stub offers a method which results in a file transfer it is possible to integrate a custom protocol that forwards a modified request to the replicated object which returns not the file as in the common case but URLs that point to clients that previously requested the file .
+Now the clientstub fetches the data from the offered location and responds as if it was supplied by the server object .
+This peer to peer based behavior as known from Napster is transparent to the client and can be switched on and off depending on environment conditions like load and community as needed .
+Finally we provide another modifier to mark administrative operations .
+If a method is marked with admin an authentication is necessary .
+The method to authenticate is pluggable and might be by pass phrase, internet address or any other authentication scheme .
+This modifier facilitates the creation of service management methods .
+Article  .

@@ -1,0 +1,366 @@
+Distance Measures for MPEG-7-based Retrieval 
+content:
+1 ABSTRACT :
+1-1:In visual information retrieval the careful choice of suitable proximity measures is a crucial success factor .
+1-2:The evaluation presented in this paper aims at showing that the distance measures suggested by the MPEG 7 group for the visual descriptors can be beaten by general purpose measures .
+1-3:Eight visual MPEG 7 descriptors were selected and 38 distance measures implemented .
+1-4:Three media collections were created and assessed, performance indicators developed and more than 22500 tests performed .
+1-5:Additionally, a quantisation model was developed to be able to use predicate based distance measures on continuous data as well .
+1-6:The evaluation shows that the distance measures recommended in the MPEG 7 standard are among the best but that other measures perform even better .
+1-7:H.3.3 [Information Storage and Retrieval]: Information Search .
+2 INTRODUCTION :
+2-1:The MPEG 7 standard defines among others a set of descriptors for visual media .
+2-2:Each descriptor consists of a feature extraction mechanism, a description (in binary and XML format) and guidelines that define how to apply the descriptor on different kinds of media (e.g .
+2-3:on temporal media) .
+2-4:The MPEG 7 descriptors have been carefully designed to meet partially complementaryrequirements of different application domains: archival, browsing, retrieval, etc .
+2-5:[9] .
+2-6:In the following, we will exclusively deal with the visual MPEG 7 descriptors in the context of media retrieval .
+2-7:The visual MPEG 7 descriptors fall in five groups: colour, texture, shape, motion and others (e.g .
+2-8:face description) and sum up to 16 basic descriptors .
+2-9:For retrieval applications, a rule for each descriptor is mandatory that defines how to measure the similarity of two descriptions .
+2-10:Common rules are distance functions, like the Euclidean distance and the Mahalanobis distance .
+2-11:Unfortunately, the MPEG 7 standard does not include distance measures in the normative part, because it was not designed to be (and should not exclusively understood to be) retrieval specific .
+2-12:However, the MPEG 7 authors give recommendations, which distance measure to use on a particular descriptor .
+2-13:These recommendations are based on accurate knowledge of the descriptors' behaviour and the description structures .
+2-14:In the present study a large number of successful distance measures from different areas (statistics, psychology, medicine, social and economic sciences, etc.) were implemented and applied on MPEG 7 data vectors to verify whether or not the recommended MPEG 7 distance measures are really the best for any reasonable class of media objects .
+2-15:From the MPEG 7 tests and the recommendations it does not become clear, how many and which distance measures have been tested on the visual descriptors and the MPEG 7 test datasets .
+2-16:The hypothesis is that analytically derived distance measures may be good in general but only a quantitative analysis is capable to identify the best distance measure for a specific feature extraction method .
+2-17:The paper is organised as follows .
+2-18:Section 2 gives a minimum of background information on the MPEG 7 descriptors and distance measurement in visual information retrieval (VIR, see [3], [16]) .
+2-19:Section 3 gives an overview over the implemented distance measures .
+2-20:Section 4 describes the test setup, including the test data and the implemented evaluation methods .
+2-21:Finally, Section 5 presents the results per descriptor and over all descriptors. .
+3 BACKGROUND :
+3-1:2.1 MPEG 7: visual descriptors The visual part of the MPEG 7 standard defines several descriptors .
+3-2:Not all of them are really descriptors in the sense that they extract properties from visual media .
+3-3:Some of them are just structures for descriptor aggregation or localisation .
+3-4:The basic descriptors are Color Layout, Color Structure, Dominant Color, Scalable Color, Edge Histogram, Homogeneous Texture, Texture Browsing, Region based Shape, Contour based Shape, Camera Motion, Parametric Motion and Motion Activity .
+3-5:Other descriptors are based on low level descriptors or semantic information: Group of Frames Group of Pictures Color (based on Scalable Color), Shape 3D (based on 3D mesh information), Motion Trajectory (based on object segmentation) and Face Recognition (based on face extraction) .
+3-6:Descriptors for spatiotemporal aggregation and localisation are: Spatial 2D Coordinates, Grid Layout, Region Locator (spatial), Time Series, Temporal Interpolation (temporal) and SpatioTemporal Locator (combined) .
+3-7:Finally, other structures exist for colour spaces, colour quantisation and multiple 2D views of 3D objects .
+3-8:These additional structures allow combining the basic descriptors in multiple ways and on different levels .
+3-9:But they do not change the characteristics of the extracted information .
+3-10:Consequently, structures for aggregation and localisation were not considered in the work described in this paper .
+3-11:2.2 Similarity measurement on visual data Generally, similarity measurement on visual information aims at imitating human visual similarity perception .
+3-12:Unfortunately, human perception is much more complex than any of the existing similarity models (it includes perception, recognition and subjectivity) .
+3-13:The common approach in visual information retrieval is measuring dis similarity as distance .
+3-14:Both, query object and candidate object are represented by their corresponding feature vectors .
+3-15:The distance between these objects is measured by computing the distance between the two vectors .
+3-16:Consequently, the process is independent of the employed querying paradigm (e.g .
+3-17:query by example) .
+3-18:The query object may be natural (e.g .
+3-19:a real object) or artificial (e.g .
+3-20:properties of a group of objects) .
+3-21:Goal of the measurement process is to express a relationship between the two objects by their distance .
+3-22:Iteration for multiple candidates allows then to define a partial order over the candidates and to address those in a (to be defined) neighbourhood being similar to the query object .
+3-23:At this point, it has to be mentioned that in a multi descriptor environmentespecially in MPEG 7 we are only half way towards a statement on similarity .
+3-24:If multiple descriptors are used (e.g .
+3-25:a descriptor scheme), a rule has to be defined how to combine all distances to a global value for each object .
+3-26:Still, distance measurement is the most important first step in similarity measurement .
+3-27:Obviously, the main task of good distance measures is to reorganise descriptor space in a way that media objects with the highest similarity are nearest to the query object .
+3-28:If distance is defined minimal, the query object is always in the origin of distance space and similar candidates should form clusters around the origin that are as large as possible .
+3-29:Consequently, many well known distance measures are based on geometric assumptions of descriptor space (e.g .
+3-30:Euclidean distance is based on the metric axioms) .
+3-31:Unfortunately, these measures do not fit ideally with human similarity perception (e.g .
+3-32:due to human subjectivity) .
+3-33:To overcome this shortage, researchers from different areas have developed alternative models that are mostly predicate based (descriptors are assumed to contain just binary elements, e.g .
+3-34:Tversky's Feature Contrast Model [17]) and fit better with human perception .
+3-35:In the following distance measures of both groups of approaches will be considered. .
+4 DISTANCE MEASURES :
+4-1:The distance measures used in this work have been collected from various areas (Subsection 3.1) .
+4-2:Because they work on differently quantised data, Subsection 3.2 sketches a model for unification on the basis of quantitative descriptions .
+4-3:Finally, Subsection 3.3 introduces the distance measures as well as their origin and the idea they implement .
+4-4:3.1 Sources Distance measurement is used in many research areas such as psychology, sociology (e.g .
+4-5:comparing test results), medicine (e.g .
+4-6:comparing parameters of test persons), economics (e.g .
+4-7:comparing balance sheet ratios), etc .
+4-8:Naturally, the character of data available in these areas differs significantly .
+4-9:Essentially, there are two extreme cases of data vectors (and distance measures): predicatebased (all vector elements are binary, e.g .
+4-10:{0, 1}) and quantitative (all vector elements are continuous, e.g .
+4-11:[0, 1]) .
+4-12:Predicates express the existence of properties and represent highlevel information while quantitative values can be used to measure and mostly represent low level information .
+4-13:Predicates are often employed in psychology, sociology and other human related sciences and most predicate based distance measures were therefore developed in these areas .
+4-14:Descriptions in visual information retrieval are nearly ever (if they do not integrate semantic information) quantitative .
+4-15:Consequently, mostly quantitative distance measures are used in visual information retrieval .
+4-16:The goal of this work is to compare the MPEG 7 distance measures with the most powerful distance measures developed in other areas .
+4-17:Since MPEG 7 descriptions are purely quantitative but some of the most sophisticated distance measures are defined exclusively on predicates, a model is mandatory that allows the application of predicate based distance measures on quantitative data .
+4-18:The model developed for this purpose is presented in the next section .
+4-19:3.2 Quantisation model The goal of the quantisation model is to redefine the set operators that are usually used in predicate based distance measures on continuous data .
+4-20:The first in visual information retrieval to follow this approach were Santini and Jain, who tried to apply Tversky's Feature Contrast Model [17] to content based image retrieval [12], [13] .
+4-21:They interpreted continuous data as fuzzy predicates and used fuzzy set operators .
+4-22:Unfortunately, their model suffered from several shortcomings they described in [12], [13] (for example, the quantitative model worked only for one specific version of the original predicate based measure) .
+4-23:The main idea of the presented quantisation model is that set operators are replaced by statistical functions .
+4-24:In [5] the authors could show that this interpretation of set operators is reasonable .
+4-25:The model offers a solution for the descriptors considered in the evaluation .
+4-26:It is not specific to one distance measure, but can be applied to any predicate based measure .
+4-27:Below, it will be shown that the model does not only work for predicate data but for quantitative data as well .
+4-28:Each measure implementing the model can be used as a substitute for the original predicate based measure .
+4-29:Generally, binary properties of two objects (e.g .
+4-30:media objects) can exist in both objects (denoted as a), in just one (b, c) or in none of them (d) .
+4-31:The operator needed for these relationships are UNION, MINUS and NOT .
+4-32:In the quantisation model they are replaced as follows (see [5] for further details) .
+4-33:131 ∑     ≤ + − + ==∩= k jkikjkik kkji else xx Mif xx ssXXa 0 22, 1ε ( ) ( ) ∑ ∑ ∑     ≤ ++ −==¬∩¬=    ≤−−− ==−=    ≤−−− ==−= k jkikjkik kkji k ikjkikjk kkij k jkikjkik kkji else xx if xx MssXXd else xxMifxx ssXXc else xxMifxx ssXXb 0 22, 0 , 0 , 1 2 2 ε ε ε with: ( ) [ ] ( ) { }0\ .
+4-34:0 1 .
+4-35:0 1 , 2 2 1 minmax maxmin + ∈ − =     ≥      − = =     ≥      − = −= ∈= ∑ ∑ ∑ ∑ Rp ki x where else pif p M ki x where else pif p M xxM xxxwithxX i k ik i k ik ikiki µ σ σ σ ε µ µ µ ε a selects properties that are present in both data vectors (Xi, Xj representing media objects), b and c select properties that are present in just one of them and d selects properties that are present in neither of the two data vectors .
+4-36:Every property is selected by the extent to which it is present (a and d: mean, b and c: difference) and only if the amount to which it is present exceeds a certain threshold (depending on the mean and standard deviation over all elements of descriptor space) .
+4-37:The implementation of these operators is based on one assumption .
+4-38:It is assumed that vector elements measure on interval scale .
+4-39:That means, each element expresses that the measured property is "more or less" present ("0": not at all, "M": fully present) .
+4-40:This is true for most visual descriptors and all MPEG 7 descriptors .
+4-41:A natural origin as it is assumed here ("0") is not needed .
+4-42:Introducing p (called discriminance defining parameter) for the thresholds 21 ,εε has the positive consequence that a, b, c, d can then be controlled through a single parameter .
+4-43:p is an additional criterion for the behaviour of a distance measure and determines the thresholds used in the operators .
+4-44:It expresses how accurate data items are present (quantisation) and consequently, how accurate they should be investigated .
+4-45:p can be set by the user or automatically .
+4-46:Interesting are the limits: .
+5 Mp →⇒∞→ 21 ,εε :
+5-1:In this case, all elements (=properties) are assumed to be continuous (high quantisation) .
+5-2:In consequence, all properties of a descriptor are used by the operators .
+5-3:Then, the distance measure is not discriminant for properties. .
+6 0,0 21 →⇒→ εεp :
+6-1:In this case, all properties are assumed to be predicates .
+6-2:In consequence, only binary elements (=predicates) are used by the operators (1 bit quantisation) .
+6-3:The distance measure is then highly discriminant for properties .
+6-4:Between these limits, a distance measure that uses the quantisation model is depending on p more or less discriminant for properties .
+6-5:This means, it selects a subset of all available description vector elements for distance measurement .
+6-6:For both predicate data and quantitative data it can be shown that the quantisation model is reasonable .
+6-7:If description vectors consist of binary elements only, p should be used as follows (for example, p can easily be set automatically): ( )σµεε ,min..,0,0 21 ==⇒→ pgep In this case, a, b, c, d measure like the set operators they replace .
+6-8:For example, Table 1 shows their behaviour for two onedimensional feature vectors Xi and Xj .
+6-9:As can be seen, the statistical measures work like set operators .
+6-10:Actually, the quantisation model works accurate on predicate data for any p≠∞ .
+6-11:To show that the model is reasonable for quantitative data the following fact is used .
+6-12:It is easy to show that for predicate data some quantitative distance measures degenerate to predicatebased measures .
+6-13:For example, the L1 metric (Manhattan metric) degenerates to the Hamming distance (from [9], without weights): distanceHammingcbxxL k jkik =+≡−= ∑1 If it can be shown that the quantisation model is able to reconstruct the quantitative measure from the degenerated predicate based measure, the model is obviously able to extend predicate based measures to the quantitative domain .
+6-14:This is easy to illustrate .
+6-15:For purely quantitative feature vectors, p should be used as follows (again, p can easily be set automatically): 1, 21 =⇒∞→ εεp Then, a and d become continuous functions: ∑ ∑ + −==⇒≡≤ + + ==⇒≡≤ + − k jkik kk jkik k jkik kk jkik xx MswheresdtrueM xx xx swheresatrueM xx M 22 22 b and c can be made continuous for the following expressions: ( ) ( ) ∑ ∑ ∑ −==+⇒    ≥−− ==⇒ ≥−≡≤−−    ≥−− ==⇒ ≥−≡≤−− k jkikkk k ikjkikjk kk ikjkikjk k jkikjkik kk jkikjkik xxswherescb else xxifxx swheresc xxMxxM else xxifxx swheresb xxMxxM 0 0 0 0 0 0 Table 1 .
+6-16:Quantisation model on predicate vectors .
+6-17:Xi Xj a b c d (1) (1) 1 0 0 0 (1) (0) 0 1 0 0 (0) (1) 0 0 1 0 (0) (0) 0 0 0 1 132 ∑ ∑ −==− −==− k ikjkkk k jkikkk xxswheresbc xxswherescb This means, for sufficiently high p every predicate based distance measure that is either not using b and c or just as b+c, b c or c b, can be transformed into a continuous quantitative distance measure .
+6-18:For example, the Hamming distance (again, without weights): 1 Lxxxxswherescb k jkik k jkikkk =−=−==+ ∑∑ The quantisation model successfully reconstructs the L1 metric and no distance measure specific modification has to be made to the model .
+6-19:This demonstrates that the model is reasonable .
+6-20:In the following it will be used to extend successful predicate based distance measures on the quantitative domain .
+6-21:The major advantages of the quantisation model are: (1) it is application domain independent, (2) the implementation is straightforward, (3) the model is easy to use and finally, (4) the new parameter p allows to control the similarity measurement process in a new way (discriminance on property level) .
+6-22:3.3 Implemented measures For the evaluation described in this work next to predicate based (based on the quantisation model) and quantitative measures, the distance measures recommended in the MPEG 7 standard were implemented (all together 38 different distance measures) .
+6-23:Table 2 summarises those predicate based measures that performed best in the evaluation (in sum 20 predicate based measures were investigated) .
+6-24:For these measures, K is the number of predicates in the data vectors Xi and Xj .
+6-25:In P1, the sum is used for Tversky's f() (as Tversky himself does in [17]) and α, β are weights for element b and c .
+6-26:In [5] the author's investigated Tversky's Feature Contrast Model and found α=1, β=0 to be the optimum parameters .
+6-27:Some of the predicate based measures are very simple (e.g .
+6-28:P2, P4) but have been heavily exploited in psychological research .
+6-29:Pattern difference (P6) a very powerful measure is used in the statistics package SPSS for cluster analysis .
+6-30:P7 is a correlation coefficient for predicates developed by Pearson .
+6-31:Table 3 shows the best quantitative distance measures that were used .
+6-32:Q1 and Q2 are metric based and were implemented as representatives for the entire group of Minkowski distances .
+6-33:The wi are weights .
+6-34:In Q5, ii σµ , are mean and standard deviation for the elements of descriptor Xi .
+6-35:In Q6, m is 2 M (=0.5) .
+6-36:Q3, the Canberra metric, is a normalised form of Q1 .
+6-37:Similarly, Q4, Clark's divergence coefficient is a normalised version of Q2 .
+6-38:Q6 is a further developed correlation coefficient that is invariant against sign changes .
+6-39:This measure is used even though its particular properties are of minor importance for this application domain .
+6-40:Finally, Q8 is a measure that takes the differences between adjacent vector elements into account .
+6-41:This makes it structurally different from all other measures .
+6-42:Obviously, one important distance measure is missing .
+6-43:The Mahalanobis distance was not considered, because different descriptors would require different covariance matrices and for some descriptors it is simply impossible to define a covariance matrix .
+6-44:If the identity matrix was used in this case, the Mahalanobis distance would degenerate to a Minkowski distance .
+6-45:Additionally, the recommended MPEG 7 distances were implemented with the following parameters: In the distance measure of the Color Layout descriptor all weights were set to "1" (as in all other implemented measures) .
+6-46:In the distance measure of the Dominant Color descriptor the following parameters were used: 20,1,3.0,7.0 21 ==== dTww α (as recommended) .
+6-47:In the Homogeneous Texture descriptor's distance all ( )kα were set to "1" and matching was done rotation and scale invariant .
+6-48:Important! Some of the measures presented in this section are distance measures while others are similarity measures .
+6-49:For the tests, it is important to notice, that all similarity measures were inverted to distance measures. .
+7 TEST SETUP :
+7-1:Subsection 4.1 describes the descriptors (including parameters) and the collections (including ground truth information) that were used in the evaluation .
+7-2:Subsection 4.2 discusses the evaluation method that was implemented and Subsection 4.3 sketches the test environment used for the evaluation process .
+7-3:4.1 Test data For the evaluation eight MPEG 7 descriptors were used .
+7-4:All colour descriptors: Color Layout, Color Structure, Dominant Color, Scalable Color, all texture descriptors: Edge Histogram, Homogeneous Texture, Texture Browsing and one shape descriptor: Region based Shape .
+7-5:Texture Browsing was used even though the MPEG 7 standard suggests that it is not suitable for retrieval .
+7-6:The other basic shape descriptor, Contour based Shape, was not used, because it produces structurally different descriptions that cannot be transformed to data vectors with elements measuring on interval scales .
+7-7:The motion descriptors were not used, because they integrate the temporal dimension of visual media and would only be comparable, if the basic colour, texture and shape descriptors would be aggregated over time .
+7-8:This was not done .
+7-9:Finally, no high level descriptors were used (Localisation, Face Recognition, etc., see Subsection 2.1), because to the author's opinion the behaviour of the basic descriptors on elementary media objects should be evaluated before conclusions on aggregated structures can be drawn .
+7-10:Table 2 .
+7-11:Predicate based distance measures .
+7-12:No .
+7-13:Measure Comment P1 cba . .
+7-14:βα −− Feature Contrast Model, Tversky 1977 [17] P2 a No .
+7-15:of co occurrences P3 cb + Hamming distance P4 K a Russel 1940 [14] P5 cb a + Kulczvnski 1927 [14] P6 2 K bc Pattern difference [14] P7 ( )( )( )( )dcdbcaba bcad ++++ − Pearson 1926 [11] 133 The Texture Browsing descriptions had to be transformed from five bins to an eight bin representation in order that all elements of the descriptor measure on an interval scale .
+7-16:A Manhattan metric was used to measure proximity (see [6] for details) .
+7-17:Descriptor extraction was performed using the MPEG 7 reference implementation .
+7-18:In the extraction process each descriptor was applied on the entire content of each media object and the following extraction parameters were used .
+7-19:Colour in Color Structure was quantised to 32 bins .
+7-20:For Dominant Color colour space was set to YCrCb, 5 bit default quantisation was used and the default value for spatial coherency was used .
+7-21:Homogeneous Texture was quantised to 32 components .
+7-22:Scalable Color values were quantised to sizeof(int) 3 bits and 64 bins were used .
+7-23:Finally, Texture Browsing was used with five components .
+7-24:These descriptors were applied on three media collections with image content: the Brodatz dataset (112 images, 512x512 pixel), a subset of the Corel dataset (260 images, 460x300 pixel, portrait and landscape) and a dataset with coats of arms images (426 images, 200x200 pixel) .
+7-25:Figure 1 shows examples from the three collections .
+7-26:Designing appropriate test sets for a visual evaluation is a highly difficult task (for example, see the TREC video 2002 report [15]) .
+7-27:Of course, for identifying the best distance measure for a descriptor, it should be tested on an infinite number of media objects .
+7-28:But this is not the aim of this study .
+7-29:It is just evaluated if for likely image collections better proximity measures than those suggested by the MPEG 7 group can be found .
+7-30:Collections of this relatively small size were used in the evaluation, because the applied evaluation methods are above a certain minimum size invariant against collection size and for smaller collections it is easier to define a high quality ground truth .
+7-31:Still, the average ratio of ground truth size to collection size is at least 1:7 .
+7-32:Especially, no collection from the MPEG 7 dataset was used in the evaluation because the evaluations should show, how well the descriptors and the recommended distance measures perform on "unknown" material .
+7-33:When the descriptor extraction was finished, the resulting XML descriptions were transformed into a data matrix with 798 lines (media objects) and 314 columns (descriptor elements) .
+7-34:To be usable with distance measures that do not integrate domain knowledge, the elements of this data matrix were normalised to [0, 1] .
+7-35:For the distance evaluation next to the normalised data matrixhuman similarity judgement is needed .
+7-36:In this work, the ground truth is built of twelve groups of similar images (four for each dataset) .
+7-37:Group membership was rated by humans based on semantic criterions .
+7-38:Table 4 summarises the twelve groups and the underlying descriptions .
+7-39:It has to be noticed, that some of these groups (especially 5, 7 and 10) are much harder to find with lowlevel descriptors than others .
+7-40:4.2 Evaluation method Usually, retrieval evaluation is performed based on a ground truth with recall and precision (see, for example, [3], [16]) .
+7-41:In multidescriptor environments this leads to a problem, because the resulting recall and precision values are strongly influenced by the method used to merge the distance values for one media object .
+7-42:Even though it is nearly impossible to say, how big the influence of a single distance measure was on the resulting recall and precision values, this problem has been almost ignored so far .
+7-43:In Subsection 2.2 it was stated that the major task of a distance measure is to bring the relevant media objects as close to the origin (where the query object lies) as possible .
+7-44:Even in a multidescriptor environment it is then simple to identify the similar objects in a large distance space .
+7-45:Consequently, it was decided to Table 3 .
+7-46:Quantitative distance measures .
+7-47:No .
+7-48:Measure Comment No .
+7-49:Measure Comment Q1 ∑ − k jkiki xxw City block distance (L1 ) Q2 ( )∑ − k jkiki xxw 2 Euclidean distance (L2 ) Q3 ∑ + − k jkik jkik xx xx Canberra metric, Lance, Williams 1967 [8] Q4 ( ) ∑ + − k jkik jkik xx xx K 2 1 Divergence coefficient, Clark 1952 [1] Q5 ( )( ) ( ) ( )∑ ∑ ∑ −− −− k k jjkiik k jjkiik xx xx 22 µµ µµ Correlation coefficient Q6       −+      −−       +−− ∑∑∑ ∑ ∑∑ k ik k jkik k ik k k jk k ikjkik xmKmxxmKmx xxmKmxx 2..2 2222 Cohen 1969 [2] Q7 ∑ ∑ ∑ k k jkik k jkik xx xx 22 Angular distance, Gower 1967 [7] Q8 ( ) ( )( )∑ − ++ −−− 1 2 11 K k jkjkikik xxxx Meehl Index [10] Table 4 .
+7-50:Ground truth information .
+7-51:Coll .
+7-52:No Images Description 1 19 Regular, chequered patterns 2 38 Dark white noise 3 33 Moon like surfaces Brodatz 4 35 Water like surfaces 5 73 Humans in nature (difficult) 6 17 Images with snow (mountains, skiing) 7 76 Animals in nature (difficult) Corel 8 27 Large coloured flowers 9 12 Bavarian communal arms 10 10 All Bavarian arms (difficult) 11 18 Dark objects light unsegmented shield Arms 12 14 Major charges on blue or red shield 134 use indicators measuring the distribution in distance space of candidates similar to the query object for this evaluation instead of recall and precision .
+7-53:Identifying clusters of similar objects (based on the given ground truth) is relatively easy, because the resulting distance space for one descriptor and any distance measure is always one dimensional .
+7-54:Clusters are found by searching from the origin of distance space to the first similar object, grouping all following similar objects in the cluster, breaking off the cluster with the first un similar object and so forth .
+7-55:For the evaluation two indicators were defined .
+7-56:The first measures the average distance of all cluster means to the origin: distanceavgclustersno sizecluster distanceclustersno i i sizecluster j ij d i _._ _ _ _ ∑ ∑ =µ where distanceij is the distance value of the j th element in the i th cluster, ∑ ∑ ∑ = CLUSTERS i i CLUSTERS i sizecluster j ij sizecluster distance distanceavg i _ _ _ , no_clusters is the number of found clusters and cluster_sizei is the size of the i th cluster .
+7-57:The resulting indicator is normalised by the distribution characteristics of the distance measure (avg_distance) .
+7-58:Additionally, the standard deviation is used .
+7-59:In the evaluation process this measure turned out to produce valuable results and to be relatively robust against parameter p of the quantisation model .
+7-60:In Subsection 3.2 we noted that p affects the discriminance of a predicate based distance measure: The smaller p is set the larger are the resulting clusters because the quantisation model is then more discriminant against properties and less elements of the data matrix are used .
+7-61:This causes a side effect that is measured by the second indicator: more and more un similar objects come out with exactly the same distance value as similar objects (a problem that does not exist for large p's) and become indiscernible from similar objects .
+7-62:Consequently, they are (false) cluster members .
+7-63:This phenomenon (conceptually similar to the "false negatives" indicator) was named "cluster pollution" and the indicator measures the average cluster pollution over all clusters: clustersno doublesno cp clustersno i sizecluster j ij i _ _ _ _ ∑ ∑ = where no_doublesij is the number of indiscernible un similar objects associated with the j th element of cluster i .
+7-64:Remark: Even though there is a certain influence, it could be proven in [5] that no significant correlation exists between parameter p of the quantisation model and cluster pollution .
+7-65:4.3 Test environment As pointed out above, to generate the descriptors, the MPEG 7 reference implementation in version 5.6 was used (provided by TU Munich) .
+7-66:Image processing was done with Adobe Photoshop and normalisation and all evaluations were done with Perl .
+7-67:The querying process was performed in the following steps: (1) random selection of a ground truth group, (2) random selection of a query object from this group, (3) distance comparison for all other objects in the dataset, (4) clustering of the resulting distance space based on the ground truth and finally, (5) evaluation .
+7-68:For each combination of dataset and distance measure 250 queries were issued and evaluations were aggregated over all datasets and descriptors .
+7-69:The next section shows the partially surprisingresults. .
+8 RESULTS :
+8-1:In the results presented below the first indicator from Subsection 4.2 was used to evaluate distance measures .
+8-2:In a first step parameter p had to be set in a way that all measures are equally discriminant .
+8-3:Distance measurement is fair if the following condition holds true for any predicate based measure dP and any continuous measure dC: ( ) ( )CP dcppdcp ≈, Then, it is guaranteed that predicate based measures do not create larger clusters (with a higher number of similar objects) for the price of higher cluster pollution .
+8-4:In more than 1000 test queries the optimum value was found to be p=1 .
+8-5:Results are organised as follows: Subsection 5.1 summarises the Figure 1 .
+8-6:Test datasets .
+8-7:Left: Brodatz dataset, middle: Corel dataset, right: coats of arms dataset .
+8-8:135 best distance measures per descriptor, Section 5.2 shows the best overall distance measures and Section 5.3 points out other interesting results (for example, distance measures that work particularly good on specific ground truth groups) .
+8-9:5.1 Best measure per descriptor Figure 2 shows the evaluation results for the first indicator .
+8-10:For each descriptor the best measure and the performance of the MPEG 7 recommendation are shown .
+8-11:The results are aggregated over the tested datasets .
+8-12:On first sight, it becomes clear that the MPEG 7 recommendations are mostly relatively good but never the best .
+8-13:For Color Layout the difference between MP7 and the best measure, the Meehl index (Q8), is just 4% and the MPEG 7 measure has a smaller standard deviation .
+8-14:The reason why the Meehl index is better may be that this descriptors generates descriptions with elements that have very similar variance .
+8-15:Statistical analysis confirmed that (see [6]) .
+8-16:For Color Structure, Edge Histogram, Homogeneous Texture, Region based Shape and Scalable Color by far the best measure is pattern difference (P6) .
+8-17:Psychological research on human visual perception has revealed that in many situation differences between the query object and a candidate weigh much stronger than common properties .
+8-18:The pattern difference measure implements this insight in the most consequent way .
+8-19:In the author's opinion, the reason why pattern difference performs so extremely well on many descriptors is due to this fact .
+8-20:Additional advantages of pattern difference are that it usually has a very low variance andbecause it is a predicate based measure its discriminance (and cluster structure) can be tuned with parameter p .
+8-21:The best measure for Dominant Color turned out to be Clark's Divergence coefficient (Q4) .
+8-22:This is a similar measure to pattern difference on the continuous domain .
+8-23:The Texture Browsing descriptor is a special problem .
+8-24:In the MPEG 7 standard it is recommended to use it exclusively for browsing .
+8-25:After testing it for retrieval on various distance measures the author supports this opinion .
+8-26:It is very difficult to find a good distance measure for Texture Browsing .
+8-27:The proposed Manhattan metric, for example, performs very bad .
+8-28:The best measure is predicate based (P7) .
+8-29:It works on common properties (a, d) but produces clusters with very high cluster pollution .
+8-30:For this descriptor the second indicator is up to eight times higher than for predicate based measures on other descriptors .
+8-31:5.2 Best overall measures Figure 3 summarises the results over all descriptors and media collections .
+8-32:The diagram should give an indication on the general potential of the investigated distance measures for visual information retrieval .
+8-33:It can be seen that the best overall measure is a predicate based one .
+8-34:The top performance of pattern difference (P6) proves that the quantisation model is a reasonable method to extend predicate based distance measures on the continuous domain .
+8-35:The second best group of measures are the MPEG 7 recommendations, which have a slightly higher mean but a lower standard deviation than pattern difference .
+8-36:The third best measure is the Meehl index (Q8), a measure developed for psychological applications but because of its characteristic properties tailormade for certain (homogeneous) descriptors .
+8-37:Minkowski metrics are also among the best measures: the average mean and variance of the Manhattan metric (Q1) and the Euclidean metric (Q2) are in the range of Q8 .
+8-38:Of course, these measures do not perform particularly well for any of the descriptors .
+8-39:Remarkably for a predicate based measure, Tversky's Feature Contrast Model (P1) is also in the group of very good measures (even though it is not among the best) that ends with Q5, the correlation coefficient .
+8-40:The other measures either have a significantly higher mean or a very large standard deviation .
+8-41:5.3 Other interesting results Distance measures that perform in average worse than others may in certain situations (e.g .
+8-42:on specific content) still perform better .
+8-43:For Color Layout, for example, Q7 is a very good measure on colour photos .
+8-44:It performs as good as Q8 and has a lower standard deviation .
+8-45:For artificial images the pattern difference and the Hamming distance produce comparable results as well .
+8-46:If colour information is available in media objects, pattern difference performs well on Dominant Color (just 20% worse Q4) and in case of difficult ground truth (group 5, 7, 10) the Meehl index is as strong as P6 .
+8-47:0,000 0,001 0,002 0,003 0,004 0,005 0,006 0,007 0,008 Q8 MP7 P6 MP7 Q4 MP7 P6 MP7 P6 MP7 P6 MP7 P6 MP7 P7 Q2 Color Layout Color Structure Dominant Color Edge Histogram Homog .
+8-48:Texture Region Shape Scalable Color Texture Browsing Figure 2 .
+8-49:Results per measure and descriptor .
+8-50:The horizontal axis shows the best measure and the performance of the MPEG 7 recommendation for each descriptor .
+8-51:The vertical axis shows the values for the first indicator (smaller value = better cluster structure) .
+8-52:Shades have the following meaning: black=µ σ (good cases), black + dark grey=µ (average) and black + dark grey + light grey=µ+σ (bad) .
+8-53:136 .
+9-1:The evaluation presented in this paper aims at testing the recommended distance measures and finding better ones for the basic visual MPEG 7 descriptors
+9-2:Eight descriptors were selected, 38 distance measures were implemented, media collections were created and assessed, performance indicators were defined and more than 22500 tests were performed
+9-3:To be able to use predicate based distance measures next to quantitative measures a quantisation model was defined that allows the application of predicate based measures on continuous data
+9-4:In the evaluation the best overall distance measures for visual content  as extracted by the visual MPEG 7 descriptors  turned out to be the pattern difference measure and the Meehl index (for homogeneous descriptions)
+9-5:Since these two measures perform significantly better than the MPEG 7 recommendations they should be further tested on large collections of image and video content (e.g
+9-6:from [15])
+9-7:The choice of the right distance function for similarity measurement depends on the descriptor, the queried media collection and the semantic level of the user's idea of similarity
+9-8:This work offers suitable distance measures for various situations
+9-9:In consequence, the distance measures identified as the best will be implemented in the open MPEG 7 based visual information retrieval framework VizIR [4]
+9-10:ACKNOWLEDGEMENTS The author would like to thank Christian Breiteneder for his valuable comments and suggestions for improvement
+9-11:The work presented in this paper is part of the VizIR project funded by the Austrian Scientific Research Fund FWF under grant no
+9-12:P16111.
+10-1:Clark, P.S
+10-2:An extension of the coefficient of divergence for use with multiple characters
+10-3:Copeia, 2 (1952), 61 64
+10-4:Cohen, J
+10-5:A profile similarity coefficient invariant over variable reflection
+10-6:Psychological Bulletin, 71 (1969), 281284
+10-7:Del Bimbo, A
+10-8:Visual information retrieval
+10-9:Morgan Kaufmann Publishers, San Francisco CA, 1999
+10-10:Eidenberger, H., and Breiteneder, C
+10-11:A framework for visual information retrieval
+10-12:In Proceedings Visual Information Systems Conference (HSinChu Taiwan, March 2002), LNCS 2314, Springer Verlag, 105 116
+10-13:Eidenberger, H., and Breiteneder, C
+10-14:Visual similarity measurement with the Feature Contrast Model
+10-15:In Proceedings SPIE Storage and Retrieval for Media Databases Conference (Santa Clara CA, January 2003), SPIE Vol
+10-16:5021, 64 76
+10-17:Eidenberger, H., How good are the visual MPEG 7 features? In Proceedings SPIE Visual Communications and Image Processing Conference (Lugano Switzerland, July 2003), SPIE Vol
+10-18:5150, 476 488
+10-19:Gower, J.G
+10-20:Multivariate analysis and multidimensional geometry
+10-21:The Statistician, 17 (1967),13 25
+10-22:Lance, G.N., and Williams, W.T
+10-23:Mixed data classificatory programs
+10-24:Agglomerative Systems Australian Comp
+10-25:Journal, 9 (1967), 373 380
+10-26:Manjunath, B.S., Ohm, J.R., Vasudevan, V.V., and Yamada, A
+10-27:Color and texture descriptors
+10-28:In Special Issue on MPEG7
+10-29:IEEE Transactions on Circuits and Systems for Video Technology, 11 6 (June 2001), 703 715
+10-30:Meehl, P
+10-31:E
+10-32:The problem is epistemology, not statistics: Replace significance tests by confidence intervals and quantify accuracy of risky numerical predictions
+10-33:In Harlow, L.L., Mulaik, S.A., and Steiger, J.H
+10-34:(Eds.)
+10-35:What if there were no significance tests? Erlbaum, Mahwah NJ, 393 425
+10-36:Pearson, K
+10-37:On the coefficients of racial likeness
+10-38:Biometrica, 18 (1926), 105 117
+10-39:Santini, S., and Jain, R
+10-40:Similarity is a geometer
+10-41:Multimedia Tools and Application, 5 3 (1997), 277 306
+10-42:Santini, S., and Jain, R
+10-43:Similarity measures
+10-44:IEEE Transactions on Pattern Analysis and Machine Intelligence, 21 9 (September 1999), 871 883
+10-45:Sint, P.P
+10-46:Similarity structures and similarity measures
+10-47:Austrian Academy of Sciences Press, Vienna Austria, 1975 (in German)
+10-48:Smeaton, A.F., and Over, P
+10-49:The TREC 2002 video track report
+10-50:NIST Special Publication SP 500 251 (March 2003), available from: http:  trec.nist.gov pubs trec11 papers  VIDEO.OVER.pdf (last visited: 2003 07 29) Smeulders, A.W.M., Worring, M., Santini, S., Gupta, A., and Jain, R
+10-51:Content based image retrieval at the end of the early years
+10-52:IEEE Transactions on Pattern Analysis and Machine Intelligence, 22 12 (December 2000), 1349 1380
+10-53:Tversky, A
+10-54:Features of similarity
+10-55:Psychological Review, 84 4 (July 1977), 327 351
+10-56:0,000 0,002 0,004 0,006 0,008 0,010 0,012 0,014 0,016 0,018 0,020 P6 MP7 Q8 Q1 Q4 Q2 P2 P4 Q6 Q3 Q7 P1 Q5 P3 P5 P7 Figure 3
+10-57:Overall results (ordered by the first indicator)
+10-58:The vertical axis shows the values for the first indicator (smaller value = better cluster structure)
+10-59:Shades have the following meaning: black=µ σ, black + dark grey=µ and black + dark grey + light grey=µ+σ
+10-60:137
+picture:

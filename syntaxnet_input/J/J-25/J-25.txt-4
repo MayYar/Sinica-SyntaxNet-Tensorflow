@@ -1,0 +1,96 @@
+COMPOUND SECURITIES 3.1 High level description Common knowledge among agents is the set of events A .
+There are no predefined securities .
+Instead, agents offer to buy or sell securities of their own design that pay off contingent on logical combinations of events and event negations .
+Combination operators may include conjunctions, disjunctions, and conditionals .
+For all practical purposes, it is impossible for agents to trade in enough securities (2n ) to form a complete market, so agents must devise their best tradeoff between the number and complexity of their bids, and the extent to which their risks are hedged and desirable bets are placed .
+In its most general form, the problem is game theoretic in nature, since what an agent should offer depends on what it believes other agents will accept .
+At the other end of the spectrum, a simplified version of the problem is to optimize bids only on currently available securities at current prices .
+In between these two formulations are other possible interesting optimization problems .
+Approximation algorithms might also be pursued .
+The auctioneer faces a nontrivial problem of matching buy and sell orders to maximize surplus (the cash and securities left over after accepted bids are fulfilled) .
+For example, offers to sell A1A2 at $0.2 and A1 ¡ÂA2 at $0.1 can match with an offer to buy A1 at $0.4, with surplus $0.1 .
+Or an offer to sell A1 at $0.3 can match with an offer to buy A1A2 at $0.4, with surplus $0.1 in cash and A1 ¡ÂA2 in securities .
+In general, a single security might qualify for multiple matches, but only one can be transacted .
+So the auctioneer must find the optimal set of matches that maximizes surplus, which could be measured in a number of ways .
+Again, approximation algorithms might be considered .
+In another formulation, the auctioneer functions as a market maker willing to take on a certain amount of risk .
+Informally, our motivation is to provide a mechanism that allows a very high degree of expressivity in placing hedges and bets, and is also capable of approximating the optimal (complete market) allocation of risk, trading off the number and complexity of securities and transactions needed .
+3.2 Formal description 3.2.1 Securities We use £p and £r to denote arbitrary boolean formulas, or logical combinations of events in A .
+We denote securities £p|£r .
+Securities pay off $1 if and only if (iff) £p and £r are true, pay off $0 iff £p is false and £r is true, and are canceled (i.e., any price paid is refunded) iff £r is false .
+We define T ¡Ý ? to be the event true and F ¡Ý ? to be the event false .
+We abbreviate £p|T as £p .
+3.2.2 Orders Agents place orders, denoted o, of the form q units of £p|£r at price p per unit, where q > 0 implies a buy order and q < 0 implies a sell order .
+We assume agents submitting buy (sell) orders will accept any price p? ? p (p? ? p) .
+We distinguish between divisible and indivisible orders .
+Agents submitting divisible orders will accept any quantity £\q where 0 < £\ ? 1 .
+Agents submitting indivisible orders will accept only exactly q units, or none at all .
+We believe that, given the nature of what is being traded (state contingent dollars), most agents will be content to trade using divisible orders .
+Every order o can be translated into a payoff vector £W across all states £s ? ? .
+The payoff £W £s in state £s is q ¡P 1£s?£r(1£s?£p ? p), where 1£s?E equals 1 iff £s ? E and zero otherwise .
+Recall that the 2n states correspond to the 2n possible combinations of event outcomes .
+We index multiple orders with subscripts (e.g., oi and £Wi) .
+Let the set of all orders be O and the set of all corresponding payoff vectors be P .
+Example 1 .
+(Translating orders into payoff vectors) Suppose that |A| = 3 .
+Consider an order to buy two units of A2 ? A3|A1 at price $0.8 .
+The corresponding payoff vector is
+.
+.
+, £W ¡ÂA1 ¡ÂA2 ¡ÂA3 = 2 ¡P 0.2, 0.2, 0.2, ?0.8, 0, 0, 0, 0 2 3.2.3 The matching problem The auctioneer"s task, called the matching problem, is to determine which orders to accept among all orders o ? O .
+Let £\i be the fraction of order oi accepted by the auctioneer (in the indivisible case, £\i must be either 0 or 1; in the divisible case, £\i can range from 0 to 1) .
+If £\i = 0, then order oi is considered rejected and no transactions take place concerning this order .
+For accepted orders (£\i > 0), the auctioneer receives the money lost by bidders and pays out the money won by bidders, so the auctioneer"s payoff vector is
+We also call the auctioneer"s payoff vector the surplus vector, since it is the (possibly state contingent) money left over after all accepted orders are filled .
+Assume that the auctioneer wants to choose a set of orders so that it is guaranteed not to lose any money in any future state, but that the auctioneer does not necessarily insist on obtaining a positive benefit from the transaction (i.e., the auctioneer is content to break even) .
+Definition 1 .
+(Matching problem, indivisible case) Given a set of orders O, does there exist £\i ? {0, 1} with at least one £\i = 1 such that ?£s, £W £s auc ? 0? In other words, does there exist a nonempty subset of orders that the auctioneer can accept without risk? 2 If ?£s, £W £s auc = c where c is nonnegative, then the surplus leftover after processing this match is c dollars .
+Let m = min£s[£W £s auc] .
+In general, processing a match leaves m dollars in cash and £W £s auc ? m in state contingent dollars, which can then be translated into securities .
+Example 2 .
+(Indivisible order matching) Suppose |A| = 0.4 and an order to sell one unit of A1 at price 0.3 .
+The 147 corresponding payoff vectors are
+Since all components are nonnegative, the two orders match .
+The auctioneer can process both orders, leaving a surplus of $0.1 in cash and one unit of A1 ¡ÂA2 in securities .
+2 Now consider the divisible case, where order can be partially filled .
+Definition 2 .
+(Matching problem, divisible case) Given a set of orders O, does there exist £\i ? [0, 1] with at least one £\i > 0 such that ?£s, £W £s auc ? 0, 2 Example 3 .
+(Divisible order matching) Suppose |A| = 2 .
+Consider an order to sell one unit of A1 at price $0.5, an order to buy one unit of A1A2|A1 ? A2 at price $0.5, and an order to buy one unit of A1| ¡ÂA2 at price $0.4 .
+The corresponding payoff vectors are
+However, if £\1 = £\2 = 3 5 and £\3 = 1, then the auctioneer"s payoff vector is
+The auctioneer can process 3 5 of the first and second orders, and all of the third order, leaving a surplus of 0.1 units of ¡ÂA1 ¡ÂA2 .
+In this example, a divisible match exists even though an indivisible match is not possible; we examine the distinction in detail in Section 5, where we separate the two matching problems into distinct complexity classes .
+2 The matching problems defined above are decision problems
+However, there may be multiple matches from which the auctioneer can choose .
+Sometimes the choices are equivalent from the auctioneer"s perspective; alternatively, an objective function can be used to find an optimal match according to that objective .
+Example 4 .
+(Auctioneer alternatives I) Suppose |A| = an order to sell one unit of A2 at price $0.7, an order to buy one unit of A1A2 at price $0.4, an order to buy one unit of A1 ¡ÂA2 at price $0.4, and an order to buy one unit of ¡ÂA1A2 at price $0.4 .
+The corresponding payoff vectors are
+The auctioneer could choose to accept bids 1, 3, and 4 together, or the auctioneer could choose to accept bids 2, 3, and 5 together .
+Both constitute matches, and in fact both yield identical payoffs (£Wauc = 0.1, 0.1, 0.1, 0.1 , or $0.1 in cash) for the auctioneer .
+2 Example 5 .
+(Auctioneer alternatives II) Suppose |A| = an order to buy one unit of A1A2 at price $0.3, and an order to buy one unit of A1 ¡ÂA2 at price $0.5 .
+The corresponding payoff vectors are
+The auctioneer could choose to accept one unit each of all three bids, yielding a payoff to the auctioneer of $0.2 in cash (£Wauc = 0.2, 0.2, 0.2, 0.2 ) .
+Alternatively, the auctioneer could choose to accept 4 3 units of bid 1, and one unit each of bids 2 and 3, yielding a payoff to the auctioneer of 1 3 units of security A1 .
+Both choices constitute matches (in fact, accepting any number of units of bid 1 between 1 and 4 3 can be part of a match), though depending on the auctioneer"s objective, one choice might be preferred over another .
+For example, if the auctioneer believes that A1 is very likely to occur, it may prefer to accept 4 3 units of bid 1 .
+2 There are many possible criteria for the auctioneer to decide among matches, all of which seem reasonable in some circumstances .
+One natural quantity to maximize is the volume of trade among bidders; another is the auctioneer"s utility, either with or without the arbitrage constraint .
+Definition 3 .
+(Trade maximization problem) Given a set of indivisible (divisible) orders O, choose £\i ? {0, 1} (£\i ? [0, 1]) to maximize X i £\iqi, under the constraint that ?£s, £W £s auc ? 0 .
+2 Another reasonable variation is to maximize the total percent of orders filled, or P i £\i, under the same (risk free) constraint that ?£s, £W £s auc ? 0 .
+Definition 4 .
+(Auctioneer risk free utility maximization problem) Let the auctioneer"s subjective probability for each state £s be Pr(£s), and let the auctioneer"s utility for y dollars be u(y) .
+Given a set of indivisible (divisible) orders O, choose £\i ? {0, 1} (£\i ? [0, 1]) to maximize X £s?? Pr(£s)u(£W £s auc), 148 under the constraint that ?£s, £W £s auc ? 0 .
+2 Definition 5 .
+(Auctioneer standard utility maximization problem) Let the auctioneer"s subjective probability for each state £s be Pr(£s), and let the auctioneer"s utility for y dollars be u(y) .
+Given a set of indivisible (divisible) orders O, choose £\i ? {0, 1} (£\i ? [0, 1]) to maximize X £s?? Pr(£s)u £W £s auc .
+2 This last objective function drops the risk free (arbitrage) constraint .
+In this case, the auctioneer is a market maker with beliefs about the likelihood of outcomes, and the auctioneer may actually lose money is some outcomes .
+Still other variations and other optimization criteria seem reasonable, including social welfare, etc .
+It also seems reasonable to suppose that the surplus be shared among bidders and the auctioneer, rather than retained solely by the auctioneer .
+This is analogous to choosing a common transaction price in a double auction (e.g., the midpoint between the bid and ask prices), rather than the buyer paying the bid price and the seller receiving the ask price, with the difference going to the auctioneer .
+The problem becomes more complicated when dividing surplus securities, in part because they are valued differently by different agents .
+Formulating reasonable sharing rules and examining the resulting incentive properties seems a rich and promising avenue for further investigation. .

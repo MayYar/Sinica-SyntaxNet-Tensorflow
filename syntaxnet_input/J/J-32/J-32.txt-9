@@ -1,0 +1,18 @@
+The most important problem left open by this paper is whether it is possible to find a Nash equilibrium of a graphical game on a bounded degree tree in polynomial time
+Our construction shows that any two pass algorithm that explicitly stores breakpoint policies needs exponential time and space
+However, it does not preclude the existence of an algorithm that is based on a similar idea, but, instead of computing the entire breakpoint policy for each vertex, uses a small number of additional passes through the graph to decide which (polynomial sized) parts of each breakpoint policy should be computed
+In particular, such an algorithm may be based on the approximation algorithm of [8], where the value of is chosen adaptively
+Another intriguing question is related to the fact that the graph for which we constructed an exponential sized breakpoint policy has pathwidth 2, while our positive results are for a path, i.e., a graph of pathwidth 1
+It is not clear if for any bounded degree graph of pathwidth 1 the running time of (the breakpoint policybased version of) our algorithm will be polynomial
+In particular, it is instructive to consider a caterpillar graph, i.e., the graph that can be obtained from Tn by deleting the vertices S1,
+, Sn
+For this graph, the best response policy of a vertex Vk in the spine of the caterpillar is obtained by combining the best response policy of its predecessor on the spine Vk?1 and its other child Tk; since the latter is a leaf, its best response policy is either trivial (i.e., [0, 1]2 , [0, 1]กั{0}, or [0, 1]กั{1}) or consists of two horizontal segments and one vertical segment of the form {ฃ\}กั[0, 1] that connects them
+Assuming for convenience that B(Vk, Tk) = [0, ฃ\]กั{0} กๅ {ฃ\}กั[0, 1] กๅ [ฃ\, 1]กั{1}, and f is the indifference function for Vk, we observe that the best response policy for Vk consists of 5 components
+Hence, one can think of constructing B(Vk+1, Vk) as the following process
+This implies that the problem of bounding the size of the best response policy (or, alternatively, the breakpoint policy), can be viewed as a generalization of the following computational geometry problem, which we believe may be of independent interest
+Given a collection of axis parallel segments in R2 , consider the following operation
+Reconnect these parts, i.e., for each segment of the form [a, b] กั {c} that was transformed into [a, t] กั {c + ฃ_i} and [t, b] กั {c}, introduce a segment {t}กั[c, c+ฃ_i]
+Is it possible to start with the segment [0, 1] and after n operations obtain a set that cannot be represented as a union of poly(n) line segments? If yes, can it be the case that in this set, there is no path with a polynomial number of turns that connects the endpoints of the original segment? It turns out that in general, the answer to the first question is positive, i.e., after n steps, it is possible to obtain a set that consists of ฃK(cn ) segments for some c > 0
+This implies that even for a caterpillar, the best response policy can be exponentially large
+However, in our example (which is omitted from this version of the paper due to space constraints), there exists a polynomial size path through the best response policy, i.e., it does not prove that the breakpoint policy is necessarily exponential in size
+If one can prove that this is always the case, it may be possible to adapt this proof to show that there can be an exponential gap between the sizes of best response policies and breakpoint policies.

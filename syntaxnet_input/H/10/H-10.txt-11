@@ -1,0 +1,35 @@
+on [9] .
+is based on [16] .
+implementation is based on [26], and the variance of the Gaussian similarity is determined by Local Scaling [30] .
+Note that the criterion that Ncut aims to minimize is just the global regularizer in our CLGR algorithm except that Ncut used the normalized Laplacian .
+In this method we just minimize Jl (defined in Eq.(24)), and the clustering results can be obtained by doing eigenvalue decomposition on matrix (I ? P)T (I ? P) with some proper discretization methods .
+implementation is based on [14] .
+implementation is based on [27] .
+[12] .
+The implementation is based on [15] .
+For computational efficiency, in the implementation of CPLR and our CLGR algorithm, we have set all the local regularization parameters {£fi}n i=1 to be identical, which is set by grid search from {0.1, 1, 10} .
+The size of the k nearest neighborhoods is set by grid search from {20, 40, 80} .
+For the CLGR method, its global regularization parameter is set by grid search from {0.1, 1, 10} .
+When constructing the global regularizer, we have adopted the local scaling method [30] to construct the Laplacian matrix .
+The final discretization method adopted in these two methods is the same as in [26], since our experiments show that using such method can achieve better results than using kmeans based methods as in [20] .
+3.4 Experimental Results The clustering accuracies comparison results are shown in table 3, and the normalized mutual information comparison results are summarized in table 4 .
+From the two tables we mainly observe that
+Since Spectral Clustering can be viewed as a weighted version of kernel k means, it can obtain good results the data clusters are arbitrarily shaped .
+This corroborates that the documents vectors are not regularly distributed (spherical or elliptical) .
+equivalence between NMF and Spectral Clustering, which Table 3
+It can be observed from the tables that NMF and Spectral Clustering usually lead to similar clustering results .
+can usually achieve better results than traditional purely document vector based methods .
+Since these methods perform an implicit feature selection at each iteration, provide an adaptive metric for measuring the neighborhood, and thus tend to yield better clustering results .
+than the results achieved from Spectral Clustering, which supports Vapnik"s theory [24] that sometimes local learning algorithms can obtain better results than global learning algorithms .
+Besides the above comparison experiments, we also test the parameter sensibility of our method .
+There are mainly two sets of parameters in our CLGR algorithm, the local and global regularization parameters ({£fi}n i=1 and £f, as we have said in section 3.3, we have set all £fi"s to be identical to £f? in our experiments), and the size of the neighborhoods .
+Therefore we have also done two sets of experiments
+In this set of experiments, we find that our CLGR algorithm can achieve good results when the two regularization parameters are neither too large nor too small .
+Typically our method can achieve good results when £f? and £f are around 0.1 .
+Figure 1 shows us such a testing example on the WebACE dataset .
+and testing the clustering performance with different ?5 ?4.5 ?4 ?3.5 ?3 ?5 ?4.5 ?4 ?3.5 ?3 0.35 0.4 0.45 0.5 0.55 local regularization para (log 2 value) global regularization para (log 2 value) clusteringaccuracy Figure 1
+sizes of neighborhoods .
+In this set of experiments, we find that the neighborhood with a too large or too small size will all deteriorate the final clustering results .
+This can be easily understood since when the neighborhood size is very small, then the data points used for training the local classifiers may not be sufficient; when the neighborhood size is very large, the trained classifiers will tend to be global and cannot capture the typical local characteristics .
+Figure 2 shows us a testing example on the WebACE dataset .
+Therefore, we can see that our CLGR algorithm (1) can achieve satisfactory results and (2) is not very sensitive to the choice of parameters, which makes it practical in real world applications. .

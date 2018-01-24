@@ -1,0 +1,65 @@
+3.1 Product performance evaluations We use a problem representation in which, at each time period, every agent must decide which one of a set of products to choose .
+Let A = {ak}k=1...p be the set of agents, B = {bi}i=1...n be the set of products, and C = {cj }j=1...m be the set of attributes on which the choice decision is to be based i.e .
+the decision to be made is a multiattribute choice one .
+Let fj 
+The intrinsic performance of 388 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) product i on attribute j is given by fj (bi) .
+However, the subjective opinion of the level of performance (of product i on attribute j) given by agent k is given by sij(ak, fj (bi)) .
+All subsequent modelling is based on these subjective performance ratings .
+For the purposes of this paper, each agent belongs to one of three equally sized groups, with each group possessing its own subjective performance ratings .
+We assume that the subjective performance ratings are not known a priori by the agents, and it is their task to discover these ratings by a combination of personal exploration and referral gathering .
+In order to model this process we introduce the notion of perceived performance ratings at time t, denoted by pij(ak, fj (bi), t) .
+Initially, all perceived performance ratings are set to zero, so that the initial selection of a product is done randomly .
+Subsequent variation in product performance over time is modelled using two quantities
+Our habituation mechanism supposes that habituation builds up with repeated use of a product, and is used to discount the performance of the product .
+In most cases i.e .
+unless the habituation factor is one or extremely close to one, this habituation based discounting eventually leads to defection, after which the level of habituation dissipates as time passes without the product being used .
+More formally, once a product i? has been chosen by agent k, the subjective level of performance is perceived and pi?j(ak, fj (b? i ), t) is set equal to si?j(ak, fj (b? i ))Hi?kt + jkt, where jkt is distributed as N(0, £m) and Hi?kt is an decreasing function of the number of time periods that agent k has been exposed to i? .
+In evaluating the performance of a product, agents make use of a satisficing framework by comparing the perceived performance of the chosen product with their satisfaction thresholds £Fk = {g1k, .
+.
+.
+, gmk}, with 0 ? gik ? 1 .
+Agent k will be satisfied with a product i? selected in time t if pi?j(ak, fj (b? i ), t) ? gjk, ?j .
+3.2 Decision processes In designing the mechanism by which agents make their choice decisions, we allow for the possibility that satisfied agents defect from the products that are currently satisfying them .
+Satisfied agents stay with their current product with probability Pr(stay), with a strategy prohibiting satisfied agents from moving (e.g .
+[6]) obtained as a special case when Pr(stay) = 1 .
+A defecting satisfied agent decides on which product to choose by considering all other products for which it has information, either by previous personal exploration or by referrals from other agents .
+The selection of a new product begins by the agent identifying those products from which he or she expects to gain a satisfactory performance on all attributes i.e .
+those products for which £_ik < 0, where £_ik = maxj [gjk ? pij(ak, fj(bi), t)], and selecting a product from this set with selection probabilities proportional to ?£_ik .
+If no satisfactory product exists (or at least the agent is unaware of any such product) the agent identifies those products that offer at least a minimum level of ¡¥acceptable" performance £^? k .
+The minimum level of acceptability is defined as the maximum deviation from his or her aspirations across all attributes that the agent is willing to accept i.e .
+a product is minimally acceptable if and only if £_ik < £^? k .
+Agents then select a product at random from the set of minimally acceptable products .
+If the set of minimally acceptable products is empty, agents select a product from the full set of products B at random .
+The decision process followed by unsatisfied agents is largely similar to that of defecting satisfied agents, with the exception that at the outset of the decision process agents will chose to explore a new product, chosen at random from the set of remaining products, with probability £\ .
+With probability 1 ? £\, they will use a decision process like the one outlined above for satisfied agents .
+3.3 Constraints on decision processes In some circumstances market barriers may exist that make switching between products more difficult, particularly where some switching costs are incurred as a result of changing one"s choice of product .
+When barriers are present, agents do not switch when they become unsatisfied, but rather only when the performance evaluation drops below some critical level i.e .
+when £_ik > £], where £] > 0 measures the strength of the market barriers .
+Although in this paper market barriers do not vary over products or time, it is straightforward to allow this to occur by allowing barriers take the general form £] = max(£]? +£Gtuse, £]? ), where £]? is a barrier to defection that is applied when the product is purchased for the first time (e.g .
+a contractual agreement), £G is the increase in barriers that are incurred for every additional time period the product is used for, and £]? is the maximum possible barrier, and all three quantities are allowed to vary over products i.e .
+be a function of i .
+3.4 Referral processes Each agent is assumed to be connected to qk < p agents i.e .
+to give and receive information from qk other agents .
+The network over which word of mouth communication travels is governed by the small world effect [18], by which networks simultaneously exhibit a high degree of clustering of agents into ¡¥communities" and a short average path length between any two agents in the network, and preferential attachment [2], by which agents with greater numbers of existing connections are more likely to receive new ones .
+This is easily achieved by building a one dimensional lattice with connections between all agent pairs separated by £e or fewer lattice spacings, and creating a small world network by choosing at random a small fraction r of the connections in the network and moving one end of each to a new agent, with that new agent chosen with probability proportional to its number of existing connections .
+This results in a distribution of the number of connections possessed by each agent i.e .
+a distribution of qk, that is strongly skewed to the right .
+In fact, if the construction of the network is slightly modified so that new connections are added with preferential attachment (but no connections are removed), the distribution of qk follows a power law distribution, but a distribution with a non zero probability of an agent having less than the modal number of connections seems more realistic in the context of word of mouth communication in marketing systems .
+When an agent purchases a product, they inform each of the other agents in their circle with probability equal to Pr(spr)k? + |£_ik? |, where Pr(spr)k? is the basic propensity of agent k? to spread word of mouth and £_ik? captures the The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 389 extent to which the agent"s most recent experience was satisfying or dissatisfying .
+Agents are thus more likely to spread word of mouth about products that they have just experienced as either very good or very bad .
+If an agent receives information on the same product from more than one agent, he or she selects the referral of only one of these agents, with selection probabilities proportional to Tt(k? , k), the degree to which previous referrals from k? to k were successful i.e .
+resulted in satisfying experiences for agent k .
+Thus agents have the capacity to learn about the quality of other agents" referrals and use this information to accept or block future referrals .
+In this paper, we employ a learning condition in which Tt(k? , k) is multiplied by a factor of 0.1 following an unsatisfying referral and a factor of 3 following a satisfying referral .
+The asymmetry in the weighting is similar to that employed in [16], and is motivated by the fact that an unsatisfying referral is likely to be more reliable evidence that a referring agent k? does not possess the same subjective preferences as agent k than a positive referral is of indicating the converse .
+Other referral process are certainly possible, for example one integrating multiple sources of word of mouth rather than choosing only the most trusted source
+Integrating different sources considerably complicates the process of learning about the trustworthiness of others, and raises further questions about the precise nature of the integration .
+After determining who contacts whom, the actual referral is modelled as a transmittance of information about the perceived level of performance of an experience of product i? from the referring agent k? to the accepting agent k i.e .
+pi?j(ak, fj (bi), t) takes on the value pi?j(ak? , fj(bi), t?1), ?j, provided that agent k is not currently using i? .
+Information about other products is not transmitted, and an agent will ignore any word of mouth about the product he or she is currently using .
+In effect, the referral creates an expected level of performance in the mind of an accepting agent for the product referred to, which that agent may then use when making choice decision in subsequent time periods using the decision processes outlined in the previous section .
+Once an agent has personally experienced a product, any expected performance levels suggested by previous referrals are replaced by the experienced (subjective) performance levels sij(ak, fj(bi)) + jkt and Tt(k? , k) is adjusted depending on whether the experience was a satisfying one or not. .

@@ -1,0 +1,53 @@
+domain time corresponding to the state of the world represented on that page, and is offset from the current domain time .
+ghosts move from one page to the next .
+The relation between shift time and real time depends on the processing resources available .
+3.2.2 Pheromone Infrastructure BEE must operate very rapidly, to keep pace with the ongoing battle .
+Thus we use simple agents coordinated using pheromone mechanisms .
+We have described the basic dynamics of our pheromone infrastructure elsewhere [2] .
+This infrastructure runs on the nodes of a graph structured environment (in the case of BEE, a rectangular lattice) .
+Each node maintains a scalar value for each flavor of pheromone, and provides three functions
+It evaporates pheromones over time, providing an innovative alternative to traditional truth maintenance .
+Traditionally, knowledge bases remember everything they are told unless they have a reason to forget .
+Pheromone based systems immediately begin to forget everything they learn, unless it is continually reinforced .
+Thus inconsistencies automatically remove themselves within a known period .
+It diffuses pheromones to nearby places, disseminating information for access by nearby agents .
+The distribution of each pheromone flavor over the environment forms a field that represents some aspect of the state of the world at an instant in time .
+Each page of the timeline is a complete pheromone field for the world at the BEE time represented by that page .
+The behavior of the pheromones on each page depends on whether the page represents the past or the future .
+Environment Beliefs Desires Goal Emotion Disposition State Process Analysis Action Perception Appraisal Rational Emotive Figure 2
+Each avatar generates a stream of ghosts that sample the personality space of its entity .
+They evolve against the entity"s recent observed behavior, and the fittest ghosts run into the future to generate predictions .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1429 In pages representing the future ( > t), the usual pheromone mechanisms apply .
+Ghosts deposit pheromone each time they move to a new page, and pheromones evaporate and propagate from one page to the next .
+In pages representing the past ( t), we have an observed state of the real world .
+This has two consequences for pheromone management .
+First, we can generate the pheromone fields directly from the observed locations of individual entities, so there is no need for the ghosts to make deposits .
+Second, we can adjust the pheromone intensities based on the changed locations of entities from page to page, so we do not need to evaporate or propagate the pheromones .
+Both of these simplifications reflect the fact that in our current system, we have complete knowledge of the past .
+When we introduce noise and uncertainty, we will probably need to introduce dynamic pheromones in the past as well as the future .
+Execution of the pheromone infrastructure proceeds on two time scales, running in separate threads .
+The first thread updates the book of pages each time the domain time advances past the next page boundary .
+At each step, The former now + 1page is replaced with a new current page, whose pheromones correspond to the locations and strengths of observed units; An empty page is added at the prediction horizon; The oldest page is discarded, since it has passed the insertion horizon .
+The second thread moves the ghosts from one page to the next, as fast as the processor allows .
+At each step, Ghosts reaching the = t page are evaluated for fitness and removed or evolved; New ghosts from the avatars and from the evolutionary process are inserted at the insertion horizon; A population of ghosts based on the fittest ghosts are inserted at = t to run into the future; Ghosts that have moved beyond the prediction horizon are removed; All ghosts plan their next actions based on the pheromone field in the pages they currently occupy; The system computes the next state of each page, including executing the actions elected by the ghosts, and (in future pages) evaporating pheromones and recording new deposits from the recently arrived ghosts .
+Ghost movement based on pheromone gradients is a simple process, so this system can support realistic agent populations without excessive computer load .
+In our current system, each avatar generates eight ghosts per shift .
+Since there are about 50 entities in the battlespace (about 20 units each of Red and Blue and about 5 of Green), we must support about 400 ghosts per page, or about 24000 over the entire book .
+How fast a processor do we need? Let p be the real time duration of a page in seconds .
+If each page represents 60 seconds of domain time, and we are replaying a simulation at 2x domain time, p = 30 .
+Let n be the number of pages between the insertion horizon and = t .
+In our current system, n = 30 .
+Then a shift rate of n p shifts per second will permit ghosts to run from the insertion horizon to the current time at least once before a new page is generated .
+Empirically, this level is a lower bound for reasonable performance, and easily achievable on stock WinTel platforms .
+3.3 Information sources The flexibility of the BEE"s pheromone infrastructure permits the integration of numerous information sources as input to our characterizations of entity personalities and predictions of their future behavior .
+Our current system draws on three sources of information, but others can readily be added .
+Real world observations. Observations from the real world are encoded into the pheromone field each increment of BEE time, as a new current page is generated .
+Table 1 identifies the entities that generate each flavor of pheromone .
+Statistical estimates of threat regions. Statistical techniques1 estimate the level of threat to each force (Red or Blue), based on the topology of the battlefield and the known disposition of forces .
+For example, a broad open area with no cover is threatening, especially if the opposite force occupies its margins .
+The results of this process are posted to the pheromone pages as RedThreat pheromone (representing a threat to red) and BlueThreat pheromone (representing a threat to Blue) .
+AI based plan recognition. While plan recognition is not sufficient for effective prediction, it is a valuable input .
+We dynamically configure a Bayes net based on heuristics to identify the likely goals that each entity may hold.2 The destinations of these goals function as virtual pheromones .
+Ghosts include their distance to such points in their action decisions, achieving the result of gradient following without the computational expense of maintaining a pheromone field. .

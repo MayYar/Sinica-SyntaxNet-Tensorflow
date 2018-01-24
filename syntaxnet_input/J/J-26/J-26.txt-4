@@ -1,0 +1,75 @@
+In non anonymous technologies (even with identical costs), we need to talk about the contracted set of agents and not only about the number of contracted agents
+In this section, we identify the sets of agents that can be obtained as the optimal contract for some v
+These sets construct the orbit of a technology
+Definition 3
+For a technology t, a set of agents S is in the orbit of t if for some value v, the optimal contract is exactly with the set S of agents (where ties between different S"s are broken according to a lexicographic order9 Our analysis throughout the paper sheds some light on the algorithmic aspects of computing the best contract
+In this section we state these implications (for the proofs see [2])
+We first consider the general model where the technology function is given by an arbitrary monotone function t (with rational values), and we then consider the case of structured technologies given by a network representation of the underlying Boolean function
+5.1 Binary Outcome Binary Action Technologies Here we assume that we are given a technology and value v as the input, and our output should be the optimal contract, i.e
+the set S? of agents to be contracted and the contract pi for each i ? S?
+In the general case, the success function t is of size exponential in n, the number of agents, and we will need to deal with that
+In the special case of anonymous technologies, the description of t is only the n+1 numbers t0,
+, tn, and in this case our analysis in section 3 completely suffices for computing the optimal contract
+Proposition 1
+Given as input the full description of a technology (the values t0,
+, tn and the identical cost c for an anonymous technology, or the value t(S) for all the 2n possible subsets S ? N of the players, and a vector of costs c for non anonymous technologies), the following can all be computed in polynomial time
+? An optimal contract for any given value v, for both the agency and the non strategic cases
+? The price of unaccountability POU(t, c)
+Proof
+We prove the claims for the non anonymous case, the proof for the anonymous case is similar
+We first show how to construct the orbit of the technology (the same procedure apply in both cases)
+To construct the orbit we find all transition points and the sets that are in the orbit
+The empty contract is always optimal for v = 0
+Assume that we have calculated the optimal contracts and the transition points up to some transition point v for which S is an optimal contract with the highest success probability
+We show how to calculate the next transition point and the next optimal contract
+By Lemma 3 the next contract on the orbit (for higher values) has a higher success probability (there are no two sets with the same success probability on the orbit)
+We calculate the next optimal contract by the following procedure
+We go over all sets T such that t(T) > t(S), and calculate the value for which the principal is indifferent between contracting with T and contracting with S
+The minimal indifference value is the next transition point and the contract that has the minimal indifference value is the next optimal contract
+Linearity of the utility in the value and monotonicity of the success probability of the optimal contracts ensure that the above works
+Clearly the above calculation is polynomial in the input size
+Once we have the orbit, it is clear that an optimal contract for any given value v can be calculated
+We find the largest transition point that is not larger than the value v, and the optimal contract at v is the set with the higher success probability at this transition point
+Finally, as we can calculate the orbit of the technology in both the agency and the non strategic cases in polynomial time, we can find the price of unaccountability in polynomial time
+By Lemma 1 the price of unaccountability POU(t) is obtained at some transition point, so we only need to go over all transition points, and find the one with the maximal social welfare ratio
+A more interesting question is whether if given the function t as a black box, we can compute the optimal contract in time that is polynomial in n
+We can show that, in general this is not the case
+Given as input a black box for a success function t (when the costs are identical), and a value v, the number of queries that is needed, in the worst case, to find the optimal contract is exponential in n
+Proof
+Consider the following family of technologies
+For some small > 0 and k = n 2 we define the success probability for a given set T as follows
+If |T| < k, then t(T) = |T| ¡P
+If |T| > k, then t(T) = 1 ? (n ? |T|) ¡P
+For each set of agents ?T of size k, the technology t ?T is defined by t( ?T) = 1 ? (n ? | ?T|) ¡P and t(T) = |T| ¡P for any T = ?T of size k
+For the value v = c¡P(k + 1 2), the optimal contract for t ?T is ?T (for the contract ?T the utility of the principal is about v ?c¡Pk = 1 2¡Pc > 0, while for any other contract the utility is negative)
+If the algorithm queries about at most ` n n 2 ? ? 2 sets of size k, then it cannot always determine the optimal contract (as any of the sets that it has not queried about might be the optimal one)
+We conclude that ` n n 2 ? ? 1 queries are needed to determine the optimal contract, and this is exponential in n
+27 5.2 Structured Technologies In this section we will consider the natural representation of read once networks for the underlying Boolean function
+Thus the problem we address will be
+Output
+Let t(E) denote the probability of success when each edge succeeds with probability £_e
+We first notice that even computing the value t(E) is a hard problem
+Just a little effort will reveal that our problem is not easier
+The Optimal Contract Problem for Read Once Networks is #P hard (under Turing reductions)
+Proof
+We will show that an algorithm for this problem can be used to solve the network reliability problem
+Given an instance of a network reliability problem < G, {£ae}e?E > (where £ae denotes e"s probability of success), we define an instance of the optimal contract problem as follows
+For the other edges, we let £_e = £ae and £^e = £ae 2
+By choosing £^x close enough to 1 2 , we can make sure that player x will enter the optimal contract only for very large values of v, after all other agents are contracted (if we can find the optimal contract for any value, it is easy to find a value for which in the original network the optimal contract is E, by keep doubling the value and asking for the optimal contract
+Once we find such a value, we choose £^x s.t
+c 1?2£^x is larger than that value)
+Let us denote £]x = 1 ? 2£^x
+The critical value of v where player x enters the optimal contract of G , can be found using binary search over the algorithm that supposedly finds the optimal contract for any network and any value
+Note that at this critical value v, the principal is indifferent between the set E and E ¡å {x}
+Now when we write the expression for this indifference, in terms of t(E) and £Gt i(E) , we observe the following
+t(E) ¡P £^x ¡P v ? X i?E c £^x ¡P £Gt i(E \ i) ! = t(E)(1 ? £^x) v ? X i?E c (1 ? £^x) ¡P £Gt i(E \ i) ? c t(E) ¡P £]x ! if and only if t(E) = (1 ? £^x) ¡P c (£]x)2 ¡P v thus, if we can always find the optimal contract we are also able to compute the value of t(E)
+In conclusion, computing the optimal contract in general is hard
+These results suggest two natural research directions
+The first avenue is to study families of technologies whose optimal contracts can be computed in polynomial time
+The second avenue is to explore approximation algorithms for the optimal contract problem
+A possible candidate for the first direction is the family of series parallel networks, for which the network reliability problem (computing the value of t) is polynomial
+Open Question 5
+Can the optimal contract problem for Read Once series parallel networks be solved in polynomial time? We can only handle the non trivial level of AOO networks
+Given a Read Once AND of OR network such that each OR component is an anonymous technology, the optimal contract problem can be solved in polynomial time
+Acknowledgments
+This work is supported by the Israel Science Foundation, the USA Israel Binational Science Foundation, the Lady Davis Fellowship Trust, and by a National Science Foundation grant number ANI 0331659.

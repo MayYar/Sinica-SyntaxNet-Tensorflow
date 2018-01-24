@@ -1,0 +1,13 @@
+Collaborative applications provide a shared work environment for groups of networked clients collaborating on a common task .
+They require strong consistency for shared persistent data and efficient access to fine grained objects .
+These properties are difficult to provide in wide area network because of high network latency .
+This paper described BuddyCache, a new transactional cooperative caching [20, 16, 13, 2, 28] technique that improves the latency of access to shared persistent objects for collaborative strong consistency applications in high latency network environments .
+The technique improves performance yet provides strong correctness and availability properties in the presence of node failures and slow clients .
+BuddyCache uses redirection to fetch missing objects directly from group members caches, and to support peer update, a new lightweight application level multicast technique that gives group members consistent access to the new data committed within the collaborating group without imposing extra overhead outside the group .
+Redirection, however, can interfere with object availability .
+Solo commit, is a new validation technique that allows a client in a group to commit independently of slow or failed peers .
+It provides fine grained validation using inexpensive coarse grain version information .
+We have designed and implemented BuddyCache prototype in Thor distributed transactional object storage system [23] and evaluated the benefits and costs of the system over a range of network latencies .
+Analytical results, supported by the system measurements using the multi user 007 benchmark indicate, that for typical Internet latencies BuddyCache provides significant performance benefits, e.g .
+for latencies ranging from 40 to 80 milliseconds round trip time, clients using the BuddyCache can reduce by up to 50% the latency of access to shared objects compared to the clients accessing the repository directly .
+The main contributions of the paper are

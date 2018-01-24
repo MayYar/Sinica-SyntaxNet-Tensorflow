@@ -1,0 +1,2071 @@
+
+1
+Input: -LRB- 0 -RRB- t , Seg -LRB- 0 -RRB- d , and Ali -LRB- 0 -RRB- d ; Initialize w -LRB- 0 -RRB- ? t using Equation -LRB- 6 -RRB- if w = 1 ; Stage 1
+Parse:
+t NN ROOT
+ +-- 0 LS dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- Seg NNP dep
+ +-- d NN dep
+ +-- and CC cc
+ +-- d NN conj
+ |   +-- Ali NNP nsubj
+ |       +-- -LRB- -LRB- punct
+ |       +-- 0 CD dep
+ |       +-- -RRB- -RRB- punct
+ +-- ; : punct
+ +-- Initialize VB conj
+ |   +-- w IN prep
+ |   |   +-- 0 CD pobj
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- -RRB- -RRB- punct
+ |   +-- ? , punct
+ |   +-- t NN dep
+ |       +-- using VBG partmod
+ |           +-- Equation NNP dobj
+ |           |   +-- 6 CD appos
+ |           |       +-- -LRB- -LRB- punct
+ |           |       +-- -RRB- -RRB- punct
+ |           +-- w IN advcl
+ |               +-- if IN mark
+ |               +-- = SYM pobj
+ |                   +-- 1 CD num
+ +-- Stage NN parataxis
+     +-- 1 CD num
+
+2
+Input: If Clu , Seg , or Ali changed , go to 2.1 ; otherwise , if w = 0 , return Clu -LRB- i -RRB- , Seg -LRB- i -RRB- , and Ali -LRB- i -RRB- ; else j = 0 , go to 3.1 ; Stage 3
+Parse:
+go VB ROOT
+ +-- changed VBD advcl
+ |   +-- If IN mark
+ |   +-- Clu NNP nsubj
+ |       +-- , , punct
+ |       +-- Seg NNP conj
+ |       +-- or CC cc
+ |       +-- Ali NNP conj
+ +-- , , punct
+ +-- to IN prep
+ |   +-- 2.1 CD pobj
+ +-- ; : punct
+ +-- return VB parataxis
+ |   +-- otherwise RB advmod
+ |   +-- , , punct
+ |   +-- w IN dep
+ |   |   +-- if IN mark
+ |   |   +-- = SYM dep
+ |   |   +-- 0 CD dep
+ |   +-- Clu NNP dobj
+ |       +-- -LRB- -LRB- punct
+ |       +-- i NNP dep
+ |       +-- -RRB- -RRB- punct
+ |       +-- , , punct
+ |       +-- Seg NNP conj
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- i NNP dep
+ |       |   +-- -RRB- -RRB- punct
+ |       +-- and CC cc
+ |       +-- Ali NNP conj
+ |           +-- i NNP appos
+ |               +-- -LRB- -LRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- else RB parataxis
+ |   +-- j , punct
+ |   +-- = NFP punct
+ |   +-- 0 CD punct
+ |   +-- , , punct
+ |   +-- go VB dep
+ |       +-- to IN prep
+ |           +-- 3.1 CD pobj
+ +-- Stage VB parataxis
+     +-- 3 CD num
+
+3
+Input: If Iw -LRB- ? T ; ? S -RRB- changes , go to step 6 ; otherwise , stop and return Clu -LRB- i -RRB- , Seg -LRB- i+j -RRB- , Ali -LRB- i+j -RRB- , and w -LRB- i+j -RRB- ? t ; Figure 2
+Parse:
+go VB ROOT
+ +-- changes NNS advcl
+ |   +-- If IN mark
+ |   +-- Iw NNP nsubj
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ? . punct
+ |   |   +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- ? . punct
+ |   +-- S NNP dep
+ |       +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- step NN xcomp
+ |   +-- to TO aux
+ |   +-- 6 CD dobj
+ +-- ; : punct
+ +-- stop VB parataxis
+ |   +-- otherwise RB advmod
+ |   +-- , , punct
+ |   +-- and CC cc
+ |   +-- return VB conj
+ |       +-- Clu NNP dobj
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- i NNP dep
+ |       |   +-- -RRB- -RRB- punct
+ |       |   +-- , , punct
+ |       |   +-- Seg NNP conj
+ |       |   |   +-- -LRB- -LRB- punct
+ |       |   |   +-- i+j NNP dep
+ |       |   |   +-- -RRB- -RRB- punct
+ |       |   +-- Ali NNP conj
+ |       |   |   +-- -LRB- -LRB- punct
+ |       |   |   +-- i+j NNP dep
+ |       |   |   +-- -RRB- -RRB- punct
+ |       |   +-- and CC cc
+ |       |   +-- w IN conj
+ |       |       +-- -LRB- -LRB- punct
+ |       |       +-- i+j NN pobj
+ |       |       +-- -RRB- -RRB- punct
+ |       +-- ? , punct
+ |       +-- t NN dobj
+ +-- Figure NN parataxis
+     +-- 2 CD num
+
+4
+Input: and each sentence is segmented into words , each word is stemmed .
+Parse:
+segmented VBN ROOT
+ +-- and CC cc
+ +-- sentence NN nsubjpass
+ |   +-- each DT det
+ +-- is VBZ auxpass
+ +-- into IN prep
+ |   +-- words NNS pobj
+ +-- , , punct
+ +-- stemmed VBN ccomp
+ |   +-- word NN nsubjpass
+ |   |   +-- each DT det
+ |   +-- is VBZ auxpass
+ +-- . . punct
+
+5
+Input: Then the joint probability distribution P -LRB- D , Sd , T -RRB- can be estimated .
+Parse:
+estimated VBN ROOT
+ +-- Then RB advmod
+ +-- P NN nsubjpass
+ |   +-- the DT det
+ |   +-- probability NN nn
+ |   |   +-- joint JJ amod
+ |   +-- distribution NN nn
+ |   +-- -LRB- -LRB- punct
+ |   +-- T NNP dep
+ |   |   +-- D NNP nn
+ |   |   +-- , , punct
+ |   |   +-- Sd NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- . . punct
+
+6
+Input: Finally , this distribution can be used to compute MI in our algorithm .
+Parse:
+used VBN ROOT
+ +-- Finally RB advmod
+ +-- , , punct
+ +-- distribution NN nsubjpass
+ |   +-- this DT det
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- compute VB xcomp
+ |   +-- to TO aux
+ |   +-- MI NNP dobj
+ |   +-- in IN prep
+ |       +-- algorithm NN pobj
+ |           +-- our PRP$ poss
+ +-- . . punct
+
+7
+Input: 4.3 Iterative Greedy Algorithm Our goal is to maximize the objective function , I -LRB- ? T ; ? S -RRB- or Iw -LRB- ? T ; ? S -RRB- , which can measure the dependence of term occurrences in different segments .
+Parse:
+Algorithm NNP ROOT
+ +-- 4.3 CD num
+ +-- Iterative NNP nn
+ +-- Greedy NNP nn
+ +-- is VBZ dep
+ |   +-- goal NN nsubj
+ |   |   +-- Our PRP$ poss
+ |   +-- maximize VB xcomp
+ |       +-- to TO aux
+ |       +-- function NN dobj
+ |           +-- the DT det
+ |           +-- objective JJ amod
+ +-- , , punct
+ +-- I PRP dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- T NNP dep
+ +-- ; : punct
+ +-- ? . punct
+ +-- S NNP dep
+ +-- -RRB- -RRB- punct
+ +-- or CC cc
+ +-- Iw NNP conj
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- S NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- measure VB rcmod
+ |   +-- which WDT nsubj
+ |   +-- can MD aux
+ |   +-- dependence NN dobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- occurrences NNS pobj
+ |               +-- term NN nn
+ |               +-- in IN prep
+ |                   +-- segments NNS pobj
+ |                       +-- different JJ amod
+ +-- . . punct
+
+8
+Input: Generally , first we do not know the estimate term weights , which depend on the optimal topic segmentation and alignment , and term clusters .
+Parse:
+know VB ROOT
+ +-- Generally RB advmod
+ +-- , , punct
+ +-- first RB advmod
+ +-- we PRP nsubj
+ +-- do VBP aux
+ +-- not RB neg
+ +-- weights NNS dobj
+ |   +-- the DT det
+ |   +-- estimate NN nn
+ |   +-- term NN nn
+ |   +-- , , punct
+ |   +-- depend VBP rcmod
+ |       +-- which WDT nsubj
+ |       +-- on IN prep
+ |           +-- segmentation NN pobj
+ |               +-- the DT det
+ |               +-- optimal JJ amod
+ |               +-- topic NN nn
+ |               +-- and CC cc
+ |               +-- alignment NN conj
+ |               +-- , , punct
+ |               +-- clusters NNS conj
+ |                   +-- term NN nn
+ +-- . . punct
+
+9
+Input: Moreover , this problem is NP hard -LRB- 10 -RRB- , even though if we know the term weights .
+Parse:
+hard JJ ROOT
+ +-- Moreover RB advmod
+ +-- , , punct
+ +-- problem NN nsubj
+ |   +-- this DT det
+ +-- is VBZ cop
+ +-- NP NNP npadvmod
+ +-- -LRB- -LRB- punct
+ +-- 10 CD dobj
+ +-- -RRB- -RRB- punct
+ +-- know VBP advcl
+ |   +-- even RB advmod
+ |   +-- though IN mark
+ |   +-- if IN mark
+ |   +-- we PRP nsubj
+ |   +-- weights NNS dobj
+ |       +-- the DT det
+ |       +-- term NN nn
+ +-- . . punct
+
+10
+Input: Thus , an iterative greedy algorithm is desired to find the best solution , even though probably only local maxima are reached .
+Parse:
+desired VBN ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- algorithm NN nsubj
+ |   +-- an DT det
+ |   +-- iterative JJ amod
+ |   +-- greedy JJ amod
+ +-- is VBZ cop
+ +-- find VB xcomp
+ |   +-- to TO aux
+ |   +-- solution NN dobj
+ |       +-- the DT det
+ |       +-- best JJS amod
+ +-- reached VBN advcl
+ |   +-- even RB advmod
+ |   +-- though IN mark
+ |   +-- probably RB advmod
+ |   +-- maxima NNS nsubjpass
+ |   |   +-- only RB advmod
+ |   |   +-- local JJ amod
+ |   +-- are VBP auxpass
+ +-- . . punct
+
+11
+Input: We present the iterative greedy algorithm in Figure 2 to find a local maximum of I -LRB- ? T ; ? S -RRB- or Iw -LRB- ? T ; ? S -RRB- with simultaneous term weight estimation .
+Parse:
+present VBP ROOT
+ +-- We PRP nsubj
+ +-- algorithm NN dobj
+ |   +-- the DT det
+ |   +-- iterative JJ amod
+ |   +-- greedy JJ amod
+ +-- in IN prep
+ |   +-- Figure NN pobj
+ |       +-- 2 CD num
+ +-- find VB xcomp
+ |   +-- to TO aux
+ |   +-- maximum NN dobj
+ |       +-- a DT det
+ |       +-- local JJ amod
+ |       +-- of IN prep
+ |           +-- I PRP pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- ? . punct
+ |               +-- T NNP appos
+ +-- ; : punct
+ +-- S NNP parataxis
+ |   +-- ? . punct
+ |   +-- S NNP dep
+ |   |   +-- -RRB- -RRB- punct
+ |   |   +-- or CC cc
+ |   |   +-- Iw NNP conj
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- ? . punct
+ |   |       +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- -RRB- -RRB- punct
+ |   +-- with IN prep
+ |       +-- estimation NN pobj
+ |           +-- simultaneous JJ amod
+ |           +-- term NN nn
+ |           +-- weight NN nn
+ +-- . . punct
+
+12
+Input: This algorithm can is iterative and greedy for multi document cases or single document cases with term weight estimation and or term co clustering .
+Parse:
+iterative JJ ROOT
+ +-- algorithm NN nsubj
+ |   +-- This DT det
+ +-- can MD aux
+ +-- is VBZ cop
+ +-- and CC cc
+ +-- greedy JJ conj
+ +-- for IN prep
+ |   +-- cases NNS pobj
+ |       +-- multi JJ amod
+ |       +-- document NN nn
+ |       +-- or CC cc
+ |       +-- cases NNS conj
+ |       |   +-- single JJ amod
+ |       |   +-- document NN nn
+ |       +-- with IN prep
+ |           +-- estimation NN pobj
+ |               +-- term NN nn
+ |               +-- weight NN nn
+ |               +-- and CC cc
+ |               +-- or CC cc
+ |               +-- clustering VBG conj
+ |                   +-- term NN nn
+ |                   +-- co NN nn
+ +-- . . punct
+
+13
+Input: Otherwise , since it is just a one step algorithm to solve the task of single document segmentation -LRB- 6 , 15 , 25 -RRB- , the global maximum of MI is guaranteed .
+Parse:
+guaranteed VBN ROOT
+ +-- Otherwise RB advmod
+ +-- , , punct
+ +-- algorithm NN advcl
+ |   +-- since IN mark
+ |   +-- it PRP nsubj
+ |   +-- is VBZ cop
+ |   +-- just RB advmod
+ |   +-- a DT det
+ |   +-- step NN nn
+ |   |   +-- one CD num
+ |   +-- solve VB xcomp
+ |       +-- to TO aux
+ |       +-- task NN dobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- segmentation NN pobj
+ |                   +-- single JJ amod
+ |                   +-- document NN nn
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- 6 CD dep
+ |                   |   +-- , , punct
+ |                   |   +-- 15 CD num
+ |                   |   +-- 25 CD num
+ |                   +-- -RRB- -RRB- punct
+ +-- maximum NN nsubjpass
+ |   +-- the DT det
+ |   +-- global JJ amod
+ |   +-- of IN prep
+ |       +-- MI NNP pobj
+ +-- is VBZ auxpass
+ +-- . . punct
+
+14
+Input: We will show later that term co clustering reduces the accuracy of the results and is not necessary , and for singledocument segmentation , term weights are also not required .
+Parse:
+show VB ROOT
+ +-- We PRP nsubj
+ +-- will MD aux
+ +-- later RB advmod
+ +-- reduces VBZ ccomp
+ |   +-- that DT mark
+ |   +-- clustering VBG nsubj
+ |   |   +-- term NN nn
+ |   |   +-- co NN nn
+ |   +-- accuracy NN dobj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- results NNS pobj
+ |   |           +-- the DT det
+ |   +-- and CC cc
+ |   +-- necessary JJ conj
+ |   |   +-- is VBZ cop
+ |   |   +-- not RB neg
+ |   +-- , , punct
+ |   +-- required VBN conj
+ |       +-- for IN prep
+ |       |   +-- segmentation NN pobj
+ |       |       +-- singledocument JJ amod
+ |       +-- , , punct
+ |       +-- weights NNS nsubjpass
+ |       |   +-- term NN nn
+ |       +-- are VBP auxpass
+ |       +-- also RB advmod
+ |       +-- not RB neg
+ +-- . . punct
+
+15
+Input: 4.3.1 Initialization In Step 0 , the initial term clustering Clut and topic segmentation and alignment Segd and Alid are important to avoid local maxima and reduce the number of iterations .
+Parse:
+important JJ ROOT
+ +-- 4.3.1 LS dep
+ |   +-- Initialization NN dep
+ +-- In IN prep
+ |   +-- Step NNP pobj
+ |       +-- 0 CD num
+ +-- , , punct
+ +-- term NN nsubj
+ |   +-- the DT det
+ |   +-- initial JJ amod
+ |   +-- clustering VBG partmod
+ |       +-- Segd NNP dobj
+ |           +-- Clut NNP nn
+ |           |   +-- and CC cc
+ |           |   +-- segmentation NN conj
+ |           |   |   +-- topic NN nn
+ |           |   +-- alignment NN conj
+ |           +-- and CC cc
+ |           +-- Alid NNP conj
+ +-- are VBP cop
+ +-- avoid VB ccomp
+ |   +-- to TO aux
+ |   +-- maxima NN dobj
+ |   |   +-- local JJ amod
+ |   +-- and CC cc
+ |   +-- reduce VB conj
+ |       +-- number NN dobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- iterations NNS pobj
+ +-- . . punct
+
+16
+Input: First , a good guess of term weights can be made by using the distributions of term frequency along sentences for each document and averaging them to get the initial values of w ? t
+Parse:
+made VBN ROOT
+ +-- First RB advmod
+ +-- , , punct
+ +-- guess NN nsubjpass
+ |   +-- a DT det
+ |   +-- good JJ amod
+ |   +-- of IN prep
+ |       +-- weights NNS pobj
+ |           +-- term NN nn
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- by IN prep
+ |   +-- using VBG pcomp
+ |       +-- distributions NNS dobj
+ |       |   +-- the DT det
+ |       |   +-- of IN prep
+ |       |       +-- frequency NN pobj
+ |       |           +-- term NN nn
+ |       +-- along IN prep
+ |       |   +-- sentences NNS pobj
+ |       |       +-- for IN prep
+ |       |           +-- document NN pobj
+ |       |               +-- each DT det
+ |       +-- and CC cc
+ |       +-- averaging VBG conj
+ |           +-- them PRP dobj
+ |           +-- get VB xcomp
+ |               +-- to TO aux
+ |               +-- values NNS dobj
+ |                   +-- the DT det
+ |                   +-- initial JJ amod
+ |                   +-- of IN prep
+ |                       +-- w IN pcomp
+ +-- ? . punct
+ +-- t . punct
+
+17
+Input: Then , for the initial segmentation Seg -LRB- 0 -RRB- , we can simply segment documents equally by sentences .
+Parse:
+segment VB ROOT
+ +-- Then RB advmod
+ +-- , , punct
+ +-- for IN prep
+ |   +-- Seg NNP pobj
+ |       +-- the DT det
+ |       +-- initial JJ amod
+ |       +-- segmentation NN nn
+ |       +-- -LRB- -LRB- punct
+ |       +-- 0 NFP punct
+ |       +-- -RRB- -RRB- punct
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- simply RB advmod
+ +-- documents NNS dobj
+ +-- equally RB advmod
+ +-- by IN prep
+ |   +-- sentences NNS pobj
+ +-- . . punct
+
+18
+Input: Or we can find the optimal segmentation just for each document d which maximizes the WMI , Seg -LRB- 0 -RRB- d = argmax ? sIw -LRB- T ; ? S -RRB- , where w = w -LRB- 0 -RRB- ? t .
+Parse:
+find VB ROOT
+ +-- Or CC cc
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- segmentation NN dobj
+ |   +-- the DT det
+ |   +-- optimal JJ amod
+ +-- for IN prep
+ |   +-- just RB advmod
+ |   +-- document NN pobj
+ |       +-- each DT det
+ |       +-- d NN dep
+ |       +-- maximizes VBZ rcmod
+ |           +-- which WDT nsubj
+ |           +-- WMI NNP dobj
+ |           |   +-- the DT det
+ |           |   +-- , , punct
+ |           |   +-- Seg NNP appos
+ |           |       +-- -LRB- -LRB- punct
+ |           |       +-- 0 LS dep
+ |           |       +-- -RRB- -RRB- punct
+ |           +-- argmax NN dobj
+ |               +-- d NN nn
+ |               +-- = SYM nn
+ |               +-- ? . punct
+ |               +-- sIw UH dep
+ |               +-- T NNP dep
+ |               |   +-- -LRB- -LRB- punct
+ |               |   +-- ; : punct
+ |               |   +-- ? . punct
+ |               |   +-- S NNP dep
+ |               |   +-- -RRB- -RRB- punct
+ |               +-- , , punct
+ |               +-- w IN rcmod
+ |                   +-- where WRB advmod
+ |                   +-- = : punct
+ |                   +-- w IN prep
+ |                   |   +-- 0 CD pobj
+ |                   |       +-- -LRB- -LRB- punct
+ |                   |       +-- -RRB- -RRB- punct
+ |                   +-- ? . punct
+ |                   +-- t NN pobj
+ +-- . . punct
+
+19
+Input: For the initial alignment Ali -LRB- 0 -RRB- , we can first assume that the order of segments for each d is the same .
+Parse:
+assume VB ROOT
+ +-- For IN prep
+ |   +-- alignment NN pobj
+ |       +-- the DT det
+ |       +-- initial JJ amod
+ |       +-- Ali NNP appos
+ |           +-- -LRB- -LRB- punct
+ |           +-- 0 CD dep
+ |           +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- first RB advmod
+ +-- same JJ ccomp
+ |   +-- that IN mark
+ |   +-- order NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- segments NNS pobj
+ |   |           +-- for IN prep
+ |   |               +-- d NN pobj
+ |   |                   +-- each DT det
+ |   +-- is VBZ cop
+ |   +-- the DT det
+ +-- . . punct
+
+20
+Input: For the initial term clustering Clu -LRB- 0 -RRB- , first cluster labels can be set randomly , and after the first time of Step 3 , a good initial term clustering is obtained .
+Parse:
+set VBN ROOT
+ +-- For IN prep
+ |   +-- Clu NNP pobj
+ |       +-- the DT det
+ |       +-- term NN nn
+ |       |   +-- initial JJ amod
+ |       +-- clustering VBG nn
+ |       +-- -LRB- -LRB- punct
+ |       +-- 0 LS dep
+ |       +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- labels NNS nsubjpass
+ |   +-- first JJ amod
+ |   +-- cluster NN amod
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- randomly RB advmod
+ +-- and CC cc
+ +-- obtained VBN conj
+ |   +-- after IN prep
+ |   |   +-- time NN pobj
+ |   |       +-- the DT det
+ |   |       +-- first JJ amod
+ |   |       +-- of IN prep
+ |   |           +-- Step NNP pobj
+ |   |               +-- 3 CD num
+ |   +-- , , punct
+ |   +-- clustering NN nsubjpass
+ |   |   +-- a DT det
+ |   |   +-- good JJ amod
+ |   |   +-- term NN nn
+ |   |       +-- initial JJ amod
+ |   +-- is VBZ auxpass
+ +-- . . punct
+
+21
+Input: 4.3.2 Different Cases After initialization , there are three stages for different cases .
+Parse:
+are VBP ROOT
+ +-- Cases NNS nsubj
+ |   +-- 4.3.2 LS num
+ |   +-- Different JJ amod
+ +-- After IN prep
+ |   +-- initialization NN pobj
+ +-- , , punct
+ +-- there EX expl
+ +-- stages NNS nsubj
+ |   +-- three CD num
+ |   +-- for IN prep
+ |       +-- cases NNS pobj
+ |           +-- different JJ amod
+ +-- . . punct
+
+22
+Input: Totally there are eight cases , |D| = 1 or |D| > 1 , k = l or k < l , w = 0 or w = 1 .
+Parse:
+are VBP ROOT
+ +-- Totally RB advmod
+ +-- there EX expl
+ +-- cases NNS nsubj
+ |   +-- eight CD num
+ |   +-- , , punct
+ |   +-- 1 CD amod
+ |       +-- 1 CD dep
+ |       |   +-- = SYM dep
+ |       |   |   +-- |D| NFP punct
+ |       |   |   +-- 1 CD num
+ |       |   |   +-- or CC cc
+ |       |   |   +-- |D| . conj
+ |       |   |   +-- > -RRB- punct
+ |       |   +-- , , punct
+ |       |   +-- l NNP dep
+ |       |       +-- k CD num
+ |       |       +-- = SYM nn
+ |       |       +-- or CC cc
+ |       |       +-- k NNP conj
+ |       |       +-- < -LRB- punct
+ |       |       +-- l UH dep
+ |       +-- w IN dep
+ |       +-- = SYM dep
+ |       +-- 0 CD dep
+ |           +-- or CC cc
+ |           +-- w IN conj
+ +-- . . punct
+
+23
+Input: Single document segmentation without term clustering and term weight estimation -LRB- |D| = 1 , k = l , w = 0 -RRB- only requires Stage 1 -LRB- Step 1 -RRB- .
+Parse:
+requires VBZ ROOT
+ +-- segmentation NN nsubj
+ |   +-- document NN nn
+ |   |   +-- Single JJ amod
+ |   +-- without IN prep
+ |   |   +-- clustering NN pobj
+ |   |       +-- term NN nn
+ |   |       +-- and CC cc
+ |   |       +-- estimation NN conj
+ |   |           +-- term NN nn
+ |   |           +-- weight NN nn
+ |   +-- |D| NFP dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- = SYM dep
+ |       |   +-- 1 CD num
+ |       +-- , , punct
+ |       +-- l NNP dep
+ |       |   +-- k CD num
+ |       |   +-- = SYM dep
+ |       +-- w IN prep
+ |       |   +-- = SYM pobj
+ |       |       +-- 0 CD num
+ |       +-- -RRB- -RRB- punct
+ +-- only RB advmod
+ +-- Stage NNP dobj
+ |   +-- 1 CD num
+ |   +-- Step NN appos
+ |       +-- -LRB- -LRB- punct
+ |       +-- 1 CD num
+ |       +-- -RRB- -RRB- punct
+ +-- . . punct
+
+24
+Input: If term clustering is required -LRB- k < l -RRB- , Stage 2 -LRB- Step 2.1 , 2.2 , and 2.3 -RRB- is executed iteratively .
+Parse:
+executed VBN ROOT
+ +-- required VBN advcl
+ |   +-- If IN mark
+ |   +-- clustering NN nsubjpass
+ |   |   +-- term NN nn
+ |   +-- is VBZ auxpass
+ |   +-- k CD dobj
+ |       +-- -LRB- -LRB- punct
+ |       +-- < -LRB- punct
+ |       +-- l NNP dep
+ |       +-- -RRB- -RRB- punct
+ |       +-- , , punct
+ |       +-- Stage NN appos
+ |       |   +-- 2 CD num
+ |       +-- 2.1 CD dep
+ |           +-- Step NN nn
+ |           +-- , , punct
+ |           +-- 2.2 CD conj
+ |           +-- and CC cc
+ |           +-- 2.3 CD conj
+ +-- is VBZ auxpass
+ +-- iteratively RB advmod
+ +-- . . punct
+
+25
+Input: If term weight estimation is required -LRB- w = 1 -RRB- , Stage 3 -LRB- Step 3.1 , 3.2 , and 3.3 -RRB- is executed iteratively .
+Parse:
+Stage NN ROOT
+ +-- required VBN advcl
+ |   +-- If IN mark
+ |   +-- estimation NN nsubjpass
+ |   |   +-- term NN nn
+ |   |   +-- weight NN nn
+ |   +-- is VBZ auxpass
+ |   +-- w IN prep
+ |       +-- -LRB- -LRB- punct
+ |       +-- = SYM pobj
+ |       |   +-- 1 CD num
+ |       +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- 3 CD num
+ +-- -LRB- -LRB- punct
+ +-- Step NN conj
+ |   +-- 3.1 CD num
+ |   +-- , , punct
+ |   +-- 3.2 CD num
+ +-- and CC cc
+ +-- executed VBN conj
+ |   +-- 3.3 CD nsubjpass
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- is VBZ auxpass
+ |   +-- iteratively RB advmod
+ +-- . . punct
+
+26
+Input: If both are required -LRB- k < l , w = 1 -RRB- , Stage 2 and 3 run one after the other .
+Parse:
+required VBN ROOT
+ +-- If IN mark
+ +-- both DT nsubjpass
+ +-- are VBP auxpass
+ +-- k NNP dobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- < -LRB- punct
+ |   +-- l NNP dep
+ |   +-- , , punct
+ |   +-- w CC cc
+ |   +-- = SYM conj
+ |   |   +-- 1 CD num
+ |   +-- -RRB- -RRB- punct
+ |   +-- Stage NN conj
+ |   |   +-- 2 CD num
+ |   +-- and CC cc
+ |   +-- run VB conj
+ |       +-- 3 CD num
+ |       +-- one CD dobj
+ |           +-- after IN prep
+ |               +-- other JJ pobj
+ |                   +-- the DT det
+ +-- . . punct
+
+27
+Input: For multi document segmentation without term clustering and term weight estimation -LRB- |D| > 1 , k = l , w = 0 -RRB- , only iteration of Step 2.2 and 2.3 are required .
+Parse:
+required VBN ROOT
+ +-- For IN prep
+ |   +-- segmentation NN pobj
+ |       +-- multi JJ amod
+ |       +-- document NN nn
+ |       +-- without IN prep
+ |           +-- clustering NN pobj
+ |               +-- term NN nn
+ |               +-- and CC cc
+ |               +-- estimation NN conj
+ |                   +-- term NN nn
+ |                   +-- weight NN nn
+ +-- 1 CD nsubjpass
+ |   +-- -LRB- -LRB- punct
+ |   +-- |D| FW nn
+ |   +-- > -RRB- punct
+ |   +-- , , punct
+ |   +-- k CD num
+ |   +-- l NNP dep
+ |   |   +-- = SYM nn
+ |   +-- w IN prep
+ |   |   +-- = SYM pobj
+ |   |       +-- 0 CD num
+ |   +-- -RRB- -RRB- punct
+ +-- iteration NN nsubjpass
+ |   +-- only RB advmod
+ |   +-- of IN prep
+ |       +-- Step NNP pobj
+ |           +-- 2.2 CD num
+ |           +-- and CC cc
+ |           +-- 2.3 CD conj
+ +-- are VBP auxpass
+ +-- . . punct
+
+28
+Input: At Stage 1 , the global maximum can be found based on I -LRB- ? T ; ? S -RRB- using dynamic programming in Section 4.4 .
+Parse:
+found VBN ROOT
+ +-- At IN prep
+ |   +-- Stage NNP pobj
+ |       +-- 1 CD num
+ +-- , , punct
+ +-- maximum NN nsubjpass
+ |   +-- the DT det
+ |   +-- global JJ amod
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- based VBN prep
+ |   +-- on IN pcomp
+ |       +-- I PRP pobj
+ |       +-- -LRB- -LRB- punct
+ |       +-- ? . punct
+ |       +-- T NNP pobj
+ +-- ; : punct
+ +-- S NNP parataxis
+ |   +-- ? . punct
+ |   +-- -RRB- -RRB- punct
+ |   +-- using VBG partmod
+ |       +-- programming NN dobj
+ |       |   +-- dynamic JJ amod
+ |       +-- in IN prep
+ |           +-- Section NNP pobj
+ |               +-- 4.4 CD num
+ +-- . . punct
+
+29
+Input: Simultaneously finding a good term clustering and estimated term weights is impossible , since when moving a term to a new term cluster to maximize Iw -LRB- ? T ; ? S -RRB- , we do not know that the weight of this term should be the one of the new cluster or the old cluster .
+Parse:
+know VB ROOT
+ +-- finding VBG partmod
+ |   +-- Simultaneously RB advmod
+ |   +-- clustering NN dobj
+ |   |   +-- a DT det
+ |   |   +-- term NN nn
+ |   |       +-- good JJ amod
+ |   +-- and CC cc
+ |   +-- impossible JJ conj
+ |   |   +-- weights NNS nsubj
+ |   |   |   +-- estimated VBN amod
+ |   |   |   +-- term NN nn
+ |   |   +-- is VBZ cop
+ |   |   +-- , , punct
+ |   |   +-- since IN prep
+ |   |       +-- moving VBG pcomp
+ |   |           +-- when WRB advmod
+ |   |           +-- term NN dobj
+ |   |           |   +-- a DT det
+ |   |           +-- to IN prep
+ |   |           |   +-- cluster NN pobj
+ |   |           |       +-- a DT det
+ |   |           |       +-- new JJ amod
+ |   |           |       +-- term NN nn
+ |   |           +-- maximize VB xcomp
+ |   |               +-- to TO aux
+ |   |               +-- Iw NN dobj
+ |   |                   +-- -LRB- -LRB- punct
+ |   |                   +-- ? . punct
+ |   |                   +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- ? . punct
+ |   +-- S NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- do VBP aux
+ +-- not RB neg
+ +-- one CD ccomp
+ |   +-- that IN mark
+ |   +-- weight NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- term NN pobj
+ |   |           +-- this DT det
+ |   +-- should MD aux
+ |   +-- be VB cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- cluster NN pobj
+ |           +-- the DT det
+ |           +-- new JJ amod
+ |           +-- or CC cc
+ |           +-- cluster NN conj
+ |               +-- the DT det
+ |               +-- old JJ amod
+ +-- . . punct
+
+30
+Input: Thus , we first do term clustering at Stage 2 , and then estimate term weights at Stage 3 .
+Parse:
+term NN ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- first RB advmod
+ +-- do VBP aux
+ +-- clustering VBG partmod
+ |   +-- at IN prep
+ |       +-- Stage NNP pobj
+ |           +-- 2 CD num
+ +-- and CC cc
+ +-- then RB advmod
+ +-- estimate VB conj
+ |   +-- weights NNS dobj
+ |   |   +-- term NN nn
+ |   +-- at IN prep
+ |       +-- Stage NN pobj
+ |           +-- 3 CD num
+ +-- . . punct
+
+31
+Input: At Stage 2 , Step 2.1 is to find the best term clustering and Step 2.2 is to find the best segmentation .
+Parse:
+is VBZ ROOT
+ +-- At IN prep
+ |   +-- Stage NNP pobj
+ |       +-- 2 CD num
+ +-- , , punct
+ +-- Step NN nsubj
+ |   +-- 2.1 CD num
+ +-- find VB xcomp
+ |   +-- to TO aux
+ |   +-- clustering VBG dobj
+ |       +-- the DT det
+ |       +-- term NN nn
+ |           +-- best JJS amod
+ +-- and CC cc
+ +-- is VBZ conj
+ |   +-- Step NNP nsubj
+ |   |   +-- 2.2 CD num
+ |   +-- find VB xcomp
+ |       +-- to TO aux
+ |       +-- segmentation NN dobj
+ |           +-- the DT det
+ |           +-- best JJS amod
+ +-- . . punct
+
+32
+Input: This cycle is repeated to find a local maximum based on MI I until it converges .
+Parse:
+repeated VBN ROOT
+ +-- cycle NN nsubjpass
+ |   +-- This DT det
+ +-- is VBZ auxpass
+ +-- find VB xcomp
+ |   +-- to TO aux
+ |   +-- maximum NN dobj
+ |   |   +-- a DT det
+ |   |   +-- local JJ amod
+ |   |   +-- based VBN partmod
+ |   |       +-- on IN prep
+ |   |           +-- I PRP pobj
+ |   |               +-- MI NNP nn
+ |   +-- converges VBZ advcl
+ |       +-- until IN mark
+ |       +-- it PRP nsubj
+ +-- . . punct
+
+33
+Input: The two steps are
+Parse:
+are VBP ROOT
+ +-- steps NNS nsubj
+     +-- The DT det
+     +-- two CD num
+
+34
+Input: After finding a good term clustering , term weights are estimated if w = 1 .
+Parse:
+estimated VBN ROOT
+ +-- After IN prep
+ |   +-- finding VBG pcomp
+ |       +-- clustering NN dobj
+ |           +-- a DT det
+ |           +-- term NN nn
+ |               +-- good JJ amod
+ +-- , , punct
+ +-- weights NNS nsubjpass
+ |   +-- term NN nn
+ +-- are VBP auxpass
+ +-- w IN advcl
+ |   +-- if IN mark
+ |   +-- = SYM dep
+ |       +-- 1 CD num
+ +-- . . punct
+
+35
+Input: At Stage 3 , similar as Stage 2 , Step 3.1 is term weight re estimation and Step 3.2 is to find a better segmentation .
+Parse:
+weight NN ROOT
+ +-- At IN prep
+ |   +-- Stage NN pobj
+ |       +-- 3 CD num
+ |       +-- , , punct
+ |       +-- similar JJ amod
+ |           +-- as IN prep
+ |               +-- Stage NNP pobj
+ |                   +-- 2 CD num
+ +-- , , punct
+ +-- Step NN nsubj
+ |   +-- 3.1 CD num
+ +-- is VBZ cop
+ +-- term NN nn
+ +-- re IN prep
+ |   +-- estimation NN pobj
+ +-- and CC cc
+ +-- is VBZ conj
+ |   +-- Step NNP nsubj
+ |   |   +-- 3.2 CD num
+ |   +-- find VB xcomp
+ |       +-- to TO aux
+ |       +-- segmentation NN dobj
+ |           +-- a DT det
+ |           +-- better JJR amod
+ +-- . . punct
+
+36
+Input: They are repeated to find a local maximum based on WMI Iw until it converges .
+Parse:
+repeated VBN ROOT
+ +-- They PRP nsubjpass
+ +-- are VBP auxpass
+ +-- find VB xcomp
+ |   +-- to TO aux
+ |   +-- maximum NN dobj
+ |   |   +-- a DT det
+ |   |   +-- local JJ amod
+ |   |   +-- based VBN partmod
+ |   |       +-- on IN prep
+ |   |           +-- Iw NN pobj
+ |   |               +-- WMI NNP nn
+ |   +-- converges VBZ advcl
+ |       +-- until IN mark
+ |       +-- it PRP nsubj
+ +-- . . punct
+
+37
+Input: However , if the term clustering in Stage 2 is not accurate , then the term weight estimation at Stage 3 may have a bad result .
+Parse:
+have VB ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- accurate JJ advcl
+ |   +-- if IN mark
+ |   +-- term NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- clustering VBG partmod
+ |   |       +-- in IN prep
+ |   |           +-- Stage NNP pobj
+ |   |               +-- 2 CD num
+ |   +-- is VBZ cop
+ |   +-- not RB neg
+ +-- then RB advmod
+ +-- estimation NN nsubj
+ |   +-- the DT det
+ |   +-- weight NN nn
+ |   |   +-- term NN nn
+ |   +-- at IN prep
+ |       +-- Stage NNP pobj
+ |           +-- 3 CD num
+ +-- may MD aux
+ +-- result NN dobj
+ |   +-- a DT det
+ |   +-- bad JJ amod
+ +-- . . punct
+
+38
+Input: Finally , at Step 3.3 , this algorithm converges and return the output .
+Parse:
+converges NNS ROOT
+ +-- Finally RB advmod
+ +-- , , punct
+ +-- at IN prep
+ |   +-- Step NNP pobj
+ |       +-- 3.3 CD num
+ +-- this DT det
+ +-- algorithm NN nn
+ +-- and CC cc
+ +-- return VB conj
+ |   +-- output NN dobj
+ |       +-- the DT det
+ +-- . . punct
+
+39
+Input: This algorithm can handle both single document and multi document segmentation .
+Parse:
+handle VB ROOT
+ +-- algorithm NN nsubj
+ |   +-- This DT det
+ +-- can MD aux
+ +-- document NN dobj
+ |   +-- both DT preconj
+ |   +-- single JJ amod
+ |   +-- and CC cc
+ |   +-- segmentation NN conj
+ |       +-- multi JJ amod
+ |       +-- document NN nn
+ +-- . . punct
+
+40
+Input: It also can detect shared topics among documents by checking the proportion of overlapped sentences on the same topics , as described in Sec 5.2 .
+Parse:
+detect VB ROOT
+ +-- It PRP nsubj
+ +-- also RB advmod
+ +-- can MD aux
+ +-- topics NNS dobj
+ |   +-- shared VBN amod
+ |   +-- among IN prep
+ |       +-- documents NNS pobj
+ +-- by IN prep
+ |   +-- checking VBG pcomp
+ |       +-- proportion NN dobj
+ |       |   +-- the DT det
+ |       |   +-- of IN prep
+ |       |       +-- sentences NNS pobj
+ |       |           +-- overlapped JJ amod
+ |       +-- on IN prep
+ |       |   +-- topics NNS pobj
+ |       |       +-- the DT det
+ |       |       +-- same JJ amod
+ |       +-- , , punct
+ |       +-- described VBN advcl
+ |           +-- as IN mark
+ |           +-- in IN prep
+ |               +-- Sec NNP pobj
+ |                   +-- 5.2 CD num
+ +-- . . punct
+
+41
+Input: 4.4 Algorithm Optimization In many previous works on segmentation , dynamic programming is a technique used to maximize the objective function .
+Parse:
+Optimization NN ROOT
+ +-- 4.4 NFP punct
+ +-- Algorithm RB amod
+ +-- In IN prep
+ |   +-- works NNS pobj
+ |       +-- many JJ amod
+ |       +-- previous JJ amod
+ |       +-- on IN prep
+ |           +-- segmentation NN pobj
+ +-- , , punct
+ +-- technique NN ccomp
+ |   +-- programming NN nsubj
+ |   |   +-- dynamic JJ amod
+ |   +-- is VBZ cop
+ |   +-- a DT det
+ |   +-- used VBN partmod
+ |       +-- maximize VB xcomp
+ |           +-- to TO aux
+ |           +-- function NN dobj
+ |               +-- the DT det
+ |               +-- objective JJ amod
+ +-- . . punct
+
+42
+Input: Similarly , at Step 1 , 2.2 , and 3.2 of our algorithm , we can use dynamic programming .
+Parse:
+use VB ROOT
+ +-- Similarly RB advmod
+ +-- , , punct
+ +-- at IN prep
+ |   +-- Step NNP pobj
+ |       +-- 1 CD num
+ |       +-- , , punct
+ |       +-- 2.2 CD num
+ |       +-- and CC cc
+ |       +-- 3.2 CD conj
+ |           +-- of IN prep
+ |               +-- algorithm NN pobj
+ |                   +-- our PRP$ poss
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- programming NN dobj
+ |   +-- dynamic JJ amod
+ +-- . . punct
+
+43
+Input: For Stage 1 , using dynamic programming can still find the global optimum , but for Stage 2 and Stage 3 , we can only find the optimum for each step of topic segmentation and alignment of a document .
+Parse:
+find VB ROOT
+ +-- For IN prep
+ |   +-- Stage NNP pobj
+ |       +-- 1 CD num
+ +-- , , punct
+ +-- using VBG csubj
+ |   +-- programming NN dobj
+ |       +-- dynamic JJ amod
+ +-- can MD aux
+ +-- still RB advmod
+ +-- optimum NN dobj
+ |   +-- the DT det
+ |   +-- global JJ amod
+ +-- but CC cc
+ +-- find VB conj
+ |   +-- for IN prep
+ |   |   +-- Stage NNP pobj
+ |   |       +-- 2 CD num
+ |   |       +-- and CC cc
+ |   |       +-- Stage NN conj
+ |   |           +-- 3 CD num
+ |   +-- , , punct
+ |   +-- we PRP nsubj
+ |   +-- can MD aux
+ |   +-- only RB advmod
+ |   +-- optimum NN dobj
+ |       +-- the DT det
+ |       +-- for IN prep
+ |           +-- step NN pobj
+ |               +-- each DT det
+ |               +-- of IN prep
+ |                   +-- segmentation NN pobj
+ |                       +-- topic NN nn
+ |                       +-- and CC cc
+ |                       +-- alignment NN conj
+ |                           +-- of IN prep
+ |                               +-- document NN pobj
+ |                                   +-- a DT det
+ +-- . . punct
+
+44
+Input: Here we only show the dynamic programming for Step 3.2 using WMI -LRB- Step 1 and 2.2 are similar but they can use either I or Iw -RRB- .
+Parse:
+show VBP ROOT
+ +-- Here RB advmod
+ +-- we PRP nsubj
+ +-- only RB advmod
+ +-- similar JJ ccomp
+ |   +-- programming NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- dynamic JJ amod
+ |   |   +-- for IN prep
+ |   |       +-- Step NNP pobj
+ |   |           +-- 3.2 CD num
+ |   |           +-- using VBG partmod
+ |   |               +-- WMI NNP dobj
+ |   |                   +-- -LRB- -LRB- punct
+ |   |                   +-- Step NN dep
+ |   |                       +-- 1 CD num
+ |   |                       +-- and CC cc
+ |   |                       +-- 2.2 CD conj
+ |   +-- are VBP cop
+ |   +-- but CC cc
+ |   +-- use VB conj
+ |   |   +-- they PRP nsubj
+ |   |   +-- can MD aux
+ |   |   +-- I PRP dobj
+ |   |       +-- either CC preconj
+ |   |       +-- or CC cc
+ |   |       +-- Iw NNP conj
+ |   +-- -RRB- -RRB- punct
+ +-- . . punct
+
+45
+Input: There are two cases that are not shown in the algorithm in Figure 2
+Parse:
+are VBP ROOT
+ +-- There EX expl
+ +-- cases NNS nsubj
+     +-- two CD num
+     +-- shown VBN rcmod
+         +-- that WDT nsubjpass
+         +-- are VBP auxpass
+         +-- not RB neg
+         +-- in IN prep
+             +-- Figure NN pobj
+                 +-- 2 CD num
+
+46
+Input: The alignment mapping function of the former case is simply just Alid -LRB- ? si -RRB- = ? si , while for the latter one '' s alignment mapping function Alid -LRB- ? si -RRB- = ? sj , i and j may be different .
+Parse:
+Alid NNP ROOT
+ +-- function NN nsubj
+ |   +-- The DT det
+ |   +-- mapping NN nn
+ |   |   +-- alignment NN nn
+ |   +-- of IN prep
+ |       +-- case NN pobj
+ |           +-- the DT det
+ |           +-- former JJ amod
+ +-- is VBZ cop
+ +-- simply RB advmod
+ +-- just RB advmod
+ +-- -LRB- -LRB- punct
+ +-- ? . punct
+ +-- si UH dep
+ +-- -RRB- -RRB- punct
+ +-- = SYM dep
+ |   +-- ? . punct
+ |   +-- different JJ dep
+ |       +-- si UH discourse
+ |       +-- , , punct
+ |       +-- Alid NNP advcl
+ |       |   +-- while IN mark
+ |       |   +-- for IN prep
+ |       |   |   +-- function NN pobj
+ |       |   |       +-- one NN poss
+ |       |   |       |   +-- the DT det
+ |       |   |       |   +-- latter JJ amod
+ |       |   |       |   +-- '' '' punct
+ |       |   |       |   +-- s POS possessive
+ |       |   |       +-- alignment JJ amod
+ |       |   |       +-- mapping NN nn
+ |       |   +-- si UH dep
+ |       |   |   +-- -LRB- -LRB- punct
+ |       |   |   +-- ? . punct
+ |       |   |   +-- -RRB- -RRB- punct
+ |       |   +-- = SYM dep
+ |       |   +-- ? . punct
+ |       |   +-- sj NFP advmod
+ |       +-- i PRP nsubj
+ |       |   +-- and CC cc
+ |       |   +-- j , conj
+ |       +-- may MD aux
+ |       +-- be VB cop
+ +-- . . punct
+
+47
+Input: The computational steps for the two cases are listed below
+Parse:
+listed VBN ROOT
+ +-- steps NNS nsubjpass
+ |   +-- The DT det
+ |   +-- computational JJ amod
+ |   +-- for IN prep
+ |       +-- cases NNS pobj
+ |           +-- the DT det
+ |           +-- two CD num
+ +-- are VBP auxpass
+ +-- below IN advmod
+
+48
+Input: Then put sentences from i to j into Part k , and compute partial WMI PIw -LRB- ? T ; ? sk -LRB- si , si+1 , ... , sj -RRB- -RRB- ? t ? ? T pw -LRB- ? t , ? sk -RRB- log pw -LRB- ? t , ? sk -RRB- pw -LRB- ? t -RRB- pw -LRB- ? sk -RRB- , where Alid -LRB- si , si+1 , ... , sj -RRB- = k , k ? -LRB- 1 , 2 , ... , p -RRB- , 1 ? i ? j ? nd , and Segd -LRB- sq -RRB- = ? sk for all i ? q ? j .
+Parse:
+put VB ROOT
+ +-- Then RB advmod
+ +-- sentences NNS dobj
+ +-- from IN prep
+ |   +-- i PRP pobj
+ |   +-- to IN prep
+ |       +-- j VB pobj
+ +-- into IN prep
+ |   +-- Part NNP pobj
+ |       +-- k CD num
+ |       +-- , , punct
+ |       +-- and CC cc
+ |       +-- PIw NNP conj
+ |           +-- compute JJ amod
+ |           +-- partial JJ amod
+ |           +-- WMI NNP nn
+ |           +-- -LRB- -LRB- punct
+ |           +-- ? . punct
+ |           +-- T NNP appos
+ +-- ; : punct
+ +-- ? . punct
+ +-- log VB parataxis
+ |   +-- sk NNP nsubj
+ |   |   +-- sj NN dep
+ |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   +-- si UH discourse
+ |   |   |   +-- , , punct
+ |   |   |   +-- si+1 CD dep
+ |   |   |   +-- ... , punct
+ |   |   |   +-- -RRB- -RRB- punct
+ |   |   +-- ? . punct
+ |   |   +-- t NN dep
+ |   |   +-- pw NNP dep
+ |   |   |   +-- T NNP nn
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ? , punct
+ |   |   +-- t NN appos
+ |   |   +-- , , punct
+ |   |   +-- sk NN dep
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- pw NN dobj
+ |       +-- -LRB- -LRB- punct
+ |       +-- ? . punct
+ |       +-- t NN dep
+ |       |   +-- , , punct
+ |       |   +-- ? . punct
+ |       |   +-- sk NNP dep
+ |       +-- -RRB- -RRB- punct
+ |       +-- pw NNP dep
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- ? . punct
+ |       |   +-- t NN dep
+ |       |   +-- -RRB- -RRB- punct
+ |       |   +-- pw NN dep
+ |       |   +-- ? , punct
+ |       |   +-- sk NNP appos
+ |       +-- , , punct
+ |       +-- where WRB prep
+ |           +-- i PRP pobj
+ |               +-- k CD dep
+ |               |   +-- si+1 CD dep
+ |               |   |   +-- Alid NNP dep
+ |               |   |   +-- -LRB- -LRB- punct
+ |               |   |   +-- si FW dep
+ |               |   |   +-- , , punct
+ |               |   |   +-- ... , punct
+ |               |   |   +-- sj NFP dep
+ |               |   |   +-- -RRB- -RRB- punct
+ |               |   +-- = NFP punct
+ |               |   +-- , , punct
+ |               |   +-- k NNP appos
+ |               |   |   +-- ? . punct
+ |               |   +-- -LRB- -LRB- punct
+ |               |   +-- 2 CD dep
+ |               |   |   +-- 1 CD num
+ |               |   |   +-- , , punct
+ |               |   |   +-- ... , punct
+ |               |   |   +-- p NN appos
+ |               |   +-- -RRB- -RRB- punct
+ |               |   +-- 1 CD amod
+ |               |   +-- ? . punct
+ |               +-- ? , punct
+ |               +-- j UH dep
+ |               +-- = SYM dep
+ |               +-- ? . punct
+ |               +-- sk NN dep
+ |               +-- for IN prep
+ |               |   +-- all DT pobj
+ |               +-- i PRP dep
+ |               +-- q NNP dep
+ +-- . . punct
+
+49
+Input: -LRB- 2 -RRB- Let M -LRB- sm , 1 -RRB- = PIw -LRB- ? T ; ? s1 -LRB- s1 , s2 , ... , sm -RRB- -RRB- .
+Parse:
+Let VB ROOT
+ +-- 2 LS dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- M NNP dobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- sm NNP dep
+ |   |   +-- , , punct
+ |   |   +-- 1 CD dep
+ |   +-- -RRB- -RRB- punct
+ |   +-- PIw NN dep
+ |       +-- = SYM nn
+ |       +-- -LRB- -LRB- punct
+ |       +-- ? . punct
+ |       +-- T NNP appos
+ |       +-- ; : punct
+ |       +-- s1 CD dep
+ |       |   +-- sm NN dep
+ |       |       +-- -LRB- -LRB- punct
+ |       |       +-- s1 CD dep
+ |       |       +-- , , punct
+ |       |       +-- s2 CD conj
+ |       |       +-- ... , punct
+ |       |       +-- -RRB- -RRB- punct
+ |       +-- -RRB- -RRB- punct
+ +-- . . punct
+
+50
+Input: Then M -LRB- sm , L -RRB- = maxi -LRB- M -LRB- si ? 1 , L ? 1 -RRB- + PIw -LRB- ? T ; ? sL -LRB- si , ... , sm -RRB- -RRB- -RRB- , where 0 ? m ? nd , 1 < L < p , 1 ? i ? m + 1 , and when i > m , no sentences are put into ? sk when compute PIw -LRB- note PIw -LRB- ? T ; ? s -LRB- si , ... , sm -RRB- -RRB- = 0 for single document segmentation -RRB- .
+Parse:
++ SYM ROOT
+ +-- Then RB advmod
+ +-- M NNP dep
+ |   +-- sm NNP appos
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- , , punct
+ |   |   +-- L NNP appos
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- = , punct
+ |   +-- maxi NN dep
+ |   |   +-- si NNP appos
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- M NNP nn
+ |   |       +-- ? . punct
+ |   |       +-- 1 CD dep
+ |   |       +-- , , punct
+ |   |       +-- L NNP appos
+ |   |       |   +-- ? . punct
+ |   |       |   +-- 1 CD num
+ |   |       +-- -RRB- -RRB- punct
+ |   +-- + SYM prep
+ |   |   +-- PIw NNP pobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- sL UH dep
+ |   |   +-- sm NN dep
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- si NN amod
+ |   |       +-- , , punct
+ |   |       +-- ... , punct
+ |   |       +-- -RRB- -RRB- punct
+ |   +-- -RRB- -RRB- punct
+ |   +-- , , punct
+ |   +-- p NN rcmod
+ |   |   +-- where WRB advmod
+ |   |   +-- m NN dep
+ |   |   |   +-- 0 NFP dep
+ |   |   |   |   +-- ? . punct
+ |   |   |   +-- ? . punct
+ |   |   +-- nd UH discourse
+ |   |   +-- , , punct
+ |   |   +-- 1 CD num
+ |   |   +-- < -LRB- punct
+ |   |   +-- L NNP nn
+ |   +-- 1 CD num
+ |   +-- i PRP dep
+ +-- m NN nn
+ +-- 1 CD num
+ +-- , , punct
+ +-- and CC cc
+ +-- put VBN conj
+ |   +-- > VBZ advcl
+ |   |   +-- when WRB advmod
+ |   |   +-- i PRP nsubj
+ |   |   +-- m VBP dobj
+ |   +-- , , punct
+ |   +-- sentences NNS nsubjpass
+ |   |   +-- no DT det
+ |   +-- are VBP auxpass
+ |   +-- into IN prep
+ |   |   +-- ? . punct
+ |   |   +-- sk NN pobj
+ |   +-- note VB advcl
+ |       +-- when WRB advmod
+ |       +-- PIw NN nsubj
+ |       |   +-- compute JJ amod
+ |       |   +-- -LRB- -LRB- punct
+ |       +-- PIw NNP dobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- ? . punct
+ |           +-- T NNP appos
+ +-- ; : punct
+ +-- ? . punct
+ +-- s POS punct
+ +-- si NN dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- , , punct
+ |   +-- ... : punct
+ |   +-- sm NN dep
+ |   +-- -RRB- -RRB- punct
+ +-- -RRB- -RRB- punct
+ +-- = SYM discourse
+ +-- 0 NFP punct
+ +-- for IN prep
+ |   +-- segmentation NN pobj
+ |       +-- single JJ amod
+ |       +-- document NN nn
+ +-- . . punct
+
+51
+Input: -LRB- 3 -RRB- Finally M -LRB- snd , p -RRB- = maxi -LRB- M -LRB- si ? 1 , p ? 1 -RRB- + PIw -LRB- ? T ; ? sp -LRB- si , ... , snd -RRB- -RRB- -RRB- , where 1 ? i ? nd+1 .
+Parse:
+M NNP ROOT
+ +-- 3 LS dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- Finally RB nn
+ +-- -LRB- -LRB- punct
+ +-- snd UH dep
+ |   +-- , , punct
+ |   +-- p NFP punct
+ +-- -RRB- -RRB- punct
+ +-- maxi NN dep
+ |   +-- = , nn
+ +-- si NNP dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- M NNP nn
+ |   +-- ? . punct
+ |   +-- 1 CD dep
+ |   +-- , , punct
+ |   +-- p NN dep
+ |   |   +-- ? . punct
+ |   |   +-- 1 CD dep
+ |   +-- -RRB- -RRB- punct
+ +-- + SYM dep
+ +-- PIw NNP dep
+ +-- ? . punct
+ +-- T NNP appos
+ +-- ; : punct
+ +-- snd NN dep
+ |   +-- ? . punct
+ |   +-- sp UH dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- si NN dep
+ |   +-- , , punct
+ |   +-- ... : punct
+ |   +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- where WRB prep
+ |   +-- i PRP pobj
+ |       +-- 1 CD dep
+ |       |   +-- ? . punct
+ |       +-- ? , punct
+ |       +-- nd+1 CD dep
+ +-- . . punct
+
+52
+Input: The optimal Iw is found and the corresponding segmentation is the best .
+Parse:
+found VBN ROOT
+ +-- Iw NN nsubjpass
+ |   +-- The DT det
+ |   +-- optimal NN amod
+ +-- is VBZ auxpass
+ +-- and CC cc
+ +-- best JJS conj
+ |   +-- segmentation NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- corresponding VBG amod
+ |   +-- is VBZ cop
+ |   +-- the DT det
+ +-- . . punct
+
+53
+Input: Case 2 -LRB- alignment required -RRB-
+Parse:
+Case NN ROOT
+ +-- 2 CD num
+ +-- -LRB- -LRB- punct
+ +-- alignment NN dep
+ |   +-- required VBN partmod
+ +-- -RRB- -RRB- punct
+
+54
+Input: -LRB- 2 -RRB- Let M -LRB- sm , 1 , k -RRB- = PIw -LRB- ? T ; ? sk -LRB- s1 , s2 , ... , sm -RRB- -RRB- , where k ? -LRB- 1 , 2 , ... , p -RRB- .
+Parse:
+Let VB ROOT
+ +-- 2 LS dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- M NNP ccomp
+ |   +-- -LRB- -LRB- punct
+ |   +-- sm NNP dep
+ |   |   +-- , , punct
+ |   |   +-- 1 CD amod
+ |   |   +-- k NN appos
+ |   +-- -RRB- -RRB- punct
+ |   +-- = SYM prep
+ |   |   +-- PIw NNP pobj
+ |   +-- ? . punct
+ |   +-- T NNP appos
+ |   +-- ; : punct
+ |   +-- sk NNP dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- s1 CD dep
+ |       |   +-- , , punct
+ |       |   +-- s2 CD appos
+ |       +-- , , punct
+ |       +-- ... , punct
+ |       +-- sm NN dobj
+ +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- where WRB prep
+ |   +-- k NNP pobj
+ |       +-- ? . punct
+ |       +-- p NN appos
+ |           +-- -LRB- -LRB- punct
+ |           +-- 1 CD num
+ |           |   +-- , , punct
+ |           |   +-- 2 CD amod
+ |           +-- , , punct
+ |           +-- ... , punct
+ |           +-- -RRB- -RRB- punct
+ +-- . . punct
+
+55
+Input: Then M -LRB- sm , L , kL -RRB- = maxi , j -LRB- M -LRB- si ? 1 , L ? 1 , kL j -RRB- + PIw -LRB- ? T ; ? sAlid -LRB- ? sL -RRB- =j -LRB- si , si+1 , ... , sm -RRB- -RRB- -RRB- , where 0 ? m ? nd , 1 < L < p , 1 ? i ? m + 1 , kL ? Set -LRB- p , L -RRB- , which is the set of all p ! L ! -LRB- p ? L -RRB- ! combinations of L segments chosen from all p segments , j ? kL , the set of L segments chosen from all p segments , and kL j is the combination of L ? 1 segments in kL except Segment j .
+Parse:
+sm NN ROOT
+ +-- Then RB advmod
+ +-- M NNP dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- sm NNP dep
+ |   |   +-- , , punct
+ |   |   +-- L NNP appos
+ |   |   +-- kL NFP appos
+ |   +-- -RRB- -RRB- punct
+ +-- = , punct
+ +-- maxi NN dep
+ +-- , , punct
+ +-- j UH dep
+ |   +-- si NNP dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- M NNP nn
+ |       +-- ? . punct
+ |       +-- 1 CD dep
+ |       +-- , , punct
+ |       +-- L NNP dep
+ |       |   +-- ? . punct
+ |       |   +-- 1 CD num
+ |       +-- j SYM dep
+ |       |   +-- kL GW nn
+ |       +-- -RRB- -RRB- punct
+ +-- + SYM dep
+ +-- PIw NNP dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- T NNP dep
+ |       +-- ? . punct
+ |       +-- ; : punct
+ |       +-- sAlid NNP dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- sL SYM dep
+ |       +-- -RRB- -RRB- punct
+ +-- =j SYM dep
+ +-- -LRB- -LRB- punct
+ +-- si FW dep
+ +-- si+1 CD dep
+ +-- ... , punct
+ +-- -RRB- -RRB- punct
+ +-- p NN dep
+ |   +-- where WRB advmod
+ |   +-- m NN dep
+ |   |   +-- 0 NFP dep
+ |   |   |   +-- ? . punct
+ |   |   +-- ? . punct
+ |   +-- nd UH discourse
+ |   +-- , , punct
+ |   +-- 1 CD num
+ |   +-- < -LRB- punct
+ |   +-- L NNP nn
+ +-- i PRP dep
+ |   +-- 1 CD dep
+ |       +-- ? . punct
+ +-- ? . punct
+ +-- combination NN dep
+ |   +-- m NN nsubj
+ |   |   +-- + SYM dep
+ |   |       +-- 1 CD num
+ |   +-- , , punct
+ |   +-- kL UH nsubj
+ |   |   +-- ? . punct
+ |   |   +-- Set NNP prep
+ |   |       +-- p NN pobj
+ |   |           +-- -LRB- -LRB- punct
+ |   |           +-- , , punct
+ |   |           +-- L NNP appos
+ |   |           +-- -RRB- -RRB- punct
+ |   |           +-- set NN rcmod
+ |   |           |   +-- which WDT nsubj
+ |   |           |   +-- is VBZ cop
+ |   |           |   +-- the DT det
+ |   |           |   +-- of IN prep
+ |   |           |   |   +-- p NN pobj
+ |   |           |   |       +-- all DT det
+ |   |           |   |       +-- ! . punct
+ |   |           |   |       +-- L UH appos
+ |   |           |   |           +-- ! . punct
+ |   |           |   |           +-- -LRB- -LRB- punct
+ |   |           |   |           +-- p UH dep
+ |   |           |   |           |   +-- ? . punct
+ |   |           |   |           |   +-- L NNP dep
+ |   |           |   |           +-- -RRB- -RRB- punct
+ |   |           |   +-- ! . punct
+ |   |           |   +-- combinations NNS dobj
+ |   |           |       +-- of IN prep
+ |   |           |           +-- segments NNS pobj
+ |   |           |               +-- L NN nn
+ |   |           |               +-- chosen VBN partmod
+ |   |           |                   +-- from IN prep
+ |   |           |                       +-- segments NNS pobj
+ |   |           |                           +-- all DT det
+ |   |           |                           +-- p NNP nn
+ |   |           |                           +-- , , punct
+ |   |           |                           +-- j NNP conj
+ |   |           |                           +-- ? , punct
+ |   |           |                           +-- kL UH conj
+ |   |           |                           +-- set NN conj
+ |   |           |                           |   +-- the DT det
+ |   |           |                           |   +-- of IN prep
+ |   |           |                           |       +-- segments NNS pobj
+ |   |           |                           |           +-- L NN nn
+ |   |           |                           |           +-- chosen VBN partmod
+ |   |           |                           |               +-- from IN prep
+ |   |           |                           |                   +-- segments NNS pobj
+ |   |           |                           |                       +-- all DT det
+ |   |           |                           |                       +-- p NNP nn
+ |   |           |                           +-- and CC cc
+ |   |           |                           +-- kL SYM conj
+ |   |           +-- j , punct
+ |   +-- is VBZ cop
+ |   +-- the DT det
+ |   +-- of IN prep
+ |   |   +-- L NNP pobj
+ |   +-- ? . punct
+ |   +-- segments NNS dobj
+ |       +-- 1 CD num
+ |       +-- in IN prep
+ |       |   +-- kL , pobj
+ |       +-- except IN prep
+ |           +-- j NNP pobj
+ |               +-- Segment NNP nn
+ +-- . . punct
+
+56
+Input: -LRB- 3 -RRB- Finally , M -LRB- snd , p , kp -RRB- = maxi , j -LRB- M -LRB- si ? 1 , p ? 1 , kp j -RRB- +PIw -LRB- ? T ; ? sAlid -LRB- ? sL -RRB- =j -LRB- si , si+1 , ... , snd -RRB- -RRB- -RRB- , where kp is just the combination of all p segments and 1 ? i ? nd + 1 , which is the optimal Iw and the corresponding segmentation is the best .
+Parse:
+p NNP ROOT
+ +-- 3 LS dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- Finally RB advmod
+ +-- , , punct
+ +-- M NNP dep
+ +-- -LRB- -LRB- punct
+ +-- snd NN nn
+ +-- kp NFP dep
+ +-- -RRB- -RRB- punct
+ +-- = , prep
+ |   +-- maxi NN pobj
+ |       +-- , , punct
+ |       +-- j UH appos
+ |       |   +-- si NNP appos
+ |       |       +-- -LRB- -LRB- punct
+ |       |       +-- M NNP nn
+ |       |       +-- ? . punct
+ |       |       +-- 1 CD dep
+ |       |       +-- , , punct
+ |       |       +-- p NN appos
+ |       |       |   +-- ? . punct
+ |       |       |   +-- 1 CD num
+ |       |       +-- j , appos
+ |       |       |   +-- kp GW nn
+ |       |       +-- -RRB- -RRB- punct
+ |       |       +-- +PIw NNP dep
+ |       |           +-- -LRB- -LRB- punct
+ |       |           +-- T NNP dep
+ |       |           |   +-- ? . punct
+ |       |           |   +-- ; : punct
+ |       |           |   +-- sAlid NNP dep
+ |       |           |   +-- -LRB- -LRB- punct
+ |       |           |   +-- sL SYM dep
+ |       |           |   +-- -RRB- -RRB- punct
+ |       |           +-- snd NN dep
+ |       |               +-- =j SYM dep
+ |       |               +-- -LRB- -LRB- punct
+ |       |               +-- si FW dep
+ |       |               +-- , , punct
+ |       |               +-- si+1 CD dep
+ |       |               +-- ... , punct
+ |       |               +-- -RRB- -RRB- punct
+ |       +-- combination NN rcmod
+ |           +-- where WRB advmod
+ |           +-- kp NNP nsubj
+ |           +-- is VBZ cop
+ |           +-- just RB advmod
+ |           +-- the DT det
+ |           +-- of IN prep
+ |           |   +-- segments NNS pobj
+ |           |       +-- all DT det
+ |           |       +-- p NNP nn
+ |           |       +-- and CC cc
+ |           |       +-- 1 CD conj
+ |           +-- ? . punct
+ |           +-- nd UH parataxis
+ |               +-- i PRP dep
+ |               +-- ? , punct
+ |               +-- + SYM dep
+ |               |   +-- 1 CD num
+ |               +-- , , punct
+ |               +-- Iw NN rcmod
+ |                   +-- which WDT nsubj
+ |                   +-- is VBZ cop
+ |                   +-- the DT det
+ |                   +-- optimal JJ amod
+ |                   +-- and CC cc
+ |                   +-- best JJS conj
+ |                       +-- segmentation NN nsubj
+ |                       |   +-- the DT det
+ |                       |   +-- corresponding VBG amod
+ |                       +-- is VBZ cop
+ |                       +-- the DT det
+ +-- . . punct
+
+57
+Input: The steps of Case 1 and 2 are similar , except in Case 2 , alignment is considered in addition to segmentation .
+Parse:
+similar JJ ROOT
+ +-- steps NNS nsubj
+ |   +-- The DT det
+ |   +-- of IN prep
+ |       +-- Case NN pobj
+ |           +-- 1 CD num
+ |           +-- and CC cc
+ |           +-- 2 CD conj
+ +-- are VBP cop
+ +-- , , punct
+ +-- except IN prep
+ |   +-- in IN pcomp
+ |       +-- Case NNP pobj
+ |           +-- 2 CD num
+ +-- considered VBN ccomp
+ |   +-- alignment NN nsubjpass
+ |   +-- is VBZ auxpass
+ |   +-- in IN prep
+ |       +-- addition NN pobj
+ |           +-- to IN prep
+ |               +-- segmentation NN pobj
+ +-- . . punct
+
+58
+Input: First , basic items of probability for computing Iw are computed excluding Doc d , and then partial WMI by putting every possible sequential segment -LRB- including empty segment -RRB- of d into every segment of the set .
+Parse:
+computed VBN ROOT
+ +-- First RB advmod
+ +-- , , punct
+ +-- items NNS nsubjpass
+ |   +-- basic JJ amod
+ |   +-- of IN prep
+ |   |   +-- probability NN pobj
+ |   +-- for IN prep
+ |       +-- Iw PRP pobj
+ |           +-- computing NN amod
+ +-- are VBP auxpass
+ +-- excluding VBG prep
+ |   +-- d NN pobj
+ |       +-- Doc NNP nn
+ |       +-- , , punct
+ |       +-- and CC cc
+ |       +-- then RB advmod
+ |       +-- WMI NN conj
+ |           +-- partial JJ amod
+ +-- by IN prep
+ |   +-- putting VBG pcomp
+ |       +-- segment NN dobj
+ |       |   +-- every DT det
+ |       |   +-- possible JJ amod
+ |       |   +-- sequential JJ amod
+ |       |   +-- including VBG prep
+ |       |   |   +-- -LRB- -LRB- punct
+ |       |   |   +-- segment NN pobj
+ |       |   |   |   +-- empty JJ amod
+ |       |   |   +-- -RRB- -RRB- punct
+ |       |   +-- of IN prep
+ |       |       +-- d NN pobj
+ |       +-- into IN prep
+ |           +-- segment NN pobj
+ |               +-- every DT det
+ |               +-- of IN prep
+ |                   +-- set NN pobj
+ |                       +-- the DT det
+ +-- . . punct
+
+59
+Input: Second , the optimal sum of PIw for L segments and the leftmost m sentences , M -LRB- sm , L -RRB- , is found .
+Parse:
+found VBN ROOT
+ +-- Second RB advmod
+ +-- , , punct
+ +-- sum NN nsubjpass
+ |   +-- the DT det
+ |   +-- optimal JJ amod
+ |   +-- of IN prep
+ |   |   +-- PIw NNP pobj
+ |   +-- for IN prep
+ |       +-- segments NNS pobj
+ |           +-- L NNP nn
+ |           +-- and CC cc
+ |           +-- sentences NNS conj
+ |               +-- the DT det
+ |               +-- leftmost JJ amod
+ |               +-- m CD num
+ |               +-- , , punct
+ |               +-- sm NNP appos
+ |                   +-- M NNP nn
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- , , punct
+ |                   +-- L NNP appos
+ |                   +-- -RRB- -RRB- punct
+ +-- is VBZ auxpass
+ +-- . . punct
+
+60
+Input: Finally , the maximal WMI is found among different sums of M -LRB- sm , p ? 1 -RRB- and PIw for Segment p. .
+Parse:
+found VBN ROOT
+ +-- Finally RB advmod
+ +-- , , punct
+ +-- WMI NN nsubjpass
+ |   +-- the DT det
+ |   +-- maximal JJ amod
+ +-- is VBZ auxpass
+ +-- among IN prep
+ |   +-- sums NNS pobj
+ |       +-- different JJ amod
+ |       +-- of IN prep
+ |           +-- M NNP pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- p NNP dep
+ |               |   +-- sm NNP nn
+ |               |   +-- , , punct
+ |               |   +-- ? . punct
+ |               |   +-- 1 CD num
+ |               +-- -RRB- -RRB- punct
+ |               +-- and CC cc
+ |               +-- PIw NNP conj
+ |                   +-- for IN prep
+ |                       +-- p. NN pobj
+ |                           +-- Segment NNP nn
+ +-- . . punct

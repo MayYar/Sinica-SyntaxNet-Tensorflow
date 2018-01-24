@@ -1,0 +1,26 @@
+The practical constraints of many application environments require distributed management of executing plans and schedules .
+Such factors as geographical separation of executing agents, limitations on communication bandwidth, constraints relating to chain of command and the high tempo of execution dynamics may all preclude any single agent from obtaining a complete global view of the problem, and hence necessitate collaborative yet localized planning and scheduling decisions .
+In this paper, we consider the problem of managing and executing schedules in an uncertain and distributed environment as defined by the DARPA Coordinators program .
+We assume a team of collaborative agents, each responsible for executing a portion of a globally preestablished schedule, but none possessing a global view of either the problem or solution .
+The team goal is to maximize the total quality of all activities executed by all agents, given that unexpected events will force changes to pre scheduled activities and alter the utility of executing others as execution unfolds .
+To provide a basis for distributed coordination, each agent is aware of dependencies between its scheduled activities and those of other agents .
+Each agent is also given a pre computed set of local contingency (fall back) options .
+Central to our approach to solving this multi agent problem is an incremental flexible times scheduling framework .
+In a flexible times representation of an agent"s schedule, the execution intervals associated with scheduled activities are not fixed, but instead are allowed to float within imposed time and activity sequencing constraints .
+This representation allows the explicit use of slack as a hedge against simple forms of executional uncertainty (e.g., activity durations), and its underlying implementation as a Simple Temporal Network model provides efficient updating and consistency enforcement mechanisms .
+The advantages of flexible times frameworks have been demonstrated in various centralized planning and scheduling contexts (e.g., [12, 8, 9, 10, 11]) .
+However their use in distributed problem solving settings has been quite sparse ([7] is one exception), and prior approaches to multi agent scheduling (e.g., [6, 13, 5]) have generally operated with fixed times representations of agent schedules .
+We define an agent architecture centered around incremental management of a flexible times schedule .
+The underlying STN based representation is used (1) to loosen the coupling between executor and scheduler threads, (2) to retain a basic ability to absorb unexpected executional delays (or speedups), and (3) to provide a basic criterion for detecting the need for schedule change .
+Local change is ac484 978 81 904262 7 5 c 2007 IFAAMAS Figure 1
+complished by an incremental scheduler, designed to maximize quality while attempting to minimize schedule change .
+To this schedule management infra structure, we add two mechanisms for multi agent coordination .
+Basic coordination with other agents is achieved by simple communication of local schedule changes to other agents with interdependent activities .
+Layered over this is a non local option generation and evaluation process (similar in some respects to [5]), aimed at identification of opportunities for global improvement through joint changes to the schedules of multiple agents .
+This latter process uses analysis of detected conflicts in the STN as a basis for generating options .
+The remainder of the paper is organized as follows .
+We begin by briefly summarizing the general distributed scheduling problem of interest in our work .
+Next, we introduce the agent architecture we have developed to solve this problem and sketch its operation .
+In the following sections, we describe the components of the architecture in more detail, considering in turn issues relating to executing agent schedules, incrementally revising agent schedules and coordinating schedule changes among multiple agents .
+We then give some experimental results to indicate current system performance .
+Finally we conclude with a brief discussion of current research plans. .

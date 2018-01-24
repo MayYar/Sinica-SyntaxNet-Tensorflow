@@ -1,0 +1,28 @@
+To compare two sequences, we must find the best alignment, which is to place one sequence above the other making clear the correspondence between similar characters [7] .
+Given an alignment between two sequences, a score is usually associated for it as follows (figure 1) .
+For each column, we associate, for instance, +1 if the two characters are identical, 1 if the characters are different and 2 if one of them is a space .
+The score is the sum of all the values and the maximal score is the similarity between the sequences .
+To compute exact local sequence alignments, [14] proposed an algorithm (SW), based on dynamic programming, with quadratic time and space complexity .
+Usually, one given biological sequence is compared against thousands or even millions of sequences that compose genetic data banks .
+By now, there are millions of entries composed of billions of nucleotides at GenBank, which is one of the most important public gene repositories .
+Due to the 156 G A C G G A T T A G G A T C G G A A T A G +1 +1 ?2 +1 +1 +1 +1 ?1 +1 +1 +1 £U = 6 Figure 1
+In this scenario, the use of exact methods such as SW is prohibitive .
+For this reason, faster heuristic methods are proposed which do not guarantee that the best alignment will be produced .
+Usually, these heuristic methods are evaluated using the concepts of sensitivity and sensibility .
+Sensitivity is the rate at which the method fails to identify similar sequences whereas sensibility is the rate at which the method identifies sequences that are not similar [7] .
+BLAST [1] is the most widely used heuristic method for sequence comparison .
+2.1 The BLAST Algorithm BLAST (Basic Local Alignment Tool) [1] is a set of programs used to search DNA and protein databases for similarities between sequences .
+It is designed to obtain high performance with low impact in terms of sensibility .
+BLAST provides programs to compare many combinations of query and database sequence types (table 1) .
+Table 1
+In 1996 1997, two gapped versions of BLAST emerged
+Basically, the algorithm proceeds in three steps
+In the seeding step, a query sequence is split in portions called words of size W .
+These words are matched to database sequences and used as alignment seeds if their scores are higher than a threshold T .
+In the extension step, alignments are generated from seeds .
+A parameter X maintains the recent alignment history and controls this step .
+Once seeds are extended, the last step begins .
+The alignments are evaluated to determine if they are statistically significant .
+The significant ones are termed HSPs (High scoring Segment Pairs) .
+A new parameter, S, is used to sort alignments .
+The combination of parameters W, T, X and S is used to determine the sensitivity and speed of BLAST searches. .

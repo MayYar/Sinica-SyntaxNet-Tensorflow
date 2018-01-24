@@ -1,0 +1,334 @@
+Adapting Asynchronous Messaging Middleware 
+content:
+1 ABSTRACT :
+1-1:The characteristics of mobile environments, with the possibility of frequent disconnections and fluctuating bandwidth, have forced a rethink of traditional middleware .
+1-2:In particular, the synchronous communication paradigms often employed in standard middleware do not appear to be particularly suited to ad hoc environments, in which not even the intermittent availability of a backbone network can be assumed .
+1-3:Instead, asynchronous communication seems to be a generally more suitable paradigm for such environments .
+1-4:Message oriented middleware for traditional systems has been developed and used to provide an asynchronous paradigm of communication for distributed systems, and, recently, also for some specific mobile computing systems .
+1-5:In this paper, we present our experience in designing, implementing and evaluating EMMA (Epidemic Messaging Middleware for ad hoc networks), an adaptation of Java Message Service for mobile ad hoc environments .
+1-6:We discuss in detail the design challenges and some possible solutions, showing a concrete example of the feasibility and suitability of the application of the asynchronous paradigm in this setting and outlining a research roadmap for the coming years .
+1-7:C.2.4 [Computer Communication Networks]: Distributed .
+2 INTRODUCTION :
+2-1:With the increasing popularity of mobile devices and their widespread adoption, there is a clear need to allow the development of a broad spectrum of applications that operate effectively over such an environment .
+2-2:Unfortunately, this is far from simple: mobile devices are increasingly heterogeneous in terms of processing capabilities, memory size, battery capacity, and network interfaces .
+2-3:Each such configuration has substantially different characteristics that are both statically different for example, there is a major difference in capability between a Berkeley mote and an 802.11g equipped laptop and that vary dynamically, as in situations of fluctuating bandwidth and intermittent connectivity .
+2-4:Mobile ad hoc environments have an additional element of complexity in that they are entirely decentralised .
+2-5:In order to craft applications for such complex environments, an appropriate form of middleware is essential if cost effective development is to be achieved .
+2-6:In this paper, we examine one of the foundational aspects of middleware for mobile ad hoc environments: that of the communication primitives .
+2-7:Traditionally, the most frequently used middleware primitives for communication assume the simultaneous presence of both end points on a network, since the stability and pervasiveness of the networking infrastructure is not an unreasonable assumption for most wired environments .
+2-8:In other words, most communication paradigms are synchronous: object oriented middleware such as CORBA and Java RMI are typical examples of middleware based on synchronous communication .
+2-9:In recent years, there has been growing interest in platforms based on asynchronous communication paradigms, such as publish subscribe systems [6]: these have been exploited very successfully where there is application level asynchronicity .
+2-10:From a Gartner Market Report [7]: Given messageoriented middleware"s popularity, scalability, flexibility, and affinity with mobile and wireless architectures, by 2004, MOM will emerge as the dominant form of communication middleware for linking mobile and enterprise applications (0.7 probability)... .
+2-11:Moreover, in mobile ad hoc systems, the likelihood of network fragmentation means that synchronous communication may in any case be impracticable, giving situations in which delay tolerant asynchronous traffic is the only form of traffic that could be supported .
+2-12:121 Middleware 2004 Companion Middleware for mobile ad hoc environments must therefore support semi synchronous or completely asynchronous communication primitives if it is to avoid substantial limitations to its utility .
+2-13:Aside from the intellectual challenge in supporting this model, this work is also interesting because there are a number of practical application domains in allowing inter community communication in undeveloped areas of the globe .
+2-14:Thus, for example, projects that have been carried out to help populations that live in remote places of the globe such as Lapland [3] or in poor areas that lack fixed connectivity infrastructure [9] .
+2-15:There have been attempts to provide mobile middleware with these properties, including STEAM, LIME, XMIDDLE, Bayou (see [11] for a more complete review of mobile middleware) .
+2-16:These models differ quite considerably from the existing traditional middleware in terms of primitives provided .
+2-17:Furthermore, some of them fail in providing a solution for the true ad hoc scenarios .
+2-18:If the projected success of MOM becomes anything like a reality, there will be many programmers with experience of it .
+2-19:The ideal solution to the problem of middleware for ad hoc systems is, then, to allow programmers to utilise the same paradigms and models presented by common forms of MOM and to ensure that these paradigms are supportable within the mobile environment .
+2-20:This approach has clear advantages in allowing applications developed on standard middleware platforms to be easily deployed on mobile devices .
+2-21:Indeed, some research has already led to the adaptation of traditional middleware platforms to mobile settings, mainly to provide integration between mobile devices and existing fixed networks in a nomadic (i.e., mixed) environment [4] .
+2-22:With respect to message oriented middleware, the current implementations, however, either assume the existence of a backbone network to which the mobile hosts connect from time to time while roaming [10], or assume that nodes are always somehow reachable through a path [18] .
+2-23:No adaptation to heterogeneous or completely ad hoc scenarios, with frequent disconnection and periodically isolated clouds of hosts, has been attempted .
+2-24:In the remainder of this paper we describe an initial attempt to adapt message oriented middleware to suit mobile and, more specifically, mobile ad hoc networks .
+2-25:In our case, we elected to examine JMS, as one of the most widely known MOM systems .
+2-26:In the latter part of this paper, we explore the limitations of our results and describe the plans we have to take the work further. .
+3 MESSAGE ORIENTED MIDDLEWARE AND JAVA MESSAGE SERVICE (JMS) :
+3-1:AND JAVA MESSAGE SERVICE Message oriented middleware systems support communication between distributed components via message passing: the sender sends a message to identified queues, which usually reside on a server .
+3-2:A receiver retrieves the message from the queue at a different time and may acknowledge the reply using the same asynchronous mechanism .
+3-3:Message oriented middleware thus supports asynchronous communication in a very natural way, achieving de coupling of senders and receivers .
+3-4:A sender is able to continue processing as soon as the middleware has accepted the message; eventually, the receiver will send an acknowledgment message and the sender will be able to collect it at a convenient time .
+3-5:However, given the way they are implemented, these middleware systems usually require resource rich devices, especially in terms of memory and disk space, where persistent queues of messages that have been received but not yet processed, are stored .
+3-6:Sun Java Message Service [5], IBM WebSphere MQ [6], Microsoft MSMQ [12] are examples of very successful message oriented middleware for traditional distributed systems .
+3-7:The Java Messaging Service is a collection of interfaces for asynchronous communication between distributed components .
+3-8:It provides a common way for Java programs to create, send and receive messages .
+3-9:JMS users are usually referred to as clients .
+3-10:The JMS specification further defines providers as the components in charge of implementing the messaging system and providing the administrative and control functionality (i.e., persistence and reliability) required by the system .
+3-11:Clients can send and receive messages, asynchronously, through the JMS provider, which is in charge of the delivery and, possibly, of the persistence of the messages .
+3-12:There are two types of communication supported: point to point and publish subscribe models .
+3-13:In the point to point model, hosts send messages to queues .
+3-14:Receivers can be registered with some specific queues, and can asynchronously retrieve the messages and then acknowledge them .
+3-15:The publish subscribe model is based on the use of topics that can be subscribed to by clients .
+3-16:Messages are sent to topics by other clients and are then received in an asynchronous mode by all the subscribed clients .
+3-17:Clients learn about the available topics and queues through Java Naming and Directory Interface [14] .
+3-18:Queues and topics are created by an administrator on the provider and are registered with the JNDI interface for look up .
+3-19:In the next section, we introduce the challenges of mobile networks, and show how JMS can be adapted to cope with these requirements. .
+4 JMS FOR MOBILE COMPUTING :
+4-1:Mobile networks vary very widely in their characteristics, from nomadic networks in which modes relocate whilst offline through to ad hoc networks in which modes move freely and in which there is no infrastructure .
+4-2:Mobile ad hoc networks are most generally applicable in situations where survivability and instant deployability are key: most notably in military applications and disaster relief .
+4-3:In between these two types of "mobile" networks, there are, however, a number of possible heterogeneous combinations, where nomadic and ad hoc paradigms are used to interconnect totally unwired areas to more structured networks (such as a LAN or the Internet) .
+4-4:Whilst the JMS specification has been extensively implemented and used in traditional distributed systems, adaptations for mobile environments have been proposed only recently .
+4-5:The challenges of porting JMS to mobile settings are considerable; however, in view of its widespread acceptance and use, there are considerable advantages in allowing the adaptation of existing applications to mobile environments and in allowing the interoperation of applications in the wired and wireless regions of a network .
+4-6:In [10], JMS was adapted to a nomadic mobile setting, where mobile hosts can be JMS clients and communicate through the JMS provider that, however, sits on a backbone network, providing reliability and persistence .
+4-7:The client prototype presented in [10] is very lightweight, due to the delegation of all the heavyweight functionality to the Middleware for Pervasive and ad hoc Computing 122 provider on the wired network .
+4-8:However, this approach is somewhat limited in terms of widespread applicability and scalability as a consequence of the concentration of functionality in the wired portion of the network .
+4-9:If JMS is to be adapted to completely ad hoc environments, where no fixed infrastructure is available, and where nodes change location and status very dynamically, more issues must be taken into consideration .
+4-10:Firstly, discovery needs to use a resilient but distributed model: in this extremely dynamic environment, static solutions are unacceptable .
+4-11:As discussed in Section 2, a JMS administrator defines queues and topics on the provider .
+4-12:Clients can then learn about them using the Java Naming and Directory Interface .
+4-13:However, due to the way JNDI is designed, a JNDI node (or more than one) needs to be in reach in order to obtain a binding of a name to an address (i.e., knowing where a specific queue topic is) .
+4-14:In mobile ad hoc environments, the discovery process cannot assume the existence of a fixed set of discovery servers that are always reachable, as this would not match the dynamicity of ad hoc networks .
+4-15:Secondly, a JMS Provider, as suggested by the JMS specification, also needs to be reachable by each node in the network, in order to communicate .
+4-16:This assumes a very centralised architecture, which again does not match the requirements of a mobile ad hoc setting, in which nodes may be moving and sparse: a more distributed and dynamic solution is needed .
+4-17:Persistence is, however, essential functionality in asynchronous communication environments as hosts are, by definition, connected at different times .
+4-18:In the following section, we will discuss our experience in designing and implementing JMS for mobile ad hoc networks. .
+5 JMSFOR MOBILE ad hoc NETWORKS :
+5-1:4.1 Adaptation of JMS for Mobile ad hoc Networks Developing applications for mobile networks is yet more challenging: in addition to the same considerations as for infrastructured wireless environments, such as the limited device capabilities and power constraints, there are issues of rate of change of network connectivity, and the lack of a static routing infrastructure .
+5-2:Consequently, we now describe an initial attempt to adapt the JMS specification to target the particular requirements related to ad hoc scenarios .
+5-3:As discussed in Section 3, a JMS application can use either the point to point and the publish subscribe styles of messaging .
+5-4:Point to Point Model The point to point model is based on the concept of queues, that are used to enable asynchronous communication between the producer of a message and possible different consumers .
+5-5:In our solution, the location of queues is determined by a negotiation process that is application dependent .
+5-6:For example, let us suppose that it is possible to know a priori, or it is possible to determine dynamically, that a certain host is the receiver of the most part of messages sent to a particular queue .
+5-7:In this case, the optimum location of the queue may well be on this particular host .
+5-8:In general, it is worth noting that, according to the JMS specification and suggested design patterns, it is common and preferable for a client to have all of its messages delivered to a single queue .
+5-9:Queues are advertised periodically to the hosts that are within transmission range or that are reachable by means of the underlying synchronous communication protocol, if provided .
+5-10:It is important to note that, at the middleware level, it is logically irrelevant whether or not the network layer implements some form of ad hoc routing (though considerably more efficient if it does); the middleware only considers information about which nodes are actively reachable at any point in time .
+5-11:The hosts that receive advertisement messages add entries to their JNDI registry .
+5-12:Each entry is characterized by a lease (a mechanism similar to that present in Jini [15]) .
+5-13:A lease represents the time of validity of a particular entry .
+5-14:If a lease is not refreshed (i.e, its life is not extended), it can expire and, consequently, the entry is deleted from the registry .
+5-15:In other words, the host assumes that the queue will be unreachable from that point in time .
+5-16:This may be caused, for example, if a host storing the queue becomes unreachable .
+5-17:A host that initiates a discovery process will find the topics and the queues present in its connected portion of the network in a straightforward manner .
+5-18:In order to deliver a message to a host that is not currently in reach1 , we use an asynchronous epidemic routing protocol that will be discussed in detail in Section 4.2 .
+5-19:If two hosts are in the same cloud (i.e., a connected path exists between them), but no synchronous protocol is available, the messages are sent using the epidemic protocol .
+5-20:In this case, the delivery latency will be low as a result of the rapidity of propagation of the infection in the connected cloud (see also the simulation results in Section 5) .
+5-21:Given the existence of an epidemic protocol, the discovery mechanism consists of advertising the queues to the hosts that are currently unreachable using analogous mechanisms .
+5-22:Publish Subscribe Model In the publish subscribe model, some of the hosts are similarly designated to hold topics and store subscriptions, as before .
+5-23:Topics are advertised through the registry in the same way as are queues, and a client wishing to subscribe to a topic must register with the client holding the topic .
+5-24:When a client wishes to send a message to the topic list, it sends it to the topic holder (in the same way as it would send a message to a queue) .
+5-25:The topic holder then forwards the message to all subscribers, using the synchronous protocol if possible, the epidemic protocol otherwise .
+5-26:It is worth noting that we use a single message with multiple recipients, instead of multiple messages with multiple recipients .
+5-27:When a message is delivered to one of the subscribers, this recipient is deleted from the list .
+5-28:In order to delete the other possible replicas, we employ acknowledgment messages (discussed in Section 4.4), returned in the same way as a normal message .
+5-29:We have also adapted the concepts of durable and non durable subscriptions for ad hoc settings .
+5-30:In fixed platforms, durable subscriptions are maintained during the disconnections of the clients, whether these are intentional or are the result of failures .
+5-31:In traditional systems, while a durable subscriber is disconnected from the server, it is responsible for storing messages .
+5-32:When the durable subscriber reconnects, the server sends it all unexpired messages .
+5-33:The problem is that, in our scenario, disconnections are the norm 1 In theory, it is not possible to send a message to a peer that has never been reachable in the past, since there can be no entry present in the registry .
+5-34:However, to overcome this possible limitation, we provide a primitive through which information can be added to the registry without using the normal channels .
+5-35:123 Middleware 2004 Companion rather than the exception .
+5-36:In other words, we cannot consider disconnections as failures .
+5-37:For these reasons, we adopt a slightly different semantics .
+5-38:With respect to durable subscriptions, if a subscriber becomes disconnected, notifications are not stored but are sent using the epidemic protocol rather than the synchronous protocol .
+5-39:In other words, durable notifications remain valid during the possible disconnections of the subscriber .
+5-40:On the other hand, if a non durable subscriber becomes disconnected, its subscription is deleted; in other words, during disconnections, notifications are not sent using the epidemic protocol but exploit only the synchronous protocol .
+5-41:If the topic becomes accessible to this host again, it must make another subscription in order to receive the notifications .
+5-42:Unsubscription messages are delivered in the same way as are subscription messages .
+5-43:It is important to note that durable subscribers have explicitly to unsubscribe from a topic in order to stop the notification process; however, all durable subscriptions have a predefined expiration time in order to cope with the cases of subscribers that do not meet again because of their movements or failures .
+5-44:This feature is clearly provided to limit the number of the unnecessary messages sent around the network .
+5-45:4.2 Message Delivery using Epidemic Routing In this section, we examine one possible mechanism that will allow the delivery of messages in a partially connected network .
+5-46:The mechanism we discuss is intended for the purposes of demonstrating feasibility; more efficient communication mechanisms for this environment are themselves complex, and are the subject of another paper [13] .
+5-47:The asynchronous message delivery described above is based on a typical pure epidemic style routing protocol [16] .
+5-48:A message that needs to be sent is replicated on each host in reach .
+5-49:In this way, copies of the messages are quickly spread through connected networks, like an infection .
+5-50:If a host becomes connected to another cloud of mobile nodes, during its movement, the message spreads through this collection of hosts .
+5-51:Epidemic style replication of data and messages has been exploited in the past in many fields starting with the distributed database systems area [2] .
+5-52:Within epidemic routing, each host maintains a buffer containing the messages that it has created and the replicas of the messages generated by the other hosts .
+5-53:To improve the performance, a hash table indexes the content of the buffer .
+5-54:When two hosts connect, the host with the smaller identifier initiates a so called anti entropy session, sending a list containing the unique identifiers of the messages that it currently stores .
+5-55:The other host evaluates this list and sends back a list containing the identifiers it is storing that are not present in the other host, together with the messages that the other does not have .
+5-56:The host that has started the session receives the list and, in the same way, sends the messages that are not present in the other host .
+5-57:Should buffer overflow occur, messages are dropped .
+5-58:The reliability offered by this protocol is typically best effort, since there is no guarantee that a message will eventually be delivered to its recipient .
+5-59:Clearly, the delivery ratio of the protocol increases proportionally to the maximum allowed delay time and the buffer size in each host (interesting simulation results may be found in [16]) .
+5-60:4.3 Adaptation of the JMS Message Model In this section, we will analyse the aspects of our adaptation of the specification related to the so called JMS Message Model [5] .
+5-61:According to this, JMS messages are characterised by some properties defined using the header field, which contains values that are used by both clients and providers for their delivery .
+5-62:The aspects discussed in the remainder of this section are valid for both models (point to point and publish subscribe) .
+5-63:A JMS message can be persistent or non persistent .
+5-64:According to the JMS specification, persistent messages must be delivered with a higher degree of reliability than the nonpersistent ones .
+5-65:However, it is worth noting that it is not possible to ensure once and only once reliability for persistent messages as defined in the specification, since, as we discussed in the previous subsection, the underlying epidemic protocol can guarantee only best effort delivery .
+5-66:However, clients maintain a list of the identifiers of the recently received messages to avoid the delivery of message duplicates .
+5-67:In other words, we provide the applications with at mostonce reliability for both types of messages .
+5-68:In order to implement different levels of reliability, EMMA treats persistent and non persistent messages differently, during the execution of the anti entropy epidemic protocol .
+5-69:Since the message buffer space is limited, persistent messages are preferentially replicated using the available free space .
+5-70:If this is insufficient and non persistent messages are present in the buffer, these are replaced .
+5-71:Only the successful deliveries of the persistent messages are notified to the senders .
+5-72:According to the JMS specification, it is possible to assign a priority to each message .
+5-73:The messages with higher priorities are delivered in a preferential way .
+5-74:As discussed above, persistent messages are prioritised above the non persistent ones .
+5-75:Further selection is based on their priorities .
+5-76:Messages with higher priorities are treated in a preferential way .
+5-77:In fact, if there is not enough space to replicate all the persistent messages, a mechanism based on priorities is used to delete and replicate non persistent messages (and, if necessary, persistent messages) .
+5-78:Messages are deleted from the buffers using the expiration time value that can be set by senders .
+5-79:This is a way to free space in the buffers (one preferentially deletes older messages in cases of conflict); to eliminate stale replicas in the system; and to limit the time for which destinations must hold message identifiers to dispose of duplicates .
+5-80:4.4 Reliability and Acknowledgment Mechanisms As already discussed, at most once message delivery is the best that can be achieved in terms of delivery semantics in partially connected ad hoc settings .
+5-81:However, it is possible to improve the reliability of the system with efficient acknowledgment mechanisms .
+5-82:EMMA provides a mechanism for failure notification to applications if the acknowledgment is not received within a given timeout (that can be configured by application developers) .
+5-83:This mechanism is the one that distinguishes the delivery of persistent and non persistent messages in our JMS implementation: the deliveries of the former are notified to the senders, whereas the latter are not .
+5-84:We use acknowledgment messages not only to inform senders about the successful delivery of messages but also to delete the replicas of the delivered messages that are still present in the network .
+5-85:Each host maintains a list of the messages Middleware for Pervasive and ad hoc Computing 124 successfully delivered that is updated as part of the normal process of information exchange between the hosts .
+5-86:The lists are exchanged during the first steps of the anti entropic epidemic protocol with a certain predefined frequency .
+5-87:In the case of messages with multiple recipients, a list of the actual recipients is also stored .
+5-88:When a host receives the list, it checks its message buffer and updates it according to the following rules: (1) if a message has a single recipient and it has been delivered, it is deleted from the buffer; (2) if a message has multiple recipients, the identifiers of the delivered hosts are deleted from the associated list of recipients .
+5-89:If the resulting length of the list of recipients is zero, the message is deleted from the buffer .
+5-90:These lists have, clearly, finite dimensions and are implemented as circular queues .
+5-91:This simple mechanism, together with the use of expiration timestamps, guarantees that the old acknowledgment notifications are deleted from the system after a limited period of time .
+5-92:In order to improve the reliability of EMMA, a design mechanism for intelligent replication of queues and topics based on the context information could be developed .
+5-93:However this is not yet part of the current architecture of EMMA. .
+6 IMPLEMENTATION AND PRELIMINARY EVALUATION :
+6-1:EVALUATION We implemented a prototype of our platform using the J2ME Personal Profile .
+6-2:The size of the executable is about 250KB including the JMS 1.1 jar file; this is a perfectly acceptable figure given the available memory of the current mobile devices on the market .
+6-3:We tested our prototype on HP IPaq PDAs running Linux, interconnected with WaveLan, and on a number of laptops with the same network interface .
+6-4:We also evaluated the middleware platform using the OMNET++ discrete event simulator [17] in order to explore a range of mobile scenarios that incorporated a more realistic number of hosts than was achievable experimentally .
+6-5:More specifically, we assessed the performance of the system in terms of delivery ratio and average delay, varying the density of population and the buffer size, and using persistent and non persistent messages with different priorities .
+6-6:The simulation results show that the EMMA"s performance, in terms of delivery ratio and delay of persistent messages with higher priorities, is good .
+6-7:In general, it is evident that the delivery ratio is strongly related to the correct dimensioning of the buffers to the maximum acceptable delay .
+6-8:Moreover, the epidemic algorithms are able to guarantee a high delivery ratio if one evaluates performance over a time interval sufficient for the dissemination of the replicas of messages (i.e., the infection spreading) in a large portion of the ad hoc network .
+6-9:One consequence of the dimensioning problem is that scalability may be seriously impacted in peer to peer middleware for mobile computing due to the resource poverty of the devices (limited memory to store temporarily messages) and the number of possible interconnections in ad hoc settings .
+6-10:What is worse is that common forms of commercial and social organisation (six degrees of separation) mean that even modest TTL values on messages will lead to widespread flooding of epidemic messages .
+6-11:This problem arises because of the lack of intelligence in the epidemic protocol, and can be addressed by selecting carrier nodes for messages with greater care .
+6-12:The details of this process are, however, outside the scope of this paper (but may be found in [13]) and do not affect the foundation on which the EMMA middleware is based: the ability to deliver messages asynchronously. .
+7 CRITICAL VIEW OF THE STATE OF THE ART :
+7-1:THE ART The design of middleware platforms for mobile computing requires researchers to answer new and fundamentally different questions; simply assuming the presence of wired portions of the network on which centralised functionality can reside is not generalisable .
+7-2:Thus, it is necessary to investigate novel design principles and to devise architectural patterns that differ from those traditionally exploited in the design of middleware for fixed systems .
+7-3:As an example, consider the recent cross layering trend in ad hoc networking [1] .
+7-4:This is a way of re thinking software systems design, explicitly abandoning the classical forms of layering, since, although this separation of concerns afford portability, it does so at the expense of potential efficiency gains .
+7-5:We believe that it is possible to view our approach as an instance of cross layering .
+7-6:In fact, we have added the epidemic network protocol at middleware level and, at the same time, we have used the existing synchronous network protocol if present both in delivering messages (traditional layering) and in informing the middleware about when messages may be delivered by revealing details of the forwarding tables (layer violation) .
+7-7:For this reason, we prefer to consider them jointly as the communication layer of our platform together providing more efficient message delivery .
+7-8:Another interesting aspect is the exploitation of context and system information to improve the performance of mobile middleware platforms .
+7-9:Again, as a result of adopting a cross layering methodology, we are able to build systems that gather information from the underlying operating system and communication components in order to allow for adaptation of behaviour .
+7-10:We can summarise this conceptual design approach by saying that middleware platforms must be not only context aware (i.e., they should be able to extract and analyse information from the surrounding context) but also system aware (i.e., they should be able to gather information from the software and hardware components of the mobile system) .
+7-11:A number of middleware systems have been developed to support ad hoc networking with the use of asynchronous communication (such as LIME, XMIDDLE, STEAM [11]) .
+7-12:In particular, the STEAM platform is an interesting example of event based middleware for ad hoc networks, providing location aware message delivery and an effective solution for event filtering .
+7-13:A discussion of JMS, and its mobile realisation, has already been conducted in Sections 4 and 2 .
+7-14:The Swiss company Softwired has developed the first JMS middleware for mobile computing, called iBus Mobile [10] .
+7-15:The main components of this typically infrastructure based architecture are the JMS provider, the so called mobile JMS gateway, which is deployed on a fixed host and a lightweight JMS client library .
+7-16:The gateway is used for the communication between the application server and mobile hosts .
+7-17:The gateway is seen by the JMS provider as a normal JMS client .
+7-18:The JMS provider can be any JMS enabled application server, such as BEA Weblogic .
+7-19:Pronto [19] is an example of mid125 Middleware 2004 Companion dleware system based on messaging that is specifically designed for mobile environments .
+7-20:The platform is composed of three classes of components: mobile clients implementing the JMS specification, gateways that control traffic, guaranteeing efficiency and possible user customizations using different plug ins and JMS servers .
+7-21:Different configurations of these components are possible; with respect to mobile ad hoc networks applications, the most interesting is Serverless JMS .
+7-22:The aim of this configuration is to adapt JMS to a decentralized model .
+7-23:The publish subscribe model exploits the efficiency and the scalability of the underlying IP multicast protocol .
+7-24:Unreliable and reliable message delivery services are provided: reliability is provided through a negative acknowledgment based protocol .
+7-25:Pronto represents a good solution for infrastructure based mobile networks but it does not adequately target ad hoc settings, since mobile nodes rely on fixed servers for the exchange of messages .
+7-26:Other MOM implemented for mobile environments exist; however, they are usually straightforward extensions of existing middleware [8] .
+7-27:The only implementation of MOM specifically designed for mobile ad hoc networks was developed at the University of Newcastle [18] .
+7-28:This work is again a JMS adaptation; the focus of that implementation is on group communication and the use of application level routing algorithms for topic delivery of messages .
+7-29:However, there are a number of differences in the focus of our work .
+7-30:The importance that we attribute to disconnections makes persistence a vital requirement for any middleware that needs to be used in mobile ad hoc networks .
+7-31:The authors of [18] signal persistence as possible future work, not considering the fact that routing a message to a non connected host will result in delivery failure .
+7-32:This is a remarkable limitation in mobile settings where unpredictable disconnections are the norm rather than the exception. .
+8-1:Asynchronous communication is a useful communication paradigm for mobile ad hoc networks, as hosts are allowed to come, go and pick up messages when convenient, also taking account of their resource availability (e.g., power, connectivity levels)
+8-2:In this paper we have described the state of the art in terms of MOM for mobile systems
+8-3:We have also shown a proof of concept adaptation of JMS to the extreme scenario of partially connected mobile ad hoc networks
+8-4:We have described and discussed the characteristics and differences of our solution with respect to traditional JMS implementations and the existing adaptations for mobile settings
+8-5:However, trade offs between application level routing and resource usage should also be investigated, as mobile devices are commonly power resource scarce
+8-6:A key limitation of this work is the poorly performing epidemic algorithm and an important advance in the practicability of this work requires an algorithm that better balances the needs of efficiency and message delivery probability
+8-7:We are currently working on algorithms and protocols that, exploiting probabilistic and statistical techniques on the basis of small amounts of exchanged information, are able to improve considerably the efficiency in terms of resources (memory, bandwidth, etc) and the reliability of our middleware platform [13]
+8-8:One futuristic research development, which may take these ideas of adaptation of messaging middleware for mobile environments further is the introduction of more mobility oriented communication extensions, for instance the support of geocast (i.e., the ability to send messages to specific geographical areas).
+9-1:M
+9-2:Conti, G
+9-3:Maselli, G
+9-4:Turi, and S
+9-5:Giordano
+9-6:Cross layering in Mobile ad hoc Network Design
+9-7:IEEE Computer, 37(2):48 51, February 2004
+9-8:A
+9-9:Demers, D
+9-10:Greene, C
+9-11:Hauser, W
+9-12:Irish, J
+9-13:Larson, S
+9-14:Shenker, H
+9-15:Sturgis, D
+9-16:Swinehart, and D
+9-17:Terry
+9-18:Epidemic Algorithms for Replicated Database Maintenance
+9-19:In Sixth Symposium on Principles of Distributed Computing, pages 1 12, August 1987
+9-20:A
+9-21:Doria, M
+9-22:Uden, and D
+9-23:P
+9-24:Pandey
+9-25:Providing connectivity to the Saami nomadic community
+9-26:In Proceedings of the Second International Conference on Open Collaborative Design for Sustainable Innovation, December 2002
+9-27:M
+9-28:Haahr, R
+9-29:Cunningham, and V
+9-30:Cahill
+9-31:Supporting CORBA applications in a Mobile Environment
+9-32:In 5th International Conference on Mobile Computing and Networking (MOBICOM99), pages 36 47
+9-33:ACM, August 1999
+9-34:M
+9-35:Hapner, R
+9-36:Burridge, R
+9-37:Sharma, J
+9-38:Fialli, and K
+9-39:Stout
+9-40:Java Message Service Specification Version 1.1
+9-41:Sun Microsystems, Inc., April 2002
+9-42:http:  java.sun.com products jms
+9-43:J
+9-44:Hart
+9-45:WebSphere MQ: Connecting your applications without complex programming
+9-46:IBM WebSphere Software White Papers, 2003
+9-47:S
+9-48:Hayward and M
+9-49:Pezzini
+9-50:Marrying Middleware and Mobile Computing
+9-51:Gartner Group Research Report, September 2001
+9-52:IBM
+9-53:WebSphere MQ EveryPlace Version 2.0, November 2002
+9-54:http:  www 3.ibm.com software integration wmqe
+9-55:ITU
+9-56:Connecting remote communities
+9-57:Documents of the World Summit on Information Society, 2003
+9-58:http:  www.itu.int osg spu wsis themes
+9-59:S
+9-60:Maffeis
+9-61:Introducing Wireless JMS
+9-62:Softwired AG, www.sofwired inc.com, 2002
+9-63:C
+9-64:Mascolo, L
+9-65:Capra, and W
+9-66:Emmerich
+9-67:Middleware for Mobile Computing
+9-68:In E
+9-69:Gregori, G
+9-70:Anastasi, and S
+9-71:Basagni, editors, Advanced Lectures on Networking, volume 2497 of Lecture Notes in Computer Science, pages 20 58
+9-72:Springer Verlag, 2002
+9-73:Microsoft
+9-74:Microsoft Message Queuing (MSMQ) Version 2.0 Documentation
+9-75:M
+9-76:Musolesi, S
+9-77:Hailes, and C
+9-78:Mascolo
+9-79:Adaptive routing for intermittently connected mobile ad hoc networks
+9-80:Technical report, UCL CS Research Note, July 2004
+9-81:Submitted for Publication
+9-82:Sun Microsystems
+9-83:Java Naming and Directory Interface (JNDI) Documentation Version 1.2
+9-84:2003
+9-85:http:  java.sun.com products jndi
+9-86:Sun Microsystems
+9-87:Jini Specification Version 2.0, 2003
+9-88:http:  java.sun.com products jini
+9-89:A
+9-90:Vahdat and D
+9-91:Becker
+9-92:Epidemic routing for Partially Connected ad hoc Networks
+9-93:Technical Report CS 2000 06, Department of Computer Science, Duke University, 2000
+9-94:A
+9-95:Vargas
+9-96:The OMNeT++ discrete event simulation system
+9-97:In Proceedings of the European Simulation Multiconference (ESM"2001), Prague, June 2001
+9-98:E
+9-99:Vollset, D
+9-100:Ingham, and P
+9-101:Ezhilchelvan
+9-102:JMS on Mobile ad hoc Networks
+9-103:In Personal Wireless Communications (PWC), pages 40 52, Venice, September 2003
+9-104:E
+9-105:Yoneki and J
+9-106:Bacon
+9-107:Pronto: Mobilegateway with publish subscribe paradigm over wireless network
+9-108:Technical Report 559, University of Cambridge, Computer Laboratory, February 2003
+9-109:Middleware for Pervasive and ad hoc Computing 126
+picture:

@@ -1,0 +1,78 @@
+So far, we have restricted our attention to normal form games .
+In a normal form game, it is assumed that every agent knows every other agent"s preferences over the outcomes of the game .
+In general, however, agents may have some private information about their preferences that is not known to the other agents .
+Moreover, at the time of commitment to a strategy, the agents may not even know their own (final) preferences over the outcomes of the game yet, because these preferences may be dependent on a context that has yet to materialize .
+For example, when the code for a trading agent is written, it may not yet be clear how that agent will value resources that it will negotiate over later, because this depends on information that is not yet available at the time at which the code is written (such as orders that will have been placed to the agent before the negotiation) .
+In this section, we will study commitment in Bayesian games, which can model such uncertainty over preferences .
+3.1 Definitions In a Bayesian game, every player i has a set of actions Si, a set of types £Ki with an associated probability distribution £ki 
+.
+.
+¡Ñ Sn ¡÷ R .
+A pure strategy in a Bayesian game is a mapping from the player"s types to actions, £mi 
+(Bayesian games can be rewritten in normal form by enumerating every pure strategy £mi, but this will cause an exponential blowup in the size of the representation of the game and therefore cannot lead to efficient algorithms.) The strategy that the leader should commit to depends on whether, at the time of commitment, the leader knows her own type .
+If the leader does know her own type, the other types that the leader might have had become irrelevant and the leader should simply commit to the strategy that is optimal for the type .
+However, as argued above, the leader does not necessarily know her own type at the time of commitment (e.g., the time at which the code is submitted) .
+In this case, the leader must commit to a strategy that is 86 dependent upon the leader"s eventual type .
+We will study this latter model, although we will pay specific attention to the case where the leader has only a single type, which is effectively the same as the former model .
+3.2 Commitment to pure strategies It turns out that computing an optimal pure strategy to commit to is hard in Bayesian games, even with two players .
+Theorem 5 .
+Finding an optimal pure strategy to commit to in 2 player Bayesian games is NP hard, even when the follower has only a single type .
+Proof .
+We reduce an arbitrary VERTEX COVER instance to the following Bayesian game between the leader and the follower .
+The leader has K types £c1, £c2, .
+.
+.
+, £cK , each occurring with probability 1 K, and for every vertex v ? V , the leader has an action sv .
+The follower has only a single type; for each edge e ? E, the follower has an action te, and the follower has a single additional action t0 .
+The utility function for the leader is given by, for all £cl ? £Kl and all s ? S, u £cl l (s, t0) = 1, and for all e ? E, u £cl l (s, te) = 0 .
+The follower"s utility is given by
+We claim that the leader can get a utility of 1 if and only if there is a solution to the VERTEX COVER instance .
+First, suppose that there is a solution to the VERTEXCOVER instance .
+Then, the leader can commit to a pure strategy such that for each vertex v in the cover, the leader plays sv for some type .
+Then, the follower"s utility for playing te (for any e ? E) is at most K?1 K + 1 K (?K) = ? 1 K , so that the follower will prefer to play t0, which gives the leader a utility of 1, as required .
+Now, suppose that there is a pure strategy for the leader that will give the leader a utility of 1 .
+Then, the follower must play t0 .
+In order for the follower not to prefer playing te (for any e ? E) instead, for at least one v ? e the leader must play sv for some type £cl .
+Hence, the set of vertices v that the leader plays for some type must constitute a vertex cover; and this set can have size at most K, because the leader has only K types .
+So there is a solution to the VERTEXCOVER instance .
+However, if the leader has only a single type, then the problem becomes easy again (#types is the number of types for the follower)
+In 2 player Bayesian games in which the leader has only a single type, an optimal pure strategy to commit to can be found in O(#outcomes ¡P #types) time .
+Proof .
+For every leader action s, we can compute, for every follower type £cf ? £Kf , which actions t maximize the follower"s utility; call this set of actions BR£cf (s) .
+Then, the utility that the leader receives for committing to action s can be computed as £cf ?£Kf £k(£cf ) maxt?BR£cf (s) ul(s, t), and the leader can choose the best action to commit to .
+3.3 Commitment to mixed strategies In two player zero sum imperfect information games with perfect recall (no player ever forgets something that it once knew), a minimax strategy can be constructed in polynomial time [12, 13] .
+Unfortunately, this result does not extend to computing optimal mixed strategies to commit to in the general sum case not even in Bayesian games .
+We will exhibit NP hardness by reducing from the INDEPENDENTSET problem .
+Definition 2 .
+In INDEPENDENT SET, we are given a graph G = (V, E) and an integer K .
+We are asked whether there exists a subset of the vertices S ? V , with |S| = K, such that no edge e ? E has both of its endpoints in S .
+Again, this problem is NP complete [9] .
+Theorem 7 .
+Finding an optimal mixed strategy to commit to in 2 player Bayesian games is NP hard, even when the leader has only a single type and the follower has only two actions .
+Proof .
+We reduce an arbitrary INDEPENDENT SET instance to the following Bayesian game between the leader and the follower .
+The leader has only a single type, and for every vertex v ? V , the leader has an action sv .
+The follower has a type £cv for every v ? V , occurring with probability 1 (|E|+1)|V | , and a type £ce for every e ? E, occurring with probability 1 |E|+1 .
+The follower has two actions
+The leader"s utility is given by, for all s ? S, ul(s, t0) = 1 and ul(s, t1) = 0 .
+The follower"s utility is given by
+We claim that an optimal strategy to commit to gives the leader an expected utility of at least |E| |E|+1 + K (|E|+1)|V | if and only if there is a solution to the INDEPENDENT SET instance .
+First, suppose that there is a solution to the INDEPENDENT SET instance .
+Then, the leader could commit to the following strategy
+If the follower has type £ce for some e ? E, the expected utility for the follower of playing t1 is at most 1 K 2K 3 = 2 3, because there is at most one vertex v ? e such that sv is played with nonzero probability .
+Hence, the follower will play t0 and obtain a utility of 1 .
+If the follower has type £cv for some vertex v in the independent set, the expected utility for the follower of playing t1 is K?1 K K K?1 = 1, because the leader plays sv with probability 1 K .
+It follows that the follower (who breaks ties to maximize the leader"s utility) will play t0, which also gives a utility of 1 and gives the leader a higher utility .
+Hence the leader"s expected utility for this strategy is at least |E| |E|+1 + K (|E|+1)|V | , as required .
+87 Now, suppose that there is a strategy that gives the leader an expected utility of at least |E| |E|+1 + K (|E|+1)|V | .
+Then, this strategy must induce the follower to play t0 whenever it has a type of the form £ce (because otherwise, the utility could be at most |E|?1 |E|+1 + |V | (|E|+1)|V | = |E| |E|+1 < |E| |E|+1 + K (|E|+1)|V | e = (v1, v2) ? E, the probability that the leader plays one of sv1 and sv2 is at least 2 K, because then the expected utility for the follower of playing t1 when it has type £ce would be at least 2 K 2K 3 = 4 3 > 1 .
+Moreover, the strategy must induce the follower to play t0 for at least K types of the form £cv .
+Inducing the follower to play t0 when it has type £cv can be done only by playing sv with probability at least 1 K, which will give the follower a utility of at most K?1 K K K?1 = 1 for playing t1 .
+But then, the set of vertices v such that sv is played with probability at least 1 K must constitute an independent set of size K (because if there were an edge e between two such vertices, it would induce the follower to play t1 for type £ce by the above) .
+By contrast, if the follower has only a single type, then we can generalize the linear programming approach for normalform games
+In 2 player Bayesian games in which the follower has only a single type, an optimal mixed strategy to commit to can be found in polynomial time using linear programming .
+Proof .
+We generalize the approach in Theorem 2 as follows .
+For every pure follower strategy t, we compute a mixed strategy for the leader for every one of the leader"s types such that 1) playing t is a best response for the follower, and 2) under this constraint, the mixed strategy maximizes the leader"s ex ante expected utility .
+To do so, we generalize the linear program as follows
+This shows an interesting contrast between commitment to pure strategies and commitment to mixed strategies in Bayesian games

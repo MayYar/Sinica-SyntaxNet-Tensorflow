@@ -1,0 +1,558 @@
+A Unified and General Framework for 
+content:
+1 ABSTRACT :
+1-1:This paper proposes a unified and general framework for argumentation based negotiation, in which the role of argumentation is formally analyzed .
+1-2:The framework makes it possible to study the outcomes of an argumentation based negotiation .
+1-3:It shows what an agreement is, how it is related to the theories of the agents, when it is possible, and how this can be attained by the negotiating agents in this case .
+1-4:It defines also the notion of concession, and shows in which situation an agent will make one, as well as how it influences the evolution of the dialogue .
+1-5:I.2.3 [Deduction and Theorem Proving]: .
+2 INTRODUCTION :
+2-1:Roughly speaking, negotiation is a process aiming at finding some compromise or consensus between two or several agents about some matters of collective agreement, such as pricing products, allocating resources, or choosing candidates .
+2-2:Negotiation models have been proposed for the design of systems able to bargain in an optimal way with other agents for example, buying or selling products in ecommerce .
+2-3:Different approaches to automated negotiation have been investigated, including game theoretic approaches (which usually assume complete information and unlimited computation capabilities) [11], heuristic based approaches which try to cope with these limitations [6], and argumentation based approaches [2, 3, 7, 8, 9, 12, 13] which emphasize the importance of exchanging information and explanations between negotiating agents in order to mutually influence their behaviors (e.g .
+2-4:an agent may concede a goal having a small priority), and consequently the outcome of the dialogue .
+2-5:Indeed, the two first types of settings do not allow for the addition of information or for exchanging opinions about offers .
+2-6:Integrating argumentation theory in negotiation provides a good means for supplying additional information and also helps agents to convince each other by adequate arguments during a negotiation dialogue .
+2-7:Indeed, an offer supported by a good argument has a better chance to be accepted by an agent, and can also make him reveal his goals or give up some of them .
+2-8:The basic idea behind an argumentationbased approach is that by exchanging arguments, the theories of the agents (i.e .
+2-9:their mental states) may evolve, and consequently, the status of offers may change .
+2-10:For instance, an agent may reject an offer because it is not acceptable for it .
+2-11:However, the agent may change its mind if it receives a strong argument in favor of this offer .
+2-12:Several proposals have been made in the literature for modeling such an approach .
+2-13:However, the work is still preliminary .
+2-14:Some researchers have mainly focused on relating argumentation with protocols .
+2-15:They have shown how and when arguments in favor of offers can be computed and exchanged .
+2-16:Others have emphasized on the decision making problem .
+2-17:In [3, 7], the authors argued that selecting an offer to propose at a given step of the dialogue is a decision making problem .
+2-18:They have thus proposed an argumentationbased decision model, and have shown how such a model can be related to the dialogue protocol .
+2-19:In most existing works, there is no deep formal analysis of the role of argumentation in negotiation dialogues .
+2-20:It is not clear how argumentation can influence the outcome of the dialogue .
+2-21:Moreover, basic concepts in negotiation such as agreement (i.e .
+2-22:optimal solutions, or compromise) and concession are neither defined nor studied .
+2-23:This paper aims to propose a unified and general framework for argumentation based negotiation, in which the role of argumentation is formally analyzed, and where the existing systems can be restated .
+2-24:In this framework, a negotiation dialogue takes place between two agents on a set O of offers, whose structure is not known .
+2-25:The goal of a negotiation is to find among elements of O, an offer that satisfies more or less 967 978 81 904262 7 5 c 2007 IFAAMAS the preferences of both agents .
+2-26:Each agent is supposed to have a theory represented in an abstract way .
+2-27:A theory consists of a set A of arguments whose structure and origin are not known, a function specifying for each possible offer in O, the arguments of A that support it, a non specified conflict relation among the arguments, and finally a preference relation between the arguments .
+2-28:The status of each argument is defined using Dung"s acceptability semantics .
+2-29:Consequently, the set of offers is partitioned into four subsets: acceptable, rejected, negotiable and non supported offers .
+2-30:We show how an agent"s theory may evolve during a negotiation dialogue .
+2-31:We define formally the notions of concession, compromise, and optimal solution .
+2-32:Then, we propose a protocol that allows agents i) to exchange offers and arguments, and ii) to make concessions when necessary .
+2-33:We show that dialogues generated under such a protocol terminate, and even reach optimal solutions when they exist .
+2-34:This paper is organized as follows: Section 2 introduces the logical language that is used in the rest of the paper .
+2-35:Section 3 defines the agents as well as their theories .
+2-36:In section 4, we study the properties of these agents" theories .
+2-37:Section 5 defines formally an argumentation based negotiation, shows how the theories of agents may evolve during a dialogue, and how this evolution may influence the outcome of the dialogue .
+2-38:Two kinds of outcomes: optimal solution and compromise are defined, and we show when such outcomes are reached .
+2-39:Section 6 illustrates our general framework through some examples .
+2-40:Section 7 compares our formalism with existing ones .
+2-41:Section 8 concludes and presents some perspectives .
+2-42:Due to lack of space, the proofs are not included .
+2-43:These last are in a technical report that we will make available online at some later time. .
+3 THE LOGICAL LANGUAGE :
+3-1:In what follows, L will denote a logical language, and ≡ is an equivalence relation associated with it .
+3-2:From L, a set O = {o1, .
+3-3:.
+3-4:.
+3-5:, on} of n offers is identified, such that oi, oj ∈ O such that oi ≡ oj .
+3-6:This means that the offers are different .
+3-7:Offers correspond to the different alternatives that can be exchanged during a negotiation dialogue .
+3-8:For instance, if the agents try to decide the place of their next meeting, then the set O will contain different towns .
+3-9:Different arguments can be built from L .
+3-10:The set Args(L) will contain all those arguments .
+3-11:By argument, we mean a reason in believing or of doing something .
+3-12:In [3], it has been argued that the selection of the best offer to propose at a given step of the dialogue is a decision problem .
+3-13:In [4], it has been shown that in an argumentation based approach for decision making, two kinds of arguments are distinguished: arguments supporting choices (or decisions), and arguments supporting beliefs .
+3-14:Moreover, it has been acknowledged that the two categories of arguments are formally defined in different ways, and they play different roles .
+3-15:Indeed, an argument in favor of a decision, built both on an agent"s beliefs and goals, tries to justify the choice; whereas an argument in favor of a belief, built only from beliefs, tries to destroy the decision arguments, in particular the beliefs part of those decision arguments .
+3-16:Consequently, in a negotiation dialogue, those two kinds of arguments are generally exchanged between agents .
+3-17:In what follows, the set Args(L) is then divided into two subsets: a subset Argso(L) of arguments supporting offers, and a subset Argsb(L) of arguments supporting beliefs .
+3-18:Thus, Args(L) = Argso(L) ∪ Argsb(L) .
+3-19:As in [5], in what follows, we consider that the structure of the arguments is not known .
+3-20:Since the knowledge bases from which arguments are built may be inconsistent, the arguments may be conflicting too .
+3-21:In what follows, those conflicts will be captured by the relation RL, thus RL ⊆ Args(L) × Args(L) .
+3-22:Three assumptions are made on this relation: First the arguments supporting different offers are conflicting .
+3-23:The idea behind this assumption is that since offers are exclusive, an agent has to choose only one at a given step of the dialogue .
+3-24:Note that, the relation RL is not necessarily symmetric between the arguments of Argsb(L) .
+3-25:The second hypothesis says that arguments supporting the same offer are also conflicting .
+3-26:The idea here is to return the strongest argument among these arguments .
+3-27:The third condition does not allow an argument in favor of an offer to attack an argument supporting a belief .
+3-28:This avoids wishful thinking .
+3-29:Formally: Definition 1 .
+3-30:RL ⊆ Args(L) × Args(L) is a conflict relation among arguments such that: • ∀a, a ∈ Argso(L), s.t .
+3-31:a = a , a RL a • a ∈ Argso(L) and a ∈ Argsb(L) such that a RL a Note that the relation RL is not symmetric .
+3-32:This is due to the fact that arguments of Argsb(L) may be conflicting but not necessarily in a symmetric way .
+3-33:In what follows, we assume that the set Args(L) of arguments is finite, and each argument is attacked by a finite number of arguments. .
+4 NEGOTIATING AGENTS THEORIES AND REASONING MODELS :
+4-1:REASONING MODELS In this section we define formally the negotiating agents, i.e .
+4-2:their theories, as well as the reasoning model used by those agents in a negotiation dialogue .
+4-3:3.1 Negotiating agents theories Agents involved in a negotiation dialogue, called negotiating agents, are supposed to have theories .
+4-4:In this paper, the theory of an agent will not refer, as usual, to its mental states (i.e .
+4-5:its beliefs, desires and intentions) .
+4-6:However, it will be encoded in a more abstract way in terms of the arguments owned by the agent, a conflict relation among those arguments, a preference relation between the arguments, and a function that specifies which arguments support offers of the set O .
+4-7:We assume that an agent is aware of all the arguments of the set Args(L) .
+4-8:The agent is even able to express a preference between any pair of arguments .
+4-9:This does not mean that the agent will use all the arguments of Args(L), but it encodes the fact that when an agent receives an argument from another agent, it can interpret it correctly, and it can also compare it with its own arguments .
+4-10:Similarly, each agent is supposed to be aware of the conflicts between arguments .
+4-11:This also allows us to encode the fact that an agent can recognize whether the received argument is in conflict or not with its arguments .
+4-12:However, in its theory, only the conflicts between its own arguments are considered .
+4-13:Definition 2 (Negotiating agent theory) .
+4-14:Let O be a set of n offers .
+4-15:A negotiating agent theory is a tuple A, F, , R, Def such that: • A ⊆ Args(L) .
+4-16:968 The Sixth Intl .
+4-17:Joint Conf .
+4-18:on Autonomous Agents and Multi Agent Systems (AAMAS 07) • F: O → 2A s.t ∀i, j with i = j, F(oi) ∩ F(oj) = ∅ .
+4-19:Let AO = ∪F(oi) with i = 1, .
+4-20:.
+4-21:.
+4-22:, n .
+4-23:• ⊆ Args(L) × Args(L) is a partial preorder denoting a preference relation between arguments .
+4-24:• R ⊆ RL such that R ⊆ A × A • Def ⊆ A × A such that ∀ a, b ∈ A, a defeats b, denoted a Def b iff: a R b, and not (b a) The function F returns the arguments supporting offers in arguments supporting it, called arguments PRO, and arguments against it, called arguments CONS .
+4-25:Moreover, these two types of arguments are not necessarily conflicting .
+4-26:For simplicity reasons, in this paper we consider only arguments PRO .
+4-27:Moreover, we assume that an argument cannot support two distinct offers .
+4-28:However, it may be the case that an offer is not supported at all by arguments, thus F(oi) may be empty .
+4-29:Example 1 .
+4-30:Let O = {o1, o2, o3} be a set of offers .
+4-31:The following theory is the theory of agent i: • A = {a1, a2, a3, a4} • F(o1) = {a1}, F(o2) = {a2}, F(o3) = ∅ .
+4-32:Thus, Ao = {a1, a2} • = {(a1, a2), (a2, a1), (a3, a2), (a4, a3)} • R = {a1, a2), (a2, a1), (a3, a2), (a4, a3)} • Def = {(a4, a3), (a3, a2)} From the above definition of agent theory, the following hold: Property 1 .
+4-33:• Def ⊆ R • ∀a, a ∈ F(oi), a R a 3.2 The reasoning model From the theory of an agent, one can define the argumentation system used by that agent for reasoning about the offers and the arguments, i.e .
+4-34:for computing the status of the different offers and arguments .
+4-35:Definition 3 (Argumentation system) .
+4-36:Let A, F, , R, Def be the theory of an agent .
+4-37:The argumentation system of that agent is the pair A, Def .
+4-38:In [5], different acceptability semantics have been introduced for computing the status of arguments .
+4-39:These are based on two basic concepts, defence and conflict free, defined as follows: Definition 4 (Defence conflict free) .
+4-40:Let S ⊆ A .
+4-41:• S defends an argument a iff each argument that defeats a is defeated by some argument in S .
+4-42:• S is conflict free iff there exist no a, a in S such that a Def a .
+4-43:Definition 5 (Acceptability semantics) .
+4-44:Let S be a conflict free set of arguments, and let T : 2A → 2A be a function such that T = {a | a is defended by S} .
+4-45:• S is a complete extension iff S = T .
+4-46:• S is a preferred extension iff S is a maximal (w.r.t set ⊆) complete extension .
+4-47:• S is a grounded extension iff it is the smallest (w.r.t set ⊆) complete extension .
+4-48:Let E1, .
+4-49:.
+4-50:.
+4-51:, Ex denote the different extensions under a given semantics .
+4-52:Note that there is only one grounded extension .
+4-53:It contains all the arguments that are not defeated, and those arguments that are defended directly or indirectly by nondefeated arguments .
+4-54:Theorem 1 .
+4-55:Let A, Def the argumentation system defined as shown above. .
+5 The grounded extensions is S = i≥1 T (∅). :
+5-1:T (∅) .
+5-2:Note that when the grounded extension (or the preferred extension) is empty, this means that there is no acceptable offer for the negotiating agent .
+5-3:Example 2 .
+5-4:In example 1, there is one preferred extension, E = {a1, a2, a4} .
+5-5:Now that the acceptability semantics is defined, we are ready to define the status of any argument .
+5-6:Definition 6 (Argument status) .
+5-7:Let A, Def be an argumentation system, and E1, .
+5-8:.
+5-9:.
+5-10:, Ex its extensions under a given semantics .
+5-11:Let a ∈ A .
+5-12:This means that a is in some extensions and not in others .
+5-13:Note that A = {a|a is accepted} ∪ {a|a is rejected} ∪ {a|a is undecided} .
+5-14:Example 3 .
+5-15:In example 1, the arguments a1, a2 and a4 are accepted, whereas the argument a3 is rejected .
+5-16:As said before, agents use argumentation systems for reasoning about offers .
+5-17:In a negotiation dialogue, agents propose and accept offers that are acceptable for them, and reject bad ones .
+5-18:In what follows, we will define the status of an offer .
+5-19:According to the status of arguments, one can define four statuses of the offers as follows: Definition 7 (Offers status) .
+5-20:Let o ∈ O .
+5-21:• The offer o is acceptable for the negotiating agent iff ∃ a ∈ F(o) such that a is accepted .
+5-22:Oa = {oi ∈ O, such that oi is acceptable} .
+5-23:• The offer o is rejected for the negotiating agent iff ∀ a ∈ F(o), a is rejected .
+5-24:Or = {oi ∈ O, such that oi is rejected} .
+5-25:The Sixth Intl .
+5-26:Joint Conf .
+5-27:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 969 • The offer o is negotiable iff ∀ a ∈ F(o), a is undecided .
+5-28:On = {oi ∈ O, such that oi is negotiable} .
+5-29:• The offer o is non supported iff it is neither acceptable, nor rejected or negotiable .
+5-30:Ons = {oi ∈ O, such that oi is non supported offers} .
+5-31:Example 4 .
+5-32:In example 1, the two offers o1 and o2 are acceptable since they are supported by accepted arguments, whereas the offer o3 is non supported since it has no argument in its favor .
+5-33:From the above definitions, the following results hold: Property 2 .
+5-34:Let o ∈ O .
+5-35:• O = Oa ∪ Or ∪ On ∪ Ons .
+5-36:• The set Oa may contain more than one offer .
+5-37:From the above partition of the set O of offers, a preference relation between offers is defined .
+5-38:Let Ox and Oy be two subsets of O .
+5-39:Ox Oy means that any offer in Ox is preferred to any offer in the set Oy .
+5-40:We can write also for two offers oi, oj, oi oj iff oi ∈ Ox, oj ∈ Oy and Ox Oy .
+5-41:Definition 8 (Preference between offers) .
+5-42:Let O be a set of offers, and Oa, Or, On, Ons its partition .
+5-43:Oa On Ons Or .
+5-44:Example 5 .
+5-45:In example 1, we have o1 o3, and o2 o3 .
+5-46:However, o1 and o2 are indifferent. .
+6 THE STRUCTURE OF NEGOTIATION  THEORIES :
+6-1:THEORIES In this section, we study the properties of the system developed above .
+6-2:We first show that in the particular case where A = AO (ie .
+6-3:all of the agent"s arguments refer to offers), the corresponding argumentation system will return at least one non empty preferred extension .
+6-4:Theorem 2 .
+6-5:Let A, Def an argumentation system such that A = AO .
+6-6:Then the system returns at least one extension E, such that |E| ≥ 1 .
+6-7:We now present some results that demonstrate the importance of indifference in negotiating agents, and more specifically its relation to acceptable outcomes .
+6-8:We first show that the set Oa may contain several offers when their corresponding accepted arguments are indifferent w.r.t the preference relation .
+6-9:Theorem 3 .
+6-10:Let o1, o2 ∈ O .
+6-11:o1, o2 ∈ Oa iff ∃ a1 ∈ F(o1), ∃ a2 ∈ F(o2), such that a1 and a2 are accepted and are indifferent w.r.t (i.e .
+6-12:a b and b a) .
+6-13:We now study acyclic preference relations that are defined formally as follows .
+6-14:Definition 9 (Acyclic relation) .
+6-15:A relation R on a set A is acyclic if there is no sequence a1, a2, .
+6-16:.
+6-17:.
+6-18:, an ∈ A, with n > 1, such that (ai, ai+1) ∈ R and (an, a1) ∈ R, with 1 ≤ i < n .
+6-19:Note that acyclicity prohibits pairs of arguments a, b such that a b and b a, ie., an acyclic preference relation disallows indifference .
+6-20:Theorem 4 .
+6-21:Let A be a set of arguments, R the attacking relation of A defined as R ⊆ A × A, and an acyclic relation on A .
+6-22:Then for any pair of arguments a, b ∈ A, such that (a, b) ∈ R, either (a, b) ∈ Def or (b, a) ∈ Def (or both) .
+6-23:The previous result is used in the proof of the following theorem that states that acyclic preference relations sanction extensions that support exactly one offer .
+6-24:Theorem 5 .
+6-25:Let A be a set of arguments, and an acyclic relation on A .
+6-26:If E is an extension of <A, Def>, then |E ∩ AO| = 1 .
+6-27:An immediate consequence of the above is the following .
+6-28:Property 3 .
+6-29:Let A be a set of arguments such that A = AO .
+6-30:If the relation on A is acyclic, then each extension Ei of <A, Def>, |Ei| = 1 .
+6-31:Another direct consequence of the above theorem is that in acyclic preference relations, arguments that support offers can participate in only one preferred extension .
+6-32:Theorem 6 .
+6-33:Let A be a set of arguments, and an acyclic relation on A .
+6-34:Then the preferred extensions of A, Def are pairwise disjoint w.r.t arguments of AO .
+6-35:Using the above results we can prove the main theorem of this section that states that negotiating agents with acyclic preference relations do not have acceptable offers .
+6-36:Theorem 7 .
+6-37:Let A, F, R, , Def be a negotiating agent such that A = AO and is an acyclic relation .
+6-38:Then the set of accepted arguments w.r.t A, Def is emtpy .
+6-39:Consequently, the set of acceptable offers, Oa is empty as well. .
+7 ARGUMENTATION BASED NEGOTIATION :
+7-1:In this section, we define formally a protocol that generates argumentation based negotiation dialogues between two negotiating agents P and C .
+7-2:The two agents negotiate about an object whose possible values belong to a set both agents .
+7-3:For simplicity reasons, we assume that this set does not change during the dialogue .
+7-4:The agents are equipped with theories denoted respectively AP , FP , P , RP , DefP , and AC , FC , C , RC , DefC .
+7-5:Note that the two theories may be different in the sense that the agents may have different sets of arguments, and different preference relations .
+7-6:Worst yet, they may have different arguments in favor of the same offers .
+7-7:Moreover, these theories may evolve during the dialogue .
+7-8:5.1 Evolution of the theories Before defining formally the evolution of an agent"s theory, let us first introduce the notion of dialogue moves, or moves for short .
+7-9:Definition 10 (Move) .
+7-10:A move is a tuple mi = pi, ai, oi, ti such that: • pi ∈ {P, C} • ai ∈ Args(L) ∪ θ1 1 In what follows θ denotes the fact that no argument, or no offer is given 970 The Sixth Intl .
+7-11:Joint Conf .
+7-12:on Autonomous Agents and Multi Agent Systems (AAMAS 07) • oi ∈ O ∪ θ • ti ∈ N∗ is the target of the move, such that ti < i The function Player (resp .
+7-13:Argument, Offer, Target) returns the player of the move (i.e .
+7-14:pi) (resp .
+7-15:the argument of a move, i.e ai, the offer oi, and the target of the move, ti) .
+7-16:Let M denote the set of all the moves that can be built from {P, C}, Arg(L), O .
+7-17:Note that the set M is finite since Arg(L) and O are assumed to be finite .
+7-18:Let us now see how an agent"s theory evolves and why .
+7-19:The idea is that if an agent receives an argument from another agent, it will add the new argument to its theory .
+7-20:Moreover, since an argument may bring new information for the agent, thus new arguments can emerge .
+7-21:Let us take the following example: Example 6 .
+7-22:Suppose that an agent P has the following propositional knowledge base: ΣP = {x, y → z} .
+7-23:From this base one cannot deduce z .
+7-24:Let"s assume that this agent receives the following argument {a, a → y} that justifies y .
+7-25:It is clear that now P can build an argument, say {a, a → y, y → z} in favor of z .
+7-26:In a similar way, if a received argument is in conflict with the arguments of the agent i, then those conflicts are also added to its relation Ri .
+7-27:Note that new conflicts may arise between the original arguments of the agent and the ones that emerge after adding the received arguments to its theory .
+7-28:Those new conflicts should also be considered .
+7-29:As a direct consequence of the evolution of the sets Ai and Ri , the defeat relation Defi is also updated .
+7-30:The initial theory of an agent i, (i.e .
+7-31:its theory before the dialogue starts), is denoted by Ai 0, Fi 0, i 0, Ri 0, Defi 0 , with i ∈ {P, C} .
+7-32:Besides, in this paper, we suppose that the preference relation i of an agent does not change during the dialogue .
+7-33:Definition 11 (Theory evolution) .
+7-34:Let m1, .
+7-35:.
+7-36:., mt, .
+7-37:.
+7-38:., mj be a sequence of moves .
+7-39:The theory of an agent i at a step t > 0 is: Ai t, Fi t , i t, Ri t, Defi t such that: • Ai t = Ai 0 ∪ {ai, i = 1, .
+7-40:.
+7-41:.
+7-42:, t, ai = Argument(mi)} ∪ A with A ⊆ Args(L) • Fi t = O → 2Ai t • i t = i 0 • Ri t = Ri 0 ∪ {(ai, aj) | ai = Argument(mi), aj = Argument(mj), i, j ≤ t, and ai RL aj} ∪ R with R ⊆ RL • Defi t ⊆ Ai t × Ai t The above definition captures the monotonic aspect of an argument .
+7-43:Indeed, an argument cannot be removed .
+7-44:However, its status may change .
+7-45:An argument that is accepted at step t of the dialogue by an agent may become rejected at step t + i .
+7-46:Consequently, the status of offers also change .
+7-47:Thus, the sets Oa, Or, On, and Ons may change from one step of the dialogue to another .
+7-48:That means for example that some offers could move from the set Oa to the set Or and vice versa .
+7-49:Note that in the definition of Rt, the relation RL is used to denote a conflict between exchanged arguments .
+7-50:The reason is that, such a conflict may not be in the set Ri of the agent i .
+7-51:Thus, in order to recognize such conflicts, we have supposed that the set RL is known to the agents .
+7-52:This allows us to capture the situation where an agent is able to prove an argument that it was unable to prove before, by incorporating in its beliefs some information conveyed through the exchange of arguments with another agent .
+7-53:This, unknown at the beginning of the dialogue argument, could give to this agent the possibility to defeat an argument that it could not by using its initial arguments .
+7-54:This could even lead to a change of the status of these initial arguments and this change would lead to the one of the associated offers" status .
+7-55:In what follows, Oi t,x denotes the set of offers of type x, where x ∈ {a, n, r, ns}, of the agent i at step t of the dialogue .
+7-56:In some places, we can use for short the notation Oi t to denote the partition of the set O at step t for agent i .
+7-57:Note that we have: not(Oi t,x ⊆ Oi t+1,x) .
+7-58:5.2 The notion of agreement As said in the introduction, negotiation is a process aiming at finding an agreement about some matters .
+7-59:By agreement, one means a solution that satisfies to the largest possible extent the preferences of both agents .
+7-60:In case there is no such solution, we say that the negotiation fails .
+7-61:In what follows, we will discuss the different kinds of solutions that may be reached in a negotiation .
+7-62:The first one is the optimal solution .
+7-63:An optimal solution is the best offer for both agents .
+7-64:Formally: Definition 12 (Optimal solution) .
+7-65:Let O be a set of offers, and o ∈ O .
+7-66:The offer o is an optimal solution at a step t ≥ 0 iff o ∈ OP t,a ∩ OC t,a Such a solution does not always exist since agents may have conflicting preferences .
+7-67:Thus, agents make concessions by proposing accepting less preferred offers .
+7-68:Definition 13 (Concession) .
+7-69:Let o ∈ O be an offer .
+7-70:The offer o is a concession for an agent i iff o ∈ Oi x such that ∃Oi y = ∅, and Oi y Oi x .
+7-71:During a negotiation dialogue, agents exchange first their most preferred offers, and if these last are rejected, they make concessions .
+7-72:In this case, we say that their best offers are no longer defendable .
+7-73:In an argumentation setting, this means that the agent has already presented all its arguments supporting its best offers, and it has no counter argument against the ones presented by the other agent .
+7-74:Formally: Definition 14 (Defendable offer) .
+7-75:Let Ai t, Fi t , i t, Ri t, Defi t be the theory of agent i at a step t > 0 of the dialogue .
+7-76:Let o ∈ O such that ∃j ≤ t with Player(mj) = i and offer(mj) = o .
+7-77:The offer o is defendable by the agent i iff: • ∃a ∈ Fi t (o), and k ≤ t s.t .
+7-78:Argument(mk) = a, or • ∃a ∈ At \Fi t (o) s.t .
+7-79:a Defi t b with Argument(mk) = b, k ≤ t, and Player(mk) = i l ≤ t, Argument(ml) = a The offer o is said non defendable otherwise and NDi t is the set of non defendable offers of agent i at a step t .
+7-80:The Sixth Intl .
+7-81:Joint Conf .
+7-82:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 971 5.3 Negotiation dialogue Now that we have shown how the theories of the agents evolve during a dialogue, we are ready to define formally an argumentation based negotiation dialogue .
+7-83:For that purpose, we need to define first the notion of a legal continuation .
+7-84:Definition 15 (Legal move) .
+7-85:A move m is a legal continuation of a sequence of moves m1, .
+7-86:.
+7-87:.
+7-88:, ml iff j, k < l, such that: • Offer(mj) = Offer(mk), and • Player(mj) = Player(mk) The idea here is that if the two agents present the same offer, then the dialogue should terminate, and there is no longer possible continuation of the dialogue .
+7-89:Definition 16 (Argumentation based negotiation) .
+7-90:An argumentation based negotiation dialogue d between two agents P and C is a non empty sequence of moves m1, .
+7-91:.
+7-92:.
+7-93:, ml such that: • pi = P iff i is even, and pi = C iff i is odd • Player(m1) = P, Argument(m1) = θ, Offer(m1) = θ, and Target(m1) = 02 • ∀ mi, if Offer(mi) = θ, then Offer(mi) oj, ∀ oj ∈ O\(O Player(mi) i,r ∪ ND Player(mi) i ) • ∀i = 1, .
+7-94:.
+7-95:.
+7-96:, l, mi is a legal continuation of m1, .
+7-97:.
+7-98:.
+7-99:, mi−1 • Target(mi) = mj such that j < i and Player(mi) = Player(mj) • If Argument(mi) = θ, then: if Offer(mi) = θ then Argument(mi) ∈ F(Offer(mi)) if Offer(mi) = θ then Argument(mi) Def Player(mi) i Argument(Target(mi)) • i, j ≤ l such that mi = mj • m ∈ M such that m is a legal continuation of m1, .
+7-100:.
+7-101:.
+7-102:, ml Let D be the set of all possible dialogues .
+7-103:The first condition says that the two agents take turn .
+7-104:The second condition says that agent P starts the negotiation dialogue by presenting an offer .
+7-105:Note that, in the first turn, we suppose that the agent does not present an argument .
+7-106:This assumption is made for strategical purposes .
+7-107:Indeed, arguments are exchanged as soon as a conflict appears .
+7-108:The third condition ensures that agents exchange their best offers, but never the rejected ones .
+7-109:This condition takes also into account the concessions that an agent will have to make if it was established that a concession is the only option for it at the current state of the dialogue .
+7-110:Of course, as we have shown in a previous section, an agent may have several good or acceptable offers .
+7-111:In this case, the agent chooses one of them randomly .
+7-112:The fourth condition ensures that the moves are legal .
+7-113:This condition allows to terminate the dialogue as soon as an offer is presented by both agents .
+7-114:The fifth condition allows agents to backtrack .
+7-115:The sixth 2 The first move has no target .
+7-116:condition says that an agent may send arguments in favor of offers, and in this case the offer should be stated in the same move .
+7-117:An agent can also send arguments in order to defeat arguments of the other agent .
+7-118:The next condition prevents repeating the same move .
+7-119:This is useful for avoiding loops .
+7-120:The last condition ensures that all the possible legal moves have been presented .
+7-121:The outcome of a negotiation dialogue is computed as follows: Definition 17 (Dialogue outcome) .
+7-122:Let d = m1, .
+7-123:.
+7-124:., ml be a argumentation based negotiation dialogue .
+7-125:The outcome of this dialogue, denoted Outcome, is Outcome(d) = Offer(ml) iff ∃j < l s.t .
+7-126:Offer(ml) = Offer(mj), and Player(ml) = Player(mj) .
+7-127:Otherwise, Outcome(d) = θ .
+7-128:Note that when Outcome(d) = θ, the negotiation fails, and no agreement is reached by the two agents .
+7-129:However, if Outcome(d) = θ, the negotiation succeeds, and a solution that is either optimal or a compromise is found .
+7-130:Theorem 8 .
+7-131:∀di ∈ D, the argumentation based negotiation di terminates .
+7-132:The above result is of great importance, since it shows that the proposed protocol avoids loops, and dialogues terminate .
+7-133:Another important result shows that the proposed protocol ensures to reach an optimal solution if it exists .
+7-134:Formally: Theorem 9 (Completeness) .
+7-135:Let d = m1, .
+7-136:.
+7-137:.
+7-138:, ml be a argumentation based negotiation dialogue .
+7-139:If ∃t ≤ l such that OP t,a ∩ OC t,a = ∅, then Outcome(d) ∈ OP t,a ∩ OC t,a .
+7-140:We show also that the proposed dialogue protocol is sound in the sense that, if a dialogue returns a solution, then that solution is for sure a compromise .
+7-141:In other words, that solution is a common agreement at a given step of the dialogue .
+7-142:We show also that if the negotiation fails, then there is no possible solution .
+7-143:Theorem 10 (Soundness) .
+7-144:Let d = m1, .
+7-145:.
+7-146:.
+7-147:, ml be a argumentation based negotiation dialogue .
+7-148:OP t,x ∩ OC t,y, with x, y ∈ {a, n, ns}. .
+8 If Outcome(d) = θ, then ∀t ≤ l, OP :
+8-1:t,x ∩ OC t,y = ∅, ∀ x, y ∈ {a, n, ns} .
+8-2:A direct consequence of the above theorem is the following: Property 4 .
+8-3:Let d = m1, .
+8-4:.
+8-5:.
+8-6:, ml be a argumentationbased negotiation dialogue .
+8-7:If Outcome(d) = θ, then ∀t ≤ l, • OP t,r = OC t,a ∪ OC t,n ∪ OC t,ns, and • OC t,r = OP t,a ∪ OP t,n ∪ OP t,ns. .
+9 ILLUSTRATIVE EXAMPLES :
+9-1:In this section we will present some examples in order to illustrate our general framework .
+9-2:Example 7 (No argumentation) .
+9-3:Let O = {o1, o2} be the set of all possible offers .
+9-4:Let P and C be two agents, equipped with the same theory: A, F, , R, Def such that A = ∅, F(o1) = F(o2) = ∅, = ∅, R = ∅, Def = ∅ .
+9-5:In this case, it is clear that the two offers o1 and o2 are nonsupported .
+9-6:The proposed protocol (see Definition 16) will generate one of the following dialogues: 972 The Sixth Intl .
+9-7:Joint Conf .
+9-8:on Autonomous Agents and Multi Agent Systems (AAMAS 07) P: m1 = P, θ, o1, 0 C: m2 = C, θ, o1, 1 This dialogue ends with o1 as a compromise .
+9-9:Note that this solution is not considered as optimal since it is not an acceptable offer for the agents .
+9-10:P: m1 = P, θ, o1, 0 C: m2 = C, θ, o2, 1 P: m3 = P, θ, o2, 2 This dialogue ends with o2 as a compromise .
+9-11:P: m1 = P, θ, o2, 0 C: m2 = C, θ, o2, 1 This dialogue also ends with o2 as a compromise .
+9-12:The last possible dialgue is the following that ends with o1 as a compromise .
+9-13:P: m1 = P, θ, o2, 0 C: m2 = C, θ, o1, 1 P: m3 = P, θ, o1, 2 Note that in the above example, since there is no exchange of arguments, the theories of both agents do not change .
+9-14:Let us now consider the following example .
+9-15:Example 8 (Static theories) .
+9-16:Let O = {o1, o2} be the set of all possible offers .
+9-17:The theory of agent P is AP , FP , P , RP , DefP such that: AP = {a1, a2}, FP (o1) = {a1}, FP (o2) = {a2}, P = {(a1, a2)}, RP = {(a1, a2), (a2, a1)}, DefP = {a1, a2} .
+9-18:The argumentation system AP , DefP of this agent will return a1 as an accepted argument, and a2 as a rejected one .
+9-19:Consequently, the offer o1 is acceptable and o2 is rejected .
+9-20:The theory of agent C is AC , FC , C , RC , DefC such that: AC = {a1, a2}, FC (o1) = {a1}, FC (o2) = {a2}, C = {(a2, a1)}, RC = {(a1, a2), (a2, a1)}, DefC = {a2, a1} .
+9-21:The argumentation system AC , DefC of this agent will return a2 as an accepted argument, and a1 as a rejected one .
+9-22:Consequently, the offer o2 is acceptable and o1 is rejected .
+9-23:The only possible dialogues that may take place between the two agents are the following: P: m1 = P, θ, o1, 0 C: m2 = C, θ, o2, 1 P: m3 = P, a1, o1, 2 C: m4 = C, a2, o2, 3 The second possible dialogue is the following: P: m1 = P, θ, o1, 0 C: m2 = C, a2, o2, 1 P: m3 = P, a1, o1, 2 C: m4 = C, θ, o2, 3 Both dialogues end with failure .
+9-24:Note that in both dialogues, the theories of both agents do not change .
+9-25:The reason is that the exchanged arguments are already known to both agents .
+9-26:The negotiation fails because the agents have conflicting preferences .
+9-27:Let us now consider an example in which argumentation will allow agents to reach an agreement .
+9-28:Example 9 (Dynamic theories) .
+9-29:Let O = {o1, o2} be the set of all possible offers .
+9-30:The theory of agent P is AP , FP , P , RP , DefP such that: AP = {a1, a2}, FP (o1) = {a1}, FP (o2) = {a2}, P = {(a1, a2), (a3, a1)}, RP = {(a1, a2), (a2, a1)}, DefP = {(a1, a2)} .
+9-31:The argumentation system AP , DefP of this agent will return a1 as an accepted argument, and a2 as a rejected one .
+9-32:Consequently, the offer o1 is acceptable and o2 is rejected .
+9-33:The theory of agent C is AC , FC , C , RC , DefC such that: AC = {a1, a2, a3}, FC (o1) = {a1}, FC (o2) = {a2}, C = {(a1, a2), (a3, a1)}, RC = {(a1, a2), (a2, a1), (a3, a1)}, DefC = {(a1, a2), (a3, a1)} .
+9-34:The argumentation system AC , DefC of this agent will return a3 and a2 as accepted arguments, and a1 as a rejected one .
+9-35:Consequently, the offer o2 is acceptable and o1 is rejected .
+9-36:The following dialogue may take place between the two agents: P: m1 = P, θ, o1, 0 C: m2 = C, θ, o2, 1 P: m3 = P, a1, o1, 2 C: m4 = C, a3, θ, 3 C: m5 = P, θ, o2, 4 At step 4 of the dialogue, the agent P receives the argument a3 from P .
+9-37:Thus, its theory evolves as follows: AP = {a1, a2, a3}, RP = {(a1, a2), (a2, a1), (a3, a1)}, DefP = {(a1, a2), (a3, a1)} .
+9-38:At this step, the argument a1 which was accepted will become rejected, and the argument a2 which was at the beginning of the dialogue rejected will become accepted .
+9-39:Thus, the offer o2 will be acceptable for the agent, whereas o1 will become rejected .
+9-40:At this step 4, the offer o2 is acceptable for both agents, thus it is an optimal solution .
+9-41:The dialogue ends by returning this offer as an outcome. .
+10 RELATED WORK :
+10-1:Argumentation has been integrated in negotiation dialogues at the early nineties by Sycara [12] .
+10-2:In that work, the author has emphasized the advantages of using argumentation in negotiation dialogues, and a specific framework has been introduced .
+10-3:In [8], the different types of arguments that are used in a negotiation dialogue, such as threats and rewards, have been discussed .
+10-4:Moreover, a particular framework for negotiation have been proposed .
+10-5:In [9, 13], different other frameworks have been proposed .
+10-6:Even if all these frameworks are based on different logics, and use different definitions of arguments, they all have at their heart an exchange of offers and arguments .
+10-7:However, none of those proposals explain when arguments can be used within a negotiation, and how they should be dealt with by the agent that receives them .
+10-8:Thus the protocol for handling arguments was missing .
+10-9:Another limitation of the above frameworks is the fact that the argumentation frameworks they The Sixth Intl .
+10-10:Joint Conf .
+10-11:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 973 use are quite poor, since they use a very simple acceptability semantics .
+10-12:In [2] a negotiation framework that fills the gap has been suggested .
+10-13:A protocol that handles the arguments was proposed .
+10-14:However, the notion of concession is not modeled in that framework, and it is not clear what is the status of the outcome of the dialogue .
+10-15:Moreover, it is not clear how an agent chooses the offer to propose at a given step of the dialogue .
+10-16:In [1, 7], the authors have focused mainly on this decision problem .
+10-17:They have proposed an argumentation based decision framework that is used by agents in order to choose the offer to propose or to accept during the dialogue .
+10-18:In that work, agents are supposed to have a beliefs base and a goals base .
+10-19:Our framework is more general since it does not impose any specific structure for the arguments, the offers, or the beliefs .
+10-20:The negotiation protocol is general as well .
+10-21:Thus this framework can be instantiated in different ways by creating, in such manner, different specific argumentation based negotiation frameworks, all of them respecting the same properties .
+10-22:Our framework is also a unified one because frameworks like the ones presented above can be represented within this framework .
+10-23:For example the decision making mechanism proposed in [7] for the evaluation of arguments and therefore of offers, which is based on a priority relation between mutually attacked arguments, can be captured by the relation defeat proposed in our framework .
+10-24:This relation takes simultaneously into account the attacking and preference relations that may exist between two arguments. .
+11-1:In this paper we have presented a unified and general framework for argumentation based negotiation
+11-2:Like any other argumentation based negotiation framework, as it is evoked in (e.g
+11-3:[10]), our framework has all the advantages that argumentation based negotiation approaches present when related to the negotiation approaches based either on game theoretic models (see e.g
+11-4:[11]) or heuristics ([6])
+11-5:This work is a first attempt to formally define the role of argumentation in the negotiation process
+11-6:More precisely, for the first time, it formally establishes the link that exists between the status of the arguments and the offers they support, it defines the notion of concession and shows how it influences the evolution of the negotiation, it determines how the theories of agents evolve during the dialogue and performs an analysis of the negotiation outcomes
+11-7:It is also the first time where a study of the formal properties of the negotiation theories of the agents as well as of an argumentative negotiation dialogue is presented
+11-8:Our future work concerns several points
+11-9:A first point is to relax the assumption that the set of possible offers is the same to both agents
+11-10:Indeed, it is more natural to assume that agents may have different sets of offers
+11-11:During a negotiation dialogue, these sets will evolve
+11-12:Arguments in favor of the new offers may be built from the agent theory
+11-13:Thus, the set of offers will be part of the agent theory
+11-14:Another possible extension of this work would be to allow agents to handle both arguments PRO and CONS offers
+11-15:This is more akin to the way human take decisions
+11-16:Considering both types of arguments will refine the evaluation of the offers status
+11-17:In the proposed model, a preference relation between offers is defined on the basis of the partition of the set of offers
+11-18:This preference relation can be refined
+11-19:For instance, among the acceptable offers, one may prefer the offer that is supported by the strongest argument
+11-20:In [4], different criteria have been proposed for comparing decisions
+11-21:Our framework can thus be extended by integrating those criteria
+11-22:Another interesting point to investigate is that of considering negotiation dialogues between two agents with different profiles
+11-23:By profile, we mean the criterion used by an agent to compare its offers.
+12-1:L
+12-2:Amgoud, S
+12-3:Belabbes, and H
+12-4:Prade
+12-5:Towards a formal framework for the search of a consensus between autonomous agents
+12-6:In Proceedings of the 4th International Joint Conference on Autonomous Agents and Multi Agents systems, pages 537 543, 2005
+12-7:L
+12-8:Amgoud, S
+12-9:Parsons, and N
+12-10:Maudet
+12-11:Arguments, dialogue, and negotiation
+12-12:In Proceedings of the 14th European Conference on Artificial Intelligence, 2000
+12-13:L
+12-14:Amgoud and H
+12-15:Prade
+12-16:Reaching agreement through argumentation: A possibilistic approach
+12-17:In 9 th International Conference on the Principles of Knowledge Representation and Reasoning, KR"2004, 2004
+12-18:L
+12-19:Amgoud and H
+12-20:Prade
+12-21:Explaining qualitative decision under uncertainty by argumentation
+12-22:In 21st National Conference on Artificial Intelligence, AAAI"06, pages 16  20, 2006
+12-23:P
+12-24:M
+12-25:Dung
+12-26:On the acceptability of arguments and its fundamental role in nonmonotonic reasoning, logic programming and n person games
+12-27:Artificial Intelligence, 77:321 357, 1995
+12-28:N
+12-29:R
+12-30:Jennings, P
+12-31:Faratin, A
+12-32:R
+12-33:Lumuscio, S
+12-34:Parsons, and C
+12-35:Sierra
+12-36:Automated negotiation: Prospects, methods and challenges
+12-37:International Journal of Group Decision and Negotiation, 2001
+12-38:A
+12-39:Kakas and P
+12-40:Moraitis
+12-41:Adaptive agent negotiation via argumentation
+12-42:In Proceedings of the 5th International Joint Conference on Autonomous Agents and Multi Agents systems, pages 384 391, 2006
+12-43:S
+12-44:Kraus, K
+12-45:Sycara, and A
+12-46:Evenchik
+12-47:Reaching agreements through argumentation: a logical model and implementation
+12-48:Artificial Intelligence, 104:1 69, 1998
+12-49:S
+12-50:Parsons and N
+12-51:R
+12-52:Jennings
+12-53:Negotiation through argumentation a preliminary report
+12-54:In Proceedings of the 2nd International Conference on Multi Agent Systems, pages 267 274, 1996
+12-55:I
+12-56:Rahwan, S
+12-57:D
+12-58:Ramchurn, N
+12-59:R
+12-60:Jennings, P
+12-61:McBurney, S
+12-62:Parsons, and E
+12-63:Sonenberg
+12-64:Argumentation based negotiation
+12-65:Knowledge Engineering Review, 18 (4):343 375, 2003
+12-66:J
+12-67:Rosenschein and G
+12-68:Zlotkin
+12-69:Rules of Encounter: Designing Conventions for Automated Negotiation Among Computers,
+12-70:MIT Press, Cambridge, Massachusetts, 1994., 1994
+12-71:K
+12-72:Sycara
+12-73:Persuasive argumentation in negotiation
+12-74:Theory and Decision, 28:203 242, 1990
+12-75:F
+12-76:Tohm´e
+12-77:Negotiation and defeasible reasons for choice
+12-78:In Proceedings of the Stanford Spring Symposium on Qualitative Preferences in Deliberation and Practical Reasoning, pages 95 102, 1997
+12-79:974 The Sixth Intl
+12-80:Joint Conf
+12-81:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

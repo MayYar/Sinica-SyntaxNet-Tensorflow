@@ -1,0 +1,24 @@
+There is a large body of work devoted to query optimization .
+Buckley and Lewit [3], in one of the earliest works, take a term at a time approach to deciding when inverted lists need not be further examined .
+More recent examples demonstrate that the top k documents for a query can be returned without the need for evaluating the complete set of posting lists [1, 4, 15] .
+Although these approaches seek to improve query processing efficiency, they differ from our current work in that they do not consider caching .
+They may be considered separate and complementary to a cache based approach .
+Raghavan and Sever [12], in one of the first papers on exploiting user query history, propose using a query base, built upon a set of persistent optimal queries submitted in the past, to improve the retrieval effectiveness for similar future queries .
+Markatos [10] shows the existence of temporal locality in queries, and compares the performance of different caching policies .
+Based on the observations of Markatos, Lempel and Moran propose a new caching policy, called Probabilistic Driven Caching, by attempting to estimate the probability distribution of all possible queries submitted to a search engine [8] .
+Fagni et al .
+follow Markatos" work by showing that combining static and dynamic caching policies together with an adaptive prefetching policy achieves a high hit ratio [7] .
+Different from our work, they consider caching and prefetching of pages of results .
+As systems are often hierarchical, there has also been some effort on multi level architectures .
+Saraiva et al .
+propose a new architecture for Web search engines using a two level dynamic caching system [13] .
+Their goal for such systems has been to improve response time for hierarchical engines .
+In their architecture, both levels use an LRU eviction policy .
+They find that the second level cache can effectively reduce disk traffic, thus increasing the overall throughput .
+Baeza Yates and Saint Jean propose a three level index organization [2] .
+Long and Suel propose a caching system structured according to three different levels [9] .
+The intermediate level contains frequently occurring pairs of terms and stores the intersections of the corresponding inverted lists .
+These last two papers are related to ours in that they exploit different caching strategies at different levels of the memory hierarchy .
+Finally, our static caching algorithm for posting lists in Section 5 uses the ratio frequency size in order to evaluate the goodness of an item to cache .
+Similar ideas have been used in the context of file caching [17], Web caching [5], and even caching of posting lists [9], but in all cases in a dynamic setting .
+To the best of our knowledge we are the first to use this approach for static caching of posting lists. .

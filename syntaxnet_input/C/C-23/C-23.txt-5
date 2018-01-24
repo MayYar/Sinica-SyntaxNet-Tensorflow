@@ -1,0 +1,42 @@
+SERVICE We constructed a replica selection service to enable clients to select the better replica servers in Data Grid environments .
+See below for a detailed description .
+4.1 Replica Selection Scenario Our proposed replica selection model is illustrated in [23], which shows how a client identifies the best location for a desired replica transfer .
+The client first logins in at a local site and executes the Data Grid platform application, which checks to see if the files are available at the local site .
+If they are present at the local site, the application accesses them immediately; otherwise, it passes the logical file names to the replica catalog server, which returns a list of physical locations for all registered copies .
+The application passes this list of replica locations to a replica selection server, which identifies the storage system destination locations for all candidate data transfer operations .
+The replica selection server sends the possible destination locations to the information server, which provides performance measurements and predictions of the three system factors described below .
+The replica selection server chooses better replica locations according to these estimates and returns location information to the transfer application, which receives the replica through GridFTP .
+When the application finishes, it returns the results to the user .
+4.2 System Factors Determining the best database from many with the same replications is a significant problem .
+In our model, we consider three system factors that affect replica selection
+In other words, data file transfer times are tightly dependent on network bandwidth situations .
+Because network bandwidth is an unstable dynamic factor, we must measure it frequently and predict it as accurately as possible .
+The Network Weather Service is a powerful toolkit for this purpose .
+CPU load
+CPU loading is a dynamic system factor, and a heavy system CPU load will certainly affect data file downloads process from the site .
+The measurement of it is done by the Globus Toolkit MDS .
+I O state
+Data files in Data Grids are huge .
+If the I O state of a site that we wish to download files from is very busy, it will directly affect data transfer performance .
+We measure I O states using sysstat [15] utilities .
+4.3 Our Replica Selection Cost Model The target function of a cost model for distributed and replicated data storage is the information score from the information service .
+We listed some influencing factors for our cost model in the preceding section .
+However, we must express these factors in mathematical notation for further analysis .
+We assume node i is the local site the user or application logs in on, and node j possesses the replica the user or application wants .
+The seven system parameters our replica selection cost model considers are
+OIOI j CPUCPU j BWBW jiji WPWPWPScore (1) The three influencing factors in this formula
+After several experimental measurements, we determined that network bandwidth is the most significant factor directly influencing data transfer times .
+When we performed data transfers using the GridFTP protocol we discovered that CPU and I O statuses slightly affect data transfer performance .
+Their respective values in our Data Grid environment are 80%, 10%, and 10% .
+4.4 Co Allocation Cost Analysis When clients download datasets using GridFTP co allocation technology, three time costs are incurred
+Authentication Time
+The client then establishes a control channel, sets up transfer parameters, and requests data channel creation .
+When the channel has been established, the data begins flowing .
+Transmission Time
+Data pathways need be opened only once and may handle many transfers before being closed .
+This allows the same data pathways to be used for multiple file transfers .
+However, data channels must be explicitly reset between transfer requests .
+This is less time costly .
+Combination Time
+With partial file transfer, file sections can be retrieved from data servers by specifying only the section start and end offsets .
+When these file sections are delivered, they may need to be reassembled; the reassembly operation incurs an additional time cost. .

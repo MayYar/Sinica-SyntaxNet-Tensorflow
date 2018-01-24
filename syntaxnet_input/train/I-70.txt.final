@@ -1,0 +1,360 @@
+A Multi-Agent System for Building Dynamic Ontologies 
+content:
+1 ABSTRACT :
+1-1:Ontologies building from text is still a time consuming task which justifies the growth of Ontology Learning .
+1-2:Our system named Dynamo is designed along this domain but following an original approach based on an adaptive multi agent architecture .
+1-3:In this paper we present a distributed hierarchical clustering algorithm, core of our approach .
+1-4:It is evaluated and compared to a more conventional centralized algorithm .
+1-5:We also present how it has been improved using a multi criteria approach .
+1-6:With those results in mind, we discuss the limits of our system and add as perspectives the modifications required to reach a complete ontology building solution .
+1-7:I.2.11 [Artificial Intelligence]: Distributed Artificial .
+2 INTRODUCTION :
+2-1:Nowadays, it is well established that ontologies are needed for semantic web, knowledge management, B2B.. .
+2-2:For knowledge management, ontologies are used to annotate documents and to enhance the information retrieval .
+2-3:But building an ontology manually is a slow, tedious, costly, complex and time consuming process .
+2-4:Currently, a real challenge lies in building them automatically or semi automatically and keeping them up to date .
+2-5:It would mean creating dynamic ontologies [10] and it justifies the emergence of ontology learning techniques [14] [13] .
+2-6:Our research focuses on Dynamo (an acronym of DYNAMic Ontologies), a tool based on an adaptive multi agent system to construct and maintain an ontology from a domain specific set of texts .
+2-7:Our aim is not to build an exhaustive, general hierarchical ontology but a domain specific one .
+2-8:We propose a semi automated tool since an external resource is required: the "ontologist" .
+2-9:An ontologist is a kind of cognitive engineer, or analyst, who is using information from texts and expert interviews to design ontologies .
+2-10:In the multi agent field, ontologies generally enable agents to understand each other [12] .
+2-11:They"re sometimes used to ease the ontology building process, in particular for collaborative contexts [3], but they rarely represent the ontology itself [16] .
+2-12:Most works interested in the construction of ontologies [7] propose the refinement of ontologies .
+2-13:This process consists in using an existing ontology and building a new one from it .
+2-14:This approach is different from our approach because Dynamo starts from scratch .
+2-15:Researchers, working on the construction of ontologies from texts, claim that the work to be automated requires external resources such as a dictionary [14], or web access [5] .
+2-16:In our work, we propose an interaction between the ontologist and the system, our external resource lies both in the texts and the ontologist .
+2-17:This paper first presents, in section 2, the big picture of the Dynamo system .
+2-18:In particular the motives that led to its creation and its general architecture .
+2-19:Then, in section 3 we discuss the distributed clustering algorithm used in Dynamo and compare it to a more classic centralized approach .
+2-20:Section 4 is dedicated to some enhancement of the agents behavior that got designed by taking into account criteria ignored by clustering .
+2-21:And finally, in section 5, we discuss the limitations of our approach and explain how it will be addressed in further work. .
+3 DYNAMO OVERVIEW :
+3-1:2.1 Ontology as a Multi Agent System Dynamo aims at reducing the need for manual actions in processing the text analysis results and at suggesting a concept network kick off in order to build ontologies more efficiently .
+3-2:The chosen approach is completely original to our knowledge and uses an adaptive multi agent system .
+3-3:This choice comes from the qualities offered by multi agent system: they can ease the interactive design of a system [8] (in our case, a conceptual network), they allow its incremental building by progressively taking into account new data (coming from text analysis and user interaction), and last but not least they can be easily distributed across a computer network .
+3-4:Dynamo takes a syntactical and terminological analysis of texts as input .
+3-5:It uses several criteria based on statistics computed from the linguistic contexts of terms to create and position the concepts .
+3-6:As output, Dynamo provides to the analyst a hierarchical organization of concepts (the multi agent system itself) that can be validated, refined of modified, until he she obtains a satisfying state of 1286 978 81 904262 7 5 c 2007 IFAAMAS the semantic network .
+3-7:An ontology can be seen as a stable map constituted of conceptual entities, represented here by agents, linked by labelled relations .
+3-8:Thus, our approach considers an ontology as a type of equilibrium between its concept agents where their forces are defined by their potential relationships .
+3-9:The ontology modification is a perturbation of the previous equilibrium by the appearance or disappearance of agents or relationships .
+3-10:In this way, a dynamic ontology is a self organizing process occurring when new texts are included into the corpus, or when the ontologist interacts with it .
+3-11:To support the needed flexibility of such a system we use a selforganizing multi agent system based on a cooperative approach [9] .
+3-12:We followed the ADELFE method [4] proposed to drive the design of this kind of multi agent system .
+3-13:It justifies how we designed some of the rules used by our agents in order to maximize the cooperation degree within Dynamo"s multi agent system .
+3-14:2.2 Proposed Architecture In this section, we present our system architecture .
+3-15:It addresses the needs of Knowledge Engineering in the context of dynamic ontology management and maintenance when the ontology is linked to a document collection .
+3-16:The Dynamo system consists of three parts (cf .
+3-17:figure 1): • a term network, obtained thanks to a term extraction tool used to preprocess the textual corpus, • a multi agent system which uses the term network to make a hierarchical clustering in order to obtain a taxonomy of concepts, • an interface allowing the ontologist to visualize and control the clustering process .
+3-18:?? Ontologist Interface System Concept Agent Term Term network Terms Extraction Tool Figure 1: System architecture The term extractor we use is Syntex, a software that has efficiently been used for ontology building tasks [11] .
+3-19:We mainly selected it because of its robustness and the great amount of information extracted .
+3-20:In particular, it creates a "Head Expansion" network which has already proven to be interesting for a clustering system [1] .
+3-21:In such a network, each term is linked to its head term1 and 1 i.e .
+3-22:the maximum sub phrase located as head of the term its expansion term2 , and also to all the terms for which it is a head or an expansion term .
+3-23:For example, "knowledge engineering from text" has "knowledge engineering" as head term and "text" as expansion term .
+3-24:Moreover, "knowledge engineering" is composed of "knowledge" as head term and "engineering" as expansion term .
+3-25:With Dynamo, the term network obtained as the output of the extractor is stored in a database .
+3-26:For each term pair, we assume that it is possible to compute a similarity value in order to make a clustering [6] [1] .
+3-27:Because of the nature of the data, we are only focusing on similarity computation between objects described thanks to binary variables, that means that each item is described by the presence or absence of a characteristic set [15] .
+3-28:In the case of terms we are generally dealing with their usage contexts .
+3-29:With Syntex, those contexts are identified by terms and characterized by some syntactic relations .
+3-30:The Dynamo multi agent system implements the distributed clustering algorithm described in detail in section 3 and the rules described in section 4 .
+3-31:It is designed to be both the system producing the resulting structure and the structure itself .
+3-32:It means that each agent represent a class in the taxonomy .
+3-33:Then, the system output is the organization obtained from the interaction between agents, while taking into account feedback coming from the ontologist when he she modifies the taxonomy given his needs or expertise. .
+4 DISTRIBUTED CLUSTERING :
+4-1:This section presents the distributed clustering algorithm used in Dynamo .
+4-2:For the sake of understanding, and because of its evaluation in section 3.1, we recall the basic centralized algorithm used for a hierarchical ascending clustering in a non metric space, when a symmetrical similarity measure is available [15] (which is the case of the measures used in our system) .
+4-3:Algorithm 1: Centralized hierarchical ascending clustering algorithm Data: List L of items to organize as a hierarchy Result: Root R of the hierarchy while length(L) > 1 do max ← 0; A ← nil; B ← nil; for i ← 1 to length(L) do I ← L[i]; for j ← i + 1 to length(L) do J ← L[j]; sim ← similarity(I, J); if sim > max then max ← sim; A ← I; B ← J; end end end remove(A, L); remove(B, L); append((A, B), L); end R ← L[1]; In algorithm 1, for each clustering step, the pair of the most similar elements is determined .
+4-4:Those two elements are grouped in a cluster, and the resulting class is appended to the list of remaining elements .
+4-5:This algorithm stops when the list has only one element left .
+4-6:2 i.e .
+4-7:the maximum sub phrase located as tail of the term The Sixth Intl .
+4-8:Joint Conf .
+4-9:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1287 The hierarchy resulting from algorithm 1 is always a binary tree because of the way grouping is done .
+4-10:Moreover grouping the most similar elements is equivalent to moving them away from the least similar ones .
+4-11:Our distributed algorithm is designed relying on those two facts .
+4-12:It is executed concurrently in each of the agents of the system .
+4-13:Note that, in the following of this paper, we used for both algorithms an Anderberg similarity (with α = 0.75) and an average link clustering strategy [15] .
+4-14:Those choices have an impact on the resulting tree, but they impact neither the global execution of the algorithm nor its complexity .
+4-15:We now present the distributed algorithm used in our system .
+4-16:It is bootstrapped in the following way: • a TOP agent having no parent is created, it will be the root of the resulting taxonomy, • an agent is created for each term to be positioned in the taxonomy, they all have TOP as parent .
+4-17:Once this basic structure is set, the algorithm runs until it reaches equilibrium and then provides the resulting taxonomy .
+4-18:Ak−1 Ak AnA2A1 P ..... .
+4-19:..... .
+4-20:A1 Figure 2: Distributed classification: Step 1 The process first step (figure 2) is triggered when an agent (here Ak) has more than one brother (since we want to obtain a binary tree) .
+4-21:Then it sends a message to its parent P indicating its most dissimilar brother (here A1) .
+4-22:Then P receives the same kind of message from each of its children .
+4-23:In the following, this kind of message will be called a "vote" .
+4-24:Ak−1 Ak AnA2A1 P P" ..... .
+4-25:..... .
+4-26:P" P" Figure 3: Distributed clustering: Step 2 Next, when P has got messages from all its children, it starts the second step (figure 3) .
+4-27:Thanks to the received messages indicating the preferences of its children, P can determine three sub groups among its children: • the child which got the most "votes" by its brothers, that is the child being the most dissimilar from the greatest number of its brothers .
+4-28:In case of a draw, one of the winners is chosen randomly (here A1), • the children that allowed the "election" of the first group, that is the agents which chose their brother of the first group as being the most dissimilar one (here Ak to An), • the remaining children (here A2 to Ak−1) .
+4-29:Then P creates a new agent P (having P as parent) and asks agents from the second group (here agents Ak to An) to make it their new parent .
+4-30:Ak−1 Ak AnA2A1 P P" ..... .
+4-31:..... .
+4-32:Figure 4: Distributed clustering: Step 3 Finally, step 3 (figure 4) is trivial .
+4-33:The children rejected by P (here agent A2 to An) take its message into account and choose P as their new parent .
+4-34:The hierarchy just created a new intermediate level .
+4-35:Note that this algorithm generally converges, since the number of brothers of an agent drops .
+4-36:When an agent has only one remaining brother, its activity stops (although it keeps processing messages coming from its children) .
+4-37:However in a few cases we can reach a "circular conflict" in the voting procedure when for example A votes against B, B against C and C against A .
+4-38:With the current system no decision can be taken .
+4-39:The current procedure should be improved to address this, probably using a ranked voting method .
+4-40:3.1 Quantitative Evaluation Now, we evaluate the properties of our distributed algorithm .
+4-41:It requires to begin with a quantitative evaluation, based on its complexity, while comparing it with the algorithm 1 from the previous section .
+4-42:Its theoretical complexity is calculated for the worst case, by considering the similarity computation operation as elementary .
+4-43:For the distributed algorithm, the worst case means that for each run, only a two item group can be created .
+4-44:Under those conditions, for a given dataset of n items, we can determine the amount of similarity computations .
+4-45:For algorithm 1, we note l = length(L), then the most enclosed "for" loop is run l − i times .
+4-46:And its body has the only similarity computation, so its cost is l−i .
+4-47:The second "for" loop is ran l times for i ranging from 1 to l .
+4-48:Then its cost is Pl i=1(l − i) which can be simplified in l×(l−1) 2 .
+4-49:Finally for each run of the "while" loop, l is decreased from n to 1 which gives us t1(n) as the amount of similarity computations for algorithm 1: t1(n) = nX l=1 l × (l − 1) 2 (1) For the distributed algorithm, at a given step, each one of the l agents evaluates the similarity with its l −1 brothers .
+4-50:So each steps has a l × (l − 1) cost .
+4-51:Then, groups are created and another vote occurs with l decreased by one (since we assume worst case, only groups of size 2 or l −1 are built) .
+4-52:Since l is equal to n on first run, we obtain tdist(n) as the amount of similarity computations for the distributed algorithm: tdist(n) = nX l=1 l × (l − 1) (2) Both algorithms then have an O(n3 ) complexity .
+4-53:But in the worst case, the distributed algorithm does twice the number of el1288 The Sixth Intl .
+4-54:Joint Conf .
+4-55:on Autonomous Agents and Multi Agent Systems (AAMAS 07) ementary operations done by the centralized algorithm .
+4-56:This gap comes from the local decision making in each agent .
+4-57:Because of this, the similarity computations are done twice for each agent pair .
+4-58:We could conceive that an agent sends its computation result to its peer .
+4-59:But, it would simply move the problem by generating more communication in the system .
+4-60:0 20000 40000 60000 80000 100000 120000 140000 160000 180000 10 20 30 40 50 60 70 80 90 100 Amountofcomparisons Amount of input terms .
+5 Logarithmic polynomial :
+5-1:.
+6 Centralized algorithm :
+6-1:Figure 5: Experimental results In a second step, the average complexity of the algorithm has been determined by experiments .
+6-2:The multi agent system has been executed with randomly generated input data sets ranging from ten to one hundred terms .
+6-3:The given value is the average of comparisons made for one hundred of runs without any user interaction .
+6-4:It results in the plots of figure 5 .
+6-5:The algorithm is then more efficient on average than the centralized algorithm, and its average complexity is below the worst case .
+6-6:It can be explained by the low probability that a data set forces the system to create only minimal groups (two items) or maximal (n − 1 elements) for each step of reasoning .
+6-7:Curve number 2 represents the logarithmic polynomial minimizing the error with curve number 1 .
+6-8:The highest degree term of this polynomial is in n2 log(n), then our distributed algorithm has a O(n2 log(n)) complexity on average .
+6-9:Finally, let"s note the reduced variation of the average performances with the maximum and the minimum .
+6-10:In the worst case for 100 terms, the variation is of 1,960.75 for an average of 40,550.10 (around 5%) which shows the good stability of the system .
+6-11:3.2 Qualitative Evaluation Although the quantitative results are interesting, the real advantage of this approach comes from more qualitative characteristics that we will present in this section .
+6-12:All are advantages obtained thanks to the use of an adaptive multi agent system .
+6-13:The main advantage to the use of a multi agent system for a clustering task is to introduce dynamic in such a system .
+6-14:The ontologist can make modifications and the hierarchy adapts depending on the request .
+6-15:It is particularly interesting in a knowledge engineering context .
+6-16:Indeed, the hierarchy created by the system is meant to be modified by the ontologist since it is the result of a statistic computation .
+6-17:During the necessary look at the texts to examine the usage contexts of terms [2], the ontologist will be able to interpret the real content and to revise the system proposal .
+6-18:It is extremely difficult to realize this with a centralized "black box" approach .
+6-19:In most cases, one has to find which reasoning step generated the error and to manually modify the resulting class .
+6-20:Unfortunately, in this case, all the reasoning steps that occurred after the creation of the modified class are lost and must be recalculated by taking the modification into account .
+6-21:That is why a system like ASIUM [6] tries to soften the problem with a system user collaboration by showing to the ontologist the created classes after each step of reasoning .
+6-22:But, the ontologist can make a mistake, and become aware of it too late .
+6-23:Figure 6: Concept agent tree after autonomous stabilization of the system In order to illustrate our claims, we present an example thanks to a few screenshots from the working prototype tested on a medical related corpus .
+6-24:By using test data and letting the system work by itself, we obtain the hierarchy from figure 6 after stabilization .
+6-25:It is clear that the concept described by the term "lésion" (lesion) is misplaced .
+6-26:It happens that the similarity computations place it closer to "femme" (woman) and "chirurgien" (surgeon) than to "infection", "gastro entérite" (gastro enteritis) and "hépatite" (hepatitis) .
+6-27:This wrong position for "lesion" is explained by the fact that without ontologist input the reasoning is only done on statistics criteria .
+6-28:Figure 7: Concept agent tree after ontologist modification Then, the ontologist replaces the concept in the right branch, by affecting "ConceptAgent:8" as its new parent .
+6-29:The name "ConceptAgent:X" is automatically given to a concept agent that is not described by a term .
+6-30:The system reacts by itself and refines the clustering hierarchy to obtain a binary tree by creating "ConceptAgent:11" .
+6-31:The new stable state if the one of figure 7 .
+6-32:This system user coupling is necessary to build an ontology, but no particular adjustment to the distributed algorithm principle is needed since each agent does an autonomous local processing and communicates with its neighborhood by messages .
+6-33:Moreover, this algorithm can de facto be distributed on a computer network .
+6-34:The communication between agents is then done by sending messages and each one keeps its decision autonomy .
+6-35:Then, a system modification to make it run networked would not require to adjust the algorithm .
+6-36:On the contrary, it would only require to rework the communication layer and the agent creation process since in our current implementation those are not networked. .
+7 MULTI CRITERIA HIERARCHY :
+7-1:In the previous sections, we assumed that similarity can be computed for any term pair .
+7-2:But, as soon as one uses real data this property is not verified anymore .
+7-3:Some terms do not have any similarity value with any extracted term .
+7-4:Moreover for leaf nodes it is sometimes interesting to use other means to position them in the hierarchy .
+7-5:For this low level structuring, ontologists generally base The Sixth Intl .
+7-6:Joint Conf .
+7-7:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1289 their choices on simple heuristics .
+7-8:Using this observation, we built a new set of rules, which are not based on similarity to support low level structuring .
+7-9:4.1 Adding Head Coverage Rules In this case, agents can act with a very local point of view simply by looking at the parent child relation .
+7-10:Each agent can try to determine if its parent is adequate .
+7-11:It is possible to guess this because each concept agent is described by a set of terms and thanks to the "Head Expansion" term network .
+7-12:In the following TX will be the set of terms describing concept agent X and head(TX ) the set of all the terms that are head of at least one element of TX .
+7-13:Thanks to those two notations we can describe the parent adequacy function a(P, C) between a parent P and a child C: a(P, C) = |TP ∩ head(TC )| |TP ∪ head(TC )| (3) Then, the best parent for C is the P agent that maximizes a(P, C) .
+7-14:An agent unsatisfied by its parent can then try to find a better one by evaluating adequacy with candidates .
+7-15:We designed a complementary algorithm to drive this search: When an agent C is unsatisfied by its parent P, it evaluates a(Bi, C) with all its brothers (noted Bi) the one maximizing a(Bi, C) is then chosen as the new parent .
+7-16:Figure 8: Concept agent tree after autonomous stabilization of the system without head coverage rule We now illustrate this rule behavior with an example .
+7-17:Figure 8 shows the state of the system after stabilization on test data .
+7-18:We can notice that "hépatite viral" (viral hepatitis) is still linked to the taxonomy root .
+7-19:It is caused by the fact that there is no similarity value between the "viral hepatitis" term and any of the term of the other concept agents .
+7-20:Figure 9: Concept agent tree after activation of the head coverage rule After activating the head coverage rule and letting the system stabilize again we obtain figure 9 .
+7-21:We can see that "viral hepatitis" slipped through the branch leading to "hepatitis" and chose it as its new parent .
+7-22:It is a sensible default choice since "viral hepatitis" is a more specific term than "hepatitis" .
+7-23:This rule tends to push agents described by a set of term to become leafs of the concept tree .
+7-24:It addresses our concern to improve the low level structuring of our taxonomy .
+7-25:But obviously our agents lack a way to backtrack in case of modifications in the taxonomy which would make them be located in the wrong branch .
+7-26:That is one of the point where our system still has to be improved by adding another set of rules .
+7-27:4.2 On Using Several Criteria In the previous sections and examples, we only used one algorithm at a time .
+7-28:The distributed clustering algorithm tends to introduce new layers in the taxonomy, while the head coverage algorithm tends to push some of the agents toward the leafs of the taxonomy .
+7-29:It obviously raises the question on how to deal with multiple criteria in our taxonomy building, and how agents determine their priorities at a given time .
+7-30:The solution we chose came from the search for minimizing non cooperation within the system in accordance with the ADELFE method .
+7-31:Each agent computes three non cooperation degrees and chooses its current priority depending on which degree is the highest .
+7-32:For a given agent A having a parent P, a set of brothers Bi and which received a set of messages Mk having the priority pk the three non cooperation degrees are: • μH = 1 − a(P, A), is the "head coverage" non cooperation degree, determined by the head coverage of the parent, • μB(A) = max(1 − similarity(A, Bi)), is the "brotherhood" non cooperation degree, determined by the worst brother of A regarding similarities, • μM = max(pk), is the "message" non cooperation degree, determined by the most urgent message received .
+7-33:Then, the non cooperation degree μ(A) of agent A is: μ(A) = max(μH (A), μB(A), μM (A)) (4) Then, we have three cases determining which kind of action A will choose: • if μ(A) = μH then A will use the head coverage algorithm we detailed in the previous subsection • if μ(A) = μB(A) then A will use the distributed clustering algorithm (see section 3) • if μ(A) = μM then A will process Mk immediately in order to help its sender Those three cases summarize the current activities of our agents: they have to find the best parent for them (μ(A) = μH (A)), improve the structuring through clustering (μ(A) = μB(A)) and process other agent messages (μ(A) = μM (A)) in order to help them fulfill their own goals .
+7-34:4.3 Experimental Complexity Revisited We evaluated the experimental complexity of the whole multiagent system when all the rules are activated .
+7-35:In this case, the metric used is the number of messages exchanged in the system .
+7-36:Once again the system has been executed with input data sets ranging from ten to one hundred terms .
+7-37:The given value is the average of message amount sent in the system as a whole for one hundred runs without user interaction .
+7-38:It results in the plots of figure 10 .
+7-39:Curve number 1 represents the average of the value obtained .
+7-40:Curve number 2 represents the average of the value obtained when only the distributed clustering algorithm is activated, not the full rule set .
+7-41:Curve number 3 represents the polynomial minimizing the error with curve number 1 .
+7-42:The highest degree term of this polynomial is in n3 , then our multi agent system has a O(n3 ) complexity 1290 The Sixth Intl .
+7-43:Joint Conf .
+7-44:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 0 5000 10000 15000 20000 25000 10 20 30 40 50 60 70 80 90 100 Amountofmessages Amount of input terms .
+8 Cubic polynomial :
+8-1:Figure 10: Experimental results on average .
+8-2:Moreover, let"s note the very small variation of the average performances with the maximum and the minimum .
+8-3:In the worst case for 100 terms, the variation is of 126.73 for an average of 20,737.03 (around 0.6%) which proves the excellent stability of the system .
+8-4:Finally the extra head coverage rules are a real improvement on the distributed algorithm alone .
+8-5:They introduce more constraints and stability point is reached with less interactions and decision making by the agents .
+8-6:It means that less messages are exchanged in the system while obtaining a tree of higher quality for the ontologist. .
+9 DISCUSSION & PERSPECTIVES :
+9-1:5.1 Current Limitation of our Approach The most important limitation of our current algorithm is that the result depends on the order the data gets added .
+9-2:When the system works by itself on a fixed data set given during initialization, the final result is equivalent to what we could obtain with a centralized algorithm .
+9-3:On the contrary, adding a new item after a first stabilization has an impact on the final result .
+9-4:Figure 11: Concept agent tree after autonomous stabilization of the system To illustrate our claims, we present another example of the working system .
+9-5:By using test data and letting the system work by itself, we obtain the hierarchy of figure 11 after stabilization .
+9-6:Figure 12: Concept agent tree after taking in account "hepatitis" Then, the ontologist interacts with the system and adds a new concept described by the term "hepatitis" and linked to the root .
+9-7:The system reacts and stabilizes, we then obtain figure 12 as a result .
+9-8:"hepatitis" is located in the right branch, but we have not obtained the same organization as the figure 6 of the previous example .
+9-9:We need to improve our distributed algorithm to allow a concept to move along a branch .
+9-10:We are currently working on the required rules, but the comparison with centralized algorithm will become very difficult .
+9-11:In particular since they will take into account criteria ignored by the centralized algorithm .
+9-12:5.2 Pruning for Ontologies Building In section 3, we presented the distributed clustering algorithm used in the Dynamo system .
+9-13:Since this work was first based on this algorithm, it introduced a clear bias toward binary trees as a result .
+9-14:But we have to keep in mind that we are trying to obtain taxonomies which are more refined and concise .
+9-15:Although the head coverage rule is an improvement because it is based on how the ontologists generally work, it only addresses low level structuring but not the intermediate levels of the tree .
+9-16:By looking at figure 7, it is clear that some pruning could be done in the taxonomy .
+9-17:In particular, since "lésion" moved, "ConceptAgent:9" could be removed, it is not needed anymore .
+9-18:Moreover the branch starting with "ConceptAgent:8" clearly respects the constraint to make a binary tree, but it would be more useful to the user in a more compact and meaningful form .
+9-19:In this case "ConceptAgent:10" and "ConceptAgent:11" could probably be merged .
+9-20:Currently, our system has the necessary rules to create intermediate levels in the taxonomy, or to have concepts shifting towards the leaf .
+9-21:As we pointed, it is not enough, so new rules are needed to allow removing nodes from the tree, or move them toward the root .
+9-22:Most of the work needed to develop those rules consists in finding the relevant statistic information that will support the ontologist. .
+10-1:After being presented as a promising solution, ensuring model quality and their terminological richness, ontology building from textual corpus analysis is difficult and costly
+10-2:It requires analyst supervising and taking in account the ontology aim
+10-3:Using natural languages processing tools ease the knowledge localization in texts through language uses
+10-4:That said, those tools produce a huge amount of lexical or grammatical data which is not trivial to examine in order to define conceptual elements
+10-5:Our contribution lies in this step of the modeling process from texts, before any attempts to normalize or formalize the result
+10-6:We proposed an approach based on an adaptive multi agent system to provide the ontologist with a first taxonomic structure of concepts
+10-7:Our system makes use of a terminological network resulting from an analysis made by Syntex
+10-8:The current state of our software allows to produce simple structures, to propose them to the ontologist and to make them evolve depending on the modifications he made
+10-9:Performances of the system are interesting and some aspects are even comparable to their centralized counterpart
+10-10:Its strengths are mostly qualitative since it allows more subtle user interactions and a progressive adaptation to new linguistic based information
+10-11:From the point of view of ontology building, this work is a first step showing the relevance of our approach
+10-12:It must continue, both to ensure a better robustness during classification, and to obtain richer structures semantic wise than simple trees
+10-13:From this improvements we are mostly focusing on the pruning to obtain better taxonomies
+10-14:We"re currently working on the criterion to trigger the complementary actions of the structure changes applied by our clustering algorithm
+10-15:In other words this algorithm introduces inThe Sixth Intl
+10-16:Joint Conf
+10-17:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1291 termediate levels, and we need to be able to remove them if necessary, in order to reach a dynamic equilibrium
+10-18:Also from the multi agent engineering point of view, their use in a dynamic ontology context has shown its relevance
+10-19:This dynamic ontologies can be seen as complex problem solving, in such a case self organization through cooperation has been an efficient solution
+10-20:And, more generally it"s likely to be interesting for other design related tasks, even if we"re focusing only on knowledge engineering in this paper
+10-21:Of course, our system still requires more evaluation and validation work to accurately determine the advantages and flaws of this approach
+10-22:We"re planning to work on such benchmarking in the near future.
+11-1:H
+11-2:Assadi
+11-3:Construction of a regional ontology from text and its use within a documentary system
+11-4:Proceedings of the International Conference on Formal Ontology and Information Systems  FOIS"98, pages 236 249, 1998
+11-5:N
+11-6:Aussenac Gilles and D
+11-7:Sörgel
+11-8:Text analysis for ontology and terminology engineering
+11-9:Journal of Applied Ontology, 2005
+11-10:J
+11-11:Bao and V
+11-12:Honavar
+11-13:Collaborative ontology building with wiki@nt
+11-14:Proceedings of the Workshop on Evaluation of Ontology Based Tools (EON2004), 2004
+11-15:C
+11-16:Bernon, V
+11-17:Camps, M. P
+11-18:Gleizes, and G
+11-19:Picard
+11-20:Agent Oriented Methodologies, chapter 7
+11-21:Engineering Self Adaptive Multi Agent Systems : the ADELFE Methodology, pages 172 202
+11-22:Idea Group Publishing, 2005
+11-23:C
+11-24:Brewster, F
+11-25:Ciravegna, and Y
+11-26:Wilks
+11-27:Background and foreground knowledge in dynamic ontology construction
+11-28:Semantic Web Workshop, SIGIR"03, August 2003
+11-29:D
+11-30:Faure and C
+11-31:Nedellec
+11-32:A corpus based conceptual clustering method for verb frames and ontology acquisition
+11-33:LREC workshop on adapting lexical and corpus resources to sublanguages and applications, 1998
+11-34:F
+11-35:Gandon
+11-36:Ontology Engineering: a Survey and a Return on Experience
+11-37:INRIA, 2002
+11-38:J. P
+11-39:Georgé, G
+11-40:Picard, M. P
+11-41:Gleizes, and P
+11-42:Glize
+11-43:Living Design for Open Computational Systems
+11-44:12th IEEE International Workshops on Enabling Technologies, Infrastructure for Collaborative Enterprises, pages 389 394, June 2003
+11-45:M. P
+11-46:Gleizes, V
+11-47:Camps, and P
+11-48:Glize
+11-49:A Theory of emergent computation based on cooperative self organization for adaptive artificial systems
+11-50:Fourth European Congress of Systems Science, September 1999
+11-51:J
+11-52:Heflin and J
+11-53:Hendler
+11-54:Dynamic ontologies on the web
+11-55:American Association for Artificial Intelligence Conference, 2000
+11-56:S
+11-57:Le Moigno, J
+11-58:Charlet, D
+11-59:Bourigault, and M. C
+11-60:Jaulent
+11-61:Terminology extraction from text to build an ontology in surgical intensive care
+11-62:Proceedings of the AMIA 2002 annual symposium, 2002
+11-63:K
+11-64:Lister, L
+11-65:Sterling, and K
+11-66:Taveter
+11-67:Reconciling Ontological Differences by Assistant Agents
+11-68:AAMAS"06, May 2006
+11-69:A
+11-70:Maedche
+11-71:Ontology learning for the Semantic Web
+11-72:Kluwer Academic Publisher, 2002
+11-73:A
+11-74:Maedche and S
+11-75:Staab
+11-76:Mining Ontologies from Text
+11-77:EKAW 2000, pages 189 202, 2000
+11-78:C
+11-79:D
+11-80:Manning and H
+11-81:Schütze
+11-82:Foundations of Statistical Natural Language Processing
+11-83:The MIT Press, Cambridge, Massachusetts, 1999
+11-84:H
+11-85:V
+11-86:D
+11-87:Parunak, R
+11-88:Rohwer, T
+11-89:C
+11-90:Belding, and S
+11-91:Brueckner
+11-92:Dynamic decentralized any time hierarchical clustering
+11-93:29th Annual International ACM SIGIR Conference on Research & Development on Information Retrieval, August 2006
+11-94:1292 The Sixth Intl
+11-95:Joint Conf
+11-96:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

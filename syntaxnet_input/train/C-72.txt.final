@@ -1,0 +1,381 @@
+GUESS: Gossiping Updates for Efficient Spectrum Sensing 
+content:
+1 ABSTRACT :
+1-1:Wireless radios of the future will likely be frequency agile, that is, supporting opportunistic and adaptive use of the RF spectrum .
+1-2:Such radios must coordinate with each other to build an accurate and consistent map of spectral utilization in their surroundings .
+1-3:We focus on the problem of sharing RF spectrum data among a collection of wireless devices .
+1-4:The inherent requirements of such data and the time granularity at which it must be collected makes this problem both interesting and technically challenging .
+1-5:We propose GUESS, a novel incremental gossiping approach to coordinated spectral sensing .
+1-6:It (1) reduces protocol overhead by limiting the amount of information exchanged between participating nodes, (2) is resilient to network alterations, due to node movement or node failures, and (3) allows exponentially fast information convergence .
+1-7:We outline an initial solution incorporating these ideas and also show how our approach reduces network overhead by up to a factor of 2.4 and results in up to 2.7 times faster information convergence than alternative approaches .
+1-8:C.2.4 [Distributed Systems]: Distributed applications .
+2 INTRODUCTION :
+2-1:There has recently been a huge surge in the growth of wireless technology, driven primarily by the availability of unlicensed spectrum .
+2-2:However, this has come at the cost of increased RF interference, which has caused the Federal Communications Commission in the United States to re evaluate its strategy on spectrum allocation .
+2-3:Currently, the FCC has licensed RF spectrum to a variety of public and private institutions, termed primary users .
+2-4:New spectrum allocation regimes implemented by the FCC use dynamic spectrum access schemes to either negotiate or opportunistically allocate RF spectrum to unlicensed secondary users Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page .
+2-5:To copy otherwise, to republish, to post on servers or to redistribute to lists, requires prior specific D1 D2 D5 D3 D4 Primary User Shadowed Secondary Users Secondary Users detect Primary's Signal Shadowed Secondary User Figure 1: Without cooperation, shadowed users are not able to detect the presence of the primary user .
+2-6:that can use it when the primary user is absent .
+2-7:The second type of allocation scheme is termed opportunistic spectrum sharing .
+2-8:The FCC has already legislated this access method for the 5 GHz band and is also considering the same for TV broadcast bands [1] .
+2-9:As a result, a new wave of intelligent radios, termed cognitive radios (or software defined radios), is emerging that can dynamically re tune their radio parameters based on interactions with their surrounding environment .
+2-10:Under the new opportunistic allocation strategy, secondary users are obligated not to interfere with primary users (senders or receivers) .
+2-11:This can be done by sensing the environment to detect the presence of primary users .
+2-12:However, local sensing is not always adequate, especially in cases where a secondary user is shadowed from a primary user, as illustrated in Figure 1 .
+2-13:Here, coordination between secondary users is the only way for shadowed users to detect the primary .
+2-14:In general, cooperation improves sensing accuracy by an order of magnitude when compared to not cooperating at all [5] .
+2-15:To realize this vision of dynamic spectrum access, two fundamental problems must be solved: (1) Efficient and coordinated spectrum sensing and (2) Distributed spectrum allocation .
+2-16:In this paper, we propose strategies for coordinated spectrum sensing that are low cost, operate on timescales comparable to the agility of the RF environment, and are resilient to network failures and alterations .
+2-17:We defer the problem of spectrum allocation to future work .
+2-18:Spectrum sensing techniques for cognitive radio networks [4, 17] are broadly classified into three regimes; (1) centralized coordinated techniques, (2) decentralized coordinated techniques, and (3) decentralized uncoordinated techniques .
+2-19:We advocate a decentralized coordinated approach, similar in spirit to OSPF link state routing used in the Internet .
+2-20:This is more effective than uncoordinated approaches because making decisions based only on local information is fallible (as shown in Figure 1) .
+2-21:Moreover, compared to cen12 tralized approaches, decentralized techniques are more scalable, robust, and resistant to network failures and security attacks (e.g .
+2-22:jamming) .
+2-23:Coordinating sensory data between cognitive radio devices is technically challenging because accurately assessing spectrum usage requires exchanging potentially large amounts of data with many radios at very short time scales .
+2-24:Data size grows rapidly due to the large number (i.e .
+2-25:thousands) of spectrum bands that must be scanned .
+2-26:This data must also be exchanged between potentially hundreds of neighboring secondary users at short time scales, to account for rapid changes in the RF environment .
+2-27:This paper presents GUESS, a novel approach to coordinated spectrum sensing for cognitive radio networks .
+2-28:Our approach is motivated by the following key observations: devices have limited sensing resolution because they are low cost and low duty cycle devices and thus cannot perform complex RF signal processing (e.g .
+2-29:matched filtering) .
+2-30:Many are typically equipped with simple energy detectors that gather only approximate information .
+2-31:Approximate statistical summaries of sensed data are sufficient for correlating sensed information between radios, as relative usage information is more important than absolute usage data .
+2-32:Thus, exchanging exact RF information may not be necessary, and more importantly, too costly for the purposes of spectrum sensing .
+2-33:RF spectrum utilization changes infrequently .
+2-34:Moreover, utilization of a specific RF band affects only that band and not the entire spectrum .
+2-35:Therefore, if the usage pattern of a particular band changes substantially, nodes detecting that change can initiate an update protocol to update the information for that band alone, leaving in place information already collected for other bands .
+2-36:This allows rapid detection of change while saving the overhead of exchanging unnecessary information .
+2-37:Based on these observations, GUESS makes the following contributions: algorithms to the problem of coordinated spectrum sensing .
+2-38:These algorithms are well suited to coordinated spectrum sensing due to the unique characteristics of the problem: i.e .
+2-39:radios are power limited, mobile and have limited bandwidth to support spectrum sensing capabilities .
+2-40:dissemination of spectrum summaries .
+2-41:We argue that approximate summaries are adequate for performing accurate radio parameter tuning .
+2-42:randomized gossiping to support incremental maintenance of spectrum summaries .
+2-43:Compared to standard gossiping approaches, incremental techniques can further reduce overhead and protocol execution time by requiring fewer radio resources .
+2-44:The rest of the paper is organized as follows .
+2-45:Section 2 motivates the need for a low cost and efficient approach to coordinated spectrum sensing .
+2-46:Section 3 discusses related work in the area, while Section 4 provides a background on in network aggregation and randomized gossiping .
+2-47:Sections 5 and 6 discuss extensions and protocol details of these techniques for coordinated spectrum sensing .
+2-48:Section 7 presents simulation results showcasing the benefits of GUESS, and Section 8 presents a discussion and some directions for future work. .
+3 MOTIVATION :
+3-1:To estimate the scale of the problem, In stat predicts that the number of WiFi enabled devices sold annually alone will grow to 430 million by 2009 [2] .
+3-2:Therefore, it would be reasonable to assume that a typical dense urban environment will contain several thousand cognitive radio devices in range of each other .
+3-3:As a result, distributed spectrum sensing and allocation would become both important and fundamental .
+3-4:Coordinated sensing among secondary radios is essential due to limited device sensing resolution and physical RF effects such as shadowing .
+3-5:Cabric et al .
+3-6:[5] illustrate the gains from cooperation and show an order of magnitude reduction in the probability of interference with the primary user when only a small fraction of secondary users cooperate .
+3-7:However, such coordination is non trivial due to: (1) the limited bandwidth available for coordination, (2) the need to communicate this information on short timescales, and (3) the large amount of sensory data that needs to be exchanged .
+3-8:Limited Bandwidth: Due to restrictions of cost and power, most devices will likely not have dedicated hardware for supporting coordination .
+3-9:This implies that both data and sensory traffic will need to be time multiplexed onto a single radio interface .
+3-10:Therefore, any time spent communicating sensory information takes away from the device"s ability to perform its intended function .
+3-11:Thus, any such coordination must incur minimal network overhead .
+3-12:Short Timescales: Further compounding the problem is the need to immediately propagate updated RF sensory data, in order to allow devices to react to it in a timely fashion .
+3-13:This is especially true due to mobility, as rapid changes of the RF environment can occur due to device and obstacle movements .
+3-14:Here, fading and multi path interference heavily impact sensing abilities .
+3-15:Signal level can drop to a deep null with just a λ 4 movement in receiver position (3.7 cm at 2 GHz), where λ is the wavelength [14] .
+3-16:Coordination which does not support rapid dissemination of information will not be able to account for such RF variations .
+3-17:Large Sensory Data: Because cognitive radios can potentially use any part of the RF spectrum, there will be numerous channels that they need to scan .
+3-18:Suppose we wish to compute the average signal energy in each of 100 discretized frequency bands, and each signal can have up to 128 discrete energy levels .
+3-19:Exchanging complete sensory information between nodes would require 700 bits per transmission (for 100 channels, each requiring seven bits of information) .
+3-20:Exchanging this information among even a small group of 50 devices each second would require (50 time steps × 50 devices × 700 bits per transmission) = 1.67 Mbps of aggregate network bandwidth .
+3-21:Contrast this to the use of a randomized gossip protocol to disseminate such information, and the use of FM bit vectors to perform in network aggregation .
+3-22:By applying gossip and FM aggregation, aggregate bandwidth requirements drop to (c·logN time steps × 50 devices × 700 bits per transmission) = 0.40 Mbps, since 12 time steps are needed to propagate the data (with c = 2, for illustrative purpoes1 Research in cognitive radio has increased rapidly [4, 17] over the years, and it is being projected as one of the leading enabling technologies for wireless networks of the future [9] .
+3-23:As mentioned earlier, the FCC has already identified new regimes for spectrum sharing between primary users and secondary users and a variety of systems have been proposed in the literature to support such sharing [4, 17] .
+3-24:Detecting the presence of a primary user is non trivial, especially a legacy primary user that is not cognitive radio aware .
+3-25:Secondary users must be able to detect the primary even if they cannot properly decode its signals .
+3-26:This has been shown by Sahai et al .
+3-27:[16] to be extremely difficult even if the modulation scheme is known .
+3-28:Sophisticated and costly hardware, beyond a simple energy detector, is required to improve signal detection accuracy [16] .
+3-29:Moreover, a shadowed secondary user may not even be able to detect signals from the primary .
+3-30:As a result, simple local sensing approaches have not gained much momentum .
+3-31:This has motivated the need for cooperation among cognitive radios [16] .
+3-32:More recently, some researchers have proposed approaches for radio coordination .
+3-33:Liu et al .
+3-34:[11] consider a centralized access point (or base station) architecture in which sensing information is forwarded to APs for spectrum allocation purposes .
+3-35:APs direct mobile clients to collect such sensing information on their behalf .
+3-36:However, due to the need of a fixed AP infrastructure, such a centralized approach is clearly not scalable .
+3-37:In other work, Zhao et al .
+3-38:[17] propose a distributed coordination approach for spectrum sensing and allocation .
+3-39:Cognitive radios organize into clusters and coordination occurs within clusters .
+3-40:The CORVUS [4] architecture proposes a similar clustering method that can use either a centralized or decentralized approach to manage clusters .
+3-41:Although an improvement over purely centralized approaches, these techniques still require a setup phase to generate the clusters, which not only adds additional delay, but also requires many of the secondary users to be static or quasi static .
+3-42:In contrast, GUESS does not place such restrictions on secondary users, and can even function in highly mobile environments. .
+4 BACKGROUND :
+4-1:This section provides the background for our approach .
+4-2:We present the FM aggregation scheme that we use to generate spectrum summaries and perform in network aggregation .
+4-3:We also discuss randomized gossiping techniques for disseminating aggregates in a cognitive radio network .
+4-4:4.1 FM Aggregation Aggregation is the process where nodes in a distributed network combine data received from neighboring nodes with their local value to generate a combined aggregate .
+4-5:This aggregate is then communicated to other nodes in the network and this process repeats until the aggregate at all nodes has converged to the same value, i.e .
+4-6:the global aggregate .
+4-7:Double counting is a well known problem in this process, where nodes may contribute more than once to the aggregate, causing inaccuracy in the final result .
+4-8:Intuitively, nodes can tag the aggregate value they transmit with information about which nodes have contributed to it .
+4-9:However, this approach is not scalable .
+4-10:Order and Duplicate Insensitive techniques have been proposed in the literature [10, 15] .
+4-11:We adopt the ODI approach pioneered by Flajolet and Martin for the purposes of aggregation .
+4-12:Next we outline the FM approach; for full details, see [7] .
+4-13:Suppose we want to compute the number of nodes in the network, i.e .
+4-14:the COUNT query .
+4-15:To do so, each node performs a coin toss experiment as follows: toss an unbiased coin, stopping after the first head is seen .
+4-16:The node then sets the ith bit in a bit vector (initially filled with zeros), where i is the number of coin tosses it performed .
+4-17:The intuition is that as the number of nodes doing coin toss experiments increases, the probability of a more significant bit being set in one of the nodes" bit vectors increases .
+4-18:These bit vectors are then exchanged among nodes .
+4-19:When a node receives a bit vector, it updates its local bit vector by bitwise OR ing it with the received vector (as shown in Figure 2 which computes AVERAGE) .
+4-20:At the end of the aggregation process, every node, with high probability, has the same bit vector .
+4-21:The actual value of the count aggregate is then computed using the following formula, AGGF M = 2j−1 0.77351, where j represents the bit position of the least significant zero in the aggregate bit vector [7] .
+4-22:Although such aggregates are very compact in nature, requiring only O(logN) state space (where N is the number of nodes), they may not be very accurate as they can only approximate values to the closest power of 2, potentially causing errors of up to 50% .
+4-23:More accurate aggregates can be computed by maintaining multiple bit vectors at each node, as explained in [7] .
+4-24:This decreases the error to within O(1 √ m), where m is the number of such bit vectors .
+4-25:Queries other than count can also be computed using variants of this basic counting algorithm, as discussed in [3] (and shown in Figure 2) .
+4-26:Transmitting FM bit vectors between nodes is done using randomized gossiping, discussed next .
+4-27:4.2 Gossip Protocols Gossip based protocols operate in discrete time steps; a time step is the required amount of time for all transmissions in that time step to complete .
+4-28:At every time step, each node having something to send randomly selects one or more neighboring nodes and transmits its data to them .
+4-29:The randomized propagation of information provides fault tolerance and resilience to network failures and outages .
+4-30:We emphasize that this characteristic of the protocol also allows it to operate without relying on any underlying network structure .
+4-31:Gossip protocols have been shown to provide exponentially fast convergence2 , on the order of O(log N) [10], where N is the number of nodes (or radios) .
+4-32:These protocols can therefore easily scale to very dense environments .
+4-33:2 Convergence refers to the state in which all nodes have the most up to date view of the network .
+4-34:14 Two types of gossip protocols are: • Uniform Gossip: In uniform gossip, at each timestep, each node chooses a random neighbor and sends its data to it .
+4-35:This process repeats for O(log(N)) steps (where N is the number of nodes in the network) .
+4-36:Uniform gossip provides exponentially fast convergence, with low network overhead [10] .
+4-37:• Random Walk: In random walk, only a subset of the nodes (termed designated nodes) communicate in a particular time step .
+4-38:At startup, k nodes are randomly elected as designated nodes .
+4-39:In each time step, each designated node sends its data to a random neighbor, which becomes designated for the subsequent timestep (much like passing a token) .
+4-40:This process repeats until the aggregate has converged in the network .
+4-41:Random walk has been shown to provide similar convergence bounds as uniform gossip in problems of similar context [8, 12]. .
+5 INCREMENTAL PROTOCOLS :
+5-1:5.1 Incremental FM Aggregates One limitation of FM aggregation is that it does not support updates .
+5-2:Due to the probabilistic nature of FM, once bit vectors have been ORed together, information cannot simply be removed from them as each node"s contribution has not been recorded .
+5-3:We propose the use of delete vectors, an extension of FM to support updates .
+5-4:We maintain a separate aggregate delete vector whose value is subtracted from the original aggregate vector"s value to obtain the resulting value as follows .
+5-5:AGGINC = (2a−1 0.77351) − (2b−1 0.77351) (1) Here, a and b represent the bit positions of the least significant zero in the original and delete bit vectors respectively .
+5-6:Suppose we wish to compute the average signal level detected in a particular frequency .
+5-7:To compute this, we compute the SUM of all signal level measurements and divide that by the COUNT of the number of measurements .
+5-8:A SUM aggregate is computed similar to COUNT (explained in Section 4.1), except that each node performs s coin toss experiments, where s is the locally measured signal level .
+5-9:Figure 2 illustrates the sequence by which the average signal energy is computed in a particular band using FM aggregation .
+5-10:Now suppose that the measured signal at a node changes from s to s .
+5-11:The vectors are updated as follows .
+5-12:• s > s: We simply perform (s − s) more coin toss experiments and bitwise OR the result with the original bit vector .
+5-13:• s < s: We increase the value of the delete vector by performing (s − s ) coin toss experiments and bitwise OR the result with the current delete vector .
+5-14:Using delete vectors, we can now support updates to the measured signal level .
+5-15:With the original implementation of FM, the aggregate would need to be discarded and a new one recomputed every time an update occurred .
+5-16:Thus, delete vectors provide a low overhead alternative for applications whose data changes incrementally, such as signal level measurements in a coordinated spectrum sensing environment .
+5-17:Next we discuss how these aggregates can be communicated between devices using incremental routing protocols .
+5-18:5.2 Incremental Routing Protocol We use the following incremental variants of the routing protocols presented in Section 4.2 to support incremental updates to previously computed aggregates .
+5-19:Update Received OR Local Update Occurs Recovered Susceptible Time stamp Expires Initial State Additional Update Received Infectious Clean Up Figure 3: State diagram each device passes through as updates proceed in the system • Incremental Gossip Protocol (IGP): When an update occurs, the updated node initiates the gossiping procedure .
+5-20:Other nodes only begin gossiping once they receive the update .
+5-21:Therefore, nodes receiving the update become active and continue communicating with their neighbors until the update protocol terminates, after O(log(N)) time steps .
+5-22:• Incremental Random Walk Protocol (IRWP): When an update (or updates) occur in the system, instead of starting random walks at k random nodes in the network, all k random walks are initiated from the updated node(s) .
+5-23:The rest of the protocol proceeds in the same fashion as the standard random walk protocol .
+5-24:The allocation of walks to updates is discussed in more detail in [3], where the authors show that the number of walks has an almost negligible impact on network overhead. .
+6 PROTOCOL DETAILS :
+6-1:Using incremental routing protocols to disseminate incremental FM aggregates is a natural fit for the problem of coordinated spectrum sensing .
+6-2:Here we outline the implementation of such techniques for a cognitive radio network .
+6-3:We continue with the example from Section 5.1, where we wish to perform coordination between a group of wireless devices to compute the average signal level in a particular frequency band .
+6-4:Using either incremental random walk or incremental gossip, each device proceeds through three phases, in order to determine the global average signal level for a particular frequency band .
+6-5:Figure 3 shows a state diagram of these phases .
+6-6:Susceptible: Each device starts in the susceptible state and becomes infectious only when its locally measured signal level changes, or if it receives an update message from a neighboring device .
+6-7:If a local change is observed, the device updates either the original or delete bit vector, as described in Section 5.1, and moves into the infectious state .
+6-8:If it receives an update message, it ORs the received original and delete bit vectors with its local bit vectors and moves into the infectious state .
+6-9:Note, because signal level measurements may change sporadically over time, a smoothing function, such as an exponentially weighted moving average, should be applied to these measurements .
+6-10:Infectious: Once a device is infectious it continues to send its up to date bit vectors, using either incremental random walk or incremental gossip, to neighboring nodes .
+6-11:Due to FM"s order and duplicate insensitive properties, simultaneously occurring updates are handled seamlessly by the protocol .
+6-12:Update messages contain a time stamp indicating when the update was generated, and each device maintains a lo15 0 200 400 600 800 1000 1 10 100 Number of Measured Signal Changes Executiontime(ms) Incremental Gossip Uniform Gossip (a) Incremental Gossip and Uniform Gossip on Clique 0 200 400 600 800 1000 1 10 100 Number of Measured Signal Changes ExecutionTime(ms) .
+6-13:Incremental Random Walk Random Walk (b) Incremental Random Walk and Random Walk on Clique 0 400 800 1200 1600 2000 1 10 100 Number of Measured Signal Changes ExecutionTime(ms) .
+6-14:Random Walk Incremental Random Walk (c) Incremental Random Walk and Random Walk on Power Law Random Graph Figure 4: Execution times of Incremental Protocols 0.9 1.4 1.9 2.4 2.9 1 10 100 Number of Measured Signal Changes OverheadImprovementRatio .
+6-15:(NormalizedtoUniformGossip) Incremental Gossip Uniform Gossip (a) Incremental Gossip and Uniform Gossip on Clique 0.9 1.4 1.9 2.4 2.9 1 10 100 Number of Measured Signal Changes OverheadImprovementRatio .
+6-16:(NormalizedtoRandomWalk) Incremental Random Walk Random Walk (b) Incremental Random Walk and Random Walk on Clique 0.9 1.1 1.3 1.5 1.7 1.9 1 10 100 Number of Measured Signal Changes OverheadImprovementRatio .
+6-17:(NormalizedtoRandomWalk) Random Walk Incremental Random Walk (c) Incremental Random Walk and Random Walk on Power Law Random Graph Figure 5: Network overhead of Incremental Protocols cal time stamp of when it received the most recent update .
+6-18:Using this information, a device moves into the recovered state once enough time has passed for the most recent update to have converged .
+6-19:As discussed in Section 4.2, this happens after O(log(N)) time steps .
+6-20:Recovered: A recovered device ceases to propagate any update information .
+6-21:At this point, it performs clean up and prepares for the next infection by entering the susceptible state .
+6-22:Once all devices have entered the recovered state, the system will have converged, and with high probability, all devices will have the up to date average signal level .
+6-23:Due to the cumulative nature of FM, even if all devices have not converged, the next update will include all previous updates .
+6-24:Nevertheless, the probability that gossip fails to converge is small, and has been shown to be O(1 N) [10] .
+6-25:For coordinated spectrum sensing, non incremental routing protocols can be implemented in a similar fashion .
+6-26:Random walk would operate by having devices periodically drop the aggregate and re run the protocol .
+6-27:Each device would perform a coin toss (biased on the number of walks) to determine whether or not it is a designated node .
+6-28:This is different from the protocol discussed above where only updated nodes initiate random walks .
+6-29:Similar techniques can be used to implement standard gossip. .
+7 EVALUATION :
+7-1:We now provide a preliminary evaluation of GUESS in simulation .
+7-2:A more detailed evaluation of this approach can be found in [3] .
+7-3:Here we focus on how incremental extensions to gossip protocols can lead to further improvements over standard gossiping techniques, for the problem of coordinated spectrum sensing .
+7-4:Simulation Setup: We implemented a custom simulator in C++ .
+7-5:We study the improvements of our incremental gossip protocols over standard gossiping in two dimensions: execution time and network overhead .
+7-6:We use two topologies to represent device connectivity: a clique, to eliminate the effects of the underlying topology on protocol performance, and a BRITE generated [13] power law random graph (PLRG), to illustrate how our results extend to more realistic scenarios .
+7-7:We simulate a large deployment of 1,000 devices to analyze protocol scalability .
+7-8:In our simulations, we compute the average signal level in a particular band by disseminating FM bit vectors .
+7-9:In each run of the simulation, we induce a change in the measured signal at one or more devices .
+7-10:A run ends when the new average signal level has converged in the network .
+7-11:For each data point, we ran 100 simulations and 95% confidence intervals (error bars) are shown .
+7-12:Simulation Parameters: Each transmission involves sending 70 bits of information to a neighboring node .
+7-13:To compute the AVERAGE aggregate, four bit vectors need to be transmitted: the original SUM vector, the SUM delete vector, the original COUNT vector, and the COUNT delete vector .
+7-14:Non incremental protocols do not transmit the delete vectors .
+7-15:Each transmission also includes a time stamp of when the update was generated .
+7-16:We assume nodes communicate on a common control channel at 2 Mbps .
+7-17:Therefore, one time step of protocol execution corresponds to the time required for 1,000 nodes to sequentially send 70 bits at 2 Mbps .
+7-18:Sequential use of the control channel is a worst case for our protocols; in practice, multiple control channels could be used in parallel to reduce execution time .
+7-19:We also assume nodes are loosely time synchronized, the implications of which are discussed further in [3] .
+7-20:Finally, in order to isolate the effect of protocol operation on performance, we do not model the complexities of the wireless channel in our simulations .
+7-21:Incremental Protocols Reduce Execution Time: Figure 4(a) compares the performance of incremental gossip with uniform gossip on a clique topology .
+7-22:We observe that both protocols have almost identical execution times .
+7-23:This is expected as IGP operates in a similar fashion to 16 uniform gossip, taking O(log(N)) time steps to converge .
+7-24:Figure 4(b) compares the execution times of incremental random walk and standard random walk on a clique .
+7-25:IRWP reduces execution time by a factor of 2.7 for a small number of measured signal changes .
+7-26:Although random walk and IRWP both use k random walks (in our simulations k = number of nodes), IRWP initiates walks only from updated nodes (as explained in Section 5.2), resulting in faster information convergence .
+7-27:These improvements carry over to a PLRG topology as well (as shown in Figure 4(c)), where IRWP is 1.33 times faster than random walk .
+7-28:Incremental Protocols Reduce Network Overhead: Figure 5(a) shows the ratio of data transmitted using uniform gossip relative to incremental gossip on a clique .
+7-29:For a small number of signal changes, incremental gossip incurs 2.4 times less overhead than uniform gossip .
+7-30:This is because in the early steps of protocol execution, only devices which detect signal changes communicate .
+7-31:As more signal changes are introduced into the system, gossip and incremental gossip incur approximately the same overhead .
+7-32:Similarly, incremental random walk incurs much less overhead than standard random walk .
+7-33:Figure 5(b) shows a 2.7 fold reduction in overhead for small numbers of signal changes on a clique .
+7-34:Although each protocol uses the same number of random walks, IRWP uses fewer network resources than random walk because it takes less time to converge .
+7-35:This improvement also holds true on more complex PLRG topologies (as shown in Figure 5(c)), where we observe a 33% reduction in network overhead .
+7-36:From these results it is clear that incremental techniques yield significant improvements over standard approaches to gossip, even on complex topologies .
+7-37:Because spectrum utilization is characterized by incremental changes to usage, incremental protocols are ideally suited to solve this problem in an efficient and cost effective manner. .
+8 DISCUSSION AND FUTURE WORK :
+8-1:We have only just scratched the surface in addressing the problem of coordinated spectrum sensing using incremental gossiping .
+8-2:Next, we outline some open areas of research .
+8-3:Spatial Decay: Devices performing coordinated sensing are primarily interested in the spectrum usage of their local neighborhood .
+8-4:Therefore, we recommend the use of spatially decaying aggregates [6], which limits the impact of an update on more distant nodes .
+8-5:Spatially decaying aggregates work by successively reducing (by means of a decay function) the value of the update as it propagates further from its origin .
+8-6:One challenge with this approach is that propagation distance cannot be determined ahead of time and more importantly, exhibits spatio temporal variations .
+8-7:Therefore, finding the optimal decay function is non trivial, and an interesting subject of future work .
+8-8:Significance Threshold: RF spectrum bands continually experience small scale changes which may not necessarily be significant .
+8-9:Deciding if a change is significant can be done using a significance threshold β, below which any observed change is not propagated by the node .
+8-10:Choosing an appropriate operating value for β is application dependent, and explored further in [3] .
+8-11:Weighted Readings: Although we argued that most devices will likely be equipped with low cost sensing equipment, there may be situations where there are some special infrastructure nodes that have better sensing abilities than others .
+8-12:Weighting their measurements more heavily could be used to maintain a higher degree of accuracy .
+8-13:Determining how to assign such weights is an open area of research .
+8-14:Implementation Specifics: Finally, implementing gossip for coordinated spectrum sensing is also open .
+8-15:If implemented at the MAC layer, it may be feasible to piggy back gossip messages over existing management frames (e.g .
+8-16:networking advertisement messages) .
+8-17:As well, we also require the use of a control channel to disseminate sensing information .
+8-18:There are a variety of alternatives for implementing such a channel, some of which are outlined in [4] .
+8-19:The trade offs of different approaches to implementing GUESS is a subject of future work. .
+9-1:Spectrum sensing is a key requirement for dynamic spectrum allocation in cognitive radio networks
+9-2:The nature of the RF environment necessitates coordination between cognitive radio devices
+9-3:We propose GUESS, an approximate yet low overhead approach to perform efficient coordination between cognitive radios
+9-4:The fundamental contributions of GUESS are: (1) an FM aggregation scheme for efficient innetwork aggregation, (2) a randomized gossiping approach which provides exponentially fast convergence and robustness to network alterations, and (3) incremental variations of FM and gossip which we show can reduce the communication time by up to a factor of 2.7 and reduce network overhead by up to a factor of 2.4
+9-5:Our preliminary simulation results showcase the benefits of this approach and we also outline a set of open problems that make this a new and exciting area of research
+9-6:10
+9-7:REFERENCES
+10-1:Unlicensed Operation in the TV Broadcast Bands and Additional Spectrum for Unlicensed Devices Below 900 MHz in the 3 GHz band, May 2004
+10-2:Notice of Proposed Rule Making 04 186, Federal Communications Commission
+10-3:In Stat: Covering the Full Spectrum of Digital Communications Market Research, from Vendor to End user, December 2005
+10-4:http:  www.in stat.com catalog scatalogue.asp?id=28
+10-5:N
+10-6:Ahmed, D
+10-7:Hadaller, and S
+10-8:Keshav
+10-9:Incremental Maintenance of Global Aggregates
+10-10:UW
+10-11:Technical Report CS 2006 19, University of Waterloo, ON, Canada, 2006
+10-12:R
+10-13:W
+10-14:Brodersen, A
+10-15:Wolisz, D
+10-16:Cabric, S
+10-17:M
+10-18:Mishra, and D
+10-19:Willkomm
+10-20:CORVUS: A Cognitive Radio Approach for Usage of Virtual Unlicensed Spectrum
+10-21:Technical report, July 2004
+10-22:D
+10-23:Cabric, S
+10-24:M
+10-25:Mishra, and R
+10-26:W
+10-27:Brodersen
+10-28:Implementation Issues in Spectrum Sensing for Cognitive Radios
+10-29:In Asilomar Conference, 2004
+10-30:E
+10-31:Cohen and H
+10-32:Kaplan
+10-33:Spatially Decaying Aggregation Over a Network: Model and Algorithms
+10-34:In Proceedings of SIGMOD 2004, pages 707 718, New York, NY, USA, 2004
+10-35:ACM Press
+10-36:P
+10-37:Flajolet and G
+10-38:N
+10-39:Martin
+10-40:Probabilistic Counting Algorithms for Data Base Applications
+10-41:J
+10-42:Comput
+10-43:Syst
+10-44:Sci., 31(2):182 209, 1985
+10-45:C
+10-46:Gkantsidis, M
+10-47:Mihail, and A
+10-48:Saberi
+10-49:Random Walks in Peer to Peer Networks
+10-50:In Proceedings of INFOCOM 2004, pages 1229 1240, 2004
+10-51:E
+10-52:Griffith
+10-53:Previewing Intel"s Cognitive Radio Chip, June 2005
+10-54:http:  www.internetnews.com wireless article.php 3513721
+10-55:D
+10-56:Kempe, A
+10-57:Dobra, and J
+10-58:Gehrke
+10-59:Gossip Based Computation of Aggregate Information
+10-60:In FOCS 2003, page 482, Washington, DC, USA, 2003
+10-61:IEEE Computer Society
+10-62:X
+10-63:Liu and S
+10-64:Shankar
+10-65:Sensing based Opportunistic Channel Access
+10-66:In ACM Mobile Networks and Applications (MONET) Journal, March 2005
+10-67:Q
+10-68:Lv, P
+10-69:Cao, E
+10-70:Cohen, K
+10-71:Li, and S
+10-72:Shenker
+10-73:Search and Replication in Unstructured Peer to Peer Networks
+10-74:In Proceedings of ICS, 2002
+10-75:A
+10-76:Medina, A
+10-77:Lakhina, I
+10-78:Matta, and J
+10-79:Byers
+10-80:BRITE: an Approach to Universal Topology Generation
+10-81:In Proceedings of MASCOTS conference, Aug
+10-82:2001
+10-83:S
+10-84:M
+10-85:Mishra, A
+10-86:Sahai, and R
+10-87:W
+10-88:Brodersen
+10-89:Cooperative Sensing among Cognitive Radios
+10-90:In ICC 2006, June 2006
+10-91:S
+10-92:Nath, P
+10-93:B
+10-94:Gibbons, S
+10-95:Seshan, and Z
+10-96:R
+10-97:Anderson
+10-98:Synopsis Diffusion for Robust Aggregation in Sensor Networks
+10-99:In Proceedings of SenSys 2004, pages 250 262, 2004
+10-100:A
+10-101:Sahai, N
+10-102:Hoven, S
+10-103:M
+10-104:Mishra, and R
+10-105:Tandra
+10-106:Fundamental Tradeoffs in Robust Spectrum Sensing for Opportunistic Frequency Reuse
+10-107:Technical Report UC Berkeley, 2006
+10-108:J
+10-109:Zhao, H
+10-110:Zheng, and G. H
+10-111:Yang
+10-112:Distributed Coordination in Dynamic Spectrum Allocation Networks
+10-113:In Proceedings of DySPAN 2005, Baltimore (MD), Nov
+10-114:2005
+10-115:17
+picture:

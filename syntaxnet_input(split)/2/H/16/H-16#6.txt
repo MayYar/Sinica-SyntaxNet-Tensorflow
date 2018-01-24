@@ -1,0 +1,755 @@
+Input: The previous section shows that caching posting lists can obtain a higher hit rate compared to caching query answers .
+Parse:
+shows VBZ ROOT
+ +-- section NN nsubj
+ |   +-- The DT det
+ |   +-- previous JJ amod
+ +-- obtain VB ccomp
+ |   +-- that IN mark
+ |   +-- lists NNS nsubj
+ |   |   +-- caching VBG nn
+ |   |   +-- posting VBG nn
+ |   +-- can MD aux
+ |   +-- rate NN dobj
+ |   |   +-- a DT det
+ |   |   +-- hit VBN amod
+ |   |       +-- higher JJR advmod
+ |   +-- compared VBN prep
+ |       +-- to IN pcomp
+ |           +-- answers NNS pobj
+ |               +-- caching VBG amod
+ |               +-- query NN nn
+ +-- . . punct
+Input: In this section we study the problem of how to select posting lists to place on a certain amount of available memory , assuming that the whole index is larger than the amount of memory available .
+Parse:
+study VBP ROOT
+ +-- In IN prep
+ |   +-- section NN pobj
+ |       +-- this DT det
+ +-- we PRP nsubj
+ +-- problem NN dobj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- select VB pcomp
+ |           +-- how WRB advmod
+ |           +-- to TO aux
+ |           +-- lists NNS dobj
+ |           |   +-- posting NN nn
+ |           +-- place VB xcomp
+ |               +-- to TO aux
+ |               +-- on IN prep
+ |                   +-- amount NN pobj
+ |                       +-- a DT det
+ |                       +-- certain JJ amod
+ |                       +-- of IN prep
+ |                           +-- memory NN pobj
+ |                               +-- available JJ amod
+ +-- , , punct
+ +-- assuming VBG partmod
+ |   +-- larger JJR ccomp
+ |       +-- that IN mark
+ |       +-- index NN nsubj
+ |       |   +-- the DT det
+ |       |   +-- whole JJ amod
+ |       +-- is VBZ cop
+ |       +-- available JJ ccomp
+ |           +-- than IN mark
+ |           +-- amount NN nsubj
+ |               +-- the DT det
+ |               +-- of IN prep
+ |                   +-- memory NN pobj
+ +-- . . punct
+Input: The posting lists have variable size -LRB- in fact , their size distribution follows a power law -RRB- , so it is beneficial for a caching policy to consider the sizes of the posting lists .
+Parse:
+have VBP ROOT
+ +-- lists NNS nsubj
+ |   +-- The DT det
+ |   +-- posting NN nn
+ +-- size NN dobj
+ |   +-- variable JJ amod
+ +-- follows VBZ parataxis
+ |   +-- -LRB- -LRB- punct
+ |   +-- in IN prep
+ |   |   +-- fact NN pobj
+ |   +-- , , punct
+ |   +-- distribution NN nsubj
+ |   |   +-- their PRP$ poss
+ |   |   +-- size NN nn
+ |   +-- law NN dobj
+ |   |   +-- a DT det
+ |   |   +-- power NN nn
+ |   +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- so IN cc
+ +-- beneficial JJ conj
+ |   +-- it PRP nsubj
+ |   +-- is VBZ cop
+ |   +-- for IN prep
+ |       +-- policy NN pobj
+ |           +-- a DT det
+ |           +-- caching VBG amod
+ |           +-- consider VB infmod
+ |               +-- to TO aux
+ |               +-- sizes NNS dobj
+ |                   +-- the DT det
+ |                   +-- of IN prep
+ |                       +-- lists NNS pobj
+ |                           +-- the DT det
+ |                           +-- posting NN nn
+ +-- . . punct
+Input: We consider both dynamic and static caching .
+Parse:
+consider VBP ROOT
+ +-- We PRP nsubj
+ +-- caching NN dobj
+ |   +-- dynamic JJ amod
+ |       +-- both DT preconj
+ |       +-- and CC cc
+ |       +-- static JJ conj
+ +-- . . punct
+Input: For dynamic caching , we use two well known policies , LRU and LFU , as well as a modified algorithm that takes posting list size into account .
+Parse:
+use VBP ROOT
+ +-- For IN prep
+ |   +-- caching NN pobj
+ |       +-- dynamic JJ amod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- policies NNS dobj
+ |   +-- two CD num
+ |   +-- known VBN amod
+ |   |   +-- well RB advmod
+ |   +-- , , punct
+ |   +-- LRU NNP appos
+ |   |   +-- and CC cc
+ |   |   +-- LFU , conj
+ |   +-- well RB cc
+ |   |   +-- as RB advmod
+ |   |   +-- as IN mwe
+ |   +-- algorithm NN conj
+ |       +-- a DT det
+ |       +-- modified VBN amod
+ |       +-- takes VBZ rcmod
+ |           +-- that WDT nsubj
+ |           +-- posting VBG xcomp
+ |               +-- size NN dobj
+ |               |   +-- list NN nn
+ |               +-- into IN prep
+ |                   +-- account NN pobj
+ +-- . . punct
+Input: Before discussing the static caching strategies , we introduce some notation .
+Parse:
+introduce VBP ROOT
+ +-- Before IN prep
+ |   +-- discussing VBG pcomp
+ |       +-- strategies NNS dobj
+ |           +-- the DT det
+ |           +-- static NN amod
+ |           +-- caching NN nn
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- notation NN dobj
+ |   +-- some DT det
+ +-- . . punct
+Input: We use fq -LRB- t -RRB- to denote the query term frequency of a term t , that is , the number of queries containing t in the query log , and fd -LRB- t -RRB- to denote the document frequency of t , that is , the number of documents in the collection in which the term t appears .
+Parse:
+use VBP ROOT
+ +-- We PRP nsubj
+ +-- fq FW dobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- t NN dep
+ |   +-- -RRB- -RRB- punct
+ +-- denote VB xcomp
+ |   +-- to TO aux
+ |   +-- frequency NN dobj
+ |       +-- the DT det
+ |       +-- term NN nn
+ |       |   +-- query NN nn
+ |       +-- of IN prep
+ |           +-- t NN pobj
+ |               +-- a DT det
+ |               +-- term NN nn
+ +-- , , punct
+ +-- is VBZ ccomp
+ |   +-- that DT nsubj
+ +-- number NN conj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- queries NNS pobj
+ |           +-- containing VBG partmod
+ |               +-- t NN dobj
+ |               +-- in IN prep
+ |                   +-- log NN pobj
+ |                       +-- the DT det
+ |                       +-- query NN nn
+ +-- and CC cc
+ +-- fd NNP conj
+ |   +-- t NN appos
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- denote VB infmod
+ |   |   +-- to TO aux
+ |   |   +-- frequency NN dobj
+ |   |       +-- the DT det
+ |   |       +-- document NN nn
+ |   |       +-- of IN prep
+ |   |           +-- t NN pobj
+ |   +-- , , punct
+ |   +-- is VBZ rcmod
+ |   |   +-- that DT nsubj
+ |   +-- number NN appos
+ |       +-- the DT det
+ |       +-- of IN prep
+ |       |   +-- documents NNS pobj
+ |       +-- in IN prep
+ |       |   +-- collection NN pobj
+ |       |       +-- the DT det
+ |       +-- appears VBZ rcmod
+ |           +-- in IN prep
+ |           |   +-- which WDT pobj
+ |           +-- t NN nsubj
+ |               +-- the DT det
+ |               +-- term NN nn
+ +-- . . punct
+Input: The first strategy we consider is the algorithm proposed by Baeza Yates and Saint Jean -LRB- 2 -RRB- , which consists in selecting the posting lists of the terms with the highest query term frequencies fq -LRB- t -RRB- .
+Parse:
+algorithm NN ROOT
+ +-- strategy NN nsubj
+ |   +-- The DT det
+ |   +-- first JJ amod
+ |   +-- consider VBP rcmod
+ |       +-- we PRP nsubj
+ +-- is VBZ cop
+ +-- the DT det
+ +-- proposed VBN partmod
+ |   +-- by IN prep
+ |       +-- Yates NNP pobj
+ |           +-- Baeza NNP nn
+ |           +-- and CC cc
+ |           +-- Jean NNP conj
+ |           |   +-- Saint NNP nn
+ |           +-- 2 CD appos
+ |               +-- -LRB- -LRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- consists VBZ rcmod
+ |   +-- which WDT nsubj
+ |   +-- in IN prep
+ |       +-- selecting VBG pcomp
+ |           +-- lists NNS dobj
+ |           |   +-- the DT det
+ |           |   +-- posting NN nn
+ |           |   +-- of IN prep
+ |           |       +-- terms NNS pobj
+ |           |           +-- the DT det
+ |           +-- with IN prep
+ |               +-- frequencies NNS pobj
+ |                   +-- the DT det
+ |                   +-- term NN nn
+ |                   |   +-- highest JJS amod
+ |                   |   +-- query NN nn
+ |                   +-- fq , punct
+ |                   +-- t NN appos
+ |                       +-- -LRB- -LRB- punct
+ |                       +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: We call this algorithm Qtf .
+Parse:
+call VBP ROOT
+ +-- We PRP nsubj
+ +-- algorithm NN dobj
+ |   +-- this DT det
+ +-- Qtf NNP dep
+ +-- . . punct
+Input: We observe that there is a trade off between fq -LRB- t -RRB- and fd -LRB- t -RRB- .
+Parse:
+observe VBP ROOT
+ +-- We PRP nsubj
+ +-- is VBZ ccomp
+ |   +-- that IN mark
+ |   +-- there EX expl
+ |   +-- trade NN nsubj
+ |       +-- a DT det
+ |       +-- off RP dep
+ |       +-- between IN prep
+ |           +-- fq NNP pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- t NN dep
+ |               +-- -RRB- -RRB- punct
+ |               +-- and CC cc
+ |               +-- fd NN conj
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- t NNP dep
+ |                   +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: Terms with high fq -LRB- t -RRB- are useful to keep in the cache because they are queried often .
+Parse:
+useful JJ ROOT
+ +-- Terms NNS nsubj
+ |   +-- with IN prep
+ |       +-- fq NNP pobj
+ |           +-- high JJ amod
+ |           +-- -LRB- -LRB- punct
+ |           +-- t NN dep
+ |           +-- -RRB- -RRB- punct
+ +-- are VBP cop
+ +-- keep VB xcomp
+ |   +-- to TO aux
+ |   +-- in IN prep
+ |       +-- cache NN pobj
+ |           +-- the DT det
+ +-- queried VBN advcl
+ |   +-- because IN mark
+ |   +-- they PRP nsubjpass
+ |   +-- are VBP auxpass
+ |   +-- often RB advmod
+ +-- . . punct
+Input: On the other hand , terms with high fd -LRB- t -RRB- are not good candidates because they correspond to long posting lists and consume a substantial amount of space .
+Parse:
+candidates NNS ROOT
+ +-- On IN prep
+ |   +-- hand NN pobj
+ |       +-- the DT det
+ |       +-- other JJ amod
+ +-- , , punct
+ +-- terms NNS nsubj
+ |   +-- with IN prep
+ |       +-- fd NN pobj
+ |           +-- high JJ amod
+ |           +-- -LRB- -LRB- punct
+ |           +-- t NN dep
+ |           +-- -RRB- -RRB- punct
+ +-- are VBP cop
+ +-- not RB neg
+ +-- good JJ amod
+ +-- correspond VBP advcl
+ |   +-- because IN mark
+ |   +-- they PRP nsubj
+ |   +-- to TO prep
+ |   |   +-- lists NNS pobj
+ |   |       +-- posting NN nn
+ |   |           +-- long JJ amod
+ |   +-- and CC cc
+ |   +-- consume VB conj
+ |       +-- amount NN dobj
+ |           +-- a DT det
+ |           +-- substantial JJ amod
+ |           +-- of IN prep
+ |               +-- space NN pobj
+ +-- . . punct
+Input: In fact , the problem of selecting the best posting lists for the static cache corresponds to the standard Knapsack problem
+Parse:
+corresponds NNS ROOT
+ +-- In IN prep
+ |   +-- fact NN pobj
+ +-- , , punct
+ +-- problem NN nsubj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- selecting VBG pcomp
+ |           +-- lists NNS dobj
+ |               +-- the DT det
+ |               +-- best JJS amod
+ |               +-- posting NN nn
+ |               +-- for IN prep
+ |                   +-- cache NN pobj
+ |                       +-- the DT det
+ |                       +-- static JJ amod
+ +-- to IN prep
+     +-- problem NN pobj
+         +-- the DT det
+         +-- standard JJ amod
+         +-- Knapsack NNP nn
+Input: In our case , value corresponds to fq -LRB- t -RRB- and size corresponds to fd -LRB- t -RRB- .
+Parse:
+corresponds VBZ ROOT
+ +-- In IN prep
+ |   +-- case NN pobj
+ |       +-- our PRP$ poss
+ +-- , , punct
+ +-- value NN nsubj
+ +-- to IN prep
+ |   +-- fq NNP pobj
+ |       +-- -LRB- -LRB- punct
+ |       +-- t NN dep
+ |       +-- -RRB- -RRB- punct
+ |       +-- and CC cc
+ |       +-- corresponds NNS conj
+ |           +-- size NN nn
+ |           +-- to IN prep
+ |           |   +-- fd NNP pobj
+ |           +-- t NN appos
+ |               +-- -LRB- -LRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: Thus , we employ a simple algorithm for the knapsack problem , which is selecting the posting lists of the terms with the highest values of the ratio fq -LRB- t -RRB- fd -LRB- t -RRB- .
+Parse:
+employ VBP ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- algorithm NN dobj
+ |   +-- a DT det
+ |   +-- simple JJ amod
+ |   +-- for IN prep
+ |   |   +-- problem NN pobj
+ |   |       +-- the DT det
+ |   |       +-- knapsack NN nn
+ |   +-- , , punct
+ |   +-- selecting VBG rcmod
+ |       +-- which WDT nsubj
+ |       +-- is VBZ aux
+ |       +-- lists NNS dobj
+ |       |   +-- the DT det
+ |       |   +-- posting NN nn
+ |       |   +-- of IN prep
+ |       |       +-- terms NNS pobj
+ |       |           +-- the DT det
+ |       +-- with IN prep
+ |           +-- values NNS pobj
+ |               +-- the DT det
+ |               +-- highest JJS amod
+ |               +-- of IN prep
+ |               |   +-- fq UH pobj
+ |               |       +-- the DT det
+ |               |       +-- ratio NN nn
+ |               +-- fd NNP appos
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- t NN nn
+ |                   +-- -RRB- -RRB- punct
+ |                   +-- t NN dep
+ +-- . . punct
+Input: We call this algorithm QtfDf .
+Parse:
+call VBP ROOT
+ +-- We PRP nsubj
+ +-- algorithm NN dobj
+ |   +-- this DT det
+ +-- QtfDf , dep
+ +-- . . punct
+Input: We tried other variations considering query frequencies instead of term frequencies , but the gain was minimal compared to the complexity added .
+Parse:
+tried VBD ROOT
+ +-- We PRP nsubj
+ +-- variations NNS dobj
+ |   +-- other JJ amod
+ |   +-- considering VBG partmod
+ |       +-- frequencies NNS dobj
+ |           +-- query NN nn
+ |           +-- instead RB cc
+ |           |   +-- of IN mwe
+ |           +-- frequencies NNS conj
+ |               +-- term NN nn
+ +-- , , punct
+ +-- but CC cc
+ +-- minimal JJ conj
+ |   +-- gain NN nsubj
+ |   |   +-- the DT det
+ |   +-- was VBD cop
+ |   +-- compared VBN prep
+ |       +-- to IN pcomp
+ |           +-- complexity NN pobj
+ |               +-- the DT det
+ |               +-- added VBN partmod
+ +-- . . punct
+Input: In addition to the above two static algorithms we consider the following algorithms for dynamic caching
+Parse:
+consider VBP ROOT
+ +-- In IN prep
+ |   +-- addition NN pobj
+ |       +-- to IN prep
+ |           +-- algorithms NNS pobj
+ |               +-- the DT det
+ |               +-- above JJ amod
+ |               +-- two CD num
+ |               +-- static JJ amod
+ +-- we PRP nsubj
+ +-- algorithms NNS dobj
+     +-- the DT det
+     +-- following VBG amod
+     +-- for IN prep
+         +-- caching NN pobj
+             +-- dynamic JJ amod
+Input: The performance of all the above algorithms for 15 weeks of the query log and the UK dataset are shown in Figure 8 .
+Parse:
+shown VBN ROOT
+ +-- performance NN nsubjpass
+ |   +-- The DT det
+ |   +-- of IN prep
+ |   |   +-- algorithms NNS pobj
+ |   |       +-- all PDT predet
+ |   |       +-- the DT det
+ |   |       +-- above JJ amod
+ |   +-- for IN prep
+ |       +-- weeks NNS pobj
+ |           +-- 15 CD num
+ |           +-- of IN prep
+ |               +-- log NN pobj
+ |                   +-- the DT det
+ |                   +-- query NN nn
+ |                   +-- and CC cc
+ |                   +-- dataset NN conj
+ |                       +-- the DT det
+ |                       +-- UK NNP nn
+ +-- are VBP auxpass
+ +-- in IN prep
+ |   +-- Figure NN pobj
+ |       +-- 8 CD num
+ +-- . . punct
+Input: Performance is measured with hit rate .
+Parse:
+measured VBN ROOT
+ +-- Performance NN nsubjpass
+ +-- is VBZ auxpass
+ +-- with IN prep
+ |   +-- rate NN pobj
+ |       +-- hit NN nn
+ +-- . . punct
+Input: The cache size is measured as a fraction of the total space required to store the posting lists of all terms .
+Parse:
+measured VBN ROOT
+ +-- size NN nsubjpass
+ |   +-- The DT det
+ |   +-- cache NN nn
+ +-- is VBZ auxpass
+ +-- as IN prep
+ |   +-- fraction NN pobj
+ |       +-- a DT det
+ |       +-- of IN prep
+ |           +-- space NN pobj
+ |               +-- the DT det
+ |               +-- total JJ amod
+ |               +-- required VBN partmod
+ |                   +-- store VB xcomp
+ |                       +-- to TO aux
+ |                       +-- lists NNS dobj
+ |                           +-- the DT det
+ |                           +-- posting NN nn
+ |                           +-- of IN prep
+ |                               +-- terms NNS pobj
+ |                                   +-- all DT det
+ +-- . . punct
+Input: For the dynamic algorithms , we load the cache with terms in order of fq -LRB- t -RRB- and we let the cache warm up for 1 million queries .
+Parse:
+load VBP ROOT
+ +-- For IN prep
+ |   +-- algorithms NNS pobj
+ |       +-- the DT det
+ |       +-- dynamic JJ amod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- cache NN dobj
+ |   +-- the DT det
+ +-- with IN prep
+ |   +-- terms NNS pobj
+ +-- in IN prep
+ |   +-- order NN pobj
+ |       +-- of IN prep
+ |           +-- fq FW pobj
+ |               +-- -LRB- -LRB- punct
+ |               +-- t NN dep
+ |               +-- -RRB- -RRB- punct
+ +-- and CC cc
+ +-- let VBP conj
+ |   +-- we PRP nsubj
+ |   +-- warm VB ccomp
+ |       +-- cache NN nsubj
+ |       |   +-- the DT det
+ |       +-- up RP prt
+ |       +-- for IN prep
+ |           +-- queries NNS pobj
+ |               +-- million CD num
+ |                   +-- 1 CD number
+ +-- . . punct
+Input: For the static algorithms , we assume complete knowledge of the frequencies fq -LRB- t -RRB- , that is , we estimate fq -LRB- t -RRB- from the whole query stream .
+Parse:
+assume VBP ROOT
+ +-- For IN prep
+ |   +-- algorithms NNS pobj
+ |       +-- the DT det
+ |       +-- static JJ amod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- knowledge NN dobj
+ |   +-- complete JJ amod
+ |   +-- of IN prep
+ |       +-- frequencies NNS pobj
+ |           +-- the DT det
+ |           +-- fq , punct
+ |           +-- -LRB- -LRB- punct
+ |           +-- t NN dep
+ |           +-- -RRB- -RRB- punct
+ +-- is VBZ ccomp
+ |   +-- that DT nsubj
+ +-- estimate VBP ccomp
+ |   +-- we PRP nsubj
+ |   +-- fq UH dobj
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- t NN dep
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- from IN prep
+ |       +-- stream NN pobj
+ |           +-- the DT det
+ |           +-- whole JJ amod
+ |           +-- query NN nn
+ +-- . . punct
+Input: As we show in Section 7 the results do not change much if we compute the query term frequencies using the first 3 or 4 weeks of the query log and measure the hit rate on the rest .
+Parse:
+change VB ROOT
+ +-- show VBP advcl
+ |   +-- As IN mark
+ |   +-- we PRP nsubj
+ |   +-- in IN prep
+ |       +-- Section NN pobj
+ |           +-- 7 CD num
+ +-- results NNS nsubj
+ |   +-- the DT det
+ +-- do VBP aux
+ +-- not RB neg
+ +-- much JJ dobj
+ +-- compute VBP advcl
+ |   +-- if IN mark
+ |   +-- we PRP nsubj
+ |   +-- frequencies NNS dobj
+ |   |   +-- the DT det
+ |   |   +-- term NN nn
+ |   |       +-- query NN nn
+ |   +-- using VBG xcomp
+ |   |   +-- weeks NNS dobj
+ |   |       +-- the DT det
+ |   |       +-- first JJ amod
+ |   |       +-- 3 CD num
+ |   |       |   +-- or CC cc
+ |   |       |   +-- 4 CD conj
+ |   |       +-- of IN prep
+ |   |           +-- log NN pobj
+ |   |               +-- the DT det
+ |   |               +-- query NN nn
+ |   +-- and CC cc
+ |   +-- measure VB conj
+ |       +-- rate NN dobj
+ |       |   +-- the DT det
+ |       |   +-- hit VBN amod
+ |       +-- on IN prep
+ |           +-- rest NN pobj
+ |               +-- the DT det
+ +-- . . punct
+Input: 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0.1 0.2 0.3 0.4 0.5 0.6 0.7 Hitrate Cache size Caching posting lists static QTF DF LRU LFU Dyn QTF DF QTF Figure 8
+Parse:
+0.2 CD ROOT
+ +-- 0.3 CD prep
+     +-- 0.5 CD dep
+         +-- 0.4 CD num
+         +-- 0.6 CD prep
+             +-- 0.8 CD dep
+                 +-- 0.7 CD num
+                 +-- 0.9 CD prep
+                     +-- 0.1 CD dep
+                         +-- 1 CD number
+                         +-- 0.2 CD prep
+                             +-- lists NNS pobj
+                                 +-- 0.3 CD num
+                                 +-- 0.6 CD num
+                                 |   +-- 0.4 CD number
+                                 |   +-- 0.5 CD number
+                                 +-- size NN nn
+                                 |   +-- 0.7 CD num
+                                 |   +-- Cache NNP nn
+                                 |       +-- Hitrate NNP nn
+                                 +-- Caching NNP nn
+                                 +-- posting NN nn
+                                 +-- LRU NNP dep
+                                     +-- static NN amod
+                                     +-- QTF $ nn
+                                     +-- DF NNP nn
+                                     +-- LFU , punct
+                                     +-- QTF NNP appos
+                                         +-- Dyn NNP nn
+                                         +-- QTF NNP nn
+                                         +-- DF NNP nn
+                                         +-- Figure NN dep
+                                             +-- 8 CD num
+Input: The most important observation from our experiments is that the static QtfDf algorithm has a better hit rate than all the dynamic algorithms .
+Parse:
+is VBZ ROOT
+ +-- observation NN nsubj
+ |   +-- The DT det
+ |   +-- important JJ amod
+ |   |   +-- most RBS advmod
+ |   +-- from IN prep
+ |       +-- experiments NNS pobj
+ |           +-- our PRP$ poss
+ +-- has VBZ ccomp
+ |   +-- that IN mark
+ |   +-- algorithm NNP nsubj
+ |   |   +-- the DT det
+ |   |   +-- static NN amod
+ |   |   +-- QtfDf , punct
+ |   +-- rate NN dobj
+ |       +-- a DT det
+ |       +-- better JJR amod
+ |       +-- hit VBN nn
+ |       +-- than IN prep
+ |           +-- algorithms NNS pobj
+ |               +-- all PDT predet
+ |               +-- the DT det
+ |               +-- dynamic JJ amod
+ +-- . . punct
+Input: An important benefit a static cache is that it requires no eviction and it is hence more efficient when evaluating queries .
+Parse:
+is VBZ ROOT
+ +-- benefit NN nsubj
+ |   +-- An DT det
+ |   +-- important JJ amod
+ |   +-- cache NN dobj
+ |       +-- a DT det
+ |       +-- static JJ amod
+ +-- requires VBZ ccomp
+ |   +-- that IN mark
+ |   +-- it PRP nsubj
+ |   +-- eviction NN dobj
+ |   |   +-- no DT det
+ |   +-- and CC cc
+ |   +-- efficient JJ conj
+ |       +-- it PRP nsubj
+ |       +-- is VBZ cop
+ |       +-- hence RB advmod
+ |       +-- more RBR advmod
+ |       +-- evaluating VBG advcl
+ |           +-- when WRB advmod
+ |           +-- queries NNS dobj
+ +-- . . punct
+Input: However , if the characteristics of the query traffic change frequently over time , then it requires re populating the cache often or there will be a significant impact on hit rate. .
+Parse:
+requires VBZ ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- change NN advcl
+ |   +-- if IN mark
+ |   +-- characteristics NNS nsubj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- traffic NN pobj
+ |   |           +-- the DT det
+ |   |           +-- query NN nn
+ |   +-- frequently RB advmod
+ |   +-- over IN prep
+ |       +-- time NN pobj
+ +-- then RB advmod
+ +-- it PRP nsubj
+ +-- re IN prep
+ |   +-- populating VBG pcomp
+ |       +-- cache NN dobj
+ |       |   +-- the DT det
+ |       +-- often RB advmod
+ +-- or CC cc
+ +-- impact NN conj
+ |   +-- there EX expl
+ |   +-- will MD aux
+ |   +-- be VB cop
+ |   +-- a DT det
+ |   +-- significant JJ amod
+ |   +-- on IN prep
+ |       +-- rate. NN pobj
+ |           +-- hit VBN amod
+ +-- . . punct

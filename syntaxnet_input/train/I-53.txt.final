@@ -1,0 +1,472 @@
+A Randomized Method for the Shapley Value 
+content:
+1 ABSTRACT :
+1-1:The Shapley value is one of the key solution concepts for coalition games .
+1-2:Its main advantage is that it provides a unique and fair solution, but its main problem is that, for many coalition games, the Shapley value cannot be determined in polynomial time .
+1-3:In particular, the problem of finding this value for the voting game is known to be #P complete in the general case .
+1-4:However, in this paper, we show that there are some specific voting games for which the problem is computationally tractable .
+1-5:For other general voting games, we overcome the problem of computational complexity by presenting a new randomized method for determining the approximate Shapley value .
+1-6:The time complexity of this method is linear in the number of players .
+1-7:We also show, through empirical studies, that the percentage error for the proposed method is always less than 20% and, in most cases, less than 5% .
+1-8:I.2.11 [Distributed Artificial Intelligence]: Multiagent Systems .
+2 INTRODUCTION :
+2-1:Coalition formation, a key form of interaction in multi agent systems, is the process of joining together two or more agents so as to achieve goals that individuals on their own cannot, or to achieve them more efficiently [1, 11, 14, 13] .
+2-2:Often, in such situations, there is more than one possible coalition and a player"s payoff depends on which one it joins .
+2-3:Given this, a key problem is to ensure that none of the parties in a coalition has any incentive to break away from it and join another coalition (i.e., the coalitions should be stable) .
+2-4:However, in many cases there may be more than one solution (i.e., a stable coalition) .
+2-5:In such cases, it becomes difficult to select a single solution from among the possible ones, especially if the parties are self interested (i.e., they have different preferences over stable coalitions) .
+2-6:In this context, cooperative game theory deals with the problem of coalition formation and offers a number of solution concepts that possess desirable properties like stability, fair division of joint gains, and uniqueness [16, 14] .
+2-7:Cooperative game theory differs from its non cooperative counterpart in that for the former the players are allowed to form binding agreements and so there is a strong incentive to work together to receive the largest total payoff .
+2-8:Also, unlike non cooperative game theory, cooperative game theory does not specify a game through a description of the strategic environment (including the order of players" moves and the set of actions at each move) and the resulting payoffs, but, instead, it reduces this collection of data to the coalitional form where each coalition is represented by a single real number: there are no actions, moves, or individual payoffs .
+2-9:The chief advantage of this approach, at least in multiple player environments, is its practical usefulness .
+2-10:Thus, many more real life situations fit more easily into a coalitional form game, whose structure is more tractable than that of a non cooperative game, whether that be in normal or extensive form and it is for this reason that we focus on such forms in this paper .
+2-11:Given these observations, a number of multiagent systems researchers have used and extended cooperative game theoretic solutions to facilitate automated coalition formation [20, 21, 18] .
+2-12:Moreover, in this work, one of the most extensively studied solution concepts is the Shapley value [19] .
+2-13:A player"s Shapley value gives an indication of its prospects of playing the game the higher the Shapley value, the better its prospects .
+2-14:The main advantage of the Shapley value is that it provides a solution that is both unique and fair (see Section 2.1 for a discussion of the property of fairness) .
+2-15:However, while these are both desirable properties, the Shapley value has one major drawback: for many coalition games, it cannot be determined in polynomial time .
+2-16:For instance, finding this value for the weighted voting game is, in general, #P complete [6] .
+2-17:A problem is #P hard if solving it is as hard as counting satisfying assignments of propositional logic formulae [15, p442] .
+2-18:Since #P completeness thus subsumes NP completeness, this implies that computing the Shapley value for the weighted voting game will be intractable in general .
+2-19:In other words, it is practically infeasible to try to compute the exact Shapley value .
+2-20:However, the voting game has practical relevance to multi agent systems as it is an important means of reaching consensus between multiple agents .
+2-21:Hence, our objective is to overcome the computational complexity of finding the Shapley value for this game .
+2-22:Specifically, we first show that there are some specific voting games for which the exact value can 959 978 81 904262 7 5 c 2007 IFAAMAS be computed in polynomial time .
+2-23:By identifying such games, we show, for the first tme, when it is feasible to find the exact value and when it is not .
+2-24:For the computationally complex voting games, we present a new randomised method, along the lines of Monte Carlo simulation, for computing the approximate Shapley value .
+2-25:The computational complexity of such games has typically been tackled using two main approaches .
+2-26:The first is to use generating functions [3] .
+2-27:This method trades time complexity for storage space .
+2-28:The second uses an approximation technique based on Monte Carlo simulation [12, 7] .
+2-29:However the method we propose is more general than either of these (see Section 6 for details) .
+2-30:Moreover, no work has previously analysed the approximation error .
+2-31:The approximation error relates to how close the approximate is to the true Shapley value .
+2-32:Specifically, it is the difference between the true and the approximate Shapley value .
+2-33:It is important to determine this error because the performance of an approximation method is evaluated in terms of two criteria: its time complexity, and its approximation error .
+2-34:Thus, our contribution lies in also in providing, for the first time, an analysis of the percentage error in the approximate Shapley value .
+2-35:This analysis is carried out empirically .
+2-36:Our experiments show that the error is always less than 20%, and in most cases it is under 5% .
+2-37:Finally, our method has time complexity linear in the number of players and it does not require any arrays (i.e., it is economical in terms of both computing time and storage space) .
+2-38:Given this, and the fact that software agents have limited computational resources and therefore cannot compute the true Shapley value, our results are especially relevant to such resource bounded agents .
+2-39:The rest of the paper is organised as follows .
+2-40:Section 2 defines the Shapley value and describes the weighted voting game .
+2-41:In Section 3 we describe voting games whose Shapley value can be found in polynomial time .
+2-42:In Section 4, we present a randomized method for finding the approximate Shapley value and analyse its performance in Section 5 .
+2-43:Section 6 discusses related literature .
+2-44:Finally, Section 7 concludes. .
+3 BACKGROUND :
+3-1:We begin by introducing coalition games and the Shapley value and then define the weighted voting game .
+3-2:A coalition game is a game where groups of players (coalitions) may enforce cooperative behaviour between their members .
+3-3:Hence the game is a competition between coalitions of players, rather than between individual players .
+3-4:Depending on how the players measure utility, coalition game theory is split into two parts .
+3-5:If the players measure utility or the payoff in the same units and there is a means of exchange of utility such as side payments, we say the game has transferable utility; otherwise it has non transferable utility .
+3-6:More formally, a coalition game with transferable utility, N, v , consists of: of N (i.e., a coalition) a real number v(S) (the worth of S) .
+3-7:For each coalition S, the number v(S) is the total payoff that is available for division among the members of S (i.e., the set of joint actions that coalition S can take consists of all possible divisions of v(S) among the members of S) .
+3-8:Coalition games with nontransferable payoffs differ from ones with transferable payoffs in the following way .
+3-9:For the former, each coalition is associated with a set of payoff vectors that is not necessarily the set of all possible divisions of some fixed amount .
+3-10:The focus of this paper is on the weighted voting game (described in Section 2.1) which is a game with transferable payoffs .
+3-11:Thus, in either case, the players will only join a coalition if they expect to gain from it .
+3-12:Here, the players are allowed to form binding agreements, and so there is strong incentive to work together to receive the largest total payoff .
+3-13:The problem then is how to split the total payoff between or among the players .
+3-14:In this context, Shapley [19] constructed a solution using an axiomatic approach .
+3-15:Shapley defined a value for games to be a function that assigns to a game (N, v), a number ϕi(N, v) for each i in N .
+3-16:This function satisfies three axioms [17]: play no role in determining the value .
+3-17:players i in any carrier C equal v(C) .
+3-18:A carrier C is a subset of N such that v(S) = v(S ∩ C) for any subset of players S ⊂ N .
+3-19:games must be related to one another .
+3-20:It requires that for any games ϕi(N, v) and ϕi(N, v ), ϕi(N, v)+ϕi(N, v ) = ϕi(N, v + v ) for all i in N .
+3-21:Shapley showed that there is a unique function that satisfies these three axioms .
+3-22:Shapley viewed this value as an index for measuring the power of players in a game .
+3-23:Like a price index or other market indices, the value uses averages (or weighted averages in some of its generalizations) to aggregate the power of players in their various cooperation opportunities .
+3-24:Alternatively, one can think of the Shapley value as a measure of the utility of risk neutral players in a game .
+3-25:We first introduce some notation and then define the Shapley value .
+3-26:Let S denote the set N − {i} and fi : S → 2N−{i} be a random variable that takes its values in the set of all subsets of N − {i}, and has the probability distribution function (g) defined as: g(fi(S) = S) = |S|!(n − |S| − 1)! n! The random variable fi is interpreted as the random choice of a coalition that player i joins .
+3-27:Then, a player"s Shapley value is defined in terms of its marginal contribution .
+3-28:Thus, the marginal contribution of player i to coalition S with i ∈ S is a function Δiv that is defined as follows: Δiv(S) = v(S ∪ {i}) − v(S) Thus a player"s marginal contribution to a coalition S is the increase in the value of S as a result of i joining it .
+3-29:DEFINITION 1 .
+3-30:The Shapley value (ϕi) of the game N, v for player i is the expectation of its marginal contribution to a coalition that is chosen randomly: ϕi(N, v) = E[Δiv ◦ fi] (1) The Shapley value is interpreted as follows .
+3-31:Suppose that all the players are arranged in some order, all orderings being equally likely .
+3-32:Then ϕi(N, v) is the expected marginal contribution, over all orderings, of player i to the set of players who precede him .
+3-33:The method for finding a player"s Shapley value depends on the definition of the value function (v) .
+3-34:This function is different for different games, but here we focus specifically on the weighted voting game for the reasons outlined in Section 1 .
+3-35:960 The Sixth Intl .
+3-36:Joint Conf .
+3-37:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 2.1 The weighted voting game We adopt the definition of the voting game given in [6] .
+3-38:Thus, there is a set of n players that may, for example, represent shareholders in a company or members in a parliament .
+3-39:The weighted voting game is then a game G = N, v in which: v(S) = j 1 if w(S) ≥ q 0 otherwise for some q ∈ IR+ and wi ∈ IRN + , where: w(S) = X i∈S wi for any coalition S .
+3-40:Thus wi is the number of votes that player i has and q is the number of votes needed to win the game (i.e., the quota) .
+3-41:Note that for this game (denoted q; w1, .
+3-42:.
+3-43:.
+3-44:, wn ), a player"s marginal contribution is either zero or one .
+3-45:This is because the value of any coalition is either zero or one .
+3-46:A coalition with value zero is called a losing coalition and with value one a winning coalition .
+3-47:If a player"s entry to a coalition changes it from losing to winning, then the player"s marginal contribution for that coalition is one; otherwise it is zero .
+3-48:The main advantage of the Shapley value is that it gives a solution that is both unique and fair .
+3-49:The property of uniqueness is desirable because it leaves no ambiguity .
+3-50:The property of fairness relates to how the gains from cooperation are split between the members of a coalition .
+3-51:In this case, a player"s Shapley value is proportional to the contribution it makes as a member of a coalition; the more contribution it makes, the higher its value .
+3-52:Thus, from a player"s perspective, both uniqueness and fairness are desirable properties. .
+4 VOTING GAMES WITH POLYNOMIAL TIME SOLUTIONS :
+4-1:TIME SOLUTIONS Here we describe those voting games for which the Shapley value can be determined in polynomial time .
+4-2:This is achieved using the direct enumeration approach (i.e., listing all possible coalitions and finding a player"s marginal contribution to each of them) .
+4-3:We characterise such games in terms of the number of players and their weights .
+4-4:3.1 All players have equal weight Consider the game q; j, .
+4-5:.
+4-6:.
+4-7:, j with m parties .
+4-8:Each party has j votes .
+4-9:If q ≤ j, then there would be no need for the players to form a coalition .
+4-10:On the other hand, if q = mj (m = |N| is the number of players), only the grand coalition is possible .
+4-11:The interesting games are those for which the quota (q) satisfies the constraint: (j + 1) ≤ q ≤ j(m − 1) .
+4-12:For these games, the value of a coalition is one if the weight of the coalition is greater than or equal to q, otherwise it is zero .
+4-13:Let ϕ denote the Shapley value for a player .
+4-14:Consider any one player .
+4-15:This player can join a coalition as the ith member where 1 ≤ i ≤ m .
+4-16:However, the marginal contribution of the player is 1 only if it joins a coalition as the q j th member .
+4-17:In all other cases, its marginal contribution is zero .
+4-18:Thus, the Shapley value for each player ϕ = 1 m .
+4-19:Since ϕ requires one division operation, it can be found in constant time (i.e., O(1)) .
+4-20:3.2 A single large party Consider a game in which there are two types of players: large (with weight wl > ws) and small (with weight ws) .
+4-21:There is one large player and m small ones .
+4-22:The quota for this game is q; i.e., we have a game of the form q; wl, ws, ws, .
+4-23:.
+4-24:.
+4-25:, ws .
+4-26:The total number of players is (m + 1) .
+4-27:The value of a coalition is one if the weight of the coalition is greater than or equal to q, otherwise it is zero .
+4-28:Let ϕl denote the Shapley value for the large player and ϕs that for each small player .
+4-29:We first consider ws = 1 and then ws > 1 .
+4-30:The smallest possible value for q is wl + 1 .
+4-31:This is because, if q ≤ wl, then the large party can win the election on its own without the need for a coalition .
+4-32:Thus, the quota for the game satisfies the constraint wl + 1 ≤ q ≤ m + wl − 1 .
+4-33:Also, the lower and upper limits for wl are 2 and (q − 1) respectively .
+4-34:The lower limit is 2 because the weight of the large party has to be greater than each small one .
+4-35:Furthermore, the weight of the large party cannot be greater than q, since in that case, there would be no need for the large party to form a coalition .
+4-36:Recall that for our voting game, a player"s marginal contribution to a coalition can only be zero or one .
+4-37:Consider the large party .
+4-38:This party can join a coalition as the ith member where 1 ≤ i ≤ (m + 1) .
+4-39:However, the marginal contribution of the large party is one if it joins a coalition as the ith member where (q − wl) ≤ i < q .
+4-40:In all the remaining cases, its marginal contribution is zero .
+4-41:Thus, out of the total (m + 1) possible cases, its marginal contribution is one in wl cases .
+4-42:Hence, the Shapley value of the large party is: ϕl = wl (m + 1) .
+4-43:In the same way, we obtain the Shapley value of the large party for the general case where ws > 1 as: ϕl = wl ws (m + 1) Now consider a small player .
+4-44:We know that the sum of the Shapley values of all the m+1 players is one .
+4-45:Also, since the small parties have equal weights, their Shapley values are the same .
+4-46:Hence, we get: ϕs = 1 − ϕl m Thus, both ϕl and ϕs can be computed in constant time .
+4-47:This is because both require a constant number of basic operations (addition, subtraction, multiplication, and division) .
+4-48:In the same way, the Shapley value for a voting game with a single large party and multiple small parties can be determined in constant time .
+4-49:3.3 Multiple large and small parties We now consider a voting game that has two player types: large and small (as in Section 3.2), but now there are multiple large and multiple small parties .
+4-50:The set of parties consists of ml large parties and ms small parties .
+4-51:The weight of each large party is wl and that of each small one is ws, where ws < wl .
+4-52:We show the computational tractability for this game by considering the following four possible scenarios: S1 q ≤ mlwl and q ≤ msws S2 q ≤ mlwl and q ≥ msws S3 q ≥ mlwl and q ≥ msws S4 q ≥ mlwl and q ≤ msws For the first scenario, consider a large player .
+4-53:In order to determine the Shapley value for this player, we need to consider the number of all possible coalitions that give it a marginal contribution of one .
+4-54:It is possible for the marginal contribution of this player to be one if it joins a coalition in which the number of large players is between zero and (q −1) wl .
+4-55:In other words, there are (q −1) wl +1 such cases and we now consider each of them .
+4-56:The Sixth Intl .
+4-57:Joint Conf .
+4-58:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 961 Consider a coalition such that when the large player joins in, there are i large players and (q − iwl − 1) ws small players already in it, and the remaining players join after the large player .
+4-59:Such a coalition gives the large player unit marginal contribution .
+4-60:Let C2 l (i, q) denote the number of all such coalitions .
+4-61:To begin, consider the case i = 0: C2 l (0, q) = C „ ms, q − 1 ws « × FACTORIAL „ q − 1 ws « × FACTORIAL „ ml + ms − q − 1 ws − 1 « where C(y, x) denotes the number of possible combinations of x items from a set of y items .
+4-62:For i = 1, we get: C2 l (1, q) = C(ml, 1) × C „ ms, q − wl − 1 ws « × FACTORIAL „ q − wl − 1 ws « × FACTORIAL „ ml + ms − q − wl − 1 ws − 1 « In general, for i > 1, we get: C2 l (i, q) = C(ml, i) × C „ ms, q − iwl − 1 ws « × FACTORIAL „ q − iwl − 1 ws « × FACTORIAL „ ml + ms − q − wl − 1 ws − 1 « Thus the large player"s Shapley value is: ϕl = q−1 wlX i=0 C2 l (i, q) FACTORIAL(ml + ms) For a given i, the time to find C2 l (i, q) is O(T) where T = (mlms(q − iwl − 1)(ml + ms)) ws Hence, the time to find the Shapley value is O(T q wl) .
+4-63:In the same way, a small player"s Shapley value is: ϕs = q−1 wsX i=0 C2 s (i, q) FACTORIAL(ml + ms) and can be found in time O(T q ws) .
+4-64:Likewise, the remaining three scenarios (S2 to S4) can be shown to have the same time complexity .
+4-65:3.4 Three player types We now consider a voting game that has three player types: 1, 2, and 3 .
+4-66:The set of parties consists of m1 players of type 1 (each with weight w1), m2 players of type 2 (each with weight w2), and m3 players of type 3 (each with weight w3) .
+4-67:For this voting game, consider a player of type 1 .
+4-68:It is possible for the marginal contribution of this player to be one if it joins a coalition in which the number of type 1 players is between zero and (q − 1) w1 .
+4-69:In other words, there are (q − 1) w1 + 1 such cases and we now consider each of them .
+4-70:Consider a coalition such that when the type 1 player joins in, there are i type 1 players already in it .
+4-71:The remaining players join after the type 1 player .
+4-72:Let C3 l (i, q) denote the number of all such coalitions that give a marginal contribution of one to the type 1 player where: C3 1 (i, q) = q−1 w1X i=0 q−iw1−1 w2X j=0 C2 1 (j, q − iw1) Therefore the Shapley value of the type 1 player is: ϕ1 = q−1 w1X i=0 C3 1 (i, q) FACTORIAL(m1 + m2 + m3) The time complexity of finding this value is O(T q2 w1w2) where: T = ( 3Y i=1 mi)(q − iwl − 1)( 3X i=1 mi) (w2 + w3) Likewise, for the other two player types (2 and 3) .
+4-73:Thus, we have identified games for which the exact Shapley value can be easily determined .
+4-74:However, the computational complexity of the above direct enumeration method increases with the number of player types .
+4-75:For a voting game with more than three player types, the time complexity of the above method is a polynomial of degree four or more .
+4-76:To deal with such situations, therefore, the following section presents a faster randomised method for finding the approximate Shapley value. .
+5 FINDING THE APPROXIMATE SHAPLEY VALUE :
+5-1:VALUE We first give a brief introduction to randomized algorithms and then present our randomized method for finding the approximate Shapley value .
+5-2:Randomized algorithms are the most commonly used approach for finding approximate solutions to computationally hard problems .
+5-3:A randomized algorithm is an algorithm that, during some of its steps, performs random choices [2] .
+5-4:The random steps performed by the algorithm imply that by executing the algorithm several times with the same input we are not guaranteed to find the same solution .
+5-5:Now, since such algorithms generate approximate solutions, their performance is evaluated in terms of two criteria: their time complexity, and their error of approximation .
+5-6:The approximation error refers to the difference between the exact solution and its approximation .
+5-7:Against this background, we present a randomized method for finding the approximate Shapley value and empirically evaluate its error .
+5-8:We first describe the general voting game and then present our randomized algorithm .
+5-9:In its general form, a voting game has more than two types of players .
+5-10:Let wi denote the weight of player q; w1, w2, .
+5-11:.
+5-12:.
+5-13:, wm .
+5-14:The weights are specified in terms of a probability distribution function .
+5-15:For such a game, we want to find the approximate Shapley value .
+5-16:We let P denote a population of players .
+5-17:The players" weights in this population are defined by a probability distribution function .
+5-18:Irrespective of the actual probability distribution function, let μ be the mean weight for the population of players and ν the variance in the players" weights .
+5-19:From this population of players we randomly draw samples and find the sum of the players" weights in the sample using the following rule from Sampling Theory (see [8] p425): If w1, w2, .
+5-20:.
+5-21:.
+5-22:, wn is a random sample of size n drawn from any distribution with mean μ and variance ν, then the sample sum has an approximate Normal distribution with mean nμ and variance ν n (the larger the n the better the approximation) .
+5-23:962 The Sixth Intl .
+5-24:Joint Conf .
+5-25:on Autonomous Agents and Multi Agent Systems (AAMAS 07) R SHAPLEYVALUE (P, μ, ν, q, wi) P: Population of players μ: Mean weight of the population P ν: Variance in the weights for poulation P q: Quota for the voting game wi: Player i"s weight .
+6 Ti ← 0; a ← q − wi; b ← q − :
+6-1:2.1 .
+6-2:Select a random sample SX of size X from the population P 2.2 .
+6-3:Evaluate expected marginal contribution (ΔX i ) of player i to SX as: ΔX i ← 1√ (2πν X) R b a e−X (x−Xμ)2 2ν dx 2.3 .
+6-4:Ti ← Ti + ΔX i ϕi ← Ti m Table 1: Randomized algorithm to find the Shapley value for player i .
+6-5:We know from Definition 1, that the Shapley value for a player is the expectation of its marginal contribution to a coalition that is chosen randomly .
+6-6:We use this rule to determine the Shapley value as follows .
+6-7:For player i with weight wi, let ϕi denote the Shapley value .
+6-8:Let X denote the size of a random sample drawn from a population in which the individual player weights have any distribution .
+6-9:The marginal contribution of player i to this random sample is one if the total weight of the X players in the sample is greater than or equal to a = q −wi but less than b = q − (where is an inifinitesimally small quantity) .
+6-10:Otherwise, its marginal contribution is zero .
+6-11:Thus, the expected marginal contribution of player i (denoted ΔX i ) to the sample coalition is the area under the curve defined by N(Xμ, ν X ) in the interval [a, b] .
+6-12:This area is shown as the region B in Figure 1 (the dotted line in the figure is Xμ) .
+6-13:Hence we get: ΔX i = 1 p (2πν X) Z b a e−X (x−Xμ)2 2ν dx (2) and the Shapley value is: ϕi = 1 m mX X=1 ΔX i (3) The above steps are described in Table 1 .
+6-14:In more detail, Step 1 does the initialization .
+6-15:In Step 2, we vary X between 1 and m and repeatedly do the following .
+6-16:In Step 2.1, we randomly select a sample SX of size X from the population P .
+6-17:Player i"s marginal contribution to the random coalition SX is found in Step 2.2 .
+6-18:The average marginal contribution is found in Step 3 and this is the Shapley value for player i .
+6-19:THEOREM 1 .
+6-20:The time complexity of the proposed randomized method is linear in the number of players .
+6-21:PROOF .
+6-22:As per Equation 3, ΔX i must be computed m times .
+6-23:This is done in the for loop of Step 2 in Table 1 .
+6-24:Hence, the time complexity of computing a player"s Shapley value is O(m) .
+6-25:The following section analyses the approximation error for the proposed method. .
+7 PERFORMANCE OF THE RANDOMIZED METHOD :
+7-1:METHOD We first derive the formula for measuring the error in the approximate Shapley value and then conduct experiments for evaluating this error in a wide range of settings .
+7-2:However, before doing so, we introduce the idea of error .
+7-3:The concept of error relates to a measurement made of a quantity which has an accepted value [22, 4] .
+7-4:Obviously, it cannot be determined exactly how far off a measurement is from the accepted value; if this could be done, it would be possible to just give a more accurate, corrected value .
+7-5:Thus, error has to do with uncertainty in measurements that nothing can be done about .
+7-6:If a measurement is repeated, the values obtained will differ and none of the results can be preferred over the others .
+7-7:However, although it is not possible to do anything about such error, it can be characterized .
+7-8:As described in Section 4, we make measurements on samples that are drawn randomly from a given population of players .
+7-9:Now, there are statistical errors associated with sampling which are unavoidable and must be lived with .
+7-10:Hence, if the result of a measurement is to have meaning it cannot consist of the measured value alone .
+7-11:An indication of how accurate the result is must be included also .
+7-12:Thus, the result of any physical measurement has two essential components: quantity measured, and For example, if the estimate of a quantity is x and the uncertainty is e(x) the quantity would lie in x ± e(x) .
+7-13:For sampling experiments, the standard error is by far the most common way of characterising uncertainty [22] .
+7-14:Given this, the following section defines this error and uses it to evaluate the performance of the proposed randomized method .
+7-15:5.1 Approximation error The accuracy of the above randomized method depends on its sampling error which is defined as follows [22, 4]: DEFINITION 2 .
+7-16:The sampling error (or standard error) is defined as the standard deviation for a set of measurements divided by the square root of the number of measurements .
+7-17:To this end, let e(σX ) be the sampling error in the sum of the weights for a sample of size X drawn from the distribution N(Xμ, ν X ) where: e(σX ) = p (ν X) p = p (ν) X (4) Let e(ΔX i ) denote the error in the marginal contribution for player i (given in Equation 2) .
+7-18:This error is obtained by propagating the error in Equation 4 to Equation 2 .
+7-19:In Equation 2, a and b are the lower and upper limits for the sum of the players" weights for a The Sixth Intl .
+7-20:Joint Conf .
+7-21:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 963 b C B a − e (σX ) a A )X(σeb+ Sum of weights Z1 Z2 Figure 1: A normal distribution for the sum of players" weights in a coalition of size X .
+7-22:40 60 80 100 0 50 100 0 5 10 15 20 25 QuotaWeight PercentageerrorintheShapleyvalue Figure 2: Performance of the randomized method for m = 10 players .
+7-23:coalition of size X .
+7-24:Since the error in this sum is e(σX ), the actual values of a and b lie in the interval a ± e(σX ) and b ± e(σX ) respectively .
+7-25:Hence, the error in Equation 2 is either the probability that the sum lies between the limits a − e(σX ) and a (i.e., the area under the curve defined by N(Xμ, ν X ) between a − e(σX ) and a, which is the shaded region A in Figure 1) or the probability that the sum of weights lies between the limits b and b+e(σX ) (i.e., the area under the curve defined by N(Xμ, ν X ) between b and b + e(σX ), which is the shaded region C in Figure 1) .
+7-26:More specifically, the error is the maximum of these two probabilities: e(ΔX i ) = 1 p (2πν X) × MAX „Z a a−e(σX ) e−X (x−Xμ)2 2ν dx, Z b+e(σX ) b e−X (x−Xμ)2 2ν dx « On the basis of the above error, we find the error in the Shapley value by using the following standard error propagation rules [22]: R1 If x and y are two random variables with errors e(x) and e(y) respectively, then the error in the random variable z = x + y is given by: e(z) = e(x) + e(y) R2 If x is a random variable with error e(x) and z = kx where 0 100 200 300 400 500 0 100 200 300 400 500 0 5 10 15 20 25 QuotaWeight PercentageerrorintheShapleyvalue Figure 3: Performance of the randomized method for m = 50 players .
+7-27:the constant k has no error, then the error in z is: e(z) = |k|e(x) Using the above rules, the error in the Shapley value (given in Equation 3) is obtained by propagating the error in Equation 4 to all coalitions between the sizes X = 1 and X = m .
+7-28:Let e(ϕi) denote this error where: e(ϕi) = 1 m mX X=1 e(ΔX i ) We analyze the performance of our method in terms of the percentage error PE in the approximate Shapley value which is defined as follows: PE = 100 × e(ϕi) ϕi (5) 5.2 Experimental Results We now compute the percentage error in the Shapley value using the above equation for PE .
+7-29:Since this error depends on the parameters of the voting game, we evaluate it in a range of settings by systematically varying the parameters of the voting game .
+7-30:In particular, we conduct experiments in the following setting .
+7-31:For a player with weight w, the percentage error in a player"s Shapley value depends on the following five parameters (see Equation 3): .
+8 The number of parties (m). :
+8-1:.
+9 The mean weight (μ). :
+9-1:.
+10 The quota for the voting game (q). :
+10-1:.
+11 The given player"s weight (w). :
+11-1:We fix μ = 10 and ν = 1 .
+11-2:This is because, for the normal distribution, μ = 10 ensures that for almost all the players the weight is positive, and ν = 1 is used most commonly in statistical experiments (ν can be higher or lower but PE is increasing in νsee Equations 4 and 5) .
+11-3:We then vary m, q, and w as follows .
+11-4:We vary m between 5 and 100 (since beyond 100 we found that the error is close to zero), for each m we vary q between 4μ and mμ (we impose these limits because they ensure that the size of the 964 The Sixth Intl .
+11-5:Joint Conf .
+11-6:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 0 200 400 600 800 1000 0 200 400 600 800 1000 0 5 10 15 20 25 QuotaWeight PercentageerrorintheShapleyvalue Figure 4: Performance of the randomized method for m = 100 players .
+11-7:winning coalition is more than one and less than m see Section 3 for details), and for each q, we vary w between 1 and q−1 (because a winning coalition must contain at least two players) .
+11-8:The results of these experiments are shown in Figures 2, 3, and 4 .
+11-9:As seen in the figures, the maximum PE is around 20% and in most cases it is below 5% .
+11-10:We now analyse the effect of the three parameters: w, q, and m on the percentage error in more detail .
+11-11:Effect of w .
+11-12:The PE depends on e(σX ) because, in Equation 5, the limits of integration depend on e(σX In order to overcome the computational complexity of finding the Shapley value, two main approaches have been proposed in the literature .
+11-13:One approach is to use generating functions [3] .
+11-14:This method is an exact procedure that overcomes the problem of time complexity, but its storage requirements are substantial it requires huge arrays .
+11-15:It also has the limitation (not shared by other approaches) that it can only be applied to games with integer weights and quotas .
+11-16:The other method uses an approximation technique based on Monte Carlo simulation .
+11-17:In [12], for instance, the Shapley value is computed by considering a random sample from a large population of players .
+11-18:The method we propose differs from this in that they define the Shapley value by treating a player"s number of swings (if a player can change a losing coalition to a winning one, then, for the player, the coalition is counted as a swing) as a random variable, while we treat the players" weights as random variables .
+11-19:In [12], however, the question remains how to get the number of swings from the definition of a voting game and what is the time complexity of doing this .
+11-20:Since the voting game is defined in terms of the players" weights and the number of swings are obtained from these weights, our method corresponds more closely to the definition of the voting game .
+11-21:Our method also differs from [7] in that while [7] presents a method for the case where all the players" weights are distributed normally, our method applies to any type of distribution for these weights .
+11-22:Thus, as stated in Section 1, our method is more general than [3, 12, 7] .
+11-23:Also, unlike all the above mentioned work, we provide an analysis of the performance of our method in terms of the percentage error in the approximate Shapley value .
+11-24:A method for finding the Shapley value was also proposed in [5] .
+11-25:This method gives the exact Shapley value, but its time complexity is exponential .
+11-26:Furthermore, the method can be used only if the game is represented in a specific form (viz., the multi issue representation), not otherwise .
+11-27:Finally, [9, 10] present a polynomial time method for finding the Shapley value .
+11-28:This method can be used if the coalition game is represented as a marginal contribution net .
+11-29:Furthermore, they assume that the Shapley value of a component of a given coalition game is given by an oracle, and on the basis of this assumption aggregate these values to find the value for the overall game .
+11-30:In contrast, our method is independent The Sixth Intl .
+11-31:Joint Conf .
+11-32:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 965 of the representation and gives an approximate Shapley value in linear time, without the need for an oracle. .
+12 CONCLUSIONS AND FUTURE WORK :
+12-1:Coalition formation is an important form of interaction in multiagent systems .
+12-2:An important issue in such work is for the agents to decide how to split the gains from cooperation between the members of a coalition .
+12-3:In this context, cooperative game theory offers a solution concept called the Shapley value .
+12-4:The main advantage of the Shapley value is that it provides a solution that is both unique and fair .
+12-5:However, its main problem is that, for many coalition games, the Shapley value cannot be determined in polynomial time .
+12-6:In particular, the problem of finding this value for the voting game is #P complete .
+12-7:Although this problem is, in general #P complete, we show that there are some specific voting games for which the Shapley value can be determined in polynomial time and characterise such games .
+12-8:By doing so, we have shown when it is computationally feasible to find the exact Shapley value .
+12-9:For other complex voting games, we presented a new randomized method for determining the approximate Shapley value .
+12-10:The time complexity of the proposed method is linear in the number of players .
+12-11:We analysed the performance of this method in terms of the percentage error in the approximate Shapley value .
+12-12:Our experiments show that the percentage error in the Shapley value is at most 20 .
+12-13:Furthermore, in most cases, the error is less than 5% .
+12-14:Finally, we analyse the effect of the different parameters of the voting game on this error .
+12-15:Our study shows that the error decreases as .
+13 a player"s weight increases, :
+13-1:.
+14 the quota increases, and :
+14-1:.
+15-1:Given the fact that software agents have limited computational resources and therefore cannot compute the true Shapley value, our results are especially relevant to such resource bounded agents
+15-2:In future, we will explore the problem of determining the Shapley value for other commonly occurring coalition games like the production economy and the market economy.
+16-1:R
+16-2:Aumann
+16-3:Acceptable points in general cooperative n person games
+16-4:In Contributions to theTheory of Games volume IV
+16-5:Princeton University Press, 1959
+16-6:G
+16-7:Ausiello, P
+16-8:Crescenzi, G
+16-9:Gambosi, V
+16-10:Kann, A
+16-11:Marchetti Spaccamela, and M
+16-12:Protasi
+16-13:Complexity and approximation: Combinatorial optimization problems and their approximability properties
+16-14:Springer, 2003
+16-15:J
+16-16:M
+16-17:Bilbao, J
+16-18:R
+16-19:Fernandez, A
+16-20:J
+16-21:Losada, and J
+16-22:J
+16-23:Lopez
+16-24:Generating functions for computing power indices efficiently
+16-25:Top 8, 2:191 213, 2000
+16-26:P
+16-27:Bork, H
+16-28:Grote, D
+16-29:Notz, and M
+16-30:Regler
+16-31:Data Analysis Techniques in High Energy Physics Experiments
+16-32:Cambridge University Press, 1993
+16-33:V
+16-34:Conitzer and T
+16-35:Sandholm
+16-36:Computing Shapley values, manipulating value division schemes, and checking core membership in multi issue domains
+16-37:In Proceedings of the National Conference on Artificial Intelligence, pages 219 225, San Jose, California, 2004
+16-38:X
+16-39:Deng and C
+16-40:H
+16-41:Papadimitriou
+16-42:On the complexity of cooperative solution concepts
+16-43:Mathematics of Operations Research, 19(2):257 266, 1994
+16-44:S
+16-45:S
+16-46:Fatima, M
+16-47:Wooldridge, and N
+16-48:R
+16-49:Jennings
+16-50:An analysis of the shapley value and its uncertainty for the voting game
+16-51:In Proc
+16-52:7th Int
+16-53:Workshop on Agent Mediated Electronic Commerce, pages 39 52, 2005
+16-54:A
+16-55:Francis
+16-56:Advanced Level Statistics
+16-57:Stanley Thornes Publishers, 1979
+16-58:S
+16-59:Ieong and Y
+16-60:Shoham
+16-61:Marginal contribution nets: A compact representation scheme for coalitional games
+16-62:In Proceedings of the Sixth ACM Conference on Electronic Commerce, pages 193 202, Vancouver, Canada, 2005
+16-63:S
+16-64:Ieong and Y
+16-65:Shoham
+16-66:Multi attribute coalition games
+16-67:In Proceedings of the Seventh ACM Conference on Electronic Commerce, pages 170 179, Ann Arbor, Michigan, 2006
+16-68:J
+16-69:P
+16-70:Kahan and A
+16-71:Rapoport
+16-72:Theories of Coalition Formation
+16-73:Lawrence Erlbaum Associates Publishers, 1984
+16-74:I
+16-75:Mann and L
+16-76:S
+16-77:Shapley
+16-78:Values for large games iv: Evaluating the electoral college exactly
+16-79:Technical report, The RAND Corporation, Santa Monica, 1962
+16-80:A
+16-81:MasColell, M
+16-82:Whinston, and J
+16-83:R
+16-84:Green
+16-85:Microeconomic Theory
+16-86:Oxford University Press, 1995
+16-87:M
+16-88:J
+16-89:Osborne and A
+16-90:Rubinstein
+16-91:A Course in Game Theory
+16-92:The MIT Press, 1994
+16-93:C
+16-94:H
+16-95:Papadimitriou
+16-96:Computational Complexity
+16-97:Addison Wesley Longman, 1994
+16-98:A
+16-99:Rapoport
+16-100:N person Game Theory : Concepts and Applications
+16-101:Dover Publications, Mineola, NY, 2001
+16-102:A
+16-103:E
+16-104:Roth
+16-105:Introduction to the shapley value
+16-106:In A
+16-107:E
+16-108:Roth, editor, The Shapley value, pages 1 27
+16-109:University of Cambridge Press, Cambridge, 1988
+16-110:T
+16-111:Sandholm and V
+16-112:Lesser
+16-113:Coalitions among computationally bounded agents
+16-114:Artificial Intelligence Journal, 94(1):99 137, 1997
+16-115:L
+16-116:S
+16-117:Shapley
+16-118:A value for n person games
+16-119:In A
+16-120:E
+16-121:Roth, editor, The Shapley value, pages 31 40
+16-122:University of Cambridge Press, Cambridge, 1988
+16-123:O
+16-124:Shehory and S
+16-125:Kraus
+16-126:A kernel oriented model for coalition formation in general environments: Implemetation and results
+16-127:In In Proceedings of the National Conference on Artificial Intelligence (AAAI 96), pages 131 140, 1996
+16-128:O
+16-129:Shehory and S
+16-130:Kraus
+16-131:Methods for task allocation via agent coalition formation
+16-132:Artificial Intelligence Journal, 101(2):165 200, 1998
+16-133:J
+16-134:R
+16-135:Taylor
+16-136:An introduction to error analysis: The study of uncertainties in physical measurements
+16-137:University Science Books, 1982
+16-138:966 The Sixth Intl
+16-139:Joint Conf
+16-140:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

@@ -1,0 +1,19 @@
+We call such an information need a task, and the associated questions as the queries in this task .
+A distillation system is supposed to monitor the incoming documents, process them chunk by chunk in a temporal order, select potentially relevant and novel passages from each chunk with respect to each query, and present a ranked list of passages to the user .
+Passage ranking here is based on how relevant a passage is with respect to the current query, how novel it is with respect to the current user history (of his or her interactions with the system), and how redundant it is compared to other passages with a higher rank in the list .
+When presented with a list of passages, the user may provide feedback by highlighting arbitrary spans of text that he or she found relevant .
+These spans of text are taken as positive examples in the adaptation of the query profile, and also added to the user"s history .
+Passages not marked by the user are taken as negative examples .
+As soon as the query profile is updated, the system re issues a search and returns another ranked list of passages where the previously seen passages are either removed or ranked low, based on user preference .
+For example, if the user highlights бе...officials have posted a $100,000 reward for their capture..." as relevant answer to the query What steps have been taken so far?, then the highlighted piece is used as an additional positive training example in the adaptation of the query profile .
+This piece of feedback is also added to the user history as a seen example, so that in future, the system will not place another passage mentioning бе$100,000 reward" at the top of the ranked list .
+However, an article mentioning бе...officials have doubled the reward money to $200,000..." might be ranked high since it is both relevant to the (updated) query profile and novel with respect to the (updated) user history .
+The user may modify the original queries or add a new query during the process; the query profiles will be changed accordingly .
+Clearly, novelty detection is very important for the utility of such a system because of the iterative search .
+Without novelty detection, the old relevant passages would be shown to the user repeatedly in each ranked list .
+Through the above example, we can see the main properties of our new framework for utility based information distillation over temporally ordered documents .
+Our framework combines and extends the power of adaptive filtering (AF), ad hoc retrieval and novelty detection .
+Compared to standard IR, our approach has the power of incrementally learning long term information needs and modeling a sequence of queries within a task .
+Compared to conventional AF, it enables a more active role of the user in refining his or her information needs and requesting new results by allowing relevance and novelty feedback via highlighting of arbitrary spans of text in passages returned by the system .
+Compared to past work, this is the first evaluation of novelty detection integrated with adaptive filtering for sequenced queries that allows flexible user feedback over ranked passages .
+The combination of AF, IR and ND with the new extensions raises an important research question regarding evaluation methodology

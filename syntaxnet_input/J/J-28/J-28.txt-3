@@ -1,0 +1,41 @@
+VCG AUCTIONS In this section, we first describe the marginal decreasing piecewise bidding language that is used in our forward and reverse auctions .
+Continuing, we introduce the VCG mechanism for the problem and the £` dominance results for approximations to VCG outcomes .
+We also discuss the economic properties of VCG mechanisms in these forward and reverse auction multi unit settings .
+2.1 Marginal Decreasing Piecewise Bids We provide a piecewise constant and marginal decreasing bidding language .
+This bidding language is expressive for a natural class of valuation and cost functions
+See Figure 1 for an example .
+In addition, we slightly relax the marginal decreasing requirement to allow
+Reverse Auction Bid 7 5 10 20 25 10 8 Quantity Price 7 5 10 20 25 10 8 Quantity Price Forward Auction Bid Figure 1
+In the forward auction bid, the bidder offers $10 per unit for quantity in the range [5, 10), $8 per unit in the range [10, 20), and $7 in the range [20, 25] .
+Her valuation is zero for quantities outside the range [10, 25] .
+In the reverse auction bid, the cost of the seller is ¡Û outside the range [10, 25] .
+In detail, in a forward auction, a bid from buyer i can be written as a list of (quantity range, unit price) tuples, ((u1 i , p1 i ), (u2 i , p2 i ), .
+.
+.
+, (umi?1 i , pmi?1 i )), with an upper bound umi i on the quantity .
+The interpretation is that the bidder"s valuation in the 167 (semi open) quantity range [uj i , uj+1 i ) is pj i for each unit .
+Additionally, it is assumed that the valuation is 0 for quantities less than u1 i as well as for quantities more than um i .
+This is implemented by adding two dummy bid tuples, with zero prices in the range [0, u1 i ) and (umi i , ¡Û) .
+We interpret the bid list as defining a price function, pbid,i(q) = qpj i , if uj i ? q < uj+1 i , where j = 1, 2, .
+.
+.
+, mi ?1 .
+In order to resolve the boundary condition, we assume that the bid price for the upper bound quantity umi i is pbid,i(umi i ) = umi i pmi?1 i .
+A seller"s bid is similarly defined in the reverse auction .
+The interpretation is that the bidder"s cost in the (semi open) quantity range [uj i , uj+1 i ) is pj i for each unit .
+Additionally, it is assumed that the cost is ¡Û for quantities less than u1 i as well as for quantities more than um i .
+Equivalently, the unit prices in the ranges [0, u1 i ) and (um i , ¡Û) are infinity .
+We interpret the bid list as defining a price function, pask,i(q) = qpj i , if uj i ? q < uj+1 i .
+2.2 VCG Based Multi Unit Auctions We construct the tractable and approximately strategyproof multiunit auctions around a VCG mechanism .
+We assume that all agents have quasilinear utility functions; that is, ui(q, p) = vi(q)? p, for a buyer i with valuation vi(q) for q units at price p, and ui(q, p) = p ? ci(q) for a seller i with cost ci(q) at price p .
+This is a standard assumption in the auction literature, equivalent to assuming risk neutral agents [13] .
+We will use the term payoff interchangeably for utility .
+In the forward auction, there is a seller with M units to sell .
+We assume that this seller has no intrinsic value for the items .
+Given a set of bids from I agents, let V denote the maximal revenue to the seller, given that at most one point on the bid curve can be selected from each agent and no more than M units of the item can be sold .
+Let x? = (x? 1, .
+.
+.
+, x? N ) denote the solution to this winner determination problem, where x? i is the number of units sold to agent i .
+Similarly, let V (I \ i) denote the maximal revenue to the seller without bids from agent i .
+The VCG mechanism is defined as follows

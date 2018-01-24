@@ -1,0 +1,51 @@
+2.1 Data Grid The Data Grids enable the sharing, selection, and connection of a wide variety of geographically distributed computational and storage resources for solving large scale data intensive scientific applications (e.g., high energy physics, bioinformatics applications, and astrophysical virtual observatory) .
+The term Data Grid traditionally represents the network of distributed storage resources, from archival systems to caches and databases, which are linked using a logical name space to create global, persistent identifiers and provide uniform access mechanisms [4] .
+Data Grids [1, 2, 16] federate a lot of storage resources .
+Large collections of measured or computed data are emerging as important resources in many data intensive applications .
+2.1.1 Replica Management Replica management involves creating or removing replicas at a data grid site [19] .
+In other words, the role of a replica manager is to create or delete replicas, within specified storage systems .
+Most often, these replicas are exact copies of the original files, created only to harness certain performance benefits .
+A replica manager typically maintains a replica catalog containing replica site addresses and the file instances .
+The replica management service is responsible for managing the replication of complete and partial copies of datasets, defined as collections of files .
+The replica management service is just one component in a Data Grid environment that provides support for high performance, data intensive applications .
+A replica or location is a subset of a collection that is stored on a particular physical storage system .
+There may be multiple possibly overlapping subsets of a collection stored on multiple storage systems in a Data Grid .
+These Grid storage systems may use a variety of underlying storage technologies and data movement protocols, which are independent of replica management .
+2.1.2 Replica Catalog As mentioned above, the purpose of the replica catalog is to provide mappings between logical names for files or collections and one or more copies of the objects on physical storage systems .
+The replica catalog includes optional entries that describe individual logical files .
+Logical files are entities with globally unique names that may have one or more physical instances .
+The catalog may optionally contain one logical file entry in the replica catalog for each logical file in a collection .
+A Data Grid may contain multiple replica catalogs .
+For example, a community of researchers interested in a particular research topic might maintain a replica catalog for a collection of data sets of mutual interest .
+It is possible to create hierarchies of replica catalogs to impose a directory like structure on related logical collections .
+In addition, the replica manager can perform access control on entire catalogs as well as on individual logical files .
+2.1.3 Replica Selection The purpose of replica selection [16] is to select a replica from among the sites which constitute a Data Grid [19] .
+The criteria of selection depend on characteristics of the application .
+By using this mechanism, users of the Data Grid can easily manage replicas of data sets at their sites, with better performance .
+Much previous effort has been devoted to the replica selection problem .
+The common process of replica selection consists of three steps
+Then, applications can select a replica according to its specific attributes .
+Replica selection is important to data intensive applications, and it can provide location transparency .
+When a user requests for accessing a data set, the system determines an appropriate way to deliver the replica to the user .
+2.2 Globus Toolkit and GridFTP The Globus Project [9, 11, 16] provides software tools collectively called The Globus Toolkit that makes it easier to build computational Grids and Grid based applications .
+Many organizations use the Globus Toolkit to build computational Grids to support their applications .
+The composition of the Globus Toolkit can be pictured as three pillars
+Each pillar represents a primary component of the Globus Toolkit and makes use of a common foundation of security .
+GRAM implements a resource management protocol, MDS implements an information services protocol, and GridFTP implements a data transfer protocol .
+They all use the GSI security protocol at the connection layer [10, 11, 16, 13] .
+The Globus alliance proposed a common data transfer and access protocol called GridFTP that provides secure, efficient data movement in Grid environments [3] .
+This protocol, which extends the standard FTP protocol, provides a superset of the features offered by the various Grid storage systems currently in use .
+In order to solve the appearing problems, the Data Grid community tries to develop a secure, efficient data transport mechanism and replica management services .
+GridFTP is a reliable, secure and efficient data transport protocol which is developed as a part of the Globus project .
+There is another key technology from Globus project, called replica catalog [16] which is used to register and manage complete and partial copies of data sets .
+The replica catalog contains the mapping information from a logical file or collection to one or more physical files .
+2.3 Network Weather Service The Network Weather Service [22] is a generalized and distributed monitoring system for producing short term performance forecasts based on historical performance measurements .
+The goal of the system is to dynamically characterize and forecast the performance deliverable at the application level from a set of network and computational resources .
+A typical installation involves one nws_nameserver, one or more nws_memory (which may reside on different machines), and an nws_sensor running on each machine with resources which are to be monitored .
+The system includes sensors for end to end TCP IP performance (bandwidth and latency), available CPU percentage, and available non paged memory .
+798 2.4 Sysstat Utilities The Sysstat [15] utilities are a collection of performance monitoring tools for the Linux OS .
+The Sysstat package incorporates the sar, mpstat, and iostat commands .
+The sar command collects and reports system activity information, which can also be saved in a system activity file for future inspection .
+The iostat command reports CPU statistics and I O statistics for tty devices and disks .
+The statistics reported by sar concern I O transfer rates, paging activity, process related activities, interrupts, network activity, memory and swap space utilization, CPU utilization, kernel activities, and tty statistics, among others .
+Uniprocessor and Symmetric multiprocessor machines are fully supported. .

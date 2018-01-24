@@ -1,0 +1,73 @@
+MODEL From the previous section, we notice that the Poisson language model has a strong connection to the multinomial language model .
+This is expected since they both belong to the exponential family [26] .
+However, there are many differences when these two families of models are applied with different smoothing methods .
+From the perspective of retrieval, will these two language models perform equivalently? If not, which model provides more benefits to retrieval, or provides flexibility which could lead to potential benefits? In this section, we analytically discuss the retrieval features of the Poisson language models, by comparing their behavior with that of the multinomial language models .
+3.1 The Equivalence of Basic Models Let us begin with the assumption that all the query terms appear in every document .
+Under this assumption, no smoothing is needed .
+A document can be scored by the log likelihood of the query with the maximum likelihood estimate
+Thus Score(d, q) ? c(w,q)>0 c(w, q) log c(w, d) w?V c(w, d) This is exactly the log likelihood of the query if the document language model is a multinomial with maximum likelihood estimate .
+Indeed, even with Gamma smoothing, when plugging £fd,w = c(w,d)+?£fC,w |d|+? and £fC,w = c(w,C) |C| into Equation 5, it is easy to show that Score(d, q) ? w?q¡äd c(w, q) log(1 + c(w, d) ? ¡P c(w,C) |C| ) + |q| log ? |d| + ? (6) which is exactly the Dirichlet retrieval formula in [28] .
+Note that this equivalence holds only when the document length variation is modeled with Poisson process .
+This derivation indicates the equivalence of the basic Poisson and multinomial language models for retrieval .
+With other smoothing strategies, however, the two models would be different .
+Nevertheless, with this equivalence in basic models, we could expect that the Poisson language model performs comparably to the multinomial language model in retrieval, if only simple smoothing is explored .
+Based on this equivalence analysis, one may ask, why we should pursue the Poisson language model .
+In the following sections, we show that despite the equivalence in their basic models, the Poisson language model brings in extra flexibility for exploring advanced techniques on various retrieval features, which could not be achieved with multinomial language models .
+3.2 Term Dependent Smoothing One flexibility of the Poisson language model is that it provides a natural framework to accommodate term dependent (per term) smoothing .
+Existing work on language model smoothing has already shown that different types of queries should be smoothed differently according to how discriminative the query terms are .
+[7] also predicted that different terms should have a different smoothing weights .
+With multinomial query generation models, people usually use a single smoothing coefficient to control the combination of the document model and the background model [28, 29] .
+This parameter can be made specific for different queries, but always has to be a constant for all the terms .
+This is mandatory since a multinomial language model has the constraint that w?V p(w|d) = 1 .
+However, from retrieval perspective, different terms may need to be smoothed differently even if they are in the same query .
+For example, a non discriminative term (e.g., the, is) is expected to be explained more with the background model, while a content term (e.g., retrieval, bush) in the query should be explained with the document model .
+Therefore, a better way of smoothing would be to set the interpolation coefficient (i.e., £_ in Formula 2 and Formula 3) specifically for each term .
+Since the Poisson language model does not have the sum to one constraint across terms, it can easily accommodate per term smoothing without needing to heuristically twist the semantics of a generative model as in the case of multinomial language models .
+Below we present a possible way to explore term dependent smoothing with Poisson language models .
+Essentially, we want to use a term specific smoothing coefficient £_ in the linear combination, denoted as £_w .
+This coefficient should intuitively be larger if w is a common word and smaller if it is a content word .
+The key problem is to find a method to assign reasonable values to £_w .
+Empirical tuning is infeasible for so many parameters .
+We may instead estimate the parameters ? = {£_1, ..., £_|V |} by maximizing the likelihood of the query given the mixture model of p(q|£NQ) and p(q|U), where £NQ is the true query model to generate the query and p(q|U) is a query background model as discussed in Section 2.2.3 .
+With the model p(q|£NQ) hidden, the query likelihood is p(q|?, U) = £NQ w?V ((1 ? £_w)p(c(w, q)|£NQ) + £_wp(c(w, q)|U))P(£NQ|U)d£NQ If we have relevant documents for each query, we can approximate the query model space with the language models of all the relevant documents .
+Without relevant documents, we opt to approximate the query model space with the models of all the documents in the collection .
+Setting p(¡P|U) as p(¡P|C), the query likelihood becomes p(q|?, U) = d?C £kd w?V ((1?£_w)p(c(w, q)|?£Nd)+£_wp(c(w, q)|C)) where £kd = p(?£Nd|U) .
+p(¡P|?£Nd) is an estimated Poisson language model for document d .
+If we have prior knowledge on p(?£Nd|U), such as which documents are relevant to the query, we can set £kd accordingly, because what we want is to find ? that can maximize the likelihood of the query given relevant documents .
+Without this prior knowledge, we can leave £kd as free parameters, and use the EM algorithm to estimate £kd and ? .
+The updating functions are given as £k (k+1) d = £kd w?V ((1 ? £_w)p(c(w, q)|?£Nd) + £_wp(c(w, q)|C)) d?C £kd w?V ((1 ? £_w)p(c(w, q)|?£Nd) + £_wp(c(w, q)|C)) and £_ (k+1) w = d?C £kd £_wp(c(w, q)|C)) (1 ? £_w)p(c(w, q)|?£Nd) + £_wp(c(w, q)|C)) As discussed in [29], we only need to run the EM algorithm for several iterations, thus the computational cost is relatively low .
+We again assume our vocabulary containing all query terms plus a pseudo non query term .
+Note that the function does not give an explicit way of estimating the coefficient for the unseen non query term .
+In our experiments, we set it to the average over £_w of all query terms .
+With this flexibility, we expect Poisson language models could improve the retrieval performance, especially for verbose queries, where the query terms have various discriminative values .
+In Section 4, we use empirical experiments to prove this hypothesis .
+3.3 Mixture Background Models Another flexibility is to explore different background (collection) models (i.e., p(¡P|U), or p(¡P|C)) .
+One common assumption made in language modeling information retrieval is that the background model is a homogeneous model of the document models [28, 29] .
+Similarly, we can also make the assumption that the collection model is a Poisson language model, with the rates £fC,w = d?C c(w,d) |C| .
+However, this assumption usually does not hold, since the collection is far more complex than a single document .
+Indeed, the collection usually consists of a mixture of documents with various genres, authors, and topics, etc .
+Treating the collection model as a mixture of document models, instead of a single pseudo document model is more reasonable .
+Existing work of multinomial language modeling has already shown that a better modeling of background improves the retrieval performance, such as clusters [15, 10], neighbor documents [25], and aspects [8, 27] .
+All the approaches can be easily adopted using Poisson language models .
+However, a common problem of these approaches is that they all require heavy computation to construct the background model .
+With Poisson language modeling, we show that it is possible to model the mixture background without paying for the heavy computational cost .
+Poisson Mixture [3] has been proposed to model a collection of documents, which can fit the data much better than a single Poisson .
+The basic idea is to assume that the collection is generated from a mixture of Poisson models, which has the general form of p(x = k|PM) = £f p(£f)p(x = k|£f)d£f p(¡P|£f) is a single Poisson model and p(£f) is an arbitrary probability density function .
+There are three well known Poisson mixtures [3]
+Note that the 2 Poisson model has actually been explored in probabilistic retrieval models, which led to the well known BM25 formula [22] .
+All these mixtures have closed forms, and can be estimated from the collection of documents efficiently .
+This is an advantage over the multinomial mixture models, such as PLSI [8] and LDA [1], for retrieval .
+For example, the probability density function of Katz"s K Mixture is given as p(c(w) = k|£\w, £]w) = (1 ? £\w)£bk,0 + £\w £]w + 1 ( £]w £]w + 1 )k where £bk,0 = 1 when k = 0, and 0 otherwise .
+With the observation of a collection of documents, £\w and £]w can be estimated as £]w = cf(w) ? df(w) df(w) and £\w = cf(w) N£]w where cf(w) and df(w) are the collection frequency and document frequency of w, and N is the number of documents in the collection .
+To account for the different document lengths, we assume that £]w is a reasonable estimation for generating a document of the average length, and use £] = £]w avdl |q| to generate the query .
+This Poisson mixture model can be easily used to replace P(¡P|C) in the retrieval functions 3 and 4 .
+3.4 Other Possible Flexibilities In addition to term dependent smoothing and efficient mixture background, a Poisson language model has also some other potential advantages .
+For example, in Section 2, we see that Formula 2 introduces a component which does document length penalization .
+Intuitively, when the document has more unique words, it will be penalized more .
+On the other hand, if a document is exactly n copies of another document, it would not get over penalized .
+This feature is desirable and not achieved with the Dirichlet model [5] .
+Potentially, this component could penalize a document according to what types of terms it contains .
+With term specific settings of £_, we could get even more flexibility for document length normalization .
+Pseudo feedback is yet another interesting direction where the Poission model might be able to show its advantage .
+With model based feedback, we could again relax the combination coefficients of the feedback model and the background model, and allow different terms to contribute differently to the feedback model .
+We could also utilize the relevant documents to learn better per term smoothing coefficients. .

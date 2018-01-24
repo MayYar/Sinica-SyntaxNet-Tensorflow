@@ -1,0 +1,65 @@
+In this paper, we consider the following general problem .
+Given a sender and a large set of interested receivers spread across the Internet, how can we maximize the amount of bandwidth delivered to receivers? Our problem domain includes software or video distribution and real time multimedia streaming .
+Traditionally, native IP multicast has been the preferred method for delivering content to a set of receivers in a scalable fashion .
+However, a number of considerations, including scale, reliability, and congestion control, have limited the wide scale deployment of IP multicast .
+Even if all these problems were to be addressed, IP multicast does not consider bandwidth when constructing its distribution tree .
+More recently, overlays have emerged as a promising alternative to multicast for network efficient point to multipoint data delivery .
+Typical overlay structures attempt to mimic the structure of multicast routing trees .
+In network layer multicast however, interior nodes consist of high speed routers with limited processing power and extensibility .
+Overlays, on the other hand, use programmable (and hence extensible) end hosts as interior nodes in the overlay tree, with these hosts acting as repeaters to multiple children down the tree .
+Overlays have shown tremendous promise for multicast style applications .
+However, we argue that a tree structure has fundamental limitations both for high bandwidth multicast and for high reliability .
+One difficulty with trees is that bandwidth is guaranteed to be monotonically decreasing moving down the tree .
+Any loss high up the tree will reduce the bandwidth available to receivers lower down the tree .
+A number of techniques have been proposed to recover from losses and hence improve the available bandwidth in an overlay tree [2, 6] .
+However, fundamentally, the bandwidth available to any host is limited by the bandwidth available from that node"s single parent in the tree .
+Thus, our work operates on the premise that the model for high bandwidth multicast data dissemination should be re examined .
+Rather than sending identical copies of the same data stream to all nodes in a tree and designing a scalable mechanism for recovering from loss, we propose that participants in a multicast overlay cooperate to strategically 282 transmit disjoint data sets to various points in the network .
+Here, the sender splits data into sequential blocks .
+Blocks are further subdivided into individual objects which are in turn transmitted to different points in the network .
+Nodes still receive a set of objects from their parents, but they are then responsible for locating peers that hold missing data objects .
+We use a distributed algorithm that aims to make the availability of data items uniformly spread across all overlay participants .
+In this way, we avoid the problem of locating the last object, which may only be available at a few nodes .
+One hypothesis of this work is that, relative to a tree, this model will result in higher bandwidth leveraging the bandwidth from simultaneous parallel downloads from multiple sources rather than a single parent and higher reliability retrieving data from multiple peers reduces the potential damage from a single node failure .
+To illustrate Bullet"s behavior, consider a simple three node overlay with a root R and two children A and B .
+R has 1 Mbps of available (TCP friendly) bandwidth to each of A and B .
+However, there is also 1 Mbps of available bandwidth between A and B .
+In this example, Bullet would transmit a disjoint set of data at 1 Mbps to each of A and B .
+A and B would then each independently discover the availability of disjoint data at the remote peer and begin streaming data to one another, effectively achieving a retrieval rate of 2 Mbps .
+On the other hand, any overlay tree is restricted to delivering at most 1 Mbps even with a scalable technique for recovering lost data .
+Any solution for achieving the above model must maintain a number of properties .
+First, it must be TCP friendly [15] .
+No flow should consume more than its fair share of the bottleneck bandwidth and each flow must respond to congestion signals (losses) by reducing its transmission rate .
+Second, it must impose low control overhead .
+There are many possible sources of such overhead, including probing for available bandwidth between nodes, locating appropriate nodes to peer with for data retrieval and redundantly receiving the same data objects from multiple sources .
+Third, the algorithm should be decentralized and scalable to thousands of participants .
+No node should be required to learn or maintain global knowledge, for instance global group membership or the set of data objects currently available at all nodes .
+Finally, the approach must be robust to individual failures .
+For example, the failure of a single node should result only in a temporary reduction in the bandwidth delivered to a small subset of participants; no single failure should result in the complete loss of data for any significant fraction of nodes, as might be the case for a single node failure high up in a multicast overlay tree .
+In this context, this paper presents the design and evaluation of Bullet, an algorithm for constructing an overlay mesh that attempts to maintain the above properties .
+Bullet nodes begin by self organizing into an overlay tree, which can be constructed by any of a number of existing techniques [1, 18, 21, 24, 34] .
+Each Bullet node, starting with the root of the underlying tree, then transmits a disjoint set of data to each of its children, with the goal of maintaining uniform representativeness of each data item across all participants .
+The level of disjointness is determined by the bandwidth available to each of its children .
+Bullet then employs a scalable and efficient algorithm to enable nodes to quickly locate multiple peers capable of transmitting missing data items to the node .
+Thus, Bullet layers a high bandwidth mesh on top of an arbitrary overlay tree .
+Depending on the type of data being transmitted, Bullet can optionally employ a variety of encoding schemes, for instance Erasure codes [7, 26, 25] or Multiple Description Coding [17], to efficiently disseminate data, adapt to variable bandwidth, and recover from losses .
+Finally, we use TFRC [15] to transfer data both down the overlay tree and among peers .
+This ensures that the entire overlay behaves in a congestion friendly manner, adjusting its transmission rate on a per connection basis based on prevailing network conditions .
+One important benefit of our approach is that the bandwidth delivered by the Bullet mesh is somewhat independent of the bandwidth available through the underlying overlay tree .
+One significant limitation to building high bandwidth overlay trees is the overhead associated with the tree construction protocol .
+In these trees, it is critical that each participant locates a parent via probing with a high level of available bandwidth because it receives data from only a single source (its parent) .
+Thus, even once the tree is constructed, nodes must continue their probing to adapt to dynamically changing network conditions .
+While bandwidth probing is an active area of research [20, 35], accurate results generally require the transfer of a large amount of data to gain confidence in the results .
+Our approach with Bullet allows receivers to obtain high bandwidth in aggregate using individual transfers from peers spread across the system .
+Thus, in Bullet, the bandwidth available from any individual peer is much less important than in any bandwidthoptimized tree .
+Further, all the bandwidth that would normally be consumed probing for bandwidth can be reallocated to streaming data across the Bullet mesh .
+We have completed a prototype of Bullet running on top of a number of overlay trees .
+Our evaluation of a 1000 node overlay running across a wide variety of emulated 20,000 node network topologies shows that Bullet can deliver up to twice the bandwidth of a bandwidth optimized tree (using an o?ine algorithm and global network topology information), all while remaining TCP friendly .
+We also deployed our prototype across the PlanetLab [31] wide area testbed .
+For these live Internet runs, we find that Bullet can deliver comparable bandwidth performance improvements .
+In both cases, the overhead of maintaining the Bullet mesh and locating the appropriate disjoint data is limited to 30 Kbps per node, acceptable for our target high bandwidth, large scale scenarios .
+The remainder of this paper is organized as follows .
+Section 2 presents Bullet"s system components including RanSub, informed content delivery, and TFRC .
+Section 3 then details Bullet, an efficient data distribution system for bandwidth intensive applications .
+Section 4 evaluates Bullet"s performance for a variety of network topologies, and compares it to existing multicast techniques .
+Section 5 places our work in the context of related efforts and Section 6 presents our conclusions. .

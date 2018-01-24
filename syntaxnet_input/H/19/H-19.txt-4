@@ -1,0 +1,67 @@
+In this section, we show how representative features can be extracted for (un)important or (a)periodic events .
+4.1 Spectral Analysis for Dominant Period Given a feature f, we decompose its feature trajectory yf = [yf (1), yf (2), ..., yf (T)] into the sequence of T complex numbers [X1, .
+.
+.
+, XT ] via the discrete Fourier transform (DFT)
+.
+.
+, T .
+DFT can represent the original time series as a linear combination of complex sinusoids, which is illustrated by the inverse discrete Fourier transform (IDFT)
+.
+.
+, T, where the Fourier coefficient Xk denotes the amplitude of the sinusoid with frequency k T .
+The original trajectory can be reconstructed with just the dominant frequencies, which can be determined from the power spectrum using the popular periodogram estimator .
+The periodogram is a sequence of the squared magnitude of the Fourier coefficients, Xk 2 , k = 1, 2, .
+.
+.
+, T 2 , which indicates the signal power at frequency k T in the spectrum .
+From the power spectrum, the dominant period is chosen as the inverse of the frequency with the highest power spectrum, as follows .
+Definition 4 .
+(Dominant Period) The dominant period of a given feature f is Pf = T arg max k Xk 2 .
+Accordingly, we have Definition 5 .
+(Dominant Power Spectrum) The dominant power spectrum of a given feature f is Sf = Xk 2 , with Xk 2 ? Xj 2 , ?j = k .
+4.2 Categorizing Features The DPS of a feature trajectory is a strong indicator of its activeness at the specified frequency; the higher the DPS, the more likely for the feature to be bursty .
+Combining DPS with DP, we therefore categorize all features into four types
+? HH
+The boundary between long term and short term periodic is set to T 2 .
+However, distinguishing between a high and low DPS is not straightforward, which will be tackled later .
+Properties of Different Feature Sets To better understand the properties of HH, HL, LH and LL, we select four features, Christmas, soccer, DBS and your as illustrative examples .
+Since the boundary between high and low power spectrum is unclear, these chosen examples have relative wide range of power spectrum values .
+Figure 2(a) shows the DFIDF trajectory for Christmas with a distinct burst around Christmas day .
+For the 1 year Reuters dataset, Christmas is classified as a typical aperiodic event with Pf = 365 and Sf = 135.68, as shown in Figure 2(b) .
+Clearly, the value of Sf = 135.68 is reasonable for a well known bursty event like Christmas .
+0 0.5 1 1.5 8 20 1996 12 8 1996 3 28 1997 7 16 1997 (a) Christmas(DFIDF
+The DFIDF trajectory for soccer is shown in Figure 3(a), from which we can observe that there is a regular burst every 7 days, which is again verified by its computed value of Pf = 7, as shown in Figure 3(b) .
+Using the domain knowledge that soccer games have more matches every Saturday, which makes it a typical and heavily reported periodic event, we thus consider the value of Sf = 155.13 to be high .
+0 0.2 0.4 0.6 8 20 1996 12 8 1996 3 28 1997 7 16 1997 (a) soccer(DFIDF
+From the DFIDF trajectory for DBS in Figure 4(a), we can immediately deduce DBS to be an infrequent word with a trivial burst on 08 17 1997 corresponding to DBS Land Ra?es Holdings plans .
+This is confirmed by the long period of Pf = 365 and low power of Sf = 0.3084 as shown in Figure 4(b) .
+Moreover, since this aperiodic event is only reported in a few news stories over a very short time of few days, we therefore say that its low power value of Sf = 0.3084 is representative of unimportant events .
+The most confusing example is shown in Figure 5 for the word feature your, which looks very similar to the graph for soccer in Figure 3 .
+At first glance, we may be tempted to group both your and soccer into the same category of HL or LL since both distributions look similar and have the same dominant period of approximately a week .
+However, further 0 0.05 0.1 0.15 8 20 1996 12 8 1996 3 28 1997 7 16 1997 (a) DBS(DFIDF
+analysis indicates that the periodicity of your is due to the differences in document counts for weekdays (average 2,919 per day) and weekends3 (average 479 per day) .
+One would have expected the periodicity of a stopword like your to be a day .
+Moreover, despite our DFIDF normalization, the weekday weekend imbalance still prevailed; stopwords occur 4 times more frequently on weekends than on weekdays .
+Thus, the DPS remains the only distinguishing factor between your (Sf = 9.42) and soccer (Sf = 155.13) .
+However, it is very dangerous to simply conclude that a power value of S = 9.42 corresponds to a stopword feature .
+0 0.05 0.1 0.15 0.2 8 20 1996 12 8 1996 3 28 1997 7 16 1997 (a) your(DFIDF
+Before introducing our solution to this problem, let"s look at another LL example as shown in Figure 6 for beenb, which is actually a confirmed typo .
+We therefore classify beenb as a noisy feature that does not contribute to any event .
+Clearly, the trajectory of your is very different from beenb, which means that the former has to be considered separately .
+0 0.001 0.002 0.003 0.004 8 20 1996 12 8 1996 3 28 1997 7 16 1997 (a) beenb(DFIDF
+Stop Words Feature Set Based on the above analysis, we realize that there must be another feature set between HL and LL that corresponds to the set of stopwords .
+Features from this set has moderate DPS and low but known dominant period .
+Since it is hard to distinguish this feature set from HL and LL only based on DPS, we introduce another factor called average DFIDF .
+As shown in Figure 5, features like your usually have a lower DPS than a HL feature like soccer, but have a much higher DFIDF than another LL noisy feature such as beenb .
+Since such properties are usually characteristics of stopwords, we group features like your into the newly defined stopword feature set .
+Since setting the DPS and DFIDF thresholds for identifying stopwords is more of an art than science, we proposed a heuristic HS algorithm, Algorithm 1 .
+The basic idea is to only use news stories from weekdays to identify stopwords .
+3 The weekends here also include public holidays falling on weekdays .
+The SW set is initially seeded with a small set of 29 popular stopwords utilized by Google search engine .
+Algorithm 1 Heuristic Stopwords detection Input
+2
+4
+We then set the boundary between high and low DPS to be the upper bound of the SW set"s DPS .
+An overview of all five feature sets is shown in Figure 7 .
+Figure 7

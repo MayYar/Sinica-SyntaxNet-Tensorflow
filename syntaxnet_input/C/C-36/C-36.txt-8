@@ -1,0 +1,11 @@
+Event content encryption can be used to enforce an access control policy while events are in transit in the broker network of a multi domain publish subscribe system
+Encryption causes an overhead, but i) there may be no alternative when access control is required, and ii) the performance penalty can be lessened with implementation optimisations, such as passing cached plaintext content alongside encrypted content between brokers with identical security credentials
+This is particularly appropriate if broker to broker connections are secured by default so that wire sniffing is not an issue
+Attribute level encryption can be implemented in order to enforce fine grained access control policies
+In addition to providing attribute level access control, attribute encryption enables partially authorised brokers to implement contentbased routing based on the attributes that are accessible to them
+Our experiments show that i) by caching plaintext and ciphertext content when possible, we are able to deliver comparable performance to plaintext events, and ii) that attribute encryption within an event incurs far less overhead than defining separate event types for the attributes that need different levels of protection
+In environments comprising multiple domains, where eventbrokers have different security credentials, we have quantified how a trade off can be made between performance and expressiveness
+Acknowledgements We would like to thank the anonymous reviewers for their very helpful comments
+Lauri Pesonen is supported by EPSRC (GR T28164) and the Nokia Foundation
+David Eyers is supported by EPSRC (GR S94919)
+114

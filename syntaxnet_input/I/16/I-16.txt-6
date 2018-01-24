@@ -1,0 +1,57 @@
+As described above, we consider the case that the advertising agents do not have an externally derived estimate of the value of exposing the advert to a single user .
+Rather, they have a constrained budget, B, and a limited period of interest during which they wish to display their advert .
+Their goal is then to find the appropriate amount to bid within each auction in this period, in order to maximise the exposure of their advert .
+In attempting to achieve this goal the advertising agent is faced with a high level of uncertainty about future events .
+It will be uncertain of the number of users who will be present during any advertising cycle since even if the number of users currently present 3 This assumption of having a single BluScreen instance is made to simplify our task of validating the correctness and the efficiency of the proposed mechanism and strategy, and generalising these results to the case of multiple screens is the aim of our future work .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 265 is known, some may leave before the advert commences, and others may arrive .
+Moreover, the amount that must be bid to ensure that an auction is won is uncertain since it depends on the number and behaviour of the competing advertising agents .
+Thus, we enable the agent to use its observations of the arrival and departure of users to build a probabilistic model, based upon independent Poisson processes, that describes the number of users who are likely to be exposed to any advert .
+In addition, we enable the agent to observe the outcome of previous advertising cycle auctions, and use the observations of the closing price, and the success or otherwise of the bids that it itself submitted, to build a probabilistic model of the bid required to win the auction .
+The agent then uses these two models to calculate its expected utility in each advertising cycle, and in turn, determine the optimal sequence of bids that maximises this utility given its constrained budget .
+Having calculated this sequence of bids, then the first bid in the sequence is actually used in the auction for the next advertising cycle .
+However, at the close of this cycle, the process is repeated with a new optimal sequence of bids being calculated in order take to account of what actually happened in the preceding auction (i.e .
+whether the bid was successful or not, and how many users arrived or departed) .
+Thus, in the next three subsections we describe these two probabilistic models, and their application within the bidding strategy of the advertising agent .
+5.1 Predicting the Number of Users In order to predict the number of users that will be present in any future advertising cycle, it is necessary to propose a probabilistic model for the behaviour of the users .
+Thus, our advanced bidding strategy assumes that their arrival and departures are determined by two independent Poisson processes4 with arrival rate, £fa, and departure rate, £fd .
+This represents a simple model that is commonly applied within queuing theory5 [5], yet is one that we believe well describes the case where BluScreen displays are placed in communal areas where people meet and congregate .
+Given the history of users" arrivals and departures obtained from the device detection agent, the advertising agent makes a maximum likelihood estimation of the values of £fa and £fd .
+In more detail, if the advertising agent has observed n users arriving within a time period t, then the maximum likelihood estimation for the arrival rate £fa is simply given by
+.
+.
+, tn time periods, then the maximum likelihood estimation for the departure rate £fd is given by
+Our users are not actually modelled as a queue since the duration of their stay is independent of that of the other users .
+0 t t + tc £n (i) n users ? (iii) £fatc users ? (ii) £fat users ? Figure 3
+In environments where these rates are subject to change, the agent can use a limited time window over which observations are used to estimate these rates .
+Alternatively, in situations where cyclic changes in these rates are likely to occur (i.e .
+changing arrival and departure rates at different times of the day, as may be seen in areas where commuters pass through), the agent can estimate separate values over each hour long period .
+Having estimated the arrival and departure rate of users, and knowing the number of users who are present at the current time, the advertising agent is then able to predict the number of users who are likely to be present in any future advertising cycle6 .
+Thus, we consider the problem of predicting this number for an advertising cycle of duration tc that starts at a time t in the future, given that n users are currently present (see figure 3) .
+This number will be composed of three factors
+Now, considering case (i) above, the probability of one of the n users still being present when the advertising cycle starts is given by ¡Û t £fde?£fd£n d£n = e?£fdt .
+Thus we expect ne?£fdt of these users to be present .
+In case (ii), we expect £fat new users to arrive before the advertising cycle commences, and the probability that any of these will still be there when it actually does so is given by 1 t t 0 e?£fd(t?£n) d£n = 1 £fdt 1 ? e?£fdt .
+Thus we expect £fa £fd 1 ? e?£fdt of these users to be present .
+Finally, in case (iii) we expect £fatc users to arrive during the course of the advertising cycle .
+Thus, the combination of these three factors gives an expression for the expected number of users who will be present within an advertising cycle of length tc, that commencing at time t in the future, given that there are n users currently present
+The mean number of users present at any time is simply £fa £fd, and the mean number of users exposed to an advert in any advertising cycle is given by £fa tc + 1 £fd .
+5.2 Predicting the Probability of Winning In addition to estimating the number of users who will be present in any advertising cycle, an effective bidding agent must also be able to predict the probability of it winning an auction given that it submits any specified bid .
+This is a common problem within bidding agents, and approaches can generally be classified as game theoretic or decision theoretic .
+Since our advertising agents are unaware of the number or identity of the competing advertising 6 Note that we do not require a user to be present for the entire advertising cycle in order to be counted as present .
+266 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) agents, the game theoretic approach is precluded .
+Thus, we take a decision theoretic approach similar to that adopted within continuous double auctions where bidding agents estimate the market price of goods by observing transaction prices [4] .
+Thus, our advertising agents uses a parameterised function to describe the probability of winning the auction given any submitted bid, P(b) .
+This function must have support [0, ¡Û) since bids must be positive .
+In addition, we expect it to exhibit by an ¡¥s" shaped curve whereby the probability of winning an auction is small when the submitted bid is very low, the probability is close to one when the bid is very high, and there is a transition point that characterises the change from a losing to a wining bid .
+To this end, we use the cumulative form of the gamma distribution for this function
+This function has the necessary properties described above, and has two parameters, k and £c .
+The transition point where P(b) = 0.5 is given by k£c and the sharpness of the transition is described by k£c2 .
+In figure 4 we show examples of this function for three different values of k and £c .
+The advertising agent chooses the most appropriate values of k and £c by fitting the probability function to observations of previous auctions .
+An observation is a pair {bi, oi} consisting of the bid, bi, and an auction outcome, oi .
+Each auction generates at least one pair in which bi is equal to the closing price of the auction, and oi = 1 .
+In addition, another pair is generated for each unsuccessful bid submitted by the advertising agent itself, and in this case oi = .

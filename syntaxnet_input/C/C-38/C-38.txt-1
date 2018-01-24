@@ -1,0 +1,33 @@
+This paper presents a simple and scalable framework for architecting peer to peer overlays called Peer to peer Receiverdriven Overlay (or PRO) .
+PRO is designed for non interactive streaming applications and its primary design goal is to maximize delivered bandwidth (and thus delivered quality) to peers with heterogeneous and asymmetric bandwidth .
+To achieve this goal, PRO adopts a receiver driven approach where each receiver (or participating peer) (i) independently discovers other peers in the overlay through gossiping, and (ii) selfishly determines the best subset of parent peers through which to connect to the overlay to maximize its own delivered bandwidth .
+Participating peers form an unstructured overlay which is inherently robust to high churn rate .
+Furthermore, each receiver leverages congestion controlled bandwidth from its parents as implicit signal to detect and react to long term changes in network or overlay condition without any explicit coordination with other participating peers .
+Independent parent selection by individual peers dynamically converge to an efficient overlay structure .
+Categories and Subject Descriptors
+Since overlay structures are layered over the best effort Internet, any approach for constructing overlay should address the following fundamental challenges
+Coping with bandwidth variations, heterogeneity and asymmetry are particularly important in design of peer to peer overlay for streaming applications because delivered quality to each peer is directly determined by its bandwidth connectivity to (other peer(s) on) the overlay .
+This paper presents a simple framework for architecting Peer to peer Receiver driven Overlay, called PRO .
+PRO can accommodate a spectrum of non interactive streaming applications ranging from playback to lecture mode live sessions .
+The main design philosophy in PRO is that each peer should be allowed to independently and selfishly determine the best way to connect to the overlay in order to maximize its own delivered quality .
+Toward this end, each peer can connect to the overlay topology at multiple points (i.e., receive content through multiple parent peers) .
+Therefore, participating peers form an unstructured overlay that can gracefully cope with high churn rate[5] .
+Furthermore, having multiple parent peers accommodates bandwidth heterogeneity and asymmetry while improves resiliency against dynamics of peer participation .
+PRO consists of two key components
+Gossiping provides a scalable and efficient approach to peer discovery in unstructured peer to peer networks that can be customized to guide direction of discovery towards peers with desired properties (e.g., peers with shorter distance or higher bandwidth) .
+(ii) Receiver driven Parent Selection
+Since the available bandwidth from different participating peers to a receiver (and possible correlation among them) can be measured only at that receiver, a receiver driven approach is the natural solution to maximize available bandwidth to heterogeneous peers .
+Furthermore, the available bandwidth from parent peers serves as an implicit signal for a receiver to detect and react to changes in network or overlay condition without any explicit coordination with other participating peers .
+Independent parent selection by individual peers leads to an efficient overlay that maximizes delivered quality to each peer .
+PRO incorporates 42 several damping functions to ensure stability of the overlay despite uncoordinated actions by different peers .
+PRO is part of a larger architecture that we have developed for peer to peer streaming .
+In our earlier work, we developed a mechanism called PALS [18] that enables a receiver to stream layered structured content from a given set of congestion controlled senders .
+Thus, PRO and PALS are both receiver driven but complement each other .
+More specifically, PRO determines a proper subset of parent peers that collectively maximize delivered bandwidth to each receiver whereas PALS coordinates in time streaming of different segments of multimedia content from these parents despite unpredictable variations in their available bandwidth .
+This division of functionality provides a great deal of flexibility because it decouples overlay construction from delivery mechanism .
+In this paper, we primarily focus on the overlay construction mechanism, or PRO .
+The rest of this paper is organized as follows
+We illustrate the differences between PRO and previous solutions, and justify our design choices .
+We present our proposed framework in Section 3 .
+In Sections 4 and 5, the key components of our framework are described in further detail .
+Finally, Section 6 concludes the paper and presents our future plans. .

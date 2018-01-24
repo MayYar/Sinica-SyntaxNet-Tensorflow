@@ -1,0 +1,33 @@
+Intuitively, there exists a clear tradeoff between the size of IP and the fraction of queries that IP can handle
+When IP is small, on the other hand, the cost for IP will be smaller, but more queries will be forwarded to IF , requiring us to maintain more copies of IF .
+Given this tradeoff, how should we determine the optimal size of IP in order to maximize the cost saving? To find the answer, we start with a simple example .
+Example 3 Again, consider a scenario similar to Example 1, where the query load is 5000 queries sec, each copy of an index can handle 1000 queries sec, and the full index spans across 4 machines .
+But now, suppose that if we prune IF by 75% to IP 1 (i.e., the size of IP 1 is 25% of IF ), IP 1 can handle 40% of the queries (i.e., C = 1 for 40% of the queries) .
+Also suppose that if IF is pruned by 50% to IP 2, IP 2 can handle 80% of the queries .
+Which one of the IP 1, IP 2 is preferable for the 1st tier index? To find out the answer, we first compute the number of machines needed when we use IP 1 for the 1st tier .
+At the 1st tier, we need 5 copies of IP 1 to handle the query load of 5000 queries sec .
+Since the size of IP 1 is 25% of IF (that requires 4 machines), one copy of IP 1 requires one machine .
+Therefore, the total number of machines required for the 1st tier is 5กั1 = 5 (5 copies of IP 1 with 1 machine per copy) .
+Also, since IP 1 can handle 40% of the queries, the 2nd tier has to handle 3000 queries sec (60% of the 5000 queries sec), so we need a total of 3กั4 = 12 machines for the 2nd tier (3 copies of IF with 4 machines per copy) .
+Overall, when we use IP 1 for the 1st tier, we need 5 + 12 = 17 machines to handle the load .
+We can do similar analysis when we use IP 2 and see that a total of 14 machines are needed when IP 2 is used .
+Given this result, we can conclude that using IP 2 is preferable .
+2 The above example shows that the cost of the two tier architecture depends on two important parameters
+We use s to denote the size of the p index relative to IF (i.e., if s = 0.2, for example, the p index is 20% of the size of IF ) .
+We use f(s) to denote the fraction of the queries that a p index of size s can handle (i.e., if f(s) = 0.3, 30% of the queries return the value C = 1 from IP ) .
+In general, we can expect that f(s) will increase as s gets larger because IP can handle more queries as its size grows .
+In Figure 3, we show an example graph of f(s) over s .
+Given the notation, we can state the problem of p index size optimization as follows .
+In formulating the problem, we assume that the number of machines required to operate a two tier architecture 0 0.2 0.4 0.6 0.8 1 0 0.2 0.4 0.6 0.8 1 Fractionofqueriesguaranteed f(s) Fraction of index s Fraction of queries guaranteed per fraction of index Optimal size s=0.16 Figure 3
+is roughly proportional to the total size of the indexes necessary to handle the query load .
+Problem 1 (Optimal index size) Given a query load Q and the function f(s), find the optimal p index size s that minimizes the total size of the indexes necessary to handle the load Q .
+2 The following theorem shows how we can determine the optimal index size .
+Theorem 1 The cost for handling the query load Q is minimal when the size of the p index, s, satisfies d f(s) d s = 1 .
+2 Proof The proof of this and the following theorems is omitted due to space constraints .
+This theorem shows that the optimal point is when the slope of the f(s) curve is 1 .
+For example, in Figure 3, the optimal size is when s = 0.16 .
+Note that the exact shape of the f(s) graph may vary depending on the query load and the pruning policy .
+For example, even for the same p index, if the query load changes significantly, fewer (or more) queries may be handled by the p index, decreasing (or increasing)f(s) .
+Similarly, if we use an effective pruning policy, more queries will be handled by IP than when we use an ineffective pruning policy, increasing f(s) .
+Therefore, the function f(s) and the optimal index size may change significantly depending on the query load and the pruning policy .
+In our later experiments, however, we find that even though the shape of the f(s) graph changes noticeably between experiments, the optimal index size consistently lies between 10% 30% in most experiments. .

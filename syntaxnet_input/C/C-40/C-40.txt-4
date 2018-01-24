@@ -1,0 +1,121 @@
+In Section 4.1 we introduce our target application model .
+Next, Section 4.2 presents an abstraction of our node and edge structures whose detailed indexing and cell evaluation methods are explained later in Sections 4.3 and 4.4 .
+Several optimization issues for edge indexing follow in Section 4.5 .
+4.1 Target Application Our target application assumes both 3D object streaming and sub world hosting .
+The sub world hosting is a collaborative virtual environment where every server hosts one sub world, thus constructing a single world .
+Second Life is the classic example of such an approach .
+A virtual space is partitioned into equal sized sub worlds .
+The sample sub world separated with bold dashed lines in Figure 2 contains four virtual entities
+As mentioned in Section 3, all object entities (E1, E2, A) have their own square shaped AOI .
+Two user entities (S, A) are associated with individual client machines, (client S and client A in the figure) .
+The spatial condition that the point location of S resides inside the AOI of E2 can be symbolized as S.P ? E2.R .
+Every sub world is managed by its dedicated server machine .
+Each server indexes all the entities, delivers any new events (i.e., a new user enters into the sub world or an object moves from one place to another) to clients, and resolves any inconsistencies among the entities .
+For efficient management of moving entities, a server further divides its sub world into smaller partitions, called grid cells .
+Figure 2 shows the 4 ¡Ñ 4 grid enclosed by the dashed lines .
+Instead of indexing the object entities with a user entity structure, our system indexes their visible regions on the grid cells .
+Retrieval of the indexed objects for a given user includes the search and de3 A better indexing method for a 3D space is work in progress .
+404 Tokens
+There are three object entities, {E1, E2, A}, and two user entities, {S, A} in the world .
+livery of the indices stored on the cell it is located in .
+This retrieval process is interchangeably called a user (or query) evaluation .
+Our application only considers the efficient indexing of virtual entities and the search for the most relevant entities that is, how many entities per sub world are indexed and how quickly index updates are recognized and retrieved .
+Efficient delivery of retrieved real geometry data is out of the scope of this paper .
+4.2 Abstraction We define a token as an abstraction of a virtual entity that satisfies a specific spatial relationship with a given cell .
+In our application, we use three types of tokens
+Appearance Token denotes that its entity is an IT for the given cell, but not for the previously adjacent cell .
+Disappearance Token is the opposite of AT, meaning that while its entity does not satisfy the IT relationship with the given cell, it does so with the previously adjacent cell .
+We also define two data structures for storing and retrieving the tokens
+A node is a data structure that stores ITs of a cell .
+Thus, the node for cell i is defined as a set of IT entities and formally expressed as Ni = {o|o.R¡äi.R = ?}, where R is either an AOI or a cell region .
+An edge is another data structure for two adjacent cells that stores their ATs or DTs .
+If the edge only stores the AT entities, it is termed an Appearance Edge (AE); otherwise, if it stores DTs, it is termed a Disappearance Edge .
+The AE for two adjacent cells i and j is defined as a set of ATs and expressed as E+(i, j) = Nj ? (Ni ¡ä Nj ) (1) where Ni and Nj are the node structures for the cells i and j .
+The DE for two adjacent cells i, j is defined as a set of DTs, satisfying
+In this analysis, we assume that node and edge structures are implemented with hash tables .
+For hash table manipulations we assume three memory access functions
+Their processing costs are denoted by Ta, Td, and Ts, respectively .
+A token scan operation reads the tokens in a hash bucket sequentially .
+It is extensively used during cell evaluations .
+Ts and Td are a function of the number of tokens in the bucket while Ta is constant .
+For the purpose of analysis, we define two random variables .
+One variable, denoted by mo, represents the side length of the AOI of an entity o .
+The side lengths are uniformly distributed in the range of [mmin, mmax] .
+The average value of mo is denoted by ydirectional maximum distance of a moving entity during a time interval .
+The simulated movement of an entity during the given time is also uniformly distributed in the range of [0, v] .
+For a simple calculation, both random variables are expressed as the number of cell units .
+Table 1 summarizes the symbolic notations and their meaning .
+5.1 Memory Requirements Let the token size be denoted by s .
+Node indexing uses s ¡P |Uq| memory units for user entities and s ¡P ?o?U (mo + 1)2 ? s(m2 + 2m + 1 + V ar(mo))|U| units for object entities .
+Single table edge indexing consumes s ¡P |Uq| storage units for the user entities and s ¡P ?o?U 2(mo + 1) ? 2s(m + 1)|U| for the object entities .
+Two table edge indexing occupies s ¡P |Uq| units for the users and s{ ?i?O 2(mi+1)+ ?j?(U?O) 2(mj +1)} ? 2s(m+1)|U| units for the objects .
+Table 2 summarizes these results .
+In our target apTable 2
+indexing method user entities object entities node indexing s ¡P |Uq| s((m + 1)2 + V ar(mo))|U| single table edge s ¡P |Uq| 2s(m + 1)|U| two table edge s ¡P |Uq| 2s(m + 1)|U| plication, our edge indexing methods consume approximately m+1 2 times less memory space than node indexing .
+Different grid cell partitioning with edge methods will lead to different memory requirements .
+For example, here are two grids
+The memory requirement for the user entities is unchanged because it depends only on the total number of user entities .
+The memory requirements for the object entities are approximately 2s(m + 1)|U| in the M ¡Ñ M grid case and 2s(2m + 1)|U| for the (2M) ¡Ñ (2M) grid .
+Thus, a four times larger cell size will lead to an approximately two times smaller number of tokens .
+5.2 Processing Cost In this section, we focus on the cost analysis of update operations and cell evaluations .
+For a fair comparison of the different methods, we only analyze the run time complexity of moving objects and moving users .
+5.2.1 Update Cost We assume that a set of moving objects O and a set of moving users Q are known in advance .
+Similar to edge indexing, node indexing has two update policies
+Full update, implemented in Q Index [13] and SINA [10], removes all the old tokens from the old cell node structures and inserts all the new tokens into the new cell nodes .
+The incremental update policy, implemented by no existing work, removes and inserts all the tokens whose spatial condition changed during a period .
+In this analysis, we only consider incremental node indexing .
+To analyze the update cost of node indexing, we introduce the maximum reachable distance (v), where the next location of a moving entity, whose previous location was at cell(0,0), is uniformly distributed over the (¡Óv, ¡Óv) grid cell space as illustrated in Figure 5 .
+We also assume that the given maximum reachable distance is less than any side length of the AOI of the objects in the system; that is, v < mo where o ? O .
+As seen in Figure 5, the next location may fall into three categories
+If an object resides in the same cell, there will be no update .
+If the object moves into the area A, there will be (i + j)(mo + 1) ? ij token insertions and removals, where 1 ? i, j ? v .
+Otherwise, there will be k(mo + 1) token insertions and removals, where 1 ? k ? v .
+Thus, the expected processing time of an object update for node indexing is the summation of three different movement types T node per update(o) = 4 ¡P + 4 ¡P (2v + 1)2 ¡P (Ta + Td) = v(v + 1){v(4mo + 3 ? v) + 2(mo + 1)} (2v + 1)2 ¡P (Ta + Td) (3) and the expected processing time of any object for node indexing is obtained by T node per update = ?o?O,v<mo T node per update(o) |O| = v(v + 1){v(4m + 3 ? v) + 2m + 1)} (2v + 1)2 ¡P (Ta + Td) (4) .
+407 Table 3
+indexing method queries ¡Ñ(Ta + Td) (seconds) objects ¡Ñ(Ta + Td) (seconds) node indexing with incremental update |Q| |O| ¡P v(v+1){v(4m+3?v)+2(m+1)} (2v+1)2 single table edge indexing with full update |Q| |O| ¡P 2(m + 1) single table edge indexing with incremental update |Q| |O| ¡P v(4m(1+2v)+9v+5) (2v+1)2 two table edge indexing |Q| ¡P Ta Ta+Td |O| ¡P 2(m + 1) Ta Ta+Td Maximum Reachable Distance (v) (0,0) i j (i,j) A A AA B B B B Figure 5
+The expected time of any single entity update for edge indexing with full update is
+Roughly speaking, its worst case processing cost is the same as Tedgefull per update .
+Due to space limitations we only show the analysis result of the expected processing time when v of any object o ? O is smaller than mo
+In this table, it is evident that while the update cost of the worst case edge indexing (single table edge indexing with full update policy) depends only on m, that of the best case node indexing (node indexing with incremental update policy) is still proportional to two variables, v and m .
+For a smaller value of v (v = 1), the update cost of node indexing slightly outperforms that of edge indexing (i.e., 12m+8 9 vs .
+2(m + 1)) .
+However, as v increases, the performance gain is then immediately reversed (i.e., 60m+24 25 versus 2(m + 1), where v = 2) .
+Another interesting result is that two table edge indexing depends only on the token insertion cost, Ta .
+Typically, Td is slightly 1 2 3 4 5 0 5 10 15 20 25 30 35 40 Maximum Reachable Distance (v) (%) #ofAffectedTokens Two?table Edge Indexing Incremental Edge Indexing Full Edge Indexing Incremental Node Indexing Figure 6
+The update complexity, the expected number of token removals and insertions per object update, is drawn as a function of maximum reachable distance (v) .
+The average side length of object AOIs is 10% of the side length of a given 2 D map .
+greater than Ta because Td requires at least one token lookup operation .
+After the lookup, Td executes the reverse operation of Ta .
+Thus, Td may well be expressed as (Ta + Tlookup) and can be simplified as (Ta + |E| 2¡Pb ¡PTs) where |E| is the size of the edge structure and b is the number of its hash buckets .
+From this observation, we can infer that full update of single table edge indexing takes at least twice as long as the update for two table edge indexing .
+Figure 6 shows that full update of edge indexing when the maximum reachable distance is less than the side length of any moving entities takes constant time to update the corresponding edge structures, which mainly depends on the side length of the given AOI .
+In this figure we assume that the average side length of the AOI is 0.1 (or 10 %) .
+The node indexing method, however, depends not only on the side length but also on the reachable distance .
+Thus the entity update in node indexing is much heavier than the full update for edge indexing .
+As expected, these simulation results validate a common belief that in less dynamic environments, incremental updates reduce the amount of token insertions and removals noticeably while in extremely dynamic environments the reduction ratio becomes negligible .
+5.2.2 Cell Evaluation Cost Node indexing scans all entities and then collects the user entities indexed on every cell node .
+Therefore, it would take |Q|¡ÑTs to scan all user entities .
+If every node stores (m2 +2m+1+V ar(mo))|O| M2 object entities on average, the expected completion time of one cell evaluation will then be ?o?O (m2 +2m+1+V ar(mo))|O| M2 ¡P Ts .
+If every cell has at most one user entity, the expected completion time of all cell evaluations will be |Q| ¡P (m2 +2m+1+V ar(mo))|O| M2 ¡P Ts .
+The runtime complexity of the single table cell evaluation can 408 Table 4
+indexing method expected elapsed time node indexing Ts ¡P |Q| ¡P (m2 +2m+1+V ar(mo))|O| M2 single table edge Ts ¡P (|Q| + |O| ¡P 2(m + 1)) two table edge (Ts + Td) ¡P (|Q| + |O| ¡P 2(m + 1)) be simplified as Ts ¡P|O|¡P2(m +1) .
+In this analysis, we do not consider any data delivery overhead after a cell evaluation .
+Note that in single table edge indexing we need to scan all the tokens for cell evaluations .
+Two table edge indexing executes in Td to remove the evaluated tokens after a cell evaluation .
+Unlike the Td operation, the Td operation is much lighter because it does not require any lookup operation .
+Table 4 shows the expected complexities of different cell evaluation scenarios .
+If previously computed result sets are re used during the next evaluation round, the expected elapsed time of node indexing will be bound by the total number of cell evaluations (i.e., Ts(m2 + 2m + 1 + V ar(mo))|O|) .
+However, in the worst case, the cell evaluation of node indexing is still m+1 2 times longer than that of any edge indexing method .
+5.2.3 Putting it Together
+In this section we focus on evaluating the performance difference between single table edge indexing and two table edge indexing .
+The total elapsed time of full update based single table edge indexing for a given set of moving entities is the summation of the elapsed time of updates and cell evaluations
+First of all, Td is very predictable and a more lightweight procedure than Td .
+All the data structure manipulation overheads, such as Ta, Ts, and Td can be easily profiled and all become constant .
+In addition, twotable indexing is guaranteed to outperform single table full update edge indexing .
+Another novelty of the two table approach is that it is highly resilient to the underlying data distribution, regardless of whether it is highly skewed or uniform .
+Equation 8 also reveals the minimum time interval that satisfies the given input parameters, Ta, Ts, Td, |Q|, |O|, and m .
+While Ta, Ts and Td are system specific parameters, |O|, |Q|, and m are all application specific .
+The latter can be configured by the former and any given real time constraint T .
+Thus, the system throughput how many moving objects and users are supported by the given system is obtained from Equation 9 .
+Maximum System Throughput = |Q| + |O|2(m + 1) = T Ts + Ta + Td (9) For example, if a given sub world is only filled with moving avatars, A = Q = O, whose average side length is 10% of the map side length, then Ts + Td takes 0.42 microseconds per token evaluation, and Ta takes 0.78 microseconds, and the system will handle about 36,231 avatars per second .
+Every avatar can navigate in the sub world freely and the same number of remotely connected clients receive the latest update events continuously. .

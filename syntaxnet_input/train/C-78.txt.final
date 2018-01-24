@@ -1,0 +1,525 @@
+An Architectural Framework and a Middleware for 
+content:
+1 ABSTRACT :
+1-1:In a future networked physical world, a myriad of smart sensors and actuators assess and control aspects of their environments and autonomously act in response to it .
+1-2:Examples range in telematics, traffic management, team robotics or home automation to name a few .
+1-3:To a large extent, such systems operate proactively and independently of direct human control driven by the perception of the environment and the ability to organize respective computations dynamically .
+1-4:The challenging characteristics of these applications include sentience and autonomy of components, issues of responsiveness and safety criticality, geographical dispersion, mobility and evolution .
+1-5:A crucial design decision is the choice of the appropriate abstractions and interaction mechanisms .
+1-6:Looking to the basic building blocks of such systems we may find components which comprise mechanical components, hardware and software and a network interface, thus these components have different characteristics compared to pure software components .
+1-7:They are able to spontaneously disseminate information in response to events observed in the physical environment or to events received from other component via the network interface .
+1-8:Larger autonomous components may be composed recursively from these building blocks .
+1-9:The paper describes an architectural framework and a middleware supporting a component based system and an integrated view on events based communication comprising the real world events and the events generated in the system .
+1-10:It starts by an outline of the component based system construction .
+1-11:The generic event architecture GEAR is introduced which describes the event based interaction between the components via a generic event layer .
+1-12:The generic event layer hides the different communication channels including ∗This work was partially supported by the EC, through project IST 2000 26031 (CORTEX), and by the FCT, through the Large Scale Informatic Systems Laboratory (LaSIGE) and project POSI 1999 CHS 33996 .
+1-13:the interactions through the environment .
+1-14:An appropriate middleware is presented which reflects these needs and allows to specify events which have quality attributes to express temporal constraints .
+1-15:This is complemented by the notion of event channels which are abstractions of the underlying network and allow to enforce quality attributes .
+1-16:They are established prior to interaction to reserve the needed computational and network resources for highly predictable event dissemination .
+1-17:C.2.4 [Computer Communication Networks]: Distributed .
+2 INTRODUCTION :
+2-1:In recent years we have seen the continuous improvement of technologies that are relevant for the construction of distributed embedded systems, including trustworthy visual, auditory, and location sensing [11], communication and processing .
+2-2:We believe that in a future networked physical world a new class of applications will emerge, composed of a myriad of smart sensors and actuators to assess and control aspects of their environments and autonomously act in response to it .
+2-3:The anticipated challenging characteristics of these applications include autonomy, responsiveness and safety criticality, large scale, geographical dispersion, mobility and evolution .
+2-4:In order to deal with these challenges, it is of fundamental importance to use adequate high level models, abstractions and interaction paradigms .
+2-5:Unfortunately, when facing the specific characteristics of the target systems, the shortcomings of current architectures and middleware interaction paradigms become apparent .
+2-6:Looking to the basic building blocks of such systems we may find components which comprise mechanical parts, hardware, software and a network interface .
+2-7:However, classical event object models are usually software oriented and, as such, when trans28 ported to a real time, embedded systems setting, their harmony is cluttered by the conflict between, on the one side, send receive of software events (message based), and on the other side, input output of hardware or real world events, register based .
+2-8:In terms of interaction paradigms, and although the use of event based models appears to be a convenient solution [10, 22], these often lack the appropriate support for non functional requirements like reliability, timeliness or security .
+2-9:This paper describes an architectural framework and a middleware, supporting a component based system and an integrated view on event based communication comprising the real world events and the events generated in the system .
+2-10:When choosing the appropriate interaction paradigm it is of fundamental importance to address the challenging issues of the envisaged sentient applications .
+2-11:Unlike classical approaches that confine the possible interactions to the application boundaries, i.e .
+2-12:to its components, we consider that the environment surrounding the application also plays a relevant role in this respect .
+2-13:Therefore, the paper starts by clarifying several issues concerning our view of the system, about the interactions that may take place and about the information flows .
+2-14:This view is complemented by providing an outline of the component based system construction and, in particular, by showing that it is possible to compose larger applications from basic components, following an hierarchical composition approach .
+2-15:This provides the necessary background to introduce the Generic Events Architecture (GEAR), which describes the event based interaction between the components via a generic event layer while allowing the seamless integration of physical and computer information flows .
+2-16:In fact, the generic event layer hides the different communication channels, including the interactions through the environment .
+2-17:Additionally, the event layer abstraction is also adequate for the proper handling of the non functional requirements, namely reliability and timeliness, which are particularly stringent in real time settings .
+2-18:The paper devotes particular attention to this issue by discussing the temporal aspects of interactions and the needs for predictability .
+2-19:An appropriate middleware is presented which reflects these needs and allows to specify events which have quality attributes to express temporal constraints .
+2-20:This is complemented by the notion of Event Channels (EC), which are abstractions of the underlying network while being abstracted by the event layer .
+2-21:In fact, event channels play a fundamental role in securing the functional and non functional (e.g .
+2-22:reliability and timeliness) properties of the envisaged applications, that is, in allowing the enforcement of quality attributes .
+2-23:They are established prior to interaction to reserve the needed computational and network resources for highly predictable event dissemination .
+2-24:The paper is organized as follows .
+2-25:In Section 3 we introduce the fundamental notions and abstractions that we adopt in this work to describe the interactions taking place in the system .
+2-26:Then, in Section 4, we describe the componentbased approach that allows composition of objects .
+2-27:GEAR is then described in Section 5 and Section 6 focuses on temporal aspects of the interactions .
+2-28:Section 7 describes the COSMIC middleware, which may be used to specify the interaction between sentient objects .
+2-29:A simple example to highlight the ideas presented in the paper appears in Section 8 and Section 9 concludes the paper. .
+3 RELATED WORK :
+3-1:Our work considers a wired physical world in which a very large number of autonomous components cooperate .
+3-2:It is inspired by many research efforts in very different areas .
+3-3:Event based systems in general have been introduced to meet the requirements of applications in which entities spontaneously generate information and disseminate it [1, 25, 22] .
+3-4:Intended for large systems and requiring quite complex infrastructures, these event systems do not consider stringent quality aspects like timeliness and dependability issues .
+3-5:Secondly, they are not created to support inter operability between tiny smart devices with substantial resource constraints .
+3-6:In [10] a real time event system for CORBA has been introduced .
+3-7:The events are routed via a central event server which provides scheduling functions to support the real time requirements .
+3-8:Such a central component is not available in an infrastructure envisaged in our system architecture and the developed middleware TAO (The Ace Orb) is quite complex and unsuitable to be directly integrated in smart devices .
+3-9:There are efforts to implement CORBA for control networks, tailored to connect sensor and actuator components [15, 19] .
+3-10:They are targeted for the CAN Bus [9], a popular network developed for the automotive industry .
+3-11:However, in these approaches the support for timeliness or dependability issues does not exist or is only very limited .
+3-12:A new scheme to integrate smart devices in a CORBA environment is proposed in [17] and has lead to the proposal of a standard by the Object Management Group [26] .
+3-13:Smart transducers are organized in clusters that are connected to a CORBA system by a gateway .
+3-14:The clusters form isolated subnetworks .
+3-15:A special master node enforces the temporal properties in the cluster subnet .
+3-16:A CORBA gateway allows to access sensor data and write actuator data by means of an interface file system .
+3-17:The basic structure is similar to the WAN of CANs structure which has been introduced in the CORTEX project [4] .
+3-18:Islands of tight control may be realized by a control network and cooperate via wired or wireless networks covering a large number of these subnetworks .
+3-19:However, in contrast to the event channel model introduced in this paper, all communication inside a cluster relies on a single technical solution of a synchronous communication channel .
+3-20:Secondly, although the temporal behaviour of a single cluster is rigorously defined, no model to specify temporal properties for clusterto CORBA or cluster to cluster interactions is provided. .
+4 INFORMATION FLOW AND INTERACTION MODEL :
+4-1:INTERACTION MODEL In this paper we consider a component based system model that incorporates previous work developed in the context of the IST CORTEX project [5] .
+4-2:As mentioned above, a fundamental idea underlying the approach is that applications can be composed of a large number of smart components that are able to sense their surrounding environment and interact with it .
+4-3:These components are referred to as sentient objects, a metaphor elaborated in CORTEX and inspired on the generic concept of sentient computing introduced in [12] .
+4-4:Sentient objects accept input events from a variety of different sources (including sensors, but not constrained to that), process them, and produce output events, whereby 29 they actuate on the environment and or interact with other objects .
+4-5:Therefore, the following kinds of interactions can take place in the system: Environment to object interactions: correspond to a flow of information from the environment to application objects, reporting about the state of the former, and or notifying about events taking place therein .
+4-6:Object to object interactions: correspond to a flow of information among sentient objects, serving two purposes .
+4-7:The first is related with complementing the assessment of each individual object about the state of the surrounding space .
+4-8:The second is related to collaboration, in which the object tries to influence other objects into contributing to a common goal, or into reacting to an unexpected situation .
+4-9:Object to environment interactions: correspond to a flow of information from an object to the environment, with the purpose of forcing a change in the state of the latter .
+4-10:Before continuing, we need to clarify a few issues with respect to these possible forms of interaction .
+4-11:We consider that the environment can be a producer or consumer of information while interacting with sentient objects .
+4-12:The environment is the real (physical) world surrounding an object, not necessarily close to the object or limited to certain boundaries .
+4-13:Quite clearly, the information produced by the environment corresponds to the physical representation of real time entities, of which typical examples include temperature, distance or the state of a door .
+4-14:On the other hand, actuation on the environment implies the manipulation of these real time entities, like increasing the temperature (applying more heat), changing the distance (applying some movement) or changing the state of the door (closing or opening it) .
+4-15:The required transformations between system representations of these real time entities and their physical representations is accomplished, generically, by sensors and actuators .
+4-16:We further consider that there may exist dumb sensors and actuators, which interact with the objects by disseminating or capturing raw transducer information, and smart sensors and actuators, with enhanced processing capabilities, capable of speaking some more elaborate event dialect (see Sections 5 and 6.1) .
+4-17:Interaction with the environment is therefore done through sensors and actuators, which may, or may not be part of sentient objects, as discussed in Section 4.2 .
+4-18:State or state changes in the environment are considered as events, captured by sensors (in the environment or within sentient objects) and further disseminated to other potentially interested sentient objects in the system .
+4-19:In consequence, it is quite natural to base the communication and interaction among sentient objects and with the environment on an event based communication model .
+4-20:Moreover, typical properties of event based models, such as anonymous and non blocking communication, are highly desirable in systems where sentient objects can be mobile and where interactions are naturally very dynamic .
+4-21:A distinguishing aspect of our work from many of the existing approaches, is that we consider that sentient objects may indirectly communicate with each other through the environment, when they act on it .
+4-22:Thus the environment constitutes an interaction and communication channel and is in the control and awareness loop of the objects .
+4-23:In other words, when a sentient object actuates on the environment it will be able to observe the state changes in the environment by means of events captured by the sensors .
+4-24:Clearly, other objects might as well capture the same events, thus establishing the above mentioned indirect communication path .
+4-25:In systems that involve interactions with the environment it is very important to consider the possibility of communication through the environment .
+4-26:It has been shown that the hidden channels developing through the latter (e.g., feedback loops) may hinder software based algorithms ignoring them [30] .
+4-27:Therefore, any solution to the problem requires the definition of convenient abstractions and appropriate architectural constructs .
+4-28:On the other hand, in order to deal with the information flow through the whole computer system and environment in a seamless way, handling software and hardware events uniformly, it is also necessary to find adequate abstractions .
+4-29:As discussed in Section 5, the Generic Events Architecture introduces the concept of Generic Event and an Event Layer abstraction which aim at dealing, among others, with these issues. .
+5 SENTIENT OBJECT COMPOSITION :
+5-1:In this section we analyze the most relevant issues related with the sentient object paradigm and the construction of systems composed of sentient objects .
+5-2:4.1 Component based System Construction Sentient objects can take several different forms: they can simply be software based components, but they can also comprise mechanical and or hardware parts, amongst which the very sensorial apparatus that substantiates sentience, mixed with software components to accomplish their task .
+5-3:We refine this notion by considering a sentient object as an encapsulating entity, a component with internal logic and active processing elements, able to receive, transform and produce new events .
+5-4:This interface hides the internal hardware software structure of the object, which may be complex, and shields the system from the low level functional and temporal details of controlling a specific sensor or actuator .
+5-5:Furthermore, given the inherent complexity of the envisaged applications, the number of simultaneous input events and the internal size of sentient objects may become too large and difficult to handle .
+5-6:Therefore, it should be possible to consider the hierarchical composition of sentient objects so that the application logic can be separated across as few or as many of these objects as necessary .
+5-7:On the other hand, composition of sentient objects should normally be constrained by the actual hardware component"s structure, preventing the possibility of arbitrarily composing sentient objects .
+5-8:This is illustrated in Figure 1, where a sentient object is internally composed of a few other sentient objects, each of them consuming and producing events, some of which only internally propagated .
+5-9:Observing the figure, and recalling our previous discussion about the possible interactions, we identify all of them here: an object to environment interaction occurs between the object controlling a WLAN transmitter and some WLAN receiver in the environment; an environment to object interaction takes place when the object responsible for the GPS 30 G P S r e c e p t i o n W i r e l e s s t r a n s m i s s i o n D o p p l e r r a d a r P h y s i c a l f e e d b a c k O b j e c t ' s b o d y I n t e r n a l N e t w o r k Figure 1: Component aware sentient object composition .
+5-10:signal reception uses the information transmitted by the satellites; finally, explicit object to object interactions occur internally to the container object, through an internal communication network .
+5-11:Additionally, it is interesting to observe that implicit communication can also occur, whether the physical feedback develops through the environment internal to the container object (as depicted) or through the environment external to this object .
+5-12:However, there is a subtle difference between both cases .
+5-13:While in the former the feedback can only be perceived by objects internal to the container, bounding the extent to which consistency must be ensured, such bounds do not exist in the latter .
+5-14:In fact, the notion of sentient object as an encapsulating entity may serve other purposes (e.g., the confinement of feedback and of the propagation of events), beyond the mere hierarchical composition of objects .
+5-15:To give a more concrete example of such component aware object composition we consider a scenario of cooperating robots .
+5-16:Each robot is made of several components, corresponding, for instance, to axis and manipulator controllers .
+5-17:Together with the control software, each of these controllers may be a sentient object .
+5-18:On the other hand, a robot itself is a sentient object, composed of the objects materialized by the controllers, and the environment internal to its own structure, or body .
+5-19:This means that it should be possible to define cooperation activities using the events produced by robot sentient objects, without the need to know the internal structure of robots, or the events produced by body objects or by smart sensors within the body .
+5-20:From an engineering point of view, however, this also means that robot sentient object may have to generate new events that reflect its internal state, which requires the definition of a gateway to make the bridge between the internal and external environments .
+5-21:4.2 Encapsulation and Scoping Now an important question is about how to represent and disseminate events in a large scale networked world .
+5-22:As we have seen above, any event generated by a sentient object could, in principle, be visible anywhere in the system and thus received by any other sentient object .
+5-23:However, there are substantial obstacles to such universal interactions, originating from the components heterogeneity in such a largescale setting .
+5-24:Firstly, the components may have severe performance constraints, particularly because we want to integrate smart sensors and actuators in such an architecture .
+5-25:Secondly, the bandwidth of the participating networks may vary largely .
+5-26:Such networks may be low power, low bandwidth fieldbuses, or more powerful wireless networks as well as high speed backbones .
+5-27:Thirdly, the networks may have widely different reliability and timeliness characteristics .
+5-28:Consider a platoon of cooperating vehicles .
+5-29:Inside a vehicle there may be a field bus like CAN [8, 9], TTP A [17] or LIN [20], with a comparatively low bandwidth .
+5-30:On the other hand, the vehicles are communicating with others in the platoon via a direct wireless link .
+5-31:Finally, there may be multiple platoons of vehicles which are coordinated by an additional wireless network layer .
+5-32:At the abstraction level of sentient objects, such heterogeneity is reflected by the notion of body vs environment .
+5-33:At the network level, we assume the WAN of CANs structure [27] to model the different networks .
+5-34:The notion of body and environment is derived from the recursively defined component based object model .
+5-35:A body is similar to a cell membrane and represents a quality of service container for the sentient objects inside .
+5-36:On the network level, it may be associated with the components coupled by a certain CAN .
+5-37:A CAN defines the dissemination quality which can be expected by the cooperating objects .
+5-38:In the above example, a vehicle may be a sentient object, whose body is composed of the respective lower level objects (sensors and actuators) which are connected by the internal network (see Figure 1) .
+5-39:Correspondingly, the platoon can be seen itself as an object composed of a collection of cooperating vehicles, its body being the environment encapsulated by the platoon zone .
+5-40:At the network level, the wireless network represents the respective CAN .
+5-41:However, several platoons united by their CANs may interact with each other and objects further away, through some wider range, possible fixed networking substrate, hence the concept of WAN of CANs .
+5-42:The notions of body environment and WAN of CANs are very useful when defining interaction properties across such boundaries .
+5-43:Their introduction obeyed to our belief that a single mechanism to provide quality measures for interactions is not appropriate .
+5-44:Instead, a high level construct for interaction across boundaries is needed which allows to specify the quality of dissemination and exploits the knowledge about body and environment to assess the feasibility of quality constraints .
+5-45:As we will see in the following section, the notion of an event channel represents this construct in our architecture .
+5-46:It disseminates events and allows the network independent specification of quality attributes .
+5-47:These attributes must be mapped to the respective properties of the underlying network structure. .
+6 A GENERIC EVENTS ARCHITECTURE :
+6-1:In order to successfully apply event based object oriented models, addressing the challenges enumerated in the introduction of this paper, it is necessary to use adequate architectural constructs, which allow the enforcement of fundamental properties such as timeliness or reliability .
+6-2:We propose the Generic Events Architecture (GEAR), depicted in Figure 2, which we briefly describe in what follows (for a more detailed description please refer to [29]) .
+6-3:The L shaped structure is crucial to ensure some of the properties described .
+6-4:Environment: The physical surroundings, remote and close, solid and etherial, of sentient objects .
+6-5:31 C o m m ' sC o m m ' sC o m m ' s T r a n s l a t i o n L a y e r T r a n s l a t i o n L a y e r B o d y E n v i r o n m e n t B o d y E n v i r o n m e n t B o d y E n v i r o n m e n t ( i n c l u d i n g o p e r a t i o n a l n e t w o r k ) ( o f o b j e c t o r o b j e c t c o m p o u n d ) T r a n s l a t i o n L a y e r T r a n s l a t i o n S e n t i e n t O b j e c t S e n t i e n t O b j e c t S e n t i e n t O b j e c t R e g u l a r N e t w o r k c o n s u m ep r o d u c e E v e n t L a y e r E v e n t L a y e r E v e n t L a y e r S e n t i e n t O b j e c t Figure 2: Generic Events architecture .
+6-6:Body: The physical embodiment of a sentient object (e.g., the hardware where a mechatronic controller resides, the physical structure of a car) .
+6-7:Note that due to the compositional approach taken in our model, part of what is environment to a smaller object seen individually, becomes body for a larger, containing object .
+6-8:In fact, the body is the internal environment of the object .
+6-9:This architecture layering allows composition to take place seamlessly, in what concerns information flow .
+6-10:Inside a body there may also be implicit knowledge, which can be exploited to make interaction more efficient, like the knowledge about the number of cooperating entities, the existence of a specific communication network or the simple fact that all components are co located and thus the respective events do not need to specify location in their context attributes .
+6-11:Such intrinsic information is not available outside a body and, therefore, more explicit information has to be carried by an event .
+6-12:Translation Layer: The layer responsible for physical event transformation from to their native form to event channel dialect, between environment body and an event channel .
+6-13:Essentially one doing observation and actuation operations on the lower side, and doing transactions of event descriptions on the other .
+6-14:On the lower side this layer may also interact with dumb sensors or actuators, therefore talking the language of the specific device .
+6-15:These interactions are done through operational networks (hence the antenna symbol in the figure) .
+6-16:Event Layer: The layer responsible for event propagation in the whole system, through several Event Channels (EC): .
+6-17:In concrete terms, this layer is a kind of middleware that provides important event processing services which are crucial for any realistic event based system .
+6-18:For example, some of the services that imply the processing of events may include publishing, subscribing, discrimination (zoning, filtering, fusion, tracing), and queuing .
+6-19:Communication Layer: The layer responsible for wrapping events (as a matter of fact, event descriptions in EC dialect) into carrier event messages, to be transported to remote places .
+6-20:For example, a sensing event generated by a smart sensor is wrapped in an event message and disseminated, to be caught by whoever is concerned .
+6-21:The same holds for an actuation event produced by a sentient object, to be delivered to a remote smart actuator .
+6-22:Likewise, this may apply to an event message from one sentient object to another .
+6-23:Dumb sensors and actuators do not send event messages, since they are unable to understand the EC dialect (they do not have an event layer neither a communication layer they communicate, if needed, through operational networks) .
+6-24:Regular Network: This is represented in the horizontal axis of the block diagram by the communication layer, which encompasses the usual LAN, TCP IP, and realtime protocols, desirably augmented with reliable and or ordered broadcast and other protocols .
+6-25:The GEAR introduces some innovative ideas in distributed systems architecture .
+6-26:While serving an object model based on production and consumption of generic events, it treats events produced by several sources (environment, body, objects) in a homogeneous way .
+6-27:This is possible due to the use of a common basic dialect for talking about events and due to the existence of the translation layer, which performs the necessary translation between the physical representation of a real time entity and the EC compliant format .
+6-28:Crucial to the architecture is the event layer, which uses event channels to propagate events through regular network infrastructures .
+6-29:The event layer is realized by the COSMIC middleware, as described in Section 7 .
+6-30:5.1 Information Flow in GEAR The flow of information (external environment and computational part) is seamlessly supported by the L shaped architecture .
+6-31:It occurs in a number of different ways, which demonstrates the expressiveness of the model with regard to the necessary forms of information encountered in real time cooperative and embedded systems .
+6-32:Smart sensors produce events which report on the environment .
+6-33:Body sensors produce events which report on the body .
+6-34:They are disseminated by the local event layer module, on an event channel propagated through the regular network, to any relevant remote event layer modules where entities showed an interest on them, normally, sentient objects attached to the respective local event layer modules .
+6-35:Sentient objects consume events they are interested in, process them, and produce other events .
+6-36:Some of these events are destined to other sentient objects .
+6-37:They are published on an EC using the same EC dialect that serves, e.g., sensor originated events .
+6-38:However, these events are semantically of a kind such that they are to be subscribed by the relevant sentient objects, for example, the sentient objects composing a robot controller system, or, at a higher level, the sentient objects composing the actual robots in 32 a cooperative application .
+6-39:Smart actuators, on the other hand, merely consume events produced by sentient objects, whereby they accept and execute actuation commands .
+6-40:Alternatively to talking to other sentient objects, sentient objects can produce events of a lower level, for example, actuation commands on the body or environment .
+6-41:They publish these exactly the same way: on an event channel through the local event layer representative .
+6-42:Now, if these commands are of concern to local actuator units (e.g., body, including internal operational networks), they are passed on to the local translation layer .
+6-43:If they are of concern to a remote smart actuator, they are disseminated through the distributed event layer, to reach the former .
+6-44:In any case, if they are also of interest to other entities, such as other sentient objects that wish to be informed of the actuation command, then they are also disseminated through the EC to these sentient objects .
+6-45:A key advantage of this architecture is that event messages and physical events can be globally ordered, if necessary, since they all pass through the event layer .
+6-46:The model also offers opportunities to solve a long lasting problem in realtime, computer control, and embedded systems: the inconsistency between message passing and the feedback loop information flow subsystems. .
+7 TEMPORAL ASPECTS OF THE INTERACTIONS :
+7-1:INTERACTIONS Any interaction needs some form of predictability .
+7-2:If safety critical scenarios are considered as it is done in CORTEX, temporal aspects become crucial and have to be made explicit .
+7-3:The problem is how to define temporal constraints and how to enforce them by appropriate resource usage in a dynamic ad hoc environment .
+7-4:In an system where interactions are spontaneous, it may be also necessary to determine temporal properties dynamically .
+7-5:To do this, the respective temporal information must be stated explicitly and available during run time .
+7-6:Secondly, it is not always ensured that temporal properties can be fulfilled .
+7-7:In these cases, adaptations and timing failure notification must be provided [2, 28] .
+7-8:In most real time systems, the notion of a deadline is the prevailing scheme to express and enforce timeliness .
+7-9:However, a deadline only weakly reflect the temporal characteristics of the information which is handled .
+7-10:Secondly, a deadline often includes implicit knowledge about the system and the relations between activities .
+7-11:In a rather well defined, closed environment, it is possible to make such implicit assumptions and map these to execution times and deadlines .
+7-12:E.g .
+7-13:the engineer knows how long a vehicle position can be used before the vehicle movement outdates this information .
+7-14:Thus he maps this dependency between speed and position on a deadline which then assures that the position error can be assumed to be bounded .
+7-15:In a open environment, this implicit mapping is not possible any more because, as an obvious reason, the relation between speed and position, and thus the error bound, cannot easily be reverse engineered from a deadline .
+7-16:Therefore, our event model includes explicit quality attributes which allow to specify the temporal attributes for every individual event .
+7-17:This is of course an overhead compared to the use of implicit knowledge, but in a dynamic environment such information is needed .
+7-18:To illustrate the problem, consider the example of the position of a vehicle .
+7-19:A position is a typical example for time, value entity [30] .
+7-20:Thus, the position is useful if we can determine an error bound which is related to time, e.g .
+7-21:if we want a position error below 10 meters to establish a safety property between cooperating cars moving with 5 m sec, the position has a validity time of 2 seconds .
+7-22:In a time, value entity entity we can trade time against the precision of the value .
+7-23:This is known as value over time and time over value [18] .
+7-24:Once having established the time value relation and captured in event attributes, subscribers of this event can locally decide about the usefulness of an information .
+7-25:In the GEAR architecture temporal validity is used to reason about safety properties in a event based system [29] .
+7-26:We will briefly review the respective notions and see how they are exploited in our COSMIC event middleware .
+7-27:Consider the timeline of generating an event representing some real time entity [18] from its occurrence to the notification of a certain sentient object (Figure 3) .
+7-28:The real time entity is captured at the sensor interface of the system and has to be transformed in a form which can be treated by a computer .
+7-29:During the time interval t0 the sensor reads the real time entity and a time stamp is associated with the respective value .
+7-30:The derived time, value entity represents an observation .
+7-31:It may be necessary to perform substantial local computations to derive application relevant information from the raw sensor data .
+7-32:However, it should be noted that the time stamp of the observation is associated with the capture time and thus independent from further signal processing and event generation .
+7-33:This close relationship between capture time and the associated value is supported by smart sensors described above .
+7-34:The processed sensor information is assembled in an event data structure after ts to be published to an event channel .
+7-35:As is described later, the event includes the time stamp of generation and the temporal validity as attributes .
+7-36:The temporal validity is an application defined measure for the expiration of a time, value .
+7-37:As we explained in the example of a position above, it may vary dependent on application parameters .
+7-38:Temporal validity is a more general concept than that of a deadline .
+7-39:It is independent of a certain technical implementation of a system .
+7-40:While deadlines may be used to schedule the respective steps in an event generation and dissemination, a temporal validity is an intrinsic property of a time, value entity carried in an event .
+7-41:A temporal validity allows to reason about the usefulness of information and is beneficial even in systems in which timely dissemination of events cannot be enforced because it enables timing failure detection at the event consumer .
+7-42:It is obvious that deadlines or periods can be derived from the temporal validity of an event .
+7-43:To set a deadline, knowledge of an implementation, worst case execution times or message dissemination latencies is necessary .
+7-44:Thus, in the timeline of Figure 3 every interval may have a deadline .
+7-45:Event dissemination through soft real time channels in COSMIC exploits the temporal validity to define dissemination deadlines .
+7-46:Quality attributes can be defined, for instance, in terms of validity interval, omission degree pairs .
+7-47:These allow to characterize the usefulness of the event for a certain application, in a certain context .
+7-48:Because of that, quality attributes of an event clearly depend on higher level issues, such as the nature of the sentient object or of the smart sensor that produced the event .
+7-49:For instance, an event containing an indication of some vehicle speed must have different quality attributes depending on the kind of vehicle 33 real world event observation: <time stamp, value> event generated ready to be transmitted event received notification , to t event producer communication network event consumer event channel push <event> , ts , tm , tt , tn , t o : t i m e t o o b t a i n a n o b s e r v a t i o n , t s : t i m e t o p r o c e s s s e n s o r r e a d i n g , t m : t i m e t o a s s e m b l e a n e v e n t m e s s a g e , t t : t i m e t o t r a n s f e r t h e e v e n t o n t h e r e g u l a r n e t w o r k , t n : t i m e f o r n o t i f i c a t i o n o n t h e c o n s u m e r s i t e Figure 3: Event processing and dissemination .
+7-50:from which it originated, or depending on its current speed .
+7-51:The same happens with the position event of the car example above, whose validity depends on the current speed and on a predefined required precision .
+7-52:However, since quality attributes are strictly related with the semantics of the application or, at least, with some high level knowledge of the purpose of the system (from which the validity of the information can be derived), the definition of these quality attributes may be done by exploiting the information provided at the programming interface .
+7-53:Therefore, it is important to understand how the system programmer can specify non functional requirements at the API, and how these requirements translate into quality attributes assigned to events .
+7-54:While temporal validity is identified as an intrinsic event property, which is exploited to decide on the usefulness of data at a certain point in time, it is still necessary to provide a communication facility which can disseminate the event before the validity is expired .
+7-55:In a WAN of CANs network structure we have to cope with very different network characteristics and quality of service properties .
+7-56:Therefore, when crossing the network boundaries the quality of service guarantees available in a certain network will be lost and it will be very hard, costly and perhaps impossible to achieve these properties in the next larger area of the WAN of CANs structure .
+7-57:CORTEX has a couple of abstractions to cope with this situation (network zones, body environment) which have been discussed above .
+7-58:From the temporal point of view we need a high level abstraction like the temporal validity for the individual event now to express our quality requirements of the dissemination over the network .
+7-59:The bound, coverage pair, introduced in relation with the TCB [28] seems to be an appropriate approach .
+7-60:It considers the inherent uncertainty of networks and allows to trade the quality of dissemination against the resources which are needed .
+7-61:In relation with the event channel model discussed later, the bound, coverage pair allows to specify the quality properties of an event channel independently of specific technical issues .
+7-62:Given the typical environments in which sentient applications will operate, where it is difficult or even impossible to provide timeliness or reliability guarantees, we proposed an alternative way to handle non functional application requirements, in relation with the TCB approach [28] .
+7-63:The proposed approach exploits intrinsic characteristics of applications, such as fail safety, or time elasticity, in order to secure QoS specifications of the form bound, coverage .
+7-64:Instead of constructing systems that rely on guaranteed bounds, the idea is to use (possibly changing) bounds that are secured with a constant probability all over the execution .
+7-65:This obviously requires an application to be able to adapt to changing conditions (and or changing bounds) or, if this is not possible, to be able to perform some safety procedures when the operational conditions degrade to an unbearable level .
+7-66:The bounds we mentioned above refer essentially to timeliness bounds associated to the execution of local or distributed activities, or combinations thereof .
+7-67:From these bounds it is then possible to derive the quality attributes, in particular validity intervals, that characterize the events published in the event channel .
+7-68:6.1 The Role of Smart Sensors and Actuators Smart devices encapsulate hardware, software and mechanical components and provide information and a set of well specified functions and which are closely related to the interaction with the environment .
+7-69:The built in computational components and the network interface enable the implementation of a well defined high level interface that does not just provide raw transducer data, but a processed, application related set of events .
+7-70:Moreover, they exhibit an autonomous spontaneous behaviour .
+7-71:They differ from general purpose nodes because they are dedicated to a certain functionality which complies to their sensing and actuating capabilities while general purpose node may execute any program .
+7-72:Concerning the sentient object model, smart sensors and actuators may be basic sentient objects themselves, consuming events from the real world environment and producing the respective generic events for the system"s event layer or, 34 vice versa consuming a generic event and converting it to a real world event by an actuation .
+7-73:Smart components therefore constitute the periphery, i.e .
+7-74:the real world interface of a more complex sentient object .
+7-75:The model of sentient objects also constitutes the framework to built more complex virtual sensors by relating multiple (primary, i.e .
+7-76:sensors which directly sense a physical entity) sensors .
+7-77:Smart components translate events of the environment to an appropriate form available at the event layer or, vice versa, transform a system event into an actuation .
+7-78:For smart components we can assume that: • Smart components have dedicated resources to perform a specific function .
+7-79:• These resources are not used for other purposes during normal real time operation .
+7-80:• No local temporal conflicts occur that will change the observable temporal behaviour .
+7-81:• The functions of a component can usually only be changed during a configuration procedure which is not performed when the component is involved in critical operations .
+7-82:• An observation of the environment as a time,value pair can be obtained with a bounded jitter in time .
+7-83:Many predictability and scheduling problems arise from the fact, that very low level timing behaviours have to be handled on a single processor .
+7-84:Here, temporal encapsulation of activities is difficult because of the possible side effects when sharing a single processor resource .
+7-85:Consider the control of a simple IR range detector which is used for obstacle avoidance .
+7-86:Dependent on its range and the speed of a vehicle, it has to be polled to prevent the vehicle from crashing into an obstacle .
+7-87:On a single central processor, this critical activity has to be coordinated with many similar, possibly less critical functions .
+7-88:It means that a very fine grained schedule has to be derived based purely on the artifacts of the low level device control .
+7-89:In a smart sensor component, all this low level timing behaviour can be optimized and encapsulated .
+7-90:Thus we can assume temporal encapsulation similar to information hiding in the functional domain .
+7-91:Of course, there is still the problem to guarantee that an event will be disseminated and recognized in due time by the respective system components, but this relates to application related events rather than the low artifacts of a device timing .
+7-92:The main responsibility to provide timeliness guarantees is shifted to the event layer where these events are disseminated .
+7-93:Smart sensors thus lead to network centric system model .
+7-94:The network constitute the shared resource which has to be scheduled in a predictable way .
+7-95:The COSMIC middleware introduced in the next section is an approach to provide predictable event dissemination for a network of smart sensors and actuators. .
+8 Abstract Network :
+8-1:FOR COOPERATING SMART DEVICES An event model and a middleware suitable for smart components must support timely and reliable communication and also must be resource efficient .
+8-2:COSMIC (COoperating Smart devices) is aimed at supporting the interaction between those components according to the concepts introduced so far .
+8-3:Based on the model of a WAN of CANs, we assume that the components are connected to some form of CAN as a fieldbus or a special wireless sensor network which provides specific network properties .
+8-4:E.g .
+8-5:a fieldbus developed for control applications usually includes mechanisms for predictable communication while other networks only support a best effort dissemination .
+8-6:A gateway connects these CANs to the next level in the network hierarchy .
+8-7:The event system should allow the dynamic interaction over a hierarchy of such networks and comply with the overall CORTEX generic event model .
+8-8:Events are typed information carriers and are disseminated in a publisher subscriber style [24, 7], which is particularly suitable because it supports generative, anonymous communication [3] and does not create any artificial control dependencies between producers of information and the consumers .
+8-9:This decoupling in space (no references or names of senders or receivers are needed for communication) and the flow decoupling (no control transfer occurs with a data transfer) are well known [24, 7, 14] and crucial properties to maintain autonomy of components and dynamic interactions .
+8-10:It is obvious that not all networks can provide the same QoS guarantees and secondly, applications may have widely differing requirements for event dissemination .
+8-11:Additionally, when striving for predictability, resources have to be reserved and data structures must be set up before communication takes place .
+8-12:Thus, these things can not predictably be made on the fly while disseminating an event .
+8-13:Therefore, we introduced the notion of an event channel to cope with differing properties and requirements and have an object to which we can assign resources and reservations .
+8-14:The concept of an event channel is not new [10, 25], however, it has not yet been used to reflect the properties of the underlying heterogeneous communication networks and mechanisms as described by the GEAR architecture .
+8-15:Rather, existing event middleware allows to specify the priorities or deadlines of events handled in an event server .
+8-16:Event channels allow to specify the communication properties on the level of the event system in a fine grained way .
+8-17:An event channel is defined by: event channel := subject, quality attributeList, handlers The subject determines the types of events event which may be issued to the channel .
+8-18:The quality attributes model the properties of the underlying communication network and dissemination scheme .
+8-19:These attributes include latency specifications, dissemination constraints and reliability parameters .
+8-20:The notion of zones which represent a guaranteed quality of service in a subnetwork support this approach .
+8-21:Our goal is to handle the temporal specifications as bound, coverage pairs [28] orthogonal to the more technical questions of how to achieve a certain synchrony property of the dissemination infrastructure .
+8-22:Currently, we support quality attributes of event channels in a CAN Bus environment represented by explicit synchrony classes .
+8-23:The COSMIC middleware maps the channel properties to lower level protocols of the regular network .
+8-24:Based on our previous work on predictable protocols for the CAN Bus, COSMIC defines an abstract network which provides hard, soft and non real time message classes [21] .
+8-25:Correspondingly, we distinguish three event channel classes according to their synchrony properties: hard real time channels, soft real time channels and non real time channels .
+8-26:Hard real time channels guarantee event propagation within the defined time constraints in the presence 35 of a specified number of omission faults .
+8-27:HRTECs are supported by a reservation scheme which is similar to the scheme used in time triggered protocols like TTP [16][31], TTP A [17], and TTCAN [8] .
+8-28:However, a substantial advantage over a TDMA scheme is that due to CAN Bus properties, bandwidth which was reserved but is not needed by a HRTEC can be used by less critical traffic [21] .
+8-29:Soft real time channels exploit the temporal validity interval of events to derive deadlines for scheduling .
+8-30:The validity interval defines the point in time after which an event becomes temporally inconsistent .
+8-31:Therefore, in a real time system an event is useless after this point and may me discarded .
+8-32:The transmission deadline is defined as the latest point in time when a message has to be transmitted and is specified in a time interval which is derived from the expiration time: tevent ready < DL < texpiration − ∆notification texpiration defines the point in time when the temporal validity expires .
+8-33:∆notification is the expected end to end latency which includes the transfer time over the network and the time the event may be delayed by the local event handling in the nodes .
+8-34:As said before, event deadlines are used to schedule the dissemination by SRTECs .
+8-35:However, deadlines may be missed in transient overload situations or due to arbitrary arrival times of events .
+8-36:On the publisher side the application"s exception handler is called whenever the event deadline expires before event transmission .
+8-37:At this point in time the event is also not expected to arrive at the subscriber side before the validity expires .
+8-38:Therefore, the event is removed from the sending queue .
+8-39:On the subscriber side the expiration time is used to schedule the delivery of the event .
+8-40:If the event cannot be delivered until its expiration time it is removed from the respective queues allocated by the COSMIC middleware .
+8-41:This prevents the communication system to be loaded by outdated messages .
+8-42:Non real time channels do not assume any temporal specification and disseminate events in a best effort manner .
+8-43:An instance of an event channel is created locally, whenever a publisher makes an announcement for publication or a subscriber subscribes for an event notification .
+8-44:When a publisher announces publication, the respective data structures of an event channel are created by the middleware .
+8-45:When a subscriber subscribes to an event channel, it may specify context attributes of an event which are used to filter events locally .
+8-46:E.g .
+8-47:a subscriber may only be interested in events generated at a certain location .
+8-48:Additionally the subscriber specifies quality properties of the event channel .
+8-49:A more detailed description of the event channels can be found in [13] .
+8-50:Currently, COSMIC handles all event channels which disseminate events beyond the CAN network boundary as non real time event channels .
+8-51:This is mainly because we use the TCP IP protocol to disseminate events over wireless links or to the standard Ethernet .
+8-52:However, there are a number of possible improvements which can easily be integrated in the event channel model .
+8-53:The Timely Computing Base [28] can be exploited for timing failure detection and thus would provide awareness for event dissemination in environments where timely delivery of events cannot be enforced .
+8-54:Additionally, there are wireless protocols which can provide timely and reliable message delivery [6, 23] which may be exploited for the respective event channel classes .
+8-55:Events are the information carriers which are exchanged between sentient objects through event channels .
+8-56:To cope with the requirements of an ad hoc environment, an event includes the description of the context in which it has been generated and quality attributes defining requirements for dissemination .
+8-57:This is particularly important in an open, dynamic environment where an event may travel over multiple networks .
+8-58:An event instance is specified as: event := subject, context attributeList, quality attributeList, contents A subject defines the type of the event and is related to the event contents .
+8-59:It supports anonymous communication and is used to route an event .
+8-60:The subject has to match to the subject of the event channel through which the event is disseminated .
+8-61:Attributes are complementary to the event contents .
+8-62:They describe individual functional and non functional properties of the event .
+8-63:The context attributes describe the environment in which the event has been generated, e.g .
+8-64:a location, an operational mode or a time of occurrence .
+8-65:The quality attributes specify timeliness and dependability aspects in terms of validity interval, omission degree pairs .
+8-66:The validity interval defines the point in time after which an event becomes temporally inconsistent [18] .
+8-67:As described above, the temporal validity can be mapped to a deadline .
+8-68:However, usually a deadline is an engineering artefact which is used for scheduling while the temporal validity is a general property of a time, value entity .
+8-69:In a environment where a deadline cannot be enforced, a consumer of an event eventually must decide whether the event still is temporally consistent, i.e .
+8-70:represents a valid time, value entity .
+8-71:7.1 The Architecture of the COSMIC Middleware On the architectural level, COSMIC distinguish three layers roughly depicted in Figure 4 .
+8-72:Two of them, the event layer and the abstract network layer are implemented by the COSMIC middleware .
+8-73:The event layer provides the API for the application and realizes the abstraction of event and event channels .
+8-74:The abstract network implements real time message classes and adapts the quality requirements to the underlying real network .
+8-75:An event channel handler resides in every node .
+8-76:It supports the programming interface and provides the necessary data structures for event based communication .
+8-77:Whenever an object subscribes to a channel or a publisher announces a channel, the event channel handler is involved .
+8-78:It initiates the binding of the channel"s subject, which is represented by a network independent unique identifier to an address of the underlying abstract network to enable communication [14] .
+8-79:The event channel handler then tightly cooperates with the respective handlers of the abstract network layer to disseminate events or receive event notifications .
+8-80:It should be noted that the QoS properties of the event layer in general depend on what the abstract network layer can provide .
+8-81:Thus, it may not always be possible to e.g .
+8-82:support hard real time event channels because the abstract network layer cannot provide the respective guarantees .
+8-83:In [13], we describe the protocols and services of the abstract network layer particularly for the CAN Bus .
+8-84:As can be seen in Figure 4, the hard real time message class is supported by a dedicated handler which is able to provide the time triggered message dissemination .
+8-85:36  event notifications HRT msg list SRT msg queue NRT msg queue HRT msg calendar HRTC Handler S NRTC Handler Abstract Network Layer CAN Layer RX Buffer TX Buffer RX, TX, error interrupts Event Channel Specs .
+8-86:Event Layer send messages exception notification exceptions, notifications ECH: Event Channel Handler p u b l i s h a n n o u n c e s u b s c r i b e b i n d i n g p r o t o c o l c o n f i g .
+8-87:p r o t o c o l Global Time Service event notifications HRT msg list SRT msg queue NRT msg queue HRT msg calendar HRTC Handler S NRTC Handler Abstract Network Layer CAN Layer RX Buffer TX Buffer RX, TX, error interrupts Event Channel Specs .
+8-88:Event Layer send messages exception notification exceptions, notifications ECH: Event Channel Handler p u b l i s h a n n o u n c e s u b s c r i b e b i n d i n g p r o t o c o l c o n f i g .
+8-89:p r o t o c o l Global Time Service Figure 4: Architecture layers of COSMIC .
+8-90:The HRT handler maintains the HRT message list, which contains an entry for each local HRT message to be sent .
+8-91:The entry holds the parameters for the message, the activation status and the binding information .
+8-92:Messages are scheduled on the bus according to the HRT message calendar which comprises the precise start time for each time slot allocated for a message .
+8-93:Soft real time message queues order outgoing messages according to their transmission deadlines derived from the temporal validity interval .
+8-94:If the transmission deadline is exceeded, the event message is purged out of the queue .
+8-95:The respective application is notified via the exception notification interface and can take actions like trying to publish the event again or publish it to a channel of another class .
+8-96:Incoming event messages are ordered according to their temporal validity .
+8-97:If an event message arrive, the respective applications are notified .
+8-98:At the moment, an outdated message is deleted from the queue and if the queue runs out of space, the oldest message is discarded .
+8-99:However, there are other policies possible depending on event attributes and available memory space .
+8-100:Non real time messages are FIFO ordered in a fixed size circular buffer .
+8-101:7.2 Status of COSMIC The goal for developing COSMIC was to provide a platform to seamlessly integrate smart tiny components in a large system .
+8-102:Therefore, COSMIC should run also on the small, resource constraint devices which are built around 16Bit or even 8 Bit micro controllers .
+8-103:The distributed COSMIC middleware has been implemented and tested on various platforms .
+8-104:Under RT Linux, we support the real time channels over the CAN Bus as described above .
+8-105:The RTLinux version runs on Pentium processors and is currently evaluated before we intent to port it to a smart sensor or actuator .
+8-106:For the interoperability in a WAN of CANs environment, we only provide non real time channels at the moment .
+8-107:This version includes a gateway between the CANbus and a TCP IP network .
+8-108:It allows us to use a standard wireless 802.11 network .
+8-109:The non real time version of COSMIC is available on Linux, RT Linux and on the microcontroller families C167 (Infineon) and 68HC908 (Motorola) .
+8-110:Both micro controllers have an on board CAN controller and thus do not require additional hardware components for the network .
+8-111:The memory footprint of COSMIC is about 13 Kbyte on a C167 and slightly more on the 68HC908 where it fits into the on board flash memory without problems .
+8-112:Because only a few channels are required on such a smart sensor or actuator component, the requirement of RAM (which is a scarce resource on many single chip systems) to hold the dynamic data structures of a channel is low .
+8-113:The COSMIC middleware makes it very easy to include new smart sensors in an existing system .
+8-114:Particularly, the application running on a smart sensor to condition and process the raw physical data must not be aware of any low level network specific details .
+8-115:It seamlessly interacts with other components of the system exclusively via event channels .
+8-116:The demo example, briefly described in the next chapter, is using a distributed infrastructure of tiny smart sensors and actuators directly cooperating via event channels over heterogeneous networks. .
+9 AN ILLUSTRATIVE EXAMPLE :
+9-1:A simple example for many important properties of the proposed system showing the coordination through the environment and events disseminated over the network is the demo of two cooperating robots depicted in Figure 5 .
+9-2:Each robot is equipped with smart distance sensors, speed sensors, acceleration sensors and one of the robots (the guide (KURT2) in front (Figure 5)) has a tracking camera allowing to follow a white line .
+9-3:The robots form a WAN of CANs system in which their local CANs are interconnected via a wireless 802.11 network .
+9-4:COSMIC provides the event layer for seamless interaction .
+9-5:The blind robot (N.N.) is searching the guide randomly .
+9-6:Whenever the blind robot detects (by its front distance sensors) an obstacle, it checks whether this may be the guide .
+9-7:For this purpose, it dynamically subscribes to the event channel disseminating distance events from rear distance sensors of the guide(s) and compares these with the distance events from its local front sensors .
+9-8:If the distance is approximately the same it infers that it is really behind a guide .
+9-9:Now N.N .
+9-10:also subscribes to the event channels of the tracking camera and the speed sensors 37 Figure 5: Cooperating robots .
+9-11:to follow the guide .
+9-12:The demo application highlights the following properties of the system: advance .
+9-13:In principle, any two a priori unknown robots can cooperate .
+9-14:All what publishers and subscribers have to know to dynamically interact in this environment is the subject of the respective event class .
+9-15:A problem will be to receive only the events of the robot which is closest .
+9-16:A robot identity does not help much to solve this problem .
+9-17:Rather, the position of the event generation entity which is captured in the respective attributes can be evaluated to filter the relevant event out of the event stream .
+9-18:A suitable wireless protocol which uses proximity to filter events has been proposed by Meier and Cahill [22] in the CORTEX project .
+9-19:cooperation between the robots is controlled by sensing the distance between the robots .
+9-20:If the guide detects that the distance grows, it slows down .
+9-21:Respectively, if the blind robot comes too close it reduces its speed .
+9-22:The local distance sensors produce events which are disseminated through a low latency, highly predictable event channel .
+9-23:The respective reaction time can be calculated as function of the speed and the distance of the robots and define a dynamic dissemination deadline for events .
+9-24:Thus, the interaction through the environment will secure the safety properties of the application, i.e .
+9-25:the follower may not crash into the guide and the guide may not loose the follower .
+9-26:Additionally, the robots have remote subscriptions to the respective distance events which are used to check it with the local sensor readings to validate that they really follow the guide which they detect with their local sensors .
+9-27:Because there may be longer latencies and omissions, this check occasionally will not be possible .
+9-28:The unavailability of the remote events will decrease the quality of interaction and probably and slow down the robots, but will not affect safety properties .
+9-29:events of the line tracking camera .
+9-30:Thus it can see through the eye of the guide .
+9-31:Because it knows the distance to the guide and the speed as well, it can foresee the necessary movements .
+9-32:The proposed system provides the architectural framework for such a cooperation .
+9-33:The respective sentient object controlling the actuation of the robot receives as input the position and orientation of the white line to be tracked .
+9-34:In the case of the guide robot, this information is directly delivered as a body event with a low latency and a high reliability over the internal network .
+9-35:For the follower robot, the information comes also via an event channel but with different quality attributes .
+9-36:These quality attributes are reflected in the event channel description .
+9-37:The sentient object controlling the actuation of the follower is aware of the increased latency and higher probability of omission. .
+10-1:The paper addresses problems of building large distributed systems interacting with the physical environment and being composed from a huge number of smart components
+10-2:We cannot assume that the network architecture in such a system is homogeneous
+10-3:Rather multiple edge networks are fused to a hierarchical, heterogeneous wide area network
+10-4:They connect the tiny sensors and actuators perceiving the environment and providing sentience to the application
+10-5:Additionally, mobility and dynamic deployment of components require the dynamic interaction without fixed, a priori known addressing and routing schemes
+10-6:The work presented in the paper is a contribution towards the seamless interaction in such an environment which should not be restricted by technical obstacles
+10-7:Rather it should be possible to control the flow of information by explicitly specifying functional and temporal dissemination constraints
+10-8:The paper presented the general model of a sentient object to describe composition, encapsulation and interaction in such an environment and developed the Generic Event Architecture GEAR which integrates the interaction through the environment and the network
+10-9:While appropriate abstractions and interaction models can hide the functional heterogeneity of the networks, it is impossible to hide the quality differences
+10-10:Therefore, one of the main concerns is to define temporal properties in such an open infrastructure
+10-11:The notion of an event channel has been introduced which allows to specify quality aspects explicitly
+10-12:They can be verified at subscription and define a boundary for event dissemination
+10-13:The COSMIC middleware is a first attempt to put these concepts into operation
+10-14:COSMIC allows the interoperability of tiny components over multiple network boundaries and supports the definition of different real time event channel classes
+10-15:There are many open questions that emerged from our work
+10-16:One direction of future research will be the inclusion of real world communication channels established between sensors and actuators in the temporal analysis and the ordering of such events in a cause effect chain
+10-17:Additionally, the provision of timing failure detection for the adaptation of interactions will be in the focus of our research
+10-18:To reduce network traffic and only disseminate those events to the subscribers which they are really interested in and which have a chance to arrive timely, the encapsulation and scoping schemes have to be transformed into respective multi level filtering rules
+10-19:The event attributes which describe aspects of the context and temporal constraints for the dissemination will be exploited for this purpose
+10-20:Finally, it is intended to integrate the results in the COSMIC middleware to enable experimental assessment
+10-21:38 10
+10-22:REFERENCES
+11-1:J
+11-2:Bacon, K
+11-3:Moody, J
+11-4:Bates, R
+11-5:Hayton, C
+11-6:Ma, A
+11-7:McNeil, O
+11-8:Seidel, and M
+11-9:Spiteri
+11-10:Generic support for distributed applications
+11-11:IEEE Computer, 33(3):68 76, 2000
+11-12:L
+11-13:B
+11-14:Becker, M
+11-15:Gergeleit, S
+11-16:Schemmer, and E
+11-17:Nett
+11-18:Using a flexible real time scheduling strategy in a distributed embedded application
+11-19:In Proc
+11-20:of the 9th IEEE International Conference on Emerging Technologies and Factory Automation (ETFA), Lisbon, Portugal, Sept
+11-21:2003
+11-22:N
+11-23:Carriero and D
+11-24:Gelernter
+11-25:Linda in context
+11-26:Communications of the ACM, 32(4):444 458, apr 1989
+11-27:A
+11-28:Casimiro (Ed.)
+11-29:Preliminary definition of cortex system architecture
+11-30:CORTEX project, IST 2000 26031, Deliverable D4, Apr
+11-31:2002
+11-32:CORTEX project Annex 1, Description of Work
+11-33:Technical report, CORTEX project, IST 2000 26031, Oct
+11-34:2000
+11-35:http:  cortex.di.fc.ul.pt
+11-36:R
+11-37:Cunningham and V
+11-38:Cahill
+11-39:Time bounded medium access control for ad hoc networks
+11-40:In Proceedings of the Second ACM International Workshop on Principles of Mobile Computing (POMC"02), pages 1 8, Toulouse, France, Oct
+11-41:2002
+11-42:ACM Press
+11-43:P
+11-44:T
+11-45:Eugster, P
+11-46:Felber, R
+11-47:Guerraoui, and A. M
+11-48:Kermarrec
+11-49:The many faces of publish subscribe
+11-50:Technical Report DSC ID:200104, EPFL, Lausanne, Switzerland, 2001
+11-51:T
+11-52:F¨uhrer, B
+11-53:M¨uller, W
+11-54:Dieterle, F
+11-55:Hartwich,
+picture:

@@ -1,0 +1,681 @@
+Self-interested Automated Mechanism Design and 
+content:
+1 ABSTRACT :
+1-1:Often, an outcome must be chosen on the basis of the preferences reported by a group of agents .
+1-2:The key difficulty is that the agents may report their preferences insincerely to make the chosen outcome more favorable to themselves .
+1-3:Mechanism design is the art of designing the rules of the game so that the agents are motivated to report their preferences truthfully, and a desirable outcome is chosen .
+1-4:In a recently proposed approach called automated mechanism design a mechanism is computed for the preference aggregation setting at hand .
+1-5:This has several advantages, but the downside is that the mechanism design optimization problem needs to be solved anew each time .
+1-6:Unlike the earlier work on automated mechanism design that studied a benevolent designer, in this paper we study automated mechanism design problems where the designer is self interested .
+1-7:In this case, the center cares only about which outcome is chosen and what payments are made to it .
+1-8:The reason that the agents" preferences are relevant is that the center is constrained to making each agent at least as well off as the agent would have been had it not participated in the mechanism .
+1-9:In this setting, we show that designing optimal deterministic mechanisms is NP complete in two important special cases: when the center is interested only in the payments made to it, and when payments are not possible and the center is interested only in the outcome chosen .
+1-10:We then show how allowing for randomization in the mechanism makes problems in this setting computationally easy .
+1-11:Finally, we show that the payment maximizing AMD problem is closely related to an interesting variant of the optimal (revenuemaximizing) combinatorial auction design problem, where the bidders have best only preferences .
+1-12:We show that here, too, designing an optimal deterministic auction is NPcomplete, but designing an optimal randomized auction is easy .
+1-13:F.2 [Theory of Computation]: Analysis of Algorithms .
+2 INTRODUCTION :
+2-1:In multiagent settings, often an outcome must be chosen on the basis of the preferences reported by a group of agents .
+2-2:Such outcomes could be potential presidents, joint plans, allocations of goods or resources, etc .
+2-3:The preference aggregator generally does not know the agents" preferences a priori .
+2-4:Rather, the agents report their preferences to the coordinator .
+2-5:Unfortunately, an agent may have an incentive to misreport its preferences in order to mislead the mechanism into selecting an outcome that is more desirable to the agent than the outcome that would be selected if the agent revealed its preferences truthfully .
+2-6:Such manipulation is undesirable because preference aggregation mechanisms are tailored to aggregate preferences in a socially desirable way, and if the agents reveal their preferences insincerely, a socially undesirable outcome may be chosen .
+2-7:Manipulability is a pervasive problem across preference aggregation mechanisms .
+2-8:A seminal negative result, the Gibbard Satterthwaite theorem, shows that under any nondictatorial preference aggregation scheme, if there are at least 3 possible outcomes, there are preferences under which an agent is better off reporting untruthfully [10, 23] .
+2-9:(A preference aggregation scheme is called dictatorial if one of the agents dictates the outcome no matter what preferences the other agents report.) What the aggregator would like to do is design a preference aggregation mechanism so that 1) the self interested agents are motivated to report their preferences truthfully, and 2) the mechanism chooses an outcome that is desirable from the perspective of some objective .
+2-10:This is the classic setting of mechanism design in game theory .
+2-11:In this paper, we study the case where the designer is self interested, that is, the designer does not directly care about how the out132 come relates to the agents" preferences, but is rather concerned with its own agenda for which outcome should be chosen, and with maximizing payments to itself .
+2-12:This is the mechanism design setting most relevant to electronic commerce .
+2-13:In the case where the mechanism designer is interested in maximizing some notion of social welfare, the importance of collecting the agents" preferences is clear .
+2-14:It is perhaps less obvious why they should be collected when the designer is self interested and hence its objective is not directly related to the agents" preferences .
+2-15:The reason for this is that often the agents" preferences impose limits on how the designer chooses the outcome and payments .
+2-16:The most common such constraint is that of individual rationality (IR), which means that the mechanism cannot make any agent worse off than the agent would have been had it not participated in the mechanism .
+2-17:For instance, in the setting of optimal auction design, the designer (auctioneer) is only concerned with how much revenue is collected, and not per se with how well the allocation of the good (or goods) corresponds to the agents" preferences .
+2-18:Nevertheless, the designer cannot force an agent to pay more than its valuation for the bundle of goods allocated to it .
+2-19:Therefore, even a self interested designer will choose an outcome that makes the agents reasonably well off .
+2-20:On the other hand, the designer will not necessarily choose a social welfare maximizing outcome .
+2-21:For example, if the designer always chooses an outcome that maximizes social welfare with respect to the reported preferences, and forces each agent to pay the difference between the utility it has now and the utility it would have had if it had not participated in the mechanism, it is easy to see that agents may have an incentive to misreport their preferences and this may actually lead to less revenue being collected .
+2-22:Indeed, one of the counterintuitive results of optimal auction design theory is that sometimes the good is allocated to nobody even when the auctioneer has a reservation price of 0 .
+2-23:Classical mechanism design provides some general mechanisms, which, under certain assumptions, satisfy some notion of nonmanipulability and maximize some objective .
+2-24:The upside of these mechanisms is that they do not rely on (even probabilistic) information about the agents" preferences (e.g., the Vickrey Clarke Groves mechanism [24, 4, 11]), or they can be easily applied to any probability distribution over the preferences (e.g., the dAGVA mechanism [8, 2], the Myerson auction [18], and the Maskin Riley multi unit auction [17]) .
+2-25:However, the general mechanisms also have significant downsides: • The most famous and most broadly applicable general mechanisms, VCG and dAGVA, only maximize social welfare .
+2-26:If the designer is self interested, as is the case in many electronic commerce settings, these mechanisms do not maximize the designer"s objective .
+2-27:• The general mechanisms that do focus on a selfinterested designer are only applicable in very restricted settings such as Myerson"s expected revenue maximizing auction for selling a single item, and Maskin and Riley"s expected revenue maximizing auction for selling multiple identical units of an item .
+2-28:• Even in the restricted settings in which these mechanisms apply, the mechanisms only allow for payment maximization .
+2-29:In practice, the designer may also be interested in the outcome per se .
+2-30:For example, an auctioneer may care which bidder receives the item .
+2-31:• It is often assumed that side payments can be used to tailor the agents" incentives, but this is not always practical .
+2-32:For example, in barter based electronic marketplaces such as Recipco, firstbarter.com, BarterOne, and Intagio side payments are not allowed .
+2-33:Furthermore, among software agents, it might be more desirable to construct mechanisms that do not rely on the ability to make payments, because many software agents do not have the infrastructure to make payments .
+2-34:In contrast, we follow a recent approach where the mechanism is designed automatically for the specific problem at hand .
+2-35:This approach addresses all of the downsides listed above .
+2-36:We formulate the mechanism design problem as an optimization problem .
+2-37:The input is characterized by the number of agents, the agents" possible types (preferences), and the aggregator"s prior distributions over the agents" types .
+2-38:The output is a nonmanipulable mechanism that is optimal with respect to some objective .
+2-39:This approach is called automated mechanism design .
+2-40:The automated mechanism design approach has four advantages over the classical approach of designing general mechanisms .
+2-41:First, it can be used even in settings that do not satisfy the assumptions of the classical mechanisms (such as availability of side payments or that the objective is social welfare) .
+2-42:Second, it may allow one to circumvent impossibility results (such as the Gibbard Satterthwaite theorem) which state that there is no mechanism that is desirable across all preferences .
+2-43:When the mechanism is designed for the setting at hand, it does not matter that it would not work more generally .
+2-44:Third, it may yield better mechanisms (in terms of stronger nonmanipulability guarantees and or better outcomes) than classical mechanisms because the mechanism capitalizes on the particulars of the setting (the probabilistic information that the designer has about the agents" types) .
+2-45:Given the vast amount of information that parties have about each other today, this approach is likely to lead to tremendous savings over classical mechanisms, which largely ignore that information .
+2-46:For example, imagine a company automatically creating its procurement mechanism based on statistical knowledge about its suppliers, rather than using a classical descending procurement auction .
+2-47:Fourth, the burden of design is shifted from humans to a machine .
+2-48:However, automated mechanism design requires the mechanism design optimization problem to be solved anew for each setting .
+2-49:Hence its computational complexity becomes a key issue .
+2-50:Previous research has studied this question for benevolent designers that wish to maximize, for example, social welfare [5, 6] .
+2-51:In this paper we study the computational complexity of automated mechanism design in the case of a self interested designer .
+2-52:This is an important setting for automated mechanism design due to the shortage of general mechanisms in this area, and the fact that in most e commerce settings the designer is self interested .
+2-53:We also show that this problem is closely related to a particular optimal (revenue maximizing) combinatorial auction design problem .
+2-54:133 The rest of this paper is organized as follows .
+2-55:In Section 2, we justify the focus on nonmanipulable mechanisms .
+2-56:In Section 3, we define the problem we study .
+2-57:In Section 4, we show that designing an optimal deterministic mechanism is NP complete even when the designer only cares about the payments made to it .
+2-58:In Section 5, we show that designing an optimal deterministic mechanism is also NP complete when payments are not possible and the designer is only interested in the outcome chosen .
+2-59:In Section 6, we show that an optimal randomized mechanism can be designed in polynomial time even in the general case .
+2-60:Finally, in Section 7, we show that for designing optimal combinatorial auctions under best only preferences, our results on AMD imply that this problem is NP complete for deterministic auctions, but easy for randomized auctions. .
+3 JUSTIFYING THE FOCUS ON  NONMANIPULABLE MECHANISMS :
+3-1:NONMANIPULABLE MECHANISMS Before we define the computational problem of automated mechanism design, we should justify our focus on nonmanipulable mechanisms .
+3-2:After all, it is not immediately obvious that there are no manipulable mechanisms that, even when agents report their types strategically and hence sometimes untruthfully, still reach better outcomes (according to whatever objective we use) than any nonmanipulable mechanism .
+3-3:This does, however, turn out to be the case: given any mechanism, we can construct a nonmanipulable mechanism whose performance is identical, as follows .
+3-4:We build an interface layer between the agents and the original mechanism .
+3-5:The agents report their preferences (or types) to the interface layer; subsequently, the interface layer inputs into the original mechanism the types that the agents would have strategically reported to the original mechanism, if their types were as declared to the interface layer .
+3-6:The resulting outcome is the outcome of the new mechanism .
+3-7:Since the interface layer acts strategically on each agent"s behalf, there is never an incentive to report falsely to the interface layer; and hence, the types reported by the interface layer are the strategic types that would have been reported without the interface layer, so the results are exactly as they would have been with the original mechanism .
+3-8:This argument is known in the mechanism design literature as the revelation principle [16] .
+3-9:(There are computational difficulties with applying the revelation principle in large combinatorial outcome and type spaces [7, 22] .
+3-10:However, because here we focus on flatly represented outcome and type spaces, this is not a concern here.) Given this, we can focus on truthful mechanisms in the rest of the paper. .
+4 DEFINITIONS :
+4-1:We now formalize the automated mechanism design setting .
+4-2:Definition 1 .
+4-3:In an automated mechanism design setting, we are given: • a finite set of outcomes O; • a finite set of N agents; • for each agent i, .
+5 a finite set of types Θi, :
+5-1:correlated types, there is a single joint distribution γ over Θ1 × .
+5-2:.
+5-3:.
+5-4:× ΘN ), and • An objective function whose expectation the designer wishes to maximize .
+5-5:There are many possible objective functions the designer might have, for example, social welfare (where the designer seeks to maximize the sum of the agents" utilities), or the minimum utility of any agent (where the designer seeks to maximize the worst utility had by any agent) .
+5-6:In both of these cases, the designer is benevolent, because the designer, in some sense, is pursuing the agents" collective happiness .
+5-7:However, in this paper, we focus on the case of a self interested designer .
+5-8:A self interested designer cares only about the outcome chosen (that is, the designer does not care how the outcome relates to the agents" preferences, but rather has a fixed preference over the outcomes), and about the net payments made by the agents, which flow to the designer .
+5-9:Definition 2 .
+5-10:A self interested designer has an objective function given by g(o) + N i=1 πi, where g : O → R indicates the designer"s own preference over the outcomes, and πi is the payment made by agent i .
+5-11:In the case where g = 0 everywhere, the designer is said to be payment maximizing .
+5-12:In the case where payments are not possible, g constitutes the objective function by itself .
+5-13:We now define the kinds of mechanisms under study .
+5-14:By the revelation principle, we can restrict attention to truthful, direct revelation mechanisms, where agents report their types directly and never have an incentive to misreport them .
+5-15:Definition 3 .
+5-16:We consider the following kinds of mechanism: • A deterministic mechanism without payments consists of an outcome selection function o : Θ1 × Θ2 × .
+5-17:.
+5-18:.
+5-19:× ΘN → O .
+5-20:• A randomized mechanism without payments consists of a distribution selection function p : Θ1 × Θ2 × .
+5-21:.
+5-22:.
+5-23:× ΘN → P(O), where P(O) is the set of probability distributions over O .
+5-24:• A deterministic mechanism with payments consists of an outcome selection function o : Θ1 ×Θ2 × .
+5-25:.
+5-26:.×ΘN → O and for each agent i, a payment selection function πi : Θ1 × Θ2 × .
+5-27:.
+5-28:.
+5-29:× ΘN → R, where πi(θ1, .
+5-30:.
+5-31:.
+5-32:, θN ) gives the payment made by agent i when the reported types are θ1, .
+5-33:.
+5-34:.
+5-35:, θN .
+5-36:1 Though this follows standard game theory notation [16], the fact that the agent has both a utility function and a type is perhaps confusing .
+5-37:The types encode the various possible preferences that the agent may turn out to have, and the agent"s type is not known to the aggregator .
+5-38:The utility function is common knowledge, but because the agent"s type is a parameter in the agent"s utility function, the aggregator cannot know what the agent"s utility is without knowing the agent"s type .
+5-39:134 • A randomized mechanism with payments consists of a distribution selection function p : Θ1 × Θ2 × .
+5-40:.
+5-41:.
+5-42:× ΘN → P(O), and for each agent i, a payment selection function πi : Θ1 × Θ2 × .
+5-43:.
+5-44:.
+5-45:× ΘN → R.2 There are two types of constraint on the designer in building the mechanism .
+5-46:3.1 Individual rationality constraints The first type of constraint is the following .
+5-47:The utility of each agent has to be at least as great as the agent"s fallback utility, that is, the utility that the agent would receive if it did not participate in the mechanism .
+5-48:Otherwise that agent would not participate in the mechanism and no agent"s participation can ever hurt the mechanism designer"s objective because at worst, the mechanism can ignore an agent by pretending the agent is not there .
+5-49:(Furthermore, if no such constraint applied, the designer could simply make the agents pay an infinite amount.) This type of constraint is called an IR (individual rationality) constraint .
+5-50:There are three different possible IR constraints: ex ante, ex interim, and ex post, depending on what the agent knows about its own type and the others" types when deciding whether to participate in the mechanism .
+5-51:Ex ante IR means that the agent would participate if it knew nothing at all (not even its own type) .
+5-52:We will not study this concept in this paper .
+5-53:Ex interim IR means that the agent would always participate if it knew only its own type, but not those of the others .
+5-54:Ex post IR means that the agent would always participate even if it knew everybody"s type .
+5-55:We will define the latter two notions of IR formally .
+5-56:First, we need to formalize the concept of the fallback outcome .
+5-57:We assume that each agent"s fallback utility is zero for each one of its types .
+5-58:This is without loss of generality because we can add a constant term to an agent"s utility function (for a given type), without affecting the decision making behavior of that expected utility maximizing agent [16] .
+5-59:Definition 4 .
+5-60:In any automated mechanism design setting with an IR constraint, there is a fallback outcome o0 ∈ O where, for any agent i and any type θi ∈ Θi, we have ui(θi, o0) = 0 .
+5-61:(Additionally, in the case of a self interested designer, g(o0) = 0.) We can now to define the notions of individual rationality .
+5-62:Definition 5 .
+5-63:Individual rationality is defined by: • A deterministic mechanism is ex interim IR if for any agent i, and any type θi ∈ Θi, we have E(θ1,..,θi−1,θi+1,..,θN )|θi [ui(θi, o(θ1, .., θN ))−πi(θ1, .., θN )] ≥ 0 .
+5-64:A randomized mechanism is ex interim IR if for any agent i, and any type θi ∈ Θi, we have E(θ1,..,θi−1,θi+1,..,θN )|θi Eo|θ1,..,θn [ui(θi, o)−πi(θ1, .., θN )] ≥ 0 .
+5-65:• A deterministic mechanism is ex post IR if for any agent i, and any type vector (θ1, .
+5-66:.
+5-67:.
+5-68:, θN ) ∈ Θ1 × .
+5-69:.
+5-70:.
+5-71:× ΘN , we have ui(θi, o(θ1, .
+5-72:.
+5-73:.
+5-74:, θN )) − πi(θ1, .
+5-75:.
+5-76:.
+5-77:, θN ) ≥ 0 .
+5-78:2 We do not randomize over payments because as long as the agents and the designer are risk neutral with respect to payments, that is, their utility is linear in payments, there is no reason to randomize over payments .
+5-79:A randomized mechanism is ex post IR if for any agent i, and any type vector (θ1, .
+5-80:.
+5-81:.
+5-82:, θN ) ∈ Θ1 × .
+5-83:.
+5-84:.
+5-85:× ΘN , we have Eo|θ1,..,θn [ui(θi, o) − πi(θ1, .., θN )] ≥ 0 .
+5-86:The terms involving payments can be left out in the case where payments are not possible .
+5-87:3.2 Incentive compatibility constraints The second type of constraint says that the agents should never have an incentive to misreport their type (as justified above by the revelation principle) .
+5-88:For this type of constraint, the two most common variants (or solution concepts) are implementation in dominant strategies, and implementation in Bayes Nash equilibrium .
+5-89:Definition 6 .
+5-90:Given an automated mechanism design setting, a mechanism is said to implement its outcome and payment functions in dominant strategies if truthtelling is always optimal even when the types reported by the other agents are already known .
+5-91:Formally, for any agent i, any type vector (θ1, .
+5-92:.
+5-93:.
+5-94:, θi, .
+5-95:.
+5-96:.
+5-97:, θN ) ∈ Θ1 × .
+5-98:.
+5-99:.
+5-100:× Θi × .
+5-101:.
+5-102:.
+5-103:× ΘN , and any alternative type report ˆθi ∈ Θi, in the case of deterministic mechanisms we have ui(θi, o(θ1, .
+5-104:.
+5-105:.
+5-106:, θi, .
+5-107:.
+5-108:.
+5-109:, θN )) − πi(θ1, .
+5-110:.
+5-111:.
+5-112:, θi, .
+5-113:.
+5-114:.
+5-115:, θN ) ≥ ui(θi, o(θ1, .
+5-116:.
+5-117:.
+5-118:, ˆθi, .
+5-119:.
+5-120:.
+5-121:, θN )) − πi(θ1, .
+5-122:.
+5-123:.
+5-124:, ˆθi, .
+5-125:.
+5-126:.
+5-127:, θN ) .
+5-128:In the case of randomized mechanisms we have Eo|θ1,..,θi,..,θn [ui(θi, o) − πi(θ1, .
+5-129:.
+5-130:.
+5-131:, θi, .
+5-132:.
+5-133:.
+5-134:, θN )] ≥ Eo|θ1,.., ˆθi,..,θn [ui(θi, o) − πi(θ1, .
+5-135:.
+5-136:.
+5-137:, ˆθi, .
+5-138:.
+5-139:.
+5-140:, θN )] .
+5-141:The terms involving payments can be left out in the case where payments are not possible .
+5-142:Thus, in dominant strategies implementation, truthtelling is optimal regardless of what the other agents report .
+5-143:If it is optimal only given that the other agents are truthful, and given that one does not know the other agents" types, we have implementation in Bayes Nash equilibrium .
+5-144:Definition 7 .
+5-145:Given an automated mechanism design setting, a mechanism is said to implement its outcome and payment functions in Bayes Nash equilibrium if truthtelling is always optimal to an agent when that agent does not yet know anything about the other agents" types, and the other agents are telling the truth .
+5-146:Formally, for any agent i, any type θi ∈ Θi, and any alternative type report ˆθi ∈ Θi, in the case of deterministic mechanisms we have E(θ1,..,θi−1,θi+1,..,θN )|θi [ui(θi, o(θ1, .
+5-147:.
+5-148:.
+5-149:, θi, .
+5-150:.
+5-151:.
+5-152:, θN ))− πi(θ1, .
+5-153:.
+5-154:.
+5-155:, θi, .
+5-156:.
+5-157:.
+5-158:, θN )] ≥ E(θ1,..,θi−1,θi+1,..,θN )|θi [ui(θi, o(θ1, .
+5-159:.
+5-160:.
+5-161:, ˆθi, .
+5-162:.
+5-163:.
+5-164:, θN ))− πi(θ1, .
+5-165:.
+5-166:.
+5-167:, ˆθi, .
+5-168:.
+5-169:.
+5-170:, θN )] .
+5-171:In the case of randomized mechanisms we have E(θ1,..,θi−1,θi+1,..,θN )|θi Eo|θ1,..,θi,..,θn [ui(θi, o)− πi(θ1, .
+5-172:.
+5-173:.
+5-174:, θi, .
+5-175:.
+5-176:.
+5-177:, θN )] ≥ E(θ1,..,θi−1,θi+1,..,θN )|θi Eo|θ1,.., ˆθi,..,θn [ui(θi, o)− πi(θ1, .
+5-178:.
+5-179:.
+5-180:, ˆθi, .
+5-181:.
+5-182:.
+5-183:, θN )] .
+5-184:The terms involving payments can be left out in the case where payments are not possible .
+5-185:135 3.3 Automated mechanism design We can now define the computational problem we study .
+5-186:Definition 8 .
+5-187:(AUTOMATED MECHANISM DESIGN (AMD)) We are given: • an automated mechanism design setting, • an IR notion (ex interim, ex post, or none), • a solution concept (dominant strategies or Bayes Nash), • whether payments are possible, • whether randomization is possible, • (in the decision variant of the problem) a target value G .
+5-188:We are asked whether there exists a mechanism of the specified kind (in terms of payments and randomization) that satisfies both the IR notion and the solution concept, and gives an expected value of at least G for the objective .
+5-189:An interesting special case is the setting where there is only one agent .
+5-190:In this case, the reporting agent always knows everything there is to know about the other agents" types because there are no other agents .
+5-191:Since ex post and ex interim IR only differ on what an agent is assumed to know about other agents" types, the two IR concepts coincide here .
+5-192:Also, because implementation in dominant strategies and implementation in Bayes Nash equilibrium only differ on what an agent is assumed to know about other agents" types, the two solution concepts coincide here .
+5-193:This observation will prove to be a useful tool in proving hardness results: if we prove computational hardness in the singleagent setting, this immediately implies hardness for both IR concepts, for both solution concepts, for any number of agents. .
+6 PAYMENT MAXIMIZINGDETERMINISTIC AMD IS HARD :
+6-1:PAYMENT MAXIMIZINGDETERMINISTIC AMD IS HARD In this section we demonstrate that it is NP complete to design a deterministic mechanism that maximizes the expected sum of the payments collected from the agents .
+6-2:We show that this problem is hard even in the single agent setting, thereby immediately showing it hard for both IR concepts, for both solution concepts .
+6-3:To demonstrate NPhardness, we reduce from the MINSAT problem .
+6-4:Definition 9 .
+6-5:We are given a formula φ in conjunctive normal form, represented by a set of Boolean variables V and a set of clauses C, and an integer K (K < |C|) .
+6-6:We are asked whether there exists an assignment to the variables in V such that at most K clauses in φ are satisfied .
+6-7:MINSAT was recently shown to be NP complete [14] .
+6-8:We can now present our result .
+6-9:Theorem 1 .
+6-10:Payment maximizing deterministic AMD is NP complete, even for a single agent, even with a uniform distribution over types .
+6-11:Proof .
+6-12:It is easy to show that the problem is in NP .
+6-13:To show NP hardness, we reduce an arbitrary MINSAT instance to the following single agent payment maximizing deterministic AMD instance .
+6-14:Let the agent"s type set be Θ = {θc : c ∈ C} ∪ {θv : v ∈ V }, where C is the set of clauses in the MINSAT instance, and V is the set of variables .
+6-15:Let the probability distribution over these types be uniform .
+6-16:Let the outcome set be O = {o0} ∪ {oc : c ∈ C} ∪ {ol : l ∈ L}, where L is the set of literals, that is, L = {+v : v ∈ V } ∪ {−v : v ∈ V } .
+6-17:Let the notation v(l) = v denote that v is the variable corresponding to the literal l, that is, l ∈ {+v, −v} .
+6-18:Let l ∈ c denote that the literal l occurs in clause c .
+6-19:Then, let the agent"s utility function be given by u(θc, ol) = |Θ| + 1 for all l ∈ L with l ∈ c; u(θc, ol) = 0 for all l ∈ L with l ∈ c; u(θc, oc) = |Θ| + 1; u(θc, oc ) = 0 for all c ∈ C with c = c ; u(θv, ol) = |Θ| for all l ∈ L with v(l) = v; u(θv, ol) = 0 for all l ∈ L with v(l) = v; u(θv, oc) = 0 for all c ∈ C .
+6-20:The goal of the AMD instance is G = |Θ| + |C|−K |Θ| , where K is the goal of the MINSAT instance .
+6-21:We show the instances are equivalent .
+6-22:First, suppose there is a solution to the MINSAT instance .
+6-23:Let the assignment of truth values to the variables in this solution be given by the function f : V → L (where v(f(v)) = v for all v ∈ V ) .
+6-24:Then, for every v ∈ V , let o(θv) = of(v) and π(θv) = |Θ| .
+6-25:For every c ∈ C, let o(θc) = oc; let π(θc) = |Θ| + 1 if c is not satisfied in the MINSAT solution, and π(θc) = |Θ| if c is satisfied .
+6-26:It is straightforward to check that the IR constraint is satisfied .
+6-27:We now check that the agent has no incentive to misreport .
+6-28:If the agent"s type is some θv, then any other report will give it an outcome that is no better, for a payment that is no less, so it has no incentive to misreport .
+6-29:If the agent"s type is some θc where c is a satisfied clause, again, any other report will give it an outcome that is no better, for a payment that is no less, so it has no incentive to misreport .
+6-30:The final case to check is where the agent"s type is some θc where c is an unsatisfied clause .
+6-31:In this case, we observe that for none of the types, reporting it leads to an outcome ol for a literal l ∈ c, precisely because the clause is not satisfied in the MINSAT instance .
+6-32:Because also, no type besides θc leads to the outcome oc, reporting any other type will give an outcome with utility 0, while still forcing a payment of at least |Θ| from the agent .
+6-33:Clearly the agent is better off reporting truthfully, for a total utility of misreport .
+6-34:Finally, we show that the goal is reached .
+6-35:If s is the number of satisfied clauses in the MINSAT solution (so that s ≤ K), the expected payment from this mechanism is |V ||Θ|+s|Θ|+(|C|−s)(|Θ|+1) |Θ| ≥ |V ||Θ|+K|Θ|+(|C|−K)(|Θ|+1) |Θ| = |Θ| + |C|−K |Θ| = G .
+6-36:So there is a solution to the AMD instance .
+6-37:Now suppose there is a solution to the AMD instance, given by an outcome function o and a payment function {o+v, o−v} .
+6-38:Then the utility that the agent derives from the given outcome for this type is 0, and hence, by IR, no payment can be extracted from the agent for this type .
+6-39:Because, again by IR, the maximum payment that can be extracted for any other type is |Θ| + 1, it follows that the maximum expected payment that could be obtained is at most (|Θ|−1)(|Θ|+1) |Θ| < |Θ| < G, contradicting that this is a solution to the AMD instance .
+6-40:It follows that in the solution to the AMD instance, for every v ∈ V , o(θv) ∈ {o+v, o−v} .
+6-41:136 We can interpret this as an assignment of truth values to the variables: v is set to true if o(θv) = o+v, and to false if o(θv) = o−v .
+6-42:We claim this assignment is a solution to the MINSAT instance .
+6-43:By the IR constraint, the maximum payment we can extract from any type θv is |Θ| .
+6-44:Because there can be no incentives for the agent to report falsely, for any clause c satisfied by the given assignment, the maximum payment we can extract for the corresponding type θc is |Θ| .
+6-45:(For if we extracted more from this type, the agent"s utility in this case would be less than 1; and if v is the variable satisfying c in the assignment, so that o(θv) = ol where l occurs in c, then the agent would be better off reporting θv instead of the truthful report θc, to get an outcome worth |Θ|+1 to it while having to pay at most |Θ|.) Finally, for any unsatisfied clause c, by the IR constraint, the maximum payment we can extract for the corresponding type θc is |Θ| + 1 .
+6-46:It follows that the expected payment from our mechanism is at most V |Θ|+s|Θ|+(|C|−s)(|Θ|+1) Θ , where s is the number of satisfied clauses .
+6-47:Because our mechanism achieves the goal, it follows that V |Θ|+s|Θ|+(|C|−s)(|Θ|+1) Θ ≥ G, which by simple algebraic manipulations is equivalent to s ≤ K .
+6-48:So there is a solution to the MINSAT instance .
+6-49:Because payment maximizing AMD is just the special case of AMD for a self interested designer where the designer has no preferences over the outcome chosen, this immediately implies hardness for the general case of AMD for a selfinterested designer where payments are possible .
+6-50:However, it does not yet imply hardness for the special case where payments are not possible .
+6-51:We will prove hardness in this case in the next section. .
+7 SELF INTERESTED DETERMINISTIC AMD WITHOUT PAYMENTS IS HARD :
+7-1:AMD WITHOUT PAYMENTS IS HARD In this section we demonstrate that it is NP complete to design a deterministic mechanism that maximizes the expectation of the designer"s objective when payments are not possible .
+7-2:We show that this problem is hard even in the single agent setting, thereby immediately showing it hard for both IR concepts, for both solution concepts .
+7-3:Theorem 2 .
+7-4:Without payments, deterministic AMD for a self interested designer is NP complete, even for a single agent, even with a uniform distribution over types .
+7-5:Proof .
+7-6:It is easy to show that the problem is in NP .
+7-7:To show NP hardness, we reduce an arbitrary MINSAT instance to the following single agent self interested deterministic AMD without payments instance .
+7-8:Let the agent"s type set be Θ = {θc : c ∈ C} ∪ {θv : v ∈ V }, where C is the set of clauses in the MINSAT instance, and V is the set of variables .
+7-9:Let the probability distribution over these types be uniform .
+7-10:Let the outcome set be O = {o0} ∪ {oc : c ∈ C}∪{ol : l ∈ L}∪{o∗ }, where L is the set of literals, that is, L = {+v : v ∈ V } ∪ {−v : v ∈ V } .
+7-11:Let the notation v(l) = v denote that v is the variable corresponding to the literal l, that is, l ∈ {+v, −v} .
+7-12:Let l ∈ c denote that the literal l occurs in clause c .
+7-13:Then, let the agent"s utility function be given by u(θc, ol) = 2 for all l ∈ L with l ∈ c; u(θc, ol) = −1 for all l ∈ L with l ∈ c; u(θc, oc) = 2; u(θc, oc ) = −1 for all c ∈ C with c = c ; u(θc, o∗ ) = 1; u(θv, ol) = 1 for all l ∈ L with v(l) = v; u(θv, ol) = −1 for all l ∈ L with v(l) = v; u(θv, oc) = −1 for all c ∈ C; u(θv, o∗ ) = −1 .
+7-14:Let the designer"s objective function be given by g(o∗ ) = |Θ|+1; g(ol) = |Θ| for all l ∈ L; g(oc) = |Θ| for all c ∈ C .
+7-15:The goal of the AMD instance is G = |Θ| + |C|−K |Θ| , where K is the goal of the MINSAT instance .
+7-16:We show the instances are equivalent .
+7-17:First, suppose there is a solution to the MINSAT instance .
+7-18:Let the assignment of truth values to the variables in this solution be given by the function f : V → L (where v(f(v)) = v for all v ∈ V ) .
+7-19:Then, for every v ∈ V , let o(θv) = of(v) .
+7-20:For every c ∈ C that is satisfied in the MINSAT solution, let o(θc) = oc; for every unsatisfied c ∈ C, let o(θc) = o∗ .
+7-21:It is straightforward to check that the IR constraint is satisfied .
+7-22:We now check that the agent has no incentive to misreport .
+7-23:If the agent"s type is some θv, it is getting the maximum utility for that type, so it has no incentive to misreport .
+7-24:If the agent"s type is some θc where c is a satisfied clause, again, it is getting the maximum utility for that type, so it has no incentive to misreport .
+7-25:The final case to check is where the agent"s type is some θc where c is an unsatisfied clause .
+7-26:In this case, we observe that for none of the types, reporting it leads to an outcome ol for a literal l ∈ c, precisely because the clause is not satisfied in the MINSAT instance .
+7-27:Because also, no type leads to the outcome oc, there is no outcome that the mechanism ever selects that would give the agent utility greater than 1 for type θc, and hence the agent has no incentive to report falsely .
+7-28:This establishes that the agent never has an incentive to misreport .
+7-29:Finally, we show that the goal is reached .
+7-30:If s is the number of satisfied clauses in the MINSAT solution (so that s ≤ K), then the expected value of the designer"s objective function is |V ||Θ|+s|Θ|+(|C|−s)(|Θ|+1) |Θ| ≥ |V ||Θ|+K|Θ|+(|C|−K)(|Θ|+1) |Θ| = |Θ| + |C|−K |Θ| = G .
+7-31:So there is a solution to the AMD instance .
+7-32:Now suppose there is a solution to the AMD instance, given by an outcome function o .
+7-33:First, suppose there is some v ∈ V such that o(θv) ∈ {o+v, o−v} .
+7-34:The only other outcome that the mechanism is allowed to choose under the IR constraint is o0 .
+7-35:This has an objective value of 0, and because the highest value the objective function ever takes is |Θ| + 1, it follows that the maximum expected value of the objective function that could be obtained is at most (|Θ|−1)(|Θ|+1) |Θ| < |Θ| < G, contradicting that this is a solution to the AMD instance .
+7-36:It follows that in the solution to the AMD instance, for every v ∈ V , o(θv) ∈ {o+v, o−v} .
+7-37:We can interpret this as an assignment of truth values to the variables: v is set to true if o(θv) = o+v, and to false if o(θv) = o−v .
+7-38:We claim this assignment is a solution to the MINSAT instance .
+7-39:By the above, for any type θv, the value of the objective function in this mechanism will be |Θ| .
+7-40:For any clause c satisfied by the given assignment, the value of the objective function in the case where the agent reports type θc will be at most |Θ| .
+7-41:(This is because we cannot choose the outcome o∗ for such a type, as in this case the agent would have an incentive to report θv instead, where v is the variable satisfying c in the assignment (so that o(θv) = ol where l occurs in c).) Finally, for any unsatisfied clause c, the maximum value the objective function can take in the case where the agent reports type θc is |Θ| + 1, simply because this is the largest value the function ever takes .
+7-42:It follows that the expected value of the objective function for our mechanism is at most V |Θ|+s|Θ|+(|C|−s)(|Θ|+1) Θ , where s is the number of satisfied 137 clauses .
+7-43:Because our mechanism achieves the goal, it follows that V |Θ|+s|Θ|+(|C|−s)(|Θ|+1) Θ ≥ G, which by simple algebraic manipulations is equivalent to s ≤ K .
+7-44:So there is a solution to the MINSAT instance .
+7-45:Both of our hardness results relied on the constraint that the mechanism should be deterministic .
+7-46:In the next section, we show that the hardness of design disappears when we allow for randomization in the mechanism. .
+8 RANDOMIZED AMD FOR A  SELFINTERESTED DESIGNER IS EASY :
+8-1:SELFINTERESTED DESIGNER IS EASY We now show how allowing for randomization over the outcomes makes the problem of self interested AMD tractable through linear programming, for any constant number of agents .
+8-2:Theorem 3 .
+8-3:Self interested randomized AMD with a constant number of agents is solvable in polynomial time by linear programming, both with and without payments, both for ex post and ex interim IR, and both for implementation in dominant strategies and for implementation in Bayes Nash equilibrium even if the types are correlated .
+8-4:Proof .
+8-5:Because linear programs can be solved in polynomial time [13], all we need to show is that the number of variables and equations in our program is polynomial for any constant number of agents that is, exponential only in N .
+8-6:Throughout, for purposes of determining the size of the linear program, let T = maxi{|Θi|} .
+8-7:The variables of our linear program will be the probabilities (p(θ1, θ2, .
+8-8:.
+8-9:.
+8-10:, θN ))(o) (at most TN |O| variables) and the payments πi(θ1, θ2, .
+8-11:.
+8-12:.
+8-13:, θN ) (at most NTN variables) .
+8-14:(We show the linear program for the case where payments are possible; the case without payments is easily obtained from this by simply omitting all the payment variables in the program, or by adding additional constraints forcing the payments to be 0.) First, we show the IR constraints .
+8-15:For ex post IR, we add the following (at most NTN ) constraints to the LP: • For every i ∈ {1, 2, .
+8-16:.
+8-17:.
+8-18:, N}, and for every (θ1, θ2, .
+8-19:.
+8-20:.
+8-21:, θN ) ∈ Θ1 × Θ2 × .
+8-22:.
+8-23:.
+8-24:× ΘN , we add ( o∈O (p(θ1, θ2, .
+8-25:.
+8-26:.
+8-27:, θN ))(o)u(θi, o)) − πi(θ1, θ2, .
+8-28:.
+8-29:.
+8-30:, θN ) ≥ 0 .
+8-31:For ex interim IR, we add the following (at most NT) constraints to the LP: • For every i ∈ {1, 2, .
+8-32:.
+8-33:.
+8-34:, N}, for every θi ∈ Θi, we add θ1,.. .
+8-35:,θN γ(θ1, .
+8-36:.
+8-37:.
+8-38:, θN |θi)(( o∈O (p(θ1, θ2, .
+8-39:.
+8-40:.
+8-41:, θN ))(o)u(θi, o))− πi(θ1, θ2, .
+8-42:.
+8-43:.
+8-44:, θN )) ≥ 0 .
+8-45:Now, we show the solution concept constraints .
+8-46:For implementation in dominant strategies, we add the following (at most NTN+1 ) constraints to the LP: • For every i ∈ {1, 2, .
+8-47:.
+8-48:.
+8-49:, N}, for every (θ1, θ2, .
+8-50:.
+8-51:.
+8-52:, θi, .
+8-53:.
+8-54:.
+8-55:, θN ) ∈ Θ1 × Θ2 × .
+8-56:.
+8-57:.
+8-58:× ΘN , and for every alternative type report ˆθi ∈ Θi, we add the constraint ( o∈O (p(θ1, θ2, .
+8-59:.
+8-60:.
+8-61:, θi, .
+8-62:.
+8-63:.
+8-64:, θN ))(o)u(θi, o)) − πi(θ1, θ2, .
+8-65:.
+8-66:.
+8-67:, θi, .
+8-68:.
+8-69:.
+8-70:, θN ) ≥ ( o∈O (p(θ1, θ2, .
+8-71:.
+8-72:.
+8-73:, ˆθi, .
+8-74:.
+8-75:.
+8-76:, θN ))(o)u(θi, o)) − πi(θ1, θ2, .
+8-77:.
+8-78:.
+8-79:, ˆθi, .
+8-80:.
+8-81:.
+8-82:, θN ) .
+8-83:Finally, for implementation in Bayes Nash equilibrium, we add the following (at most NT2 ) constraints to the LP: • For every i ∈ {1, 2, ..., N}, for every θi ∈ Θi, and for every alternative type report ˆθi ∈ Θi, we add the constraint θ1,...,θN γ(θ1, ..., θN |θi)(( o∈O (p(θ1, θ2, ..., θi, ..., θN ))(o)u(θi, o)) − πi(θ1, θ2, ..., θi, ..., θN )) ≥ θ1,...,θN γ(θ1, ..., θN |θi)(( o∈O (p(θ1, θ2, ..., ˆθi, ..., θN ))(o)u(θi, o)) − πi(θ1, θ2, ..., ˆθi, ..., θN )) .
+8-84:All that is left to do is to give the expression the designer is seeking to maximize, which is: • θ1,...,θN γ(θ1, ..., θN )(( o∈O (p(θ1, θ2, ..., θi, ..., θN ))(o)g(o)) + N i=1 πi(θ1, θ2, ..., θN )) .
+8-85:As we indicated, the number of variables and constraints is exponential only in N, and hence the linear program is of polynomial size for constant numbers of agents .
+8-86:Thus the problem is solvable in polynomial time. .
+9 IMPLICATIONS FOR AN OPTIMAL COMBINATORIAL AUCTION DESIGN :
+9-1:COMBINATORIAL AUCTION DESIGN PROBLEM In this section, we will demonstrate some interesting consequences of the problem of automated mechanism design for a self interested designer on designing optimal combinatorial auctions .
+9-2:Consider a combinatorial auction with a set S of items for sale .
+9-3:For any bundle B ⊆ S, let ui(θi, B) be bidder i"s utility for receiving bundle B when the bidder"s type is θi .
+9-4:The optimal auction design problem is to specify the rules of the auction so as to maximize expected revenue to the auctioneer .
+9-5:(By the revelation principle, without loss of generality, we can assume the auction is truthful.) The optimal auction design problem is solved for the case of a single item by the famous Myerson auction [18] .
+9-6:However, designing optimal auctions in combinatorial auctions is a recognized open research problem [3, 25] .
+9-7:The problem is open even if there are only two items for sale .
+9-8:(The twoitem case with a very special form of complementarity and no substitutability has been solved recently [1].) Suppose we have free disposal items can be thrown away at no cost .
+9-9:Also, suppose that the bidders" preferences have the following structure: whenever a bidder receives a bundle of items, the bidder"s utility for that bundle is determined by the best item in the bundle only .
+9-10:(We emphasize that 138 which item is the best is allowed to depend on the bidder"s type.) Definition 10 .
+9-11:Bidder i is said to have best only preferences over bundles of items if there exists a function vi : Θi × S → R such that for any θi ∈ Θi, for any B ⊆ S, ui(θi, B) = maxs∈B vi(θi, s) .
+9-12:We make the following useful observation in this setting: there is no sense in awarding a bidder more than one item .
+9-13:The reason is that if the bidder is reporting truthfully, taking all but the highest valued item away from the bidder will not hurt the bidder; and, by free disposal, doing so can only reduce the incentive for this bidder to falsely report this type, when the bidder actually has another type .
+9-14:We now show that the problem of designing a deterministic optimal auction here is NP complete, by a reduction from the payment maximizing AMD problem! Theorem 4 .
+9-15:Given an optimal combinatorial auction design problem under best only preferences (given by a set of items S and for each bidder i, a finite type space Θi and a function vi : Θi × S → R such that for any θi ∈ Θi, for any B ⊆ S, ui(θi, B) = maxs∈B vi(θi, s)), designing the optimal deterministic auction is NP complete, even for a single bidder with a uniform distribution over types .
+9-16:Proof .
+9-17:The problem is in NP because we can nondeterministically generate an allocation rule, and then set the payments using linear programming .
+9-18:To show NP hardness, we reduce an arbitrary paymentmaximizing deterministic AMD instance, with a single agent and a uniform distribution over types, to the following optimal combinatorial auction design problem instance with a single bidder with best only preferences .
+9-19:For every outcome o ∈ O in the AMD instance (besides the outcome o0), let there be one item so ∈ S .
+9-20:Let the type space be the same, and let v(θi, so) = ui(θi, o) (where u is as specified in the AMD instance) .
+9-21:Let the expected revenue target value be the same in both instances .
+9-22:We show the instances are equivalent .
+9-23:First suppose there exists a solution to the AMD instance, given by an outcome function and a payment function .
+9-24:Then, if the AMD solution chooses outcome o for a type, in the optimal auction solution, allocate {so} to the bidder for this type .
+9-25:(Unless o = o0, in which case we allocate {} to the bidder.) Let the payment functions be the same in both instances .
+9-26:Then, the utility that an agent receives for reporting a type (given the true type) in either solution is the same, so we have incentive compatibility in the optimal auction solution .
+9-27:Moreover, because the type distribution and the payment function are the same, the expected revenue to the auctioneer designer is the same .
+9-28:It follows that there exists a solution to the optimal auction design instance .
+9-29:Now suppose there exists a solution to the optimal auction design instance .
+9-30:By the at most one item observation, we can assume without loss of generality that the solution never allocates more than one item .
+9-31:Then, if the optimal auction solution allocates item so to the bidder for a type, in the AMD solution, let the mechanism choose outcome o for that type .
+9-32:If the optimal auction solution allocates nothing to the bidder for a type, in the AMD solution, let the mechanism choose outcome o0 for that type .
+9-33:Let the payment functions be the same .
+9-34:Then, the utility that an agent receives for reporting a type (given the true type) in either solution is the same, so we have incentive compatibility in the AMD solution .
+9-35:Moreover, because the type distribution and the payment function are the same, the expected revenue to the designer auctioneer is the same .
+9-36:It follows that there exists a solution to the AMD instance .
+9-37:Fortunately, we can also carry through the easiness result for randomized mechanisms to this combinatorial auction setting giving us one of the few known polynomial time algorithms for an optimal combinatorial auction design problem .
+9-38:Theorem 5 .
+9-39:Given an optimal combinatorial auction design problem under best only preferences (given by a set of items S and for each bidder i, a finite type space Θi and a function vi : Θi × S → R such that for any θi ∈ Θi, for any B ⊆ S, ui(θi, B) = maxs∈B vi(θi, s)), if the number of bidders is a constant k, then the optimal randomized auction can be designed in polynomial time .
+9-40:(For any IC and IR constraints.) Proof .
+9-41:By the at most one item observation, we can without loss of generality restrict ourselves to allocations where each bidder receives at most one item .
+9-42:There are fewer than (|S| + 1)k such allocations that is, a polynomial number of allocations .
+9-43:Because we can list the outcomes explicitly, we can simply solve this as a payment maximizing AMD instance, with linear programming. .
+10 RELATED RESEARCH ON  COMPLEXITY IN MECHANISM DESIGN :
+10-1:COMPLEXITY IN MECHANISM DESIGN There has been considerable recent interest in mechanism design in computer science .
+10-2:Some of it has focused on issues of computational complexity, but most of that work has strived toward designing mechanisms that are easy to execute (e.g .
+10-3:[20, 15, 19, 9, 12]), rather than studying the complexity of designing the mechanism .
+10-4:The closest piece of earlier work studied the complexity of automated mechanism design by a benevolent designer [5, 6] .
+10-5:Roughgarden has studied the complexity of designing a good network topology for agents that selfishly choose the links they use [21] .
+10-6:This is related to mechanism design, but differs significantly in that the designer only has restricted control over the rules of the game because there is no party that can impose the outcome (or side payments) .
+10-7:Also, there is no explicit reporting of preferences. .
+11-1:RESEARCH Often, an outcome must be chosen on the basis of the preferences reported by a group of agents
+11-2:The key difficulty is that the agents may report their preferences insincerely to make the chosen outcome more favorable to themselves
+11-3:Mechanism design is the art of designing the rules of the game so that the agents are motivated to report their preferences truthfully, and a desirable outcome is chosen
+11-4:In a recently emerging approach called automated mechanism design a mechanism is computed for the specific preference aggregation setting at hand
+11-5:This has several advantages, 139 but the downside is that the mechanism design optimization problem needs to be solved anew each time
+11-6:Unlike earlier work on automated mechanism design that studied a benevolent designer, in this paper we studied automated mechanism design problems where the designer is self interesteda setting much more relevant for electronic commerce
+11-7:In this setting, the center cares only about which outcome is chosen and what payments are made to it
+11-8:The reason that the agents" preferences are relevant is that the center is constrained to making each agent at least as well off as the agent would have been had it not participated in the mechanism
+11-9:In this setting, we showed that designing an optimal deterministic mechanism is NP complete in two important special cases: when the center is interested only in the payments made to it, and when payments are not possible and the center is interested only in the outcome chosen
+11-10:These hardness results imply hardness in all more general automated mechanism design settings with a self interested designer
+11-11:The hardness results apply whether the individual rationality (participation) constraints are applied ex interim or ex post, and whether the solution concept is dominant strategies implementation or Bayes Nash equilibrium implementation
+11-12:We then showed that allowing randomization in the mechanism makes the design problem in all these settings computationally easy
+11-13:Finally, we showed that the paymentmaximizing AMD problem is closely related to an interesting variant of the optimal (revenue maximizing) combinatorial auction design problem, where the bidders have best only preferences
+11-14:We showed that here, too, designing an optimal deterministic mechanism is NP complete even with one agent, but designing an optimal randomized mechanism is easy
+11-15:Future research includes studying automated mechanism design with a self interested designer in more restricted settings such as auctions (where the designer"s objective may include preferences about which bidder should receive the good as well as payments)
+11-16:We also want to study the complexity of automated mechanism design in settings where the outcome and type spaces have special structure so they can be represented more concisely
+11-17:Finally, we plan to assemble a data set of real world mechanism design problems both historical and current and apply automated mechanism design to those problems
+11-18:10
+11-19:REFERENCES
+12-1:M
+12-2:Armstrong
+12-3:Optimal multi object auctions
+12-4:Review of Economic Studies, 67:455 481, 2000
+12-5:K
+12-6:Arrow
+12-7:The property rights doctrine and demand revelation under incomplete information
+12-8:In M
+12-9:Boskin, editor, Economics and human welfare
+12-10:New York Academic Press, 1979
+12-11:C
+12-12:Avery and T
+12-13:Hendershott
+12-14:Bundling and optimal auctions of multiple products
+12-15:Review of Economic Studies, 67:483 497, 2000
+12-16:E
+12-17:H
+12-18:Clarke
+12-19:Multipart pricing of public goods
+12-20:Public Choice, 11:17 33, 1971
+12-21:V
+12-22:Conitzer and T
+12-23:Sandholm
+12-24:Complexity of mechanism design
+12-25:In Proceedings of the 18th Annual Conference on Uncertainty in Artificial Intelligence (UAI 02), pages 103 110, Edmonton, Canada, 2002
+12-26:V
+12-27:Conitzer and T
+12-28:Sandholm
+12-29:Automated mechanism design: Complexity results stemming from the single agent setting
+12-30:In Proceedings of the 5th International Conference on Electronic Commerce (ICEC 03), pages 17 24, Pittsburgh, PA, USA, 2003
+12-31:V
+12-32:Conitzer and T
+12-33:Sandholm
+12-34:Computational criticisms of the revelation principle
+12-35:In Proceedings of the ACM Conference on Electronic Commerce (ACM EC), New York, NY, 2004
+12-36:Short paper
+12-37:Full length version appeared in the AAMAS 03 workshop on Agent Mediated Electronic Commerce (AMEC)
+12-38:C
+12-39:d"Aspremont and L
+12-40:A
+12-41:G´erard Varet
+12-42:Incentives and incomplete information
+12-43:Journal of Public Economics, 11:25 45, 1979
+12-44:J
+12-45:Feigenbaum, C
+12-46:Papadimitriou, and S
+12-47:Shenker
+12-48:Sharing the cost of muliticast transmissions
+12-49:Journal of Computer and System Sciences, 63:21 41, 2001
+12-50:Early version in Proceedings of the Annual ACM Symposium on Theory of Computing (STOC), 2000
+12-51:A
+12-52:Gibbard
+12-53:Manipulation of voting schemes
+12-54:Econometrica, 41:587 602, 1973
+12-55:T
+12-56:Groves
+12-57:Incentives in teams
+12-58:Econometrica, 41:617 631, 1973
+12-59:J
+12-60:Hershberger and S
+12-61:Suri
+12-62:Vickrey prices and shortest paths: What is an edge worth? In Proceedings of the Annual Symposium on Foundations of Computer Science (FOCS), 2001
+12-63:L
+12-64:Khachiyan
+12-65:A polynomial algorithm in linear programming
+12-66:Soviet Math
+12-67:Doklady, 20:191 194, 1979
+12-68:R
+12-69:Kohli, R
+12-70:Krishnamurthi, and P
+12-71:Mirchandani
+12-72:The minimum satisfiability problem
+12-73:SIAM Journal of Discrete Mathematics, 7(2):275 283, 1994
+12-74:D
+12-75:Lehmann, L
+12-76:I
+12-77:O"Callaghan, and Y
+12-78:Shoham
+12-79:Truth revelation in rapid, approximately efficient combinatorial auctions
+12-80:Journal of the ACM, 49(5):577 602, 2002
+12-81:Early version appeared in Proceedings of the ACM Conference on Electronic Commerce (ACM EC), 1999
+12-82:A
+12-83:Mas Colell, M
+12-84:Whinston, and J
+12-85:R
+12-86:Green
+12-87:Microeconomic Theory
+12-88:Oxford University Press, 1995
+12-89:E
+12-90:S
+12-91:Maskin and J
+12-92:Riley
+12-93:Optimal multi unit auctions
+12-94:In F
+12-95:Hahn, editor, The Economics of Missing Markets, Information, and Games, chapter 14, pages 312 335
+12-96:Clarendon Press, Oxford, 1989
+12-97:R
+12-98:Myerson
+12-99:Optimal auction design
+12-100:Mathematics of Operation Research, 6:58 73, 1981
+12-101:N
+12-102:Nisan and A
+12-103:Ronen
+12-104:Computationally feasible VCG mechanisms
+12-105:In Proceedings of the ACM Conference on Electronic Commerce (ACM EC), pages 242 252, Minneapolis, MN, 2000
+12-106:N
+12-107:Nisan and A
+12-108:Ronen
+12-109:Algorithmic mechanism design
+12-110:Games and Economic Behavior, 35:166 196, 2001
+12-111:Early version in Proceedings of the Annual ACM Symposium on Theory of Computing (STOC), 1999
+12-112:T
+12-113:Roughgarden
+12-114:Designing networks for selfish users is hard
+12-115:In Proceedings of the Annual Symposium on Foundations of Computer Science (FOCS), 2001
+12-116:T
+12-117:Sandholm
+12-118:Issues in computational Vickrey auctions
+12-119:International Journal of Electronic Commerce, 4(3):107 129, 2000
+12-120:Special Issue on 140 Applying Intelligent Agents for Electronic Commerce
+12-121:A short, early version appeared at the Second International Conference on Multi Agent Systems (ICMAS), pages 299 306, 1996
+12-122:M
+12-123:A
+12-124:Satterthwaite
+12-125:Strategy proofness and Arrow"s conditions: existence and correspondence theorems for voting procedures and social welfare functions
+12-126:Journal of Economic Theory, 10:187 217, 1975
+12-127:W
+12-128:Vickrey
+12-129:Counterspeculation, auctions, and competitive sealed tenders
+12-130:Journal of Finance, 16:8 37, 1961
+12-131:R
+12-132:V
+12-133:Vohra
+12-134:Research problems in combinatorial auctions
+12-135:Mimeo, version Oct
+12-136:29, 2001
+12-137:141
+picture:

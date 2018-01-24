@@ -1,0 +1,391 @@
+
+1
+Input: In this section , we present the basic New Event Detection model which is similar to what most current systems apply .
+Parse:
+present VBP ROOT
+ +-- In IN prep
+ |   +-- section NN pobj
+ |       +-- this DT det
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- model NN dobj
+ |   +-- the DT det
+ |   +-- basic JJ amod
+ |   +-- Event NNP nn
+ |   |   +-- New NNP nn
+ |   +-- Detection NNP nn
+ |   +-- similar JJ rcmod
+ |       +-- which WDT nsubj
+ |       +-- is VBZ cop
+ |       +-- to IN prep
+ |           +-- apply VBP pcomp
+ |               +-- what WP dobj
+ |               +-- systems NNS nsubj
+ |                   +-- most JJS amod
+ |                   +-- current JJ amod
+ +-- . . punct
+
+2
+Input: Then , we propose our new model by extending the basic model .
+Parse:
+propose VBP ROOT
+ +-- Then RB advmod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- model NN dobj
+ |   +-- our PRP$ poss
+ |   +-- new JJ amod
+ +-- by IN prep
+ |   +-- extending VBG pcomp
+ |       +-- model NN dobj
+ |           +-- the DT det
+ |           +-- basic JJ amod
+ +-- . . punct
+
+3
+Input: New Event Detection systems use news story stream as input , in which stories are strictly time ordered .
+Parse:
+use VBP ROOT
+ +-- systems NNS nsubj
+ |   +-- New JJ amod
+ |   +-- Detection NNP nn
+ |       +-- Event NNP nn
+ +-- stream NN dobj
+ |   +-- story NN nn
+ |       +-- news NN nn
+ +-- as IN prep
+ |   +-- input NN pobj
+ |       +-- , , punct
+ |       +-- time NN rcmod
+ |           +-- in IN prep
+ |           |   +-- which WDT pobj
+ |           +-- stories NNS nsubj
+ |           +-- are VBP cop
+ |           +-- strictly RB advmod
+ |           +-- ordered VBN partmod
+ +-- . . punct
+
+4
+Input: Only previously received stories are available when dealing with current story .
+Parse:
+available JJ ROOT
+ +-- stories NNS nsubj
+ |   +-- Only RB advmod
+ |   +-- received VBN amod
+ |       +-- previously RB advmod
+ +-- are VBP cop
+ +-- dealing VBG advcl
+ |   +-- when WRB advmod
+ |   +-- with IN prep
+ |       +-- story NN pobj
+ |           +-- current JJ amod
+ +-- . . punct
+
+5
+Input: The output is a decision for whether the current story is on a new event or not and the confidence of the decision .
+Parse:
+decision NN ROOT
+ +-- output NN nsubj
+ |   +-- The DT det
+ +-- is VBZ cop
+ +-- a DT det
+ +-- for IN prep
+ |   +-- is VBZ pcomp
+ |       +-- whether IN mark
+ |       +-- story NN nsubj
+ |       |   +-- the DT det
+ |       |   +-- current JJ amod
+ |       +-- on IN prep
+ |       |   +-- event NN pobj
+ |       |       +-- a DT det
+ |       |       +-- new JJ amod
+ |       +-- or CC cc
+ |       +-- not RB conj
+ +-- and CC cc
+ +-- confidence NN conj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- decision NN pobj
+ |           +-- the DT det
+ +-- . . punct
+
+6
+Input: Usually , a NED model consists of three parts
+Parse:
+consists VBZ ROOT
+ +-- Usually RB advmod
+ +-- , , punct
+ +-- model NN nsubj
+ |   +-- a DT det
+ |   +-- NED JJ amod
+ +-- of IN prep
+     +-- parts NNS pobj
+         +-- three CD num
+
+7
+Input: 3.1 Story Representation Preprocessing is needed before generating story representation .
+Parse:
+needed VBN ROOT
+ +-- Preprocessing NNP nsubjpass
+ |   +-- 3.1 CD num
+ |   +-- Representation NNP nn
+ |       +-- Story NNP nn
+ +-- is VBZ auxpass
+ +-- before IN prep
+ |   +-- generating VBG pcomp
+ |       +-- representation NN dobj
+ |           +-- story NN nn
+ +-- . . punct
+
+8
+Input: For preprocessing , we tokenize words , recognize abbreviations , normalize abbreviations , add part of speech tags , remove stopwords included in the stop list used in InQuery -LRB- 14 -RRB- , replace words with their stems using K stem algorithm -LRB- 15 -RRB- , and then generate word vector for each news story .
+Parse:
+tokenize VBP ROOT
+ +-- For IN prep
+ |   +-- preprocessing VBG pobj
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- words NNS dobj
+ +-- recognize VB conj
+ |   +-- abbreviations NNS dobj
+ +-- normalize NN conj
+ |   +-- abbreviations NNS dobj
+ +-- add VB conj
+ |   +-- part NN dobj
+ |       +-- of IN prep
+ |           +-- tags NNS pobj
+ |               +-- speech NN nn
+ +-- remove VB conj
+ |   +-- stopwords NNS dobj
+ |       +-- included VBN partmod
+ |           +-- in IN prep
+ |               +-- list NN pobj
+ |                   +-- the DT det
+ |                   +-- stop NN nn
+ |                   +-- used VBN partmod
+ |                       +-- in IN prep
+ |                           +-- InQuery NNP pobj
+ |                               +-- -LRB- -LRB- punct
+ |                               +-- 14 CD dep
+ |                               +-- -RRB- -RRB- punct
+ +-- replace VB conj
+ |   +-- words NNS dobj
+ |   +-- with IN prep
+ |   |   +-- stems NNS pobj
+ |   |       +-- their PRP$ poss
+ |   +-- using VBG xcomp
+ |       +-- algorithm NNP dobj
+ |           +-- K NNP nn
+ |           +-- stem NN nn
+ |           +-- -LRB- -LRB- punct
+ |           +-- 15 CD dep
+ |           +-- -RRB- -RRB- punct
+ +-- and CC cc
+ +-- then RB advmod
+ +-- generate VB conj
+ |   +-- vector NN dobj
+ |       +-- word NN nn
+ |       +-- for IN prep
+ |           +-- story NN pobj
+ |               +-- each DT det
+ |               +-- news NN nn
+ +-- . . punct
+
+9
+Input: We use incremental TF IDF model for term weight calculation -LRB- 4 -RRB- .
+Parse:
+use VBP ROOT
+ +-- We PRP nsubj
+ +-- model NN dobj
+ |   +-- incremental JJ amod
+ |   +-- TF FW nn
+ |   +-- IDF NNP nn
+ +-- for IN prep
+ |   +-- calculation NN pobj
+ |       +-- term NN nn
+ |       +-- weight NN nn
+ |       +-- 4 CD appos
+ |           +-- -LRB- -LRB- punct
+ |           +-- -RRB- -RRB- punct
+ +-- . . punct
+
+10
+Input: In a TF IDF model , term frequency in a news document is weighted by the inverse document frequency , which is generated from training corpus .
+Parse:
+weighted VBN ROOT
+ +-- In IN prep
+ |   +-- model NN pobj
+ |       +-- a DT det
+ |       +-- TF FW nn
+ |       +-- IDF NNP nn
+ +-- , , punct
+ +-- frequency NN nsubjpass
+ |   +-- term NN nn
+ |   +-- in IN prep
+ |       +-- document NN pobj
+ |           +-- a DT det
+ |           +-- news NN nn
+ +-- is VBZ auxpass
+ +-- by IN prep
+ |   +-- frequency NN pobj
+ |       +-- the DT det
+ |       +-- inverse NN amod
+ |       +-- document NN nn
+ |       +-- , , punct
+ |       +-- generated VBN rcmod
+ |           +-- which WDT nsubjpass
+ |           +-- is VBZ auxpass
+ |           +-- from IN prep
+ |               +-- corpus NN pobj
+ |                   +-- training NN nn
+ +-- . . punct
+
+11
+Input: When a new term occurs in testing process , there are two solutions
+Parse:
+are VBP ROOT
+ +-- occurs VBZ advcl
+ |   +-- When WRB advmod
+ |   +-- term NN nsubj
+ |   |   +-- a DT det
+ |   |   +-- new JJ amod
+ |   +-- in IN prep
+ |       +-- process NN pobj
+ |           +-- testing NN nn
+ +-- , , punct
+ +-- there EX expl
+ +-- solutions NNS nsubj
+     +-- two CD num
+
+12
+Input: df = 1 -RRB- .
+Parse:
+df UH ROOT
+ +-- = SYM dep
+ |   +-- 1 CD num
+ +-- -RRB- -RRB- punct
+ +-- . . punct
+
+13
+Input: The new term receives too low weight in the first solution -LRB- 0 -RRB- and too high weight in the second solution .
+Parse:
+receives VBZ ROOT
+ +-- term NN nsubj
+ |   +-- The DT det
+ |   +-- new JJ amod
+ +-- weight NN dobj
+ |   +-- low JJ amod
+ |       +-- too RB advmod
+ +-- in IN prep
+ |   +-- solution NN pobj
+ |       +-- the DT det
+ |       +-- first JJ amod
+ |       +-- -LRB- -LRB- punct
+ |       +-- 0 NFP punct
+ |       +-- -RRB- -RRB- punct
+ |       +-- and CC cc
+ |       +-- weight NN conj
+ |       |   +-- high JJ amod
+ |       |       +-- too RB advmod
+ |       +-- in IN prep
+ |           +-- solution NN pobj
+ |               +-- the DT det
+ |               +-- second JJ amod
+ +-- . . punct
+
+14
+Input: In incremental TF IDF model , document frequencies are updated dynamically in each time step t
+Parse:
+updated VBN ROOT
+ +-- In IN prep
+ |   +-- model NN pobj
+ |       +-- incremental JJ amod
+ |       +-- TF . nn
+ |       +-- IDF NNP nn
+ +-- , , punct
+ +-- frequencies NNS nsubjpass
+ |   +-- document NN nn
+ +-- are VBP auxpass
+ +-- dynamically RB advmod
+ +-- in IN prep
+ |   +-- step NN pobj
+ |       +-- each DT det
+ |       +-- time NN nn
+ +-- t . punct
+
+15
+Input: In this work , each time window includes 50 news stories .
+Parse:
+includes VBZ ROOT
+ +-- In IN prep
+ |   +-- work NN pobj
+ |       +-- this DT det
+ +-- , , punct
+ +-- window NN nsubj
+ |   +-- each DT det
+ |   +-- time NN nn
+ +-- stories NNS dobj
+ |   +-- 50 CD num
+ |   +-- news NN nn
+ +-- . . punct
+
+16
+Input: Thus , each story d received in t is represented as follows
+Parse:
+represented VBN ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- story NN nsubjpass
+ |   +-- each DT det
+ |   +-- received VBD rcmod
+ |       +-- d NN nsubj
+ |       +-- in IN prep
+ |           +-- t NN pobj
+ +-- is VBZ auxpass
+ +-- follows VBZ advcl
+     +-- as IN mark
+
+17
+Input: 3.2 Similarity Calculation We use Hellinger distance for the calculation of similarity between two stories , for two stories d and d '' at time t , their similarity is defined as follows
+Parse:
+defined VBN ROOT
+ +-- Calculation NN nsubjpass
+ |   +-- 3.2 CD num
+ |   +-- Similarity NN nn
+ |   +-- use VBP rcmod
+ |       +-- We PRP nsubj
+ |       +-- distance NN dobj
+ |       |   +-- Hellinger NNP nn
+ |       +-- for IN prep
+ |       |   +-- stories NNS pobj
+ |       |       +-- two CD num
+ |       |       +-- d CD dep
+ |       |       |   +-- and CC cc
+ |       |       |   +-- d NN conj
+ |       |       +-- '' '' punct
+ |       |       +-- at IN prep
+ |       |           +-- t NNP pobj
+ |       |               +-- time NN nn
+ |       +-- , , punct
+ +-- , , punct
+ +-- similarity NN nsubjpass
+ |   +-- their PRP$ poss
+ +-- is VBZ auxpass
+ +-- follows VBZ advcl
+     +-- as IN mark
+
+18
+Input: time -LRB- d -RRB- means the publication time of story d .
+Parse:
+means VBZ ROOT
+ +-- time NN nsubj
+ |   +-- -LRB- -LRB- punct
+ |   +-- d NN dep
+ |   +-- -RRB- -RRB- punct
+ +-- time NN dobj
+ |   +-- the DT det
+ |   +-- publication NN nn
+ |   +-- of IN prep
+ |       +-- d NN pobj
+ |           +-- story NN nn
+ +-- . . punct

@@ -1,0 +1,64 @@
+Since all agents are subject to similar search costs, and their perceived utilities are drawn from the same distribution function, they all share the same strategy in equilibrium .
+A multi equilibria scenario may occur, however as we discuss in the following paragraphs since all agents share the same preferences priorities (unlike, for example, in the famous battle of the sexes scenario) we can always identify which equilibrium strategy will be used .
+Notice that if all agents are using the same sample size, N, then the value xN resulting from solving Equation 10 by substituting k = N and xk = xN is a stable reservation value (i.e., none of the agents can benefit from changing just the value of xN ) .
+An equilibrium strategy (N, xN ) can be found by identifying an N value for which no single agent has an incentive to use a different number of parallel interactions, k (and the new optimal reservation 454 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) value that is associated with k according to Equation 10) .
+While this implies an infinite solution space, we can always bound it using Equations 8 and 10 .
+Within the framework of this paper, we demonstrate such a bounding methodology for the common case were c(N) is linear7 or convex, by using the following Theorem 3 .
+THEOREM 3 .
+When c(N) is linear (or convex), then
+(b) Similarly, when all other agents sample k potential partners over a search round, if an agent"s expected utility of using k ? 1 potential partners, Vk?1(xk?1), is smaller than the expected utility when using k potential partners, Vk(xk), then the expected utility when using N potential partners, where N < k ? 1, is also smaller than Vk(xk) .
+Proof
+Since Vk(xk) = xk ?k (according to Equation 9), the claims are
+(a) We start by proving that if xk+1 < xk then xk+2 < xk .
+Assume otherwise, i.e., xk+1 < xk and xk+2 > xk .
+Therefore, according to Equation 10, the following holds
+Since the assumption in this proof is that xk+2 > xk then the above can be transformed into
+Now we need to prove the same for any xk+j .
+We will prove this in two steps
+Second, if xk+i < xk and xk+i+1 < xk, then xk+2i+1 < xk .
+Together these constitute the necessary induction arguments to prove the case (a) .
+We start with the even case, using a similar methodology
+According to Equation 10, and the fact that c(i) is convex, the following holds
+As for the odd case, we use Equation 10 once for k + i + 1 parallel interactions and once for k + 2i + 1 .
+From the convexity of ci, we obtain
+operating the agent per time unit) and variable costs (i.e., cost of processing a single interaction"s data) .
+This time the integrated term in Equation 15 can be re written as Gk(y) k k?1 (1 ? Gk(y) i k?1 )(Gk(y) i+1 k?1 ? 1) which is obviously negative, contradicting the initial assumption, thus xk+i+1 < xk .
+Now using induction one can prove that if xk+1 < xk then xk+i < xk .
+This concludes part (a) of the proof .
+The proof for part (b) of the theorem is obtained in a similar manner .
+In this case
+The above theorem supplies us with a powerful tool for eliminating non equilibrium N values .
+It suggests that we can check the stability of a sample size N and the appropriate reservation value xN simply by calculating the optimal reservation values of a single agent when deviating towards using samples of sizes N ? 1 and N + 1 (keeping the other agents with strategy (N, xN )) .
+If both the appropriate reservation values associated with the two latter sample sizes are smaller than xN then according to Theorems 3 the same holds when deviating to any other sample size k .
+The above process can be further simplified by using VN+1(xN ) > xN and VN?1(xN ) > xN as the two elimination rules .
+This derives from Theorem 3 and the properties of the function VN (x) found in Theorem 2 .
+Notice that a multi equilibria scenario may occur, however can easily be resolved .
+If several strategies satisfy the stability condition defined above, then the agents will always prefer the one associated with the highest expected utility .
+Therefore an algorithm that goes over the different N values and checks them according to the rules above can be applied, assuming that we can bound the interval for searching the equilibrium N .
+The following Theorem 4 suggests such an upper bound .
+THEOREM 4 .
+An upper bound for the equilibrium number of partners to be considered over a search round is the solution of the equation
+Proof
+From Equation 7
+Hence if A(N) ? c(N) < 0, then A(N, x) ? c(N) < 0?x and VN (x) < 0 ?x .
+Next we prove that if A(N)?c(N) gets negative, it stays negative .
+Recalling that for any g(y)
+Therefore A(N) is concave .
+Since c(N) is convex, ?c(N) is concave, and a sum of concave functions is concave, we obtain that The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 455 A(N) ? c(N) is concave .
+This guarantees that once the concave expression A(N) ? c(N) shifts from a positive value to a negative one (with the increase in N), it cannot become positive again .
+Therefore, having N? such that A(N? ) = c(N? ), and A(N?? ) > c(N?? ) for some N?? < N? , is an upper bound for N, i.e., VN (x) < 0 ?N ? N? .
+The condition we specify for N?? is merely for ensuring that VN is switching from a positive value to a negative one (and not vice versa) and is trivial to implement .
+Given the existence of the upper bound, we can design an algorithm for finding the equilibrium strategy (if one exists) .
+The algorithm extracts the upper bound, ?N, for the equilibrium number of parallel interactions according to Theorem 4 .
+Out of the set of values satisfying the stability condition defined above, the algorithm chooses the one associated with the highest reservation value according to Equation 10 .
+This is the equilibrium associated with the highest expected utility to all agents according to Theorem 2 .
+0.1875 0.39 0.41 0.43 0.45 0.47 0.49 2 3 4 5 6 7 8 9 10 11 12 13 expected utility VN(x) num ber ofparallelinteractions VN+ 1 ( XN) VN( XN) VN 1 ( XN) enlarged Figure 2
+The cost function used is c(N) = 0.2 + 0.02N .
+The graph depicts a single agent"s expected utility when all other agents are using N parallel interactions (on the horizontal axis) and the appropriate reservation value xN (calculated according to Equation 10) .
+The different curves depict the expected utility of the agent when it uses a strategy
+According to the discussion following Theorem 3, a stable equilibrium satisfies
+The strategy satisfying the latter condition in our example is (9, 0.437). .

@@ -1,0 +1,27 @@
+In this section, we prove that (the decision version of) the market clearing problem with short cycles is NP complete .
+Theorem 1 .
+Given a graph G = (V, E) and an integer L ? 3, the problem of deciding if G admits a perfect cycle cover containing cycles of length at most L is NP complete .
+Proof .
+It is clear that this problem is in NP .
+For NPhardness, we reduce from 3D Matching, which is the problem of, given disjoint sets X, Y and Z of size q, and a set of triples T ? X กั Y กั Z, deciding if there is a disjoint subset M of T with size q .
+One straightforward idea is to construct a tripartite graph with vertex sets X กๅ Y กๅ Z and directed edges (xa, yb), (yb, zc), and (zc, xa) for each triple ti = {xa, yb, zc} ? T .
+However, it is not too hard to see that this encoding fails because a perfect cycle cover may include a cycle with no corresponding triple .
+Instead then, we use the following reduction .
+Given an instance of 3D Matching, construct one vertex for each element in X, Y and Z .
+For each triple, ti = {xa, yb, zc} construct the gadget in Figure 2, which is a similar to one in Garey and Johnson [5, pp 68 69] .
+Note that the gadgets intersect only on vertices in X กๅ Y กๅ Z .
+It is clear that this construction can be done in polynomial time .
+1 .. .
+2 3 y_b .. .
+2 3 z_c y_b^i z_c^i L?1 L?1 L?1 x_a^i x_a .. .
+2 31 1 Figure 2
+Let M be a perfect 3D Matching .
+We will show the construction admits a perfect cycle cover by short cycles .
+If ti = {xa, yb, zc} ? M, add from ti"s gadget the three lengthL cycles containing xa, yb and zc respectively .
+Also add the cycle ? xi a, yi b, zi c ? .
+Otherwise, if ti ? M, add the three lengthL cycles containing xi a, yi b and zi c respectively .
+It is clear that all vertices are covered, since M partitions X กั Y กั Z .
+Conversely, suppose we have a perfect cover by short cycles .
+Note that the construction only has short cycles of lengths 3 and L, and no short cycle involves distinct vertices from two different gadgets .
+It is easy to see then that in a perfect cover, each gadget ti contributes cycles according to the cases above
+Hence, there exists a perfect 3D Matching in the original instance. .

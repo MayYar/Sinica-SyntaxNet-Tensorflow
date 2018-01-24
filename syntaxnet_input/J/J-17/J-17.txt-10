@@ -1,0 +1,92 @@
+THE TWO VALUES CASE We now present a deterministic 2 approximation truthful mechanism for the case where pij ? {L, H} for all i, j
+In the sequel, we will often say that j is assigned to a lowmachine to denote that j is assigned to a machine i where pij = L
+We will call a job j a low job of machine i if pij = L; the low load of i is the load on i due to its low jobs, i.e., P j
+As in Section 4, our goal is to obtain an approximation algorithm that satisfies cycle monotonicity
+We first obtain a simplification of condition (3) for our two values {L, H} scheduling domain (Proposition 5.1) that will be convenient to work with
+We describe our algorithm in Section 5.1
+In Section 5.2, we bound its approximation guarantee and prove that it satisfies cycle monotonicity
+In Section 5.3, we compute explicit payments giving a truthful mechanism
+Finally, in Section 5.4 we show that no deterministic mechanism can achieve the optimum makespan
+Define nk, H = ? ?{j 
+Note that np,T ¡PL+(n?np,T )¡PH ?m¡PT is a decreasing function of T, so T? (p) can be computed in polynomial time via binary search
+(p) and the corresponding partial assignment (i.e., j is assigned to i iff there is 1 unit of flow on edge (j, i))
+the flow phase, in a greedy manner as follows
+Consider these jobs in an arbitrary order and assign each job to the machine with the current lowest load (where the load includes the jobs assigned in the flow phase)
+Our algorithm needs to compute a prefix maximal assignment for the threshold T? (p)
+The proof showing the existence of a prefix maximal flow only yields a pseudopolynomial time algorithm for computing it
+But notice that the max flow remains the same for any T ? T = n ¡P L
+So a prefix maximal flow for T is also prefix maximal for any T ? T
+Thus, we only need to compute a prefix maximal flow for T = min{T? (p), T }
+This can be be done in polynomial time by using the iterative augmenting paths algorithm in the existence proof to compute iteratively the maxflow for the polynomially many multiples of L up to (and including) T
+Theorem 5.3 One can efficiently compute payments that when combined with Algorithm 2 yield a deterministic 2approximation truthful mechanism for the two values scheduling domain
+5.2 Analysis Let OPT(p) denote the optimal makespan for p
+We now prove that Algorithm 2 is a 2 approximation algorithm that satisfies cycle monotonicity
+This will then allow us to compute payments in Section 5.3 and prove Theorem 5.3
+5.2.1 Proof of approximation Claim 5.4 If OPT(p) < H, the makespan is at most OPT(p)
+Proof
+If OPT(p) < H, it must be that the optimal schedule assigns all jobs to low machines, so np,OPT(p) = n
+Thus, we have T? (p) = L ¡P H L
+Furthermore, since we compute a prefix maximal flow for threshold T? (p) we have np,T ?(p)|OPT(p) = np,OPT(p) = n, which implies that the load on each machine is at most OPT(p)
+So in this case the makespan is at most (and hence exactly) OPT(p)
+Claim 5.5 If OPT(p) ? H, then T? (p) ? L ¡P OPT(p) L ? OPT(p) + L
+Proof
+Let nOPT(p) be the number of jobs assigned to low machines in an optimum schedule
+The total load on all machines is exactly nOPT(p) ¡P L + (n ? nOPT(p)) ¡P H, and is at most m ¡P OPT(p), since every machine has load at most OPT(p)
+So taking T = L ¡P OPT(p) L ? H, since np,T ? nOPT(p) we have that np,T ¡PL+(n?np,T )¡PH ? m¡PT
+Hence, T? (p), the smallest such T, is at most L ¡P OPT(p) L
+Claim 5.6 Each job assigned in step 3 of the algorithm is assigned to a high machine
+258 Proof
+Suppose j is assigned to machine i in step 3
+If pij = L, then we must have ni p,T ?(p) = T? (p), otherwise we could have assigned j to i in step 2 to obtain a flow of larger value
+So at the point just before j is assigned in step 3, the load of each machine must be at least T? (p)
+Hence, the total load after j is assigned is at least m ¡P T? (p) + L > m ¡P T? (p)
+But the total load is also at most np,T ?(p) ¡P L + (n ? np,T ?(p)) ¡P H ? m ¡P T? (p), yielding a contradiction
+Lemma 5.7 The above algorithm returns a schedule with makespan at most OPT(p)+max ? L, H(1? 1 m ) ¡Â ? 2¡POPT(p)
+Proof
+If OPT(p) < H, then by Claim 5.4, we are done
+So suppose OPT(p) ? H
+By Claim 5.5, we know that T? (p) ? OPT(p) + L
+If there are no unassigned jobs after step 2 of the algorithm, then the makespan is at most T? (p) and we are done
+So assume that there are some unassigned jobs after step 2
+We will show that the makespan after step 3 is at most T +H ` 1? 1 m ? where T = min ? T? (p), OPT(p) ¡Â
+Suppose the claim is false
+Let i be the machine with the maximum load, so li > T + H ` 1 ? 1 m ?
+Let j be the last job assigned to i in step 3, and consider the point just before it is assigned to i
+So li > T ? H m at this point
+Also since j is assigned to i, by our greedy rule, the load on all the other machines must be at least li
+So the total load after j is assigned, is at least H + m ¡P li > m ¡P T (since pij = H by Claim 5.6)
+Also, for any assignment of jobs to machines in step 3, the total load is at most np,T ?(p) ¡P L + (n ? np,T ?(p)) ¡P H since there are np,T ?(p) jobs assigned to low machines
+Therefore, we must have m ¡P T < np,T ?(p) ¡P L + (n ? np,T ?(p)) ¡P H
+But we will argue that m ¡P T ? np,T ?(p) ¡PL+(n?np,T ?(p))¡PH, which yields a contradiction
+If T = T? (p), this follows from the definition of T? (p)
+If T = OPT(p), then letting nOPT(p) denote the number of jobs assigned to low machines in an optimum schedule, we have np,T ?(p) ? nOPT(p)
+So np,T ?(p) ¡PL+(n?np,T ?(p))¡PH ? nOPT(p) ¡PL+(n?nOPT(p))¡PH
+This is exactly the total load in an optimum schedule, which is at most m ¡P OPT(p)
+5.2.2 Proof of cycle monotonicity Lemma 5.8 Consider any two instances p = (pi, p?i) and p = (pi, p?i) where pi ? pi, i.e., pij ? pij ?j
+If T is a threshold such that np,T > np ,T , then every maximum flow x for (p , T) must assign all jobs j such that pij = L
+Proof
+Let Gp denote the residual graph for (p , T) and flow x
+Suppose by contradiction that there exists a job j? with pij? = L that is unassigned by x
+Since pi ? pi, all edges (j, i) that are present in the network for (p , T) are also present in the network for (p, T)
+Thus, x is a valid flow for (p, T)
+But it is not a max flow, since np,T > np ,T
+So there exists an augmenting path P in the residual graph for (p, T) and flow x
+Observe that node i must be included in P, otherwise P would also be an augmenting path in the residual graph Gp contradicting the fact that x is a maxflow
+In particular, this implies that there is a path P ? P from i to the sink t
+Let P = (i, j1, i1,
+, jK , iK , t)
+All the edges of P are also present as edges in Gp  all reverse edges (i , j +1) are present since such an edge implies that xi j +1 = 1; all forward edges (j , i ) are present since i = i so pi j = pi j = L, and xi j +1 = 0
+But then there is an augmenting path (j? , i, j1, i1,
+, jK , iK , t) in Gp which contradicts the maximality of x
+Let L denote the all low processing time vector
+Define TL i (p?i) = T? (L, p?i)
+Since we are focusing on machine i, and p?i is fixed throughout, we abbreviate TL i (p?i) to TL
+Also, let pL = (L, p?i)
+Note that T? (p) ? TL for every instance p = (pi, p?i)
+Corollary 5.9 Let p = (pi, p?i) be any instance and let x be any prefix maximal flow for (p, T? (p))
+Then, the low load on machine i is at most TL
+Proof
+Let T? = T? (p)
+If T? = TL , then this is clearly true
+Otherwise, consider the assignment x truncated at TL
+Since x is prefix maximal, we know that this constitutes a max flow for (p, TL

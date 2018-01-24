@@ -1,0 +1,45 @@
+FRAMEWORK In this section, we describe our new approach for implementing and composing protocols that is based on services .
+692 We show in Section 5 the advantages of service based protocol frameworks over event based protocol frameworks .
+Service Interface .
+In our service based framework, protocol modules in the same stack communicate through objects called service interfaces .
+Requests, replies and notifications are all issued to service interfaces .
+Protocol Modules .
+A protocol module is a set of executers, listeners and interceptors .
+Executers handle requests .
+An executer can be dynamically bound to a service interface .
+It can be later unbound .
+A request issued to a service interface si leads to the execution of the executer bound to si .
+If no executer is bound to si, the request is delayed until some executer is bound to si .
+Contrary to events, at most one executer at any time can be bound to a service interface on every machine .
+Listeners handle replies and notifications .
+A listener can be dynamically bound and unbound to from a service interface si .
+A notification issued to a service interface si is handled by all listeners bound to si in the local stack .
+A reply issued to a service interface is handled by one single listener .
+To ensure that one single listener handles a reply, a module Pi has to identify, each time it issues a request, the listener to handle the possible reply .
+If the request and the reply occur respectively, in stack i and in stack j, the service interface si on i communicates to the service interface si on j the listener that must handle the reply .
+If the listener that must handle the reply does not exist, the reply is delayed until the listener is created .
+Stack 1 P1 Q1 R1 S1 Network t u nt Figure 3
+We denote a service interface by a small letter (e.g .
+t, u and nt) in a hexagonal box .
+The fact that a module Pi can generate a request to a service interface si is represented by a dashed black arrow going from Pi to si .
+Similarly, a dashed white arrow going from module Pi to service interface si represents the fact that Pi can generate a reply or a notification to si .
+We represent executers with white boxes inside protocol modules and listeners with white boxes with a gray border .
+A connecting line between a service interface si and an executer e (resp .
+a listener l) shows that e (resp .
+l) is bound to si .
+In Figure 3, module Q1 contains an executer bound to service interface t and a listener bound to service interface u .
+Module Q1 can generate replies and notifications to service interface t and requests to service interface u .
+Note that the service interface nt allows to access the network .
+P1 Q1 P1 Q1 T1T1 t t t Figure 4
+Similarly to executers, interceptors can be dynamically bound or unbound to a service interface .
+They are activated each time a request, a reply or a notification is issued to the service interface they are bound to .
+This is illustrated in Figure 4 .
+In the right part of the figure, the interceptor of the protocol module T1 is represented by a rounded box .
+The interceptor is bound to service interface t .
+The left part of the figure shows that an interceptor can be seen as an executer plus a listener .
+When P1 issues a request req to the service interface t, the executer interceptor of T1 is executed .
+Then, module T1 may forward a request req to the service interface t, where we can have req = req 1 .
+When module Q1 issues a reply or a notification, a similar mechanism is used, except that this time the listener interceptor of T1 is executed .
+Note that a protocol module Ti, that has an interceptor bound to a service interface, is able to modify requests, replies and notifications .
+Upon requests, if several interceptors are bound to the same service interface, they are executed in the order of binding .
+Upon replies and notifications, the order is reversed. .

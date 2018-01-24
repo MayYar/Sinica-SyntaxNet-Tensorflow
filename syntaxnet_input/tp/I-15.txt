@@ -1,0 +1,307 @@
+﻿Information Searching and Sharing in Large-Scale 
+content:
+1 ABSTRACT :
+1-1:Finding the right agents in a large and dynamic network to provide the needed resources in a timely fashion, is a long standing problem .
+1-2:This paper presents a method for information searching and sharing that combines routing indices with tokenbased methods .
+1-3:The proposed method enables agents to search effectively by acquiring their neighbors" interests, advertising their information provision abilities and maintaining indices for routing queries, in an integrated way .
+1-4:Specifically, the paper demonstrates through performance experiments how static and dynamic networks of agents can be ‘tuned" to answer queries effectively as they gather evidence for the interests and information provision abilities of others, without altering the topology or imposing an overlay structure to the network of acquaintances. .
+2 INTRODUCTION :
+2-1:I.2.11 [Artificial Intelligence]: Distributed Artificial Intelligence Considering to be a decentralized control problem, information searching and sharing in large scale systems of cooperative agents is a hard problem in the general case: The computation of an optimal policy, when each agent possesses an approximate partial view of the state of the environment and when agents" observations and activities are interdependent (i.e .
+2-2:one agent"s actions affect the observations and the state of an other) [3], is hard .
+2-3:This fact, has resulted to efforts that either require agents to have a global view of the system [15], to heuristics [4], to precomputation of agents" information needs and information provision capabilities for proactive communication [17], to localized reasoning processes built on incoming information [12,13,14], and to mathematical frameworks for coordination whose optimal policies can be approximated [11] for small (sub ) networks of associated agents .
+2-4:On the other hand, there is a lot of research on semantic peer to peer search networks and social networks [1,5,6,8,9,10,16,18,19] many of which deal with tuning a network of peers for effective information searching and sharing .
+2-5:They do it mostly by imposing logical and semantic overlay structures .
+2-6:However, as far as we know there is no work that demonstrates the effectiveness of a gradual tuning process in large scale dynamic networks that studies the impact of the information gathered by agents as more and more queries are issued and served in concurrent sessions in the network .
+2-7:The main issue in this paper concerns ‘tuning" a network of agents, each with a specific expertise, for efficient and effective information searching and sharing, without altering the topology or imposing an overlay structure via clustering, introduction of shortcut indices, or re wiring .
+2-8:‘ " is the task of sharing and gathering the knowledge for agents to propagate requests to the acquaintances, minimizing the searching effort, increasing the efficiency and the benefit of the system .
+2-9:Specifically, this paper proposes a method for information searching and sharing in dynamic and large scale networks, which combines routing indices with token based methods for information sharing in large scale multi agent systems .
+2-10:This paper is structured as follows: Section 2 presents related work and motivates the proposed method .
+2-11:Section 3 states the problem and section 4 presents in detail the individual techniques and the overall proposed method .
+2-12:Section 5 presents the experimental setup and results, and section 6 concludes the paper, sketching future work. .
+3 RELATED WORK :
+3-1:Information provision and sharing can be considered to be a decentralized partially observable Markov decision process [3,4,11,14] .
+3-2:In the general case, decentralized control of largescale dynamic systems of cooperative agents is a hard problem .
+3-3:Optimal solutions can only be approximated by means of heuristics, by relaxations of the original problem or by centralized solutions .
+3-4:The computation of an optimal control policy is simple given that global states can be factored, that the probability of transitions and observations are independent, the observations combined determine the global state of the system and the reward function can be easily defined as the sum of local reward functions [3] .
+3-5:However, in a large scale dynamic system with decentralized control it is very hard for agents to possess accurate partial views of the environment, and it is even more hard for agents to possess a global view of the environment .
+3-6:Furthermore, agents" observations can not be assumed independent, as one agent"s actions can affect the observations of others: For instance, when one agent joins leaves the system, then this may affect other agents" assessment of neighbours" information provision abilities .
+3-7:Furthermore, the probabilities of transitions can be dependent too; something that increases the complexity of the problem: For example, when an agent sends a query to another agent, then this may affect the state of the latter, as far as the assessed interests of the former are concerned .
+3-8:Considering independent activities and observations, authors in [4] propose a decision theoretic solution treating standard action and information exchange as explicit choices that the decision maker must make .
+3-9:They approximate the solution using a myopic algorithm .
+3-10:Their work differs in the one reported here in the following aspects: First, it aims at optimizing communication, while the goal here is to tune the network for effective information sharing, reducing communication and increasing system"s benefit .
+3-11:Second, the solution is approximated using a myopic algorithm, but authors do not demonstrate how suboptimal are the solutions computed (something we neither do), given their interest to the optimal solution .
+3-12:Third, they consider that transitions and observations made by agents are independent, which, as already discussed, is not true in the general case .
+3-13:Last, in contrast to their approach where agents broadcast messages, here agents decide not only when to communicate, but to whom to send a message too .
+3-14:Token based approaches are promising for scaling coordination and therefore information provision and sharing to large scale systems effectively .
+3-15:In [11] authors provide a mathematical framework for routing tokens, providing also an approximation to solving the original problem in case of independent agents" activities .
+3-16:The proposed method requires a high volume of computations that authors aim to reduce by restricting its application to static logical teams of associated agents .
+3-17:In accordance to this approach, in [12,13,14], information sharing is considered only for static networks and self tuning of networks is not demonstrated .
+3-18:As it will be shown in section 5, our experiments show that although these approaches can handle information sharing in dynamic networks, they require a larger amount of messages in comparison to the approach proposed here and can not tune the network for efficient information sharing .
+3-19:Proactive communication has been proposed in [17] as a result of a dynamic decision theoretic determination of communication strategies .
+3-20:This approach is based on the specification of agents as providers and needers: This is done by a plan based precomputation of information needs and provision abilities of agents .
+3-21:However, this approach can not scale to large and dynamic networks, as it would be highly inefficient for each agent to compute and determine its potential needs and information provision abilities given its potential interaction with 100s of other agents .
+3-22:Viewing information retrieval in peer to peer systems from a multi agent system perspective, the approach proposed in [18] is based on a language model of agents" documents collection .
+3-23:Exploiting the models of other agents in the network, agents construct their view of the network which is being used for forming routing decisions .
+3-24:Initially, agents build their views using the models of their neighbours .
+3-25:Then, the system reorganizes by forming clusters of agents with similar content .
+3-26:Clusters are being exploited during information retrieval using a kNN approach and a gradient search scheme .
+3-27:Although this work aims at tuning a network for efficient information provision (through reorganization), it does not demonstrate the effectiveness of the approach with respect to this issue .
+3-28:Moreover, although during reorganization and retrieval they measure the similarity of content between agents, a more fine grained approach is needed that would allow agents to measure similarities of information items or sub collections of information items .
+3-29:However, it is expected that this will complicate re organization .
+3-30:Based on their work on peer to peer systems, H.Zhand and V.Lesser in [19] study concurrent search sessions .
+3-31:Dealing with static networks, they focus on minimizing processing and communication bottlenecks: Although we deal with concurrent search sessions, their work is orthogonal to ours, which may be further extended towards incorporating such features in the future .
+3-32:Considering research in semantic peer to peer systems1 , most of the approaches exploit what can be loosely stated a routing index .
+3-33:A major question concerning information searching is what information has to be shared between peers, when, and what adjustments have to be made so as queries to be routed to trustworthy information sources in the most effective and efficient way .
+3-34:REMINDIN" [10] peers gather information concerning the queries that have been answered successfully by other peers, so as to subsequently select peers to forward requests to: This is a lazy learning approach that does not involve advertisement of peer information provision abilities .
+3-35:This results in a tuning process where the overall recall increases over time, while the number of messages per query remains about the same .
+3-36:Here, agents actively advertise their information provision abilities based on the assessed interests of their peers: This results in a much lower number of messages per query than those reported in REMINDIN" .
+3-37:In [5,6] peers, using a common ontology, advertise their expertise, which is being exploited for the formation of a semantic overlay network: Queries are propagated in this network depending on their similarity with peers" expertise .
+3-38:It is on the receiver"s side to decide whether it shall accept or not an advertisement, based on the similarity between expertise descriptions .
+3-39:According to our approach, agents advertise selectively their information provision abilities about specific topics to their neighbours with similar information interests (and only to these) .
+3-40:However, this is done as time passes and while agents" receive requests from their peers .
+3-41:The gradual creation of overlay networks via re wiring, shortcuts creation [1,8,16] or clustering of peers [17,9] are tuning approaches that differ fundamentally from the one proposed here: Through local interactions, we aim at tuning the network for efficient information provision by gathering routing information gradually, as queries are being propagated in the network and 1 General research in peer to peer systems concentrates either on network topologies or on distribution of documents: Approaches do not aim to optimize advertising, and search mostly requires common keys for nodes and their contents .
+3-42:They generate a substantial overhead in highly dynamic settings, where nodes join leave the system .
+3-43:248 The Sixth Intl .
+3-44:Joint Conf .
+3-45:on Autonomous Agents and Multi Agent Systems (AAMAS 07) agents advertise their information provision abilities given the interests of their neighbours .
+3-46:Given the success of this method, we shall study how the addition of logical paths and gradual evolution of the network topology can further increase the effectiveness of the proposed method. .
+4 PROBLEM STATEMENT :
+4-1:Let { } be the set of agents in the system .
+4-2:The network of agents is modelled as a graph =( , ), where is the set of agents and is a set of bidirectional edges denoted as nonordered pairs ( , ) .
+4-3:The neighbourhood of an agent includes all the one hop away agents (i.e .
+4-4:its acquaintance agents) such that ( ) The set of acquaintances of is denoted by Each agent maintains (a) an ontology that represents categories of information, (b) indices of information pieces available to its local database and to other agents, and (c) a profile model for some of its acquaintances .
+4-5:Indices and profile models are described in detail in section 4 .
+4-6:Ontology concepts represent categories that classify the information pieces available .
+4-7:It is assumed that agents in the network share the same ontology, but each agent has a set of information items in its local repository, which are classified under the concepts of its expertise .
+4-8:The set of concepts is denoted by It is assumed that the sets of items in agents" local repositories are non overlapping .
+4-9:Finally, it is assumed that there is a set of queries .
+4-10:Each query is represented by a tuple where is the unique identity of the query is a non negative integer representing the maximum number of information pieces requested, is the specific category to which these pieces must belong, is a path in the network of agents through which the query has been propagated (initially it contains the originator of the query and each agent appends its id in the before propagating the query), and is a positive integer that specifies the maximum number of hops that the query can reach .
+4-11:In case this limit is exceeded and the corresponding number of information pieces have not been found, then the query is considered unfulfilled However, even in this case, a (possibly high) percentage of the requested pieces of information may have been found .
+4-12:The problem that this article deals with is as follows: Given a network of agents and a set of queries , agents must retrieve the pieces of information requested by queries, in concurrent search sessions, and further ‘tune" the network so as to answer future similar queries in the more effective and efficient way, increasing the benefit of the system and reducing the communication messages required .
+4-13:The of the system is the ratio of information pieces retrieved to the number of information pieces requested .
+4-14:The of the system is measured by the number of messages needed for searching and updating the indexes and profiles maintained .
+4-15:‘Tuning" the network requires agents to acquire the necessary information about acquaintances" interests and information provision abilities (i.e .
+4-16:the routing and profiling tuples detailed in section 4), so as to route queries and further share information in the most efficient way .
+4-17:This must be done seamlessly to searching: I.e .
+4-18:agents in the network must share acquire the necessary information while searching, increasing the benefit and efficiency gradually, as more queries are posed. .
+5 INFORMATION SEARCHING AND SHARING :
+5-1:SHARING 4.1 Overall Method Given a network =( , ) of agents and a set of queries , each agent maintains indices for routing queries to the right agents, as well as acquaintances" profiles for advertising its information provision abilities to those interested .
+5-2:To capture information about pieces of information accessible by the agents, each agent maintains a routing index that is realized as a set of tuples of the form < , , > .
+5-3:Each such tuple specifies the number of information items in category that can be reached by , such that ( ) { } .
+5-4:This specifies the of to with respect to the information category .
+5-5:As it can be noticed, each tuple corresponds either to the agent itself (specifying the pieces of information classified in available to its local repository) or to an acquaintance of the agent (recording the pieces of information in category available to the acquaintance agent and to agents that can be reached through this acquaintance) .
+5-6:The routing index is exploited for the propagation of queries to the right agents: Those that are either more likely to provide answers or that know someone that can provide the requested pieces of information .
+5-7:Considering an agent , the profile model of some of its acquaintances , denoted by is a set of tuples < , >, maintained by .
+5-8:Such a tuple specifies the probability that the acquaintance is interested to pieces of information in category subsequently, such a probability is also denoted by ) .
+5-9:Formally, the profile model of an acquaintance of is { , >| ( ) and } .
+5-10:Profile models are exploited by the agents to decide where to ‘advertise" their information provision abilities .
+5-11:Given two acquaintances and in , the information searching and sharing process proceeds as it is depicted in Figure 1: Initially, each agent has no knowledge about the information provision abilities of its acquaintances and also, it possesses no information about their interests .
+5-12:When that the query is sent to from the agent , then has to update the profile of concerning the category increasing the probability that is interested to information in When this probability is greater than a threshold value (due to the queries about that has sent to ), then assesses that it is highly Figure 1 .
+5-13:Typical pattern for information sharing between two acquaintances (numbers show the sequence of tasks) Aj Ai The Sixth Intl .
+5-14:Joint Conf .
+5-15:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 249 probable for to be interested about information in category .
+5-16:This leads to inform about its information provision abilities as far as the category is concerned .
+5-17:This information is being used by to update its index about .
+5-18:This index is being exploited by to further propagate queries, and it is further propagated to those interested in .
+5-19:Moreover, the profile of maintained by guides to propagate changes concerning its information provision abilities to .
+5-20:The above method has the following features: (a) It combines routing indices and token based information sharing techniques for efficient information searching and sharing, without imposing an overlay network structure .
+5-21:(b) It can be used by agents to adapt safely and effectively to dynamic networks .
+5-22:(c) It supports the acquisition and exploitation of different types of locally available information for the ‘tuning" process .
+5-23:(d) It extends the tokenbased method for information sharing (as it was originally proposed in [12,13]) in two respects: First, to deal with categories of information represented by means of ontology concepts and not with specific pieces of information, and second, to guide agents to advertise information that is semantically similar to the information requested, by using a semantic similarity measure between information categories .
+5-24:Therefore, it paves the way for the use of token based methods for semantic peer to peer systems .
+5-25:This is further described in section 4.3 .
+5-26:(d) It provides a more sophisticated way for agents to update routing indices than that originally proposed in [2] .
+5-27:This is done by gathering and exploiting acquaintances" profiles for effective information sharing, avoiding unnecessary and cyclic updates that may result to misleading information about agents" information provision abilities .
+5-28:This is further described in the next sub section .
+5-29:4.2 Routing Indices As already specified, given a network of agents and the set of agent"s acquaintances, the routing index of (denoted by ) is a collection of at most | | indexing tuples < , > .
+5-30:The key idea is that given such an index and a request concerning , will forward this request to if the resources available (i.e .
+5-31:the information abilities of to ) can best serve this request .
+5-32:To compute the information abilities of to , all tuples < , > concerning all agents in ( ) { } must be aggregated .
+5-33:Crespo and Garcia Molina [2] examine various types of aggregations .
+5-34:In this paper, given some tuples < >,< , …> maintained by the agent , their aggregation is the tuple < , > .
+5-35:This gives information concerning the pieces of information that can be provided through , but it does not distinguish what each of "s acquaintances can provide: This is an inherent feature of routing indices .
+5-36:Without considering the interests of its acquaintances, may compute aggregations concerning agents in ( ) { } { } and advertise share its information provision abilities to each agent in ( ) .
+5-37:For instance, given the network configuration depicted in Figure 2 and a category , agent sends the aggregation of the tuples concerning agents in ( ) { } { } (denoted as ( , )) to agent , which records the tuple < > .
+5-38:Similarly the aggregation of the tuples concerning the agents in ( ) { } { } (denoted as ( )) is sent to the agent , which also records the tuple < > .
+5-39:It must be noticed that and record the information provision abilities of each from its own point of view .
+5-40:Every time the tuple that models the information provision abilities of an agent changes, the aggregation has to re compute and send the new aggregation to the appropriate neighbors in the way described above .
+5-41:Then, its neighbors have to propagate these updates to their acquaintances, and so on .
+5-42:Figure 2.Aggregating and sharing information provision indices .
+5-43:Routing indices may be misleading and lead to inefficiency in arbitrary graphs containing cycles .
+5-44:The exploitation of acquaintances" profiles can provide solutions to these deficiencies .
+5-45:Each agent propagates its information provision abilities concerning a category only to these acquaintances that have high interest in this category .
+5-46:As it has been mentioned, an agent expresses its interest in a category by propagating queries about it .
+5-47:Therefore, indices concerning a category are propagated in the inverse direction in the paths to which queries about are propagated .
+5-48:Indices are propagated as long as agents in the path have a high interest in .
+5-49:Queries can not be propagated in a cyclic fashion since an agent serves and propagates queries that have not been served by it in a previous time point .
+5-50:Therefore, due to their relation to queries, indices are not propagated in a cyclic fashion, as well .
+5-51:However, there is still a specific case where cycles can not be avoided .
+5-52:Such a case is shown in Figure 3: Figure 3 .
+5-53:Cyclic pattern for the sharing of indices .
+5-54:While the propagation of the query causes the propagation of information provision abilities of agents in a non cyclic way (since the agent A recognizes that has been served), the query causes the propagation of information abilities of A to other agents in the network, causing, in conjunction to the propagation of indices due to a cyclic update of indices .
+5-55:4.3 Profiles The key assumption behind the exploitation of acquaintances" profiles, as it was originally proposed in [12,13], is that for an agent to pass a specific information item, this agent has a high interest on it or to related information .
+5-56:As already said, in our case, acquaintances" profiles are created based on received queries and specify the interests of acquaintances to specific information categories .
+5-57:Given the query sent from to , has to record not only the interest of to , but Ak A2 A Notation Acquaintance relation Flow of query Flow of indices due to Flow of query Flow of indices due to 250 The Sixth Intl .
+5-58:Joint Conf .
+5-59:on Autonomous Agents and Multi Agent Systems (AAMAS 07) the interest of to all the related classes, given their semantic similarity to To measure the similarity between two ontology classes we use the similarity function [0,1] [7]: = otherwise cc 01.0 1 cofsubconceptaiscif ji ji where is the length of the shortest path between and in the graph spanned by the sub concept relation and the minimal level in the hierarchy of either or .
+5-60:and are parameters scaling the contribution of shortest path length and , respectively .
+5-61:Based on previous works we choose =0.2 and =0.6 as optimal values .
+5-62:It must be noticed that we measure similarity between sub concepts, assigning a very low similarity value between concepts that are not related by the sub concept relation .
+5-63:This is due to that, each query about information in category can be answered by information in any sub category of close enough to Given a threshold value 0.3, 0.3 indicates that an agent interested in is also interested in , while <0.3 indicates that an agent interested in is unlikely to be interested in .
+5-64:This threshold value was chosen after some empirical experiments with ontologies .
+5-65:The update of "s assessment on pc based on an incoming query from is computed by leveraging Bayes Rule as follows [12,13]: , and ( ) If is the last in the || 1 || 2 ),( If is not the last in the Then probabilities must be normalized to ensure that , 1 )( , According to the first case of the equation, the probability that the agent that has propagated a query about to be interested about information in , is updated based on the similarity between and .
+5-66:The second case updates the interests of agents other than the requesting one, in a way that ensures that normalization works .
+5-67:It must be noticed that in contrast to [12,13], the computation has been changed in favour to the agent that passed the query .
+5-68:The profiles of acquaintances enable an agent to decide where and which advertisements to be sent .
+5-69:Specifically, for each and for which is greater than a threshold value (currently set to 0.5), the agent aggregates the vectors ( ) of each agent ( ) { } { }and sends the tuple ( , ) to .
+5-70:Also, given a high , when a change to an index concerning occurs (e.g .
+5-71:due to a change in "s local repository, or due to that the set of its acquaintances changed), sends the updated aggregated index entry to .
+5-72:Doing so, the agent which is highly interested to pieces of information in category updates its index so as to become aware of the information provision abilities of as far as the category is concerned .
+5-73:4.4 Tuning Tuning is performed seamlessly to searching: As agents propagate queries to be served, their profiles are getting updated by their acquaintances .
+5-74:As their profiles are getting updated, agents receive the aggregated indices of their acquaintances, becoming aware of their information provision abilities on information categories to which they are probably interested .
+5-75:Given these indices, agents further propagate queries to acquaintances that are more likely to serve queries, and so on .
+5-76:Concerning the routing index and the profiles maintained by an agent , it must be pointed that does not need to record all possible tuples, i.e .
+5-77:| | | { }|: It records only those that are of particular interest for searching and sharing information, depending on the expertise and interests of its own and its acquaintances .
+5-78:Initially, agents do not possess profiles of their acquaintances .
+5-79:For indices there are two alternatives: Either agents do not initially possess any information about acquaintances" local repositories (this is the case), or they do (this is the case) .
+5-80:Given a query, agents propagate this query to those acquaintances that have the highest information provision abilities .
+5-81:In the no initialization of indices case where an agent does not initially possess information about its acquaintances" abilities, it may initially propagate a query to all of them, resulting to a pure flooding approach; or it may propagate the query randomly to a percentage of them .
+5-82:In the initialization of indices case, where an agent initially possesses information about its acquaintances" local repository, it can propagate queries to all or to a percentage of those that can best serve the request .
+5-83:We considered both cases in our experiments .
+5-84:Given a static setting where agents do not shift their expertise, and the distribution of information pieces does not change, the network will eventually reach a state where no information concerning agents" information abilities will need to be propagated and no agents" profiles will need to be updated: Queries shall be propagated only to those agents that will lead to a near to the maximum benefit of the system in a very efficient way .
+5-85:In a dynamic setting, agents may shift their expertise, their interests, they may leave the network at will, or welcome new agents that join the network and bring new information provision abilities, new interests and new types of queries .
+5-86:In this paper we study settings where agents may leave or join the network .
+5-87:This requires agents to adapt safely and effectively .
+5-88:Towards this goal, in case an agent does not receive a reply from one of its acquaintances within a time interval, then it retracts all the indices and the profile concerning the missing acquaintance and repropagates the queries that have been sent to the missing agent since the last successful handshake, to other agents .
+5-89:In case a new agent joins the network, then its acquaintances that are getting aware of its presence propagate all the queries that have processed by them in the last time points (currently is set to 6) to the newcomer .
+5-90:This is done so as to inform the newcomer about their interests and initiate information sharing. .
+6 EXPERIMENTAL SETUP :
+6-1:To validate the proposed approach we have built a prototype that simulates large networks .
+6-2:To test the scalability of our approach The Sixth Intl .
+6-3:Joint Conf .
+6-4:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 251 we have run several experiments with various types of networks .
+6-5:Here we present results from 3 network types with | |=100, | |=500 and | |=1000 that provide representative cases .
+6-6:Networks are constructed by distributing randomly | | agents in an area, each with a visibility ratio equal to The acquaintances of an agent are those that are visible to the agent and those from which the agent is visible (since edges in the network are bidirectional) .
+6-7:Details about networks are given in Table 1 .
+6-8:The column avg(|N(A)|) shows the average number of acquaintances per agent in the network and the column |T| shows the number of queries per network type .
+6-9:It must be noticed that the TypeA network is more dense than the others, which are much larger than this .
+6-10:Each experiment ran 40 times .
+6-11:In each run the network is provided with a new set of randomly generated queries that are originated from randomly chosen agents .
+6-12:The agents search and gather knowledge that they further use and enrich, tuning the network gradually, run by run .
+6-13:Each run lasts a number of rounds that depends on the of queries and on the parameters that determine the dynamics of the network: To end a run, all queries must have either been served (i.e .
+6-14:100% of the information items requested must have been found), or they must have been unfulfilled (i.e .
+6-15:have exceeded their ) .
+6-16:It must be noticed that in case of a dynamic setting, this ending criterion causes some of the queries to be lost .
+6-17:This is the case when some queries are the only active remained and the agents to whom they have been propagated left the network without their acquaintances to be aware of it .
+6-18:Table1: Network types |N| R N avg(|N(A)|) |T| TypeA 100 10 25 50 363 TypeB 500 10 125 20 1690 TypeC 1000 10 250 10 3330 Information used in the experiments is synthetic and is being classified in 15 distinct categories: Each agent"s expertise comprises a unique information category .
+6-19:For the category in its expertise each agent holds at most 1000 information pieces, the exact number of which is determined randomly .
+6-20:At each run a constant number of queries are being generated, depending on the type of network used (last column in Table 1) .
+6-21:At each run, each query is randomly assigned to an originator agent and is set to request a random number of information items, classified in a sub category of the query originator agent"s expertise .
+6-22:This sub category is chosen in a random way and the requested items are less than 6000 .
+6-23:The for any query is set to be equal to 6 .
+6-24:In such a setting, the demand for information items is much higher than the agents" information provision abilities, given the of queries: The maximum benefit in any experimental case is much less than 60% (this has been done so as to challenge the ‘tuning" task in settings where queries can not be served in the first hop or after 2 3 hops) .
+6-25:Given that agents are initially not aware of acquaintances" local repository ( case), we have run several evaluation experiments for each network type depending on the percentage of acquaintances to which a query can be propagated by an agent .
+6-26:These types of experiments are denoted by TypeX Y, where X denotes the type of network and Y the percentage of acquaintances: Here we present results for Y equal to 10, 20 or 50 .
+6-27:For instance, TypeA 10 denotes a setting with a 0 50 100 150 200 250 300 TypeA 10 Type B 20 (no initialization) TypeB 20 (initialization) Type C 50 4000 14000 24000 34000 44000 54000 40 42 44 46 48 50 52 54 56 58 0 0.0005 0.001 0.0015 0.002 0.0025 0.003 0.0035 0.004 0.0045 TypeA 10 TypeB 20 (no initialization) Type B 20 (initialization) TypeC 50 TypeB 20 without RIs Figure 4 .
+6-28:Results for static networks as agents gather information about acquaintances" abilities and interests network of TypeA where each query is being propagated to at most 10% of an agent"s acquaintances .
+6-29:The exact number of acquaintances is randomly chosen per agent and queries are being propagated only to those acquaintances that are likely to best i messages per run q messages per run benefit per run message gain per run 252 The Sixth Intl .
+6-30:Joint Conf .
+6-31:on Autonomous Agents and Multi Agent Systems (AAMAS 07) serve the request .
+6-32:Figures 4 and 5 show experiments for static and dynamic networks of TypeA 10 (dense network with a low percentage of acquaintances), TypeB 20 (quite dense network with a low percentage of acquaintances), with initialization and without initialization, and TypeC 50 (not a so dense network with a quite high percentage of acquaintances) .
+6-33:To demonstrate the advantages of our method we have considered networks without 0 200 400 600 800 1000 1200 1400 1600 1800 2000 0 10000 20000 30000 40000 50000 60000 70000 80000 42 43 44 45 46 47 48 49 50 0 0.0005 0.001 0.0015 0.002 0.0025 0.003 0.0035 TypeB 20 TypeB 20 without RIs TypeC 50 TypeC 50 without RIs TypeC 50 (static) Figure 5 .
+6-34:Results for dynamic networks as agents gather information about acquaintances" abilities and interests routing indices for TypeC 50 and TypeB 20 networks: Agents in these networks, similarly to [12,13], share information concerning their local repository based on their assessments on acquaintances" interests .
+6-35:Results computed in each experiment show the number of querypropagation messages ( ), the number of messages for the update of indices ( ), the of the system, i.e .
+6-36:the average ratio of information pieces provided to the number of pieces requested per query, and the i.e .
+6-37:the ratio of benefit to the total number of messages .
+6-38:The horizontal axis in each diagram corresponds to the runs .
+6-39:As it is shown in Figure 4, as agents search and share information from run 1 to run 40, they manage to increase the benefit of the system, by drastically reducing the number of messages .
+6-40:Also (not shown here due to space reasons) the number of unfulfilled queries decrease, while the served queries increase gradually .
+6-41:Experiments show: (a) An effective tuning of the networks as time passes and more queries are posed to the network, even if agents maintain the models of a small percentage of their acquaintances .
+6-42:(b) That ‘tuning" can greatly facilitate the scalability of the information searching and sharing tasks in networks .
+6-43:To show whether initial knowledge about acquaintances local repository (the case) affects the effective tuning of the network, we provide representative results from the TypeB 20 network .
+6-44:As it is shown in Figure 4, the tuning task in this case does not manage to achieve the benefit of the system reported for the case .
+6-45:On the contrary, while the tuning affects the drastically; the are not affected in the same way: The in the case are less than those in the TypeB 20 with case .
+6-46:This is further shown in a more clear way in the message gain of both approaches: The message gain of the TypeB 20 with case is higher than the message gain for the TypeB 20 experiment with .
+6-47:Therefore, initial knowledge concerning local information of acquaintances can be used for guiding searching and tuning at the initial stages of the tuning task, only if we need to gain efficiency (i.e .
+6-48:decrease the number of required messages) to the cost of loosing effectiveness (i.e .
+6-49:have lower benefit): This is due to the fact that, as agents posses information about acquaintances" local repositories, the tuning process enables the further exchange of messages concerning agents" information provision abilities in cases where agents" profiles provide evidence for such a need .
+6-50:However, initial information about acquaintances" local repositories may mislead the searching process, resulting in low benefit .
+6-51:In case we need to gain effectiveness to the cost of reducing efficiency, this type of local knowledge does not suffice .
+6-52:Considering also the information sharing method without routing indices ( cases), we can see that for static networks it requires more without managing to tune the system, while the benefit is nearly the same to the one reported by our method .
+6-53:This is shown clearly in the message gain diagrams in Figure 4 .
+6-54:Figure 5 provides results for dynamic networks .
+6-55:These are results from a particular representative case of our experiments where more than 25% of (randomly chosen) nodes leave the network in each run during the experiment .
+6-56:After a random number of i messages per run q messages per run benefit per run message gain per run The Sixth Intl .
+6-57:Joint Conf .
+6-58:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 253 rounds, a new node may replace the one left .
+6-59:This newcomer has no information about the network .
+6-60:Approximately 25% of the nodes that leave the network are not replaced for 50% of the experiment, and approximately 50% are not replaced for more than 35% of the experiment .
+6-61:In such a highly dynamic setting with very scarce information resources distributed in the network, as Figure 5 shows, the tuning approach has managed to keep the benefit to acceptable levels, while still reducing drastically the number of i messages .
+6-62:However, as it can be expected, this reduction is not so drastic as it was in the corresponding static cases .
+6-63:Figure 5 shows that the message gain for the dynamic case is comparable to the message gain for the corresponding (TypeC50) static case, which proves the value of this approach for dynamic settings .
+6-64:The comparison to the case where no routing indices are exploited reveals the same results as in the static case, to the cost of a large number of messages .
+6-65:Finally it must be pointed that the maximum number of messages per query required by the proposed method is nearly 12, which is less than that that reported by other efforts. .
+7 ABSTRACT :
+7-1:This paper presents a method for semantic query processing in large networks of agents that combines routing indices with information sharing methods
+7-2:The presented method enables agents to keep records of acquaintances" interests, to advertise their information provision abilities to those that have a high interest on them, and to maintain indices for routing queries to those agents that have the requested information provision abilities
+7-3:Specifically, the paper demonstrates through extensive performance experiments: (a) How networks of agents can be ‘tuned" so as to provide requested information effectively, increasing the benefit and the efficiency of the system
+7-4:(b) How different types of local knowledge (number, local information repositories, percentage, interests and information provision abilities of acquaintances) can guide agents to effectively answer queries, balancing between efficiency and efficacy
+7-5:(c) That the proposed tuning task manages to increase the efficiency of information searching and sharing in highly dynamic and large networks
+7-6:(d) That the information gathered and maintained by agents supports efficient and effective information searching and sharing: Initial information about acquaintances information provision abilities is not necessary and a small percentage of acquaintances suffices
+7-7:Further work concerns experimenting with real data and ontologies, differences in ontologies between agents, shifts in expertise and the parallel construction of overlay structure.
+8 ABSTRACT :
+8-1:Cooper, B.F., Garcia Molina, H
+8-2:ad hoc, self supervising peer to peer search networks
+8-3:, Volume 23 ,Issue 2 (April 2005) ,169  200 Crespo, A., Garcia Molina, H
+8-4:Routing indices for peer topeer systems, in , July 2002.", Goldman, C., and Zilberstein, S
+8-5:Decentralized Control of Cooperative Systems: Categorization and Complexity Analysis
+8-6:22 (2004), 143 174
+8-7:Goldman, C., and Zilberstein, S
+8-8:Optimizing Information Exchange in Cooperative Multi agent Systems
+8-9:In , July 2003
+8-10:Haase, P., Siebes, R., van Harmelen, F
+8-11:Peer Selection in Peer to Peer Networks with Semantic Topologies
+8-12:In Lecture Notes in Computer Science, Springer, Volume 3226 2004, 108 125
+8-13:Haase, P., Broekstra, J., Ehrig, M., Menken, M., Mika, P., Plechawski, M., Pyszlak, P., Schnizler, B., Siebes, R., Staab, S., Tempich, T
+8-14:Bibster A Semantics Based Bibliographic Peer to Peer System, In , 122 136
+8-15:Li, Y., Bandar, Z., and McLean, D.
+8-16:An approach for measuring semantic similarity between words using semantic multiple information sources
+8-17:vol
+8-18:15, No 4, 2003, 871 882
+8-19:Loser, A., Staab, S., Tempich, C
+8-20:Semantic Social Overlay Networks
+8-21:
+8-22:To appear 2006 2007 Nejdl, W., Wolpers M., Siberski, W., Schmitz, C., Schlosser, M., Brunkhorst, I., Loser, Super Peer Based Routing and Clustering Strategies for RDF Based Peer to Peer Networks
+8-23:536 543
+8-24:Tempich, C., Staab, S., Wranik, A
+8-25:REMINDIN': Semantic Query Routing in Peer to Peer Networks Based on Social Metaphors
+8-26:In 640 649
+8-27:Xu, Y., Scerri, P., Yu, B., Lewis, M., and Sycara, K
+8-28:A POMDP Approach to Token Based Team Coordination
+8-29:In , (July 25 29, Utrecht) ACM Press
+8-30:Xu, Y., Lewis, M., Sycara, K., and Scerri, P
+8-31:Information Sharing in Large Scale Teams
+8-32:In , 2004
+8-33:Xu, Y., Liao, E., Scerri, P., Yu, B., Lewis, M., and Sycara, K
+8-34:Towards Flexible Coordination of Large Scale MultiAgent Systems
+8-35:Springer, 2005
+8-36:Xu, Y., Scerri, P., Yu, B., Okamoto, S., Lewis, M., and Sycara, K
+8-37:An Integrated Token Based Algorithm for Scalable Coordination
+8-38:In 407 414 Xuan, P., Lesser, V., Zilberstein, S
+8-39:Communication Decisions in Multi agent Cooperation: Model and Experiments
+8-40:In 2001, 616 623
+8-41:Yu, B., and Singh M
+8-42:Searching Social Networks, In
+8-43:Zhang, Y., Volz, R., Ioeger, T.R., Yen, J
+8-44:A Decision Theoretic Approach for Designing Proactive Communication in Multi Agent Teamwork
+8-45:In 2004, 64 71
+8-46:Zhang, H., Croft, W.B., Levine, B., Lesser, V
+8-47:A MultiAgent Approach for Peer to Peer based Information Retrieval Systems
+8-48:In In 04, 456 464
+8-49:Zhang, H., Lesser, V
+8-50:Multi Agent Based Peer to Peer Information Retrieval Systems with Concurrent Search Sessions
+8-51:In 06, 305 31
+8-52:254 The Sixth Intl
+8-53:Joint Conf
+8-54:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

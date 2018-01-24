@@ -1,0 +1,29 @@
+In this section, we describe notions that are common to all protocol frameworks .
+Protocols and Protocol Modules .
+A protocol is a distributed algorithm that solves a specific problem in a distributed system, e.g .
+a TCP protocol solves the reliable channel problem .
+A protocol is implemented as a set of identical protocol modules located on different machines .
+Protocol Stacks .
+A stack is a set of protocol modules (of different protocols) that are located on the same machine .
+Note that, despite its name, a stack is not strictly layered, 691 i.e .
+a protocol module can interact with all other protocol modules in the same stack, not only with the protocol modules directly above and below .
+In the remainder of this paper, we use the terms machine and stack interchangeably .
+Stack 1 S1 Q1 R1 P1 Network Figure 1
+We represent protocol modules by capital letters indexed with a natural number, e.g .
+P1, Q1, R1 and S1 .
+We write Pi to denote the protocol module of a protocol P in stack i .
+We use this notation throughout the paper .
+Modules are represented as white boxes .
+Arrows show module interactions .
+For instance, protocol module P1 interacts with the protocol module Q1 and conversely (See Fig .
+1) .
+Protocol Module Interactions .
+Below, we define the different kinds of interaction between protocol modules .
+? Requests are issued by protocol modules .
+A request by a protocol module Pi is an asynchronous call by Pi of another protocol module .
+? Replies are the results of a request .
+A single request can generate several replies .
+Only protocol modules belonging to the same protocol as the module that has issued the request are concerned by the corresponding replies .
+For example, a request by Pi generates replies that concern only protocol modules Pj .
+? Notifications can be used by a protocol module to inform (possibly many) protocol modules in the same stack about the occurrence of a specific event .
+Notifications may also be the results of a request. .

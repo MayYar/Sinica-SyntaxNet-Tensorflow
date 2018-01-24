@@ -1,0 +1,64 @@
+Snoeren et al .
+[36] use an overlay mesh to achieve reliable and timely delivery of mission critical data .
+In this system, every node chooses n parents from which to receive duplicate packet streams .
+Since its foremost emphasis is reliability, the system does not attempt to improve the bandwidth delivered to the overlay participants by sending disjoint data at each level .
+Further, during recovery from parent failure, it limits an overlay router"s choice of parents to nodes with a level number that is less than its own level number .
+The power of perpendicular downloads is perhaps best illustrated by Kazaa [22], the popular peer to peer file swapping network .
+Kazaa nodes are organized into a scalable, hierarchical structure .
+Individual users search for desired content in the structure and proceed to simultaneously download potentially disjoint pieces from nodes that already have it .
+Since Kazaa does not address the multicast communication model, a large fraction of users downloading the same file would consume more bandwidth than nodes organized into the Bullet overlay structure .
+Kazaa does not use erasure coding; therefore it may take considerable time to locate the last few bytes .
+294 BitTorrent [3] is another example of a file distribution system currently deployed on the Internet .
+It utilizes trackers that direct downloaders to random subsets of machines that already have portions of the file .
+The tracker poses a scalability limit, as it continuously updates the systemwide distribution of the file .
+Lowering the tracker communication rate could hurt the overall system performance, as information might be out of date .
+Further, BitTorrent does not employ any strategy to disseminate data to different regions of the network, potentially making it more difficult to recover data depending on client access patterns .
+Similar to Bullet, BitTorrent incorporates the notion of choking at each node with the goal of identifying receivers that benefit the most by downloading from that particular source .
+FastReplica [11] addresses the problem of reliable and efficient file distribution in content distribution networks (CDNs) .
+In the basic algorithm, nodes are organized into groups of fixed size (n), with full group membership information at each node .
+To distribute the file, a node splits it into n equal sized portions, sends the portions to other group members, and instructs them to download the missing pieces in parallel from other group members .
+Since only a fixed portion of the file is transmitted along each of the overlay links, the impact of congestion is smaller than in the case of tree distribution .
+However, since it treats all paths equally, FastReplica does not take full advantage of highbandwidth overlay links in the system .
+Since it requires file store and forward logic at each level of the hierarchy necessary for scaling the system, it may not be applicable to high bandwidth streaming .
+There are numerous protocols that aim to add reliability to IP multicast .
+In Scalable Reliable Multicast [16], nodes multicast retransmission requests for missed packets .
+Two techniques attempt to improve the scalability of this approach
+However, it is difficult to find appropriate timer values and local scoping settings (via the TTL field) for a wide range of topologies, number of receivers, etc .
+even when adaptive techniques are used .
+One recent study [2] shows that SRM may have significant overhead due to retransmission requests .
+Bullet is closely related to efforts that use epidemic data propagation techniques to recover from losses in the nonreliable IP multicast tree .
+In pbcast [2], a node has global group membership, and periodically chooses a random subset of peers to send a digest of its received packets .
+A node that receives the digest responds to the sender with the missing packets in a last in, first out fashion .
+Lbpcast [14] addresses pbcast"s scalability issues (associated with global knowledge) by constructing, in a decentralized fashion, a partial group membership view at each node .
+The average size of the views is engineered to allow a message to reach all participants with high probability .
+Since lbpcast does not require an underlying tree for data distribution and relies on the push gossiping model, its network overhead can be quite high .
+Compared to the reliable multicast efforts, Bullet behaves favorably in terms of the network overhead because nodes do not blindly request retransmissions from their peers .
+Instead, Bullet uses the summary views it obtains through RanSub to guide its actions toward nodes with disjoint content .
+Further, a Bullet node splits the retransmission load between all of its peers .
+We note that pbcast nodes contain a mechanism to rate limit retransmitted packets and to send different packets in response to the same digest .
+However, this does not guarantee that packets received in parallel from multiple peers will not be duplicates .
+More importantly, the multicast recovery methods are limited by the bandwidth through the tree, while Bullet strives to provide more bandwidth to all receivers by making data deliberately disjoint throughout the tree .
+Narada [19] builds a delay optimized mesh interconnecting all participating nodes and actively measures the available bandwidth on overlay links .
+It then runs a standard routing protocol on top of the overlay mesh to construct forwarding trees using each node as a possible source .
+Narada nodes maintain global knowledge about all group participants, limiting system scalability to several tens of nodes .
+Further, the bandwidth available through a Narada tree is still limited to the bandwidth available from each parent .
+On the other hand, the fundamental goal of Bullet is to increase bandwidth through download of disjoint data from multiple peers .
+Overcast [21] is an example of a bandwidth efficient overlay tree construction algorithm .
+In this system, all nodes join at the root and migrate down to the point in the tree where they are still able to maintain some minimum level of bandwidth .
+Bullet is expected to be more resilient to node departures than any tree, including Overcast .
+Instead of a node waiting to get the data it missed from a new parent, a node can start getting data from its perpendicular peers .
+This transition is seamless, as the node that is disconnected from its parent will start demanding more missing packets from its peers during the standard round of refreshing its filters .
+Overcast convergence time is limited by probes to immediate siblings and ancestors .
+Bullet is able to provide approximately a target bandwidth without having a fully converged tree .
+In parallel to our own work, SplitStream [9] also has the goal of achieving high bandwidth data dissemination .
+It operates by splitting the multicast stream into k stripes, transmitting each stripe along a separate multicast tree built using Scribe [34] .
+The key design goal of the tree construction mechanism is to have each node be an intermediate node in at most one tree (while observing both inbound and outbound node bandwidth constraints), thereby reducing the impact of a single node"s sudden departure on the rest of the system .
+The join procedure can potentially sacrifice the interior node disjointness achieved by Scribe .
+Perhaps more importantly, SplitStream assumes that there is enough available bandwidth to carry each stripe on every link of the tree, including the links between the data source and the roots of individual stripe trees independently chosen by Scribe .
+To some extent, Bullet and SplitStream are complementary .
+For instance, Bullet could run on each of the stripes to maximize the bandwidth delivered to each node along each stripe .
+CoopNet [29] considers live content streaming in a peerto peer environment, subject to high node churn .
+Consequently, the system favors resilience over network efficiency .
+It uses a centralized approach for constructing either random or deterministic node disjoint (similar to SplitStream) trees, and it includes an MDC [17] adaptation framework based on scalable receiver feedback that attempts to maximize the signal to noise ratio perceived by receivers .
+In the case of on demand streaming, CoopNet [30] addresses 295 the flash crowd problem at the central server by redirecting incoming clients to a fixed number of nodes that have previously retrieved portions of the same content .
+Compared to CoopNet, Bullet provides nodes with a uniformly random subset of the system wide distribution of the file. .

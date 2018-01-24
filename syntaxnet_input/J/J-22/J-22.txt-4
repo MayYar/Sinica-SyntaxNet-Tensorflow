@@ -1,0 +1,69 @@
+In this section, we define the matching and optimal matching problems that an auctioneer needs to solve in a general permutation betting market .
+We then illustrate the problem definitions in the context of the subset betting and pairbetting markets .
+3.1 Securities, Orders and Matching Problems Consider an event with n competing candidates where the outcome (state) is a ranking of the n candidates .
+The bidding language of a market offering securities in the future outcomes determines the type and number of securities available and directly affects what information can be aggregated about the outcome .
+A fully expressive bidding language can capture any possible information that traders may have about the final ranking; a less expressive language limits the type of information that can be aggregated though it may enable a more efficient solution to the matching problem .
+For any bidding language and number of securities in a permutation betting market, we can succinctly represent the problem of the auctioneer to risklessly match offers as follows .
+Consider an index set of bets or orders O which traders submit to the auctioneer .
+Each order i ? O is a triple (bi, qi, £pi), where bi denotes how much the trader is willing to pay for a unit share of security £pi and qi is the number of shares of the security he wants to purchase at price bi .
+Naturally, bi ? (0, 1) since a unit of the security pays off at most $1 when the event is realized .
+Since order i is defined for a single security £pi, we will omit the security variable whenever it is clear from the context .
+The auctioneer can accept or reject each order, or in a divisible world accept a fraction of the order .
+Let xi be the fraction of order i ? O accepted .
+In the indivisible version of the market xi = 0 or 1 while in the divisible version xi ? [0, 1] .
+Further let Ii(s) be the indicator variable for whether order i is winning in state s, that is Ii(s) = 1 if the order is paid back $1 in state s and Ii(s) = 0 otherwise .
+There are two possible problems that the auctioneer may want to solve .
+The simpler one is to find a subset of orders that can be matched risk free, namely a subset of orders which accepted together give a nonnegative profit to the auctioneer in every possible outcome .
+We call this problem the existence of a match or sometimes simply, the matching problem .
+The more complex problem is for the auctioneer to find the optimal match with respect to some criterion such as profit, trading volume, etc .
+Definition 1 (Existence of match, indivisible orders) .
+Given a set of orders O, does there exist a set of xi ? {0, 1}, i ? O, with at least one xi = 1 such that i (bi ? Ii(s))qixi ? 0, ?s ? S? (1) Similarly we can define the existence of a match with divisible orders .
+Definition 2 (Existence of match, divisible orders) .
+Given a set of orders O, does there exist a set of xi ? [0, 1], i ? O, with at least one xi > 0 such that i (bi ? Ii(s))qixi ? 0, ?s ? S? (2) The existence of a match is a decision problem .
+It only returns whether trade can occur at no risk to the auctioneer .
+In addition to the risk free requirement, the auctioneer can optimize some criterion in determining the orders to accept .
+Some reasonable objectives include maximizing the total trading volume in the market or the worst case profit of the auctioneer .
+The following optimal matching problems are defined for an auctioneer who maximizes his worst case profit .
+Definition 3 (Optimal match, indivisible orders) .
+Given a set of orders O, choose xi ? {0, 1} such that the following mixed integer programming problem achieves its optimality max xi,c c (3) s.t .
+i bi ? Ii(s) qixi ? c, ?s ? S xi ? {0, 1}, ?i ? O .
+Definition 4 (Optimal match, divisible orders) .
+Given a set of orders O, choose xi ? [0, 1] such that the following linear programming problem achieves its optimality max xi,c c (4) s.t .
+i bi ? Ii(s) qixi ? c, ?s ? S 0 ? xi ? 1, ?i ? O .
+The variable c is the worst case profit for the auctioneer .
+Note that, strictly speaking, the optimal matching problems do not require to solve the optimization problems (3) and (4), because only the optimal set of orders are needed .
+The optimal worst case profit may remain unknown .
+3.2 Subset Betting A subset betting market allows two different types of bets .
+Traders can bet on a subset of positions a candidate may end up at, or they can bet on a subset of candidates that will occupy a particular position .
+A security £\|£X where £X is a subset of positions pays off $1 if candidate £\ stands at a position that is an element of £X and it pays $0 otherwise .
+For example, security £\|{2, 4} pays $1 when candidate £\ 328 is ranked second or fourth .
+Similarly, a security £Z|j where £Z is a subset of candidates pays off $1 if any of the candidates in the set £Z ranks at position j .
+For instance, security {£\, £^}|2 pays off $1 when either candidate £\ or candidate £^ is ranked second .
+The auctioneer in a subset betting market faces a nontrivial matching problem, that is to determine which orders to accept among all submitted orders i ? O .
+Note that although there are only n candidates and n possible positions, the number of available securities to bet on is exponential since a trader may bet on any of the 2n subsets of candidates or positions .
+With this, it is not immediately clear whether one can even find a trading partner or a match for trade to occur, or that the auctioneer can solve the matching problem in polynomial time .
+In the next section, we will show that somewhat surprisingly there is an elegant polynomial solution to both the matching and optimal matching problems, based on classic combinatorial problems .
+When an order is accepted, the corresponding trader pays the submitted order price bi to the auctioneer and the auctioneer pays the winning orders $1 per share after the outcome is revealed .
+The auctioneer has to carefully choose which orders and what fractions of them to accept so as to be guaranteed a nonnegative profit in any future state .
+The following example illustrates the matching problem for indivisible orders in the subset betting market .
+Example 1 .
+Suppose n = 3 .
+Objects £\, £], and £^ compete for positions 1, 2, and 3 in a competition .
+The auctioneer receives the following 4 orders
+There are 6 possible states of ordering
+The corresponding statedependent profit of the auctioneer for each order can be calculated as the following vectors, c1 = (?0.4, ?0.4, 0.6, 0.6, 0.6, 0.6) c2 = (?0.3, 0.7, ?0.3, ?0.3, 0.7, ?0.3) c3 = (?0.2, 0.8, ?0.2, 0.8, ?0.2, ?0.2) c4 = ( 0.7, ?0.3, 0.7, 0.7, ?0.3, 0.7) .
+6 columns correspond to the 6 future states .
+For indivisible orders, the auctioneer can either accept orders (2) and (4) and obtain profit vector c = (0.4, 0.4, 0.4, 0.4, 0.4, 0.4), or accept orders (2), (3), and (4) and has profit across state c = (0.2, 1.2, 0.2, 1.2, 0.2, 0.2) .
+3.3 Pair Betting A pair betting market allows traders to bet on whether one candidate will rank higher than another candidate, in an outcome which is a permutation of n candidates .
+A security £\ > £] pays off $ 1 if candidate £\ is ranked higher than candidate £] and $ 0 otherwise .
+There are a total of N(N ?1) different securities offered in the market, each corresponding to an ordered pair of candidates .
+Traders place orders of the form buy qi shares of £\ > £] at price per share no greater than bi .
+bi in general should be between 0 and 1 .
+Again the order can be either indivisible or divisible and the auctioneer needs to decide what fraction xi of each order to accept so as not to incur any loss, with A B C D E F .99 .99 .5 .5 .5 .99 .99 .99 .99 Figure 1
+xi ? {0, 1} for indivisible and xi ? [0, 1] for divisible orders .
+The same definitions for existence of a match and optimal match from Section 3.1 apply .
+The orders in the pair betting market have a natural interpretation as a graph, where the candidates are nodes in the graph and each order which ranks a pair of candidates £\ > £] is represented by a directed edge e = (£\, £]) with price be and weight qe .
+With this interpretation, it is tempting to assume that a necessary condition for a match is to have a cycle in the graph with a nonnegative worst case profit .
+Assuming qe = 1 for all e, this is a cycle C with a total of |C| edges such that the worst case profit for the auctioneer is e?C be ? (|C| ? 1) ? 0, since in the worst case state the auctioneer needs to pay $,1 to every order in the cycle except one .
+However, the example in Figure 1 shows that this is not the case
+The edge labels in the figure are the prices be; both the optimal divisible and indivisible solution in this case accept all orders in full, xe = 1. .

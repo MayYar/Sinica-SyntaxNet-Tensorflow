@@ -1,0 +1,163 @@
+In a range of settings where markets mediate the interactions of buyers and sellers, one observes several recurring properties
+One example of this setting is the trade of agricultural goods in developing countries .
+Given inadequate transportation networks, and poor farmers" limited access to capital, many farmers have no alternative to trading with middlemen in inefficient local markets .
+A developing country may have many such partially overlapping markets existing alongside modern efficient markets [2] .
+Financial markets provide a different example of a setting with these general characteristics .
+In these markets much of the trade between buyers and sellers is intermediated by a variety of agents ranging from brokers to market makers to electronic trading systems .
+For many assets there is no one market; trade in a single asset may occur simultaneously on the floor of an exchange, on crossing networks, on electronic exchanges, and in markets in other countries .
+Some buyers and sellers have access to many or all of these trading venues; others have access to only one or a few of them .
+The price at which the asset trades may differ across these trading venues .
+In fact, there is no price as different traders pay or receive different prices .
+In many settings there is also a gap between the price a buyer pays for an asset, the ask price, and the price a seller receives for the asset, the bid price .
+One of the most striking examples of this phenomenon occurs in the market for foreign exchange, where there is an interbank market with restricted access and a retail market with much more open access .
+Spreads, defined as the difference between bid and ask prices, differ significantly across these markets, even though the same asset is being traded in the two markets .
+In this paper, we develop a framework in which such phenomena emerge from a game theoretic model of trade, with buyers, sellers, and traders interacting on a network .
+The edges of the network connect traders to buyers and sellers, and thus represent the access that different market participants have to one another .
+The traders serve as intermediaries in a two stage trading game
+Thus, the network encodes the relative power in the structural positions of the market participants, including the implicit levels of competition among traders .
+We show that this game always has a 143 subgame perfect Nash equilibrium, and that all equilibria lead to an efficient (i.e .
+socially optimal) allocation of goods .
+We also analyze how trader profits depend on the network structure, essentially characterizing in graph theoretic terms how a trader"s payoff is determined by the amount of competition it experiences with other traders .
+Our work here is connected to several lines of research in economics, finance, and algorithmic game theory, and we discuss these connections in more detail later in the introduction .
+At a general level, our approach can be viewed as synthesizing two important strands of work
+By developing a network model that explicitly includes traders as price setting agents, in a system together with buyers and sellers, we are able to capture price formation in a network setting as a strategic process carried out by intermediaries, rather than as the result of a centrally controlled or exogenous mechanism .
+The Basic Model
+Our goal in formulating the model is to express the process of price setting in markets such as those discussed above, where the participants do not all have uniform access to one another .
+We are given a set B of buyers, a set S of sellers, and a set T of traders .
+There is an undirected graph G that indicates who is able to trade with whom .
+All edges have one end in B ¡å S and the other in T; that is, each edge has the form (i, t) for i ? S and t ? T, or (j, t) for j ? B and t ? T .
+This reflects the constraints that all buyer seller transactions go through traders as intermediaries .
+In the most basic version of the model, we consider identical goods, one copy of which is initially held by each seller .
+Buyers and sellers each have a value for one copy of the good, and we assume that these values are common knowledge .
+We will subsequently generalize this to a setting in which goods are distinguishable, buyers can value different goods differently, and potentially sellers can value transactions with different buyers differently as well .
+Having different buyer valuations captures settings like house purchases; adding different seller valuations as well captures matching markets for example, sellers as job applicants and buyers as employers, with both caring about who ends up with which good (and with traders acting as services that broker the job search) .
+Thus, to start with the basic model, there is a single type of good; the good comes in individisible units; and each seller initially holds one unit of the good .
+All three types of agents value money at the same rate; and each i ? B ¡å S additionally values one copy of the good at £ci units of money .
+No agent wants more than one copy of the good, so additional copies are valued at 0 .
+Each agent has an initial endowment of money that is larger than any individual valuation £ci; the effect of this is to guarantee that any buyer who ends up without a copy of the good has been priced out of the market due to its valuation and network position, not a lack of funds .
+We picture each good that is sold flowing along a sequence of two edges
+The particular way in which goods flow is determined by the following game .
+First, each trader offers a bid price to each seller it is connected to, and an ask price to each buyer it is connected to .
+Sellers and buyers then choose from among the offers presented to them by traders .
+If multiple traders propose the same price to a seller or buyer, then there is no strict best response for the seller or buyer .
+In this case a selection must be made, and, as is standard (see for example [10]), we (the modelers) choose among the best offers .
+Finally, each trader buys a copy of the good from each seller that accepts its offer, and it sells a copy of the good to each buyer that accepts its offer .
+If a particular trader t finds that more buyers than sellers accept its offers, then it has committed to provide more copies of the good than it has received, and we will say that this results in a large penalty to the trader for defaulting; the effect of this is that in equilibrium, no trader will choose bid and ask prices that result in a default .
+More precisely, a strategy for each trader t is a specification of a bid price £]ti for each seller i to which t is connected, and an ask price £\tj for each buyer j to which t is connected .
+(We can also handle a model in which a trader may choose not to make an offer to certain of its adjacent sellers or buyers.) Each seller or buyer then chooses at most one incident edge, indicating the trader with whom they will transact, at the indicated price .
+(The choice of a single edge reflects the facts that (a) sellers each initially have only one copy of the good, and (b) buyers each only want one copy of the good.) The payoffs are as follows
+(In the former case, the seller receives £]ti units of money, while in the latter it keeps its copy of the good, which it values at £ci.) For each buyer j, the payoff from selecting trader t is £cj ?£\tj, whle the payoff from selecting no trader is 0 .
+(In the former case, the buyer receives the good but gives up £\tj units of money.) For each trader t, with accepted offers from sellers i1, .
+.
+.
+, is and buyers j1, .
+.
+.
+, jb, the payoff is P r £\tjr ? P r £]tir , minus a penalty £k if b > s .
+The penalty is chosen to be large enough that a trader will never incur it in equilibrium, and hence we will generally not be concerned with the penalty .
+This defines the basic elements of the game .
+The equilibrium concept we use is subgame perfect Nash equilibrium .
+Some Examples .
+To help with thinking about the model, we now describe three illustrative examples, depicted in Figure 1 .
+To keep the figures from getting too cluttered, we adopt the following conventions
+.
+.
+from top to bottom; traders are drawn as squares in the middle column and will be named t1, t2, .
+.
+.
+from top to bottom; and buyers are drawn as circles in the rightmost column and will be named j1, j2, .
+.
+.
+from top to bottom .
+All sellers in the examples will have valuations for the good equal to 0; the valuation of each buyer is drawn inside its circle; and the bid or ask price on each edge is drawn on top of the edge .
+In Figure 1(a), we show how a standard second price auction arises naturally from our model .
+Suppose the buyer valuations from top to bottom are w > x > y > z .
+The bid and ask prices shown are consistent with an equilibrium in which i1 and j1 accept the offers of trader t1, and no other buyer accepts the offer of its adjacent trader
+In this way, we can consider this particular instance as an auction for a single good in which the traders act as proxies for their adjacent buyers .
+The buyer with the highest valuation for the good ends up with it, and the surplus is divided between the seller and the associated trader .
+Note that one can construct a k unit auction with > k buyers just as easily, by building a complete bipartite graph on k sellers and traders, and then attaching each trader to a single distinct buyer .
+In Figure 1(b), we show how nodes with different positions in the network topology can achieve different payoffs, even when all 144 w x y z x w x x y y z z (a) Auction 1 1 1 0 x x 0 1 x x 1 (b) Heterogeneous outcomes 1 1 1 0 x x 0 1 x x 1 (c) Implicit perfect competition Figure 1
+(b) A network in which the middle seller and buyer benefit from perfect competition between the traders, while the other sellers and buyers have no power due to their position in the network .
+(c) A form of implicit perfect competition
+buyer valuations are the same numerically .
+Specifically, seller i2 and buyer j2 occupy powerful positions, because the two traders are competing for their business; on the other hand, the other sellers and buyers are in weak positions, because they each have only one option .
+And indeed, in every equilibrium, there is a real number x ? [0, 1] such that both traders offer bid and ask prices of x to i2 and j2 respectively, while they offer bids of 0 and asks of 1 to the other sellers and buyers .
+Thus, this example illustrates a few crucial ingredients that we will identify at a more general level shortly .
+Specifically, i2 and j2 experience the benefits of perfect competition, in that the two traders drive the bid ask spreads to 0 in competing for their business .
+On the other hand, the other sellers and buyers experience the downsides of monopoly they receive 0 payoff since they have only a single option for trade, and the corresponding trader makes all the profit .
+Note further how this natural behavior emerges from the fact that traders are able to offer different prices to different agents capturing the fact that there is no one fixed price in the kinds of markets that motivate the model, but rather different prices reflecting the relative power of the different agents involved .
+The previous example shows perhaps the most natural way in which a trader"s profit on a particular transaction can drop to 0
+(In that example, two traders each had the ability to move a copy of the good from i2 to j2.) But as our subsequent results will show, traders make zero profit more generally due to global, graph theoretic reasons .
+The example in Figure 1(c) gives an initial indication of this
+In other words, all traders make zero profit, whether or not a copy of the good passes through them and yet, no two traders have any seller buyer paths in common .
+The price spreads have been driven to zero by a global constraint imposed by the long cycle through all the agents; this is an example of implicit perfect competition determined by the network topology .
+Extending the Model to Distinguishable Goods .
+We extend the basic model to a setting with distinguishable goods, as follows .
+Instead of having each agent i ? B ¡å S have a single numerical valuation £ci, we index valuations by pairs of buyers and sellers
+This generalizes the case of indistinguishable goods, since we can always have these pairwise valuations depend only on one of the indices .
+A strategy for a trader now consists of offering a bid to each seller that specifies both a price and a buyer, and offering an ask to each buyer that specifies both a price and a seller .
+(We can also handle a model in which a trader offers bids (respectively, asks) in the form of vectors, essentially specifying a menu with a price attached to each buyer (resp .
+seller).) Each buyer and seller selects an offer from an adjacent trader, and the payoffs to all agents are determined as before .
+This general framework captures matching markets [10, 13]
+Here the sellers are job applicants, buyers are employers, and traders are the agents that mediate the job market .
+Of course, if one specifies pairwise valuations on buyers but just single valuations for sellers, we model a setting where buyers can distinguish among the goods, but sellers don"t care whom they sell to this (roughly) captures settings like housing markets .
+Our Results .
+Our results will identify general forms of some of the principles noted in the examples discussed above including the question of which buyers end up with the good; the question of how payoffs are differently realized by sellers, traders, and buyers; and the question of what structural properties of the network determine whether the traders will make positive profits .
+To make these precise, we introduce the following notation .
+Any outcome of the game determines a final allocation of goods to some of the agents; this can be specified by a collection M of triples (ie, te, je), where ie ? S, te ? T, and je ? B; moreover, each seller and each buyer appears in at most one triple .
+The meaning is for each e ? M, the good initially held by ie moves to je through te .
+(Sellers appearing in no triple keep their copy of the good.) We say that the value of the allocation is equal to P e?M £cjeie ? £cieje .
+Let £c? denote the maximum value of any allocation M that is feasible given the network .
+We show that every instance of our game has an equilibrium, and that in every such equilibrium, the allocation has value £c? 145 in other words, it achieves the best value possible .
+Thus, equilibria in this model are always efficient, in that the market enables the right set of people to get the good, subject to the network constraints .
+We establish the existence and efficiency of equilibria by constructing a linear program to capture the flow of goods through the network; the dual of this linear program contains enough information to extract equilibrium prices .
+By the definition of the game, the value of the equilibrium allocation is divided up as payoffs to the agents, and it is interesting to ask how this value is distributed in particular how much profit a trader is able to make based on its position in the network .
+We find that, although all equilibria have the same value, a given trader"s payoff can vary across different equilibria .
+However, we are able to characterize the maximum and minimum amounts that a given trader is able to make, where these maxima and minima are taken over all equilibria, and we give an efficient algorithm to compute this .
+In particular, our results here imply a clean combinatorial characterization of when a given trader t can achieve non zero payoff
+We also obtain results for the sum of all trader profits .
+Related Work .
+The standard baseline approach for analyzing the interaction of buyers and sellers is the Walrasian model in which anonymous buyers and sellers trade a good at a single market clearing price .
+This reduced form of trade, built on the idealization of a market price, is a powerful model which has led to many insights .
+But it is not a good model to use to examine where prices come from or exactly how buyers and sellers and trade with each other .
+The difficulty is that in the Walrasian model there is no agent who sets the price, and agents don"t actually trade with each other .
+In fact there is no market, in the everyday sense of that word, in the Walrasian model .
+That is, there is no physical or virtual place where buyers and sellers interact to trade and set prices .
+Thus in this simple model, all buyers and sellers are uniform and trade at the same price, and there is also no role for intermediaries .
+There are several literatures in economics and finance which examine how prices are set rather than just determining equilibrium prices .
+The literature on imperfect competition is perhaps the oldest of these .
+Here a monopolist, or a group of oliogopolists, choose prices in order to maximize their profits (see [14] for the standard textbook treatment of these markets) .
+A monopolist uses its knowledge of market demand to choose a price, or a collection of prices if it discriminates .
+Oliogopolists play a game in which their payoffs depend on market demand and the actions of their competitors .
+In this literature there are agents who set prices, but the fiction of a single market is maintained .
+In the equilibrium search literature, firms set prices and consumers search over them (see [3]) .
+Consumers do end up paying different prices, but all consumers have access to all firms and there are no intermediaries .
+In the general equilibrium literature there have been various attempts to introduce price determination .
+A standard proof technique for the existence of competitive equilibrium involves a price adjustment mechanism in which prices respond to excess demand .
+The Walrasian auctioneer is often introduced as a device to explain how this process works, but this is a fundamentally a metaphor for an iterative priceupdating algorithm, not for the internals of an actual market .
+More sophisticated processes have been introduced to study the stability of equilibrium prices or the information necessary to compute them .
+But again there are no price setting agents here .
+In the finance literature the work on market microstructure does have price setting agents (specialists), parts of it do determine separate bid and ask prices, and different agents receive different prices for the same asset (see [12] for a treatment of microstructure theory) .
+Work in information economics has identified similar phenomena (see e.g .
+[7]) .
+But there is little research in these literatures examining the effect of restrictions on who can trade with whom .
+There have been several approaches to studying how network structure determines prices .
+These have posited price determination through definitions based on competitive equilibrium or the core, or through the use of truthful mechanisms .
+In briefly reviewing this work, we will note the contrast with our approach, in that we model prices as arising from the strategic behavior of agents in the system .
+In recent work, Kakade et al .
+[8] have studied the distribution of prices at competitive equilibrium in a bipartite graph on buyers and sellers, generated using a probabilistic model capable of producing heavy tailed degree distributions [11] .
+Even Dar et al .
+[6] build on this to consider the strategic aspects of network formation when prices arise from competitive equilibrium .
+Leonard [10], Babaioff et al .
+[1], and Chu and Shen [4] consider an approach based on mechanism design
+Leonard studies VCG prices in this setting; Babaioff et al .
+and Chu and Shen additionally provide a a budget balanced mechanism .
+Since the concern here is with truthful mechanisms that operate on private valuations, there is an inherent trade off between the efficiency of the allocation and the budget balance condition .
+In contrast, our model has known valuations and prices arising from the strategic behavior of traders .
+Thus, the assumptions behind our model are in a sense not directly comparable to those underlying the mechanism design approach
+Rather, price setting is part of the strategic outcome, as in the real markets that motivate our work, and our equilibria are simultaneously budget balanced and efficient something not possible in the mechanism design frameworks that have been used .
+Demange, Gale, and Sotomayor [5], and Kranton and Minehart [9], analyze the prices at which trade occurs in a network, working within the framework of mechanism design .
+Kranton and Minehart use a bipartite graph with direct links between buyers and sellers, and then use an ascending auction mechanism, rather than strategic intermediaries, to determine the prices .
+Their auction has desirable equilibrium properties but as Kranton and Minehart note it is an abstraction of how goods are allocated and prices are determined that is similar in spirit to the Walrasian auctioneer abstraction .
+In fact, we can show how the basic model of Kranton and Minehart can be encoded as an instance of our game, with traders producing prices at equilibrium matching the prices produced by their auction mechanism.1 Finally, the classic results of Shapley and Shubik [13] on the assignment game can be viewed as studying the result of trade on a bipartite graph in terms of the core .
+They study the dual of a linear program based on the matching problem, similar to what we use for a reduced version of our model in the next section, but their focus is different as they do not consider agents that seek to set prices. .

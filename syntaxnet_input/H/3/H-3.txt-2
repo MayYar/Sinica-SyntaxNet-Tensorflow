@@ -1,0 +1,47 @@
+Queries, especially short queries, do not provide a complete specification of the information need .
+Many relevant terms can be absent from queries and terms included may be ambiguous .
+These issues have been addressed in a large number of previous studies .
+Typical solutions include expanding either document or query representation [19][35] by exploiting different resources [24][31], using word sense disambiguation [25], etc .
+In these studies, however, it has been generally assumed that query is the only element available about the user"s information need .
+In reality, query is always formulated in a search context .
+As it has been found in many previous studies [2][14][20][21][26], contextual factors have a strong influence on relevance judgments .
+These factors include, among many others, the user"s domain of interest, knowledge, preferences, etc .
+All these elements specify the contexts around the query .
+So we call them context around query in this paper .
+It has been demonstrated that user"s query should be placed in its context for a correct interpretation .
+Recent studies have investigated the integration of some contexts around the query [9][30][23] .
+Typically, a user profile is constructed to reflect the user"s domains of interest and background .
+A user profile is used to favor the documents that are more closely related to the profile .
+However, a single profile for a user can group a variety of different domains, which are not always relevant to a particular query .
+For example, if a user working in computer science issues a query Java hotel, the documents on Java language will be incorrectly favored .
+A possible solution to this problem is to use query related profiles or models instead of user centric ones .
+In this paper, we propose to model topic domains, among which the related one(s) will be selected for a given query .
+This method allows us to select more appropriate query specific context around the query .
+Another strong contextual factor identified in literature is domain knowledge, or domain specific term relations, such as program¡÷computer in computer science .
+Using this relation, one would be able to expand the query program with the term computer .
+However, domain knowledge is available only for a few domains (e.g .
+Medicine) .
+The shortage of domain knowledge has led to the utilization of general knowledge for query expansion [31], which is more available from resources such as thesauri, or it can be automatically extracted from documents [24][27] .
+However, the use of general knowledge gives rise to an enormous problem of knowledge ambiguity [31]
+For example, usually little information is available to determine whether program¡÷computer is applicable to queries Java program and TV program .
+Therefore, the relation has been applied to all queries containing program in previous studies, leading to a wrong expansion for TV program .
+Looking at the two query examples, however, people can easily determine whether the relation is applicable, by considering the context words Java and TV .
+So the important question is how we can serve these context words in queries to select the appropriate relations to apply .
+These context words form a context within query .
+In some previous studies [24][31], context words in a query have been used to select expansion terms suggested by term relations, which are, however, context independent (such as program¡÷computer) .
+Although improvements are observed in some cases, they are limited .
+We argue that the problem stems from the lack of necessary context information in relations themselves, and a more radical solution lies in the addition of contexts in relations .
+The method we propose is to add context words into the condition of a relation, such as {Java, program} ¡÷ computer, to limit its applicability to the appropriate context .
+This paper aims to make contributions on the following aspects
+The domain related to a specific query is selected (either manually or automatically) for each query .
+? Context within query
+? Multiple contextual factors
+Our approach has been tested on several TREC collections .
+The experiments clearly show that both types of context can result in significant improvements in retrieval effectiveness, and their effects are complementary .
+We will also show that it is possible to determine the query domain automatically, and this results in comparable effectiveness to a manual specification of domain .
+This paper is organized as follows .
+In section 2, we review some related work and introduce the principle of our approach .
+Section 3 presents our general model .
+Then sections 4 and 5 describe respectively the domain model and the knowledge model .
+Section 6 explains the method for parameter training .
+Experiments are presented in section 7 and conclusions in section 8. .

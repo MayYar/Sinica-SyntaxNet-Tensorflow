@@ -1,0 +1,126 @@
+In the section, we describe our experiments on the search result organization based past search engine logs .
+6.1 Experimental Design We use two baseline methods to evaluate the proposed method for organizing search results .
+For each test case, the first method is the default ranked list from a search engine (baseline) .
+The second method is to organize the search results by clustering them (cluster based) .
+For fair comparison, we use the same clustering algorithm as our logbased method (i.e., star clustering) .
+That is, we treat each search result as a document, construct the similarity graph, and find the star shaped clusters .
+We compare our method (log based) with the two baseline methods in the following experiments .
+For both cluster based and log based methods, the search results within each cluster is ranked based on their original ranking given by the search engine .
+To compare different result organization methods, we adopt a similar method as in the paper [9] .
+That is, we compare the quality (e.g., precision) of the best cluster, which is defined as the one with the largest number of relevant documents .
+Organizing search results into clusters is to help users navigate into relevant documents quickly .
+The above metric is to simulate a scenario when users always choose the right cluster and look into it .
+Specifically, we download and organize the top 100 search results into aspects for each test case .
+We use Precision at 5 documents (P@5) in the best cluster as the primary measure to compare different methods .
+P@5 is a very meaningful measure as it tells us the perceived precision when the user opens a cluster and looks at the first 5 documents .
+We also use Mean Reciprocal Rank as another metric .
+MRR is calculated as MRR = 1 |T| ? q?T 1 rq where T is a set of test queries, rq is the rank of the first relevant document for q .
+To give a fair comparison across different organization algorithms, we force both cluster based and log based methods to output the same number of aspects and force each search result to be in one and only one aspect .
+The number of aspects is fixed at 10 in all the following experiments .
+The star clustering algorithm can output different number of clusters for different input .
+To constrain the number of clusters to 10, we order all the clusters by their sizes, select the top 10 as aspect candidates .
+We then re assign each search result to one of these selected 10 aspects that has the highest similarity score with the corresponding aspect centroid .
+In our experiments, we observe that the sizes of the best clusters are all larger than 5, and this ensures that P@5 is a meaningful metric .
+6.2 Experimental Results Our main hypothesis is that organizing search results based on the users" interests learned from a search log data set is more beneficial than to organize results using a simple list or cluster search results .
+In the following, we test our hypothesis from two perspectives organization and labeling .
+Method Test set 1 Test set 2 MMR P@5 MMR P@5 Baseline 0.7347 0.3325 0.7393 0.3288 Cluster based 0.7735 0.3162 0.7666 0.2994 Log based 0.7833 0.3534 0.7697 0.3389 Cluster Baseline 5.28% 4.87% 3.69% 8.93% Log Baseline 6.62% 6.31% 4.10% 3.09% Log Cluster 1.27% 11.76% 0.40% 13.20% Table 2
+We also show the percentage of relative improvement in the lower part .
+Comparison Test set 1 Test set 2 Impr. Decr .
+Impr. Decr .
+Cluster Baseline 53 55 50 64 Log Baseline 55 44 60 45 Log Cluster 68 47 69 44 Table 3
+6.2.1 Overall performance We compare three methods, basic search engine ranking (baseline), traditional clustering based method (clusterbased), and our log based method (log based), in Table 2 using MRR and P@5 .
+We optimize the parameter £m"s for each collection individually based on P@5 values .
+This shows the best performance that each method can achieve .
+In this table, we can see that in both test collections, our method is better than both the baseline and the cluster based methods .
+For example, in the first test collection, the baseline method of MMR is 0.734, the cluster based method is 0.773 and our method is 0.783 .
+We achieve higher accuracy than both cluster based method (1.27% improvement) and the baseline method (6.62% improvement) .
+The P@5 values are 0.332 for the baseline, 0.316 for cluster based method, but 0.353 for our method .
+Our method improves over the baseline by 6.31%, while the cluster based method even decreases the accuracy .
+This is because cluster based method organizes the search results only based on the contents .
+Thus it could organize the results differently from users" preferences .
+This confirms our hypothesis of the bias of the cluster based method .
+Comparing our method with the cluster based method, we achieve significant improvement on both test collections .
+The p values of the significance tests based on P@5 on both collections are 0.01 and 0.02 respectively .
+This shows that our log based method is effective to learn users" preferences from the past query history, and thus it can organize the search results in a more useful way to users .
+We showed the optimal results above .
+To test the sensitivity of the parameter £m of our log based method, we use one of the test sets to tune the parameter to be optimal and then use the tuned parameter on the other set .
+We compare this result (log tuned outside) with the optimal results of both cluster based (cluster optimized) and log based methods (log optimized) in Figure 1 .
+We can see that, as expected, the performance using the parameter tuned on a separate set is worse than the optimal performance .
+However, our method still performs much better than the optimal results of cluster based method on both test collections .
+0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 Test set 1 Test set 2 P@5 cluster optimized log optimized log tuned outside Figure 1
+We compare it with the optimal performance of the cluster based and our logbased methods .
+0 10 20 30 40 50 60 1 2 3 4 Bin number #Queries Improved Decreased Figure 2
+In Table 3, we show pairwise comparisons of the three methods in terms of the numbers of test cases for which P@5 is increased versus decreased .
+We can see that our method improves more test cases compared with the other two methods .
+In the next section, we show more detailed analysis to see what types of test cases can be improved by our method .
+6.2.2 Detailed Analysis To better understand the cases where our log based method can improve the accuracy, we test two properties
+All the analysis below is based on test set 1 .
+Diversity Analysis
+In order to test the hypothesis that log based method help more those queries with diverse results, we compute the size ratios of the biggest and second biggest clusters in our log based results and use this ratio as an indicator of diversity .
+If the ratio is small, it means that the first two clusters have a small difference thus the results are more diverse .
+In this case, we would expect our method to help more .
+The results are shown in Figure 2 .
+In this figure, we partition the ratios into 4 bins .
+The 4 bins correspond to the ratio ranges [1, 2), [2, 3), [3, 4), and [4, +¡Û) respectively .
+([i, j) means that i ? ratio < j.) In each bin, we count the numbers of test cases whose P@5"s are improved versus decreased with respect to the ranking baseline, and plot the numbers in this figure .
+We can observe that when the ratio is smaller, the log based method can improve more test cases .
+But when 0 5 10 15 20 25 30 1 2 3 4 Bin number #Queries Improved Decreased Figure 3
+the ratio is large, the log based method can not improve over the baseline .
+For example, in bin 1, 48 test cases are improved and 34 are decreased .
+But in bin 4, all the 4 test cases are decreased .
+This confirms our hypothesis that our method can help more if the query has more diverse results .
+This also suggests that we should turn off the option of re organizing search results if the results are not very diverse (e.g., as indicated by the cluster size ratio) .
+Difficulty Analysis
+Here we analyze the effectiveness of our method in helping difficult queries .
+We quantify the query difficulty by the Mean Average Precision of the original search engine ranking for each test case .
+We then order the 172 test cases in test set 1 in an increasing order of MAP values .
+We partition the test cases into 4 bins with each having a roughly equal number of test cases .
+A small MAP means that the utility of the original ranking is low .
+Bin 1 contains those test cases with the lowest MAP"s and bin 4 contains those test cases with the highest MAP"s .
+For each bin, we compute the numbers of test cases whose P@5"s are improved versus decreased .
+Figure 3 shows the results .
+Clearly, in bin 1, most of the test cases are improved (24 vs 3), while in bin 4, log based method may decrease the performance (3 vs 20) .
+This shows that our method is more beneficial to difficult queries, which is as expected since clustering search results is intended to help difficult queries .
+This also shows that our method does not really help easy queries, thus we should turn off our organization option for easy queries .
+6.2.3 Parameter Setting We examine parameter sensitivity in this section .
+For the star clustering algorithm, we study the similarity threshold parameter £m .
+For the OKAPI retrieval function, we study the parameters k1 and b .
+We also study the impact of the number of past queries retrieved in our log based method .
+Figure 4 shows the impact of the parameter £m for both cluster based and log based methods on both test sets .
+We vary £m from 0.05 to 0.3 with step 0.05 .
+Figure 4 shows that the performance is not very sensitive to the parameter £m .
+We can always obtain the best result in range 0.1 ? £m ? 0.25 .
+In Table 4, we show the impact of OKAPI parameters .
+We vary k1 from 1.0 to 2.0 with step 0.2 and b from 0 to 1 with step 0.2 .
+From this table, it is clear that P@5 is also not very sensitive to the parameter setting .
+Most of the values are larger than 0.35 .
+The default values k1 = 1.2 and b = 0.8 give approximately optimal results .
+We further study the impact of the amount of history 0.2 0.25 0.3 0.35 0.4 0.05 0.1 0.15 0.2 0.25 0.3 P@5 similarity threhold
+We show the result on both test collections .
+b 0.0 0.2 0.4 0.6 0.8 1.0 1.0 0.3476 0.3406 0.3453 0.3616 0.3500 0.3453 1.2 0.3418 0.3383 0.3453 0.3593 0.3534 0.3546 k1 1.4 0.3337 0.3430 0.3476 0.3604 0.3546 0.3465 1.6 0.3476 0.3418 0.3523 0.3534 0.3581 0.3476 1.8 0.3465 0.3418 0.3546 0.3558 0.3616 0.3476 2.0 0.3453 0.3500 0.3534 0.3558 0.3569 0.3546 Table 4
+information to learn from by varying the number of past queries to be retrieved for learning aspects .
+The results on both test collections are shown in Figure 5 .
+We can see that the performance gradually increases as we enlarge the number of past queries retrieved .
+Thus our method could potentially learn more as we accumulate more history .
+More importantly, as time goes, more and more queries will have sufficient history, so we can improve more and more queries .
+6.2.4 An Illustrative Example We use the query area codes to show the difference in the results of the log based method and the cluster based method .
+This query may mean phone codes or zip codes .
+Table 5 shows the representative keywords extracted from the three biggest clusters of both methods .
+In the clusterbased method, the results are partitioned based on locations
+In the log based method, the results are disambiguated into two senses
+While both are reasonable partitions, our evaluation indicates that most users using such a query are often interested in either phone codes or zip codes .
+since the P@5 values of cluster based and log based methods are 0.2 and 0.6, respectively .
+Therefore our log based method is more effective in helping users to navigate into their desired results .
+Cluster based method Log based method city, state telephone, city, international local, area phone, dialing international zip, postal Table 5
+6.2.5 Labeling Comparison We now compare the labels between the cluster based method and log based method .
+The cluster based method has to rely on the keywords extracted from the snippets to construct the label for each cluster .
+Our log based method can avoid this difficulty by taking advantage of queries .
+Specifically, for the cluster based method, we count the frequency of a keyword appearing in a cluster and use the most frequent keywords as the cluster label .
+For log based method, we use the center of each star cluster as the label for the corresponding cluster .
+In general, it is not easy to quantify the readability of a cluster label automatically .
+We use examples to show the difference between the cluster based and the log based methods .
+In Table 6, we list the labels of the top 5 clusters for two examples jaguar and apple .
+For the cluster based method, we separate keywords by commas since they do not form a phrase .
+From this table, we can see that our log based method gives more readable labels because it generates labels based on users" queries .
+This is another advantage of our way of organizing search results over the clustering approach .
+Label comparison for query jaguar Log based method Cluster based method Label comparison for query apple Log based method Cluster based method .

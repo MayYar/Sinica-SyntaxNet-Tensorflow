@@ -1,0 +1,46 @@
+We are interested in setting the weights w to achieve optimal expected revenue .
+The setup is as follows .
+The auctioneer chooses a function g so that the weighting scheme is ws ¡Ý g(es) .
+We do not consider weights that also depend on the agents" bids because this would invalidate the equilibrium analysis of the previous section.4 A pool of N bidders is then obtained by i.i.d .
+draws of value relevance pairs from a common probability density f(es, vs) .
+We assume the density is continuous and has full support on [0, 1]¡Ñ[0, ¡Û) .
+The revenue to the auctioneer is then the revenue generated in symmetric equilibrium under weighting scheme w .
+This assumes the auctioneer is patient enough not to care about revenue until bids have stabilized .
+The problem of finding an optimal weighting scheme can be formulated as an optimization problem very similar to the one derived by Myerson [9] for the single item auction case (with incomplete information) .
+Let Qsk(e, v; w) = 1 if agent s obtains slot k in equilibrium under weighting scheme w, where e = (e1, .
+.
+.
+, eN ) and v = (v1, .
+.
+.
+, vN ), and let it be 0 otherwise .
+Note that the total payment of agent s in equilibrium is esxs ws+1 ws bs+1 = KX t=s es(xt ? xt+1) wt+1 ws vt+1 = esxsvs ? Z vs 0 KX k=1 esxkQsk(es, e?s, y, v?s; w) dy .
+The derivation then continues just as in the case of a singleitem auction [7, 9] .
+We take the expectation of this payment, 3 Hal Varian suggested to us that bidding credits could be used to affect revenue in keyword auctions, which prompted us to look into this connection .
+4 The analysis does not generalize to weights that depend on bids .
+It is unclear whether an equilibrium would exist at all with such weights .
+52 and sum over all agents to obtain the objective Z ¡Û 0 Z ¡Û 0 " NX s=1 KX k=1 esxk£r(es, vs)Qsk(e, v; w) # f(e, v) dv de, where £r is the virtual valuation £r(es, vs) = vs ? 1 ? F(vs|es) f(vs|es) .
+According to this analysis, we should rank bidders by virtual score es£r(es, vs) to optimize revenue (and exclude any bidders with negative virtual score) .
+However, unlike in the incomplete information setting, here we are constrained to ranking rules that correspond to a certain weighting scheme ws ¡Ý g(es) .
+We remark that the virtual score cannot be reproduced exactly via a weighting scheme .
+Lemma 1 .
+There is no weighting scheme g such that the virtual score equals the score, for any density f .
+Proof .
+Assume there is a g such that e£r(e, v) = g(e)v .
+(The subscript s is suppressed for clarity.) This is equivalent to d dv log(1 ? F(v|e)) = h(e) v, (6) where h(e) = (g(e) e?1)?1 .
+Let ¡Âv be such that F(¡Âv|e) < 1; under the assumption of full support, there is always such a ¡Âv .
+Integrating (6) with respect to v from 0 to ¡Âv, we find that the left hand side converges whereas the right hand side diverges, a contradiction .
+Of course, to rank bidders by virtual score, we only need g(es)vs = h(es£r(es, vs)) for some monotonically increasing transformation h .
+(A necessary condition for this is that £r(es, vs) be increasing in vs for all es.) Absent this regularity condition, the optimization problem seems quite difficult because it is so general
+To simplify matters, we now restrict our attention to the family of weights ws = eq s for q ? (?¡Û, +¡Û) .
+It should be much simpler to find the optimum within this family, since it is just one dimensional .
+Note that it covers rank by bid (q = 0) and rank by revenue (q = 1) as special cases .
+To see how tuning q can improve matters, consider again the equilibrium revenue
+(7) If the bidders are ranked in decreasing order of relevance, then et es ? 1 for t > s and decreasing q slightly without affecting the allocation will increase revenue .
+Similarly, if bidders are ranked in increasing order of relevance, increasing q slightly will yield an improvement .
+Now suppose there is perfect positive correlation between value and relevance .
+In this case, rank by bid will always lead to the same allocation as rank by revenue, and bidders will always be ranked in decreasing order of relevance .
+It then follows from (7) that q = 0 will yield more revenue in equilibrium than q = 1.5 5 It may appear that this contradicts the revenue equivalence theorem [7, 9], because mechanisms that always lead to the same allocation in equilibrium should yield the same revenue .
+Note though that with perfect correlation, there are If a good estimate of f is available, Monte Carlo simulations can be used to estimate the revenue curve as a function of q, and the optimum can be located .
+Simulations can also be used to quantify the effect of correlation on the location of the optimum .
+We do this in Section 7. .

@@ -1,0 +1,20 @@
+The SIP standard defined in RFC 3261 [22] and in later extensions such as [21] does not offer conference control services such as floor control or voting and does not prescribe how a conference is to be managed .
+However SIP can be used to initiate a session that uses some other conference control protocol .
+The core SIP specification supports many models for conferencing [26, 23] .
+In the server based models, a server mixes media streams, whereas in a server less conference, mixing is done at the end systems .
+SDP [7] can be used to define media capabilities and provide other information about the conference .
+We shall now consider a few conference models in SIP that have been proposed recently [23] .
+First, let us look into server less models .
+In End System Mixing, only one client (SIP UA) handles the signaling and media mixing for all the others, which is clearly not scalable and causes problems when that particular client leaves the conference .
+In the Users Joining model, a tree grows, as each invited party constitutes a new branch in the distribution path .
+This leads to an increasing number of hops for the remote leaves and is not scalable .
+Another option would be to use multicast for conferencing but multicast is not enabled over Internet and only possible on a LAN presently .
+Among server based models, in a Dial In Conference, UAs connect to a central server that handles all the mixing .
+This model is not scalable as it is limited by the processing power of the server and bandwidth of the network .
+Adhoc Centralized Conferences and Dial Out Conference Servers have similar mechanisms and problems .
+Hybrid models involving centralized signaling and distributed media, with the latter using unicast or multicast, raise scalability problems as before .
+However an advantage is that the conference control can be a third party solution .
+Distributed Partial Mixing, presented in [18], proposes that in case of bandwidth limitation, some streams are mixed and some are not, leaving interactivity intact .
+Loss of spatialism when they mix and the bandwidth increase when they do not are open problems .
+A related study [19] by the same author proposes conferencing architecture for Collaborative Virtual Environments (CVEs) but does not provide the scalability angle without the availability of multicasting .
+With the limitations of proposed conferencing systems in mind, we will now detail our proposal. .

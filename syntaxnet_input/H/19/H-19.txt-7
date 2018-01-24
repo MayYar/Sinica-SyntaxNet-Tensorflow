@@ -1,0 +1,49 @@
+In this section, we study the performances of our feature categorizing method and event detection algorithm .
+We first introduce the dataset and experimental setup, then we subjectively evaluate the categorization of features for HH, HL, LH, LL and SW .
+Finally, we study the (a)periodic event detection problem with Algorithm 2 .
+7.1 Dataset and Experimental Setup The Reuters Corpus contains 806,791 English news stories from 08 20 1996 to 08 19 1997 at a day resolution .
+Version 2 of the open source Lucene software [1] was used to tokenize the news text content and generate the document word vector .
+In order to preserve the time sensitive past present future tenses of verbs and the differences between lower case nouns and upper case named entities, no stemming was done .
+Since dynamic stopword removal is one of the functionalities of our method, no stopword was removed .
+We did remove nonEnglish characters, however, after which the number of word features amounts to 423,433 .
+All experiments were implemented in Java and conducted on a 3.2 GHz Pentium 4 PC running Windows 2003 Server with 1 GB of memory .
+7.2 Categorizing Features We downloaded 34 well known stopwords utilized by the Google search engine as our seed training features, which includes a, about, an, are, as, at, be, by, de, for, from, how, in, is, it, of, on, or, that, the, this, to, was, what, when, where, who, will, with, la, com, und, en and www .
+We excluded the last five stopwords as they are uncommon in news stories .
+By only analyzing news stories over 259 weekdays, we computed the upper bound of the power spectrum for stopwords at 11.18 and corresponding DFIDF ranges from 0.1182 to 0.3691 .
+Any feature f satisfying Sf <= 11.18 and 0.1182 <= DFIDFf <= 0.3691 over weekdays will be considered a stopword .
+In this manner, 470 stopwords were found and removed as visualized in Figure 9 .
+Some detected stopwords are A (P = 65, S = 3.36, DFIDF = 0.3103), At (P = 259, S = 1.86, DFIDF = 0.1551), GMT (P = 130, S = 6.16, DFIDF = 0.1628) and much (P = 22, S = 0.80, DFIDF = 0.1865) .
+After the removal of these stopwords, the distribution of weekday and weekend news are more or less matched, and in the ensuing experiments, we shall make use of the full corpus (weekdays and weekends) .
+The upper bound power spectrum value of 11.18 for stopwords training was selected as the boundary between the high power and low power spectrum .
+The boundary between high and low periodicity was set to 365 2 = 183 .
+All 422,963 (423433 ? 470) word features were categorized into 4 feature sets
+In Figure 10, each gray level denotes the relative density of features in a square region, measured by log10(1 + Dk), where Dk is the number of features within the k th square region .
+From the figure, we can make the 0 2 4 6 8 11.18 12879.82 1 65 100 130 259 S(f) P(f) LH HH LL HL Figure 9
+0 5 11.18 50 100 200 300 400 500 1000 12879.82 1 2 4 6 8 20 50 100 183 364 365 S(f) P(f) 0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 LH HH LL HL Figure 10
+following observations
+which are nicely separated (big horizontal gap) from the periodic features .
+This allows reliably detecting aperiodic events and periodic events independently .
+spectrum is not as clearcut and the exact value will be application specific .
+By checking the scatter distribution of features from SW on HH, HL, LH, and LL as shown in Figure 9, we found that 87.02%(409 470) of the detected stopwords originated from LL .
+The LL classification and high DFIDF scores of stopwords agree with the generally accepted notion that stopwords are equally frequent over all time .
+Therefore, setting the boundary between high and low power spectrum using the upper bound Sf of SW is a reasonable heuristic .
+7.3 Detecting Aperiodic Events We shall evaluate our two hypotheses, 1)important aperiodic events can be defined by a set of HH features, and 2)less reported aperiodic events can be defined by a set of LH features .
+Since no benchmark news streams exist for event detection (TDT datasets are not proper streams), we evaluate the quality of the automatically detected events by comparing them to manually confirmed events by searching through the corpus .
+Among the 69 HH features, we detected 17 important aperiodic events as shown in Table 1 (e1 ? e17) .
+Note that the entire identification took less than 1 second, after removing events containing only the month feature .
+Among the 17 events, other than the overlaps between e3 and e4 (both describes the same hostage event), e11 and e16 (both about company reports), the 14 identified events are extremely accurate and correspond very well to the major events of the period .
+For example, the defeat of Bob Dole, election of Tony Blair, Missile attack on Iraq, etc .
+Recall that selecting the features for one event should minimize the cost in Eq .
+2 such that 1) the number of features span different events, and 2) not all features relevant to an event will be selected, e.g., the feature Clinton is representative to e12 but since Clinton relates to many other events, its time domain signal is far different from those of other representative features like Dole and Bob .
+The number of documents of a detected event is roughly estimated by the number of indexed documents containing the representative features .
+We can see that all 17 important aperiodic events are popularly reported events .
+After 742 minutes of computation time, we detected 23, 525 less reported aperiodic events from 83,471 LH features .
+Table 1 lists the top 5 detected aperiodic events (e18 ? e22) with respect to the cost .
+We found that these 5 events are actually very trivial events with only a few news reports, and are usually subsumed by some larger topics .
+For example, e22 is one of the rescue events in an airplane hijack topic .
+One advantage of our UG Algorithm for discovering less reported aperiodic events is that we are able to precisely detect the true event period .
+7.4 Detecting Periodic Events Among the 1,087 HL features, 330 important periodic events were detected within 10 minutes of computing time .
+Table 1 lists the top 5 detected periodic events with respect to the cost (e23 ? e27) .
+All of the detected periodic events are indeed valid, and correspond to real life periodic events .
+The GMM model is able to detect and estimate the bursty period nicely although it cannot distinguish the slight difference between every Monday Friday and all weekdays as shown in e23 .
+We also notice that e26 is actually a subset of e27 (soccer game), which is acceptable since the Sheffield league results are announced independently every weekend. .

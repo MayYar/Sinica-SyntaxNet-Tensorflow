@@ -1,0 +1,73 @@
+The approach we proposed above for information distillation raises important issues regarding evaluation methodology .
+Firstly, since our framework allows the output to be passages at different levels of granularity (e.g .
+k sentence windows where k may vary) instead of a fixed length, it is not possible to have pre annotated relevance judgments at all such granularity levels .
+Secondly, since we wish to measure the utility of the system output as a combination of both relevance and novelty, traditional relevance only based measures must be replaced by measures that penalize the repetition of the same information in the system output across time .
+Thirdly, since the output of the system is ranked lists, we must reward those systems that present useful information (both relevant and previously unseen) using shorter ranked lists, and penalize those that present the same information using longer ranked lists .
+None of the existing measures in ad hoc retrieval, adaptive filtering, novelty detection or other related areas (text summarization and question answering) have desirable properties in all the three aspects .
+Therefore, we must develop a new evaluation methodology .
+4.1 Answer Keys To enable the evaluation of a system whose output consists of passages of arbitrary length, we borrow the concept of answer keys from the Question Answering community, where systems are allowed to return arbitrary spans of text as answers .
+Answer keys define what should be present in a system response to receive credit, and are comprised of a collection of information nuggets, i.e .
+factoid units about which human assessors can make binary decisions of whether or not a system response contains them .
+Defining answer keys and making the associated binary decisions are conceptual tasks that require semantic mapping [19], since system returned passages can contain the same information expressed in many different ways .
+Hence, QA evaluations have relied on human assessors for the mapping between various expressions, making the process costly, time consuming, and not scalable to large query and document collections, and extensive system evaluations with various parameter settings .
+4.1.1 Automating Evaluation based on Answer Keys Automatic evaluation methods would allow for faster system building and tuning, as well as provide an objective and affordable way of comparing various systems .
+Recently, such methods have been proposed, more or less, based on the idea of n gram co occurrences .
+Pourpre [10] assigns a fractional recall score to a system response based on its unigram overlap with a given nugget"s description .
+For example, a system response ¡¥A B C" has recall 3 4 with respect to a nugget with description ¡¥A B C D" .
+However, such an approach is unfair to systems that present the same information but using words other than A, B, C, and D .
+Another open issue is how to weight individual words in measuring the closeness of a match .
+For example, consider the question How many prisoners escaped? .
+In the nugget ¡¥Seven prisoners escaped from a Texas prison", there is no indication that ¡¥seven" is the keyword, and that it must be matched to get any relevance credit .
+Using IDF values does not help, since ¡¥seven" will generally not have a higher IDF than words like ¡¥texas" and ¡¥prison" .
+Also, redefining the nugget as just ¡¥seven" does not solve the problem since now it might spuriously match any mention of ¡¥seven" out of context .
+Nuggeteer [13] works on similar principles but makes binary decisions about whether a nugget is present in a given system response by tuning a threshold .
+However, it is also plagued by ¡¥spurious relevance" since not all words contained in the nugget description (or known correct responses) are central to the nugget .
+4.1.2 Nugget Matching Rules We propose a reliable automatic method for determining whether a snippet of text contains a given nugget, based on nugget matching rules, which are generated using a semiautomatic procedure explained below .
+These rules are essentially Boolean queries that will only match against snippets that contain the nugget .
+For instance, a candidate rule for matching answers to How many prisoners escaped? is (Texas AND seven AND escape AND (convicts OR prisoners)), possibly with other synonyms and variants in the rule .
+For a corpus of news articles, which usually follow a typical formal prose, it is fairly easy to write such simple rules to match expected answers using a bootstrap approach, as described below .
+We propose a two stage approach, inspired by Autoslog [14], that combines the strength of humans in identifying semantically equivalent expressions and the strength of the system in gathering statistical evidence from a humanannotated corpus of documents .
+In the first stage, human subjects annotated (using a highlighting tool) portions of ontopic documents that contained answers to each nugget 2 .
+In the second stage, subjects used our rule generation tool to create rules that would match the annotations for each nugget .
+The tool allows users to enter a Boolean rule as a disjunction of conjunctions (e.g .
+((a AND b) OR (a AND c AND d) OR (e))) .
+Given a candidate rule, our tool uses it as a Boolean query over the entire set of on topic documents and calculates its recall and precision with respect to the annotations that it is expected to match .
+Hence, the subjects can start with a simple rule and iteratively refine it until they are satisfied with its recall and precision .
+We observed that it was very easy for humans to improve the precision of a rule by tweaking its existing conjunctions (adding more ANDs), and improving the recall by adding more conjunctions to the disjunction (adding more ORs) .
+As an example, let"s try to create a rule for the nugget which says that seven prisoners escaped from the Texas prison .
+We start with a simple rule (seven) .
+When we input this into the rule generation tool, we realize that this rule matches many spurious occurrences of seven (e.g .
+¡¥...seven states...") and thus gets a low precision score .
+We can further qualify our rule Texas AND seven AND convicts .
+Next, by looking at the ¡¥missed annotations", we realize that some news articles mentioned ...seven prisoners escaped... .
+We then replace convicts with the disjunction (convicts OR prisoners) .
+We continue tweaking the rule in this manner until we achieve a sufficiently high recall and precision i.e .
+the (small number of) misses and false alarms can be safely ignored .
+Thus we can create nugget matching rules that succinctly capture various ways of expressing a nugget, while avoiding matching incorrect (or out of context) responses .
+Human involvement in the rule creation process ensures high quality generic rules which can then be used to evaluate arbitrary system responses reliably .
+4.2 Evaluating the Utility of a Sequence of Ranked Lists The utility of a retrieval system can be defined as the difference between how much the user gained in terms of useful information, and how much the user lost in terms of time and energy .
+We calculate this utility from the utilities of individual passages as follows .
+After reading each passage returned by the system, the user derives some gain depending on the presence of relevant and novel information, and incurs a loss in terms of the time and energy spent in going through the passage .
+However, the likelihood that the user would actually read a passage depends on its position in the ranked list .
+Hence, for a query q, the expected utility 2 LDC [18] already provides relevance judgments for 100 topics on the TDT4 corpus .
+We further ensured that these judgments are exhaustive on the entire corpus using pooling .
+of a passage pi at rank i can be defined as U(pi, q) = P(i) ? (Gain(pi, q) ? Loss(pi, q)) (4) where P(i) is the probability that the user would go through a passage at rank i .
+The expected utility for an entire ranked list of length n can be calculated simply by adding the expected utility of each passage
+However, without the loss term, DCG is a purely recall oriented metric and not suitable for an adaptive filtering setting, where the system"s utility depends in part on its ability to limit the number of items shown to the user .
+Although P(i) could be defined based on empirical studies of user behavior, for simplicity, we use P(i) exactly as defined in equation 6 .
+The gain G(pi, q) of passage pi with respect to the query q is a function of 1) the number of relevant nuggets present in pi, and 2) the novelty of each of these nuggets .
+We combine these two factors as follows .
+For each nugget Nj, we assign an initial weight wj, and also keep a count nj of the number of times this nugget has been seen by the user in the past .
+The gain derived from each subsequent occurrence of the same nugget is assumed to reduce by a dampening factor £^ .
+Thus, G(pi, q) is defined as G(pi, q) = X Nj ?C(pi,q) wj ? £^nj (7) where C(pi, q) is the set of all nuggets that appear in passage pi and also belong to the answer key of query q .
+The initial weights wj are all set of be 1.0 in our experiments, but can also be set based on a pyramid approach [11] .
+The choice of dampening factor £^ determines the user"s tolerance for redundancy .
+When £^ = 0, a nugget will only receive credit for its first occurrence i.e .
+when nj is zero3 .
+For 0 < £^ < 1, a nugget receives smaller credit for each successive occurrence .
+When £^ = 1, no dampening occurs and repeated occurrences of a nugget receive the same credit .
+Note that the nugget occurrence counts are preserved between evaluation of successive ranked lists returned by the system, since the users are expected to remember what the system showed them in the past .
+We define the loss L(pi, q) as a constant cost c (we use 0.1) incurred when reading a system returned passage .
+Thus, our metric can be re written as U(q) = nX i=1 Gain(pi, q) logb(b + i ? 1) ? L(n) (8) where L(n) is the loss associated with a ranked list of length n
+The DCU score obtained by the system is converted to a Normalized DCU score by dividing it by the DCU score of the ideal ranked list, which is created by ordering passages by their decreasing utility scores U(pi, q) and stopping when U(pi, q) ? 0 i.e .
+when the gain is less than or equal to the cost of reading the passage. .

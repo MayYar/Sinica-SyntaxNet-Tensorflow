@@ -1,0 +1,52 @@
+In order to increase the agents" autonomy over their interactive behaviors, protocols should be specified in terms of what is to be achieved rather than how the agents should act .
+In other words, protocols should be specified in a declarative manner .
+Using logic is central to this specification process .
+2.1 Linear Logic Logic has been used as formalism to model and reason about agent systems .
+Linear logic [3] is well known for modeling resources as well as updating processes .
+It has been considered in agent systems to support agent negotiation and planning by means of proof search [5, 8] .
+In real life, resources are consumed and new resources are created .
+In such logic as classical or temporal logic, however, a direct mapping of resources onto formulas is troublesome .
+If we model resources like A as one dollar and B as a chocolate bar, then A ? B in classical logic is read as from one dollar we can get a chocolate bar .
+This causes problems as the implication allows to get a chocolate bar (B is true) while retaining one dollar (A remains true) .
+In order to resolve such resource formula mapping issues, Girard proposed the constraints on which formulas will be used exactly once and can no longer be freely added or removed in derivations and hence treating linear logic formulas as resources .
+In linear logic, a linear implication A B, however, allows A to be removed after deriving B, which means the dollar is gone after using one dollar to buy a chocolate bar .
+Classical conjunction (and) and disjunction (or) are recast over different uses of contexts multiplicative as combining and additive as sharing to come up with four connectives .
+A ? (multiplicative conjunction) A, means that one has two As at the same time, which is different from A ? A = A .
+Hence, ? allows a natural expression of proportion .
+A ? (multiplicative disjunction) B, means that if not A then B or vice versa but not both A and B .
+The ability to specify choices via the additive connectives is a particularly useful feature of linear logic .
+A (additive conjunction) B, stands for one own choice, either of A or B but not both .
+A ¡ò (additive disjunction) B, stands for the possibility of either A or B, but we don"t know which .
+As remarked in [5], and ¡ò allow choices to be made clear between internal choices (one"s own), and external choices (others" choice) .
+For instance, to specify that the choice of places A or B for goods" delivery is ours as the supplier, we use A B, or is the client"s, we use A ¡ò B .
+In agent systems, this duality between inner and outer choices is manifested by one agent having the power to choose between alternatives and the other having to react to whatever choice is made .
+Moreover, during interaction, the ability to match consumption and supply of resources among agents can simplify the specification of resource allocations .
+Linear logic is a natural mechanism to provide this ability [5] .
+In addition, it is emphasized in [8] that linear logic is used to model agent states as sets of consumable resources and particularly, linear implication is used to model transitions among states and capabilities of agents .
+2.2 Temporal Linear Logic While linear logic provides advantages to modeling and reasoning about resources, it does not deal naturally with time constraints .
+Temporal logic, on the other hand, is a formal system which addresses the description and reasoning about the changes of truth values of logic expressions over time [2] .
+Temporal logic can be used for specification and verification of concurrent and reactive programs [2] .
+Temporal Linear Logic [6] is the result of introducing temporal logic into linear logic and hence is resourceconscious as well as deals with time .
+The temporal operators used are (next), (anytime), and (sometime) [6] .
+Formulas with no temporal operators can be considered as being available only at present .
+Adding to a formula A, i.e .
+A, means that A can be used only at the next time and exactly once .
+Similarly, A means that A can be used at any time and exactly once .
+A means that A can be used once at some time .
+Though both and refer to a point in time, the choice of which time is different .
+Regarding , the choice is an internal choice, as appropriate to one"s own capability .
+With , the choice is externally decided by others .
+2.3 Commitment The concept of social commitment has been recognized as fundamental to agent interaction .
+Indeed, social commitment provides intrinsic meanings of protocol actions and states [11] .
+In particular, persistence in commitments introduces into agents" consideration a certain level of predictability of other agents" actions, which is important when agents deal with issues of inter dependencies, global constraints or The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 125 resources sharing [7] .
+Commitment based approaches associate protocols actions with operations on commitments and protocol states with the set of effective commitments [11] .
+Completing the protocol is done via means end reasoning on commitment operations to bring the current state to final states where all commitments are resolved .
+From then, the corresponding legal sequences of interactive actions are determined .
+Hence, the approaches systematically enhance a variety of legal computations [11] .
+Commitments can be reduced to a more fundamental form known as pre commitments .
+A pre commitment here refers to a potential commitment that specifies what the owner agent is willing to commit [4], like performing some actions or achieving a particular state .
+Agents can negotiate about pre commitments by sending proposals of them to others .
+The others can respond by agreeing or disagreeing with the proposal or proposing another pre commitment .
+Once a precommitment is agreed, it then becomes a commitment and the process moves from negotiation phase to commitment phase, in which the agents act to fulfill their commitments. .

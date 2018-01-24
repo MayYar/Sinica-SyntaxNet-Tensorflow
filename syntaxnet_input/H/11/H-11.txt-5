@@ -1,0 +1,26 @@
+USING LAPLACIAN OPTIMAL DESIGN In this section, we describe how to apply Laplacian Optimal Design to CBIR .
+We begin with a brief description of image representation using low level visual features .
+5.1 Low Level Image Representation Low level image representation is a crucial problem in CBIR .
+General visual features includes color, texture, shape, etc .
+Color and texture features are the most extensively used visual features in CBIR .
+Compared with color and texture features, shape features are usually described after images have been segmented into regions or objects .
+Since robust and accurate image segmentation is difficult to achieve, the use of shape features for image retrieval has been limited to special applications where objects or regions are readily available .
+In this work, We combine 64 dimensional color histogram and 64 dimensional Color Texture Moment (CTM, [15]) to represent the images .
+The color histogram is calculated using 4 กั 4 กั 4 bins in HSV space .
+The Color Texture Moment is proposed by Yu et al .
+[15], which integrates the color and texture characteristics of the image in a compact form .
+CTM adopts local Fourier transform as a texture representation scheme and derives eight characteristic maps to describe different aspects of co occurrence relations of image pixels in each channel of the (SVcosH, SVsinH, V) color space .
+Then CTM calculates the first and second moment of these maps as a representation of the natural color image pixel distribution .
+Please see [15] for details .
+5.2 Relevance Feedback Image Retrieval Relevance feedback is one of the most important techniques to narrow down the gap between low level visual features and high level semantic concepts [12] .
+Traditionally, the user"s relevance feedbacks are used to update the query vector or adjust the weighting of different dimensions .
+This process can be viewed as an on line learning process in which the image retrieval system acts as a learner and the user acts as a teacher .
+They typical retrieval process is outlined as follows
+The system ranks the images in database according to some pre defined distance metric and presents to the user the top ranked images .
+request the user to label them as relevant or irrelevant .
+rerank the images in database and returns to the user the top images .
+Go to step 2 until the user is satisfied .
+Our Laplacian Optimal Design algorithm is applied in the second step for selecting the most informative images .
+Once we get the labels for the images selected by LOD, we apply Laplacian Regularized Regression (LRR, [2]) to solve the optimization problem (3) and build the classifier .
+The classifier is then used to re rank the images in database .
+Note that, in order to reduce the computational complexity, we do not use all the unlabeled images in the database but only those within top 500 returns of previous iteration. .

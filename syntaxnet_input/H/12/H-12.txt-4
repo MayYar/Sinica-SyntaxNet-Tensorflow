@@ -1,0 +1,32 @@
+A search engine must perform a variety of activities, and is comprised of many sub systems, as depicted by the boxes in Figure 1 .
+Note that there may be several other sub systems such as the Advertising Engine or the Parsing Engine that could easily be added to the diagram, but we have concentrated on the sub systems that are relevant to snippet generation .
+Depending on the number of documents that the search engine indexes, the data and processes for each Ranking Engine Crawling Engine Indexing Engine Engine Lexicon Meta Data Engine Engine Snippet Term&Doc#s Snippetperdoc WEB Query Engine Query Results Page Term#s Doc#s Invertedlists Docs perdoc Title,URL,etc Doc#s Document meta data Terms Querystring Term#s Figure 1
+Depending on the number of documents indexed, each sub system could reside on a single machine, be distributed across thousands of machines, or a combination of both .
+sub system could be distributed over many machines, or all occupy a single server and filesystem, competing with each other for resources .
+Similarly, it may be more efficient to combine some sub systems in an implementation of the diagram .
+For example, the meta data such as document title and URL requires minimal computation apart from highlighting query words, but we note that disk seeking is likely to be minimized if title, URL and fixed summary information is stored contiguously with the text from which query biased summaries are extracted .
+Here we ignore the fixed text and consider only the generation of query biased summaries
+In addition to data and programs operating on that data, each sub system also has its own memory management scheme .
+The memory management system may simply be the memory hierarchy provided by the operating system used on machines in the sub system, or it may be explicitly coded to optimise the processes in the sub system .
+There are many papers on caching in search engines (see [3] and references therein for a current summary), but it seems reasonable that there is a query cache in the Query Engine that stores precomputed final result pages for very popular queries .
+When one of the popular queries is issued, the result page is fetched straight from the query cache .
+If the issued query is not in the query cache, then the Query Engine uses the four sub systems in turn to assemble a results page .
+term, using them to get a ranked list of documents .
+query term numbers to generate snippets .
+each document to construct the results page .
+IN A document broken into one sentence per line, and a sequence of query terms .
+1 For each line of the text, L = [w1, w2, .
+.
+.
+, wm] 2 Let h be 1 if L is a heading, 0 otherwise .
+3 Let be 2 if L is the first line of a document, 1 if it is the second line, 0 otherwise .
+4 Let c be the number of wi that are query terms, counting repetitions .
+5 Let d be the number of distinct query terms that match some wi .
+6 Identify the longest contiguous run of query terms in L, say wj .
+.
+.
+wj+k .
+7 Use a weighted combination of c, d, k, h and to derive a score s .
+8 Insert L into a max heap using s as the key .
+OUT Remove the number of sentences required from the heap to form the summary .
+Figure 2

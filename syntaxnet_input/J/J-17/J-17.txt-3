@@ -1,0 +1,33 @@
+2.1 The scheduling domain In our scheduling problem, we are given n jobs and m machines, and each job must be assigned to exactly one machine .
+In the unrelated machines setting, each machine i is characterized by a vector of processing times (pij)j, where pij ? R?0 ¡å {¡Û} denotes i"s processing time for job j with the value ¡Û specifying that i cannot process j .
+We consider two special cases of this problem
+This generalizes the classic scheduling model of restricted machines, where Hj = ¡Û .
+where Lj = L and Hj = H for all jobs j, i.e., pij ? {L, H} for every i, j .
+We say that a job j is low on machine i if pij = Lj, and high if pij = Hj .
+We will use the terms schedule and assignment interchangeably .
+We represent a deterministic schedule by a vector x = (xij)i,j, where xij is 1 if job j is assigned to machine i, thus we have xij ? {0, 1} for every i, j, P i xij = 1 for every job j .
+We will also consider randomized algorithms and algorithms that return a fractional assignment .
+In both these settings, we will again specify an assignment by a vector x = (xij)i,j with P j xij = 1, but now xij ? [0, 1] for every i, j .
+For a randomized algorithm, xij is simply the probability that j is assigned to i (thus, x is a convex combination of integer assignments) .
+We denote the load of machine i (under a given assignment) by li = P j xijpij, and the makespan of a schedule is defined as the maximum load on any machine, i.e., maxi li .
+The goal in the makespan minimization problem is to assign the jobs to the machines so as to minimize the makespan of the schedule .
+2.2 Mechanism design We consider the makespan minimization problem in the above scheduling domains in the context of mechanism design .
+Mechanism design studies strategic settings where the social designer needs to ensure the cooperation of the different entities involved in the algorithmic procedure .
+Following the work of Nisan and Ronen [22], we consider the machines to be the strategic players or agents .
+The social designer holds the set of jobs that need to be assigned, but does 254 not know the (true) processing times of these jobs on the different machines .
+Each machine is a selfish entity, that privately knows its own processing time for each job .
+on a machine incurs a cost to the machine equal to the true processing time of the job on the machine, and a machine may choose to misrepresent its vector of processing times, which are private, in order to decrease its cost .
+We consider direct revelation mechanisms
+A (direct revelation) mechanism thus consists of a tuple (x, P)
+The mechanism"s goal is to compute a schedule that has near optimal makespan with respect to the true processing times; a machine i is however only interested in maximizing its own utility, Pi ? li, where li is its load under the output assignment, and may declare false processing times if this could increase its utility .
+The mechanism must therefore incentivize the machines players to truthfully reveal their processing times via the payments .
+This is made precise using the notion of dominant strategy truthfulness .
+Definition 2.1 (Truthfulness) A scheduling mechanism is truthful if, for every machine i, every vector of processing times of the other machines, p?i, every true processing time vector p1 i and any other vector p2 i of machine i, we have
+To put it in words, in a truthful mechanism, no machine can improve its utility by declaring a false processing time, no matter what the other machines declare .
+We will also consider fractional mechanisms that return a fractional assignment, and randomized mechanisms that are allowed to toss coins and where the assignment and the payments may be random variables .
+The notion of truthfulness for a fractional mechanism is the same as in Definition 2.1, where x1 , x2 are now fractional assignments .
+For a randomized mechanism, we will consider the notion of truthfulness in expectation [3], which means that a machine (player) maximizes her expected utility by declaring her true processing time vector .
+Inequality (1) also defines truthfulness in expectation for a randomized mechanism, where P1 i , P2 i now denote the expected payments made to player i, x1 , x2 are the fractional assignments denoting the randomized algorithm"s schedule (i.e., xk ij is the probability that j is assigned to i in the schedule output for (pk i , p?i)) .
+For our two scheduling domains, the informational assumption is that the values Lj, Hj are publicly known .
+The private information of a machine is which jobs have value Lj (or L) and which ones have value Hj (or H) on it .
+We emphasize that both of our domains are multidimensional, since each machine i needs to specify a vector saying which jobs are low and high on it. .

@@ -1,0 +1,91 @@
+Originally, CONFLEX was intended for use in exploring the conformers of the large bio molecules, such HIV protease .
+In such molecules, the number of trial structures increases and the time required for optimization of RPC Selection of Initial Structure Conformations Database Local Perturbation Comparison and Registration Client program Task Pool of Geometry Optimization RPC RPC Grid environment Cluster B Cluster A Cluster C Trial structureTrial structure Trial structure Trial structure Figure 3
+agent rexrex rex Client jones.tsukuba.ac.jp hpc serv.hpcc.jp hpc1 hpc2 hpc3 Agent invocation communicationNetwork Figure 4
+the trial structure becomes immense .
+We implemented the parallelized version of CONFLEX, which cannot treat such molecules using only a local PC cluster .
+In order to exploit the vast computing resources of a grid environment, we designed and implemented CONFLEX G, which is a grid enabled version of CONFLEX, with the OmniRPC system .
+CONFLEX G allocates jobs to optimize a trial structure to the computational nodes of each cluster in the grid environment .
+Figure 3 shows the process of CONFLEX G .
+The worker programs are initialized by the initialize method, which is provided by the OmniRPC AIM facility at worker invocation .
+At each RPC call, the initialized state is reused on the remote host .
+In other words, the client program can eliminate the initialization for each RPC call, and can therefore optimize trial structures efficiently .
+3.1 The OmniRPC system OmniRPC is a Grid RPC system which allows seamless parallel programming from a PC cluster to a grid environment .
+OmniRPC inherits its API and basic architecture from Ninf .
+A client and the remote computational hosts which execute the remote procedures may be connected via a network .
+The remote libraries are implemented as an executable program which contains a network stub routine as its main routine .
+We call this executable program a remote executable program (rex) .
+When the OmniRPC client program starts, the initialization function of OmniRPC system invokes the OmniRPC agent program omrpc agent in the remote hosts listed in the host file .
+To invoke the agent, the user can use the remote shell command rsh in a local area network, the GRAM (Globus Resource Allocation Manager) API of the Globus 156 toolkit[12] in a grid environment, or the secure remote shell command ssh .
+The user can switch the configurations only by changing the host file .
+OmniRpcCall is a simple client programming interface for calling remote functions .
+When OmniRpcCall makes a remote procedure call, the call is allocated to an appropriate remote host .
+When the client issues the RPC request, it requests that the agent in the selected host submit the job of the remote executable with the local job scheduler specified in the host file .
+If the job scheduler is not specified, the agent executes the remote executable in the same node by the fork system call .
+The client sends the data of the input arguments to the invoked remote executable, and receives the results upon return of the remote function .
+Once a remote executable is invoked, the client attempts to use the invoked remote executable for subsequent RPC calls in order to eliminate the cost of invoking the same remote executable again .
+When the agent and the remote executables are invoked, the remote programs obtain the client address and port from the argument list and connect back to the client by direct TCP IP or Globus IO for data transmission .
+Because the OmniRPC system does not use any fixed service ports, the client program allocates unused ports dynamically to wait for connection from the remote executables .
+This avoids possible security problems, and allows the user to install the OmniRPC system without requiring a privileged account .
+Herein, a typical grid resource is regarded as a cluster of geographically distributed PC clusters .
+For PC clusters on a private network, an OmniRPC agent process on the server host functions as a proxy to relay communications between the client and the remote executables by multiplexing the communications using a single connection .
+This feature, called multiplex IO (MXIO), allows a single client to use up to 1,000 remote computing hosts .
+When the PC cluster is inside a firewall, the port forwarding of SSH enables the node to communicate to the outside with MXIO .
+Figure 4 shows the overview of the OmniRPC system for a remote cluster with a private IP address .
+For parallel programming, the programmer can use asynchronous remote procedure calls, allowing the client to issue several requests while continuing with other computations .
+The requests are dispatched to different remote hosts to be executed in parallel, and the client waits or polls the completed request .
+In such a programming model with asynchronous remote procedure calls, the programmer should handle outstanding requests explicitly .
+Because OmniRPC is a thread safe system, a number of remote procedure calls may be outstanding at any time for multi threaded programs written in OpenMP .
+3.2 OmniRPC persistence model
+For parametric search applications, which often require large amount of identical data for each call, OmniRPC supports a limited persistence model, which is implemented by the automatic initializable module .
+The user can define an initialization procedure in the remote executable in order to send and store data automatically in advance of actual remote procedure calls .
+Since the remote executable may accept requests for subsequent calls, the data set which has been set by the initialization procedure can be re used .
+As a result, the worker program can execute efficiently and reduce the amount of data transmitted for initialization .
+Once a remote executable is invoked, the client attempts to use the invoked remote executable for subsequent RPC calls .
+However, OmniRPC does not guarantee persistence of the remote executable, so that the data set by the previous call cannot be used by subsequent calls .
+This is because a remote call by OmniRpcCall may be scheduled to any remote host dynamically, and remote executables may be terminated accidentally due to dynamic re scheduling or host faults .
+However, persistence of the remote executable can be exploited in certain applications .
+An example is a parametric search application
+This is the case for CONFLEX .
+OmniRPC provides a restricted persistence model through the automatic initializable module in order to support this type of application .
+If the initialization procedure is defined in the module, the module is automatically initialized at invocation by calling the initialization procedure .
+When the remote executable is re scheduled in different hosts, the initialization is called to initialize the newly allocated remote module .
+This can eliminate unnecessary communications when RPC calls use the same data .
+To reveal more about the difference in progress between the cases with OmniRPC AIM and without OmniRPC AIM, we present two figures .
+Figure 5 illustrates the time chart of the progress of a typical OmniRPC application using the OmniRPC AIM facility, and Figure 6 illustrates the time chart of the same application without the OmniRPC AIM facility .
+In both figures, the lines between diamonds represent the processes of initialization, and the lines between points represent the calculation .
+The bold line indicates the time when the client program sends the data to a worker program .
+It is necessary for the application without the OmniRPC AIM facility to initialize at each RPC .
+The application using the OmniRPC AIM facility can re use the initialized data once the data set is initialized .
+This can reduce the initialization at each RPC .
+The workers of the application with the AIM can calculate efficiently compared to the application without the OmniRPC AIM facility .
+3.3 Implementation of CONFLEX G using OmniRPC Figure 3 shows an overview of the process used in CONFLEXG .
+Using RPCs, CONFLEX G allocates the processes of trial structure optimization, which are performed by the computation nodes of a PC cluster in the MPI version of CONFLEX, to the computational nodes of each cluster in a grid environment .
+There are two computations which are performed by the worker programs in CONFLEX G .
+One is the initialization of a worker program, and another is the calculation of trial structure optimization .
+First, the OmniRPC facility of the AIM is adapted for initialization of a worker program .
+This facility automatically calls the initialization function, which is contained in the worker program, once the client program invokes the worker program in a remote node .
+It is necessary for the common RPC system including GridRPC to initialize a program for every RPC call, since data persistence of worker programs 157 time Client Program Worker Program 1 Worker Program 2 initialization initialization calculation calculation calculation calculation calculation Parallelized using asynchronous RPCs Figure 5
+time Client Program Worker Program 1 Worker Program 2 initialization initializationcalculation calculation calculation calculation initialization initialization initialization Parallelized using asynchronous RPCs calculation Figure 6
+Table 1
+Site Cluster Name Machine Network Authentication # of Nodes # of CPUs Univ .
+of Tsukuba Dennis Dual Xeon 2.4GHz 1Gb Ethernet Globus, SSH 14 28 Alice Dual Athlon 1800+ 100Mb Ethernet Globus, SSH 18 36 TUT Toyo Dual Athlon 2600+ 100Mb Ethernet SSH 8 16 AIST Ume Dual Pentium3 1.4GHz 1Gb Ethernet Globus, SSH 32 64 is not supported .
+In OmniRPC, however, when the Initialize remote function is defined in the worker program and a new worker program, corresponding to the other RPC, is assigned to execute, an Initialize function is called automatically .
+Therefore, after the Initialize function call to set up common initialization data, a worker program can re use this data and increase the efficiency of it"s processes .
+Thus, the higher the set up cost, the greater the potential benefit .
+We implemented the worker program of CONFLEX G to receive data, such as evaluation parameters of energy, from a client program and to be initialized by the Initialize function .
+We arranged the client program of CONFLEX G to transfer the parameter file at the time of worker initialization .
+This enables execution to be performed by modify only the client setting if the user wants to run CONFLEX G with a different data set .
+Second, in order to calculate trial structure optimization in a worker program, the worker program must receive the data, such as the atom arrangement of the trial structure and the internal energy state .
+The result is returned to the client program after the worker has Optimized the trial structure .
+Since the calculation portion of the structure optimization in this worker program can be calculated independently using different parameters, we parallelized this portion using asynchronous RPCs on the client side .
+To call the structure optimization function in a worker program from the client program, we use the OmniRpcCallAsync API, which is intended for asynchronous RPC .
+In addition, OmniRpcCallWaitAll API which waits until all asynchronous RPCs are used in order to perform synchronization with all of the asynchronous RPCs completed so as to optimize the trial structure .
+The client program which assigns trial structure optimization to the calculation node of a PC cluster using RPC is outlined as follows .
+OmniRpcInit() OmniRpcModuleInit("conflex_search",...); .. .
+while( <new conformers> ) { foreach( <trial structures> ) OmniRpcCallAsync("conflex_search_worker", ...); OmniRpcWaitAll(); .. .
+Note that OmniRpcModuleInit API returns only the arguments needed for initialization and will not actually execute the Initialization function .
+As described above, the actual Initialization is performed at the first remote call .
+Since the OmniRPC system has an easy round robin scheduler, we do not have to explicitly write the code for load balance .
+Therefore, RPCs are allocated automatically to idle workers .
+158 Table 2
+Round Trip Throughput Cluster Time (ms) (Mbps) Dennis 0.23 879.31 Alice 0.18 94.12 Toyo 11.27 1.53 Ume 1.07 373.33 .

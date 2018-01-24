@@ -1,0 +1,147 @@
+VERTEX COVER Recall that for a vertex cover auction on a graph G = (V, E), an allocation rule is an algorithm that takes as input a bid bv for each vertex and returns a vertex cover ?S of G .
+As explained in Section 2, we can combine a monotone allocation rule with threshold payments to obtain a truthful auction .
+Two natural examples of monotone allocation rules are Aopt, i.e., the algorithm that finds an optimal vertex cover, and the greedy algorithm AGR .
+However, Aopt cannot be guaranteed to run in polynomial time unless P = NP and AGR has approximation ratio of log n .
+Another approximation algorithm for vertex cover, which has approximation ratio 2, is the local ratio algorithm ALR [2, 3] .
+This algorithm considers the edges of G one by one .
+Given an edge e = (u, v), it computes = min{bu, bv} and sets bu = bu ? , bv = bv ? .
+After all edges have been processed, ALR returns the set of vertices {v | bv = 0} .
+It is not hard to check that if the order in which the edges are considered is independent of the bids, then this algorithm is monotone as well .
+Hence, we can use it to construct a truthful auction that is guaranteed to select a vertex cover whose cost is within a factor of 2 from the optimal .
+However, while the quality of the solution produced by ALR is much better than that of AGR, we still need to show that its total payment is not too high .
+In the next subsection, we bound the frugality ratio of ALR (and, more generally, all algorithms that satisfy the condition of local optimality, defined later) by 2£G, where £G is the maximum degree of G .
+We then prove a matching lower bound showing that for some graphs the frugality ratio of any truthful auction is at least £G 2 .
+5.1 Upper bound We say that an allocation rule is locally optimal if whenever bv >P w?v bw, the vertex v is not chosen .
+Note that for any such rule the threshold bid of v satisfies tv ? P w?v bw .
+CLAIM 1 .
+The algorithms Aopt, AGR, and ALR are locally optimal .
+THEOREM 4 .
+Any vertex cover auction M that has a locally optimal and monotone allocation rule and pays each agent his threshold bid has frugality ratio £pNTUmin(M) ? 2£G .
+To prove Theorem 4, we first show that the total payment of any locally optimal mechanism does not exceed £Gc(V ) .
+We then demonstrate that NTUmin(c) ? c(V ) 2 .
+By combining these two results, the theorem follows .
+LEMMA 5 .
+Consider a graph G = (V, E) with maximum degree £G .
+Let M be a vertex cover auction on G that satisfies the conditions of Theorem 4 .
+Then for any cost vector c, the total payment of M satisfies pM(c) ? £Gc(V ) .
+PROOF .
+First note that any such auction is truthful, so we can assume that each agent"s bid is equal to his cost .
+Let ?S be the vertex cover selected by M .
+Then by local optimality pM(c) = X v? ?S tv ? X v? ?S X w?v cw ? X w?V £Gcw = £Gc(V ) .
+We now derive a lower bound on TUmax(c); while not essential for the proof of Theorem 4, it helps us build the intuition necessary for that proof .
+LEMMA 6 .
+For a vertex cover instance G = (V, E) in which S is a minimum vertex cover, TUmax(c, S) ? c(V \ S) PROOF .
+For a vertex w with at least one neighbour in S, let d(w) denote the number of neighbours that w has in S .
+Consider the bid vector b in which, for each v ? S, bv = P w?v,w?S cw d(w) .
+Then P v?S bv = P v?S P w?v,w?S cw d(w) = P w ?S cw = c(V \ S) .
+To finish we want to show that b is feasible in the sense that it satisfies (2) .
+Consider a vertex cover T, and extend the bid vector b by assigning bv = cv for v ? S .
+Then b(T) = c(T \S)+b(S°‰T) ? c(T \S)+ X v?S°‰T X w?S°‰T 
+Next, we prove a lower bound on NTUmax(c, S); we will then use it to obtain a lower bound on NTUmin(c) .
+LEMMA 7 .
+For a vertex cover instance G = (V, E) in which S is a minimum vertex cover, NTUmax(c, S) ? c(V \ S) PROOF .
+If c(S) ? c(V \ S), by condition (1) we are done .
+Therefore, for the rest of the proof we assume that c(S) < c(V \ S) .
+We show how to construct a bid vector (be)e?S that satisfies conditions (1) and (2) such that b(S) ? c(V \ S); clearly, this implies NTUmax(c, S) ? c(V \ S) .
+Recall that a network flow problem is described by a directed graph £F = (V£F, E£F), a source node s ? V£F, a sink node t ? V£F, and a vector of capacity constraints ae, e ? E£F .
+Consider a network (V£F, E£F) such that V£F = V °Â{s, t}, E£F = E1 °ÂE2 °ÂE3, where E1 = {(s, v) | v ? S}, E2 = {(v, w) | v ? S, w ? 341 V \ S, (v, w) ? E}, E3 = {(w, t) | w ? V \ S} .
+Since S is a vertex cover for G, no edge of E can have both of its endpoints in V \ S, and by construction, E2 contains no edges with both endpoints in S .
+Therefore, the graph (V, E2) is bipartite with parts (S, V \ S) .
+Set the capacity constraints for e ? E£F as follows
+Recall that a cut is a partition of the vertices in V£F into two sets C1 and C2 so that s ? C1, t ? C2; we denote such a cut by C = (C1, C2) .
+Abusing notation, we write e = (u, v) ? C if u ? C1, v ? C2 or u ? C2, v ? C1, and say that such an edge e = (u, v) crosses the cut C .
+The capacity of a cut C is computed as cap(C) = P (v,w)?C a(v,w) .
+We have cap(s, V °Â{t}) = c(S), cap({s} °Â V, t) = c(V \ S) .
+Let Cmin = ({s} °Â S °Â W , {t} °Â S °Â W ) be a minimum cut in £F, where S , S ? S, W , W ? V \ S .
+See Figure 4 .
+As cap(Cmin) ? cap(s, V °Â {t}) = c(S) < +°€, and any edge in E2 has infinite capacity, no edge (u, v) ? E2 crosses Cmin .
+Consider the network £F = (V£F , E£F ), where V£F = {s} °Â S °Â W °Â {t}, E£F = {(u, v) ? E£F | u, v ? V£F } .
+Clearly, C = ({s} °Â S °Â W , {t}) is a minimum cut in £F (otherwise, there would exist a smaller cut for £F) .
+As cap(C ) = c(W ), we have c(S ) ? c(W ) .
+Now, consider the network £F = (V£F , E£F ), where V£F = {s} °Â S °Â W °Â {t}, E£F = {(u, v) ? E£F | u, v ? V£F } .
+Similarly, C = ({s}, S °Â W °Â {t}) is a minimum cut in £F , cap(C ) = c(S ) .
+As the size of a maximum flow from s to t is equal to the capacity of a minimum cut separating s and t, there exists a flow F = (fe)e?E£F of size c(S ) .
+This flow has to saturate all edges between s and S , i.e., f(s,v) = cv for all v ? S .
+Now, increase the capacities of all edges between s and S to +°€ .
+In the modified network, the capacity of a minimum cut (and hence the size of a maximum flow) is c(W ), and a maximum flow F = (fe)e?E£F can be constructed by greedily augmenting F .
+Set bv = cv for all v ? S , bv = f(s,v) for all v ? S .
+As F is constructed by augmenting F, we have bv ? cv for all v ? S, i.e., condition (1) is satisfied .
+Now, let us check that no vertex cover T ? V can violate condition (2) .
+Set T1 = T °‰ S , T2 = T °‰ S , T3 = T °‰ W , T4 = T °‰ W ; our goal is to show that b(S \ T1) + b(S \ T2) ? c(T3)+c(T4) .
+Consider all edges (u, v) ? E such that u ? S \T1 .
+If (u, v) ? E2 then v ? T3 (no edge in E2 can cross the cut), and if u, v ? S then v ? T1°ÂT2 .
+Hence, T1°ÂT3°ÂS is a vertex cover for G, and therefore c(T1)+ c(T3)+ c(S ) ? c(S) = c(T1)+ c(S \ T1) + c(S ) .
+Consequently, c(T3) ? c(S \ T1) = b(S \ T1) .
+Now, consider the vertices in S \T2 .
+Any edge in E2 that starts in one of these vertices has to end in T4 (this edge has to be covered by T, and it cannot go across the cut) .
+Therefore, the total flow out of S \T2 is at most the total flow out of T4, i.e., b(S \T2) ? c(T4) .
+Hence, b(S \ T1) + b(S \ T2) ? c(T3) + c(T4) .
+Finally, we derive a lower bound on the payment bound that is of interest to us, namely, NTUmin(c) .
+LEMMA 8 .
+For a vertex cover instance G = (V, E) in which S is a minimum vertex cover, NTUmin(c, S) ? c(V \ S) PROOF .
+Suppose for contradiction that c is a cost vector with minimum cost vertex cover S and NTUmin(c, S) < c(V \S) .
+Let b be the corresponding bid vector and let c be a new cost vector with cv = bv for v ? S and cv = cv for v ? S .
+Condition (2) guarantees that S is an optimal solution to the cost vector c .
+Now compute a bid vector b corresponding to NTUmax(c , S) .
+We S" W"" S"" W" s t T1 T3 T2 T4 0 00 1 11 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 0000 11 1111 00 00 11 11 0 00 1 11 0 00 1 11 0 00 1 11 0000000 00000000000000 00000000000000 0000000 00000000000000 00000000000000 0000000 00000000000000 1111111 11111111111111 11111111111111 1111111 11111111111111 11111111111111 1111111 11111111111111 0000 00000000 00000000 0000 00000000 00000000 0000 00000000 1111 11111111 11111111 1111 11111111 11111111 1111 11111111 00 0000 0000 00 0000 0000 00 0000 11 1111 1111 11 1111 1111 11 1111 00 0000 0000 00 0000 0000 00 0000 11 1111 1111 11 1111 1111 11 1111 00000 0000000000 0000000000 00000 0000000000 0000000000 00000 0000000000 11111 1111111111 1111111111 11111 1111111111 1111111111 11111 1111111111 0000000 00000000000000 00000000000000 0000000 00000000000000 00000000000000 0000000 00000000000000 1111111 11111111111111 11111111111111 1111111 11111111111111 11111111111111 1111111 11111111111111 0000000 00000000000000 00000000000000 0000000 00000000000000 00000000000000 0000000 00000000000000 1111111 11111111111111 11111111111111 1111111 11111111111111 11111111111111 1111111 11111111111111 0000 00000000 00000000 0000 00000000 00000000 0000 00000000 1111 11111111 11111111 1111 11111111 11111111 1111 11111111 00 0000 0000 00 0000 0000 00 0000 11 1111 1111 11 1111 1111 11 1111000 000000 000000 000 000000 000000 000 000000 000000 000 000 111 111111 111111 111 111111 111111 111 111111 111111 111 111 0000000 00000000000000 00000000000000 0000000 00000000000000 00000000000000 0000000 00000000000000 00000000000000 0000000 00000000000000 1111111 11111111111111 11111111111111 1111111 11111111111111 11111111111111 1111111 11111111111111 11111111111111 1111111 11111111111111 000 000000 000000 000 000000 000000 000 000000 000000 000 000000 111 111111 111111 111 111111 111111 111 111111 111111 111 111111 000000 000000000000 000000000000 000000 000000000000 000000000000 000000 000000000000 000000000000 000000 000000000000 111111 111111111111 111111111111 111111 111111111111 111111111111 111111 111111111111 111111111111 111111 111111111111 000000 000000000000 000000000000 000000 000000000000 000000000000 000000 000000000000 000000000000 000000 000000000000 111111 111111111111 111111111111 111111 111111111111 111111111111 111111 111111111111 111111111111 111111 111111111111 000 000000 000000 000 000000 000000 000 000000 000000 000 000000 111 111111 111111 111 111111 111111 111 111111 111111 111 111111 Figure 4
+Dashed lines correspond to edges in E \ E2 claim that bv = cv for any v ? S .
+Indeed, suppose that bv > cv for some v ? S (bv = cv for v ? S by construction) .
+As b satisfies conditions (1) (3), among the inequalities in (2) there is one that is tight for v and the bid vector b .
+That is, b(S \ T) = c(T \ S) .
+By the construction of c , c (S \ T) = c (T \ S) .
+Now since bw ? cw for all w ? S, bv > cv implies b (S \T) > c (S \T) = c (T \S) .
+But this violates (2) .
+So we now know b = c .
+Hence, we have NTUmax(c , S) = P v?S bv = NTUmin(c, S) < c(V \ S), giving a contradiction to the fact that NTUmax(c , S) ? c (V \S) which we proved in Lemma 7 .
+As NTUmin(c, S) satisfies condition (1), it follows that we have NTUmin(c, S) ? c(S) .
+Together will Lemma 8, this implies NTUmin(c, S) ? max{c(V \ S), c(S)} ? c(V ) 2 .
+Combined with Lemma 5, this completes the proof of Theorem 4 .
+REMARK 3 .
+As NTUmin(c) ? NTUmax(c) ? TUmax(c), our bound of 2£G extends to the smaller frugality ratios that we consider, i.e., £pNTUmax(M) and £pTUmax(M) .
+It is not clear whether it extends to the larger frugality ratio £pTUmin(M) .
+However, the frugality ratio £pTUmin(M) is not realistic because the payment bound TUmin(c) is inappropriately low we show in Section 6 that TUmin(c) can be significantly smaller than the total cost of a cheapest vertex cover .
+Extensions We can also apply our results to monotone vertex cover algorithms that do not necessarily output locally optimal solutions .
+To do so, we simply take the vertex cover produced by any such algorithm and transform it into a locally optimal one, considering the vertices in lexicographic order and replacing a vertex v with its neighbours whenever bv > P u?v bu .
+Note that if a vertex u has been added to the vertex cover during this process, it means that it has a neighbour whose bid is higher than bu, so after one pass all vertices in the vertex cover satisfy bv ? P u?v bu .
+This procedure is monotone in bids, and it can only decrease the cost of the vertex cover .
+Therefore, using it on top of a monotone allocation rule with approx342 imation ratio £\, we obtain a monotone locally optimal allocation rule with approximation ratio £\ .
+Combining it with threshold payments, we get an auction with £pNTUmin ? 2£G .
+Since any truthful auction has a monotone allocation rule, this procedure transforms any truthful mechanism for the vertex cover problem into a frugal one while preserving the approximation ratio .
+5.2 Lower bound In this subsection, we prove that the upper bound of Theorem 4 is essentially optimal .
+Our proof uses the techniques of [9], where the authors prove a similar result for shortest path auctions .
+THEOREM 5 .
+For any £G > 0 and any n, there exist a graph G of maximum degree £G and size N > n such that for any truthful mechanism M on G we have £pNTUmin(M) ? £G 2 .
+PROOF .
+Given n and £G, set k = n 2£G .
+Let G be the graph that consists of k blocks B1, .
+.
+.
+, Bk of size 2£G each, where each Bi is a complete bipartite graph with parts Li and Ri, |Li| = |Ri| = £G .
+We will consider two families of cost vectors for G .
+Under a cost vector x ? X, each block Bi has one vertex of cost 1; all other vertices cost 0 .
+Under a cost vector y ? Y , there is one block that has two vertices of cost 1, one in each part, all other blocks have one vertex of cost 1, and all other vertices cost 0 .
+Clearly, |X| = (2£G)k , |Y | = k(2£G)k?1 £G2 .
+We will now construct a bipartite graph W with the vertex set X °Â Y as follows .
+Consider a cost vector y ? Y that has two vertices of cost 1 in Bi; let these vertices be vl ? Li and vr ? Ri .
+By changing the cost of either of these vertices to 0, we obtain a cost vector in X .
+Let xl and xr be the cost vectors obtained by changing the cost of vl and vr, respectively .
+The vertex cover chosen by M(y) must either contain all vertices in Li or it must contain all vertices in Ri .
+In the former case, we put in W an edge from y to xl and in the latter case we put in W an edge from y to xr (if the vertex cover includes all of Bi, W contains both of these edges) .
+The graph W has at least k(2£G)k?1 £G2 edges, so there must exist an x ? X of degree at least k£G 2 .
+Let y1, .
+.
+.
+, yk£G 2 be the other endpoints of the edges incident to x, and for each i = 1, .
+.
+.
+, k£G 2, let vi be the vertex whose cost is different under x and yi; note that all vi are distinct .
+It is not hard to see that NTUmin(x) ? k
+On the other hand, by monotonicity of M we have vi ? M(x) for i = 1, .
+.
+.
+, k£G 2 (vi is in the winning set under yi, and x is obtained from yi by decreasing the cost of vi), and moreover, the threshold bid of each vi is at least 1, so the total payment of M on x is at least k£G 2 .
+Hence, £pNTUmin(M) ? M(x) NTUmin(x) ? £G 2 .
+REMARK 4 .
+The lower bound of Theorem 5 can be generalised to randomised mechanisms, where a randomised mechanism is considered to be truthful if it can be represented as a probability distribution over truthful mechanisms .
+In this case, instead of choosing the vertex x ? X with the highest degree, we put both (y, xl) and (y, xr) into W , label each edge with the probability that the respective part of the block is chosen, and pick x ? X with the highest weighted degree .
+The argument can be further extended to a more permissive definition of truthfulness for randomised mechanisms, but this discussion is beyond the scope of this paper. .

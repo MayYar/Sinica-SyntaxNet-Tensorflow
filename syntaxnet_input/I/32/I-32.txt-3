@@ -1,0 +1,26 @@
+The adversarial environment model (denoted as AE) is intended to guide the design of agents by providing a specification of the capabilities and mental attitudes of an agent in an adversarial environment .
+We focus here on specific types of adversarial environments, specified as follows
+In particular, our adversarial environment model will deal with interactions that consist of N agents (N ? 2), where all agents are adversaries, and only one agent can succeed .
+Examples of such environments range from board games (e.g., Chess, Connect Four, and Diplomacy) to certain economic environments (e.g., N bidder auctions over a single good) .
+2.1 Model Overview Our approach is to formalize the mental attitudes and behaviors of a single adversarial agent; we consider how a single agent perceives the AE .
+The following list specifies the conditions and mental states of an agent in a simple, zero sum AE
+Item 3 is required, since it might be the case that some agent has a full conflicting goal, and is currently considering adopting the intention to complete it, but is, as of yet, not committed to achieving it .
+This might occur because the agent has not yet deliberated about the effects that adopting that intention might have on the other intentions it is currently holding .
+In such cases, it might not consider itself to even be in an adversarial environment .
+Item 4 states that the agent should hold some belief about the profiles of its adversaries .
+The profile represents all the knowledge the agent has about its adversary
+It can be given explicitly or can be learned from observations of past encounters .
+2.2 Model Definitions for Mental States We use Grosz and Kraus"s definitions of the modal operators, predicates, and meta predicates, as defined in their SharedPlan formalization [4] .
+We recall here some of the predicates and operators that are used in that formalization
+The potential intention operators, Pot.Int.To(...) and Pot.Int.Th(...), are used to represent the mental state when an agent considers adopting an intention, but has not deliberated about the interaction of the other intentions it holds .
+The operator Bel(Ai, f, Tf ) represents agent Ai believing in the statement expressed in formula f, at time Tf .
+MB(A, f, Tf ) represents mutual belief for a group of agents A .
+A snapshot of the system finds our environment to be in some state e ? E of environmental variable states, and each adversary in any LAi ? L of possible local states .
+At any given time step, the system will be in some world w of the set of all possible worlds w ? W, where w = E¡ÑLA1 ¡ÑLA2 ¡Ñ ...LAn , and n is the number of adversaries .
+For example, in a Texas Hold"em poker game, an agent"s local state might be its own set of cards (which is unknown to its adversary) while the environment will consist of the betting pot and the community cards (which are visible to both players) .
+A utility function under this formalization is defined as a mapping from a possible world w ? W to an element in , which expresses the desirability of the world, from a single agent perspective .
+We usually normalize the range to [0,1], where 0 represents the least desirable possible world, and 1 is the most desirable world .
+The implementation of the utility function is dependent on the domain in question .
+The following list specifies new predicates, functions, variables, and constants used in conjunction with the original definitions for the adversarial environment formalization
+predicates whose satisfaction represents an important milestone toward achievement of the full goal .
+gG? Ai ? gAi is the set of subgoals that are important to the completion of goal G? Ai (we will use g? G? Ai ? gG? Ai to represent an arbitrary subgoal). .

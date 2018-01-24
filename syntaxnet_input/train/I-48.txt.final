@@ -1,0 +1,483 @@
+Normative System Games 
+content:
+1 ABSTRACT :
+1-1:We develop a model of normative systems in which agents are assumed to have multiple goals of increasing priority, and investigate the computational complexity and game theoretic properties of this model .
+1-2:In the underlying model of normative systems, we use Kripke structures to represent the possible transitions of a multiagent system .
+1-3:A normative system is then simply a subset of the Kripke structure, which contains the arcs that are forbidden by the normative system .
+1-4:We specify an agent"s goals as a hierarchy of formulae of Computation Tree Logic (CTL), a widely used logic for representing the properties of Kripke structures: the intuition is that goals further up the hierarchy are preferred by the agent over those that appear further down the hierarchy .
+1-5:Using this scheme, we define a model of ordinal utility, which in turn allows us to interpret our Kripke based normative systems as games, in which agents must determine whether to comply with the normative system or not .
+1-6:We then characterise the computational complexity of a number of decision problems associated with these Kripke based normative system games; for example, we show that the complexity of checking whether there exists a normative system which has the property of being a Nash implementation is NP complete .
+1-7:I.2.11 [Distributed Artificial Intelligence]: Multiagent Systems; .
+2 INTRODUCTION :
+2-1:Normative systems, or social laws, have proved to be an attractive approach to coordination in multi agent systems [13, 14, 10, 15, 1] .
+2-2:Although the various approaches to normative systems proposed in the literature differ on technical details, they all share the same basic intuition that a normative system is a set of constraints on the behaviour of agents in the system; by imposing these constraints, it is hoped that some desirable objective will emerge .
+2-3:The idea of using social laws to coordinate multi agent systems was proposed by Shoham and Tennenholtz [13, 14]; their approach was extended by van der Hoek et al .
+2-4:to include the idea of specifying a desirable global objective for a social law as a logical formula, with the idea being that the normative system would be regarded as successful if, after implementing it (i.e., after eliminating all forbidden actions), the objective formula was guaranteed to be satisfied in the system [15] .
+2-5:However, this model did not take into account the preferences of individual agents, and hence neglected to account for possible strategic behaviour by agents when deciding whether to comply with the normative system or not .
+2-6:This model of normative systems was further extended by attributing to each agent a single goal in [16] .
+2-7:However, this model was still too impoverished to capture the kinds of decision making that take place when an agent decides whether or not to comply with a social law .
+2-8:In reality, strategic considerations come into play: an agent takes into account not just whether the normative system would be beneficial for itself, but also whether other agents will rationally choose to participate .
+2-9:In this paper, we develop a model of normative systems in which agents are assumed to have multiple goals, of increasing priority .
+2-10:We specify an agent"s goals as a hierarchy of formulae of Computation Tree Logic (CTL), a widely used logic for representing the properties of Kripke structures [8]: the intuition is that goals further up the hierarchy are preferred by the agent over those that appear further down the hierarchy .
+2-11:Using this scheme, we define a model of ordinal utility, which in turn allows us to interpret our Kripkebased normative systems as games, in which agents must determine whether to comply with the normative system or not .
+2-12:We thus provide a very natural bridge between logical structures and languages and the techniques and concepts of game theory, which have proved to be very powerful for analysing social contract style scenarios such as normative systems [3, 4] .
+2-13:We then characterise the computational complexity of a number of decision problems associated with these Kripke based normative system games; for example, we show that the complexity of checking whether there exists a normative system which has the property of being a Nash implementation is NP complete. .
+3 KRIPKE STRUCTURES AND CTL :
+3-1:We use Kripke structures as our basic semantic model for multiagent systems [8] .
+3-2:A Kripke structure is essentially a directed graph, with the vertex set S corresponding to possible states of the system being modelled, and the relation R ⊆ S × S capturing the 881 978 81 904262 7 5 c 2007 IFAAMAS possible transitions of the system; intuitively, these transitions are caused by agents in the system performing actions, although we do not include such actions in our semantic model (see, e.g., [13, 2, 15] for related models which include actions as first class citizens) .
+3-3:We let S0 denote the set of possible initial states of the system .
+3-4:Our model is intended to correspond to the well known interleaved concurrency model from the reactive systems literature: thus an arc corresponds to the execution of an atomic action by one of the processes in the system, which we call agents .
+3-5:It is important to note that, in contrast to such models as [2, 15], we are therefore here not modelling synchronous action .
+3-6:This assumption is not in fact essential for our analysis, but it greatly simplifies the presentation .
+3-7:However, we find it convenient to include within our model the agents that cause transitions .
+3-8:We therefore assume a set A of agents, and we label each transition in R with the agent that causes the transition via a function α : R → A .
+3-9:Finally, we use a vocabulary Φ = {p, q, .
+3-10:.
+3-11:.} of Boolean variables to express the properties of individual states S: we use a function V : S → 2Φ to label each state with the Boolean variables true (or satisfied) in that state .
+3-12:Collecting these components together, an agent labelled Kripke structure (over Φ) is a 6 tuple: K = S, S0 , R, A, α, V , where: • S is a finite, non empty set of states, • S0 ⊆ S (S0 = ∅) is the set of initial states; • R ⊆ S × S is a total binary relation on S, which we refer to as the transition relation1 ; • A = {1, .
+3-13:.
+3-14:.
+3-15:, n} is a set of agents; • α : R → A labels each transition in R with an agent; and • V : S → 2Φ labels each state with the set of propositional variables true in that state .
+3-16:In the interests of brevity, we shall hereafter refer to an agentlabelled Kripke structure simply as a Kripke structure .
+3-17:A path over a transition relation R is an infinite sequence of states π = s0, s1, .
+3-18:.
+3-19:.
+3-20:which must satisfy the property that ∀u ∈ N: (su , su+1) ∈ u in π (thus π[0] denotes the first element, π[1] the second, and so on) .
+3-21:A path π such that π[0] = s is an s path .
+3-22:Let ΠR(s) denote the set of s paths over R; since it will usually be clear from context, we often omit reference to R, and simply write Π(s) .
+3-23:We will sometimes refer to and think of an s path as a possible computation, or system evolution, from s .
+3-24:EXAMPLE 1 .
+3-25:Our running example is of a system with a single non sharable resource, which is desired by two agents .
+3-26:Consider the Kripke structure depicted in Figure 1 .
+3-27:We have two states, s and t, and two corresponding Boolean variables p1 and p2, which are 1 In the branching time temporal logic literature, a relation R ⊆ S × S is said to be total iff ∀s ∃s : (s, s ) ∈ R .
+3-28:Note that the term total relation is sometimes used to refer to relations R ⊆ S × S such that for every pair of elements s, s ∈ S we have either (s, s ) ∈ R or (s , s) ∈ R; we are not using the term in this way here .
+3-29:It is also worth noting that for some domains, other constraints may be more appropriate than simple totality .
+3-30:For example, one might consider the agent totality requirement, that in every state, every agent has at least one possible transition available: ∀s∀i ∈ A∃s : (s, s ) ∈ R and α(s, s ) = i .
+3-31:2p t p 2 2 1 s 1 1 Figure 1: The resource control running example .
+3-32:mutually exclusive .
+3-33:Think of pi as meaning agent i has currently control over the resource .
+3-34:Each agent has two possible actions, when in possession of the resource: either give it away, or keep it .
+3-35:Obviously there are infinitely many different s paths and t paths .
+3-36:Let us say that our set of initial states S0 equals {s, t}, i.e., we don"t make any assumptions about who initially has control over the resource .
+3-37:2.1 CTL We now define Computation Tree Logic (CTL), a branching time temporal logic intended for representing the properties of Kripke structures [8] .
+3-38:Note that since CTL is well known and widely documented in the literature, our presentation, though complete, will be somewhat terse .
+3-39:We will use CTL to express agents" goals .
+3-40:The syntax of CTL is defined by the following grammar: ϕ ::= | p | ¬ϕ | ϕ ∨ ϕ | E fϕ | E(ϕ U ϕ) | A fϕ | A(ϕ U ϕ) where p ∈ Φ .
+3-41:We denote the set of CTL formula over Φ by LΦ; since Φ is understood, we usually omit reference to it .
+3-42:The semantics of CTL are given with respect to the satisfaction relation |=, which holds between pairs of the form K, s, (where K is a Kripke structure and s is a state in K), and formulae of the language .
+3-43:The satisfaction relation is defined as follows: K, s |= ; K, s |= p iff p ∈ V (s) (where p ∈ Φ); K, s |= ¬ϕ iff not K, s |= ϕ; K, s |= ϕ ∨ ψ iff K, s |= ϕ or K, s |= ψ; K, s |= A fϕ iff ∀π ∈ Π(s) : K, π[1] |= ϕ; K, s |= E fϕ iff ∃π ∈ Π(s) : K, π[1] |= ϕ; K, s |= A(ϕ U ψ) iff ∀π ∈ Π(s), ∃u ∈ N, s.t .
+3-44:K, π[u] |= ψ and ∀v, (0 ≤ v < u) : K, π[v] |= ϕ K, s |= E(ϕ U ψ) iff ∃π ∈ Π(s), ∃u ∈ N, s.t .
+3-45:K, π[u] |= ψ and ∀v, (0 ≤ v < u) : K, π[v] |= ϕ The remaining classical logic connectives (∧, →, ↔) are assumed to be defined as abbreviations in terms of ¬, ∨, in the conventional manner .
+3-46:The remaining CTL temporal operators are defined: A♦ϕ ≡ A( U ϕ) E♦ϕ ≡ E( U ϕ) A ϕ ≡ ¬E♦¬ϕ E ϕ ≡ ¬A♦¬ϕ We say ϕ is satisfiable if K, s |= ϕ for some Kripke structure K and state s in K; ϕ is valid if K, s |= ϕ for all Kripke structures K and states s in K .
+3-47:The problem of checking whether K, s |= ϕ for given K, s, ϕ (model checking) can be done in deterministic polynomial time, while checking whether a given ϕ is satisfiable or whether ϕ is valid is EXPTIME complete [8] .
+3-48:We write K |= ϕ if K, s0 |= ϕ for all s0 ∈ S0 , and |= ϕ if K |= ϕ for all K .
+3-49:882 The Sixth Intl .
+3-50:Joint Conf .
+3-51:on Autonomous Agents and Multi Agent Systems (AAMAS 07) .
+4 NORMATIVE SYSTEMS :
+4-1:For our purposes, a normative system is simply a set of constraints on the behaviour of agents in a system [1] .
+4-2:More precisely, a normative system defines, for every possible system transition, whether or not that transition is considered to be legal or not .
+4-3:Different normative systems may differ on whether or not a transition is legal .
+4-4:Formally, a normative system η (w.r.t .
+4-5:a Kripke structure K = S, S0 , R, A, α, V ) is simply a subset of R, such that R \ η is a total relation .
+4-6:The requirement that R\η is total is a reasonableness constraint: it prevents normative systems which lead to states with no successor .
+4-7:Let N = {η : (η ⊆ R) & (R \ η is total)} be the set of normative systems over R .
+4-8:The intended interpretation of a normative system η is that (s, s ) ∈ η means transition (s, s ) is forbidden in the context of η; hence R \ η denotes the legal transitions of η .
+4-9:Since it is assumed η is reasonable, we are guaranteed that a legal outward transition exists for every state .
+4-10:We denote the empty normative system by η∅, so η∅ = ∅ .
+4-11:Note that the empty normative system η∅ is reasonable with respect to any transition relation R .
+4-12:The effect of implementing a normative system on a Kripke structure is to eliminate from it all transitions that are forbidden according to this normative system (see [15, 1]) .
+4-13:If K is a Kripke structure, and η is a normative system over K, then K † η denotes the Kripke structure obtained from K by deleting transitions forbidden in η .
+4-14:Formally, if K = S, S0 , R, A, α, V , and η ∈ N (R), then let K†η = K be the Kripke structure K = S , S0 , R , A , α , V where: • S = S , S0 = S0 , A = A , and V = V ; • R = R \ η; and • α is the restriction of α to R : α (s, s ) = j α(s, s ) if (s, s ) ∈ R undefined otherwise .
+4-15:Notice that for all K, we have K † η∅ = K .
+4-16:EXAMPLE 1 .
+4-17:(continued) When thinking in terms of fairness, it seems natural to consider normative systems η that contain (s, s) or (t, t) .
+4-18:A normative system with (s, t) would not be fair, in the sense that A♦A ¬p1 ∨ A♦A ¬p2 holds: in all paths, from some moment on, one agent will have control forever .
+4-19:Let us, for later reference, fix η1 = {(s, s)}, η2 = {(t, t)}, and η3 = {(s, s), (t, t)} .
+4-20:Later, we will address the issue of whether or not agents should rationally choose to comply with a particular normative system .
+4-21:In this context, it is useful to define operators on normative systems which correspond to groups of agents defecting from the normative system .
+4-22:Formally, let K = S, S0 ,R, A,α, V be a Kripke structure, let C ⊆ A be a set of agents over K, and let η be a normative system over K .
+4-23:Then: • η C denotes the normative system that is the same as η except that it only contains the arcs of η that correspond to the actions of agents in C .
+4-24:We call η C the restriction of η to C, and it is defined as: η C = {(s, s ) : (s, s ) ∈ η & α(s, s ) ∈ C} .
+4-25:Thus K † (η C) is the Kripke structure that results if only the agents in C choose to comply with the normative system .
+4-26:• η C denotes the normative system that is the same as η except that it only contains the arcs of η that do not correspond to actions of agents in C .
+4-27:We call η C the exclusion of C from η, and it is defined as: η C = {(s, s ) : (s, s ) ∈ η & α(s, s ) ∈ C} .
+4-28:Thus K † (η C) is the Kripke structure that results if only the agents in C choose not to comply with the normative system (i.e., the only ones who comply are those in A \ C) .
+4-29:Note that we have η C = η (A\C) and η C = η (A\C) .
+4-30:EXAMPLE 1 .
+4-31:(Continued) We have η1 {1} = η1 = {(s, s)}, while η1 {1} = η∅ = η1 {2} .
+4-32:Similarly, we have η3 {1} = {(s, s)} and η3 {1} = {(t, t)}. .
+5 GOALS AND UTILITIES :
+5-1:Next, we want to be able to capture the goals that agents have, as these will drive an agent"s strategic considerations particularly, as we will see, considerations about whether or not to comply with a normative system .
+5-2:We will model an agent"s goals as a prioritised list of CTL formulae, representing increasingly desired properties that the agent wishes to hold .
+5-3:The intended interpretation of such a goal hierarchy γi for agent i ∈ A is that the further up the hierarchy a goal is, the more it is desired by i .
+5-4:Note that we assume that if an agent can achieve a goal at a particular level in its goal hierarchy, then it is unconcerned about goals lower down the hierarchy .
+5-5:Formally, a goal hierarchy, γ, (over a Kripke structure K) is a finite, non empty sequence of CTL formulae γ = (ϕ0, ϕ1, .
+5-6:.
+5-7:.
+5-8:, ϕk ) in which, by convention, ϕ0 = .
+5-9:We use a natural number indexing notation to extract the elements of a goal hierarchy, so if γ = (ϕ0, ϕ1, .
+5-10:.
+5-11:.
+5-12:, ϕk ) then γ[0] = ϕ0, γ[1] = ϕ1, and so on .
+5-13:We denote the largest index of any element in γ by |γ| .
+5-14:A particular Kripke structure K is said to satisfy a goal at index x in goal hierarchy γ if K |= γ[x], i.e., if γ[x] is satisfied in all initial states S0 of K .
+5-15:An obvious potential property of goal hierarchies is monotonicity: where goals at higher levels in the hierarchy logically imply those at lower levels in the hierarchy .
+5-16:Formally, a goal hierarchy γ is monotonic if for all x ∈ {1, .
+5-17:.
+5-18:.
+5-19:, |γ|} ⊆ N, we have |= γ[x] → γ[x − 1] .
+5-20:The simplest type of monotonic goal hierarchy is where γ[x + 1] = γ[x] ∧ ψx+1 for some ψx+1, so at each successive level of the hierarchy, we add new constraints to the goal of the previous level .
+5-21:Although this is a natural property of many goal hierarchies, it is not a property we demand of all goal hierarchies .
+5-22:EXAMPLE 1 .
+5-23:(continued) Suppose the agents have similar, but opposing goals: each agent i wants to keep the source as often and long as possible for himself .
+5-24:Define each agent"s goal hierarchy as: γi = ( ϕi 0 = , ϕi 1 = E♦pi , ϕi 2 = E E♦pi , ϕi 3 = E♦E pi , ϕi 4 = A E♦pi , ϕi 5 = E♦A pi ϕi 6 = A A♦pi , ϕi 7 = A (A♦pi ∧ E pi ), ϕi 8 = A pi ) The most desired goal of agent i is to, in every computation, always have the resource, pi (this is expressed in ϕi 8) .
+5-25:Thanks to our reasonableness constraint, this goal implies ϕi 7 which says that, no matter how the computation paths evolve, it will always be that all The Sixth Intl .
+5-26:Joint Conf .
+5-27:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 883 continuations will hit a point in which pi , and, moreover, there is a continuation in which pi always holds .
+5-28:Goal ϕi 6 is a fairness constraint implied by it .
+5-29:Note that A♦pi says that every computation eventually reaches a pi state .
+5-30:This may mean that after pi has happened, it will never happen again .
+5-31:ϕi 6 circumvents this: it says that, no matter where you are, there should be a future pi state .
+5-32:The goal ϕi 5 is like the strong goal ϕi 8 but it accepts that this is only achieved in some computation, eventually .
+5-33:ϕi 4 requires that in every path, there is always a continuation that eventually gives pi .
+5-34:Goal ϕi 3 says that pi should be true on some branch, from some moment on .
+5-35:It implies ϕi 2 which expresses that there is a computation such that everywhere during it, it is possible to choose a continuation that eventually satisfies pi .
+5-36:This implies ϕi 1, which says that pi should at least not be impossible .
+5-37:If we even drop that demand, we have the trivial goal ϕi 0 .
+5-38:We remark that it may seem more natural to express a fairness constraint ϕi 6 as A ♦pi .
+5-39:However, this is not a proper CTL formula .
+5-40:It is in fact a formula in CTL ∗ [9], and in this logic, the two expressions would be equivalent .
+5-41:However, our basic complexity results in the next sections would not hold for the richer language CTL ∗2 , and the price to pay for this is that we have to formulate our desired goals in a somewhat more cumbersome manner than we might ideally like .
+5-42:Of course, our basic framework does not demand that goals are expressed in CTL; they could equally well be expressed in CTL ∗ or indeed ATL [2] (as in [15]) .
+5-43:We comment on the implications of alternative goal representations at the conclusion of the next section .
+5-44:A multi agent system collects together a Kripke structure (representing the basic properties of a system under consideration: its state space, and the possible state transitions that may occur in it), together with a goal hierarchy, one for each agent, representing the aspirations of the agents in the system .
+5-45:Formally, a multi agent system, M , is an (n + 1) tuple: M = K, γ1, .
+5-46:.
+5-47:.
+5-48:, γn where K is a Kripke structure, and for each agent i in K, γi is a goal hierarchy over K .
+5-49:4.1 The Utility of Normative Systems We can now define the utility of a Kripke structure for an agent .
+5-50:The idea is that the utility of a Kripke structure is the highest index of any goal that is guaranteed for that agent in the Kripke structure .
+5-51:We make this precise in the function ui (·): ui = max{j : 0 ≤ j ≤ |γi | & K |= γi [j ]} Note that using these definitions of goals and utility, it never makes sense to have a goal ϕ at index n if there is a logically weaker goal ψ at index n + k in the hierarchy: by definition of utility, it could never be n for any structure K .
+5-52:EXAMPLE 1 .
+5-53:(continued) Let M = K, γ1, γ2 be the multiagent system of Figure 1, with γ1 and γ2 as defined earlier in this example .
+5-54:Recall that we have defined S0 as {s, t} .
+5-55:Then, u1(K) = u2(K) = 4: goal ϕ4 is true in S0 , but ϕ5 is not .
+5-56:To see that ϕ2 4 = A E♦p2 is true in s for instance: note that on ever path it is always the case that there is a transition to t, in which p2 is true .
+5-57:Notice that since for any goal hierarchy γi we have γ[0] = , then for all Kripke structures, ui is well defined, with ui ≥ 2 CTL ∗ model checking is PSPACE complete, and hence much worse (under standard complexity theoretic assumptions) than model checking CTL [8] .
+5-58:η δ1(K, η) δ2(K, η) η∅ 0 0 η1 0 3 η2 3 0 η3 2 2 C D C (2, 2) (0, 3) D (3, 0) (0, 0) Figure 2: Benefits of implementing a normative system η (left) and pay offs for the game ΣM .
+5-59:given agent, the relative utility of different Kripke structures, but utility values are not on some standard system wide scale .
+5-60:The fact that ui (K1) > ui (K2) certainly means that i strictly prefers K1 over K2, but the fact that ui > uj does not mean that i values K more highly than j .
+5-61:Thus, it does not make sense to compare utility values between agents, and so for example, some system wide measures of utility, (notably those measures that aggregate individual utilities, such as social welfare), do not make sense when applied in this setting .
+5-62:However, as we shall see shortly, other measures such as Pareto efficiency can be usefully applied .
+5-63:There are other representations for goals, which would allow us to define cardinal utilities .
+5-64:The simplest would be to specify goals γ for an agent as a finite, non empty, one to one relation: γ ⊆ L×R .
+5-65:We assume that the x values in pairs (ϕ, x) ∈ γ are specified so that x for agent i means the same as x for agent j , and so we have cardinal utility .
+5-66:We then define the utility for i of a Kripke structure K asui = max{x : (ϕ, x) ∈ γi & K |= ϕ} .
+5-67:The results of this paper in fact hold irrespective of which of these representations we actually choose; we fix upon the goal hierarchy approach in the interests of simplicity .
+5-68:Our next step is to show how, in much the same way, we can lift the utility function from Kripke structures to normative systems .
+5-69:Suppose we are given a multi agent system M = K, γ1, .
+5-70:.
+5-71:.
+5-72:, γn and an associated normative system η over K .
+5-73:Let for agent i, δi (K, K ) be the difference in his utility when moving from K to K : δi (K, K ) = ui (K )− ui .
+5-74:Then the utility of η to agent i wrt K is δi (K, K † η) .
+5-75:We will sometimes abuse notation and just write δi (K, η) for this, and refer to it as the benefit for agent i of implementing η in K .
+5-76:Note that this benefit can be negative .
+5-77:Summarising, the utility of a normative system to an agent is the difference between the utility of the Kripke structure in which the normative system was implemented and the original Kripke structure .
+5-78:If this value is greater than 0, then the agent would be better off if the normative system were imposed, while if it is less than 0 then the agent would be worse off if η were imposed than in the original system .
+5-79:We say η is individually rational for i wrt K if δi (K, η) > 0, and individually rational simpliciter if η is individually rational for every agent .
+5-80:A social system now is a pair Σ = M , η where M is a multi agent system, and η is a normative system over M .
+5-81:EXAMPLE 1 .
+5-82:The table at the left hand in Figure 2 displays the utilities δi (K, η) of implementing η in the Kripke structure of our running example, for the normative systems η = η∅, η1, η2 and η3, introduced before .
+5-83:Recall that u1(K) = u2(K) = 4 .
+5-84:4.2 Universal and Existential Goals 884 The Sixth Intl .
+5-85:Joint Conf .
+5-86:on Autonomous Agents and Multi Agent Systems (AAMAS 07) Keeping in mind that a norm η restricts the possible transitions of the model under consideration, we make the following observation, borrowing from [15] .
+5-87:Some classes of goals are monotonic or anti monotonic with respect to adding additional constraints to a system .
+5-88:Let us therefore define two fragments of the language of CTL: the universal language Lu with typical element μ, and the existential fragment Le with typical element ε .
+5-89:μ ::= | p | ¬p | μ ∨ μ | A fμ | A μ | A(μ U μ) ε ::= | p | ¬p | ε ∨ ε | E fε | E♦ε | E(ε U ε) Let us say, for two Kripke structures K1 = S, S0 , R1, A, α, V and K2 = S, S0 , R2, A, α, V that K1 is a subsystem of K2 and K2 is a supersystem of K1, written K1 K2 iff R1 ⊆ R2 .
+5-90:Note that typically K † η K .
+5-91:Then we have (cf .
+5-92:[15]) .
+5-93:THEOREM 1 .
+5-94:Suppose K1 K2, and s ∈ S .
+5-95:Then ∀ε ∈ Le : K1, s |= ε ⇒ K2, s |= ε ∀μ ∈ Lu : K2, s |= μ ⇒ K1, s |= μ This has the following effect on imposing a new norm: COROLLARY 1 .
+5-96:Let K be a structure, and η a normative system .
+5-97:Let γi denote a goal hierarchy for agent i .
+5-98:, (i.e., γi [n] is a universal formula) .
+5-99:Then, for any normative system η, δi (K, η) ≥ 0 .
+5-100:existential formula ε .
+5-101:Then, δi (K † η, K) ≥ 0 .
+5-102:Corollary 1"s first item says that an agent whose current maximal goal in a system is a universal formula, need never fear the imposition of a new norm η .
+5-103:The reason is that his current goal will at least remain true (in fact a goal higher up in the hierarchy may become true) .
+5-104:It follows from this that an agent with only universal goals can only gain from the imposition of normative systems η .
+5-105:The opposite is true for existential goals, according to the second item of the corollary: it can never be bad for an agent to undo a norm η .
+5-106:Hence, an agent with only existential goals might well fear any norm η .
+5-107:However, these observations implicitly assume that all agents in the system will comply with the norm .
+5-108:Whether they will in fact do so, of course, is a strategic decision: it partly depends on what the agent thinks that other agents will do .
+5-109:This motivates us to consider normative system games. .
+6 NORMATIVE SYSTEM GAMES :
+6-1:We now have a principled way of talking about the utility of normative systems for agents, and so we can start to apply the technical apparatus of game theory to analyse them .
+6-2:Suppose we have a multi agent system M = K, γ1, .
+6-3:.
+6-4:.
+6-5:, γn and a normative system η over K .
+6-6:It is proposed to the agents in M that η should be imposed on K, (typically to achieve some coordination objective) .
+6-7:Our agent let"s say agent i is then faced with a choice: should it comply with the strictures of the normative system, or not? Note that this reasoning takes place before the agent is in the system it is a design time consideration .
+6-8:We can understand the reasoning here as a game, as follows .
+6-9:A game in strategic normal form (cf .
+6-10:[11, p.11]) is a structure: G = AG, S1, .
+6-11:.
+6-12:.
+6-13:, Sn , U1, .
+6-14:.
+6-15:.
+6-16:, Un where: • AG = {1, .
+6-17:.
+6-18:.
+6-19:, n} is a set of agents the players of the game; • Si is the set of strategies for each agent i ∈ AG (a strategy for an agent i is nothing else than a choice between alternative actions); and • Ui : (S1 × · · · × Sn ) → R is the utility function for agent i ∈ AG, which assigns a utility to every combination of strategy choices for the agents .
+6-20:Now, suppose we are given a social system Σ = M , η where M = K, γ1, .
+6-21:.
+6-22:.
+6-23:, γn .
+6-24:Then we can associate a game the normative system game GΣ with Σ, as follows .
+6-25:The agents AG in GΣ are as in Σ .
+6-26:Each agent i has just two strategies available to it: • C comply (cooperate) with the normative system; and • D do not comply with (defect from) the normative system .
+6-27:If S is a tuple of strategies, one for each agent, and x ∈ {C, D}, then we denote by AGx S the subset of agents that play strategy x in η AGC S only implements the restrictions for those agents that choose to cooperate in GΣ .
+6-28:Note that this is the same as η AGD S : the normative system that excludes all the restrictions of agents that play D in GΣ .
+6-29:We then define the utility functions Ui for each i ∈ AG as: Ui = δi (K, η AGC S ) .
+6-30:So, for example, if SD is a collection of strategies in which every agent defects (i.e., does not comply with the norm), then Ui (SD ) = δi (K, (η AGD SD )) = ui (K † η∅) − ui = 0 .
+6-31:In the same way, if SC is a collection of strategies in which every agent cooperates (i.e., complies with the norm), then Ui (SC ) = δi (K, (η AGD SC )) = ui (K † (η ∅)) = ui (K † η) .
+6-32:We can now start to investigate some properties of normative system games .
+6-33:EXAMPLE 1 .
+6-34:(continued) For our example system, we have displayed the different U values for our multi agent system with the norm η3, i.e., {(s, s), (t, t)} as the second table of Figure 2 .
+6-35:For instance, the pair (0, 3) in the matrix under the entry S = C, D is obtained as follows .
+6-36:U1( C, D ) = δ1(K, η3 AGC C,D ) = u1(K † η3 AGC C,D ) − u1(K) .
+6-37:The first term of this is the utility of 1 in the system K where we implement η3 for the cooperating agent, i.e., 1, only .
+6-38:This means that the transitions are R \ {(s, s)} .
+6-39:In this system, still ϕ1 4 = A E♦p1 is the highest goal for agent 1 .
+6-40:This is the same utility for 1 as in K, and hence, δ1(K, η3 AGC C,D ) = 0 .
+6-41:Agent 2 of course benefits if agent 1 complies with η3 while 2 does not .
+6-42:His utility would be 3, since η3 AGC C,D is in fact η1 .
+6-43:5.1 Individually Rational Normative Systems A normative system is individually rational if every agent would fare better if the normative system were imposed than otherwise .
+6-44:This is a necessary, although not sufficient condition on a norm to expect that everybody respects it .
+6-45:Note that η3 of our example is individually rational for both 1 and 2, although this is not a stable situation: given that the other plays C, i is better of by playing to the corresponding game in strategic form, as follows .
+6-46:Let Σ = M , η be a social system .
+6-47:Then the following are equivalent: The Sixth Intl .
+6-48:Joint Conf .
+6-49:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 885 f(xk) .. .
+6-50:s0 s1 s2 s3 s4 s(2k−1) s2k t(x1) f(x1) t(x2) f(x2) t(xk) Figure 3: The Kripke structure produced in the reduction of Theorem 2; all transitions are associated with agent 1, the only initial state is s0. .
+7 η is individually rational in M ; :
+7-1:The decision problem associated with individually rational normative systems is as follows: INDIVIDUALLY RATIONAL NORMATIVE SYSTEM (IRNS): Given: Multi agent system M .
+7-2:Question: Does there exist an individually rational normative system for M ? THEOREM 2 .
+7-3:IRNS is NP complete, even in one agent systems .
+7-4:PROOF .
+7-5:For membership of NP, guess a normative system η, and verify that it is individually rational .
+7-6:Since η ⊆ R, we will be able to guess it in nondeterministic polynomial time .
+7-7:To verify that it is individually rational, we check that for all i, we have ui (K † η) > ui (K); computing K † η is just set subtraction, so can be done in polynomial time, while determining the value of ui for any K can be done with a polynomial number of model checking calls, each of which requires only time polynomial in the K and γ .
+7-8:Hence verifying that ui (K † η) > ui requires only polynomial time .
+7-9:For NP hardness, we reduce SAT [12, p.77] .
+7-10:Given a SAT instance ϕ over Boolean variables x1, .
+7-11:.
+7-12:.
+7-13:, xk , we produce an instance of IRNS as follows .
+7-14:First, we define a single agent A = {1} .
+7-15:For each Boolean variable xi in the SAT instance, we create two Boolean variables t(xi ) and f (xi ) in the IRNS instance .
+7-16:We then create a Kripke structure Kϕ with 2k + 1 states, as shown in Figure 3: arcs in this graph correspond to transitions in Kϕ .
+7-17:Let ϕ∗ be the result of systematically substituting for every Boolean variable xi in ϕ the CTL expression (E ft(xi )) .
+7-18:Next, consider the following formulae: k^ i=1 E f(t(xi ) ∨ f (xi )) (1) k^ i=1 ¬((E ft(xi )) ∧ (E ff (xi ))) (2) We then define the goal hierarchy for all agent 1 as follows: γ1[0] = γ1[1] = (1) ∧ (2) ∧ ϕ∗ We claim there is an individually rational normative system for the instance so constructed iff ϕ is satisfiable .
+7-19:First, notice that any individually rational normative system must force γ1[1] to be true, since in the original system, we do not have γ1[1] .
+7-20:For the ⇒ direction, if there is an individually rational normative system η, then we construct a satisfying assignment for ϕ by considering the arcs that are forbidden by η: formula (1) ensures that we must forbid an arc to either a t(xi ) or a f (xi ) state for all variables xi , but (2) ensures that we cannot forbid arcs to both .
+7-21:So, if we forbid an arc to a t(xi ) state then in the corresponding valuation for ϕ we make xi false, while if we forbid an arc to a f (xi ) state then we make xi true .
+7-22:The fact that ϕ∗ is part of the goal ensures that the normative system is indeed a valuation for ϕ .
+7-23:For ⇐, note that for any satisfying valuation for ϕ we can construct an individually rational normative system η, as follows: if the valuation makes xi true, we forbid the arc to the f (xi ) state, while if the valuation makes xi false, we forbid the arc to the t(xi ) state .
+7-24:The resulting normative system ensures γ1[1], and is thus individually rational .
+7-25:Notice that the Kripke structure constructed in the reduction contains just a single agent, and so the Theorem is proven .
+7-26:5.2 Pareto Efficient Normative Systems Pareto efficiency is a basic measure of how good a particular outcome is for a group of agents [11, p.7] .
+7-27:Intuitively, an outcome is Pareto efficient if there is no other outcome that makes every agent better off .
+7-28:In our framework, suppose we are given a social system Σ = M , η , and asked whether η is Pareto efficient .
+7-29:This amounts to asking whether or not there is some other normative system η such that every agent would be better off under η than with η .
+7-30:If η makes every agent better off than η, then we say η Pareto dominates η .
+7-31:The decision problem is as follows: PARETO EFFICIENT NORMATIVE SYSTEM (PENS): Given: Multi agent system M and normative system η over M .
+7-32:Question: Is η Pareto efficient for M ? THEOREM 3 .
+7-33:PENS is co NP complete, even for one agent systems .
+7-34:PROOF .
+7-35:Let M and η be as in the Theorem .
+7-36:We show that the complement problem to PENS, which we refer to as PARETO DOMINATED, is NP complete .
+7-37:In this problem, we are given M and η, and we are asked whether η is Pareto dominated, i.e., whether or not there exists some η over M such that η makes every agent better off than η .
+7-38:For membership of NP, simply guess a normative system η , and verify that for all i ∈ A, we have ui (K † η ) > ui (K † η) verifying requires a polynomial number of model checking problems, each of which takes polynomial time .
+7-39:Since η ⊆ R, the normative system can be guessed in non deterministic polynomial time .
+7-40:For NP hardness, we reduce IRNS, which we know to be NPcomplete from Theorem 2 .
+7-41:Given an instance M of IRNS, we let M in the instance of PARETO DOMINATED be as in the IRNS instance, and define the normative system for PARETO DOMINATED to be η∅, the empty normative system .
+7-42:Now, it is straightforward that there exists a normative system η which Pareto dominates η∅ in M iff there exist an individually rational normative system in M .
+7-43:Since the complement problem is NP complete, it follows that PENS is co NP complete .
+7-44:886 The Sixth Intl .
+7-45:Joint Conf .
+7-46:on Autonomous Agents and Multi Agent Systems (AAMAS 07) η0 η1 η2 η3 η4 η5 η6 η7 η8 u1(K † η) 4 4 7 6 5 0 0 8 0 u2(K † η) 4 7 4 6 0 5 8 0 0 Table 1: Utilities for all possible norms in our example How about Pareto efficient norms for our toy example? Settling this question amounts to finding the dominant normative systems among η0 = η∅, η1, η2, η3 defined before, and η4 = {(s, t)}, η5 = {(t, s)}, η6 = {(s, s), (t, s)}, η7 = {(t, t), (s, t)} and η8 = {(s, t), (t, s)} .
+7-47:The utilities for each system are given in Table 1 .
+7-48:From this, we infer that the Pareto efficient norms are η1, η2, η3, η6 and η7 .
+7-49:Note that η8 prohibits the resource to be passed from one agent to another, and this is not good for any agent (since we have chosen S0 = {s, t}, no agent can be sure to ever get the resource, i.e., goal ϕi 1 is not true in K † η8) .
+7-50:5.3 Nash Implementation Normative Systems The most famous solution concept in game theory is of course Nash equilibrium [11, p.14] .
+7-51:A collection of strategies, one for each agent, is said to form a Nash equilibrium if no agent can benefit by doing anything other than playing its strategy, under the assumption that the other agents play theirs .
+7-52:Nash equilibria are important because they provide stable solutions to the problem of what strategy an agent should play .
+7-53:Note that in our toy example, although η3 is individually rational for each agent, it is not a Nash equilibrium, since given this norm, it would be beneficial for agent 1 to deviate (and likewise for 2) .
+7-54:In our framework, we say a social system Σ = M , η (where η = η∅) is a Nash implementation if SC (i.e., everyone complying with the normative system) forms a Nash equilibrium in the game GΣ .
+7-55:The intuition is that if Σ is a Nash implementation, then complying with the normative system is a reasonable solution for all concerned: there can be no benefit to deviating from it, indeed, there is a positive incentive for all to comply .
+7-56:If Σ is not a Nash implementation, then the normative system is unlikely to succeed, since compliance is not rational for some agents .
+7-57:(Our choice of terminology is deliberately chosen to reflect the way the term Nash implementation is used in implementation theory, or mechanism design [11, p.185], where a game designer seeks to achieve some outcomes by designing the rules of the game such that these outcomes are equilibria.) NASH IMPLEMENTATION : Given: Multi agent system M .
+7-58:Question: Does there exist a non empty normative system η over M such that M , η forms a Nash implementation? Verifying that a particular social system forms a Nash implementation can be done in polynomial time it amounts to checking: ∀i ∈ A : ui (K † η) ≥ ui (K † (η {i})) .
+7-59:This, clearly requires only a polynomial number of model checking calls, each of which requires only polynomial time .
+7-60:THEOREM 4 .
+7-61:The NI problem is NP complete, even for twoagent systems .
+7-62:PROOF .
+7-63:For membership of NP, simply guess a normative system η and check that it forms a Nash implementation; since η ⊆ R, guessing can be done in non deterministic polynomial time, and as s(2k+1) 1 1 1 1 1 1 11 1 1 11 2 2 2 2 2 2 2 2 2 2 2 t(x1) f(x1) t(x2) f(x2) t(xk) f(xk) 2 2 t(x1) f(x1) t(x2) f(x2) t(xk) f(xk) ..... .
+7-64:s0 Figure 4: Reduction for Theorem 4 .
+7-65:we argued above, verifying that it forms a Nash implementation can be done in polynomial time .
+7-66:For NP hardness, we reduce SAT .
+7-67:Suppose we are given a SAT instance ϕ over Boolean variables x1, .
+7-68:.
+7-69:.
+7-70:, xk .
+7-71:Then we construct an instance of NI as follows .
+7-72:We create two agents, A = {1, 2} .
+7-73:For each Boolean variable xi we create two Boolean variables, t(xi ) and f (xi ), and we then define a Kripke structure as shown in Figure 4, with s0 being the only initial state; the arc labelling in Figure 4 gives the α function, and each state is labelled with the propositions that are true in that state .
+7-74:For each Boolean variable xi , we define the formulae xi and x⊥ i as follows: xi = E f(t(xi ) ∧ E f((E f(t(xi ))) ∧ A f(¬f (xi )))) x⊥ i = E f(f (xi ) ∧ E f((E f(f (xi ))) ∧ A f(¬t(xi )))) Let ϕ∗ be the formula obtained from ϕ by systematically substituting xi for xi .
+7-75:Each agent has three goals: γi [0] = for both i ∈ {1, 2}, while γ1[1] = k^ i=1 ((E f(t(xi ))) ∧ (E f(f (xi )))) γ2[1] = E fE f k^ i=1 ((E f(t(xi ))) ∧ (E f(f (xi )))) and finally, for both agents, γi [2] being the conjunction of the following formulae: The Sixth Intl .
+7-76:Joint Conf .
+7-77:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 887 k^ i=1 (xi ∨ x⊥ i ) (3) k^ i=1 ¬(xi ∧ x⊥ i ) (4) k^ i=1 ¬(E f(t(xi )) ∧ E f(f (xi ))) (5) ϕ∗ (6) We denote the multi agent system so constructed by Mϕ .
+7-78:Now, we prove that the SAT instance ϕ is satisfiable iff Mϕ has a Nash implementation normative system: For the ⇒ direction, suppose ϕ is satisfiable, and let X be a satisfying valuation, i.e., a set of Boolean variables making ϕ true .
+7-79:We can extract from X a Nash implementation normative system η as follows: if xi ∈ X , then η includes the arc from s0 to the state in which f (xi ) is true, and also includes the arc from s(2k + 1) to the state in which f (xi ) is true; if xi ∈ X , then η includes the arc from s0 to the state in which t(xi ) is true, and also includes the arc from s(2k + 1) to the state in which t(xi ) is true .
+7-80:No other arcs, apart from those so defined, as included in η .
+7-81:Notice that η is individually rational for both agents: if they both comply with the normative system, then they will have their γi [2] goals achieved, which they do not in the basic system .
+7-82:To see that η forms a Nash implementation, observe that if either agent defects from η, then neither will have their γi [2] goals achieved: agent 1 strictly prefers (C, C) over (D, C), and agent 2 strictly prefers (C, C) over (C, D) .
+7-83:For the ⇐ direction, suppose there exists a Nash implementation normative system η, in which case η = ∅ .
+7-84:Then ϕ is satisfiable; for suppose not .
+7-85:Then the goals γi [2] are not achievable by any normative system, (by construction) .
+7-86:Now, since η must forbid at least one transition, then at least one agent would fail to have its γi [1] goal achieved if it complied, so at least one would do better by defecting, i.e., not complying with η .
+7-87:But this contradicts the assumption that η is a Nash implementation, i.e., that (C, C) forms a Nash equilibrium .
+7-88:This result is perhaps of some technical interest beyond the specific concerns of the present paper, since it is related to two problems that are of wider interest: the complexity of mechanism design [5], and the complexity of computing Nash equilibria [6, 7] 5.4 Richer Goal Languages It is interesting to consider what happens to the complexity of the problems we consider above if we allow richer languages for goals: in particular, CTL ∗ [9] .
+7-89:The main difference is that determining ui in a given multi agent system M when such a goal language is used involves solving a PSPACE complete problem (since model checking for CTL ∗ is PSPACE complete [8]) .
+7-90:In fact, it seems that for each of the three problems we consider above, the corresponding problem under the assumption of a CTL ∗ representation for goals is also PSPACE complete .
+7-91:It cannot be any easier, since determining the utility of a particular Kripke structure involves solving a PSPACE complete problem .
+7-92:To see membership in PSPACE we can exploit the fact that PSPACE = NPSPACE [12, p.150], and so we can guess the desired normative system, applying a PSPACE verification procedure to check that it has the desired properties. .
+8-1:Social norms are supposed to restrict our behaviour
+8-2:Of course, such a restriction does not have to be bad: the fact that an agent"s behaviour is restricted may seem a limitation, but there may be benefits if he can assume that others will also constrain their behaviour
+8-3:The question then, for an agent is, how to be sure that others will comply with a norm
+8-4:And, for a system designer, how to be sure that the system will behave socially, that is, according to its norm
+8-5:Game theory is a very natural tool to analyse and answer these questions, which involve strategic considerations, and we have proposed a way to translate key questions concerning logic based normative systems to game theoretical questions
+8-6:We have proposed a logical framework to reason about such scenarios, and we have given some computational costs for settling some of the main questions about them
+8-7:Of course, our approach is in many senses open for extension or enrichment
+8-8:An obvious issue is to consider is the complexity of the questions we give for more practical representations of models (cf
+8-9:[1]), and to consider other classes of allowable goals.
+9-1:T
+9-2:Agotnes, W
+9-3:van der Hoek, J
+9-4:A
+9-5:Rodriguez Aguilar, C
+9-6:Sierra, and M
+9-7:Wooldridge
+9-8:On the logic of normative systems
+9-9:In Proc
+9-10:IJCAI 07, Hyderabad, India, 2007
+9-11:R
+9-12:Alur, T
+9-13:A
+9-14:Henzinger, and O
+9-15:Kupferman
+9-16:Alternating time temporal logic
+9-17:Jnl
+9-18:of the ACM, 49(5):672 713, 2002
+9-19:K
+9-20:Binmore
+9-21:Game Theory and the Social Contract Volume 1: Playing Fair
+9-22:The MIT Press: Cambridge, MA, 1994
+9-23:K
+9-24:Binmore
+9-25:Game Theory and the Social Contract Volume 2: Just Playing
+9-26:The MIT Press: Cambridge, MA, 1998
+9-27:V
+9-28:Conitzer and T
+9-29:Sandholm
+9-30:Complexity of mechanism design
+9-31:In Proc
+9-32:UAI, Edmonton, Canada, 2002
+9-33:V
+9-34:Conitzer and T
+9-35:Sandholm
+9-36:Complexity results about nash equilibria
+9-37:In Proc
+9-38:IJCAI 03, pp
+9-39:765 771, Acapulco, Mexico, 2003
+9-40:C
+9-41:Daskalakis, P
+9-42:W
+9-43:Goldberg, and C
+9-44:H
+9-45:Papadimitriou
+9-46:The complexity of computing a Nash equilibrium
+9-47:In Proc
+9-48:STOC, Seattle, WA, 2006
+9-49:E
+9-50:A
+9-51:Emerson
+9-52:Temporal and modal logic
+9-53:In Handbook of Theor
+9-54:Comp
+9-55:Sci
+9-56:Vol
+9-57:B, pages 996 1072
+9-58:Elsevier, 1990
+9-59:E
+9-60:A
+9-61:Emerson and J
+9-62:Y
+9-63:Halpern
+9-64:‘Sometimes" and ‘not never" revisited: on branching time versus linear time temporal logic
+9-65:Jnl
+9-66:of the ACM, 33(1):151 178, 1986
+9-67:D
+9-68:Fitoussi and M
+9-69:Tennenholtz
+9-70:Choosing social laws for multi agent systems: Minimality and simplicity
+9-71:Artificial Intelligence, 119(1 2):61 101, 2000
+9-72:M
+9-73:J
+9-74:Osborne and A
+9-75:Rubinstein
+9-76:A Course in Game Theory
+9-77:The MIT Press: Cambridge, MA, 1994
+9-78:C
+9-79:H
+9-80:Papadimitriou
+9-81:Computational Complexity
+9-82:Addison Wesley: Reading, MA, 1994
+9-83:Y
+9-84:Shoham and M
+9-85:Tennenholtz
+9-86:On the synthesis of useful social laws for artificial agent societies
+9-87:In Proc
+9-88:AAAI, San Diego, CA, 1992
+9-89:Y
+9-90:Shoham and M
+9-91:Tennenholtz
+9-92:On social laws for artificial agent societies: Off line design
+9-93:In Computational Theories of Interaction and Agency, pages 597 618
+9-94:The MIT Press: Cambridge, MA, 1996
+9-95:W
+9-96:van der Hoek, M
+9-97:Roberts, and M
+9-98:Wooldridge
+9-99:Social laws in alternating time: Effectiveness, feasibility, and synthesis
+9-100:Synthese, 2007
+9-101:M
+9-102:Wooldridge and W
+9-103:van der Hoek
+9-104:On obligations and normative ability
+9-105:Jnl
+9-106:of Appl
+9-107:Logic, 3:396 420, 2005
+9-108:888 The Sixth Intl
+9-109:Joint Conf
+9-110:on Autonomous Agents and Multi Agent Systems (AAMAS 07)
+picture:

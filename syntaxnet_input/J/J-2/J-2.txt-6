@@ -1,0 +1,27 @@
+For selected values of n and m, we solved the linear program using Glpk (GNU Linear Programming Kit) .
+In the table below, we present the results for a single unit (m = 1) .
+We present 1?k (the percentage of the total VCG payment that is not redistributed by the worst case optimal mechanism in the worst case) instead of k in the second column because writing k would require too many significant digits .
+Correspondingly, the third column displays the percentage 5 10 15 20 25 30 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Number of AgentsWorst?caseRedistributionPercentage 1 Unit WO 1 Unit BC 2 Units WO 2 Units BC 3 Units WO 3 Units BC 4 Units WO 4 Units BC Figure 1
+of the total VCG payment that is not redistributed by the Bailey Cavallo mechanism in the worst case (which is equal to 2 n ) .
+n 1 ? k Bailey ? Cavallo Mechanism 3 66.7% 66.7% 4 42.9% 50.0% 5 26.7% 40.0% 6 16.1% 33.3% 7 9.52% 28.6% 8 5.51% 25.0% 9 3.14% 22.2% 10 1.76% 20.0% 20 3.62e ? 5 10.0% 30 5.40e ? 8 6.67e ? 2 40 7.09e ? 11 5.00e ? 2 The worst case optimal mechanism significantly outperforms the Bailey Cavallo mechanism in the worst case .
+Perhaps more surprisingly, the worst case optimal mechanism sometimes does better in the worst case than the BaileyCavallo mechanism does on average, as the following example shows .
+Recall that the total redistribution payment of the BaileyCavallo mechanism is (m + 1)m n ?vm+2 + (n ? m ? 1)m n ?vm+1 .
+For the single unit case, this simplifies to 2 n ?v3 + n?2 n ?v2 .
+Hence the percentage of the total VCG payment that is not redistributed is ?v2? 2 n ?v3? n?2 n ?v2 ?v2 = 2 n ? 2 n ?v3 ?v2 , which has an expected value of E( 2 n ? 2 n ?v3 ?v2 ) = 2 n ? 2 n E ?v3 ?v2 .
+Suppose the bid values are drawn from a uniform distribution over [0, 1] .
+The theory of order statistics tells us that the 34 joint probability density function of ?v2 and ?v3 is f(?v3, ?v2) = n(n ? 1)(n ? 2)?vn?3 3 (1 ? ?v2) for ?v2 ? ?v3 .
+Now, E ?v3 ?v2 = R 1 0 R ?v2 0 ?v3 ?v2 f(?v3, ?v2)d?v3d?v2 = n?2 n?1 .
+So, the expected value of the remaining percentage is 2 n ? 2 n n?2 n?1 = 2 n(n?1) .
+For n = 20, this is 5.26e ? 3, whereas the remaining percentage for the worst case optimal mechanism is 3.62e?5 in the worst case .
+Let us present the optimal solution for the case n = 5 in detail .
+By solving the above linear program, we find that the optimal values for the ci are c2 = 11 45 , c3 = ?1 9 , and c4 = 1 15 .
+That is, the redistribution payment received by each agent is
+The total amount redistributed is 11 15 ?v2 + 4 15 ?v3 ? 4 15 ?v4 + 4 15 ?v5; in the worst case, 11 15 ?v2 is redistributed .
+Hence, the percentage of the total VCG payment that is not redistributed is never more than 4 15 = 26.7% .
+Finally, we compare the worst case optimal mechanism to the Bailey Cavallo mechanism for m = 1, 2, 3, 4, n = m + 2, .
+.
+.
+, 30 .
+These results are in Figure 1 .
+We see that for any m, when n = m + 2, the worst case optimal mechanism has the same worst case performance as the Bailey Cavallo mechanism (actually, in this case, the worst case optimal mechanism is identical to the BaileyCavallo mechanism) .
+When n > m + 2, the worst case optimal mechanism outperforms the Bailey Cavallo mechanism (in the worst case). .

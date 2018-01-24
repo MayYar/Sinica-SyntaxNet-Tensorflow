@@ -1,0 +1,102 @@
+In this section we introduce some background knowledge on CPNs assuming a basic understanding of ordinary Petri Nets .
+For technical details we refer the reader to [16] .
+We then map NSs to CPNs and analyse their properties .
+CPNs combine the strength of Petri nets with the strength of functional programming languages .
+On the one hand, Petri nets provide the primitives for the description of the synchronisation of concurrent processes .
+As noticed in [16], CPNs have a semantics which builds upon true concurrency, instead of interleaving .
+In our opinion, a true concurrency semantics is easier to work with because it is the way we envisage the connection between the coordination level and the normative level of a multi agent system to be .
+On the other hand, the functional programming languages used by CPNs provide the primitives for the definition of data types and the manipulation of their data values .
+Thus, we can readily translate expressions of a normative structure .
+Last but not least, CPNs have a well defined semantics which unambiguously defines the behaviour of each CPN .
+Furthermore, CPNs have a large number of formal analysis methods and tools by which properties of CPNs can be proved .
+Summing up, CPNs provide us with all the necessary features to formally reason about normative structures given that an adequate mapping is provided .
+In accordance with Petri nets, the states of a CPN are represented by means of places .
+But unlike Petri Nets, each place has an associated data type determining the kind of data which the place may contain .
+A state of a CPN is called a marking .
+It consists of a number of tokens positioned on the individual places .
+Each token carries a data value which has the type of the corresponding place .
+In general, a place may contain two or more tokens with the same data value .
+Thus, a marking of a CPN is a function which maps each place into a multi set2 of tokens of the correct type .
+One often refers to the token values as token colours and one also refers to the data types as colour sets .
+The types of a CPN can be arbitrarily complex .
+Actions in a CPN are represented by means of transitions .
+An incoming arc into a transition from a place indicates that the transition may remove tokens from the corresponding place while an outgoing arc indicates that the transition may add tokens .
+The exact number of tokens and their data values are determined by the arc expressions, which are encoded using the programming language chosen for the CPN .
+A transition is enabled in a CPN if and only if all the 2 A multi set (or bag) is an extension to the notion of set, allowing the possibility of multiple appearances of the same element .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 639 variables in the expressions of its incoming arcs are bound to some value(s) (each one of these bindings is referred to as a binding element) .
+If so, the transition may occur by removing tokens from its input places and adding tokens to its output places .
+In addition to the arc expressions, it is possible to attach a boolean guard expression (with variables) to each transition .
+Putting all the elements above together we obtain a formal definition of CPN that shall be employed further ahead for mapping purposes .
+Def .
+10 .
+A CPN is a tuple £U, P, T, A, N, C, G, E, I where
+In accordance with ordinary Petri nets, the concurrent behaviour of a CPN is based on the notion of step .
+Formally, a step is a non empty and finite multi set over the set of all binding elements .
+Let step S be enabled in a marking M .
+Then, S may occur, changing the marking M to M .
+Moreover, we say that marking M is directly reachable from marking M by the occurrence of step S, and we denote it by M[S > M .
+A finite occurrence sequence is a finite sequence of steps and markings
+.
+.
+Mn[Sn > Mn+1 such that n ? N and Mi[Si > Mi+1 ?i ? {1, .
+.
+.
+, n} .
+The set of all possible markings reachable for a net Net from a marking M is called its reachability set, and is denoted as R(Net, M) .
+5.1 Mapping to Coloured Petri Nets Our normative structure is a labelled bi partite graph .
+The same is true for a Coloured Petri Net .
+We are presenting a mapping f from one to the other, in order to provide semantics for the normative structure and prove properties about it by using well known theoretical results from work on CPNs .
+The mapping f makes use of correspondences between normative scenes and CPN places, normative transitions and CPN transitions and finally, between arc labels and CPN arc expressions .
+S ¡÷ P B ¡÷ T Lin ¡å Lout ¡÷ E The set of types is the singleton set containing the colour NP (i.e .
+£U = {NP}) .
+This complex type is structured as follows (we use CPN ML [4] syntax)
+Arcs are mapped almost directly .
+A is a finite set of arcs and N is a node function, such that ?a ? A ?a ? Ain ¡åAout .
+N(a) = a .
+The initialisation function I is defined as I(p) = £Gs (?s ? S where p is obtained from s using the mapping; remember that s = ids, £Gs ) .
+Finally, the colour function C assigns the colour NP to every place
+We are not making use of the guard function G .
+In future work, this function can be used to model constraints when we extend the expressiveness of our norm language .
+5.2 Properties of Normative Structures Having defined the mapping from normative structures to Coloured Petri Nets, we now look at properties of CPNs that help us understand the complexity of conflict detection .
+One question we would like to answer is, whether at a given point in time, a given normative structure is conflict free .
+Such a snapshot of a normative structure corresponds to a marking in the mapped CPN .
+Def .
+11 .
+Given a marking Mi, this marking is conflictfree if ??p ? P .
+?np1, np2 ? Mi(p) such that np1.mode = Obl and np2.mode = Prh and np1.illoc and np2.illoc unify under a valid substitution .
+Another interesting question would be, whether a conflict will occur from such a snapshot of the system by propagating the normative positions .
+In order to answer this question, we first translate the snapshot of the normative structure to the corresponding CPN and then execute the finite occurence sequence of markings and steps, verifying the conflict freedom of each marking as we go along .
+Def .
+12 .
+Given a marking Mi, a finite occurrence sequence Si, Si+1, ..., Sn is called conflict free, if and only if Mi[Si > Mi+1 .
+.
+.
+Mn[Sn > Mn+1 and Mk is conflict free for all k such that i ? k ? n + 1 .
+However, the main question we would like to investigate, is whether or not a given normative structure is conflictresistant, that is, whether or not the agents enacting the MAS are able to bring about conflicts through their actions .
+As soon as one includes the possibility of actions (or utterances) from autonomous agents, one looses determinism .
+Having mapped the normative structure to a CPN, we now add CPN models of the agents" interactions .
+Each form of agent interaction (i.e .
+each activity) can be modelled using CPNs along the lines of Cost et al .
+[5] .
+These nondeterministic CPNs feed tokens into the CPN that models the normative structure .
+This leads to the introduction of non determinism into the combined CPN .
+The lower half of figure 3 shows part of a CPN model of an agent protocol where the arc denoted with ¡¥1" represents some utterance of an illocution by an agent .
+The target transition of this arc, not only moves a token on to the next state of this CPN, but also places a token in the place corresponding to the appropriate normative scene in the CPN model of the normative structure (via arc ¡¥2") .
+Transition ¡¥3" finally could propagate that token in form of an obligation, for example .
+Thus, from a given marking, many different occurrence sequences are possible depending on the agents" actions .
+We make use of the reachability set R to define a situation in which agents cannot cause conflicts .
+640 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) Figure 3
+13 .
+Given a net N, a marking M is conflict resistant if and only if all markings in R(N,M) are conflict free .
+Checking conflict freedom of a marking can be done in polynomial time by checking all places of the CPN for conflicting tokens .
+Conflict freedom of an occurrence sequence in the CPN that represents the normative structure can also be done in polynomial time since this sequence is deterministic given a snapshot .
+Whether or not a normative structure is designed safely corresponds to checking the conflict resistance of the initial marking M0 .
+Now, verifying conflict resistance of a marking becomes a very difficult task .
+It corresponds to the reachability problem in a CPN
+This reachability problem is known to be NP complete for ordinary Petri Nets [22] and since CPNs are functionally identical, we cannot hope to verify conflict resistance of a normative structure off line in a reasonable amount of time .
+Therefore, distributed, run time mechanisms are needed to ensure that a normative structure maintains consistency .
+We present one such mechanism in the following section. .

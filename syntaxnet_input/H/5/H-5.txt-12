@@ -1,0 +1,24 @@
+6.1 Baselines We used Indri [17], a popular language model based retrieval engine, as a baseline for comparison with CAF?E .
+Indri supports standard search engine functionality, including pseudo relevance feedback [3, 6], and is representative of a typical query based retrieval system .
+Indri does not support any kind of novelty detection .
+We compare Indri with PRF turned on and off, against CAF?E with user feedback, novelty detection and antiredundant ranking turned on and off .
+6.2 Experimental Setup We divided the TDT4 corpus spanning 4 months into 10 chunks, each defined as a period of 12 consecutive days .
+At any given point of time in the distillation process, each system accessed the past data up to the current point, and returned a ranked list of up 50 passages per query .
+The 12 tasks defined on the corpus were divided into a training and test set with 6 tasks each .
+Each system was allowed to use the training set to tune its parameters for optimizing NDCU (equation 8), including the relevance threshold for both Indri and CAF?E, and the novelty and antiredundancy thresholds for CAF?E .
+The NDCU for each system run is calculated automatically .
+User feedback was also simulated relevance judgments for each system returned passage (as determined by the nugget matching rules described in section 4.1.2) were 4 URL
+6.3 Results In Table 1, we show the NDCU scores of the two systems under various settings .
+These scores are averaged over the six tasks in the test set, and are calculated with two dampening factors (see section 4.2)
+Using £^ = 0 creates a much more strict metric since it does not give any credit to a passage that contains relevant but redundant information .
+Hence, the improvement obtained from enabling user feedback is smaller with £^ = 0 than the improvement obtained from feedback with £^ = 0.1 .
+This reveals a shortcoming of contemporary retrieval systemswhen the user gives positive feedback on a passage, the systems gives higher weights to the terms present in that passage and tends to retrieve other passages containing the same terms and thus usually the same information .
+However, the user does not benefit from seeing such redundant passages, and is usually interested in other passages containing related information .
+It is informative to evaluate retrieval systems using our utility measure (with £^ = 0) which accounts for novelty and thus gives a more realistic picture of how well a system can generalize from user feedback, rather than using traditional IR measures like recall and precision which give an incomplete picture of improvement obtained from user feedback .
+Sometimes, however, users might indeed be interested in seeing the same information from multiple sources, as an Table 1
+In such a case, we can simply choose a higher value for £^ which corresponds to a higher tolerance for redundancy, and hence let the system tune its parameters accordingly .
+Since documents were processed chunk by chunk, it would be interesting to see how the performance of systems improves over time .
+Figures 1 and 2 show the performance trends for both the systems across chunks .
+While the performance with and without feedback on the first few chunks is expected to be close, for subsequent chunks, the performance curve with feedback enabled rises above the one with the no feedback setting .
+The performance trends are not consistent across all chunks because on topic documents are not uniformly distributed over all the chunks, making some queries ¡¥easier" than others in certain chunks .
+Moreover, since Indri uses pseudo relevance feedback while CAF?E uses feedback based on actual relevance judgments, the improvement in case of Indri is less dramatic than that of CAF?E. .

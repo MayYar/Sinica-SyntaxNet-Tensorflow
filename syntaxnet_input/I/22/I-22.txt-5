@@ -1,0 +1,140 @@
+SMMall (Shared Mental Models for all) is a cognitive agent architecture developed for supporting human centric collaborative computing .
+It stresses human"s role in team activities by means of novel collaborative concepts and multiple representations of context woven through all aspects of team work .
+Here we describe two components pertinent to the experiment reported in Section 5
+4.1 Multi Party Communication Multi party communication refers to conversations involving more than two parties .
+Aside from the speaker, the listeners involved in a conversation can be classified into various roles such as addressees (the direct listeners), auditors (the intended listeners), overhearers (the unintended but anticipated listeners), and eavesdroppers (the unanticipated listeners) .
+Multi party communication is one of the characteristics of human teams .
+SMMall agents, which can form Human Agent Pairs with human partners, support multiparty communication with the following features .
+performatives such as MInform (multi party inform), MAnnounce (multi party announce), and MAsk (multi party ask) .
+The listeners of a multi party performative can be addressees, auditors, and overhearers, which correspond to ．to", ．cc", and ．bcc" in e mail terms, respectively .
+398 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) are three built in channels
+An agent can fully tune to a channel to collect messages sent (or cc, bcc) to it .
+An agent can also partially tune to a channel to get statistic information about the messages communicated over the channel .
+This is particularly useful if an agent wants to know the communication load imposed on a teammate .
+4.2 Shared Belief Map & Load Display A concept shared belief map has been proposed and implemented into SMMall; this responds to the need to seek innovative perspectives or concepts that allow group members to effectively represent and reason about shared mental models at different levels of abstraction .
+As described in Section 5, humans and agents interacted through shared belief maps in the evaluation of HMM based load models .
+A shared belief map is a table with color coded info cellscells associated with information .
+Each row captures the belief model of one team member, and each column corresponds to a specific information type (all columns together define the boundary of the information space being considered) .
+Thus, info cell Cij of a map encodes all the beliefs (instances) of information type j held by agent i .
+Color coding applies to each info cell to indicate the number of information instances held by the corresponding agent .
+The concept of shared belief map helps maintain and present a human partner with a synergy view of the shared mental models evolving within a team .
+Briefly, SMMall has implemented the concept with the following features
+It allows selective (selected subset) or holistic info sharing .
+partners can initiate a multi party conversation .
+It also allows third party info sharing, say, A shares the information held by B with C .
+by inference rules) can be closely organized .
+Hence, nearby info cells can form meaningful plateaus (or contour lines) of similar colors .
+Colored plateaus indicate those sections of a shared mental model that bear high overlapping degrees .
+a shared belief map indicates the information difference among team members, and hence visually represents the potential information needs of each team member (See Figure 3) .
+SMMall has also implemented the HMM based models (Section 3) to allow an agent to estimate its human partner"s and other team members" cognitive processing loads .
+As shown in Fig .
+3, below the shared belief map there is a load display for each team member .
+There are 2 curves in a display
+If there are n team members, each agent needs to maintain 2n HMM based models to support the load displays .
+The human partner of a HAP can adjust her cognitive load at runtime, as well as monitor another HAP"s agent processing load and its probability of processing the information she sends at the current time step .
+Thus, the more closely a HAP can estimate the actual processing loads of other HAPs, the better information sharing performance the HAP can achieve .
+Figure 3
+Together they allow us to investigate the impact of sharing the right info .
+with the right party at the right time on the evolving of shared mental models .
+4.3 Metrics for Shared Mental Models We here describe how we measure team performance in our experiment .
+We use mental model overlapping percentage as the base to measure shared mental models .
+MMOP of a group is defined as the intersection of all the individual mental states relative to the union of individual mental states of the group .
+Formally, given a group of k agents G = {Ai|1 ? i ? k}, let Bi = {Iim|1 ? m ? n} be the beliefs (information) held by agent Ai, where each Iim is a set of information of the same type, and n (the size of information space) is fixed for the agents in G, then MMOP(G) = 100 n 1?m?n ( | ＞1?i?k Iim| | ≦1?i?k Iim| In this section we describe the experiments conducted to evaluate the load estimation models and the shared belief map concept for developing team shared mental models .
+5.1 Problem Description The members of a HAP team (i.e., a team composed of Human Agent Pairs) are situated in a dynamic environment .
+Due to their different (maybe overlapping) observability, at each time step they may get different situational information .
+The goal of a HAP team is to selectively share information in a timely manner to develop global situation awareness (say, for making critical decisions) .
+Each run of the experiment has 45 time steps; each time step lasts 15 seconds .
+A time step starts with certain infocells of the shared belief map being flashed quickly (for 2 s) .
+The flashed cells are exactly those with newly available information that should be shared at that time step .
+An info cell is frozen at the end of a time step
+This requires that the newly available information be shared in time, not later .
+The human and agent of a HAP assume different roles .
+An agent governs group communication and processes messages to update the shared belief map on its display .
+An agent, with a pre trained HMM based cognitive load model for its human partner and a processing load model for each of the other HAPs in the team, also estimates and displays their instantaneous loads .
+Human subjects need to perform a primary task and a secondary task .
+The secondary task of a human subject is to remember and mark the cells being flashed (not necessarily in the exact order) by left mouse clicks .
+Secondary task performance at step t is thus measured as the number of cells marked (remembered) correctly at t, which is taken as the observable state of the HMMbased cognitive load model of that human subject .
+The primary task of a human subject is to build a shared mental model of the dynamic situation by sharing the right information with the right party at the right time .
+To share the information associated with an info cell, a human subject needs to click the right mouse button on the cell, and select the receiving teammate(s) from the popup menu .
+There are costs associated with information sharing .
+Communications among HAPs is done by the corresponding SMMall agents, which have both limited capacity nin for processing incoming information and limited outgoing communication capacity nout .
+Thus, depending on the current HAP load, an agent may randomly ignore part or all of the incoming information (having no effect on the establishment of shared mental models) .
+On the other hand, each time step at most nout number of information sharing commands can be effective; more than that contribute nothing to the establishment of shared mental models .
+Sending information to an overloaded teammate will waste the capacity that otherwise can be used to share information with a less loaded teammate .
+This means that at each time step a human subject has to carefully go through three cognitive decisions
+The above description applies to HAP teams .
+For teams composed of SMMall agents only, the agents will take all the roles played by an agent or a human partner in HAP teams .
+5.2 Experiment Design To investigate the impacts of the HMM based load models on the evolution of shared mental models (SMM), we conducted experiments for both Agent teams and HAP teams, where agent teams involve agent processing load models only, HAP teams involve models of HAP processing load (i.e., the co effect of agent processing load and human cognitive load) .
+To get insights on how load predictions and multi party communication may affect the performance of forming SMM, we designed 3 Agent teams (TA1, TA2, TA3) and 3 HAP teams (TH1, TH2, TH3), where all agents adopt the strategy in Table 1 to send and process information .
+When sharing information, teams of type 1 (TA1, TH1) ignore load predictions; teams of type 2 (TA2, TH2) consider load predictions; teams of type 3 (TA3, TH3) follow load predictions more strictly in the sense that the agents will further group the receivers of a multi party message (MInform) by their loads and split the message into multiple messages with their receivers having the same load .
+For example, given that agents A1, A2, A3 have load 1, 2, 1, respectively .
+An agent A0 in a team of TA2 may send one multi party message, while an agent A0 in a team of TA3 will send two messages (one to A2, one to A1 and A3) .
+In addition, we controlled agents" outgoing communication capacities by varying from 6, 8, to 10 .
+Due to constraints on communication capacity and processing capacity, an agent can be inaccurate when tracking other teammates" mental models .
+In order to measure the actual shared mental models, a special SMMall agent named ．OmniAll" was added to each team to monitor inter agent communications and record the actual effects of information sharing on each agent"s mental model .
+This realizes a way, as suggested by Klimoski [6], to measuring the degree of overlap in immediate, intermediate, and long term situation awareness zones held by group members .
+We also recorded instantaneous information sharing utility, which is defined as follows .
+At each time step, let T = T0, T1, T2, T3, T4 be a sequence of sets, where T0, T1, T2, T3, and T4 are sets of teammates whose current load states are negligibly, slightly, fairly, heavily, and overly respectively .
+Let S be the set of information sharing commands issued by a human partner at the current step .
+Let Mi = {Tk ? T|k ? i, Tk = ?} .
+Instantaneous info sharing utility is defined as c?S s value(c) |S|, where s value(c) = ? ?? ?? 0 receiver(c) ? T4 0 c is known to receiver(c) 1 |Mi| receiver(c) ? Ti, i = 4 (6) In sum, this study involved 18 types of teams, each team had 4 members, and each team type was tested by 10 domain scenarios .
+30 human subjects were recruited for HAP teams .
+The experiment results are plotted in Figures 4, 6, and 7 .
+We next present our findings in this study .
+5.3 Load Estimation Betters Info sharing 400 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 35 40 45 50 55 60 65 Evolution of Shared Mental Models of Agent Teams time step PercentageofSMM(%) TA1?6 TA1?8 TA1?10 TA2?6 TA2?8 TA2?10 TA3?6 TA3?8 TA3?10 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 14 16 18 20 22 24 26 28 30 time step PercentageofSMM(%) Evolution of Shared Mental Models of HAP Teams TH1?6 TH1?8 TH1?10 TH2?6 TH2?8 TH2?10 TH3?6 TH3?8 TH3?10 NoSharing Figure 4
+Consider teams of type 1 (TA1, TH1) and teams of type 2 (TA2, TH2) .
+First look at the performance of HAP teams in Fig .
+4, we have
+(2) The averaged performance of TH2 teams performed consistently better than the TH1 teams for each capacity setting (TH2 6>TH1 6, TH2 8>TH1 8, TH2 10>TH1 10), and the performance difference of TH1 and TH2 teams increased as communication capacity increased .
+This indicates that, other things being equal, the benefit of exploiting load estimation when sharing information becomes more significant when communication capacity is larger .
+From Fig .
+4 the same findings can be derived for the performance of agent teams .
+In addition, the results also show that the SMMs of each team type were maintained steadily at a certain level after about 20 time steps .
+However, to maintain a SMM steadily at a certain level is a non trivial team task .
+The performance of teams who did not share any information (the ．NoSharing" curve in Fig .
+4) decreased constantly as time proceeded .
+5.4 Multi Party Communication for SMM We now compare teams of type 2 and type 3 (which splits multi party messages by receivers" loads) .
+As plotted in Fig .
+4, for HAP teams, the performance of team type 2 for each fixed communication capacity was consistently better than team type 3 (TH3 6?TH2 6, TH3 8<TH2 8, TH3 10<TH210); the difference became more significant as communication capacity increased .
+These also hold for the Agent teams (upper one in Fig .
+4) .
+Actually, the performance of type 3 (a) (b) A B C MInform I A B C Inform I Inform I Inform I Figure 5
+agent teams was even worse (for each fixed capacity) than the performance of type 1 agent teams .
+This can be explained by the difference of two party and multi party communications .
+In SMMall, in order to enable team level inference, each agent maintains an internal model of every team member"s mental model (beliefs) .
+According to the semantics of MInform (multi party inform), when A MInforms I to others, assuming all the receivers and overhearers will accept I, A will update its internal model of their beliefs; each of the receivers (overhearers), upon getting the message, will update its own beliefs as well as its model of the sender"s and all the other receivers" beliefs .
+Compared to two party performatives, multi party performatives are preferable for forming shared mental models .
+As illustrated in Fig .
+5(a), agent A only needs to perform MInform once (with B and C being receivers) to achieve the common knowledge of the shared belief about I (It consumes 2 of A"s communication resources, one for each receiver) .
+However, to achieve the same effects using Inform (Fig .
+5(b)), it is hard to form team level SMM especially when the team size is big (missing one Inform will nullify all others" efforts) .
+Moreover, although agent A still consumes 2, the whole team needs more resources (3 in this case) .
+However, splitting multi party messages by receivers" loads does enhance subgroup SMMs .
+In Fig .
+6 we plotted the other two measures of SMMs (distance and closeness as defined in Sec .
+4.3) .
+For HAP teams, TH3>TH2>TH1 holds in Fig .
+6(c) (larger distances indicate better subgroup SMMs), and TH3<TH2<TH1 holds in Fig .
+6(d) (smaller deviations indicate higher coherency of the whole team) .
+Thus, HAP teams of type 3 achieved better subgroup SMMs, and their team members had higher coherent view of group SMMs than teams of other types .
+For agent teams, TH3>TH1>TH2 holds in Fig .
+6(a), and TH2<TH3<TH1 holds in Fig .
+6(b) .
+Thus, agent teams of type 3 achieved better subgroup SMMs, and their team members had much higher coherent view of group SMMs than teams of type 1 (although slightly worse than team type 2) .
+Hence, generally, multi party communication encourages the forming evolving of team SMMs .
+When a group of agents can be partitioned into subteams, splitting messages by their loads can be more effective for subteam SMMs .
+5.5 The HMM based Cognitive Model To validate the HMM based cognitive load model is extremely difficult because detecting the real, noise resistant cognitive load of human beings is far beyond the current technology .
+As an indirect judgment, we plotted the regression fitted lines for the means of information sharing utility of HAP teams with and without load displays .
+For the HAP teams with load displays there is a strong negative linear relationship between info sharing utility and cognitive load levels (Pearson correlation coefficient is ? 《 0.899 = ?0.948 with P Value = 0.014) .
+Because the info sharing utility measure and the cognitive load measure are indicators of primary task performance and secondary task performance, respectively, their linear relationship complies with cognitive studies that secondary task performance can be used The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 401 Agent Teams
+to explain primary task performance .
+However, for teams without load displays there is a strong quadratic rather than linear relationship (correlation coefficient is 《 0.974 = 0.987 with P Value = 0.015) .
+This indicates that the information sharing performance of a HAP team can be significantly affected by both the human subject"s own cognitive load, and the awareness of other team members" load .
+Knowing of others" load (by estimation) will reduce the quadratic relation to a linear relation .
+Figure 7

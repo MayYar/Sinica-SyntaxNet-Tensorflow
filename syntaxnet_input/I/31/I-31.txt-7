@@ -1,0 +1,96 @@
+Recently, Dietrich and List [5] showed that preference aggregation can be embedded in judgment aggregation .
+In this section we show that our judgment aggregation logic also can be used to reason about preference aggregation .
+Given a set K of alternatives, [5] defines a simple predicate logic LK with language L(LK ) as follows
+.
+., a binary identity predicate =, a binary predicate P for strict preference, and the usual propositional and first order connectives ? Z is the collection of the following axioms
+.
+.
+, An) = A, where A is the consistent and complete judgment set corresponding to F(L1, .
+.
+.
+, Ln) where Li is the preference relation corresponding to the consistent and complete judgment set Ai .
+Thus we can use jal to reason about preference aggregation as follows .
+Take the logical language L(£U, AK ), for some set of agents £U, and take the underlying logic to be LK .
+We can then interpret our formulae in an SWF F over K, a preference profile L ? L(K) and a pair (a, b) ? K ¡Ñ K, a b, as follows
+While in the general judgment aggregation case a formula is interpreted in the context of an agenda item, in the preference aggregation case a formula is thus interpreted in the context of a pair of alternatives .
+Example 2 .
+Three agents must decide between going to dinner (d), a movie (m) or a concert (c) .
+Their individual preferences are illustrated on the right in Table 1 in Section 3, along with the result of a SWF Fmaj implementing pair wise majority voting .
+Let L = mdc, mcd, cmd be the preference profile corresponding to the preferences in the example .
+We have the following
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 571 ? Fmaj, L, (m, d) |=swf (1 ? 2) (agents 1 and 2 can choose their preferences such that they will agree on some pair of alternatives) ? Fmaj, L, (m, d) |=swf £m ? G?{1,2,3},|G|?2 i?G i (the SWF Fmaj implements pair wise majority voting) As usual, we write F |=swf £p when F, L, (a, b) |=swf £p for any L and (a, b), and so on .
+Thus, our formulae can be seen as expressing properties of social welfare functions .
+Example 3 .
+Take the formula (i ? £m) .
+When this formula is interpreted as a statement about a social welfare function, it says that there exists a preference profile such that for all pairs (a, b) of alternatives, b is preferred over a in the aggregation (by the SWF) of the preference profile if and only if agent i prefers b over a .
+6.1 Expressivity Examples We make precise the claim in Section 2.2 that the three mentioned SWF properties correspond to the three mentioned JAR properties, respectively .
+Recall the formulae defined in Section 4 .
+Proposition 2 .
+F |=swf ND iff F has the property ND2 F |=swf IND iff F has the property IIA F |=swf UNA iff F has the property PO The properties expressed above are properties of SWFs .
+Let us now look at properties of the set of alternatives K we can express .
+Properties involving cardinality is often of interest, for example in Arrow"s theorem .
+Let
+Let F ? F .
+|K| > 2 iff F |=swf MT2 .
+Proof .
+For the direction to the left, let F |=swf MT2 .
+Thus, there is a £^ such that there exists (a1 , b1 ), (a2 , b2 ) ? K ¡Ñ K, where a1 b1 , and a2 b2 , such that (i) a1 Pb1 ? £^1, (ii) a1 Pb1 ? £^2, (iii) a2 Pb2 ? £^1 and (iv) a2 Pb2 £^2 .
+From (ii) and (iv) we get that (a1 , b1 ) (a2 , b2 ), and from that and (i) and (iii) it follows that £^1 contains two different pairs a1 Pb1 and a2 Pb2 each having two different elements .
+But that is not possible if |K| = 2, because if K = {a, b} then AK = {aPb, ?aPb, bPa, ?bPa} and thus it is impossible that £^1 ? AK since we cannot have aPb, bPa ? £^1 .
+For the direction to the right, let |K| > 2; let a, b, c be three distinct elements of K .
+Let £^1 be the judgment set corresponding to the ranking abc and £^2 the judgment set corresponding to acb .
+Now, for any aggregation rule f, f, £^, aPb |= 1 ? 2 and f, £^, bPc |= 1 ? ?2 .
+Thus, F |=swf MT2, for any SWF F .
+We now have everything we need to express Arrow"s statement as a formula .
+It follows from his theorem that the formula is valid on the class of all social welfare functions .
+Theorem 4 .
+|=swf MT2 ¡÷ ?(PO ? ND ? IIA) Proof .
+Note that MT2, PO, ND and IIA are true SWF properties, their truth value wrt .
+a table is determined solely by the SWF .
+For example, F, L, (a, b) |=swf MT2 iff F |= MT2, for any F, L, a, b .
+Let F ? F (K), and F, L, (a, b) |=swf MT2 for some L and a, b .
+By Proposition 3, K has more than two alternatives .
+By Arrow"s theorem, F cannot have all the properties PO, ND2 and IIA .
+W.l.o.g assume that F does not have the PO property .
+By Proposition 2, F |=swf PO .
+Since PO is a SWF property, this means that F, L, (a, b) |=swf PO (satisfaction of PO is independent of L, a, b), and thus that F, L, (a, b) |=swf ?PO ? ?ND ? ?IIA .
+Note that the formula in Theorem 4 does not mention any agenda items (i.e., pairs of alternatives) such as haPb directly in an expression .
+This means that the formula is a member of L(£U, AK ) for any set of alternatives K, and is valid no matter which set of alternatives we assume .
+The formula MV which in the general judgment aggregation case expresses proposition wise majority voting, expresses in the preference aggregation case pair wise majority voting, as illustrated in Example 2 .
+The preference aggregation correspondent to the discursive paradox of judgment aggregation is the well known Condorcet"s voting paradox, stating that pair wise majority voting can lead to aggregated preferences which are cyclic (even if the individual preferences are not) .
+We can express Condorcet"s paradox as follows, again as a universally valid logical property of SWFs .
+Proposition 4 .
+|=swf MT2 ¡÷ ?MV, when there are at least three agents .
+Proof .
+The proof is similar to the proof of the discursive paradox .
+Let fF , £^, aPb |=LK MT2; there are thus three distinct elements a, b, c ? K .
+Assume that fF , £^, aPb |=LK MV .
+Let £^ be the judgment profile corresponding to the preference profile X = (abc, cab, bca) .
+We have that fF , £^ , aPb |=LK 1 ? 2 and, since fF , £^ , aPb |=LK MV, we have that fF , £^ , aPb |=LK £m and thus that aPb ? fF (£^ ) and (a, b) ? F(X) .
+In a similar manner we get that (c, a) ? F(X) and (b, c) ? F(X) .
+But that is impossible, since by transitivity we would also have that (a, c) ? F(X) which contradicts the fact that F(X) is antisymmetric .
+Thus, it follows that fF , £^, aPb |=LK MV .
+6.2 Axiomatisation and Logical Properties We immediately get, from Theorem 3, a sound and complete axiomatisation of preference aggregation over a finite set of alternatives .
+Corollary 1 .
+If the set of alternatives K is finite, we have that for any formula £r ? L(£U, AK ), JAL(LK ) £r iff |=swf £r .
+Proof .
+Follows immediately from Theorem 3 and the fact that for any JAR f, there is a SWF F such that f = fF .
+So, for example, Arrow"s theorem is provable in jal(LK )
+Every formula which is valid with respect to judgment aggregation rules is also valid with respect to social welfare functions, so all general logical properties of JARs are also properties of SWFs .
+Depending on the agenda, SWFs may have additional properties, induced by the logic LK , which are not always shared by JARs with other underlying logics .
+One such property is i .
+While we have |=swf i, for other agendas there are underlying logics L such that |=L i To see the latter, take an agenda with a formula p which is inconsistent in the underlying logic L p can never be included in a judgment set .
+To see the former, take an arbitrary pair of alternatives (a, b) .
+There exists some preference profile in which agent i prefers b over a .
+Technically speaking, the formula i holds in SWFs because the agenda AK does not contain a formula which (alone) is inconsistent wrt .
+the underlying logic LK .
+By the same reason, the following properties also hold in SWFs but not in JARs in general .
+|=swf o?O o 572 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) for any pair of alternatives (a, b), any possible combination of the relative ranking of a and b among the agents is possible .
+|=swf i ¡÷ ?i given an alternative b which is preferred over some other alternative a by agent i, there is some other pair of alternatives c and d such that d is not preferred over c namely (c, d) = (b, a) .
+|=swf ( (i ? j) ¡÷ (i ? ?j)) if, given preferences of agents and a SWF, for any two alternatives it is always the case that either agent i or agent j prefers the second alternative over the first, then there must exist a pair of alternatives for which the two agents disagree .
+A justification is that no single agent can prefer the second alternative over the first for every pair of alternatives, so in this case if i prefers b over a then j must prefer a over b .
+Again, this property does not necessarily hold for other agendas, because the agenda might contain an inconsistency the agents could not possibly disagree upon .
+Proof theoretically, these additional properties of SWFs are derived using the Closure rule. .

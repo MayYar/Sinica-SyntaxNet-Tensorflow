@@ -1,0 +1,973 @@
+Input: We now describe a novel algorithm which can handle singledocument segmentation , shared topic detection , and multidocument segmentation and alignment based on MI or WMI .
+Parse:
+describe VBP ROOT
+ +-- We PRP nsubj
+ +-- now RB advmod
+ +-- algorithm NN dobj
+ |   +-- a DT det
+ |   +-- novel NN amod
+ |   +-- handle VB rcmod
+ |       +-- which WDT nsubj
+ |       +-- can MD aux
+ |       +-- segmentation NN dobj
+ |           +-- singledocument JJ amod
+ |           +-- , , punct
+ |           +-- detection NN conj
+ |           |   +-- shared VBN amod
+ |           |   +-- topic NN nn
+ |           +-- and CC cc
+ |           +-- segmentation NN conj
+ |               +-- multidocument JJ amod
+ |               +-- and CC cc
+ |               +-- alignment NN conj
+ |               +-- based VBN partmod
+ |                   +-- on IN prep
+ |                       +-- MI NNP pobj
+ |                           +-- or CC cc
+ |                           +-- WMI NNP conj
+ +-- . . punct
+Input: 4.1 Mutual Information MI I -LRB- X ; Y -RRB- is a quantity to measure the amount of information which is contained in two or more random variables -LRB- 8 , 10 -RRB- .
+Parse:
+quantity NN ROOT
+ +-- MI NNP nsubj
+ |   +-- 4.1 CD num
+ |   +-- Information NNP nn
+ |   |   +-- Mutual JJ amod
+ |   +-- I PRP dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- X NNP dep
+ |   |   +-- ; : punct
+ |   |   +-- Y NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- is VBZ cop
+ +-- a DT det
+ +-- measure VB infmod
+ |   +-- to TO aux
+ |   +-- amount NN dobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |       |   +-- information NN pobj
+ |       +-- contained VBN rcmod
+ |           +-- which WDT nsubjpass
+ |           +-- is VBZ auxpass
+ |           +-- in IN prep
+ |               +-- variables NNS pobj
+ |                   +-- two CD num
+ |                   |   +-- or CC cc
+ |                   |   +-- more JJR conj
+ |                   +-- random JJ amod
+ |                   +-- -LRB- -LRB- punct
+ |                   +-- 8 CD dep
+ |                   |   +-- , , punct
+ |                   |   +-- 10 CD amod
+ |                   +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: For the case of two random variables , we have I -LRB- X ; Y -RRB- = x ? X y ? Y p -LRB- x , y -RRB- log p -LRB- x , y -RRB- p -LRB- x -RRB- p -LRB- y -RRB- , -LRB- 1 -RRB- Obviously , when random variables X and Y are independent , I -LRB- X ; Y -RRB- = 0 .
+Parse:
+have VBP ROOT
+ +-- For IN prep
+ |   +-- case NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- variables NNS pobj
+ |               +-- two CD num
+ |               +-- random JJ amod
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- Y NNP dobj
+ |   +-- I PRP dep
+ |   +-- y NN dep
+ |   +-- Y NNP dep
+ |   +-- p , dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- x NFP dep
+ |   +-- , , punct
+ |   +-- -RRB- -RRB- punct
+ |   +-- p NN dep
+ |   |   +-- y NNP dep
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- -RRB- -RRB- punct
+ |   |       +-- , , punct
+ |   |       +-- 1 CD appos
+ |   |           +-- -LRB- -LRB- punct
+ |   |           +-- -RRB- -RRB- punct
+ |   +-- x UH discourse
+ |   +-- y NFP punct
+ |   +-- x SYM dep
+ |   +-- Obviously RB dep
+ |   +-- X VBP dep
+ |   |   +-- when WRB advmod
+ |   |   +-- variables VBZ nsubj
+ |   |   |   +-- random JJ amod
+ |   |   +-- and CC cc
+ |   |   +-- independent JJ conj
+ |   |       +-- Y NN nsubj
+ |   |       +-- are VBP cop
+ |   +-- X NNP dep
+ |   +-- ; : punct
+ |   +-- = SYM dep
+ +-- 0 NFP punct
+ +-- . . punct
+Input: Thus , intuitively , the value of MI depends on how random variables are dependent on each other .
+Parse:
+depends VBZ ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- intuitively RB advmod
+ +-- value NN nsubj
+ |   +-- the DT det
+ |   +-- of IN prep
+ |       +-- MI NNP pobj
+ +-- on IN prep
+ |   +-- dependent JJ pcomp
+ |       +-- how WRB advmod
+ |       +-- variables NNS nsubj
+ |       |   +-- random JJ amod
+ |       +-- are VBP cop
+ |       +-- on IN prep
+ |           +-- other JJ pobj
+ |               +-- each DT det
+ +-- . . punct
+Input: The optimal co clustering is the mapping Clux
+Parse:
+mapping NN ROOT
+ +-- clustering VBG nsubj
+ |   +-- The DT det
+ |   +-- optimal NN amod
+ |   +-- co NN nn
+ +-- is VBZ cop
+ +-- the DT det
+ +-- Clux NNP appos
+Input: This is the criterion of MI for clustering .
+Parse:
+criterion NN ROOT
+ +-- This DT nsubj
+ +-- is VBZ cop
+ +-- the DT det
+ +-- of IN prep
+ |   +-- MI NNP pobj
+ +-- for IN prep
+ |   +-- clustering VBG pobj
+ +-- . . punct
+Input: In the case of topic segmentation , the two random variables are the term variable T and the segment variable S , and each sample is an occurrence of a term T = t in a particular segment S = s .
+Parse:
+T NN ROOT
+ +-- In IN prep
+ |   +-- case NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- segmentation NN pobj
+ |               +-- topic NN nn
+ +-- , , punct
+ +-- variables NNS nsubj
+ |   +-- the DT det
+ |   +-- two CD num
+ |   +-- random JJ amod
+ +-- are VBP cop
+ +-- the DT det
+ +-- term NN nn
+ +-- variable NN nn
+ +-- and CC cc
+ +-- S NNP conj
+ |   +-- the DT det
+ |   +-- variable NN nn
+ |       +-- segment NN nn
+ +-- occurrence NN conj
+ |   +-- sample NN nsubj
+ |   |   +-- each DT det
+ |   +-- is VBZ cop
+ |   +-- an DT det
+ |   +-- of IN prep
+ |   |   +-- t NN pobj
+ |   |       +-- a DT det
+ |   |       +-- term NN nn
+ |   |       +-- = SYM nn
+ |   |           +-- T NN nn
+ |   +-- in IN prep
+ |       +-- segment NN pobj
+ |           +-- a DT det
+ |           +-- particular JJ amod
+ |           +-- s POS dep
+ |               +-- S NNP nn
+ |               +-- = SYM dep
+ +-- . . punct
+Input: I -LRB- T ; S -RRB- is used to measure how dependent T and S are .
+Parse:
+used VBN ROOT
+ +-- I PRP nsubjpass
+ |   +-- -LRB- -LRB- punct
+ |   +-- T NNP dep
+ |   |   +-- ; : punct
+ |   |   +-- S NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- is VBZ auxpass
+ +-- measure VB xcomp
+ |   +-- to TO aux
+ |   +-- are VBP ccomp
+ |       +-- dependent JJ dep
+ |       |   +-- how WRB advmod
+ |       +-- T NN nsubj
+ |           +-- and CC cc
+ |           +-- S NNP conj
+ +-- . . punct
+Input: However , I -LRB- T ; S -RRB- can not be computed for documents before segmentation , since we do not have a set of S due to the fact that sentences of Document d , si ? Sd , is not aligned with other documents .
+Parse:
+computed VBN ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- I PRP nsubj
+ |   +-- -LRB- -LRB- punct
+ |   +-- T NNP dep
+ |   |   +-- ; : punct
+ |   |   +-- S NNP dep
+ |   +-- -RRB- -RRB- punct
+ +-- can MD aux
+ +-- not RB neg
+ +-- be VB auxpass
+ +-- for IN prep
+ |   +-- documents NNS pobj
+ +-- before IN prep
+ |   +-- segmentation NN pobj
+ +-- have VB advcl
+ |   +-- since IN mark
+ |   +-- we PRP nsubj
+ |   +-- do VBP aux
+ |   +-- not RB neg
+ |   +-- set NN dobj
+ |   |   +-- a DT det
+ |   |   +-- of IN prep
+ |   |       +-- S NNP pobj
+ |   +-- to IN prep
+ |       +-- due IN mwe
+ |       +-- fact NN pobj
+ |           +-- the DT det
+ |           +-- aligned VBN ccomp
+ |               +-- that IN mark
+ |               +-- sentences NNS nsubjpass
+ |               |   +-- of IN prep
+ |               |   |   +-- d NNP pobj
+ |               |   |       +-- Document NNP nn
+ |               |   |       +-- , , punct
+ |               |   |       +-- si NNP appos
+ |               |   +-- ? . punct
+ |               |   +-- Sd UH dep
+ |               +-- , , punct
+ |               +-- is VBZ auxpass
+ |               +-- not RB neg
+ |               +-- with IN prep
+ |                   +-- documents NNS pobj
+ |                       +-- other JJ amod
+ +-- . . punct
+Input: Thus , instead of minimizing the loss of MI , we can maximize MI after topic segmentation , computed as
+Parse:
+maximize VB ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- of IN prep
+ |   +-- instead RB advmod
+ |   +-- minimizing VBG pcomp
+ |       +-- loss NN dobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- MI NNP pobj
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- MI NNP dobj
+ +-- after IN prep
+     +-- segmentation NN pobj
+         +-- topic NN nn
+         +-- , , punct
+         +-- computed VBN partmod
+             +-- as IN prep
+Input: Note that here a segment ? s includes sentences about the the same topic among all documents .
+Parse:
+Note VB ROOT
+ +-- includes VBZ ccomp
+ |   +-- that DT mark
+ |   +-- here RB advmod
+ |   +-- segment NN nsubj
+ |   |   +-- a DT det
+ |   |   +-- ? . punct
+ |   |   +-- s POS possessive
+ |   +-- sentences NNS dobj
+ |       +-- about IN prep
+ |           +-- topic NN pobj
+ |               +-- the DT det
+ |               +-- same JJ amod
+ |               +-- among IN prep
+ |                   +-- documents NNS pobj
+ |                       +-- all DT det
+ +-- . . punct
+Input: The optimal solution is the mapping Clut
+Parse:
+mapping NN ROOT
+ +-- solution NN nsubj
+ |   +-- The DT det
+ |   +-- optimal JJ amod
+ +-- is VBZ cop
+ +-- the DT det
+ +-- Clut . punct
+Input: 4.2 Weighted Mutual Information In topic segmentation and alignment of multiple documents , if P -LRB- D , ? S , T -RRB- is known , based on the marginal distributions P -LRB- D|T -RRB- and P -LRB- ? S|T -RRB- for each term t ? T , we can categorize terms into four types in the data set
+Parse:
+categorize VB ROOT
+ +-- Information NN nsubj
+ |   +-- 4.2 CD num
+ |   +-- Weighted VBN amod
+ |   +-- Mutual JJ amod
+ |   +-- In IN prep
+ |   |   +-- segmentation NN pobj
+ |   |       +-- topic NN nn
+ |   |       +-- and CC cc
+ |   |       +-- alignment NN conj
+ |   |           +-- of IN prep
+ |   |               +-- documents NNS pobj
+ |   |                   +-- multiple JJ amod
+ |   +-- , , punct
+ |   +-- known VBN dep
+ |   |   +-- if IN mark
+ |   |   +-- P NN nsubjpass
+ |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   +-- D NNP dep
+ |   |   |   |   +-- , , punct
+ |   |   |   |   +-- ? , punct
+ |   |   |   |   +-- T NNP dep
+ |   |   |   |       +-- S NNP nn
+ |   |   |   |       +-- , , punct
+ |   |   |   +-- -RRB- -RRB- punct
+ |   |   +-- is VBZ auxpass
+ |   +-- based VBN prep
+ |       +-- on IN pcomp
+ |           +-- P NN pobj
+ |               +-- the DT det
+ |               +-- distributions NNS nn
+ |               |   +-- marginal JJ amod
+ |               +-- -LRB- -LRB- punct
+ |               +-- D|T NFP dep
+ |               +-- -RRB- -RRB- punct
+ |               +-- and CC cc
+ |               +-- P NN conj
+ |               |   +-- -LRB- -LRB- punct
+ |               |   +-- ? . punct
+ |               |   +-- S|T NFP dep
+ |               |   +-- -RRB- -RRB- punct
+ |               +-- for IN prep
+ |               |   +-- term NN pobj
+ |               |       +-- each DT det
+ |               |       +-- t NN dep
+ |               +-- ? . punct
+ |               +-- T NNP dep
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- can MD aux
+ +-- terms NNS dobj
+ +-- into IN prep
+     +-- types NNS pobj
+         +-- four CD num
+         +-- in IN prep
+             +-- set VBN pobj
+                 +-- the DT det
+                 +-- data NNS nn
+Input: ? Document dependent stop words that depends on the personal writing style are common only along the dimension of segments for some documents .
+Parse:
+stop NN ROOT
+ +-- ? , punct
+ +-- Document NNP amod
+ +-- dependent JJ amod
+ +-- common JJ dep
+ |   +-- words NNS nsubj
+ |   |   +-- depends VBZ rcmod
+ |   |       +-- that WDT nsubj
+ |   |       +-- on IN prep
+ |   |           +-- style NN pobj
+ |   |               +-- the DT det
+ |   |               +-- personal JJ amod
+ |   |               +-- writing NN nn
+ |   +-- are VBP cop
+ |   +-- along IN prep
+ |       +-- only RB advmod
+ |       +-- dimension NN pobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- segments NNS pobj
+ |                   +-- for IN prep
+ |                       +-- documents NNS pobj
+ |                           +-- some DT det
+ +-- . . punct
+Input: ? Cue words are the most important elements for segmentation .
+Parse:
+elements NNS ROOT
+ +-- ? . punct
+ +-- words NNS nsubj
+ |   +-- Cue NNP nn
+ +-- are VBP cop
+ +-- the DT det
+ +-- important JJ amod
+ |   +-- most RBS advmod
+ +-- for IN prep
+ |   +-- segmentation NN pobj
+ +-- . . punct
+Input: They are common along the dimension of documents only for the same segment , and they are not common along the dimensions of segments .
+Parse:
+common JJ ROOT
+ +-- They PRP nsubj
+ +-- are VBP cop
+ +-- along IN prep
+ |   +-- dimension NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- documents NNS pobj
+ +-- for IN prep
+ |   +-- only RB advmod
+ |   +-- segment NN pobj
+ |       +-- the DT det
+ |       +-- same JJ amod
+ +-- , , punct
+ +-- and CC cc
+ +-- common JJ conj
+ |   +-- they PRP nsubj
+ |   +-- are VBP cop
+ |   +-- not RB neg
+ |   +-- along IN prep
+ |       +-- dimensions NNS pobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- segments NNS pobj
+ +-- . . punct
+Input: ? Noisy words are other words which are not common along both dimensions .
+Parse:
+words NNS ROOT
+ +-- ? , punct
+ +-- words NNS nsubj
+ |   +-- Noisy NN nn
+ +-- are VBP cop
+ +-- other JJ amod
+ +-- common JJ rcmod
+ |   +-- which WDT nsubj
+ |   +-- are VBP cop
+ |   +-- not RB neg
+ |   +-- along IN prep
+ |       +-- dimensions NNS pobj
+ |           +-- both CC det
+ +-- . . punct
+Input: Entropy based on P -LRB- D|T -RRB- and P -LRB- ? S|T -RRB- can be used to identify different types of terms .
+Parse:
+used VBN ROOT
+ +-- Entropy NN nsubjpass
+ |   +-- based VBN prep
+ |   |   +-- on IN pcomp
+ |   |       +-- P NNP pobj
+ |   |           +-- D|T SYM dep
+ |   |           |   +-- -LRB- -LRB- punct
+ |   |           |   +-- -RRB- -RRB- punct
+ |   |           +-- and CC cc
+ |   |           +-- P NN conj
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- S|T NFP dep
+ |   +-- -RRB- -RRB- punct
+ +-- can MD aux
+ +-- be VB auxpass
+ +-- identify VB xcomp
+ |   +-- to TO aux
+ |   +-- types NNS dobj
+ |       +-- different JJ amod
+ |       +-- of IN prep
+ |           +-- terms NNS pobj
+ +-- . . punct
+Input: To reinforce the contribution of cue words in the MI computation , and simultaneously reduce the effect of the other three types of words , similar as the idea of the tf idf weight -LRB- 22 -RRB- , we use entropies of each term along the dimensions of document D and segment ? S , i.e .
+Parse:
+use VBP ROOT
+ +-- reinforce VB advcl
+ |   +-- To TO aux
+ |   +-- contribution NN dobj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |   |   +-- words NNS pobj
+ |   |   |       +-- cue NN nn
+ |   |   +-- in IN prep
+ |   |       +-- computation NN pobj
+ |   |           +-- the DT det
+ |   |           +-- MI NNP nn
+ |   +-- , , punct
+ |   +-- and CC cc
+ |   +-- simultaneously RB advmod
+ |   +-- reduce VB conj
+ |       +-- effect NN dobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- types NNS pobj
+ |                   +-- the DT det
+ |                   +-- other JJ amod
+ |                   +-- three CD num
+ |                   +-- of IN prep
+ |                   |   +-- words NNS pobj
+ |                   +-- , , punct
+ |                   +-- similar JJ amod
+ |                       +-- as IN prep
+ |                           +-- idea NN pobj
+ |                               +-- the DT det
+ |                               +-- of IN prep
+ |                                   +-- weight NN pobj
+ |                                       +-- the DT det
+ |                                       +-- tf NN nn
+ |                                       +-- idf NN nn
+ |                                       +-- -LRB- -LRB- punct
+ |                                       +-- 22 CD dep
+ |                                       +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- entropies NNS dobj
+ |   +-- of IN prep
+ |       +-- term NN pobj
+ |           +-- each DT det
+ +-- along IN prep
+ |   +-- dimensions NNS pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- D NNP pobj
+ |               +-- document NN nn
+ |               +-- and CC cc
+ |               +-- segment NN conj
+ +-- ? . punct
+ +-- S NNP dobj
+ |   +-- , , punct
+ |   +-- i.e NNP appos
+ +-- . . punct
+Input: ED -LRB- ? t -RRB- and E ? S -LRB- ? t -RRB- , to compute the weight .
+Parse:
+ED NNP ROOT
+ +-- -LRB- -LRB- punct
+ +-- ? . punct
+ +-- t NN dep
+ +-- -RRB- -RRB- punct
+ +-- and CC cc
+ +-- E NNP conj
+ |   +-- ? , punct
+ |   +-- S NNP appos
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- t NN dep
+ |   +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- compute VB dep
+ |   +-- to TO aux
+ |   +-- weight NN dobj
+ |       +-- the DT det
+ +-- . . punct
+Input: A cue word usually has a large value of ED -LRB- ? t -RRB- but a small value of E ? S -LRB- ? t -RRB- .
+Parse:
+has VBZ ROOT
+ +-- word NN nsubj
+ |   +-- A DT det
+ |   +-- cue NN nn
+ +-- usually RB advmod
+ +-- value NN dobj
+ |   +-- a DT det
+ |   +-- large JJ amod
+ |   +-- of IN prep
+ |   |   +-- ED NNP pobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- t NN dep
+ |   |   +-- ? , punct
+ |   +-- -RRB- -RRB- punct
+ |   +-- but CC cc
+ |   +-- value NN conj
+ |       +-- a DT det
+ |       +-- small JJ amod
+ |       +-- of IN prep
+ |       |   +-- E NNP pobj
+ |       +-- ? , punct
+ |       +-- S NNP dep
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- ? . punct
+ |       |   +-- t NN dep
+ |       +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: We introduce term weights -LRB- or term cluster weights -RRB- w ? t = -LRB- ED -LRB- ? t -RRB- max ? t ? ? T -LRB- ED -LRB- ? t -RRB- -RRB- -RRB- a -LRB- 1 ? E ? S -LRB- ? t -RRB- max ? t ? ? T -LRB- E ? S -LRB- ? t -RRB- -RRB- -RRB- b , -LRB- 3 -RRB- where ED -LRB- ? t -RRB- = d ? D p -LRB- d| ? t -RRB- log|D| 1 p -LRB- d| ? t -RRB- , E ? S -LRB- ? t -RRB- = ? s ? ? S p -LRB- ? s| ? t -RRB- log| ? S| 1 p -LRB- ? s| ? t -RRB- , and a > 0 and b > 0 are powers to adjust term weights .
+Parse:
+introduce VBP ROOT
+ +-- We PRP nsubj
+ +-- weights NNS dobj
+ |   +-- term NN nn
+ |   +-- -LRB- -LRB- punct
+ |   +-- or CC cc
+ |   +-- weights NNS conj
+ |   |   +-- term NN nn
+ |   |   +-- cluster NN nn
+ |   +-- -RRB- -RRB- punct
+ +-- w IN prep
+ |   +-- ? . punct
+ |   +-- = SYM dep
+ |   |   +-- t NN nn
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ED VBN dep
+ |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   +-- ? , punct
+ |   |   |   +-- t NN dobj
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- max NN dep
+ |   +-- t NNP pobj
+ +-- ? . punct
+ +-- log| NN dobj
+ |   +-- T NNP nn
+ |   |   +-- ED NNP dep
+ |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   +-- ? , punct
+ |   |   |   +-- t NN dep
+ |   |   |   +-- -RRB- -RRB- punct
+ |   |   +-- -RRB- -RRB- punct
+ |   |   +-- max NN dep
+ |   |   |   +-- a DT det
+ |   |   |       +-- -LRB- -LRB- punct
+ |   |   |       +-- E NN dep
+ |   |   |       |   +-- 1 CD num
+ |   |   |       |   +-- ? . punct
+ |   |   |       |   +-- ? , punct
+ |   |   |       |   +-- S NNP dep
+ |   |   |       |   +-- -LRB- -LRB- punct
+ |   |   |       |   +-- t NN dep
+ |   |   |       +-- -RRB- -RRB- punct
+ |   |   +-- ? . punct
+ |   |   +-- t NNP dep
+ |   |   +-- T NNP punct
+ |   |   +-- E NNP appos
+ |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   +-- ? , punct
+ |   |   |   +-- S NNP dep
+ |   |   |   +-- ? . punct
+ |   |   |   +-- t NN dep
+ |   |   |   +-- -RRB- -RRB- punct
+ |   |   +-- b NFP punct
+ |   |   +-- , , punct
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- 3 CD dep
+ |   |   +-- = VBN rcmod
+ |   |   |   +-- where WRB advmod
+ |   |   |   +-- ED NNP nsubj
+ |   |   |   |   +-- t NN dep
+ |   |   |   |       +-- -LRB- -LRB- punct
+ |   |   |   |       +-- ? . punct
+ |   |   |   |       +-- -RRB- -RRB- punct
+ |   |   |   +-- d NN dobj
+ |   |   +-- p NN dep
+ |   |   |   +-- D NNP nn
+ |   |   |   +-- d| UH dep
+ |   |   |   |   +-- -LRB- -LRB- punct
+ |   |   |   |   +-- ? . punct
+ |   |   |   |   +-- t NN dep
+ |   |   |   |   +-- -RRB- -RRB- punct
+ |   |   |   |   +-- log|D| RB dep
+ |   |   |   |   |   +-- p NNP dep
+ |   |   |   |   |       +-- 1 CD num
+ |   |   |   |   |       +-- d| UH appos
+ |   |   |   |   |           +-- -LRB- -LRB- punct
+ |   |   |   |   |           +-- ? . punct
+ |   |   |   |   |           +-- t NN dep
+ |   |   |   |   |           +-- -RRB- -RRB- punct
+ |   |   |   |   +-- , , punct
+ |   |   |   |   +-- E NNP appos
+ |   |   |   |   +-- ? , punct
+ |   |   |   |   +-- S NNP appos
+ |   |   |   +-- = SYM dep
+ |   |   |   +-- ? . punct
+ |   |   |   +-- s POS punct
+ |   |   |   +-- p NNP dep
+ |   |   |       +-- S NNP nn
+ |   |   +-- s| UH dep
+ |   |       +-- ? , punct
+ |   |       +-- t NN dep
+ |   +-- ? . punct
+ |   +-- p NN dep
+ |   |   +-- S| SYM nn
+ |   |   +-- 1 CD num
+ |   +-- -LRB- -LRB- punct
+ |   +-- s| UH dep
+ |   |   +-- ? , punct
+ |   |   +-- t NN dep
+ |   +-- -RRB- -RRB- punct
+ |   +-- , , punct
+ |   +-- and CC cc
+ |   +-- > NNS conj
+ |       +-- a DT det
+ |       +-- 0 CD punct
+ |       +-- and CC cc
+ |       +-- powers NNS conj
+ |           +-- b LS dep
+ |           |   +-- > -RRB- punct
+ |           +-- 0 CD nsubj
+ |           +-- are VBP cop
+ |           +-- adjust VB infmod
+ |               +-- to TO aux
+ |               +-- weights NNS dobj
+ |                   +-- term NN nn
+ +-- . . punct
+Input: Usually a = 1 and b = 1 as default , and max ? t ? ? T -LRB- ED -LRB- ? t -RRB- -RRB- and max ? t ? ? T -LRB- E ? S -LRB- ? t -RRB- -RRB- are used to normalize the entropy values .
+Parse:
+used VBN ROOT
+ +-- t NN nsubjpass
+ |   +-- Usually RB dep
+ |   +-- a DT det
+ |   +-- = SYM nn
+ |   |   +-- 1 CD num
+ |   |   +-- and CC cc
+ |   |   +-- b NN conj
+ |   |   +-- = SYM conj
+ |   |   |   +-- 1 CD num
+ |   |   |   +-- as IN prep
+ |   |   |       +-- default NN pobj
+ |   |   +-- , , punct
+ |   |   +-- max NN conj
+ |   |   +-- ? . punct
+ |   +-- ? . punct
+ |   +-- T NNP dep
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ED NNP dep
+ |   |   +-- ? , punct
+ |   |   +-- t NN dep
+ |   +-- -RRB- -RRB- punct
+ |   +-- and CC cc
+ |   +-- max NN conj
+ |   +-- t NNP dep
+ |   +-- E NNP dep
+ |       +-- T NNP nn
+ |       +-- -LRB- -LRB- punct
+ |       +-- ? , punct
+ |       +-- S NNP dep
+ |       |   +-- -LRB- -LRB- punct
+ |       |   +-- ? . punct
+ |       |   +-- t NN dep
+ |       +-- -RRB- -RRB- punct
+ +-- are VBP auxpass
+ +-- normalize VB xcomp
+ |   +-- to TO aux
+ |   +-- values NNS dobj
+ |       +-- the DT det
+ |       +-- entropy JJ amod
+ +-- . . punct
+Input: Term cluster weights are used to adjust p -LRB- ? t , ? s -RRB- , pw -LRB- ? t , ? s -RRB- = w ? tp -LRB- ? t , ? s -RRB- ? t ? ? T ; ? s ? ? S w ? tp -LRB- ? t , ? s -RRB- , -LRB- 4 -RRB- and Iw -LRB- ? T ; ? S -RRB- = ? t ? ? T ? s ? ? S pw -LRB- ? t , ? s -RRB- log pw -LRB- ? t , ? s -RRB- pw -LRB- ? t -RRB- pw -LRB- ? s -RRB- , -LRB- 5 -RRB- where pw -LRB- ? t -RRB- and pw -LRB- ? s -RRB- are marginal distributions of pw -LRB- ? t , ? s -RRB- .
+Parse:
+used VBN ROOT
+ +-- weights NNS nsubjpass
+ |   +-- cluster NN nn
+ |       +-- Term NN nn
+ +-- are VBP auxpass
+ +-- adjust VB xcomp
+ |   +-- to TO aux
+ |   +-- p NNP dobj
+ |   +-- -LRB- -LRB- punct
+ |   +-- ? . punct
+ |   +-- t NNP dobj
+ |   +-- , , punct
+ |   +-- s VBZ dep
+ +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- pw NN conj
+ |   +-- -LRB- -LRB- punct
+ |   +-- t NN dep
+ |   |   +-- ? . punct
+ |   |   +-- , , punct
+ |   |   +-- s VBZ dep
+ |   +-- -RRB- -RRB- punct
+ +-- = , punct
+ +-- w IN prep
+ |   +-- ? . punct
+ |   +-- tp UH dep
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ? . punct
+ |   |   +-- t NN dep
+ |   |   +-- , , punct
+ |   |   +-- s VBZ dep
+ |   +-- -RRB- -RRB- punct
+ |   +-- t NN dep
+ |   +-- T NNP pobj
+ |   +-- ; : punct
+ |   +-- s POS punct
+ |   +-- ? , punct
+ |   +-- S VB dep
+ |   |   +-- w IN prep
+ |   |       +-- ? . punct
+ |   |       +-- tp UH dep
+ |   |       |   +-- -LRB- -LRB- punct
+ |   |       |   +-- ? . punct
+ |   |       |   +-- t NN dep
+ |   |       |   +-- , , punct
+ |   |       |   +-- s VBZ dep
+ |   |       |   +-- -RRB- -RRB- punct
+ |   |       |   +-- 4 CD conj
+ |   |       |   |   +-- -LRB- -LRB- punct
+ |   |       |   |   +-- -RRB- -RRB- punct
+ |   |       |   +-- and CC cc
+ |   |       |   +-- Iw NN conj
+ |   |       +-- -LRB- -LRB- punct
+ |   |       +-- T NNP pobj
+ |   +-- S NNP pobj
+ |   +-- = SYM discourse
+ |   +-- t NN pobj
+ +-- ? . punct
+ +-- T NNP dobj
+ +-- s POS punct
+ +-- pw NN dobj
+     +-- pw NNP nn
+     |   +-- S NNP nn
+     |   +-- -LRB- -LRB- punct
+     |   +-- t NNP dep
+     |   |   +-- ? , punct
+     |   |   +-- , , punct
+     |   |   +-- ? . punct
+     |   +-- s POS punct
+     |   +-- -RRB- -RRB- punct
+     +-- log NN nn
+     +-- -LRB- -LRB- punct
+     +-- ? . punct
+     +-- t NNP appos
+         +-- . . punct
+             +-- , , punct
+             +-- ? . punct
+             +-- s VBZ dep
+                 +-- -RRB- -RRB- prep
+                     +-- pw NN pobj
+                         +-- t NN dep
+                             +-- -LRB- -LRB- punct
+                             +-- ? . punct
+                             +-- -RRB- -RRB- punct
+                             +-- pw NNP dep
+                             |   +-- -LRB- -LRB- punct
+                             |   +-- ? , punct
+                             |   +-- s NNP appos
+                             +-- , , punct
+                             +-- 5 CD appos
+                             |   +-- -LRB- -LRB- punct
+                             |   +-- -RRB- -RRB- punct
+                             +-- distributions NNS dep
+                                 +-- where WRB advmod
+                                 +-- pw NN nsubj
+                                 |   +-- -LRB- -LRB- punct
+                                 |   +-- ? . punct
+                                 |   +-- t NN conj
+                                 |   +-- -RRB- -RRB- punct
+                                 |   +-- and CC cc
+                                 |   +-- pw NNP conj
+                                 |       +-- -LRB- -LRB- punct
+                                 |       +-- ? . punct
+                                 |       +-- s POS dep
+                                 |       +-- -RRB- -RRB- punct
+                                 +-- are VBP cop
+                                 +-- marginal JJ amod
+                                 +-- of IN prep
+                                 |   +-- pw NNP pobj
+                                 +-- -LRB- -LRB- punct
+                                 +-- t NNP dep
+                                 |   +-- ? , punct
+                                 |   +-- , , punct
+                                 |   +-- ? . punct
+                                 +-- s VBZ dep
+Input: However , since we do not know either the term weights or P -LRB- D , ? S , T -RRB- , we need to estimate them , but w ? t depends on p -LRB- ? s|t -RRB- and ? S , while ? S and p -LRB- ? s|t -RRB- also depend on w ? t that is still unknown .
+Parse:
+need VBP ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- know VB advcl
+ |   +-- since IN mark
+ |   +-- we PRP nsubj
+ |   +-- do VBP aux
+ |   +-- not RB neg
+ |   +-- weights NNS dobj
+ |       +-- either CC preconj
+ |       +-- the DT det
+ |       +-- term NN nn
+ |       +-- or CC cc
+ |       +-- P NN conj
+ |       +-- D NNP appos
+ |           +-- -LRB- -LRB- punct
+ |           +-- , , punct
+ |           +-- ? , punct
+ |           +-- S NNP dep
+ |           |   +-- , , punct
+ |           |   +-- T NNP appos
+ |           +-- -RRB- -RRB- punct
+ +-- we PRP nsubj
+ +-- estimate VB xcomp
+ |   +-- to TO aux
+ |   +-- them PRP dobj
+ +-- but CC cc
+ +-- depends VBZ conj
+ |   +-- w IN dep
+ |   |   +-- ? . punct
+ |   +-- t NN nsubj
+ |   +-- on IN prep
+ |       +-- p NN pobj
+ |           +-- -LRB- -LRB- punct
+ |           +-- ? . punct
+ |           +-- s|t UH dep
+ +-- -RRB- -RRB- punct
+ +-- and CC cc
+ +-- ? , punct
+ +-- depend VB conj
+ |   +-- S NNP nsubj
+ |   |   +-- , , punct
+ |   |   +-- while IN conj
+ |   |   +-- ? , punct
+ |   |   +-- S NNP conj
+ |   |   +-- and CC cc
+ |   |   +-- p NNP conj
+ |   |   +-- -LRB- -LRB- punct
+ |   |   +-- ? . punct
+ |   |   +-- s|t NFP dep
+ |   |   +-- -RRB- -RRB- punct
+ |   +-- also RB advmod
+ |   +-- on IN prep
+ |   |   +-- w RB pcomp
+ |   +-- ? . punct
+ |   +-- t NN dobj
+ |       +-- unknown JJ rcmod
+ |           +-- that DT nsubj
+ |           +-- is VBZ cop
+ |           +-- still RB advmod
+ +-- . . punct
+Input: Thus , an iterative algorithm is required to estimate term weights w ? t and find the best segmentation and alignment to optimize the objective function Iw concurrently .
+Parse:
+required VBN ROOT
+ +-- Thus RB advmod
+ +-- , , punct
+ +-- algorithm NN nsubjpass
+ |   +-- an DT det
+ |   +-- iterative JJ amod
+ +-- is VBZ auxpass
+ +-- estimate VB xcomp
+ |   +-- to TO aux
+ |   +-- weights NNS dobj
+ |   |   +-- term NN nn
+ |   |   +-- w IN prep
+ |   |       +-- ? . punct
+ |   |       +-- t NN pobj
+ |   +-- and CC cc
+ |   +-- find VB conj
+ |       +-- segmentation NN dobj
+ |           +-- the DT det
+ |           +-- best JJS amod
+ |           +-- and CC cc
+ |           +-- alignment NN conj
+ |           +-- optimize VB infmod
+ |               +-- to TO aux
+ |               +-- function NN dobj
+ |               |   +-- the DT det
+ |               |   +-- objective JJ amod
+ |               |   +-- Iw FW appos
+ |               +-- concurrently RB advmod
+ +-- . . punct
+Input: After a document is segmented into sentences Input
+Parse:
+segmented VBN ROOT
+ +-- After IN prep
+ |   +-- document NN pobj
+ |       +-- a DT det
+ +-- is VBZ auxpass
+ +-- into IN prep
+ |   +-- sentences NNS pobj
+ +-- Input . punct
+Input: Output
+Parse:
+Output NN ROOT
+Input: Initialization
+Parse:
+Initialization NN ROOT

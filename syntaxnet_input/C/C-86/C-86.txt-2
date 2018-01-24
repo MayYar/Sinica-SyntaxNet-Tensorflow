@@ -1,0 +1,26 @@
+Market based systems have long been proposed as solutions for resource allocation in distributed systems including computational Grids [2, 20], wide area network testbeds [9], and peer to peer systems [17] .
+Yet, while the theoretical underpinnings of market based schemes have made significant strides in recent years, practical integration of market based mechanisms into real computer systems and empirical observations of such systems under real workloads has remained an elusive goal .
+Towards this end, we have designed, implemented, and deployed a microeconomic resource allocation system called Mirage [3] for scheduling testbed time on a 148 node wireless sensor network (SensorNet) testbed at Intel Research .
+The system, which employs a repeated combinatorial auction [5, 14] to schedule allocations, has been in production use for over four months and has scheduled over 312,148 node hours across 11 research projects to date .
+In designing and deploying Mirage, we had three primary goals .
+First, we wanted to validate whether a market based resource allocation scheme was necessary at all .
+An economic problem only exists when resources are scarce .
+Therefore, a key goal was to first measure both resource contention and the range of underlying valuations users place on the resources during periods of resource scarcity .
+Second, we wanted to observe how users would actually behave in a market based environment .
+Much of economic theory is predicated on rational user behavior, which forms the basis for motivating research efforts such as strategyproof mechanism design [4, 6, 15, 16, 19] .
+With Mirage, we wanted to observe to what extent rationality held and in what ways users would attempt to strategize and game the system .
+Finally, we wanted to identify what other practical problems would emerge in a deployment of a market based system .
+In this paper, we report briefly on our first goal while focusing primarily on the second .
+The third is left for future work .
+Empirical results based on four months of usage have validated the key motivating factors in using an auction based scheme (i.e., significant resource contention and widely varying valuations) but have also pointed to real world observations of strategic user behavior .
+In deploying Mirage, we made the early decision to base the system on a repeated combinatorial auction known not to be strategyproof .
+That is, self interested users could attempt to increase their personal gain, at the expense of others, by not revealing their true value to the system .
+We made this decision mainly because designing a strategyproof mechanism remains an open, challenging problem and we wanted to deploy a working system and gain experience with real users to address our three goals in a timely manner .
+Deploying a non strategyproof mechanism also had the benefit of testing rationality and seeing how and to what extent users would try to game the system .
+The key contribution of this paper is an analysis of such strategic behavior as observed over a four month time period and proposed refinements for mitigating such behavior en route to building an approximately strategyproof repeated combinatorial auction .
+The rest of this paper is organized as follows .
+In Section 2, 99 we present an overview of Mirage including high level observations on usage over a four month period .
+In Section 3, we examine strategic user behavior, focusing on the four primary types of strategies employed by users in the system .
+Based on these results, Section 4 presents a set of key challenges for market based resource allocation systems based on repeated combinatorial auctions .
+As a first step in addressing some of these challenges, we describe refinements to Mirage"s current auction scheme that mitigate the strategies observed to date and also comment on some initial steps towards building an approximately strategyproof repeated combinatorial auction for Mirage .
+Finally, in Section 5, we conclude the paper. .

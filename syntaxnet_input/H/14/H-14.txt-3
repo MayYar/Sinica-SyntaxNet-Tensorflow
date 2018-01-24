@@ -1,0 +1,38 @@
+We used Web activity logs containing searching and browsing activity collected with permission from hundreds of thousands of users over a five month period between December 2005 and April 2006 .
+Each log entry included an anonymous user identifier, a timestamp, a unique browser window identifier, and the URL of a visited Web page .
+This information was sufficient to reconstruct temporally ordered sequences of viewed pages that we refer to as trails .
+In this section, we summarize the extraction of trails, their features, and destinations (trail end points) .
+In depth description and analysis of trail extraction are presented in [20] .
+2.1 Trail Extraction For each user, interaction logs were grouped based on browser identifier information .
+Within each browser instance, participant navigation was summarized as a path known as a browser trail, from the first to the last Web page visited in that browser .
+Located within some of these trails were search trails that originated with a query submission to a commercial search engine such as Google, Yahoo!, Windows Live Search, and Ask .
+It is these search trails that we use to identify popular destinations .
+After originating with a query submission to a search engine, trails proceed until a point of termination where it is assumed that the user has completed their information seeking activity .
+Trails must contain pages that are either
+Extracting search trails using this methodology also goes some way toward handling multi tasking, where users run multiple searches concurrently .
+Since users may open a new browser window (or tab) for each task [18], each task has its own browser trail, and a corresponding distinct search trail .
+To reduce the amount of noise from pages unrelated to the active search task that may pollute our data, search trails are terminated when one of the following events occurs
+If a page (at step i) meets any of these criteria, the trail is assumed to terminate on the previous page (i.e., step i 1) .
+There are two types of search trails we consider
+Session trails transcend multiple queries and terminate only when one of the three termination criteria above are satisfied .
+Query trails use the same termination criteria as session trails, but also terminate upon submission of a new query to a search engine .
+Approximately 14 million query trails and 4 million session trails were extracted from the logs .
+We now describe some trail features .
+2.2 Trail and Destination Analysis Table 1 presents summary statistics for the query and session trails .
+Differences in user interaction between the last domain on the trail (Domain n) and all domains visited earlier (Domains 1 to (n 1)) are particularly important, because they highlight the wealth of user behavior data not captured by logs of search engine interactions .
+Statistics are averages for all trails with two or more steps (i.e., those trails where at least one search result was clicked) .
+Table 1 .
+Summary statistics (mean averages) for search trails .
+Measure Query trails Session trails Number of unique domains 2.0 4.3 Total page views All domains 4.8 16.2 Domains 1 to (n 1) 1.4 10.1 Domain n (destination) 3.4 6.2 Total time spent (secs) All domains 172.6 621.8 Domains 1 to (n 1) 70.4 397.6 Domain n (destination) 102.3 224.1 The statistics suggest that users generally browse far from the search results page (i.e., around 5 steps), and visit a range of domains during the course of their search .
+On average, users visit 2 unique (non search engine) domains per query trail, and just over 4 unique domains per session trail .
+This suggests that users often do not find all the information they seek on the first domain they visit .
+For query trails, users also visit more pages, and spend significantly longer, on the last domain in the trail compared to all previous domains combined.1 These distinctions of the last domains in the trails may indicate user interest, page utility, or page relevance.2 2.3 Destination Prediction For frequent queries, most popular destinations identified from Web activity logs could be simply stored for future lookup at search time .
+However, we have found that over the six month period covered by our dataset, 56.9% of queries are unique, and 97% queries occur 10 or fewer times, accounting for 19.8% and 66.3% of all searches respectively (these numbers are comparable to those reported in previous studies of search engine query logs [15,17]) .
+Therefore, a lookup based approach would prevent us from reliably suggesting destinations for a large fraction of searches .
+To overcome this problem, we utilize a simple term based prediction model .
+As discussed above, we extract two types of destinations
+For both destination types, we obtain a corpus of query destination pairs and use it to construct term vector representation of destinations that is analogous to the classic tf.idf document representation in traditional IR [14] .
+Then, given a new query q consisting of k terms t1¡Ktk, we identify highest scoring destinations using the following similarity function
+The average rating of most of the destinations lay between good and excellent .
+Visual inspection of those that did not lie in this range revealed that many were either relevant but had no judgments, or were related but had indirect query association (e.g., petfooddirect.com for query [dogs]) .
+, 

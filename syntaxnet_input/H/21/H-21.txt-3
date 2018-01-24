@@ -1,0 +1,88 @@
+Our methodology has two main phases .
+In the first phase, 1 In the above examples, SD450 and nc4200 represent fairly old gadget models, and hence there are advertisers placing ads on these queries .
+However, in this paper we mainly deal with rare queries which are extremely difficult to match to relevant ads .
+we construct a document classifier for classifying search results into the same taxonomy into which queries are to be classified .
+In the second phase, we develop a query classifier that invokes the document classifier on search results, and uses the latter to perform query classification .
+2.1 Building the document classifier In this work we used a commercial classification taxonomy of approximately 6000 nodes used in a major US search engine (see Section 3.1) .
+Human editors populated the taxonomy nodes with labeled examples that we used as training instances to learn a document classifier in phase 1 .
+Given a taxonomy of this size, the computational efficiency of classification is a major issue .
+Few machine learning algorithms can efficiently handle so many different classes, each having hundreds of training examples .
+Suitable candidates include the nearest neighbor and the Naive Bayes classifier [3], as well as prototype formation methods such as Rocchio [15] or centroid based [7] classifiers .
+A recent study [5] showed centroid based classifiers to be both effective and efficient for large scale taxonomies and consequently, we used a centroid classifier in this work .
+2.2 Query classification by search Having developed a document classifier for the query taxonomy, we now turn to the problem of obtaining a classification for a given query based on the initial search results it yields .
+Let"s assume that there is a set of documents D = d1 .
+.
+.
+dm indexed by a search engine .
+The search engine can then be represented by a function f = similarity(q, d) that quantifies the affinity between a query q and a document d .
+Examples of such affinity scores used in this paper are rank the rank of the document in the ordered list of search results; static score the score of the goodness of the page regardless of the query (e.g., PageRank); and dynamic score the closeness of the query and the document .
+Query classification is determined by first evaluating conditional probabilities of all possible classes P(Cj|q), and then selecting the alternative with the highest probability Cmax = arg maxCj ?C P(Cj|q) .
+Our goal is to estimate the conditional probability of each possible class using the search results initially returned by the query .
+We use the following formula that incorporates classifications of individual search results
+We assume that P(q|Cj, d) ? P(q|d), that is, a probability of a query given a document can be determined without knowing the class of the query .
+This is the case for the majority of queries that are unambiguous .
+Counter examples are queries like "jaguar" (animal and car brand) or "apple" (fruit and computer manufacturer), but such ambiguous queries can not be classified by definition, and usually consists of common words .
+In this work we concentrate on rare queries, that tend to contain rare words, be longer, and match fewer documents; consequently in our setting this assumption mostly holds .
+Using this assumption, we can write P(Cj|q) = d?D P(Cj|d)¡P P(d|q) .
+The conditional probability of a classification for a given document P(Cj|d) is estimated using the output of the document classifier (section 2.1) .
+While P(d|q) is harder to compute, we consider the underlying relevance model for ranking documents given a query .
+This issue is further explored in the next section .
+2.3 Classification based relevance model In order to describe a formal relationship of classification and ad placement (or search), we consider a model for using classification to determine ads (or search) relevance .
+Let a be an ad and q be a query, we denote by R(a, q) the relevance of a to q .
+This number indicates how relevant the ad a is to query q, and can be used to rank ads a for a given query relevance function
+(1) The right hand side expresses how we use the classification scheme C to rank ads, where s(c, a) is a scoring function that specifies how likely a is in class c, and s(c, q) is a scoring function that specifies how likely q is in class c .
+The value w(c) is a weighting term for category c, indicating the importance of category c in the relevance formula .
+This relevance function is an adaptation of the traditional word based retrieval rules .
+For example, we may let categories be the words in the vocabulary .
+We take s(Cj, a) as the word counts of Cj in a, s(Cj, q) as the word counts of Cj in q, and w(Cj) as the IDF term weighting for word Cj .
+With such choices, the method given by (1) becomes the standard TFIDF retrieval rule .
+If we take s(Cj, a) = P(Cj|a), s(Cj, q) = P(Cj|q), and w(Cj) = 1 P(Cj), and assume that q and a are independently generated given a hidden concept C, then we have RC (a, q) = Cj ?C P(Cj|a)P(Cj|q) P(Cj) = Cj ?C P(Cj|a)P(q|Cj) P(q) = P(q|a) P(q) .
+That is, the ads are ranked according to P(q|a) .
+This relevance model has been employed in various statistical language modeling techniques for information retrieval .
+The intuition can be described as follows .
+We assume that a person searches an ad a by constructing a query q
+For this query generation process, the ads can be ranked based on how likely the observed query is generated from each ad .
+It should be mentioned that in our case, each query and ad can have multiple categories .
+For simplicity, we denote by Cj a random variable indicating whether q belongs to category Cj .
+We use P(Cj|q) to denote the probability of q belonging to category Cj .
+Here the sum Cj ?C P(Cj|q) may not equal to one .
+We then consider the following ranking formula
+(2) We assume the estimation of P(Cj|a) is based on an existing text categorization system (which is known) .
+Thus, we only need to obtain estimates of P(Cj|q) for each query q .
+Equation (2) is the ad relevance model that we consider in this paper, with unknown parameters P(Cj|q) for each query from major US search engines, where we assume that the ranking formula in (2) gives good ranking for search .
+That is, top results ranked by search engines should also be ranked high by this formula .
+Therefore given a query q, and top K result pages d1(q), .
+.
+.
+, dK (q) from a major search engine, we fit parameters P(Cj|q) so that RC (di(q), q) have high scores for i = 1, .
+.
+.
+, K .
+It is worth mentioning that using this method we can only compute relative strength of P(Cj|q), but not the scale, because scale does not affect ranking .
+Moreover, it is possible that the parameters estimated may be of the form g(P(Cj|q)) for some monotone function g(¡P) of the actually conditional probability g(P(Cj|q)) .
+Although this may change the meaning of the unknown parameters that we estimate, it does not affect the quality of using the formula to rank ads .
+Nor does it affect query classification with appropriately chosen thresholds .
+In what follows, we consider two methods to compute the classification information P(Cj|q) .
+2.4 The voting method We would like to compute P(Cj|q) so that RC (di(q), q) are high for i = 1, .
+.
+.
+, K and RC (d, q) are low for a random document d .
+Assume that the vector [P(Cj|d)]Cj ?C is random for an average document, then the condition that Cj ?C P(Cj|q)2 is small implies that RC (d, q) is also small averaged over d .
+Thus, a natural method is to maximize K i=1 wiRC (di(q), q) subject to Cj ?C P(Cj|q)2 being small, where wi are weights associated with each rank i
+The optimal solution is P(Cj|q) = 1 2£f K i=1 wiP(Cj|di(q)) .
+Since both P(Cj|di(q)) and P(Cj|q) belong to [0, 1], we may just take £f = 0.5 to align the scale .
+In the experiment, we will simply take uniform weights wi .
+A more complex strategy is to let w depend on d as well
+In this general formulation, w(d, q) may depend on factors other than the rank of d in the search engine results for q .
+For example, it may be a function of r(d, q) where r(d, q) is the relevance score returned by the underlying search engine .
+Moreover, if we are given a set of hand labeled training category query pairs (C, q), then both the weights w(d, q) and the transformation g(¡P) can be learned using standard classification techniques .
+2.5 Discriminative classification We can treat the problem of estimating P(Cj|q) as a classification problem, where for each q, we label di(q) for i = 1, .
+.
+.
+, K as positive data, and the remaining documents as negative data .
+That is, we assign label yi(q) = 1 for di(q) when i ? K, and label yi(q) = ?1 for di(q) when i > K .
+In this setting, the classification scoring rule for a document di(q) is linear .
+Let xi(q) = [P(Cj|di(q))], and w = [P(Cj|q)], then Cj ?C P(Cj|q)P(Cj|di(q)) = w¡Pxi(q) .
+The values P(Cj|d) are the features for the linear classifier, and [P(Cj|d)] is the weight vector, which can be computed using any linear classification method .
+In this paper, we consider estimating w using logistic regression [17] as follows
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 0 1 2 3 4 5 6 7 8 9 10 Numberofcategories Taxonomy level Figure 1

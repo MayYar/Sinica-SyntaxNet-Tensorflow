@@ -1,0 +1,59 @@
+ACROSS WANS Three essential subsystems are involved with hosting services in a data center
+Second, services are normally hosted in a data center to provide shared access through a network, either the Internet or virtual private networks (VPNs) .
+Finally, most applications require disk storage for storing data and the amount of disk space and the frequency of access varies greatly between different services applications .
+Disruptions, failures, or in general, outages of any kind of any of these components will cause service disruption .
+For this reason, prior work and current practices have addressed the robustness of individual components .
+For example, data centers typically have multiple network connections and redundant LAN devices to ensure redundancy at the networking level .
+Similarly, physical servers are being designed with redundant hot swappable components (disks, processor blades, power supplies etc) .
+Finally, redundancy at the storage level can be provided through sophisticated data mirroring technologies .
+The focus of our work, however, is on the case where such local redundancy mechanisms are not sufficient .
+Specifically, we are interested in providing service availability when the data center as a whole becomes unavailable, for example because of data center wide maintenance operations, or because of catastrophic events .
+As such, our basic approach is to migrate services between data centers across the wide are network .
+By necessity, moving or migrating services from one data center to another needs to consider all three of these components .
+Historically, such migration has been disruptive in nature, requiring downtime of the actual services involved, or requiring heavy weight replication techniques .
+In the latter case concurrently running replicas of a service can be made available thus allowing a subset of the service to be migrated or maintained without impacting the service as a whole .
+We argue that these existing mechanisms are inadequate to meet the needs of network based services, including real time services, in terms of continuous availability and operation .
+Instead, we advocate an approach where server, network and storage subsystems cooperate and coordinate actions, in a manner that is cognizant of the service context in order to realize seamless migration across wide area networks .
+In this section we briefly describe the technical building blocks that would enable our approach .
+As outlined below, some of these building blocks exist, or exist in part, while in other cases we use the desire for high availability of services as the driver for the changes we are proposing .
+2.1 Live Virtual Server Migration The main enabler for our approach is the live server migration capabilities that have been developed in the context of server virtualization in recent years [5, 8] .
+In this approach an entire running operating system (including any active applications) executing as a virtual server is being transfered from one physical machine to another .
+Since the virtual server is migrated in its entirety, both application and kernel level state gets migrated, including any state associated with ongoing network connections .
+Assuming that network level reachability to the virtual server"s network addresses are maintained after the migration, the implication is that applications executing in the virtual server experience very little downtime (in the order of tens to hundreds of milliseconds) and ongoing network connections remain intact .
+In order to maintain network level reachability, the IP address(es) associated with the virtual server has to be reachable at the physical server where the virtual server is migrated to .
+In a LAN environment this is achieved either by issuing an unsolicited ARP reply to establish the binding between the new MAC address and the IP address, or by relying on layer two technologies to allow the virtual server to reuse its (old) MAC address [8] .
+Because of the difficulty of moving network level (i.e., IP addresses) in a routed non LAN environment, use of live server migration as a management tool has been limited to the LAN environments [22] .
+However, virtual server migration across the wide area will also be an attractive tool, specifically to deal with outages, and therefore propose networking mechanisms to enable this .
+If disk storage needs are being met with network attached storage (NAS), the storage becomes just another network based application and can therefore be addressed in the same way with LAN based migration [8] .
+Modern virtualization environments also include support for other forms of (local) storage including storage area networks (SANs) [23] .
+However, since we propose to use WAN server migration as a means to deal with complete data center outages, these mechanisms are inadequate for our purposes and below we propose extension to remote replication technologies which can work in concert with server migration to minimize service downtime .
+2.2 Networking Requirements From the discussion above, a key requirement for live server migration across a WAN is the ability to have the IP address(es) of the virtual server be reachable at the new data center location immediately after the migration has completed .
+This presents a significant challenge for a number of reasons .
+First, despite decades of work in this area, IP address mobility remains an unresolved problem that is typically only addressed at manual configuration time scales .
+The second challenge comes from the fact that current routing protocols are well known to have convergence issues which is ill suited to the time constraints imposed by live migration .
+Third, in today"s WAN networking environment connectivity changes are typically initiated, and controlled, by network operators or network management systems .
+Again this is poorly suited to WAN server migration where it is essential that the migration software, which is closely monitoring the status of the server migration process, initiate this change at the appropriate time .
+Our approach to addressing the networking requirements for live WAN migration builds on the observations that not all networking changes in this approach are time critical and further that instantaneous changes are best achieved in a localized manner .
+Specifically, in our solution, described in detail in Section 3, we allow the migration software to initiate the necessary networking changes as soon as the need for migration has been identified .
+We make use of tunneling technologies during this initial phase to preemptively establish connectivity between the data centers involved .
+Once server migration is complete, the migration software initiates a local change to direct traffic towards the new data center via the tunnel .
+Slower time scale network changes then phase out this local network connectivity change for a more optimal network wide path to the new data center .
+2.3 Storage Replication Requirements Data availability is typically addressed by replicating business data on a local primary storage system, to some remote location from where it can be accessed .
+From a business usability point of view, such remote replication is driven by two metrics [9] .
+First 263 is the recovery point objective which is the consistent data point to which data can be restored after a disaster .
+Second is the recoverytime objective which is the time it takes to recover to that consistent data point after a disaster [13] .
+Remote replication can be broadly classified into the following two categories
+? Asynchronous replication
+The amount of divergence between the local and remote copies is typically bounded by either a certain amount of data, or by a certain amount of time .
+Synchronous replication is normally recommended for applications, such as financial databases, where consistency between local and remote storage systems is a high priority .
+However, these desirable properties come at a price .
+First, because every data block needs to be replicated remotely, synchronous replication systems can not benefit from any local write coalescing of data if the same data blocks are written repeatedly [16] .
+Second, because data have to be copied to the remote location before the write operation returns, synchronous replication has a direct performance impact on the application, since both lower throughput and increased latency of the path between the primary and the remote systems are reflected in the time it takes for the local disk write to complete .
+An alternative is to use asynchronous replication .
+However, because the local and remote systems are allowed to diverge, asynchronous replication always involves some data loss in the event of a failure of the primary system .
+But, because write operations can be batched and pipelined, asynchronous replication systems can move data across the network in a much more efficient manner than synchronous replication systems .
+For WAN live server migration we seek a more flexible replication system where the mode can be dictated by the migration semantics .
+Specifically, to support live server migration we propose a remote replication system where the initial transfer of data between the data centers is performed via asynchronous replication to benefit from the efficiency of that mode of operation .
+When the bulk of the data have been transfered in this manner, replication switches to synchronous replication in anticipation of the completion of the server migration step .
+The final server migration step triggers a simultaneous switch over to the storage system at the new data center .
+In this manner, when the virtual server starts executing in the new data center, storage requirements can be locally met. .

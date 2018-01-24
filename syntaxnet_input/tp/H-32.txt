@@ -1,0 +1,410 @@
+﻿Interesting Nuggets and Their Impact on Definitional 
+content:
+1 ABSTRACT :
+1-1:Current approaches to identifying definitional sentences in the context of Question Answering mainly involve the use of linguistic or syntactic patterns to identify informative nuggets .
+1-2:This is insufficient as they do not address the novelty factor that a definitional nugget must also possess .
+1-3:This paper proposes to address the deficiency by building a Human Interest Model from external knowledge .
+1-4:It is hoped that such a model will allow the computation of human interest in the sentence with respect to the topic .
+1-5:We compare and contrast our model with current definitional question answering models to show that interestingness plays an important factor in definitional question answering .
+1-6:H.3.3 [Information Search and Retrieval]: Retrieval Models; H.1.2 .
+2 DEFINITIONAL QUESTION  ANSWERING :
+2-1:ANSWERING Definitional Question Answering was first introduced to the TExt Retrieval Conference Question Answering Track main task in 2003 .
+2-2:The Definition questions, also called Other questions in recent years, are defined as follows .
+2-3:Given a question topic X, the task of a definitional QA system is akin to answering the question What is X? or Who is X? .
+2-4:The definitional QA system is to search through a news corpus and return return a set of answers that best describes the question topic .
+2-5:Each answer should be a unique topic specific nugget that makes up one facet in the definition of the question topic .
+2-6:1.1 The Two Aspects of Topic Nuggets Officially, topic specific answer nuggets or simply topic nuggets are described as informative nuggets .
+2-7:Each informative nugget is a sentence fragment that describe some factual information about the topic .
+2-8:Depending on the topic type and domain, this can include topic properties, relationships the topic has with some closely related entity, or events that happened to the topic .
+2-9:From observation of the answer set for definitional question answering from TREC 2003 to 2005, it seems that a significant number of topic nuggets cannot simply be described as informative nuggets .
+2-10:Rather, these topic nuggets have a trivia like quality associated with them .
+2-11:Typically, these are out of the ordinary pieces of information about a topic that can pique a human reader"s interest .
+2-12:For this reason, we decided to define answer nuggets that can evoke human interest as interesting nuggets .
+2-13:In essence, interesting nuggets answer the questions What is X famous for?, What defines X? or What is extraordinary about X? .
+2-14:We now have two very different perspective as to what constitutes an answer to Definition questions .
+2-15:An answer can be some important factual information about the topic or some novel and interesting aspect about the topic .
+2-16:This duality of informativeness and interestingness can be clearly observed in the five vital answer nuggets for a TREC 2005 topic of George Foreman .
+2-17:Certain answer nuggets are more informative while other nuggets are more interesting in nature .
+2-18:Informative Nuggets Was graduate of Job Corps .
+2-19:Became oldest world champion in boxing history .
+2-20:Interesting Nuggets Has lent his name to line of food preparation products .
+2-21:Waved American flag after winning 1968 Olympics championship .
+2-22:Returned to boxing after 10 yr hiatus .
+2-23:As an African American professional heavyweight boxer, an average human reader would find the last three nuggets about George Foreman interesting because boxers do not usually lend their names to food preparation products, nor do boxers retire for 10 years before returning to the ring and become the world"s oldest boxing champion .
+2-24:Foreman"s waving of the American flag at the Olympics is interesting because the innocent action caused some AfricanAmericans to accuse Foreman of being an Uncle Tom .
+2-25:As seen here, interesting nuggets has some surprise factor or unique quality that makes them interesting to human readers .
+2-26:1.2 Identifying Interesting Nuggets Since the original official description for definitions comprise of identifying informative nuggets, most research has focused entirely on identifying informative nuggets .
+2-27:In this paper, we focus on exploring the properties of interesting nuggets and develop ways of identify such interesting nuggets .
+2-28:A Human Interest Model definitional question answering system is developed with emphasis on identifying interesting nuggets in order to evaluate the impact of interesting nuggets on the performance of a definitional question answering system .
+2-29:We further experimented with combining the Human Interest Model with a lexical pattern based definitional question answering system in order to capture both informative and interesting nuggets. .
+3 RELATED WORK :
+3-1:There are currently two general methods for Definitional Question Answering .
+3-2:The more common method uses a lexical patternbased approach was first proposed by Blair Goldensohn et al .
+3-3:[1] and Xu et al .
+3-4:[14] .
+3-5:Both groups predominantly used patterns such as copulas and appositives, as well as manually crafted lexicosyntactic patterns to identify sentences that contain informative nuggets .
+3-6:For example, Xu et al .
+3-7:used 40 manually defined structured patterns in their 2003 definitional question answering system .
+3-8:Since then, in an attempt to capture a wider class of informational nuggets, many such systems of increasing complexity has been created .
+3-9:A recent system by Harabagiu et al .
+3-10:[6] created a definitional question answering system that combines the use of 150 manually defined positive and negative patterns, named entity relations and specially crafted information extraction templates for 33 target domains .
+3-11:Here, a musician template may contain lexical patterns that identify information such as the musician"s musical style, songs sung by the musician and the band, if any, that the musician belongs to .
+3-12:As one can imagine, this is a knowledge intensive approach that requires an expert linguist to manually define all possible lexical or syntactic patterns required to identify specific types of information .
+3-13:This process requires a lot of manual labor, expertise and is not scalable .
+3-14:This lead to the development of the soft pattern approach by Cui et al .
+3-15:[4, 11] .
+3-16:Instead of manually encoding patterns, answers to previous definitional question answering evaluations were converted into generic patterns and a probabilistic model is trained to identify such patterns in sentences .
+3-17:Given a potential answer sentence, the probabilistic model outputs a probability that indicates how likely the sentence matches one or more patterns that the model has seen in training .
+3-18:Such lexicalosyntactic patterns approach have been shown to be adept at identifying factual informative nuggets such as a person"s birthdate, or the name of a company"s CEO .
+3-19:However, these patterns are either globally applicable to all topics or to a specific set of entities such as musicians or organizations .
+3-20:This is in direct contrast to interesting nuggets that are highly specific to individual topics and not to a set of entities .
+3-21:For example, the interesting nuggets for George Foreman are specific only George Foreman and no other boxer or human being .
+3-22:Topic specificity or topic relevance is thus an important criteria that helps identify interesting nuggets .
+3-23:This leads to the exploration of the second relevance based approach that has been used in definitional question answering .
+3-24:Predominantly, this approach has been used as a backup method for identifying definitional sentences when the primary method of lexicalosyntactic patterns failed to find a sufficient number of informative nuggets [1] .
+3-25:A similar approach has also been used as a baseline system for TREC 2003 [14] .
+3-26:More recently, Chen et al .
+3-27:[3] adapted a bi gram or bi term language model for definitional Question Answering .
+3-28:Generally, the relevance based approach requires a definitional corpus that contain documents highly relevant to the topic .
+3-29:The baseline system in TREC 2003 simply uses the topic words as its definitional corpus .
+3-30:Blair Goldensohn et al .
+3-31:[1] uses a machine learner to include in the definitonal corpus sentences that are likely to be definitional .
+3-32:Chen et al .
+3-33:[3] collect snippets from Google to build its definitional corpus .
+3-34:From the definitional corpus, a definitional centroid vector is built or a set of centroid words are selected .
+3-35:This centroid vector or set of centroid words is taken to be highly indicative of the topic .
+3-36:Systems can then use this centroid to identify definitional answers by using a variety of distance metrics to compare against sentences found in the set of retrieved documents for the topic .
+3-37:BlairGoldensohn et al .
+3-38:[1] uses Cosine similarity to rank sentences by centrality .
+3-39:Chen et al .
+3-40:[3] builds a bigram language model using the 350 most frequently occurring google snippet terms, described in their paper as an ordered centroid, to estimate the probability that a sentence is similar to the ordered centroid .
+3-41:As described here, the relevance based approach is highly specific to individual topics due to its dependence on a topic specific definitional corpus .
+3-42:However if individual sentences are viewed as a document, then relevance based approaches essentially use the collected topic specific centroid words as a form of document retrieval with automated query expansion to identify strongly relevant sentences .
+3-43:Thus such methods identify relevant sentences and not sentences containing definitional nuggets .
+3-44:Yet, the TREC 2003 baseline system [14] outperformed all but one other system .
+3-45:The bi term language model [3] is able to report results that are highly competitive to state of the art results using this retrieval based approach .
+3-46:At TREC 2006, a simple weighted sum of all terms model with terms weighted using solely Google snippets outperformed all other systems by a significant margin [7] .
+3-47:We believe that interesting nuggets often come in the form of trivia, novel or rare facts about the topic that tend to strongly cooccur with direct mention of topic keywords .
+3-48:This may explain why relevance based method can perform competitively in definitional question answering .
+3-49:However, simply comparing against a single centroid vector or set of centroid words may have over emphasized topic relevance and has only identified interesting definitional nuggets in an indirect manner .
+3-50:Still, relevance based retrieval methods can be used as a starting point in identifying interesting nuggets .
+3-51:We will describe how we expand upon such methods to identify interesting nuggets in the next section. .
+4 HUMAN INTEREST MODEL :
+4-1:Getting a computer system to identify sentences that a human reader would find interesting is a tall order .
+4-2:However, there are many documents on the world wide web that are contain concise, human written summaries on just about any topic .
+4-3:What"s more, these documents are written explicitly for human beings and will contain information about the topic that most human readers would be interested in .
+4-4:Assuming we can identify such relevant documents on the web, we can leverage them to assist in identifying definitional answers to such topics .
+4-5:We can take the assumption that most sentences found within these web documents will contain interesting facets about the topic at hand .
+4-6:This greatly simplifies the problem to that of finding within the AQUAINT corpus sentences similar to those found in web documents .
+4-7:This approach has been successfully used in several factoid and list Question Answering systems [11] and we feel the use of such an approach for definitional or Other question answering is justified .
+4-8:Identifying interesting nuggets requires computing machinery to understand world knowledge and human insight .
+4-9:This is still a very challenging task and the use of human written documents dramatically simplifies the complexity of the task .
+4-10:In this paper, we report on such an approach by experimenting with a simple word level edit distance based weighted term comparison algorithm .
+4-11:We use the edit distance algorithm to score the similarity of a pair of sentences, with one sentence coming from web resources and the other sentence selected from the AQUAINT corpus .
+4-12:Through a series of experiments, we will show that even such a simple approach can be very effective at definitional question answering .
+4-13:3.1 Web Resources There exists on the internet articles on just about any topic a human can think of .
+4-14:What"s more, many such articles are centrally located on several prominent websites, making them an easily accessible source of world knowledge .
+4-15:For our work on identifying interesting nuggets, we focused on finding short one or two page articles on the internet that are highly relevant to our desired topic .
+4-16:Such articles are useful as they contain concise information about the topic .
+4-17:More importantly, the articles are written by humans, for human readers and thus contain the critical human world knowledge that a computer system currently is unable to capture .
+4-18:We leverage this world knowledge by collecting articles for each topic from the following external resources to build our Interest Corpus for each topic .
+4-19:Wikipedia is a Web based, free content encyclopedia written collaboratively by volunteers .
+4-20:This resource has been used by many Question Answering system as a source of knowledge about each topic .
+4-21:We use a snapshot of Wikipedia taken in March 2006 and include the most relevant article in the Interest Corpus .
+4-22:NewsLibrary is a searchable archive of news articles from over 100 different newspaper agencies .
+4-23:For each topic, we download the 50 most relevant articles and include the title and first paragraph of each article in the Interest Corpus .
+4-24:Google Snippets are retrieved by issuing the topic as a query to the Google search engine .
+4-25:From the search results, we extracted the top 100 snippets .
+4-26:While Google snippets are not articles, we find that they provide a wide coverage of authorative information about most topics .
+4-27:Due to their comprehensive coverage of a wide variety of topics, the above resources form the bulk of our Interest Corpus .
+4-28:We also extracted documents from other resources .
+4-29:However, as these resources are more specific in nature, we do not always get any single relevant document .
+4-30:These resources are listed below .
+4-31:Biography.com is the website for the Biography television cable channel .
+4-32:The channel"s website contains searchable biographies on over 25,000 notable people .
+4-33:If the topic is a person and we can find a relevant biography on the person, we include it it in our Interest Corpus .
+4-34:Bartleby.com contains a searchable copy of several resources including the Columbia Encyclopedia, the World Factbook, and several English dictionaries .
+4-35:s9.com is a biography dictionary on over 33,000 notable people .
+4-36:Like Biography.com, we include the most relevant biography we can find in the Interest Corpus .
+4-37:Google Definitions Google search engine offers a feature called Definitions that provides the definition for a query, if it has one .
+4-38:We use this feature and extract whatever definitions the Google search engine has found for each topic into the Interest Corpus .
+4-39:Figure 1: Human Interest Model Architecture .
+4-40:WordNet WordNet is an well known electronic semantic lexicon for the English language .
+4-41:Besides grouping English words into sets of synonyms called synsets, it also provide a short definition on the meaning of words found in each synset .
+4-42:We add this short definition, if there is one, into our Interest Corpus .
+4-43:We have two major uses for this topic specific Interest Corpus, as a source of sentences containing interesting nuggets and as a unigram language model of topic terms, I .
+4-44:3.2 Multiple Interesting Centroids We have seen that interesting nuggets are highly specific to a topic .
+4-45:Relevance based approaches such as the bigram language model used by Chen et al .
+4-46:[3] are focused on identifying highly relevant sentences and pick up definitional answer nuggets as an indirect consequence .
+4-47:We believe that the use of only a single collection of centroid words has over emphasized topic relevance and choose instead to use multiple centroids .
+4-48:Since sentences in the Interest Corpus of articles we collected from the internet are likely to contain nuggets that are of interest to human readers, we can essentially use each sentence as pseudocentroids .
+4-49:Each sentence in the Interest Corpus essentially raises a different aspect of the topic for consideration as a sentence of interest to human readers .
+4-50:By performing a pairwise sentence comparison between sentences in the Interest Corpus and candidate sentences retrieved from the AQUAINT corpus, we increase the number of sentence comparisons from O(n) to O(nm) .
+4-51:Here, n is the number of potential candidate sentences and m is the number of sentences in the Interest Corpus .
+4-52:In return, we obtain a diverse ranked list of answers that are individually similar to various sentences found in the topic"s Interest Corpus .
+4-53:An answer can only be highly ranked if it is strongly similar to a sentence in the Interest Corpus, and is also strongly relevant to the topic .
+4-54:3.3 Implementation Figure 1 shows the system architecture for the proposed Human Interest based definitional QA system .
+4-55:The AQUAINT Retrieval module shown in Figure 1 reuses a document retrieval module of a current Factoid and List Question Answering system we have implemented .
+4-56:Given a set of words describing the topic, the AQUAINT Retrieval module does query expansion using Google and searches an index of AQUAINT documents to retrieve the 800 most relevant documents for consideration .
+4-57:The Web Retrieval module on the other hand, searches the online resources described in Section 3.1 for interesting documents in order to populate the Interest Corpus .
+4-58:The HIM Ranker, or Human Interest Model Ranking module, is the implementation of what is described in this paper .
+4-59:The module first builds the unigram language model, I, from the collected web documents .
+4-60:This language model will be used to weight the importance of terms within sentences .
+4-61:Next, a sentence chunker is used to segment all 800 retrieved documents into individual sentences .
+4-62:Each of these sentences can be a potential answer sentence that will be independently ranked by interestingness .
+4-63:We rank sentences by interestingness using sentences from both the Interest Corpus of external documents as well as the unigram language model we built earlier which we use to weight terms .
+4-64:A candidate sentence in our top 800 relevant AQUAINT documents is considered interesting if it is highly similar in content to a sentence found in our collection of external web documents .
+4-65:To achieve this, we perform a pairwise similarity comparison between a candidate sentence and sentences in our external documents using a weighted term edit distance algorithm .
+4-66:Term weights are used to adjust the relative importance of each unique term found in the Interest Corpus .
+4-67:When both sentences share the same term, the similarity score is incremented by the two times the term"s weight and every dissimilar term decrements the similarity score by the dissimilar term"s weight .
+4-68:We choose the highest achieved similarity score for a candidate sentence as the Human Interest Model score for the candidate sentence .
+4-69:In this manner, every candidate sentence is ranked by interestingness .
+4-70:Finally, to obtain the answer set, we select the top 12 highest ranked and non redundant sentences as definitional answers for the topic. .
+5 INITIAL EXPERIMENTS :
+5-1:The Human Interest based system described in the previous section is designed to identify only interesting nuggets and not informative nuggets .
+5-2:Thus, it can be described as a handicapped system that only deals with half the problem in definitional question answering .
+5-3:This is done in order to explore how interestingness plays a factor in definitional answers .
+5-4:In order to compare and contrast the differences between informative and interesting nuggets, we also implemented the soft pattern bigram model proposed by Cui et al .
+5-5:[4, 11] .
+5-6:In order to ensure comparable results, both systems are provided identical input data .
+5-7:Since both system require the use of external resources, they are both provided the same web articles retrieved by our Web Retrieval module .
+5-8:Both systems also rank the same same set of candidate sentences in the form of 800 most relevant documents as retrieved by our AQUAINT Retrieval module .
+5-9:For the experiments, we used the TREC 2004 question set to tune any system parameters and use the TREC 2005 question sets to test the both systems .
+5-10:Both systems are evaluated the results using the standard scoring methodology for TREC definitions .
+5-11:TREC provides a list of vital and okay nuggets for each question topic .
+5-12:Every question is scored on nugget recall and nugget precision and a single final score is computed using F Measure (see equation 1) with β = 3 to emphasize nugget recall .
+5-13:Here, NR is the number of vital nuggets returned divided by total number of vital nuggets while NP is computed using a minimum allowed character length function defined in [12] .
+5-14:The evaluation is automatically conducted using Pourpre v1.0c [10] .
+5-15:FScore = β2 ∗ NP ∗ NR (β2 + 1)NP + NR (1) System F3 Score Best TREC 2005 System 0.2480 Soft Pattern 0.2872 Human Interest Model 0.3031 Table 1: Performance on TREC 2005 Question Set Figure 2: Performance by entity types .
+5-16:4.1 Informativeness vs Interestingness Our first experiment compares the performance of solely identifying interesting nuggets against solely identifying informative nuggets .
+5-17:We compare the results attained by the Human Interest Model that only identify interesting nuggets with the results of the syntactic pattern finding Soft Pattern model as well as the result of the top performing definitional system in TREC 2005 [13] .
+5-18:Table 1 shows the F3 score the three systems for the TREC 2005 question set .
+5-19:The Human Interest Model clearly outperform both soft pattern and the best TREC 2005 system with a F3 score of 0.303 .
+5-20:The result is also comparable with the result of a human manual run, which attained a F3 score of 0.299 on the same question set [9] .
+5-21:This result is confirmation that interesting nuggets does indeed play a significant role in picking up definitional answers, and may be more vital than using information finding lexical patterns .
+5-22:In order to get a better perspective of how well the Human Interest Model performs for different types of topics, we manually divided the TREC 2005 topics into four broad categories of PERSON, ORGANIZATION, THING and EVENT as listed in Table question topics into 4 main entity types [13] .
+5-23:The performance of Human Interest Model and Soft Pattern Bigram Model for each entity type can be seen in Figure 2 .
+5-24:Both systems exhibit consistent behavior across entity types, with the best performance coming from PERSON and ORGANIZATION topics and the worst performance from THING and EVENT topics .
+5-25:This can mainly be attributed to our selection of web based resources for the definitional corpus used by both system .
+5-26:In general, it is harder to locate a single web article that describes an event or a general object .
+5-27:However given the same set of web based information, the Human Interest Model consistently outperforms the soft pattern model for all four entity types .
+5-28:This suggests that the Human Interest Model is better able to leverage the information found in web resources to identify definitional answers. .
+6 REFINEMENTS :
+6-1:Encouraged by the initial experimental results, we explored two further optimization of the basic algorithm .
+6-2:5.1 Weighting Interesting Terms The word trivia refer to tidbits of unimportant or uncommon information .
+6-3:As we have noted, interesting nuggets often has a trivialike quality that makes them of interest to human beings .
+6-4:From this description of interesting nuggets and trivia, we hypothesize that interesting nuggets are likely to occur rarely in a text corpora .
+6-5:There is a possibility that some low frequency terms may actually be important in identifying interesting nuggets .
+6-6:A standard unigram language model would not capture these low frequency terms as important terms .
+6-7:To explore this possibility, we experimented with three different term weighting schemes that can provide more weight to certain low frequency terms .
+6-8:The weighting schemes we considered include commonly used TFIDF, as well as information theoretic Kullback Leiber divergence and Jensen Shannon divergence [8] .
+6-9:TFIDF, or Term Frequency × Inverse Document Frequency, is a standard Information Retrieval weighting scheme that balances the importance of a term in a document and in a corpus .
+6-10:For our experiments, we compute the weight of each term as tf × log( N nt ), where tf is the term frequency, nt is the number of sentences in the Interest Corpus having the term and N is the total number of sentences in the Interest Corpus .
+6-11:Kullback Leibler Divergence (Equation 2) is also called KL Divergence or relative entropy, can be viewed as measuring the dissimilarity between two probability distributions .
+6-12:Here, we treat the AQUAINT corpus as a unigram language model of general English [15], A, and the Interest Corpus as a unigram language model consisting of topic specific terms and general English terms, I .
+6-13:General English words are likely to have similar distributions in both language models I and A .
+6-14:Thus using KL Divergence as a term weighting scheme will cause strong weights to be given to topicspecific terms because their distribution in the Interest Corpus they occur significantly more often or less often than in general English .
+6-15:In this way, high frequency centroid terms as well as low frequency rare but topic specific terms are both identified and highly weighted using KL Divergence .
+6-16:DKL(I A) = t I(t)log I(t) A(t) (2) Due to the power law distribution of terms in natural language, there are only a small number of very frequent terms and a large number of rare terms in both I and A .
+6-17:While the common terms in English consist of stop words, the common terms in the topic specific corpus, I, consist of both stop words and relevant topic words .
+6-18:These high frequency topic specific words occur very much more frequently in I than in A .
+6-19:As a result, we found that KL Divergence has a bias towards highly frequent topic terms as we are measuring direct dissimilarity against a model of general English where such topic terms are very rare .
+6-20:For this reason, we explored another divergence measure as a possible term weighting scheme .
+6-21:Jensen Shannon Divergence or JS Divergence extends upon KL Divergence as seen in Equation 3 .
+6-22:As with KL Divergence, we also use JS divergence to measure the dissimilarity between our two language models, I and A .
+6-23:DJS(I A) = 1 2 ¢DKL  I I+A 2 ¡+ DKL  A I+A 2 ¡£ (3) Figure 3: Performance by various term weighting schemes on the Human Interest Model .
+6-24:However, JS Divergence has additional properties1 of being symmetric and non negative as seen in Equation 4 .
+6-25:The symmetric property gives a more balanced measure of dissimilarity and avoids the bias that KL divergence has .
+6-26:DJS(I A) = DJS(A I) = 0 I = A > 0 I <> A (4) We conducted another experiment, substituting the unigram languge model weighting scheme we used in the initial experiments with the three term weighting schemes described above .
+6-27:As lower bound reference, we included a term weighting scheme consisting of a constant 1 for all terms .
+6-28:Figure 3 show the result of applying the five different term weighting schemes on the Human Interest Model .
+6-29:TFIDF performed the worst as we had anticipated .
+6-30:The reason is that most terms only appear once within each sentence, resulting in a term frequency of 1 for most terms .
+6-31:This causes the IDF component to be the main factor in scoring sentences .
+6-32:As we are computing the Inverse Document Frequency for terms in the Interest Corpus collected from web resources, IDF heavily down weights highly frequency topic terms and relevant terms .
+6-33:This results in TFIDF favoring all low frequency terms over high frequency terms in the Interest Corpus .
+6-34:Despite this, the TFIDF weighting scheme only scored a slight 0.0085 lower than our lower bound reference of constant weights .
+6-35:We view this as a positive indication that low frequency terms can indeed be useful in finding interesting nuggets .
+6-36:Both KL and JS divergence performed marginally better than the uniform language model probabilistic scheme that we used in our initial experiments .
+6-37:From inspection of the weighted list of terms, we observed that while low frequency relevant terms were boosted in strength, high frequency relevant terms still dominate the top of the weighted term list .
+6-38:Only a handful of low frequency terms were weighted as strongly as topic keywords and combined with their low frequency, may have limited the impact of re weighting such terms .
+6-39:However we feel that despite this, Jensen Shannon divergence does provide a small but measurable increase in the performance of our Human Interest Model .
+6-40:1 JS divergence also has the property of being bounded, allowing the results to be treated as a probability if required .
+6-41:However, the bounded property is not required here as we are only treating the divergence computed by JS divergence as term weights 5.2 Selecting Web Resources In one of our initial experiments, we observed that the quality of web resources included in the Interest Corpus may have a direct impact on the results we obtain .
+6-42:We wanted to determine what impact the choice of web resources have on the performance of our Human Interest Model .
+6-43:For this reason, we split our collection of web resources into four major groups listed here: N News: Title and first paragraph of the top 50 most relevant articles found in NewsLibrary .
+6-44:W Wikipedia: Text from the most relevant article found in Wikipedia .
+6-45:S Snippets: Snippets extracted from the top 100 most relevant links after querying Google .
+6-46:M Miscellaneous sources: Combination of content (when available) from secondary sources including biography.com, s9.com, bartleby.com articles, Google definitions and WordNet definitions .
+6-47:We conducted a gamut of runs on the TREC 2005 question set using all possible combinations of the above four groups of web resources to identify the best possible combination .
+6-48:All runs were conducted on Human Interest Model using JS divergence as term weighting scheme .
+6-49:The runs were sorted in descending F3 Score and the top 3 best performing runs for each entity class are listed in Table 2 together with earlier reported F3 scores from Figure 2 as a baseline reference .
+6-50:A consistent trend can be observed for each entity class .
+6-51:For PERSON and EVENT topics, NewsLibrary articles are the main source of interesting nuggets with Google snippets and miscellaneous articles offering additional supporting evidence .
+6-52:This seem intuitive for events as newspapers predominantly focus on reporting breaking newsworthy events and are thus excellent sources of interesting nuggets .
+6-53:We had expected Wikipedia rather than news articles to be a better source of interesting facts about people and were surprised to discover that news articles outperformed Wikipedia .
+6-54:We believe that the reason is because the people selected as topics thus far have been celebrities or well known public figures .
+6-55:Human readers are likely to be interested in news events that spotlight these personalities .
+6-56:Conversely for ORGANIZATION and THING topics, the best source of interesting nuggets come from Wikipedia"s most relevant article on the topic with Google snippets again providing additional information for organizations .
+6-57:With an oracle that can classify topics by entity class with 100% accuracy and by using the best web resources for each entity class as shown in Table 2, we can attain a F3 Score of 0.3158. .
+7 UNIFYING INFORMATIVENESS WITH INTERESTINGNESS :
+7-1:INTERESTINGNESS We have thus far been comparing the Human Interest Model against the Soft Pattern model in order to understand the differences between interesting and informative nuggets .
+7-2:However from the perspective of a human reader, both informative and interesting nuggets are useful and definitional .
+7-3:Informative nuggets present a general overview of the topic while interesting nuggets give readers added depth and insight by providing novel and unique aspects about the topic .
+7-4:We believe that a good definitional question answering system should provide the reader with a combined mixture of both nugget types as a definitional answer set .
+7-5:Rank PERSON ORG THING EVENT Baseline Unigram Weighting Scheme, N+W+S+M 0.3279 0.3630 0.2551 0.2644 1 N+S+M W+S W+M N+M 0.3584 0.3709 0.2688 0.2905 2 N+S N+W+S W+S+M N+S+M 0.3469 0.3702 0.2665 0.2745 3 N+M N+W+S+M W+S N+S 0.3431 0.3680 0.2616 0.2690 Table 2: Top 3 runs using different web resources for each entity class We now have two very different experts at identifying definitions .
+7-6:The Soft Pattern Bigram Model proposed by Cui et al .
+7-7:is an expert in identifying informative nuggets .
+7-8:The Human Interest Model we have described in this paper on the other hand is an expert in finding interesting nuggets .
+7-9:We had initially hoped to unify the two separate definitional question answering systems by applying an ensemble learning method [5] such as voting or boosting in order to attain a good mixture of informative and interesting nuggets in our answer set .
+7-10:However, none of the ensemble learning methods we attempted could outperform our Human Interest Model .
+7-11:The reason is that both systems are picking up very different sentences as definitional answers .
+7-12:In essence, our two experts are disagreeing on which sentences are definitional .
+7-13:In the top 10 sentences from both systems, only 4.4% of these sentences appeared in both answer sets .
+7-14:The remaining answers were completely different .
+7-15:Even when we examined the top 500 sentences generated by both systems, the agreement rate was still an extremely low 5.3% .
+7-16:Yet, despite the low agreement rate between both systems, each individual system is still able to attain a relatively high F3 score .
+7-17:There is a distinct possibility that each system may be selecting different sentences with different syntactic structures but actually have the same or similar semantic content .
+7-18:This could result in both systems having the same nuggets marked as correct even though the source answer sentences are structurally different .
+7-19:Unfortunately, we are unable to automatically verify this as the evaluation software we are using does not report correctly identified answer nuggets .
+7-20:To verify if both systems are selecting the same answer nuggets, we randomly selected a subset of 10 topics from the TREC 2005 question set and manually identified correct answer nuggets (as defined by TREC accessors) from both systems .
+7-21:When we compared the answer nuggets found by both system for this subset of topics, we found that the nugget agreement rate between both systems was 16.6% .
+7-22:While the nugget agreement rate is higher than the sentence agreement rate, both systems are generally still picking up different answer nuggets .
+7-23:We view this as further indication that definitions are indeed made up of a mixture of informative and interesting nuggets .
+7-24:It is also indication that in general, interesting and informative nuggets are quite different in nature .
+7-25:There are thus rational reasons and practical motivation in unifying answers from both the pattern based and corpus based approaches .
+7-26:However, the differences between the two systems also cause issues when we attempt to combine both answer sets .
+7-27:Currently, the best approach we found for combining both answer sets is to merge and re rank both answer sets with boosting agreements .
+7-28:We first normalize the top 1,000 ranked sentences from each system, to obtain the Normalized Human Interest Model score, him(s), and the Normalized Soft Pattern Bigram Model score, sp(s), for every unique sentence, s .
+7-29:For each sentence, the two separate scores for are then unified into a single score using Equation 5 .
+7-30:When only one system believes that the sentence is definitional, we simply retain that system"s normalized score as the unified score .
+7-31:When both systems agree agree that the sentence is definitional, the sentence"s score is boosted by the degree of agreement between between both systems .
+7-32:Score(s) = max(shim, ssp)1−min(shim,ssp) (5) In order to maintain a diverse set of answers as well as to ensure that similar sentences are not given similar ranking, we further re rank our combined list of answers using Maximal Marginal Relevance or MMR [2] .
+7-33:Using the approach described here, we achieve a F3 score of 0.3081 .
+7-34:This score is equivalent to the initial Human Interest Model score of 0.3031 but fails to outperform the optimized Human Interest Model model. .
+8 ABSTRACT :
+8-1:This paper has presented a novel perspective for answering definitional questions through the identification of interesting nuggets
+8-2:Interesting nuggets are uncommon pieces of information about the topic that can evoke a human reader"s curiosity
+8-3:The notion of an average human reader is an important consideration in our approach
+8-4:This is very different from the lexico syntactic pattern approach where the context of a human reader is not even considered when finding answers for definitional question answering
+8-5:Using this perspective, we have shown that using a combination of a carefully selected external corpus, matching against multiple centroids and taking into consideration rare but highly topic specific terms, we can build a definitional question answering module that is more focused on identifying nuggets that are of interest to human beings
+8-6:Experimental results has shown this approach can significantly outperform state of the art definitional question answering systems
+8-7:We further showed that at least two different types of answer nuggets are required to form a more thorough set of definitional answers
+8-8:What seems to be a good set of definition answers is some general information that provides a quick informative overview mixed together with some novel or interesting aspects about the topic
+8-9:Thus we feel that a good definitional question answering system would need to pick up both informative and interesting nugget types in order to provide a complete definitional coverage on all important aspects of the topic
+8-10:While we have attempted to build such a system by combining our proposed Human Interest Model with Cui et al."s Soft Pattern Bigram Model, the inherent differences between both types of nuggets seemingly caused by the low agreement rates between both models have made this a difficult task
+8-11:Indeed, this is natural as the two models have been designed to identify two very different types of definition answers using very different types of features
+8-12:As a result, we are currently only able to achieve a hybrid system that has the same level of performance as our proposed Human Interest Model
+8-13:We approached the problem of definitional question answering from a novel perspective, with the notion that interest factor plays a role in identifying definitional answers
+8-14:Although the methods we used are simple, they have been shown experimentally to be effective
+8-15:Our approach may also provide some insight into a few anomalies in past definitional question answering"s trials
+8-16:For instance, the top definitional system at the recent TREC 2006 evaluation was able to significantly outperform all other systems using relatively simple unigram probabilities extracted from Google snippets
+8-17:We suspect the main contributor to the system"s performance Entity Type Topics ORGANIZATION DePauw University, Merck & Co., Norwegian Cruise Lines (NCL), United Parcel Service (UPS), Little League Baseball, Cliffs Notes, American Legion, Sony Pictures Entertainment (SPE), Telefonica of Spain, Lions Club International, AMWAY, McDonald"s Corporation, Harley Davidson, U.S
+8-18:Naval Academy, OPEC, NATO, International Bureau of Universal Postal Union (UPU), Organization of Islamic Conference (OIC), PBGC PERSON Bing Crosby, George Foreman, Akira Kurosawa, Sani Abacha, Enrico Fermi, Arnold Palmer, Woody Guthrie, Sammy Sosa, Michael Weiss, Paul Newman, Jesse Ventura, Rose Crumb, Rachel Carson, Paul Revere, Vicente Fox, Rocky Marciano, Enrico Caruso, Pope Pius XII, Kim Jong Il THING F16, Bollywood, Viagra, Howdy Doody Show, Louvre Museum, meteorites, Virginia wine, Counting Crows, Boston Big Dig, Chunnel, Longwood Gardens, Camp David, kudzu, U.S
+8-19:Medal of Honor, tsunami, genome, Food for Oil Agreement, Shiite, Kinmen Island EVENT Russian submarine Kursk sinks, Miss Universe 2000 crowned, Port Arthur Massacre, France wins World Cup in soccer, Plane clips cable wires in Italian resort, Kip Kinkel school shooting, Crash of EgyptAir Flight 990, Preakness 1998, first 2000 Bush Gore presidential debate , 1998 indictment and trial of Susan McDougal, return of Hong Kong to Chinese sovereignty, 1998 Nagano Olympic Games, Super Bowl XXXIV, 1999 North American International Auto Show, 1980 Mount St
+8-20:Helens eruption, 1998 Baseball World Series, Hindenburg disaster, Hurricane Mitch Table 3: TREC 2005 Topics Grouped by Entity Type is Google"s PageRank algorithm, which mainly consider the number of linkages, has an indirect effect of ranking web documents by the degree of human interest
+8-21:In our future work, we seek to further improve on the combined system by incorporating more evidence in support of correct definitional answers or to filter away obviously wrong answers.
+9 ABSTRACT :
+9-1:S
+9-2:Blair Goldensohn, K
+9-3:R
+9-4:McKeown, and A
+9-5:H
+9-6:Schlaikjer
+9-7:A hybrid approach for qa track definitional questions
+9-8:In TREC "03: Proceedings of the 12th Text REtrieval Conference, Gaithersburg, Maryland, 2003
+9-9:J
+9-10:G
+9-11:Carbonell and J
+9-12:Goldstein
+9-13:The use of MMR, diversity based reranking for reordering documents and producing summaries
+9-14:In Research and Development in Information Retrieval, pages 335 336, 1998
+9-15:Y
+9-16:Chen, M
+9-17:Zhou, and S
+9-18:Wang
+9-19:Reranking answers for definitional qa using language modeling
+9-20:In Proceedings of the 21st International Conference on Computational Linguistics and 44th Annual Meeting of the Association for Computational Linguistics, pages 1081 1088, Sydney, Australia, July 2006
+9-21:Association for Computational Linguistics
+9-22:H
+9-23:Cui, M. Y
+9-24:Kan, and T. S
+9-25:Chua
+9-26:Generic soft pattern models for definitional question answering
+9-27:In SIGIR "05: Proceedings of the 28th annual international ACM SIGIR conference on Research and development in information retrieval, pages 384 391, New York, NY, USA, 2005
+9-28:ACM Press
+9-29:T
+9-30:G
+9-31:Dietterich
+9-32:Ensemble methods in machine learning
+9-33:Lecture Notes in Computer Science, 1857:1 15, 2000
+9-34:S
+9-35:Harabagiu, D
+9-36:Moldovan, C
+9-37:Clark, M
+9-38:Bowden, A
+9-39:Hickl, and P
+9-40:Wang
+9-41:Employing two question answering systems at trec 2005
+9-42:In TREC "05: Proceedings of the 14th Text REtrieval Conference, Gaithersburg, Maryland, 2005
+9-43:M
+9-44:Kaisser, S
+9-45:Scheible, and B
+9-46:Webber
+9-47:Experiments at the university of edinburgh for the trec 2006 qa track
+9-48:In TREC "06 Notebook: Proceedings of the 14th Text REtrieval Conference, Gaithersburg, Maryland, 2006
+9-49:National Institute of Standards and Technology
+9-50:J
+9-51:Lin
+9-52:Divergence measures based on the shannon entropy
+9-53:IEEE Transactions on Information Theory, 37(1):145  151, Jan 1991
+9-54:J
+9-55:Lin, E
+9-56:Abels, D
+9-57:Demner Fushman, D
+9-58:W
+9-59:Oard, P
+9-60:Wu, and Y
+9-61:Wu
+9-62:A menagerie of tracks at maryland: Hard, enterprise, qa, and genomics, oh my! In TREC "05: Proceedings of the 14th Text REtrieval Conference, Gaithersburg, Maryland, 2005
+9-63:J
+9-64:Lin and D
+9-65:Demner Fushman
+9-66:Automatically evaluating answers to definition questions
+9-67:In Proceedings of Human Language Technology Conference and Conference on Empirical Methods in Natural Language Processing, pages 931 938, Vancouver, British Columbia, Canada, October 2005
+9-68:Association for Computational Linguistics
+9-69:R
+9-70:Sun, J
+9-71:Jiang, Y
+9-72:F
+9-73:Tan, H
+9-74:Cui, T. S
+9-75:Chua, and M. Y
+9-76:Kan
+9-77:Using syntactic and semantic relation analysis in question answering
+9-78:In TREC "05: Proceedings of the 14th Text REtrieval Conference, Gaithersburg, Maryland, 2005
+9-79:E
+9-80:M
+9-81:Voorhees
+9-82:Overview of the trec 2003 question answering track
+9-83:In Text REtrieval Conference 2003, Gaithersburg, Maryland, 2003
+9-84:National Institute of Standards and Technology
+9-85:E
+9-86:M
+9-87:Voorhees
+9-88:Overview of the trec 2005 question answering track
+9-89:In TREC "05: Proceedings of the 14th Text REtrieval Conference, Gaithersburg, Maryland, 2005
+9-90:National Institute of Standards and Technology
+9-91:J
+9-92:Xu, A
+9-93:Licuanan, and R
+9-94:Weischedel
+9-95:TREC 2003 QA at BBN: Answering definitional questions
+9-96:In TREC "03: Proceedings of the 12th Text REtrieval Conference, Gaithersburg, Maryland, 2003
+9-97:D
+9-98:Zhang and W
+9-99:S
+9-100:Lee
+9-101:A language modeling approach to passage question answering
+9-102:In TREC "03: Proceedings of the 12th Text REtrieval Conference, Gaithersburg, Maryland, 2003
+picture:

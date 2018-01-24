@@ -1,0 +1,86 @@
+The Market Scoring Rule was introduced by Hanson [6] .
+It is based on the concept of a proper scoring rule, a technique which rewards forecasters to give their best prediction .
+Hanson"s innovation was to turn the scoring rules into instruments that can be traded, thereby providing traders who have new information an incentive to trade .
+One positive effect of this design is that a single trader would still have incentive to trade, which is equivalent to updating the scoring rule report to reflect her information, thereby eliminating the problem of thin markets and illiquidity .
+In this section, we show that, when the scoring rule used is the spherical scoring rule [4], there is a strong strategic equivalence between the projection game and the market scoring rule .
+Proper scoring rules are tools used to reward forecasters who predict the probability distribution of an event .
+We describe this in the simple setting of two exhaustive, mutually exclusive events A and B .
+In the simple setting of two exhaustive, mutually exclusive events A and B, proper scoring rules are defined as follows .
+Suppose the forecaster predicts that the probabilities of the events are r = (rA, rB), with rA + rB = 1 .
+The scoring rule is specified by functions sA(rA, rB) and sB(rA, rB), which are applied as follows
+The key property that a proper scoring rule satisfies is that the expected payment is maximized when the report is identical to the true probability distribution .
+4.1 Equivalence with Spherical Scoring Rule In this section, we focus on one specific scoring rule
+Definition 1 .
+The spherical scoring rule [4] is defined by si(r) def = ri ||r|| .
+For two events, this can be written as
+The definition generalizes naturally to higher dimensions .
+We now demonstrate a close connection between the projection game restricted to a circular arc and a market scoring rule that uses the spherical scoring rule .
+At this point, it is 321 convenient to use vector notation .
+Let x = (x, y) denote a position in the projection game .
+We consider the projection game restricted to the circle |x| = 1 .
+Restricted projection game Consider a move in this restricted projection game from x to x .
+Recall that q = ( p ¡Ô p2+(1?p)2 , 1?p ¡Ô p2+(1?p)2 ), where p is the true probability of the event .
+Then, the projection game profit of a move [x, x ] is q ¡P [x ? x] (noting that |x| = |x |) .
+We can extend this to an arbitrary collection3 of (not necessarily contiguous) moves X = {[x1, x1], [x2, x2], ¡P ¡P ¡P , [xl, xl]} .
+SEG PROFITp(X ) = X [x,x ]?X q ¡P [x ? x] = q ¡P 2 4 X [x,x ]?X [x ? x] 3 5 Spherical scoring rule profit We now turn our attention to the MSR with the spherical scoring rule .
+Consider a player who changes the report from r to r .
+Then, if the true probability of A is p, her expected profit is SSR PROFIT([r, r ]) = p(sA(r )?sA(r))+(1?p)(sB(r )?sB(r)) Now, let us represent the initial and final position in terms of circular coordinates .
+For r = (rA, rB), define the corresponding coordinates x = ( rA¡Ô r2 A+r2 B , rB¡Ô r2 A+r2 B The chief advantages of the projection game are that it is analytically tractable, and also easy to visualize .
+In Section 3, we used the projection game model of the DPM to prove the absence of arbitrage, and to infer strategic properties that might have been difficult to deduce otherwise .
+In this section, we provide two examples that illustrate the power of projection game analysis for gaining insight about more complex strategic settings .
+323 5.1 Traders with inertia The standard analysis of the trader behavior in any of the market forms we have studied asserts that traders who disagree with the market probabilities will expect to gain from changing the probability, and thus have a strict incentive to trade in the market .
+The expected gain may, however, be very small .
+A plausible model of real trader behavior might include some form of inertia or optimality
+We do not attempt to justify this model here; rather, we illustrate how the projection game may be used to analyze such situations, and shed some light on how to modify the trading rules to alleviate this problem .
+Consider the simple projection game restricted to a circular arc with unit radius; as we have seen, this corresponds closely to the spherical market scoring rule, and to the dynamic parimutuel market under a reasonable constraint .
+Now, suppose the market probability is p, and a trader believes the true probability is p .
+Then, his expected gain can be calculated, as follows
+The expected profit is given by E = £p(q, p ) = 1? q ¡Pq .
+Thus, the trader will trade only if 1?q¡Pq > .
+If we let £c and £c be the angles of the p line and p line respectively (from the x axis), we get E = 1 ? cos(£c ? £c ); when £c is close to £c , a Taylor series approximation gives us that E ? (£c ? £c )2 2 .
+Thus, we can derive a bound on the limit of the market accuracy
+Now, suppose a market operator faced with this situation wanted to sharpen the accuracy of the market .
+One natural approach is simply to multiply all payoffs by a constant .
+This corresponds to using a larger circle in the projection game, and would indeed improve the accuracy .
+However, it will also increase the market maker"s exposure to loss
+The projection game model suggests a natural approach to improving the accuracy while retaining the same bounds on the market maker"s loss .
+The idea is that, instead of restricting all moves to being on the unit circle, we force each move to have a slightly larger radius than the previous move .
+Suppose we insist that, if the current radius is r, the next trader has to move to r + 1 .
+Then, the trader"s expected profit would be E = r(1 ? cos(£c ? £c )) .
+Using the same approximation as above, the trader would trade as long as (£c ? £c )2 > 2 r .
+Now, even if the market maker seeded the market with r = 1, it would increase with each trade, and the incentives to sharpen the estimate increase with every trade .
+5.2 Analyzing long term strategies Up to this point, our analysis has been restricted to trader strategies that are myopic in the sense that traders do not consider the impact of their trades on other traders" beliefs .
+In practice, an informed trader can potentially profit by playing a suboptimal strategy to mislead other traders, in a way that allows her to profit later .
+In this section, we illustrate how the projection game can be used to analyze an instance of this phenomenon, and to design market rules that mitigate this effect .
+The scenario we consider is as follows .
+There are two traders speculating on the probability of an event E, who each get a 1 bit signal .
+The optimal probability for each 2bit signal pair is as follows .
+If trader 1 gets the signal 0, and trader 2 gets signal 0, the optimal probability is 0.3 .
+If trader 1 got a 0, but trader 2 got a 1, the optimal probability is 0.9 .
+If trader 1 gets 1, and trader 2 gets signal 0, the optimal probability is 0.7 .
+If trader 1 got a 0, but trader 2 got a 1, the optimal probability is 0.1 .
+(Note that the impact of trader 2"s signal is in a different direction, depending on trader 1"s signal) .
+Suppose that the prior distribution of the signals is that trader 1 is equally likely to get a 0 or a 1, but trader 2 gets a 0 with probability 0.55 and a 1 with probability 0.45 .
+The traders are playing the projection game restricted to a circular arc .
+This setup is depicted in Figure 4 .
+A B D C X Y Signals Opt .
+Pt 00 C D11 10 01 Event does not happenEventhappens B A Figure 4
+Then, trader 1 has the option of placing a last minute trade just before the market closes .
+If traders were playing their myopically optimal strategies, here is how the market should run
+Trader 2 would then infer that trader 1 received a 0 signal and move to A or C if she got 1 or 0 respectively .
+Trader 1 has no reason to move again .
+If trader 1 had got a 1, he would move to a different point X instead, and trader 2 would move to D if she saw 1 and B if she saw 0 .
+Again, trader 1 would not want to move again .
+Using the projection game, it is easy to show that, if traders consider non myopic strategies, this set of strategies is not an equilibrium .
+The exact position of the points does not matter; all we need is the relative position, and the observation that, because of the perfect symmetry in the setup, segments XY, BC, and AD are all parallel to each other .
+Now, suppose trader 1 got a 0 .
+He could move to X instead of Y , to mislead trader 2 into thinking he got a correct the rating to A .
+To show that this is a profitable deviation, observe that this strategy is equivalent to playing two additional moves over trader 1"s myopic strategy of moving to Y .
+The first move, Y X may either move toward or away from the optimal final position .
+The second move, DA or BC, is always in the correct direction .
+Further, because DA and BC are longer than XY , and parallel to XY , their projection on the final p line will always be greater 324 in absolute value than the projection of XY , regardless of what the true p line is! Thus, the deception would result in a strictly higher expected profit for trader 1 .
+Note that this problem is not specific to the projection game form
+Observe also that a strategy profile in which neither trader moved in the first two rounds, and trader 1 moved to either X or Y would be a subgame perfect equilibrium in this setup .
+We suggest that one approach to mitigating this problem might be by reducing the radius at every move .
+This essentially provides a form of discounting that motivates trader 1 to take his profit early rather than mislead trader 2 .
+Graphically, the right reduction factor would make the segments AD and BC shorter than XY (as they are chords on a smaller circle), thus making the myopic strategy optimal. .

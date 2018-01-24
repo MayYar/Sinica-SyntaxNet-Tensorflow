@@ -1,0 +1,46 @@
+Information provision and sharing can be considered to be a decentralized partially observable Markov decision process [3,4,11,14] .
+In the general case, decentralized control of largescale dynamic systems of cooperative agents is a hard problem .
+Optimal solutions can only be approximated by means of heuristics, by relaxations of the original problem or by centralized solutions .
+The computation of an optimal control policy is simple given that global states can be factored, that the probability of transitions and observations are independent, the observations combined determine the global state of the system and the reward function can be easily defined as the sum of local reward functions [3] .
+However, in a large scale dynamic system with decentralized control it is very hard for agents to possess accurate partial views of the environment, and it is even more hard for agents to possess a global view of the environment .
+Furthermore, agents" observations can not be assumed independent, as one agent"s actions can affect the observations of others
+Furthermore, the probabilities of transitions can be dependent too; something that increases the complexity of the problem
+Considering independent activities and observations, authors in [4] propose a decision theoretic solution treating standard action and information exchange as explicit choices that the decision maker must make .
+They approximate the solution using a myopic algorithm .
+Their work differs in the one reported here in the following aspects
+Second, the solution is approximated using a myopic algorithm, but authors do not demonstrate how suboptimal are the solutions computed (something we neither do), given their interest to the optimal solution .
+Third, they consider that transitions and observations made by agents are independent, which, as already discussed, is not true in the general case .
+Last, in contrast to their approach where agents broadcast messages, here agents decide not only when to communicate, but to whom to send a message too .
+Token based approaches are promising for scaling coordination and therefore information provision and sharing to large scale systems effectively .
+In [11] authors provide a mathematical framework for routing tokens, providing also an approximation to solving the original problem in case of independent agents" activities .
+The proposed method requires a high volume of computations that authors aim to reduce by restricting its application to static logical teams of associated agents .
+In accordance to this approach, in [12,13,14], information sharing is considered only for static networks and self tuning of networks is not demonstrated .
+As it will be shown in section 5, our experiments show that although these approaches can handle information sharing in dynamic networks, they require a larger amount of messages in comparison to the approach proposed here and can not tune the network for efficient information sharing .
+Proactive communication has been proposed in [17] as a result of a dynamic decision theoretic determination of communication strategies .
+This approach is based on the specification of agents as providers and needers
+However, this approach can not scale to large and dynamic networks, as it would be highly inefficient for each agent to compute and determine its potential needs and information provision abilities given its potential interaction with 100s of other agents .
+Viewing information retrieval in peer to peer systems from a multi agent system perspective, the approach proposed in [18] is based on a language model of agents" documents collection .
+Exploiting the models of other agents in the network, agents construct their view of the network which is being used for forming routing decisions .
+Initially, agents build their views using the models of their neighbours .
+Then, the system reorganizes by forming clusters of agents with similar content .
+Clusters are being exploited during information retrieval using a kNN approach and a gradient search scheme .
+Although this work aims at tuning a network for efficient information provision (through reorganization), it does not demonstrate the effectiveness of the approach with respect to this issue .
+Moreover, although during reorganization and retrieval they measure the similarity of content between agents, a more fine grained approach is needed that would allow agents to measure similarities of information items or sub collections of information items .
+However, it is expected that this will complicate re organization .
+Based on their work on peer to peer systems, H.Zhand and V.Lesser in [19] study concurrent search sessions .
+Dealing with static networks, they focus on minimizing processing and communication bottlenecks
+Considering research in semantic peer to peer systems1 , most of the approaches exploit what can be loosely stated a routing index .
+A major question concerning information searching is what information has to be shared between peers, when, and what adjustments have to be made so as queries to be routed to trustworthy information sources in the most effective and efficient way .
+REMINDIN" [10] peers gather information concerning the queries that have been answered successfully by other peers, so as to subsequently select peers to forward requests to
+This results in a tuning process where the overall recall increases over time, while the number of messages per query remains about the same .
+Here, agents actively advertise their information provision abilities based on the assessed interests of their peers
+In [5,6] peers, using a common ontology, advertise their expertise, which is being exploited for the formation of a semantic overlay network
+It is on the receiver"s side to decide whether it shall accept or not an advertisement, based on the similarity between expertise descriptions .
+According to our approach, agents advertise selectively their information provision abilities about specific topics to their neighbours with similar information interests (and only to these) .
+However, this is done as time passes and while agents" receive requests from their peers .
+The gradual creation of overlay networks via re wiring, shortcuts creation [1,8,16] or clustering of peers [17,9] are tuning approaches that differ fundamentally from the one proposed here
+They generate a substantial overhead in highly dynamic settings, where nodes join leave the system .
+248 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) agents advertise their information provision abilities given the interests of their neighbours .
+Given the success of this method, we shall study how the addition of logical paths and gradual evolution of the network topology can further increase the effectiveness of the proposed method. .

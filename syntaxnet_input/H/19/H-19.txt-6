@@ -1,0 +1,45 @@
+After identifying and modeling bursts for all features, the next task is to paint a picture of the event with a potential set of representative features .
+6.1 Feature Correlation If two features fi and fj are representative of the same event, they must satisfy the following necessary conditions
+Definition 6 .
+(feature similarity) KL(fi, fj ) is given by max(KL(fi|fj ), KL(fj |fi)), where KL(fi|fj ) = T t=1 f(yfi (t)|£cfi )log f(yfi (t)|£cfi ) f(yfj (t)|£cfj ) .
+(1) Since KL divergence is not symmetric, we define the similarity between between fi and fj as the maximum of KL(fi|fj ) and KL(fj |fi) .
+Further, the similarity between two aperiodic features can be computed using a closed form of the KL divergence [16] .
+The same discrete KL divergence formula of Eq .
+1 is employed to compute the similarity between two periodic features, Next, we define the overal similarity among a set of features R using the maximum inter feature KL Divergence value as follows .
+Definition 7 .
+(set"s similarity)KL(R) = max ?fi,fj ?R KL(fi, fj ) .
+Document Overlap Let Mi be the set of all documents containing feature fi .
+Given two features fi and fj , the overlapping document set containing both features is Mi °‰ Mj .
+Intuitively, the higher the |Mi °‰ Mj |, the more likelty that fi and fj will be highly correlated .
+We define the degree of document overlap between two features fi and fj as follows .
+Definition 8 .
+(Feature DF Overlap) d(fi, fj ) = |Mi°‰Mj| min(|Mi|,|Mj|) .
+Accordingly, the DF Overlap among a set of features R is also defined .
+Definition 9 .
+(Set DF Overlap) d(R) = min ?fi,fj ?R d(fi, fj) .
+6.2 Unsupervised Greedy Event Detection We use features from HH to detect important aperiodic events, features from LH to detect less reported unimportant aperiodic events, and features from HL to detect periodic events .
+All of them share the same algorithm .
+Given bursty feature fi ? HH, the goal is to find highly correlated features from HH .
+The set of features similar to fi can then collectively describe an event .
+Specifically, we need to find a subset Ri of HH that minimizes the following cost function
+(2) The underlying event e (associated with the burst of fi) can be represented by Ri as y(e) = fj ?Ri Sfj fu?Ri Sfu yfj .
+(3) The burst analysis for event e is exactly the same as the feature trajectory .
+The cost in Eq .
+2 can be minimized using our unsupervised greedy UG event detection algorithm, which is described in Algorithm 2 .
+The UG algorithm allows a feature Algorithm 2 Unsupervised Greedy event detection .
+Input
+1
+.
+.
+? Sf|HH| .
+2
+3
+5
+6
+8
+10
+12
+3 .
+15
+Furthermore, trivial events only containing year month features (i.e., an event only containing 1 feature Aug could be identified over a 1year news stream) could be removed, although such events will have inherent high cost and should already be ranked very low .
+Note that our UG algorithm only requires one data dependant parameter, the boundary between high and low power spectrum, to be set once, and this parameter can be easily estimated using the HS algorithm (Algorithm 1). .

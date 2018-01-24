@@ -1,0 +1,60 @@
+Having demonstrated that clickthrough inversions cannot always be explained by relevance differences, we explore what features of caption pairs, if any, lead users to prefer one caption over another .
+For example, we may hypothesize that the absence of a snippet in caption A and the presence of a snippet in caption B (e.g .
+captions 2 and 3 in figure 1) leads users to prefer caption A .
+Nonetheless, due to competing factors, a large set of clickthrough inversions may also include pairs where the snippet is missing in caption B and not in caption A .
+However, if we compare a large set of clickthrough inversions to a similar set of pairs for which the clickthroughs are consistent with their ranking, we would expect to see relatively more pairs where the snippet was missing in caption A .
+4.1 Evaluation methodology Following this line of reasoning, we extracted two sets of caption pairs from search logs over a three day period .
+The first is a set of nearly five thousand clickthrough inversions, extracted according to the procedure described in section 3.1 .
+The second is a corresponding set of caption pairs that do not exhibit clickthrough inversions .
+In other words, for pairs in this set, the result at the higher rank (caption A) received more clickthroughs than the result at the lower rank (caption B) .
+To the greatest extent possible, each pair in the second set was selected to correspond to a pair in the first set, in terms of result position and number of clicks on each result .
+We refer to the first set, containing clickthrough inversions, as the INV set; we refer to the second set, containing caption pairs for which the clickthroughs are consistent with their rank order, as the CON set .
+We extract a number of features characterizing snippets (described in detail in the next section) and compare the presence of each feature in the INV and CON sets .
+We describe the features as a hypothesized preference (e.g., a preference for captions containing a snippet) .
+Thus, in either set, a given feature may be present in one of two forms
+For example, the abFeature Tag Description MissingSnippet snippet missing in caption A and present in caption B SnippetShort short snippet in caption A (< 25 characters) with long snippet (> 100 characters) in caption B TermMatchTitle title of caption A contains matches to fewer query terms than the title of caption B TermMatchTS title+snippet of caption A contains matches to fewer query terms than the title+snippet of caption B TermMatchTSU title+snippet+URL of caption A contains matches to fewer query terms than caption B TitleStartQuery title of caption B (but not A) starts with a phrase match to the query QueryPhraseMatch title+snippet+url contains the query as a phrase match MatchAll caption B contains one match to each term; caption A contains more matches with missing terms URLQuery caption B URL is of the form www.query.com where the query matches exactly with spaces removed URLSlashes caption A URL contains more slashes (i.e .
+a longer path length) than the caption B URL URLLenDIff caption A URL is longer than the caption B URL Official title or snippet of caption B (but not A) contains the term official (with stemming) Home title or snippet of caption B (but not A) contains the phrase home page Image title or snippet of caption B (but not A) contains a term suggesting the presence of an image gallery Readable caption B (but not A) passes a simple readability test Figure 4
+These features are expressed from the perspective of the prevalent relationship predicted for clickthrough inversions .
+sence of a snippet in caption A favors caption B, and the absence of a snippet in caption B favors caption A .
+When the feature favors caption B (consistent with a clickthrough inversion) we refer to the caption pair as a positive pair .
+When the feature favors caption A, we refer to it as a negative pair .
+For missing snippets, a positive pair has the caption missing in caption A (but not B) and a negative pair has the caption missing in B (but not A) .
+Thus, for a specific feature, we can construct four subsets
+The sets INV+, INV?, CON+, and CON? will contain different subsets of INV and CON for each feature .
+When stating a feature corresponding to a hypothesized user preference, we follow the practice of stating the feature with the expectation that the size of INV+ relative to the size of INV? should be greater than the size of CON+ relative to the size of CON? .
+For example, we state the missing snippet feature as snippet missing in caption A and present in caption B .
+This evaluation methodology allows us to construct a contingency table for each feature, with INV essentially forming the experimental group and CON the control group .
+We can then apply Pearson"s chi square test for significance .
+4.2 Features Figure 4 lists the features tested .
+Many of the features on this list correspond to our own assumptions regarding the importance of certain caption characteristics
+Other features suggested themselves during the examination of the snippets collected as part of the study described in section 3.3 and during a pilot of the evaluation methodology (section 4.1) .
+For this pilot we collected INV and CON sets of similar sizes, and used these sets to evaluate a preliminary list of features and to establish appropriate parameters for the SnippetShort and Readable features .
+In the pilot, all of the features list in figure 4 were significant at the 95% level .
+A small number of other features were dropped after the pilot .
+These features all capture simple aspects of the captions .
+The first feature concerns the existence of a snippet and the second concerns the relative size of snippets .
+Apart from this first feature, we ignore pairs where one caption has a missing snippet .
+These pairs are not included in the sets constructed for the remaining features, since captions with missing snippets do not contain all the elements of a standard caption and we wanted to avoid their influence .
+The next six features concern the location and number of matching query terms .
+For the first five, a match for each query term is counted only once, additional matches for the same term are ignored .
+The MatchAll feature tests the idea that matching all the query terms exactly once is preferable to matching a subset of the terms many times with a least one query term unmatched .
+The next three features concern the URLs, capturing aspects of their length and complexity, and the last four features concern caption content .
+The first two of these content features (Official and Home) suggest claims about the importance or significance of the associated page .
+The third content feature (Image) suggests the presence of an image gallery, a popular genre of Web page .
+Terms represented by this feature include pictures, pics, and gallery .
+The last content feature (Readable) applies an ad hoc readability metric to each snippet .
+Regular users of Web search engines may notice occasional snippets that consist of little more than lists of words and phrases, rather than a coherent description .
+We define our own metric, since the Flesch Kincaid readability score and similar measures are intended for entire documents not text fragments .
+While the metric has not been experimentally validated, it does reflect our intuitions and observations regarding result snippets .
+In English, the 100 most frequent words represent about 48% of text, and we would expect readable prose, as opposed to a disjointed list of words, to contain these words in roughly this proportion .
+The Readable feature computes the percentage of these top 100 words appearing in each caption .
+If these words represent more than 40% of one caption and less than 10% of the other, the pair is included in the appropriate set .
+Feature Tag INV+ INV? %+ CON+ CON? %+ £q2 p value MissingSnippet 185 121 60.4 144 133 51.9 4.2443 0.0393 SnippetShort 20 6 76.9 12 16 42.8 6.4803 0.0109 TermMatchTitle 800 559 58.8 660 700 48.5 29.2154 <.0001 TermMatchTS 310 213 59.2 269 216 55.4 1.4938 0.2216 TermMatchTSU 236 138 63.1 189 149 55.9 3.8088 0.0509 TitleStartQuery 1058 933 53.1 916 1096 45.5 23.1999 <.0001 QueryPhraseMatch 465 346 57.3 427 422 50.2 8.2741 0.0040 MatchAll 8 2 80.0 1 4 20.0 0.0470 URLQuery 277 188 59.5 159 315 33.5 63.9210 <.0001 URLSlashes 1715 1388 55.2 1380 1758 43.9 79.5819 <.0001 URLLenDiff 2288 2233 50.6 2062 2649 43.7 43.2974 <.0001 Official 215 142 60.2 133 215 38.2 34.1397 <.0001 Home 62 49 55.8 64 82 43.8 3.6458 0.0562 Image 391 270 59.1 315 335 48.4 15.0735 <.0001 Readable 52 43 54.7 31 48 39.2 4.1518 0.0415 Figure 5
+Features supported at the 95% confidence level are bolded .
+The p value for the MatchAll feature is computed using Fisher"s Exact Test .
+4.3 Results Figure 5 presents the results .
+Each row lists the size of the four sets (INV+, INV?, CON+, and CON?) for a given feature and indicates the percentage of positive pairs (%+) for INV and CON .
+In order to reject the null hypothesis, this percentage should be significantly greater for INV than CON .
+Except in one case, we applied the chi squared test of independence to these sizes, with p values shown in the last column .
+For the MatchAll feature, where the sum of the set sizes is 15, we applied Fisher"s exact test .
+Features supported at the 95% confidence level are bolded. .

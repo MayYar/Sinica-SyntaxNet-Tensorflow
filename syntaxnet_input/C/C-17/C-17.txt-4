@@ -1,0 +1,38 @@
+Ramanathan and Rangan [20] have studied in detail the architectural configurations comparing many conferencing architecture schemes taking into consideration the network delay and computation requirements for mixing .
+Functional division and object oriented architecture design that aid in implementation is presented in [1] .
+An overview of many issues involved in supporting a large conference is dealt in [8] .
+H .
+P .
+Dommel [5] and many others highlight floor control as another pivotal aspect to be taken into account in designing a conferencing tool .
+Tightly coupled conference control protocols in Internet belong to the ITU T H.323 family [9]; however, they are mainly for small conferences .
+The latest IETF draft by Rosenberg and Schulzrinne [23] discusses conferencing models with SIP [22] in the background .
+Aspects of implementation for centralized SIP conferencing are reported in [26] .
+A new approach called partial mixing by Radenkovic [18] allows for mixed and non mixed streams to coexist .
+In all the above proposals, while there are some very useful suggestions, they share one or more of the following limitations
+Actually, mixing many arbitrary streams [24] from clients degrades the quality of the conference due to the reduction in the volume (spatial aspect of speech) .
+The number of streams mixed varies dynamically depending on the number of active participants .
+This would lead to fluctuations in the volume of every individual participant causing severe degradation in quality .
+Customized mixing of streams is not possible when many clients are active .
+There is a threshold on the number of simultaneous speakers above which increasing the number of speakers becomes counterproductive to conference quality .
+Fixing the maximum number of simultaneous speakers is dealt in a recent work [15] using Ethnomethodology, and is conjectured to be three .
+Thus it is advisable to honour that constraint .
+? There cannot be many intermediate mixers (similarly, Conference Servers as in [10]) in stages as in [20] because it brings in inordinate delay by increasing the number of hops and is not scalable with interactivity in focus .
+? Floor Control for an audio conference (even video conference) with explicit turn taking instructions to participants renders the conference essentially a one speakerat a time affair, not a live and free to interrupt one .
+This way, the conference becomes markedly artificial and its quality degrades .
+Schulzrinne et al .
+[24], assume only one participant is speaking at a time .
+In this case, if applications are implemented with some control [5], the service becomes ¡¥gagging" for the users .
+? Partial mixing [18] has a similar problem as that of mixing when more streams are mixed .
+Moreover, in [18], to allow impromptu speech, mixing is not done when the network can afford high bandwidth requirements for sending receiving all the streams, but it is unnecessary [15] .
+? For large conferences [23, 10] a centralized conference cannot scale up .
+With multicasting, clients will have to parse many streams and traffic on a client"s network increases unnecessarily .
+Evidently, different particular issues, all of which are a subset of requirements (defined in [14] and [16]) for a VoIP conferencing support, are tackled .
+Thus there is a need to address conferencing as a whole with all its requirements considered concurrently .
+Towards this goal, the VoIP conferencing system we propose is intended to be scalable and interactive .
+We make use of the "Loudness Number" for implementing floor control .
+This permits a participant to freely get into the speaking mode to interrupt the current speaker as in a natural face to face meeting .
+An upper limit on the number of floors (i.e., the number of speakers allowed to speak at the same time) is fixed using a conjecture proposed in [15] .
+The work presented here is in continuation of our studies into conferencing based on the Session Initiation Protocol in [14] and [16] .
+SIP, defined in [22] is now the most popular standard for VoIP deployment and has been chosen for its strength, ease of use, extensibility and compatibility .
+This is the reason it will be in the background of all controlling messages that will implicitly arise between the entities in our architecture .
+The actual messages are described in [16] and, as such, we do not present a complete description of them here. .

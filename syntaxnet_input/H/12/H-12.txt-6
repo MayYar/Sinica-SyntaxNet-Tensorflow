@@ -1,0 +1,34 @@
+In Section 3 we observed that the Snippet Engine would have its own RAM in proportion to the size of the document collection .
+For example, on a whole of Web search engine, the Snippet Engine would be distributed over many workstations, each with at least 4 Gb of RAM .
+In a small enterprise, the Snippet Engine may be sharing RAM with all other sub systems on a single workstation, hence only have 100 Mb available .
+In this section we use simulation to measure the number of cache hits in the Snippet Engine as memory size varies .
+We compare two caching policies
+Note that documents are first loaded into the caches in order of decreasing query independent score, which is computed as described in Section 4.4 .
+The simulations also assume a query cache exists for the top Q most frequent queries, and that these queries are never processed by the Snippet Engine .
+All queries passed into the simulations are from the second half of the Excite query log (the first half being used to compute query independent scores), and are stemmed, stopped, and have their terms sorted alphabetically .
+This final alteration simply allows queries such as red dog and dog red to return the same documents, as would be the case in a search engine where explicit phrase operators would be required in the query to enforce term order and proximity .
+Figure 4 shows the percentage of document access that hit cache using the two caching schemes, with Q either 0 or 10,000, on 535,276 Excite queries on wt100g .
+The xaxis shows the percentage of documents that are held in the cache, so 1.0% corresponds to about 185,000 documents .
+From this figure it is clear that caching even a small percentage of the documents has a large impact on reducing seek time for snippet generation .
+With 1% of documents cached, about 222 Mb for the wt100g collection, around 80% of disk seeks are avoided .
+The static cache performs surprisingly well (squares in Figure 4), but is outperformed by the LRU cache (circles) .
+In an actual implementation of LRU, however, there may be fragmentation of the cache as documents are swapped in and out .
+The reason for the large impact of the document cache is 0.0 0.5 1.0 1.5 2.0 2.5 3.0 020406080100 Cache size (% of collection) %ofaccessesascachehits LRU Q=0 LRU Q=10,000 Static Q=0 Static Q=10,000 Figure 4
+Results are from a simulation on wt100g with 535,276 Excite queries .
+that, for a particular collection, some documents are much more likely to appear in results lists than others .
+This effect occurs partly because of the approximately Zipfian query frequency distribution, and partly because most Web search engines employ ranking methods which combine query based scores with static (a priori) scores determined from factors such as link graph measures, URL features, spam scores and so on [17] .
+Documents with high static scores are much more likely to be retrieved than others .
+In addition to the document cache, the RAM of the Snippet Engine must also hold the CTS decoding table that maps integers to strings, which is capped by a parameter at compression time (1 Gb in our experiments here) .
+This is more than compensated for by the reduced size of each document, allowing more documents into the document cache .
+For example, using CTS reduces the average document size from 5.7 Kb to 1.2 Kb (as shown in Table 1), so a 2 Gb RAM could hold 368,442 uncompressed documents (2% of the collection), or 850,691 documents plus a 1 Gb decompression table (5% of the collection) .
+In fact, further experimentation with the model size reveals that the model can in fact be very small and still CTS gives good compression and fast scoring times .
+This is evidenced in Figure 5, where the compressed size of wt50g is shown in the solid symbols .
+Note that when no compression is used (Model Size is 0Mb), the collection is only 31 Gb as HTML markup, JavaScript, and repeated punctuation has been discarded as described in Section 4.1 .
+With a 5 Mb model, the collection size drops by more than half to 14 Gb, and increasing the model size to 750 Mb only elicits a 2 Gb drop in the collection size .
+Figure 5 also shows the average time to score and decode a a snippet (excluding seek time) with the different model sizes (open symbols) .
+Again, there is a large speed up when a 5 Mb model is used, but little 0 200 400 600 15202530 Model Size (Mb) CollectionSize(Gb)orTime(msec) Size (Gb) Time (msec) Figure 5
+improvement with larger models .
+Similar results hold for the wt100g collection, where a model of about 10 Mb offers substantial space and time savings over no model at all, but returns diminish as the model size increases .
+Apart from compression, there is another approach to reducing the size of each document in the cache
+Rather store sentences that are likely to be used in snippets in the cache, and if during snippet generation on a cached document the sentence scores do not reach a certain threshold, then retrieve the whole document from disk .
+This raises questions on how to choose sentences from documents to put in cache, and which to leave on disk, which we address in the next section. .

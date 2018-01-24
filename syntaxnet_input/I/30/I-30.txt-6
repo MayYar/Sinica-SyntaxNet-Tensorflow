@@ -1,0 +1,30 @@
+create an agent resource node ai, and an edge from s to this node with capacity equal to the amount of resources of type r agent a has available and with costs 0 .
+create a task resource node ti, and an edge from this node to s with capacity equal to the amount of resources of type r task t requires and costs ?e(t) .
+connect the agent resource node ai to all task resource nodes ti for neighboring tasks t ? {t ? T | (a, loc(t)) ? AE or a = loc(t)} .
+Give this connection unlimited capacity and zero costs .
+capacity and zero costs .
+Solve the minimum cost flow network problem for this network .
+The costs of the resulting network is an upper bound for the social task allocation problem .
+problem is polynomially solvable by transforming it to a flow network problem .
+Our method for efficiently calculating an upper bound for STAP makes use of this special case by converting any given STAP instance P into a new problem P where each task only has one resource type .
+More specifically, for every task t ? T with utility u(t), we do the following .
+Let m be the number of resource types {r1, .
+.
+.
+, rm} required by t .
+We then split t into a set of m tasks T = {t1, .
+.
+.
+, tm} where each task ti only has one unique resource type (of {r1, .
+.
+.
+, rm}) and each task has a fair share of the utility, i.e., the efficiency of t from Definition 5 times the amount of this resource type rsc(ti, ri) .
+After polynomially performing this conversion for every task in T , the original problem P becomes the special case P .
+Note that the set of valid allocations in P is only a subset of the set of valid allocations in P , because it is now possible to partially allocate a task .
+From this it is easy to see that the solution of P gives an upper bound of the solution of the original problem P .
+To compute the optimal solution for P , we transform it to a minimum cost flow problem .
+We model the cost in the flow network by the negation of the new task"s utility .
+A polynomial time implementation of a scaling minimum cost flow algorithm [9] is used for the computation .
+The resulting minimum cost flow represents a maximum allocation of the tasks for P .
+The detailed modeling is described in Algorithm 3 .
+In the next section, we use this upper bound to estimate the quality of the GDAP for large scale instances. .

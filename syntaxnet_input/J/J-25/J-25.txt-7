@@ -1,0 +1,273 @@
+2 complete for unlimited securities with indivisible orders .
+5.1 Small number of securities with divisible orders We can build a linear program based on Definition 2 .
+We have variables £\i .
+For each i, we have 0 ? £\i ? 1 and for each state £s in ? we have the constraint £W £s auc = X i ?£\i£W £s i ? 0 .
+Given these constraints we maximize X i £\i .
+A set of orders has a matching exactly when P i £\i > 0 .
+With O(log n) base securities, we have |?| bounded by a polynomial so we can solve this linear program in polynomial time .
+Note that one might argue that one should maximize some linear combination of the ?£W £s i s to maximize the surplus .
+However this approach will not find matchings that have zero surplus .
+5.2 Large number of securities with divisible orders With unlimited base securities, the linear program given in Section 5.1 has an exponential number of constraint equations .
+Each constraint is short to describe and easily computable given £s .
+149 Let m ? n be the total number of buy and sell orders .
+By the theory of linear programming, an upper bound on the objective function can be forced by a collection of m + 1 constraints .
+So if no matching exists there must exist m + 1 constraints that force all the £\i to zero .
+In nondeterministic polynomial time we can guess these constraints and solve the reduced linear program .
+This shows that matching is in co NP .
+To show co NP completeness we reduce the NP complete problem of Boolean formula satisfiability to the nonexistence of a matching .
+Fix a formula £p .
+Let the base securities be the variables of £p and consider the single security £p with a buy order of 0.5 .
+If the formula £p is satisfiable then there is some state with payoff 0.5 and no fractional unit of the security £p is a matching .
+If the formula £p is not satisfiable then every state has an auctioneer"s payoff of 0.5 and a single unit of the security £p is a matching .
+One could argue that if the formula £p is not satisfiable then no fully rational buyer would want to buy £p for a cost of 0.5 .
+We can get around this problem by adding auxiliary base securities, A and B, and defining two securities £n = (£p ? A) ? (A ? B) £n = (£p ? A) ? (A ? B) with separate buy orders of 0.5 on each .
+If £p were satisfiable then in the state corresponding to the satisfying assignment and both A and B to be true, £n and £n both have an auctioneer"s payoff of ?0.5 so even no divisible matching can exist .
+If £p were not satisfiable then one unit of each would be a matching since in every state at least one of £n or £n are false .
+5.3 Small number of securities with indivisible orders This case is easily seen to be in NP
+Since |?| and |S| are bounded by a polynomial in n, the verification can be done in polynomial time .
+To show that matching is NP complete we reduce the NPcomplete problem EXACT COVER BY 3 SETS (X3C) to a matching of securities .
+The input to X3C consists of a set X and a collection C of 3 element subsets of X .
+The input (X, C) is in X3C if C contains an exact cover of X, i.e., there is a subcollection C of C such that every element of X occurs in exactly one member of C .
+Karp showed that X3C is NP complete .
+Suppose we have an instance (X, C) with the vector X = {x1, .
+.
+.
+, x3q} and C = {c1, .
+.
+.
+, cm} .
+We set ? = {e1, .
+.
+.
+, e3q, r, s} and define securities labelled £p1 , .
+.
+.
+, £pm , £r1 , .
+.
+.
+, £rq and £n , as follows
+? Security £rj is true only in state s .
+? Security £n is true in each state ek but not r or s .
+We have buy orders on each £pi and £rj security for 0.5 ? 1 8q and a buy order on £n for 0.5 .
+We claim that a matching exists if and only if (X, C) is in X3C .
+If (X, C) is in X3C, let C be the subcollection that covers each element of X exactly once .
+Note that |C | = q .
+We claim the collection consisting of £pi for each ci in C , every £rj and £n has a matching .
+In each state ek we have an auctioneer"s payoff of (.5 ? 1 8q ) + (q ? 1)(?.5 ? 1 8q ) + q(.5 ? 1 8q ) ? .5 = .5 ? 2q 1 8q = .25 ? 0 .
+In states r and s the auctioneer"s payoffs are ?q(.5 + 1 8q ) + ?q(?.5 + 1 8q ) + .5 = ?5 ? 2q 1 8q = .25 ? 0 .
+Suppose now that (X, C) is not in X3C but there is a matching .
+Consider the number q of the £pi in that matching and q the number of £rj in the matching .
+Since a matching requires a nonempty subset of the orders and £n by itself is not a matching we have q + q > 0 .
+We have three cases .
+q > q
+q > q 
+q ? q ? q
+There must be some state ek not in any of the ci or C would be an exact cover .
+The auctioneer"s payoff in ek is at most ?q (.5 + 1 8q ) ? q (?.5 + 1 8q ) ? ?(q + q ) 1 8q < 0 .
+5.4 Large Number of Securities with Indivisible Orders The class £Up 2 is the second level of the polynomial time hierarchy .
+A language L is in £Up 2 if there exists a polynomial p and a set A in P such that x is in L if and only if there is a y with |y| = p(|x|) such that for all z, with |z| = p(|x|), (x, y, z) is in A .
+The class £Up 2 contains both NP and coNP .
+Unless the polynomial time hierarchy collapses (which is considered unlikely), a problem that is complete for £Up 2 is not contained in NP or co NP .
+We will show that computing a matching is £Up 2 complete, and remains so even for quite restricted types of securities, and hence is (likely) neither in NP or co NP .
+While it may seem that being NP complete or co NP complete is hard enough, there are further practical consequences of being outside of NP and co NP .
+If the matching problem were in NP, one could use heuristics to search for and verify a match if it exists; even if such heuristics fail in the worst case, they may succeed for most examples in practice .
+Similarly, if the matching problem were in co NP, one might hope to at least heuristically rule out the possibility of matching .
+But for problems outside of NP or co NP, there is no framework for verifying that a heuristically derived answer is correct .
+Less formally, for NP (or co NP) complete problems, you have to be lucky; for £Up 2 complete problems, you can"t even tell if you"ve been lucky .
+150 We note that the existence of a matching is in £Up 2
+We prove a stronger theorem which implies that matching is in £Up security Si has cost ci and pays off pi whenever formula Ci is satisfied .
+The 0 ? 1 matching problem asks whether one can, by accepting either 0 or 1 of each security, guarantee a worst case payoff strictly larger than the total cost .
+Theorem 2 .
+The 0?1 matching problem is £Up 2 complete .
+Furthermore, the problem remains £Up 2 complete under the following two special cases
+securities (or their negations) .
+These hardness results hold even if there is a promise that no subset of the securities guarantees a worst case payoff identical to their cost .
+To prove Theorem 2, we reduce from the standard £Up 2 problem that we call T??BF .
+Given a boolean formula £p with variables x1, .
+.
+.
+, xn and y1, .
+.
+.
+, yn is the following fullyquantified formula true ?x1 .
+.
+.
+?xn?y1 .
+.
+.
+?yn £p(x1, .
+.
+.
+, xn, y1, .
+.
+.
+, yn)? The problem remains £Up 2 complete when £p(x1, .
+.
+.
+, xn, y1, .
+.
+.
+, yn) is restricted to being a disjunction of conjunctions of at most 3 variables (or their negations), e.g., £p(x1, .
+.
+.
+, xn, y1, .
+.
+.
+, yn) = (x1 ? ¡Âx3 ? y2) ? (x2 ? y3 ? y7) ? ¡P ¡P ¡P .
+This form, without the bound on the conjunction size, is known as disjunctive normal form (DNF); the restriction to conjunctions of 3 variables is 3 DNF .
+We reduce T??BF to finding a matching .
+For the simplest reduction, we consider the matching problem where one has a set of Arrow Debreu securities whose payoff events are conjunctions of the base securities, or their negations .
+The auctioneer has the option of accepting either 0 or 1 of each of the given securities .
+We first reduce to the case where the payoff events are conjunctions of arbitrarily many base events (or their negations) .
+By a standard trick we can reduce the number of base events in each conjunction to 3, and with a slight twist we can even ensure that all securities have the same price as well as the same payoff .
+Finally, we show that the problem remains hard even if only conjunctions of 2 variables are allowed, though with securities that deviate slightly from Arrow Debreu securities in that they may have varying, non unit payoffs .
+5.4.1 The basic reduction Before describing the securities, we give some intuition .
+The T??BFproblem may be viewed as a game between a selector and an adversary .
+The selector sets the xi variables, and then the adversary sets the yi variables so as to falsify the formula £p .
+We can view the 0 ? 1 matching problem as one in which the auctioneer is a buyer who buys securities corresponding to disjunctions of the base events, and then the adversary sets the values of the base events to minimize the payoff from the securities .
+We construct our securities so that the optimal buying strategy is to buy n expensive securities along with a set of cheap securities, of negligible cost (for some cases we can modify the construction so that all securities have the same cost) .
+The total cost of the securities will be just under 1, and each security pays off 1, so the adversary must ensure that none of the securities pays off .
+Each expensive security forces the adversary to set some variable, xi to a particular value to prevent the security from paying off; this corresponds to setting the xi variables in the original game .
+The cheap securities are such that preventing every one of of these securities from paying off is equivalent to falsifying £p in the original game .
+Among the technical difficulties we face is how to prevent the buyer from buying conflicting securities, e.g., one that forces xi = 0 and the other that forces xi = 1, allowing for a trivial arbitrage .
+Secondly, for our analysis we need to ensure that a trader cannot spend more to get more, say by spending 1.5 for a set of securities with the property that at least 2 securities pay off under all possible events .
+For each of the variables {xi}, {yi} in £p, we add a corresponding base security (with the same labels) .
+For each existential variable xi we add additional base securities, ni and zi .
+We also include a base security Q .
+In our basic construction, each expensive security costs C and each cheap security costs ; all securities pay off 1 .
+We require that Cn+ (|cheap securities|) < 1 and C(n+1) > 1 .
+That is, one can buy n expensive securities and all of the cheap securities for less than 1, but one cannot buy n + 1 expensive securities for less than 1 .
+We at times refer to a security by its payoff clause .
+Remark
+However, this would allow one to buy a security for nothing that pays (in the worst case) nothing .
+By making > 0 , we can show it hard to distinguish portfolios that guarantee a positive profit from those that risk a positive loss .
+Setting > 0 will also allow us to show hardness results for the case where all securities have the same cost .
+For 1 ? i ? n, we have two expensive securities with payoff clauses (¡Âxi ?Q) and (¡Âni ?Q) and two cheap securities with payoff clauses (xi ? ¡Âzi) and (ni ? ¡Âzi) .
+For each clause C ? £p, we convert every negated variable ¡Âxi into ni and add the conjunction z1 ? ¡P ¡P ¡P ? zn .
+Thus, for a clause C = (x2 ? ¡Âx7 ? ¡Ây5) we construct a cheap security SC, with payoff clause (z1 ? ¡P ¡P ¡P ? zn ? x2 ? n7 ? ¡Ây5) .
+Finally, we have a cheap security with payoff clause ( ¡ÂQ) .
+We now argue that a matching exists iff ?x1 .
+.
+.
+?xn?y1 .
+.
+.
+?yn £p(x1, .
+.
+.
+, xn, y1, .
+.
+.
+, yn) .
+We do this by successively constraining the buyer and the adversary, eliminating behaviors that would cause the other player to win .
+The resulting reasonable strategies correspond exactly to the game version of T??BF .
+First, observe that if the adversary sets all of the base securities to false (0), then only the ( ¡ÂQ) security will pay off .
+151 Thus, no buyer can buy more than n expensive securities and guarantee a profit .
+The problem is thus whether one can buy n expensive securities and all the cheap securities, so that at for any setting of the base events at least one security will pay off .
+Clearly, the adversary must make Q hold, or the ( ¡ÂQ) security will pay off .
+Next, we claim that for each i, 1 ? i ? i, the auctioneer must buy at least one of the (¡Âxi ? Q) and (¡Âni ? Q) securities .
+This follow from the fact that if the adversary sets xi, ni and zi to be false, and every other base event to be true, then only the (¡Âxi ? Q) and (¡Âni ? Q) securities will pay off .
+As no auctioneer can buy more than n expensive securities, it must therefore buy exactly one of (¡Âxi ? Q) or (¡Âni ? Q), for each i, 1 ? i ? n .
+For the rest of the analysis, we assume that the auctioneer follows this constraint .
+Suppose that the buyer buys (¡Âxi ?Q) .
+Then the adversary must set xi to be true (since it must set Q to be true), or the security will pay off .
+It must then set zi to be true or (xi?¡Âzi) will pay off .
+Since the buyer doesn"t buy (¡Âni ? Q) (by the above constraint), and all the other securities pay the same or less when ni is made false, we can assume without loss of generality that the adversary sets ni to be false .
+Similarly, if the buyer buys (¡Âni ? Q), then the adversary must set ni and zi to be true, and we can assume without loss of generality that the adversary sets xi to be false .
+Note that the adversary must in all cases set each zi event to be true .
+Summarizing the preceding argument, there is an exact correspondence between the rational strategies of the buyer and settings for the xi variables forced on the adversary .
+Furthermore, the adversary is also constrained to set the variables Q, z1, .
+.
+.
+, zn to be true, and without loss of generality may be assumed to set ni = ¡Âxi .
+Under these constraints, those securities not corresponding to clauses in £p are guaranteed to not pay off .
+The adversary also decides the value of the y1, .
+.
+.
+, ym base events .
+Recall that for each clause C ? £p there is a corresponding security SC .
+Given that zi is true and ni = ¡Âxi (without loss of generality), it follows from the construction of SC that the setting of the yis causes SC to pay off iff it satisfies C .
+This establishes the reduction from T??BF to the matching problem, when the securities are constrained to be a conjunction of polynomially many base events or their negations .
+5.4.2 Reducing to 3 variable conjunctions There are standard methods for reducing DNF formulae to 3 DNF formulae, which are trivially modifiable to our securities framework; we include the reduction for completeness .
+Given a security S whose payoff clause is C = (v1 ? v2 ? ¡P ¡P ¡P ? vk) (variable negations are irrelevant to this discussion), cost c and payoff p, introduce a new auxiliary variable, w, and replace the security with two securities, S1 and S2, with payoff clauses, C1 = (v1 ? v2 ? w) and C2 = ( ¡Âw ? v3 ? ¡P ¡P ¡P ? vk) .
+The securities both have payoff p, and their costs can be any positive values that sum to c .
+Note that at most one of the securities can pay off at a time .
+If only one security is bought, then the adversary can always set w so that it won"t pay off; hence the auctioneer will buy either both or neither, for a total cost of c (here we use the fact that one is only allowed to buy either 0 or 1 shares of each security) .
+Then, it may be verified that, given the ability to set w arbitrarily, the adversary can cause C to be unsatisfied iff it can cause both C1 and C2 to be unsatisfied .
+Hence, owning one share each of S1 and S2 is equivalent to owning one share of S .
+Note that C1 has three variables and C2 has k?1 variables .
+By applying the transformation successively, one obtains an equivalent set of securities, of polynomial size, whose payoff clauses have at most 3 variables .
+We note that in the basic construction, all of the clauses with more than 3 variables are associated with cheap securities (cost ) .
+Instead of subdividing costs, we can simply make all of the resulting securities have cost ; the constraints on C and must reflect the new, larger number of cheap securities .
+One can ensure that all of the payoff clauses have exactly 3 variables, with a similar construction .
+A security S with cost c, payoff p and defining clause (x ? y) can be replaced by securities S1 and S2 with cost c 2, payoff p and defining clauses (x?y?w) and (x?y? ¡Âw), where w is a new auxiliary variable .
+Essentially the same analysis as given above applies to this case .
+The case of single variable payoff clauses is handled by two applications of this technique .
+5.4.3 Reducing to equi cost securities By setting C and appropriately, one can ensure that in the basic reduction every security costs a polynomially bounded integer multiple of ; call this ratio r .
+We now show how to reduce this case to the case where every security costs .
+Recall that the expensive securities have payoff clauses (¡Âxi ? Q) or (¡Âni ? Q) .
+Assume that security S has payoff clause (¡Âxi ? Q) (the other case is handled identically) .
+Replace S with security S , with payoff clause (¡Âxi ? Q ? w1) (w1, .
+.
+.
+, wr?1 are auxiliary variables; fresh variables are chosen for each clause), and also S1, .
+.
+.
+, Sr?1, with payoff clauses ( ¡Âw1 ? w2), ( ¡Âw2 ? w3), .
+.
+.
+, ( ¡Âwr?2 ? wr?1), and( ¡Âwr?1 ? ¡Âw1) .
+Clearly, buying none of the new securities is equivalent to not buying the original security .
+We show that buying all of the new securities is equivalent to buying the original security, and that buying a proper, nonempty subset of the securities is irrational .
+We first note that if the buyer buys securities S1, .
+.
+.
+, Sr?1, then the adversary must set w1 to be true, or one of the securities will pay off .
+To see this, note that if wi is set to false, then ( ¡Âwi ?wi+1) will be true unless wi+1 is set to false; thus, setting w1 to false forces the adversary to set wr?1 to false, causing the final clause to be true .
+Having set w1 true, the adversary can set w2, .
+.
+.
+, wr?1 to false, ensuring that none of the securities S1, .
+.
+.
+, Sr?1 pays out .
+If wi is true, then (¡Âxi ? Q ? w1) is equivalent to (¡Âxi ? Q) .
+So buying all of the replacement securities for each is equivalent to buying the original security for r .
+It remains to show that buying a proper, nonempty subset of the securities is irrational .
+If one doesn"t buy S , then the adversary can set the w variables so that none of S1, .
+.
+.
+, Sr?1 will pay off; any money spent on these securities is wasted .
+If one doesn"t buy Sr?1, the adversary can set all w to false, in which case none of the new clauses will pay off, regardless of the value of xi and Q .
+Similarly, if one 152 doesn"t buy Si, for 1 ? i ? r ?2, the adversary can set wi+1 to be true, all the other w variables to be false, and again there is no payoff, regardless of the value of xi and Q .
+Thus, buying a proper subset of these securities will not increase ones payoff .
+We note that this reduction can be combined trivially with the reduction that ensures that all of the defining clauses have 3 or fewer variables .
+With a slightly messier argument, all of the defining clauses can be set up to have exactly 3 variables .
+5.4.4 Reducing to clauses of at most 2 variables If we allow securities to have variable payoffs and prices, we can reduce to the case where each security"s payoff clause is a conjunction of at most 2 variables or their negations .
+Given a security s with payoff clause (X ? Y ? Z), cost c and payoff 1, we introduce fresh auxiliary variables, w1, w2 and w3 (new variables are used for each clause) and replace S with the following securities
+? Securities S1, .
+.
+.
+, S6, each with cost 4 and payoff 24 ? 2, with payoff clauses, (w1 ? w2) (w1 ? w3) (w2 ? w3) ( ¡Âw1 ? ¡Âw2) ( ¡Âw1 ? ¡Âw3) ( ¡Âw2 ? ¡Âw3) Here, 2 is a tiny positive quantity, described later .
+By a simple case analysis, we have the following .
+Observations
+S securities will pay off .
+will pay off .
+to be 0, will cause exactly one of the S securities to pay off .
+By Observation 1, there is no point in buying a nonempty proper subset of the S securities
+By Observation 2, if one buys all the S securities, one is guaranteed to almost make back ones investment (except for 2), in which case by Observations 3 and 4, the adversaries optimal strategy is to make exactly one of w1, w2 or w3 true .
+We set C, and 2 so that Cn + (|cheap securities|) + 2(|clauses|) < 1 .
+Thus, the accumulated losses of 2 can never spell the difference between making a guaranteed profit and making no profit at all .
+Note also that by making 2 positive we prevent the existence of break even buying strategies in which the buyer only purchases S securities .
+Summarizing the previous argument, we may assume without loss of generality that the buyer buys all of the S securities (for all clauses), and that for each clause the adversary sets exactly one of that clause"s auxiliary variables w1, w2 or w3 to be true .
+For the rest of the discussion, we assume that the players follow these constraints .
+We next claim that a rational buyer will either buy all of S1, S2 or S3, or none of them .
+If the buyer doesn"t buy S1, then if the adversary makes w1 true and w2 and w3 false, neither S2 nor S3 will pay off, regardless of how the adversary sets X, Y and Z .
+Hence, there is no point in buying either S2 or S3 if one doesn"t buy S1 .
+Applying the same argument to S2 and S3 establishes the claim .
+Clearly, buying none of S1, S2 and S3 has, up to negligible 2 factors, the same price payoff behavior as not buying S .
+We next argue that, subject to the established constraints put on the players" behaviors, buying all of S1, S2 and S3 has the same price payoff behavior (again ignoring 2 factors) as buying S, regardless of how the adversary sets X, Y and Z .
+First, in both cases, the cost is c .
+If the adversary makes X, Y and Z true, then S pays off 1, and (assuming that exactly one of w1, w2 and w3 is true), exactly one of S1, S2 or S3 will pay off 1 .
+If X is false, then S doesn"t pay off, and the adversary can set w1 true (and w2 and w3 false), ensuring that none of S1, S2 and S3 pays off .
+The same argument holds if Y or Z are false. .

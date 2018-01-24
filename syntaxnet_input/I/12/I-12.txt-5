@@ -1,0 +1,19 @@
+We tested the selective sharing mechanism in a system that simulates a distributed, Coordinators like MAS .
+This testbed environment includes a variable number of agents, each corresponding to a single CA module .
+Each agent is assigned an external source (simulating an owner) which it periodically samples to obtain a value from the distribution being estimated .
+The simulation system enabled us to avoid unnecessary inter agent scheduling and communication overhead (which are an inherent part of the Coordinators environment) and thus to better isolate the performance and effectiveness of the estimation and decision making mechanisms .
+The distribution functions used in the experiments (i.e., the distribution functions assigned to each user in the simulated environment) are multi rectangular shaped .
+This type of function is ideal for representing empirical distribution functions .
+It is composed of k rectangles, where each rectangle i is defined over the interval (xi?1, xi), and represents a probability pi, ( Pk i=1 pi =1) .
+For any value x in rectangle i, we can formulate F(x) and f(x) as
+Each rectangle is associated with one of the user"s typical activities, characterized by a set of typical interruption costs .
+(We assume the distribution of cost within each activity is uniform.) The rectangular area represents the probability of the user being engaged in this type of activity when she is randomly interrupted .
+Any overlap between the interruption costs of two or more activities results in a new rectangle for the overlapped interval .
+The user associated with the above distribution function spends most of her time in reporting (notice that this is the largest rectangle in terms of area), an activity associated with a relatively high cost of interruption .
+The user also spends a large portion of her time in planning (associated with a very high cost of interruption), monitoring his team (with a relatively small interruption cost) and receiving reports (mid level cost of interruption) .
+The user spends a relatively small portion of her time in scouting the enemy (associated with relatively high interruption cost) and resting .
+Figure 3
+Furthermore, these functions have computational advantages, mostly due to the ability to re use many of their components when calculating the optimal reservation value in economical search models .
+They also fit well the parameters the CA is trying to estimate in fast paced domains, because these parameters are mostly influenced by activities in which the user is engaged .
+The testbed system enabled us to define either hand crafted or automatically generated multi rectangular distribution functions .
+At each step of a simulation, each of the CAs samples its owner (i.e., all CAs in the system collect data at a similar rate) and then estimates the parameter (either the expected cost when using the sequential interruption technique described in Section 2 or the probability that the owner will have the required information) using one of the following methods

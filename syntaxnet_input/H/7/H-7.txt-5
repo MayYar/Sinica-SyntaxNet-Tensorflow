@@ -1,0 +1,59 @@
+If the prior £X is known, finding the optimal wm is straightforward
+Therefore, we will focus on estimating £X .
+The maximum a priori solution of £X is given by £XMAP = arg max £X P(£X|D) (2) = arg max £X P(£X, D) P(D) (3) = arg max £X P(D|£X)P(£X) (4) = arg max £X w P(D|w, £X)P(w|£X)P(£X)dw (5) Finding the optimal solution for the above problem is challenging, since we need to integrate over all w = (w1, w2, ..., wM ), which are unobserved hidden variables .
+4.1 EM Algorithm for Bayesian Hierarchical Linear Models In Equation 5, £X is the parameter needs to be estimated, and the result depends on unobserved latent variables w .
+This kind of optimization problem is usually solved by the EM algorithm .
+Applying EM to the above problem, the set of user models w are the unobservable hidden variables and we have
+For space considerations, we omit the derivation in this paper since it is not the focus of our work .
+E step
+¡Âwm = ((£U2 )?1 + Sxx,m £m2 )?1 ( Sxy,m £m2 + (£U2 )?1 ?) (6) £U2 m = ((£U2 )?1 + Sxx,m £m2 )?1 (7) where Sxx,m = j xm,jxT m,j Sxy,m = j xm,jym,j M step
+? = 1 M m ¡Âwm (8) £U2 = 1 M m £U2 m + ( ¡Âwm ? ?)( ¡Âwm ? ?)T (9) Many machine learning driven IR systems use a point estimate of the parameters at different stages in the system .
+However, we are estimating the posterior distribution of the variables at the E step .
+This avoids overfitting wm to a particular user"s data, which may be small and noisy .
+A detailed discussion about this subject appears in [10] .
+4.2 New Algorithm
+In this section, we describe why the learning rate of the EM algorithm is slow in our application and introduce a new technique to make the learning of the Bayesian hierarchical linear model scalable .
+The derivation of the new learning algorithm will be based on the EM algorithm described in the previous section .
+First, the covariance matrices £U2 , £U2 m are usually too large to be computationally feasible .
+For simplicity, and as a common practice in IR, we do not model the correlation between features .
+Thus we approximate these matrices with K dimensional diagonal matrices .
+In the rest of the paper, we use these symbols to represent their diagonal approximations
+0 0 £m2 2 . .
+0 5.1 Evaluation Data Set To evaluate the proposed technique, we used the following three major data sets (Table 1)
+MovieLens allows users to rank how much he she enjoyed a specific movie on a scale from 1 to measurement of how relevant the document representing the corresponding movie is to the user .
+We considered documents with likeability scores of 4 or 5 as relevant, and documents with a score of 1 to 3 as irrelevant to the user .
+MovieLens provided relevance judgments on 3,057 documents from 6,040 separate users .
+On average, each user rated 151 movies, of these 87 were judged to be relevant .
+The average score for a document was 3.58 .
+Documents representing each movie were constructed from the portion of the IMDB database that is available for public download[13] .
+Based on this database, we created one document per movie that contained the relevant information about it (e.g .
+directors, actors, etc.) .
+Table 1
+On Reuters, the number of rating for a simulated user is the number of documents relevant to the corresponding topic .
+Data Users Docs Ratings per User MovieLens 6,040 3,057 151 Netflix all 480,189 17,770 208 Netflix 1000 1000 17,770 127 Reuters C 34 100,000 3949 Reuters E 26 100,000 1632 Reuters G 33 100,000 2222 Reuters M 10 100,000 6529 Netflix Data
+Netflix publicly provides the relevance judgments of 480,189 anonymous customers .
+There are around 100 million rating on a scale of 1 to 5 for 17,770 documents .
+Similar to MovieLens, we considered documents with likeability scores of 4 or 5 as relevant .
+This number was reduced to 1000 customers through random sampling .
+The average customer on the reduced data set provided 127 judgments, with 70 being deemed relevant .
+The average score for documents is 3.55 .
+Reuters Data
+It covers 810,000 Reuters English language news stories from August 20, 1996 to August 19, 1997 .
+Only the first 100,000 news were used in our experiments .
+The Reuters corpus comes with a topic hierarchy .
+Each document is assigned to one of several locations on the hierarchical tree .
+The first level of the tree contains four topics, denoted as C, E, M, and G .
+For the experiments in this paper, the tree was cut at level 1 to create four smaller trees, each of which corresponds to one smaller data set
+For each small data set, we created several profiles, one profile for each node in a sub tree, to simulate multiple users, each with a related, yet separate definition of relevance .
+All the user profiles on a sub tree are supposed to share the same prior model distribution .
+Since this corpus explicitly indicates only the relevant documents for a topic(user), all other documents are considered irrelevant .
+5.2 Evaluation We designed the experiments to answer the following three questions
+In fact, the commonly used approach is equivalent to the model learned at the end of the first EM iteration .
+To answer the second question, we compared the proposed new algorithm with the standard EM algorithm to see whether the new learning algorithm is better .
+To answer the third question, we tested the efficiency of the new algorithm on the entire Netflix data set where about half a million user models need to be learned together .
+For the MovieLens and Netflix data sets, algorithm effectiveness was measured by mean square error, while on the Reuters data set classification error was used because it was more informative .
+We first evaluated the performance on each individual user, and then estimated the macro average over all users .
+Statistical tests (t tests) were carried out to see whether the results are significant .
+For the experiments on the MovieLens and Netflix data sets, we used a random sample of 90% of each user for training, and the rest for testing .
+On Reuters" data set, because there are too many relevant documents for each topic in the corpus, we used a random sample of 10% of each topic for training, and 10% of the remaining documents for testing .
+For all runs, we set (a, b, c, £U ) = (0.1, 10, 0.1, 1) manually. .

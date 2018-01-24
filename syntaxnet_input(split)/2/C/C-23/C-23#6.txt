@@ -1,0 +1,1285 @@
+Input: STRATEGY Dynamic co allocation , described above , is the most efficient approach to reducing the influence of network variations between clients and servers .
+Parse:
+approach NN ROOT
+ +-- allocation NN nsubj
+ |   +-- STRATEGY NNP nn
+ |   +-- co NN nn
+ |   |   +-- Dynamic JJ amod
+ |   +-- , , punct
+ |   +-- described VBN partmod
+ |       +-- above IN advmod
+ +-- is VBZ cop
+ +-- the DT det
+ +-- efficient JJ amod
+ |   +-- most RBS advmod
+ +-- to IN prep
+ |   +-- reducing VBG pcomp
+ |       +-- influence NN dobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- variations NNS pobj
+ |                   +-- network NN nn
+ |                   +-- between IN prep
+ |                       +-- clients NNS pobj
+ |                           +-- and CC cc
+ |                           +-- servers NNS conj
+ +-- . . punct
+Input: However , the idle time of faster servers awaiting the slowest server to deliver the last block is still a major factor affecting overall efficiency , which Conservative Load Balancing and Aggressive Load Balancing -LRB- 17 -RRB- can not effectively avoid .
+Parse:
+factor NN ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- time NN nsubj
+ |   +-- the DT det
+ |   +-- idle JJ amod
+ |   +-- of IN prep
+ |       +-- servers NNS pobj
+ |           +-- faster JJR amod
+ |           +-- awaiting VBG partmod
+ |               +-- server NN dobj
+ |               |   +-- the DT det
+ |               |   +-- slowest JJS amod
+ |               +-- deliver VB xcomp
+ |                   +-- to TO aux
+ |                   +-- block NN dobj
+ |                       +-- the DT det
+ |                       +-- last JJ amod
+ +-- is VBZ cop
+ +-- still RB advmod
+ +-- a DT det
+ +-- major JJ amod
+ +-- affecting VBG partmod
+ |   +-- efficiency NN dobj
+ |       +-- overall JJ amod
+ |       +-- , , punct
+ |       +-- avoid VB rcmod
+ |           +-- which WDT dobj
+ |           +-- Balancing NNP nsubj
+ |           |   +-- Conservative NNP nn
+ |           |   +-- Load NNP nn
+ |           |   +-- and CC cc
+ |           |   +-- Balancing NNP conj
+ |           |       +-- Aggressive NNP nn
+ |           |       +-- Load NN nn
+ |           |       +-- 17 CD appos
+ |           |           +-- -LRB- -LRB- punct
+ |           |           +-- -RRB- -RRB- punct
+ |           +-- can MD aux
+ |           +-- not RB neg
+ |           +-- effectively RB advmod
+ +-- . . punct
+Input: The approach proposed in the present paper , a dynamic allocation mechanism called Recursive Adjustment CoAllocation can overcome this , and thus , improve data transfer performance .
+Parse:
+overcome VB ROOT
+ +-- approach NN nsubj
+ |   +-- The DT det
+ |   +-- proposed VBD partmod
+ |       +-- in IN prep
+ |           +-- paper NN pobj
+ |               +-- the DT det
+ |               +-- present JJ amod
+ |               +-- , , punct
+ |               +-- mechanism NN appos
+ |                   +-- a DT det
+ |                   +-- allocation NN nn
+ |                   |   +-- dynamic JJ amod
+ |                   +-- called VBN partmod
+ |                       +-- CoAllocation NNP dep
+ |                           +-- Recursive NNP nn
+ |                           +-- Adjustment NNP nn
+ +-- can MD aux
+ +-- this DT dobj
+ +-- , , punct
+ +-- and CC cc
+ +-- improve VB conj
+ |   +-- thus RB advmod
+ |   +-- , , punct
+ |   +-- performance NN dobj
+ |       +-- transfer NN nn
+ |           +-- data NN nn
+ +-- . . punct
+Input: 5.1 Recursive Adjustment Co Allocation Recursive Adjustment Co Allocation works by continuously adjusting each replica server '' s workload to correspond to its realtime bandwidth during file transfers .
+Parse:
+works NNS ROOT
+ +-- 5.1 CD num
+ +-- Co NNP nn
+ |   +-- Recursive NNP nn
+ |   +-- Adjustment NNP nn
+ |   +-- Co NNP nn
+ |   +-- Allocation NNP nn
+ +-- Allocation NNP nn
+ +-- by IN prep
+ |   +-- adjusting VBG pcomp
+ |       +-- continuously RB advmod
+ |       +-- server NN dobj
+ |           +-- each DT det
+ |           +-- replica NN nn
+ +-- '' '' punct
+ +-- s POS punct
+ +-- workload NN dep
+ |   +-- correspond VB infmod
+ |       +-- to TO aux
+ |       +-- to IN prep
+ |       |   +-- bandwidth NN pobj
+ |       |       +-- its PRP$ poss
+ |       |       +-- realtime JJ amod
+ |       +-- during IN prep
+ |           +-- transfers NNS pobj
+ |               +-- file NN nn
+ +-- . . punct
+Input: The goal is to make the expected finish time of all servers the same .
+Parse:
+is VBZ ROOT
+ +-- goal NN nsubj
+ |   +-- The DT det
+ +-- make VB xcomp
+ |   +-- to TO aux
+ |   +-- same JJ xcomp
+ |       +-- time NN nsubj
+ |       |   +-- the DT det
+ |       |   +-- expected VBN amod
+ |       |   +-- finish NN nn
+ |       |   +-- of IN prep
+ |       |       +-- servers NNS pobj
+ |       |           +-- all DT det
+ |       +-- the DT det
+ +-- . . punct
+Input: As Figure 2 shows , when an appropriate file section is first selected , it is divided into proper block sizes according to the respective server bandwidths .
+Parse:
+divided VBN ROOT
+ +-- shows NNS advcl
+ |   +-- As IN mark
+ |   +-- Figure NN nsubj
+ |       +-- 2 CD num
+ +-- , , punct
+ +-- selected VBN advcl
+ |   +-- when WRB advmod
+ |   +-- section NN nsubjpass
+ |   |   +-- an DT det
+ |   |   +-- appropriate JJ amod
+ |   |   +-- file NN nn
+ |   +-- is VBZ auxpass
+ |   +-- first RB advmod
+ +-- it PRP nsubjpass
+ +-- is VBZ auxpass
+ +-- into IN prep
+ |   +-- sizes NNS pobj
+ |       +-- proper JJ amod
+ |       +-- block NN nn
+ +-- according VBG prep
+ |   +-- to IN pcomp
+ |       +-- bandwidths NNS pobj
+ |           +-- the DT det
+ |           +-- respective JJ amod
+ |           +-- server NN nn
+ +-- . . punct
+Input: The co allocator then assigns the blocks to servers for transfer .
+Parse:
+assigns VBZ ROOT
+ +-- allocator NN nsubj
+ |   +-- The DT det
+ |   +-- co NN nn
+ +-- then RB advmod
+ +-- blocks NNS dobj
+ |   +-- the DT det
+ +-- to IN prep
+ |   +-- servers NNS pobj
+ +-- for IN prep
+ |   +-- transfer NN pobj
+ +-- . . punct
+Input: At this moment , it is expected that the transfer finish time will be consistent at E -LRB- T1 -RRB- .
+Parse:
+expected VBN ROOT
+ +-- At IN prep
+ |   +-- moment NN pobj
+ |       +-- this DT det
+ +-- , , punct
+ +-- it PRP nsubjpass
+ +-- is VBZ auxpass
+ +-- consistent JJ ccomp
+ |   +-- that IN mark
+ |   +-- time NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- transfer NN nn
+ |   |   +-- finish NN nn
+ |   +-- will MD aux
+ |   +-- be VB cop
+ |   +-- at IN prep
+ |       +-- E NNP pobj
+ |           +-- T1 CD appos
+ |               +-- -LRB- -LRB- punct
+ |               +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: However , since server bandwidths may fluctuate during segment deliveries , actual completion time may be dissimilar -LRB- solid line , in Figure 2 -RRB- .
+Parse:
+dissimilar JJ ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- fluctuate VB advcl
+ |   +-- since IN mark
+ |   +-- bandwidths NNS nsubj
+ |   |   +-- server NN nn
+ |   +-- may MD aux
+ |   +-- during IN prep
+ |       +-- deliveries NNS pobj
+ |           +-- segment NN nn
+ +-- time NN nsubj
+ |   +-- actual JJ amod
+ |   +-- completion NN nn
+ +-- may MD aux
+ +-- be VB cop
+ +-- -LRB- -LRB- punct
+ +-- line NN dobj
+ |   +-- solid JJ amod
+ |   +-- , , punct
+ |   +-- in IN prep
+ |       +-- Figure NNP pobj
+ |           +-- 2 CD num
+ +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: Once the quickest server finishes its work at time T1 , the next section is assigned to the servers again .
+Parse:
+assigned VBN ROOT
+ +-- finishes VBZ advcl
+ |   +-- Once IN mark
+ |   +-- server NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- quickest JJS amod
+ |   +-- work NN dobj
+ |   |   +-- its PRP$ poss
+ |   +-- at IN prep
+ |       +-- time NN pobj
+ |           +-- T1 CD num
+ +-- , , punct
+ +-- section NN nsubjpass
+ |   +-- the DT det
+ |   +-- next JJ amod
+ +-- is VBZ auxpass
+ +-- to IN prep
+ |   +-- servers NNS pobj
+ |       +-- the DT det
+ +-- again RB advmod
+ +-- . . punct
+Input: This allows each server to finish its assigned workload by the expected time at E -LRB- T2 -RRB- .
+Parse:
+allows VBZ ROOT
+ +-- This DT nsubj
+ +-- finish VB xcomp
+ |   +-- server NN nsubj
+ |   |   +-- each DT det
+ |   +-- to TO aux
+ |   +-- workload NN dobj
+ |   |   +-- its PRP$ poss
+ |   |   +-- assigned VBN amod
+ |   +-- by IN prep
+ |       +-- time NN pobj
+ |           +-- the DT det
+ |           +-- expected VBN amod
+ |           +-- at IN prep
+ |               +-- E NNP pobj
+ |                   +-- T2 CD appos
+ |                       +-- -LRB- -LRB- punct
+ |                       +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: These adjustments are repeated until the entire file transfer is finished .
+Parse:
+repeated VBN ROOT
+ +-- adjustments NNS nsubjpass
+ |   +-- These DT det
+ +-- are VBP auxpass
+ +-- finished VBN advcl
+ |   +-- until IN mark
+ |   +-- transfer NN nsubjpass
+ |   |   +-- the DT det
+ |   |   +-- entire JJ amod
+ |   |   +-- file NN nn
+ |   +-- is VBZ auxpass
+ +-- . . punct
+Input: Server 1 Server 2 Server 3 Round 1 Round 2 E -LRB- T1 -RRB- E -LRB- T2 -RRB- T1 File A Section 1 Section 2 .. .
+Parse:
+Server NN ROOT
+ +-- Server NNP nn
+ |   +-- 1 CD num
+ +-- Server NN dep
+ |   +-- 2 CD num
+ +-- Round NNP dep
+ |   +-- 3 CD num
+ |   +-- Round NNP nn
+ |   +-- 1 CD num
+ |   +-- 2 CD num
+ +-- E NNP dep
+ |   +-- File NN dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- T2 CD num
+ |       +-- -RRB- -RRB- punct
+ |       +-- T1 CD num
+ |       +-- Section NN dep
+ |       |   +-- A DT det
+ |       |   +-- Section NN nn
+ |       |   |   +-- 1 CD num
+ |       |   +-- 2 CD num
+ |       +-- .. NFP punct
+ +-- T1 CD dep
+ |   +-- -LRB- -LRB- punct
+ |   +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: .. .
+Parse:
+. . ROOT
+ +-- .. NFP punct
+Input: .. .
+Parse:
+. . ROOT
+ +-- .. NFP punct
+Input: Figure 2 .
+Parse:
+Figure NN ROOT
+ +-- 2 CD num
+ +-- . . punct
+Input: The adjustment process The Recursive Adjustment Co Allocation process is illustrated in Figure 3 .
+Parse:
+illustrated VBN ROOT
+ +-- process NN nsubjpass
+ |   +-- The DT det
+ |   +-- adjustment NN nn
+ |   +-- process NN rcmod
+ |       +-- The DT det
+ |       +-- Recursive NNP nn
+ |       +-- Co NNP nn
+ |       |   +-- Adjustment NNP nn
+ |       +-- Allocation NNP nn
+ +-- is VBZ auxpass
+ +-- in IN prep
+ |   +-- Figure NN pobj
+ |       +-- 3 CD num
+ +-- . . punct
+Input: When a user requests file A , the replica selection service responds with the subset of all available servers defined by the maximum performance matrix .
+Parse:
+responds VBZ ROOT
+ +-- file VB advcl
+ |   +-- When WRB advmod
+ |   +-- requests NNS nsubj
+ |   |   +-- a DT det
+ |   |   +-- user NN nn
+ |   +-- A NNP dobj
+ +-- , , punct
+ +-- service NN nsubj
+ |   +-- the DT det
+ |   +-- replica NN nn
+ |   +-- selection NN nn
+ +-- with IN prep
+ |   +-- subset NN pobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- servers NNS pobj
+ |               +-- all DT det
+ |               +-- available JJ amod
+ |               +-- defined VBN partmod
+ |                   +-- by IN prep
+ |                       +-- matrix NN pobj
+ |                           +-- the DT det
+ |                           +-- maximum JJ amod
+ |                           +-- performance NN nn
+ +-- . . punct
+Input: The co allocation service gets this list of selected replica servers .
+Parse:
+gets VBZ ROOT
+ +-- service NN nsubj
+ |   +-- The DT det
+ |   +-- allocation NN nn
+ |       +-- co NN nn
+ +-- list NN dobj
+ |   +-- this DT det
+ |   +-- of IN prep
+ |       +-- servers NNS pobj
+ |           +-- selected VBN amod
+ |           +-- replica NN nn
+ +-- . . punct
+Input: Assuming n replica servers are selected , Si denotes server i such that 1 i n .
+Parse:
+server VBP ROOT
+ +-- selected VBN advcl
+ |   +-- Assuming VBG dep
+ |   |   +-- n CC cc
+ |   |   +-- replica NN conj
+ |   +-- servers NNS nsubjpass
+ |   +-- are VBP auxpass
+ +-- , , punct
+ +-- Si NNP nsubj
+ +-- denotes VBZ nsubj
+ +-- that DT ccomp
+ |   +-- i PRP nsubj
+ |   +-- such JJ mwe
+ |   +-- i PRP dep
+ |       +-- 1 CD num
+ |       +-- n RB advmod
+ +-- . . punct
+Input: A connection for file downloading is then built to each server .
+Parse:
+built VBN ROOT
+ +-- connection NN nsubjpass
+ |   +-- A DT det
+ |   +-- for IN prep
+ |       +-- downloading NN pobj
+ |           +-- file NN nn
+ +-- is VBZ auxpass
+ +-- then RB advmod
+ +-- to IN prep
+ |   +-- server NN pobj
+ |       +-- each DT det
+ +-- . . punct
+Input: The RecursiveAdjustment Co Allocation process is as follows .
+Parse:
+is VBZ ROOT
+ +-- process NN nsubj
+ |   +-- The DT det
+ |   +-- RecursiveAdjustment NNP nn
+ |   +-- Co NNP nn
+ |   +-- Allocation NNP nn
+ +-- follows VBZ advcl
+ |   +-- as IN mark
+ +-- . . punct
+Input: A new section of a file to be allocated is first defined .
+Parse:
+defined VBN ROOT
+ +-- section NN nsubjpass
+ |   +-- A DT det
+ |   +-- new JJ amod
+ |   +-- of IN prep
+ |       +-- file NN pobj
+ |           +-- a DT det
+ |           +-- allocated VBN infmod
+ |               +-- to TO aux
+ |               +-- be VB auxpass
+ +-- is VBZ auxpass
+ +-- first RB advmod
+ +-- . . punct
+Input: The section size , SEj , is
+Parse:
+size NN ROOT
+ +-- The DT det
+ +-- section NN nn
+ +-- , , punct
+ |   +-- is VBZ auxpass
+ +-- SEj NNP appos
+Input: And thus , there are k sections , while Tj denotes the time section j allocated .
+Parse:
+are VBP ROOT
+ +-- And CC cc
+ +-- thus RB advmod
+ +-- , , punct
+ +-- there EX expl
+ +-- sections NNS nsubj
+ |   +-- k CD num
+ +-- denotes VBZ advcl
+ |   +-- while IN mark
+ |   +-- Tj NNP nsubj
+ |   +-- time NN dobj
+ |       +-- the DT det
+ |       +-- allocated VBN rcmod
+ |           +-- j NN nsubj
+ |               +-- section NN nn
+ +-- . . punct
+Input: UnassignedFileSize is the portion of file A not yet distributed for downloading ; initially , UnassignedFileSize is equal to the total size of file A .
+Parse:
+portion NN ROOT
+ +-- UnassignedFileSize NNP nsubj
+ +-- is VBZ cop
+ +-- the DT det
+ +-- of IN prep
+ |   +-- A NNP pobj
+ |       +-- file NN nn
+ +-- distributed VBN partmod
+ |   +-- not RB neg
+ |   +-- yet RB advmod
+ |   +-- for IN prep
+ |       +-- downloading NN pobj
+ +-- ; : punct
+ +-- equal JJ parataxis
+ |   +-- initially RB advmod
+ |   +-- , , punct
+ |   +-- UnassignedFileSize NNP nsubj
+ |   +-- is VBZ cop
+ |   +-- to IN prep
+ |       +-- size NN pobj
+ |           +-- the DT det
+ |           +-- total JJ amod
+ |           +-- of IN prep
+ |               +-- A NN pobj
+ |                   +-- file NN nn
+ +-- . . punct
+Input: is the rate that determines how much of the section remains to be assigned .
+Parse:
+rate NN ROOT
+ +-- is VBZ cop
+ +-- the DT det
+ +-- determines VBZ rcmod
+ |   +-- that WDT nsubj
+ |   +-- remains VBZ ccomp
+ |       +-- much JJ nsubj
+ |       |   +-- how WRB advmod
+ |       |   +-- of IN prep
+ |       |       +-- section NN pobj
+ |       |           +-- the DT det
+ |       +-- assigned VBN xcomp
+ |           +-- to TO aux
+ |           +-- be VB auxpass
+ +-- . . punct
+Input: Figure 3 .
+Parse:
+Figure NN ROOT
+ +-- 3 CD num
+ +-- . . punct
+Input: The Recursive Adjustment Co Allocation process .
+Parse:
+process NN ROOT
+ +-- The DT det
+ +-- Recursive NNP nn
+ +-- Co NNP nn
+ |   +-- Adjustment NNP nn
+ +-- Allocation NNP nn
+ +-- . . punct
+Input: In the next step , SEj is divided into several blocks and assigned to n servers .
+Parse:
+divided VBN ROOT
+ +-- In IN prep
+ |   +-- step NN pobj
+ |       +-- the DT det
+ |       +-- next JJ amod
+ +-- , , punct
+ +-- SEj NNP nsubjpass
+ +-- is VBZ auxpass
+ +-- into IN prep
+ |   +-- blocks NNS pobj
+ |       +-- several JJ amod
+ +-- and CC cc
+ +-- assigned VBN conj
+ |   +-- to IN prep
+ |       +-- servers NNS pobj
+ |           +-- n DT det
+ +-- . . punct
+Input: Each server has a real time transfer rate to the client of Bi , which is measured by the Network Weather Service -LRB- 18 -RRB- .
+Parse:
+has VBZ ROOT
+ +-- server NN nsubj
+ |   +-- Each DT det
+ +-- rate NN dobj
+ |   +-- a DT det
+ |   +-- time NN nn
+ |   |   +-- real JJ amod
+ |   +-- transfer NN nn
+ |   +-- to IN prep
+ |       +-- client NN pobj
+ |           +-- the DT det
+ |           +-- of IN prep
+ |               +-- Bi NNP pobj
+ |                   +-- , , punct
+ |                   +-- measured VBN rcmod
+ |                       +-- which WDT nsubjpass
+ |                       +-- is VBZ auxpass
+ |                       +-- by IN prep
+ |                           +-- Service NNP pobj
+ |                               +-- the DT det
+ |                               +-- Network NNP nn
+ |                               +-- Weather NNP nn
+ |                               +-- -LRB- -LRB- punct
+ |                               +-- 18 CD dep
+ |                               +-- -RRB- -RRB- punct
+ +-- . . punct
+Input: The block size per flow from SEj for each server i at time Tj is
+Parse:
+size NN ROOT
+ +-- The DT det
+ +-- block NN nn
+ +-- per IN prep
+ |   +-- flow NN pobj
+ |       +-- from IN prep
+ |           +-- SEj NNP pobj
+ +-- for IN prep
+ |   +-- server NN pobj
+ |       +-- each DT det
+ +-- i PRP dep
+     +-- is VBZ rcmod
+         +-- at IN prep
+         |   +-- time NN pobj
+         +-- Tj NNP nsubj
+Input: UnFinishSizei is equal to zero in first round .
+Parse:
+equal JJ ROOT
+ +-- UnFinishSizei NNP nsubj
+ +-- is VBZ cop
+ +-- to IN prep
+ |   +-- zero CD pobj
+ +-- in IN prep
+ |   +-- round NN pobj
+ |       +-- first JJ amod
+ +-- . . punct
+Input: Ideally , depending to the real time bandwidth at time Tj , every flow is expected to finish its workload in future .
+Parse:
+expected VBN ROOT
+ +-- Ideally RB advmod
+ +-- , , punct
+ +-- depending VBG prep
+ |   +-- to IN pcomp
+ |       +-- bandwidth NN pobj
+ |           +-- the DT det
+ |           +-- time NN nn
+ |           |   +-- real JJ amod
+ |           +-- at IN prep
+ |               +-- time NN pobj
+ +-- Tj NNP nsubjpass
+ |   +-- , , punct
+ |   +-- flow NN appos
+ |       +-- every DT det
+ +-- is VBZ auxpass
+ +-- finish VB xcomp
+ |   +-- to TO aux
+ |   +-- workload NN dobj
+ |   |   +-- its PRP$ poss
+ |   +-- in IN prep
+ |       +-- future NN pobj
+ +-- . . punct
+Input: This fulfills our requirement to minimize the time faster servers must wait for the slowest server to finish .
+Parse:
+fulfills VBZ ROOT
+ +-- This DT nsubj
+ +-- requirement NN dobj
+ |   +-- our PRP$ poss
+ |   +-- minimize VB infmod
+ |       +-- to TO aux
+ |       +-- time NN dobj
+ |           +-- the DT det
+ |           +-- wait VB rcmod
+ |               +-- servers NNS nsubj
+ |               |   +-- faster JJR amod
+ |               +-- must MD aux
+ |               +-- finish VB advcl
+ |                   +-- for IN mark
+ |                   +-- server NN nsubj
+ |                   |   +-- the DT det
+ |                   |   +-- slowest JJS amod
+ |                   +-- to TO aux
+ +-- . . punct
+Input: If , in some cases , network variations greatly degrade transfer rates , UnFinishSizei may exceed n i ii n i ij BBzeUnFinishSiSE 11 * -RRB- -LRB- , which is the total block size expected to be transferred after Tj .
+Parse:
+exceed VB ROOT
+ +-- degrade VBP advcl
+ |   +-- If IN mark
+ |   +-- , , punct
+ |   +-- in IN prep
+ |   |   +-- cases NNS pobj
+ |   |       +-- some DT det
+ |   +-- variations NNS nsubj
+ |   |   +-- network NN nn
+ |   +-- greatly RB advmod
+ |   +-- rates NNS dobj
+ |       +-- transfer NN nn
+ +-- , , punct
+ +-- UnFinishSizei NNP nsubj
+ +-- may MD aux
+ +-- n CC advmod
+ +-- i PRP dobj
+     +-- ii CC prep
+         +-- n CC prep
+         |   +-- i PRP pobj
+         |       +-- ij : punct
+         |       +-- BBzeUnFinishSiSE NNP dep
+         |       |   +-- 11 CD num
+         |       +-- * NFP punct
+         |       +-- -RRB- -RRB- punct
+         +-- size NN dep
+             +-- -LRB- -LRB- punct
+             +-- , , punct
+             +-- which WDT nsubj
+             +-- is VBZ cop
+             +-- the DT det
+             +-- total JJ amod
+             +-- block NN nn
+             +-- expected VBN partmod
+             |   +-- transferred VBN xcomp
+             |       +-- to TO aux
+             |       +-- be VB auxpass
+             |       +-- after IN prep
+             |           +-- Tj UH pobj
+             +-- . . punct
+Input: In such cases , the co allocator eliminates the servers in advance and assigns SEj to other servers .
+Parse:
+eliminates VBZ ROOT
+ +-- In IN prep
+ |   +-- cases NNS pobj
+ |       +-- such JJ amod
+ +-- , , punct
+ +-- allocator NN nsubj
+ |   +-- the DT det
+ |   +-- co NN nn
+ +-- servers NNS dobj
+ |   +-- the DT det
+ +-- in IN prep
+ |   +-- advance NN pobj
+ +-- and CC cc
+ +-- assigns VBZ conj
+ |   +-- SEj NNP dobj
+ |   +-- to IN prep
+ |       +-- servers NNS pobj
+ |           +-- other JJ amod
+ +-- . . punct
+Input: After allocation , all channels continue transferring data blocks .
+Parse:
+continue VBP ROOT
+ +-- After IN prep
+ |   +-- allocation NN pobj
+ +-- , , punct
+ +-- channels NNS nsubj
+ |   +-- all DT det
+ +-- transferring VBG xcomp
+ |   +-- blocks NNS dobj
+ |       +-- data NNS nn
+ +-- . . punct
+Input: When a faster channel finishes its assigned data blocks , the co allocator begins allocating an unassigned section of file A again .
+Parse:
+begins VBZ ROOT
+ +-- finishes VBZ advcl
+ |   +-- When WRB advmod
+ |   +-- channel NN nsubj
+ |   |   +-- a DT det
+ |   |   +-- faster JJR amod
+ |   +-- blocks NNS dobj
+ |       +-- its PRP$ poss
+ |       +-- assigned VBN amod
+ |       +-- data NNS nn
+ +-- , , punct
+ +-- allocator NN nsubj
+ |   +-- the DT det
+ |   +-- co NN nn
+ +-- allocating VBG xcomp
+ |   +-- section NN dobj
+ |   |   +-- an DT det
+ |   |   +-- unassigned JJ amod
+ |   |   +-- of IN prep
+ |   |       +-- A NN pobj
+ |   |           +-- file NN nn
+ |   +-- again RB advmod
+ +-- . . punct
+Input: The process of allocating data 801 blocks to adjust expected flow finish time continues until the entire file has been allocated .
+Parse:
+continues VBZ ROOT
+ +-- process NN nsubj
+ |   +-- The DT det
+ |   +-- of IN prep
+ |       +-- allocating VBG pcomp
+ |           +-- data NNS iobj
+ |           +-- blocks NNS dobj
+ |           |   +-- 801 CD num
+ |           +-- adjust VB xcomp
+ |               +-- to TO aux
+ |               +-- time NN dobj
+ |                   +-- expected VBN amod
+ |                   +-- finish NN nn
+ |                       +-- flow NN nn
+ +-- allocated VBN advcl
+ |   +-- until IN mark
+ |   +-- file NN nsubjpass
+ |   |   +-- the DT det
+ |   |   +-- entire JJ amod
+ |   +-- has VBZ aux
+ |   +-- been VBN auxpass
+ +-- . . punct
+Input: 5.2 Determining When to Stop Continuous Adjustment Our approach gets new sections from whole files by dividing unassigned file ranges in each round of allocation .
+Parse:
+Determining VBG ROOT
+ +-- 5.2 LS nsubj
+ +-- gets VBZ ccomp
+ |   +-- Stop VB advcl
+ |   |   +-- When WRB advmod
+ |   |   +-- to TO aux
+ |   |   +-- Adjustment NNP dobj
+ |   |       +-- Continuous NNP nn
+ |   +-- approach NN nsubj
+ |   |   +-- Our PRP$ poss
+ |   +-- sections NNS dobj
+ |   |   +-- new JJ amod
+ |   +-- from IN prep
+ |   |   +-- files NNS pobj
+ |   |       +-- whole JJ amod
+ |   +-- by IN prep
+ |       +-- dividing VBG pcomp
+ |           +-- ranges NNS dobj
+ |           |   +-- unassigned JJ amod
+ |           |   +-- file NN nn
+ |           +-- in IN prep
+ |               +-- round NN pobj
+ |                   +-- each DT det
+ |                   +-- of IN prep
+ |                       +-- allocation NN pobj
+ +-- . . punct
+Input: These unassigned portions of the file ranges become smaller after each allocation .
+Parse:
+smaller JJR ROOT
+ +-- portions NNS nsubj
+ |   +-- These DT det
+ |   +-- unassigned JJ amod
+ |   +-- of IN prep
+ |       +-- ranges NNS pobj
+ |           +-- the DT det
+ |           +-- file NN nn
+ +-- become VBN cop
+ +-- after IN prep
+ |   +-- allocation NN pobj
+ |       +-- each DT det
+ +-- . . punct
+Input: Since adjustment is continuous , it would run as an endless loop if not limited by a stop condition .
+Parse:
+run VB ROOT
+ +-- continuous JJ advcl
+ |   +-- Since IN mark
+ |   +-- adjustment NN nsubj
+ |   +-- is VBZ cop
+ +-- , , punct
+ +-- it PRP nsubj
+ +-- would MD aux
+ +-- as IN prep
+ |   +-- loop NN pobj
+ |       +-- an DT det
+ |       +-- endless JJ amod
+ +-- limited VBN advcl
+ |   +-- if IN mark
+ |   +-- not RB neg
+ |   +-- by IN prep
+ |       +-- condition NN pobj
+ |           +-- a DT det
+ |           +-- stop NN nn
+ +-- . . punct
+Input: However , when is it appropriate to stop continuous adjustment ? We provide two monitoring criteria , LeastSize and ExpectFinishedTime , to enable users to define stop thresholds .
+Parse:
+provide VBP ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- appropriate JJ advcl
+ |   +-- when WRB advmod
+ |   +-- is VBZ cop
+ |   +-- it PRP nsubj
+ |   +-- stop VB xcomp
+ |       +-- to TO aux
+ |       +-- adjustment NN dobj
+ |           +-- continuous JJ amod
+ +-- ? , punct
+ +-- We PRP nsubj
+ +-- criteria NNS dobj
+ |   +-- two CD num
+ |   +-- monitoring NN nn
+ |   +-- , , punct
+ |   +-- LeastSize NNP appos
+ |   |   +-- and CC cc
+ |   |   +-- ExpectFinishedTime NNP conj
+ |   +-- enable VB infmod
+ |       +-- to TO aux
+ |       +-- users NNS dobj
+ |       +-- define VB xcomp
+ |           +-- to TO aux
+ |           +-- stop VB ccomp
+ |               +-- thresholds NNS dobj
+ +-- . . punct
+Input: When a threshold is reached , the co allocation server stopped dividing the remainder of the file and assigns that remainder as the final section .
+Parse:
+stopped VBD ROOT
+ +-- reached VBN advcl
+ |   +-- When WRB advmod
+ |   +-- threshold NN nsubjpass
+ |   |   +-- a DT det
+ |   +-- is VBZ auxpass
+ +-- , , punct
+ +-- server NN nsubj
+ |   +-- the DT det
+ |   +-- allocation NN nn
+ |       +-- co NN nn
+ +-- dividing VBG xcomp
+ |   +-- remainder NN dobj
+ |       +-- the DT det
+ |       +-- of IN prep
+ |           +-- file NN pobj
+ |               +-- the DT det
+ +-- and CC cc
+ +-- assigns VBZ conj
+ |   +-- remainder NN dobj
+ |   |   +-- that IN det
+ |   +-- as IN prep
+ |       +-- section NN pobj
+ |           +-- the DT det
+ |           +-- final JJ amod
+ +-- . . punct
+Input: The LeastSize criterion specifies the smallest file we want to process , and when the unassigned portion of UnassignedFileSize drops below the LeastSize specification , division stops .
+Parse:
+specifies VBZ ROOT
+ +-- criterion NN nsubj
+ |   +-- The DT det
+ |   +-- LeastSize NNP nn
+ +-- file NN dobj
+ |   +-- the DT det
+ |   +-- smallest JJS amod
+ |   +-- want VBP rcmod
+ |       +-- we PRP nsubj
+ |       +-- process VB xcomp
+ |           +-- to TO aux
+ +-- , , punct
+ +-- and CC cc
+ +-- stops VBZ conj
+ |   +-- drops NNS advcl
+ |   |   +-- when WRB advmod
+ |   |   +-- portion NN nsubj
+ |   |   |   +-- the DT det
+ |   |   |   +-- unassigned JJ amod
+ |   |   |   +-- of IN prep
+ |   |   |       +-- UnassignedFileSize NNP pobj
+ |   |   +-- below IN prep
+ |   |       +-- specification NN pobj
+ |   |           +-- the DT det
+ |   |           +-- LeastSize NNP nn
+ |   +-- , , punct
+ |   +-- division NN nsubj
+ +-- . . punct
+Input: ExpectFinishedTime criterion specifies the remaining time transfer is expected to take .
+Parse:
+specifies VBZ ROOT
+ +-- criterion NN nsubj
+ |   +-- ExpectFinishedTime JJ amod
+ +-- expected VBN ccomp
+ |   +-- transfer NN nsubjpass
+ |   |   +-- the DT det
+ |   |   +-- remaining VBG amod
+ |   |   +-- time NN nn
+ |   +-- is VBZ auxpass
+ |   +-- take VB xcomp
+ |       +-- to TO aux
+ +-- . . punct
+Input: When the expected transfer time of the unassigned portion of a file drops below the time specified by ExpectFinishedTime , file division stops .
+Parse:
+stops VBZ ROOT
+ +-- drops NNS advcl
+ |   +-- When WRB advmod
+ |   +-- time NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- expected VBN amod
+ |   |   +-- transfer NN nn
+ |   |   +-- of IN prep
+ |   |       +-- portion NN pobj
+ |   |           +-- the DT det
+ |   |           +-- unassigned JJ amod
+ |   |           +-- of IN prep
+ |   |               +-- file NN pobj
+ |   |                   +-- a DT det
+ |   +-- below IN prep
+ |       +-- time NN pobj
+ |           +-- the DT det
+ |           +-- specified VBN partmod
+ |               +-- by IN prep
+ |                   +-- ExpectFinishedTime NNP pobj
+ +-- , , punct
+ +-- division NN nsubj
+ |   +-- file NN nn
+ +-- . . punct
+Input: The expected rest time value is determined by
+Parse:
+determined VBN ROOT
+ +-- value NN nsubjpass
+ |   +-- The DT det
+ |   +-- expected VBN amod
+ |   +-- time NN nn
+ |       +-- rest NN nn
+ +-- is VBZ auxpass
+ +-- by IN prep
+Input: Higher threshold values will induce fewer divisions and yield lower co allocation costs , which include establishing connections , negotiation , reassembly , etc .
+Parse:
+induce VB ROOT
+ +-- values NNS nsubj
+ |   +-- Higher JJR amod
+ |   +-- threshold NN nn
+ +-- will MD aux
+ +-- divisions NNS dobj
+ |   +-- fewer JJR amod
+ +-- and CC cc
+ +-- yield VB conj
+ |   +-- costs NNS dobj
+ |       +-- lower JJR amod
+ |       +-- allocation NN nn
+ |       |   +-- co NN nn
+ |       +-- , , punct
+ |       +-- include VBP rcmod
+ |           +-- which WDT nsubj
+ |           +-- establishing VBG xcomp
+ |               +-- connections NNS dobj
+ |                   +-- , , punct
+ |                   +-- negotiation NN appos
+ |                   +-- reassembly RB appos
+ |                   +-- etc FW advmod
+ +-- . . punct
+Input: However , although the total coallocation adjustment time may be lower , bandwidth variations may also exert more influence .
+Parse:
+exert VB ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- lower JJR advcl
+ |   +-- although IN mark
+ |   +-- time NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- total JJ amod
+ |   |   +-- coallocation NN nn
+ |   |   +-- adjustment NN nn
+ |   +-- may MD aux
+ |   +-- be VB cop
+ +-- variations NNS nsubj
+ |   +-- bandwidth NN nn
+ +-- may MD aux
+ +-- also RB advmod
+ +-- influence NN dobj
+ |   +-- more JJR amod
+ +-- . . punct
+Input: By contrast , lower threshold values will induce more frequent dynamic server workload adjustments and , in the case of greater network fluctuations , result in fewer differences in server transfer finish time .
+Parse:
+induce VB ROOT
+ +-- By IN prep
+ |   +-- contrast NN pobj
+ +-- , , punct
+ +-- values NNS nsubj
+ |   +-- lower JJR amod
+ |   +-- threshold NN nn
+ +-- will MD aux
+ +-- adjustments NNS dobj
+ |   +-- frequent JJ amod
+ |   |   +-- more RBR advmod
+ |   +-- dynamic JJ amod
+ |   +-- workload NN nn
+ |       +-- server NN nn
+ +-- and CC cc
+ +-- result VB conj
+ |   +-- in IN prep
+ |   |   +-- differences NNS pobj
+ |   |       +-- fewer JJR amod
+ |   |       +-- in IN prep
+ |   |           +-- time NN pobj
+ |   |               +-- transfer NN nn
+ |   |               |   +-- server NN nn
+ |   |               +-- finish NN nn
+ |   +-- , , punct
+ +-- . . punct
+Input: However , lower values will also increase co allocation times , and hence , increase co allocation costs .
+Parse:
+increase VB ROOT
+ +-- However RB advmod
+ +-- , , punct
+ +-- values NNS nsubj
+ |   +-- lower JJR amod
+ +-- will MD aux
+ +-- also RB advmod
+ +-- times NNS dobj
+ |   +-- allocation NN nn
+ |       +-- co NN nn
+ +-- and CC cc
+ +-- increase VB conj
+ |   +-- hence RB advmod
+ |   +-- , , punct
+ |   +-- costs NNS dobj
+ |       +-- allocation NN nn
+ |           +-- co NN nn
+ +-- . . punct
+Input: Therefore , the internet environment , transferred file sizes , and co allocation costs should all be considered in determining optimum thresholds .
+Parse:
+transferred VBN ROOT
+ +-- Therefore RB advmod
+ +-- , , punct
+ +-- environment NN nsubj
+ |   +-- the DT det
+ |   +-- internet NN nn
+ +-- sizes NNS dobj
+ |   +-- file NN nn
+ +-- and CC cc
+ +-- considered VBN conj
+ |   +-- costs NNS nsubjpass
+ |   |   +-- allocation NN nn
+ |   |       +-- co NN nn
+ |   +-- should MD aux
+ |   +-- all DT dep
+ |   +-- be VB auxpass
+ |   +-- in IN prep
+ |       +-- determining VBG pcomp
+ |           +-- thresholds NNS dobj
+ |               +-- optimum JJ amod
+ +-- . . punct
+Input: 5.3 Reducing the Reassembly Overhead The process of reassembling blocks after data transfers using coallocation technology results in additional overhead and decreases overall performance .
+Parse:
+5.3 CD ROOT
+ +-- Reducing VBG partmod
+ |   +-- process NN dobj
+ |   |   +-- the DT det
+ |   |   +-- Overhead NNP nn
+ |   |   |   +-- Reassembly NNP nn
+ |   |   +-- The DT det
+ |   |   +-- of IN prep
+ |   |       +-- blocks NNS pobj
+ |   |           +-- reassembling VBG nn
+ |   +-- after IN prep
+ |       +-- transfers NNS pobj
+ |           +-- data NN nn
+ |           +-- using VBG partmod
+ |               +-- results NNS dobj
+ |               |   +-- technology NN nn
+ |               |       +-- coallocation NN nn
+ |               +-- in IN prep
+ |                   +-- overhead NN pobj
+ |                       +-- additional JJ amod
+ +-- and CC cc
+ +-- decreases VBZ conj
+ |   +-- performance NN dobj
+ |       +-- overall JJ amod
+ +-- . . punct
+Input: The reassembly overhead is related to total block size , and could be reduced by upgrading hardware capabilities or using better software algorithms .
+Parse:
+related VBN ROOT
+ +-- overhead NN nsubjpass
+ |   +-- The DT det
+ |   +-- reassembly RB amod
+ +-- is VBZ auxpass
+ +-- to IN prep
+ |   +-- size NN pobj
+ |       +-- total JJ amod
+ |       +-- block NN nn
+ +-- , , punct
+ +-- and CC cc
+ +-- reduced VBN conj
+ |   +-- could MD aux
+ |   +-- be VB auxpass
+ |   +-- by IN prep
+ |       +-- upgrading VBG pcomp
+ |           +-- capabilities NNS dobj
+ |           |   +-- hardware NN nn
+ |           +-- or CC cc
+ |           +-- using VBG conj
+ |               +-- algorithms NNS dobj
+ |                   +-- better JJR amod
+ |                   +-- software NN nn
+ +-- . . punct
+Input: We propose an efficient alternative reassembly mechanism to reduce the added combination overhead after all block transmissions are finished .
+Parse:
+propose VBP ROOT
+ +-- We PRP nsubj
+ +-- mechanism NN dobj
+ |   +-- an DT det
+ |   +-- efficient JJ amod
+ |   +-- alternative NN nn
+ |   +-- reassembly RB amod
+ |   +-- reduce VB infmod
+ |       +-- to TO aux
+ |       +-- combination NN dobj
+ |       |   +-- the DT det
+ |       |   +-- added VBN amod
+ |       +-- overhead NN advmod
+ |       +-- finished VBN advcl
+ |           +-- after IN mark
+ |           +-- transmissions NNS nsubjpass
+ |           |   +-- all DT det
+ |           |   +-- block NN nn
+ |           +-- are VBP auxpass
+ +-- . . punct
+Input: It differs from the conventional method in which the software starts assembly after all blocks have been delivered by starting to assemble blocks once the first deliveries finish .
+Parse:
+differs VBZ ROOT
+ +-- It PRP nsubj
+ +-- from IN prep
+ |   +-- method NN pobj
+ |       +-- the DT det
+ |       +-- conventional JJ amod
+ |       +-- delivered VBN rcmod
+ |           +-- in IN prep
+ |           |   +-- which WDT pobj
+ |           +-- assembly NN nsubjpass
+ |           |   +-- the DT det
+ |           |   +-- starts VBZ nn
+ |           |   |   +-- software NN nn
+ |           |   +-- after IN prep
+ |           |       +-- blocks NNS pobj
+ |           |           +-- all DT det
+ |           +-- have VBP aux
+ |           +-- been VBN auxpass
+ |           +-- by IN prep
+ |               +-- starting VBG pcomp
+ |                   +-- assemble VB xcomp
+ |                       +-- to TO aux
+ |                       +-- blocks NNS dobj
+ |                       +-- finish NN advcl
+ |                           +-- once IN mark
+ |                           +-- deliveries NNS nsubj
+ |                               +-- the DT det
+ |                               +-- first JJ amod
+ +-- . . punct
+Input: Of course , this makes it necessary to maintain the original splitting order .
+Parse:
+makes VBZ ROOT
+ +-- course RB advmod
+ |   +-- Of RB advmod
+ +-- , , punct
+ +-- this DT nsubj
+ +-- maintain VB xcomp
+ |   +-- it PRP nsubj
+ |   +-- necessary JJ dep
+ |   +-- to TO aux
+ |   +-- order NN dobj
+ |       +-- the DT det
+ |       +-- original JJ amod
+ |       +-- splitting NN nn
+ +-- . . punct
+Input: Co allocation strategies such as Conservative Load Balancing and Recursive Adjustment Co Allocation produce additional blocks during file transfers and can benefit from enabling reassembly during data transfers .
+Parse:
+produce VBP ROOT
+ +-- strategies NNS nsubj
+ |   +-- allocation NN nn
+ |   |   +-- Co NNP nn
+ |   +-- as IN prep
+ |       +-- such JJ mwe
+ |       +-- Balancing NNP pobj
+ |           +-- Conservative NNP nn
+ |           +-- Load NNP nn
+ |           +-- and CC cc
+ |           +-- Allocation NNP conj
+ |               +-- Recursive NNP nn
+ |               +-- Adjustment NNP nn
+ |               +-- Co NNP nn
+ +-- blocks NNS dobj
+ |   +-- additional JJ amod
+ +-- during IN prep
+ |   +-- transfers NNS pobj
+ |       +-- file NN nn
+ +-- and CC cc
+ +-- benefit VB conj
+ |   +-- can MD aux
+ |   +-- from IN prep
+ |       +-- enabling VBG pcomp
+ |           +-- reassembly RB advmod
+ |           +-- during IN prep
+ |               +-- transfers NNS pobj
+ |                   +-- data NNS nn
+ +-- . . punct
+Input: If some blocks are assembled in advance , the time cost for assembling the blocks remaining after all transfers finish can be reduced. .
+Parse:
+reduced. JJ ROOT
+ +-- assembled VBN advcl
+ |   +-- If IN mark
+ |   +-- blocks NNS nsubjpass
+ |   |   +-- some DT det
+ |   +-- are VBP auxpass
+ |   +-- in IN prep
+ |       +-- advance NN pobj
+ +-- , , punct
+ +-- cost NN nsubj
+ |   +-- the DT det
+ |   +-- time NN nn
+ |   +-- for IN prep
+ |   |   +-- assembling VBG pcomp
+ |   |       +-- blocks NNS dobj
+ |   |       |   +-- the DT det
+ |   |       +-- remaining VBG partmod
+ |   |           +-- after IN prep
+ |   |               +-- transfers NNS pobj
+ |   |                   +-- all DT det
+ |   +-- finish NN dep
+ +-- can MD aux
+ +-- be VB cop
+ +-- . . punct

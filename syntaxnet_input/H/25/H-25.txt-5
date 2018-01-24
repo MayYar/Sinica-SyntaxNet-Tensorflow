@@ -1,0 +1,32 @@
+Proper selection of terms to be presented to the user for judgment is crucial to the success of term feedback .
+If the terms are poorly chosen and there are few relevant ones, the user will have a hard time looking for useful terms to help clarify his her information need .
+If the relevant terms are plentiful, but all concentrate on a single aspect of the query topic, then we will only be able to get feedback on that aspect and missing others, resulting in a breadth loss in retrieved results .
+Therefore, it is important to carefully select presentation terms to maximize expected gain from user feedback, i.e., those that can potentially reveal most evidence of the user"s information need .
+This is similar to active feedback[21], which suggests that a retrieval system should actively probe the user"s information need, and in the case of relevance feedback, the feedback documents should be chosen to maximize learning benefits (e.g .
+diversely so as to increase coverage) .
+In our approach, the top N documents from an initial retrieval using the original query form the source of feedback terms
+These documents serve as pseudo feedback, since they provide a much richer context than the original query (usually very short), while the user is not asked to judge their relevance .
+Due to the latter reason, it is possible to make N quite large (e.g., in our experiments we set N = 60) to increase its coverage of different aspects in the topic .
+The simplest way of selecting feedback terms is to choose the most frequent M terms from the N documents .
+This method, however, has two drawbacks .
+First, a lot of common noisy terms will be selected due to their high frequencies in the document collection, unless a stop word list is used for filtering .
+Second, the presentation list will tend to be filled by terms from major aspects of the topic; those from a minor aspect are likely to be missed due to their relatively low frequencies .
+We solve the above problems by two corresponding measures .
+First, we introduce a background model £cB that is estimated from collection statistics and explains the common terms, so that they are much less likely to appear in the presentation list .
+Second, the terms are selected from multiple clusters in the pseudo feedback documents, to ensure sufficient representation of different aspects of the topic .
+We rely on the mixture multinomial model, which is used for theme discovery in [26] .
+Specifically, we assume the N documents contain K clusters {Ci| i = 1, 2, ¡P ¡P ¡P K}, each characterized by a multinomial word distribution (also known as unigram language model) £ci and corresponding to an aspect of the topic .
+The documents are regarded as sampled from a mixture of K + 1 components, including the K clusters and the background model
+We then estimate the cluster models by maximizing the probability of the pseudo feedback documents being generated from the multinomial mixture model
+The cluster models can be efficiently estimated using the Expectation Maximization algorithm .
+For its details, we refer the reader to [26] .
+Table 1 shows the cluster models for TREC query Transportation tunnel disasters (K = 3) .
+Note that only the middle cluster is relevant .
+Table 1
+If a term happens to be in top L in multiple clusters, we assign it to the cluster where it has highest probability and let the other clusters take one more term as compensation .
+We also filter out terms in the original query text because they tend to always be relevant when the query is short .
+The selected terms are then presented to the user for judgment .
+A sample (completed) feedback form is shown in Figure 1 .
+In this study we only deal with binary judgment
+We also do not explicitly exploit negative feedback (i.e., penalizing irrelevant terms), because with binary feedback an unchecked term is not necessarily irrelevant (maybe the user is unsure about its relevance) .
+We could ask the user for finer judgment (e.g., choosing from highly relevant, somewhat relevant, do not know, somewhat irrelevant and highly irrelevant), but binary feedback is more compact, taking less space to display and less user effort to make judgment. .

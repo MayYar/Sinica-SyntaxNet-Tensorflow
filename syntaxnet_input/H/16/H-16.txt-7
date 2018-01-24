@@ -1,0 +1,89 @@
+In this section we provide a detailed analysis for the problem of deciding whether it is preferable to cache query answers or cache posting lists .
+Our analysis takes into account the impact of caching between two levels of the data access hierarchy .
+It can either be applied at the memory disk layer or at a server remote server layer as in the architecture we discussed in the introduction .
+Using a particular system model, we obtain estimates for the parameters required by our analysis, which we subsequently use to decide the optimal trade off between caching query answers and caching posting lists .
+6.1 Analytical Model Let M be the size of the cache measured in answer units (the cache can store M query answers) .
+Assume that all posting lists are of the same length L, measured in answer units .
+We consider the following two cases
+In the first case, Nc = M answers fit in the cache, while in the second case Np = M L posting lists fit in the cache .
+Thus, Np = Nc L .
+Note that although posting lists require more space, we can combine terms to evaluate more queries (or partial queries) .
+For case (A), suppose that a query answer in the cache can be evaluated in 1 time unit .
+For case (B), assume that if the posting lists of the terms of a query are in the cache then the results can be computed in TR1 time units, while if the posting lists are not in the cache then the results can be computed in TR2 time units .
+Of course TR2 > TR1 .
+Now we want to compare the time to answer a stream of Q queries in both cases .
+Let Vc(Nc) be the volume of the most frequent Nc queries .
+Then, for case (A), we have an overall time TCA = Vc(Nc) + TR2(Q ? Vc(Nc)) .
+Similarly, for case (B), let Vp(Np) be the number of computable queries .
+Then we have overall time TP L = TR1Vp(Np) + TR2(Q ? Vp(Np)) .
+We want to check under which conditions we have TP L < TCA .
+We have TP L ? TCA = (TR2 ? 1)Vc(Nc) ? (TR2 ? TR1)Vp(Np) > 0 .
+Figure 9 shows the values of Vp and Vc for our data .
+We can see that caching answers saturates faster and for this particular data there is no additional benefit from using more than 10% of the index space for caching answers .
+As the query distribution is a power law with parameter £\ > 1, the i th most frequent query appears with probability proportional to 1 i£\ .
+Therefore, the volume Vc(n), which is the total number of the n most frequent queries, is Vc(n) = V0 n i=1 Q i£\ = £^nQ (0 < £^n < 1) .
+We know that Vp(n) grows faster than Vc(n) and assume, based on experimental results, that the relation is of the form Vp(n) = k Vc(n)£] .
+In the worst case, for a large cache, £] ¡÷ 1 .
+That is, both techniques will cache a constant fraction of the overall query volume .
+Then caching posting lists makes sense only if L(TR2 ? 1) k(TR2 ? TR1) > 1 .
+If we use compression, we have L < L and TR1 > TR1 .
+According to the experiments that we show later, compression is always better .
+For a small cache, we are interested in the transient behavior and then £] > 1, as computed from our data .
+In this case there will always be a point where TP L > TCA for a large number of queries .
+In reality, instead of filling the cache only with answers or only with posting lists, a better strategy will be to divide the total cache space into cache for answers and cache for posting lists .
+In such a case, there will be some queries that could be answered by both parts of the cache .
+As the answer cache is faster, it will be the first choice for answering those queries .
+Let QNc and QNp be the set of queries that can be answered by the cached answers and the cached posting lists, respectively .
+Then, the overall time is T = Vc(Nc)+TR1V (QNp ?QNc )+TR2(Q?V (QNp ¡åQNc )), where Np = (M ? Nc) L .
+Finding the optimal division of the cache in order to minimize the overall retrieval time is a difficult problem to solve analytically .
+In Section 6.3 we use simulations to derive optimal cache trade offs for particular implementation examples .
+6.2 Parameter Estimation We now use a particular implementation of a centralized system and the model of a distributed system as examples from which we estimate the parameters of the analysis from the previous section .
+We perform the experiments using an optimized version of Terrier [11] for both indexing documents and processing queries, on a single machine with a Pentium 4 at 2GHz and 1GB of RAM .
+We indexed the documents from the UK 2006 dataset, without removing stop words or applying stemming .
+The posting lists in the inverted file consist of pairs of document identifier and term frequency .
+We compress the document identifier gaps using Elias gamma encoding, and the 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Queryvolume Space precomputed answers posting lists Figure 9
+Table 2
+Centralized system TR1 TR2 TR1 TR2 Full evaluation 233 1760 707 1140 Partial evaluation 99 1626 493 798 LAN system TRL 1 TRL 2 TR L 1 TR L 2 Full evaluation 242 1769 716 1149 Partial evaluation 108 1635 502 807 WAN system TRW 1 TRW 2 TR W 1 TR W 2 Full evaluation 5001 6528 5475 5908 Partial evaluation 4867 6394 5270 5575 term frequencies in documents using unary encoding [16] .
+The size of the inverted file is 1,189Mb .
+A stored answer requires 1264 bytes, and an uncompressed posting takes 8 bytes .
+From Table 1, we obtain L = (8¡P# of postings) 1264¡P# of terms = 0.75 and L = Inverted file size 1264¡P# of terms = 0.26 .
+We estimate the ratio TR = T Tc between the average time T it takes to evaluate a query and the average time Tc it takes to return a stored answer for the same query, in the following way .
+Tc is measured by loading the answers for 100,000 queries in memory, and answering the queries from memory .
+The average time is Tc = 0.069ms .
+T is measured by processing the same 100,000 queries (the first 10,000 queries are used to warm up the system) .
+For each query, we remove stop words, if there are at least three remaining terms .
+The stop words correspond to the terms with a frequency higher than the number of documents in the index .
+We use a document at a time approach to retrieve documents containing all query terms .
+The only disk access required during query processing is for reading compressed posting lists from the inverted file .
+We perform both full and partial evaluation of answers, because some queries are likely to retrieve a large number of documents, and only a fraction of the retrieved documents will be seen by users .
+In the partial evaluation of queries, we terminate the processing after matching 10,000 documents .
+The estimated ratios TR are presented in Table 2 .
+Figure 10 shows for a sample of queries the workload of the system with partial query evaluation and compressed posting lists .
+The x axis corresponds to the total time the system spends processing a particular query, and the vertical axis corresponds to the sum t?q fq ¡P fd(t) .
+Notice that the total number of postings of the query terms does not necessarily provide an accurate estimate of the workload imposed on the system by a query (which is the case for full evaluation and uncompressed lists) .
+0 0.2 0.4 0.6 0.8 1 0 0.2 0.4 0.6 0.8 1 Totalpostingstoprocessquery(normalized) Total time to process query (normalized) Partial processing of compressed postings query len = 1 query len in [2,3] query len in [4,8] query len > 8 Figure 10
+The analysis of the previous section also applies to a distributed retrieval system in one or multiple sites .
+Suppose that a document partitioned distributed system is running on a cluster of machines interconnected with a local area network in one site .
+The broker receives queries and broadcasts them to the query processors, which answer the queries and return the results to the broker .
+Finally, the broker merges the received answers and generates the final set of answers (we assume that the time spent on merging results is negligible) .
+The difference between the centralized architecture and the document partition architecture is the extra communication between the broker and the query processors .
+Using ICMP pings on a 100Mbps LAN, we have measured that sending the query from the broker to the query processors which send an answer of 4,000 bytes back to the broker takes on average 0.615ms .
+Hence, TRL = TR + 0.615ms 0.069ms = TR + 9 .
+In the case when the broker and the query processors are in different sites connected with a wide area network (WAN), we estimated that broadcasting the query from the broker to the query processors and getting back an answer of 4,000 bytes takes on average 329ms .
+Hence, TRW = TR + 329ms 0.069ms = TR + 4768 .
+6.3 Simulation Results We now address the problem of finding the optimal tradeoff between caching query answers and caching posting lists .
+To make the problem concrete we assume a fixed budget M on the available memory, out of which x units are used for caching query answers and M ? x for caching posting lists .
+We perform simulations and compute the average response time as a function of x .
+Using a part of the query log as training data, we first allocate in the cache the answers to the most frequent queries that fit in space x, and then we use the rest of the memory to cache posting lists .
+For selecting posting lists we use the QtfDf algorithm, applied to the training query log but excluding the queries that have already been cached .
+In Figure 11, we plot the simulated response time for a centralized system as a function of x .
+For the uncompressed index we use M = 1GB, and for the compressed index we use M = 0.5GB .
+In the case of the configuration that uses partial query evaluation with compressed posting lists, the lowest response time is achieved when 0.15GB out of the 0.5GB is allocated for storing answers for queries .
+We obtained similar trends in the results for the LAN setting .
+Figure 12 shows the simulated workload for a distributed system across a WAN .
+In this case, the total amount of memory is split between the broker, which holds the cached 400 500 600 700 800 900 1000 1100 1200 0 0.2 0.4 0.6 0.8 1 Averageresponsetime Space Simulated workload single machine full uncompr 1 G partial uncompr 1 G full compr 0.5 G partial compr 0.5 G Figure 11
+3000 3500 4000 4500 5000 5500 6000 0 0.2 0.4 0.6 0.8 1 Averageresponsetime Space Simulated workload WAN full uncompr 1 G partial uncompr 1 G full compr 0.5 G partial compr 0.5 G Figure 12
+answers of queries, and the query processors, which hold the cache of posting lists .
+According to the figure, the difference between the configurations of the query processors is less important because the network communication overhead increases the response time substantially .
+When using uncompressed posting lists, the optimal allocation of memory corresponds to using approximately 70% of the memory for caching query answers .
+This is explained by the fact that there is no need for network communication when the query can be answered by the cache at the broker. .

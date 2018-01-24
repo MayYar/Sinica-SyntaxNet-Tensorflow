@@ -1,0 +1,63 @@
+PAIRWISE KEY PREDISTRIBUTION ALGORITHM FOR SENSOR NETWORKS In order to overcome the drawbacks of polynomial based and polynomial pool based key predistribution algorithms, this paper proposed an innovative H(k,u,m,v,n) model based key predistribution scheme and pairwise key establishment algorithm, which combines the advantages of polynomial based and key pool based encryption schemes, and is based on the KDC and polynomials pool based key predistribution models .
+The new H(k,u,m,v,n) model based pairwise key establishment algorithm includes three main steps
+6.1 Generation of Polynomials Pool and Key Predistribution Supposing that, the sensor network includes N nodes, and is deployed through k different rounds .
+Then we can predistribute keys for each sensor node on the basis of the H(k,u,m,v,n) model as follows
+???? ? v 1, 1 ? i ? n, 1 ? l ? k; 0 ? jjj m 121 .. .
+???? ? u 1 , 1 ? j ? m} with vn *m*um 1 +[N vn ]*n*vn 1 different t degree bivariate polynomials over a finite field Fq, and then assigns a unique polynomial ID to each bivariate polynomial in F .
+Step 2
+Step 3
+Step 4
+6.2 Direct Pairwise Key Discovery If the node A(i1i2¡Kin,j1j2¡Kjm) in the sensor network wants to establish pairwise key with a node B (i'1i'2¡Ki'n,j'1j'2¡Kj'm), then node A can establish pairwise key with the node B trough the following methods .
+Firstly, node A computes out the distance between itself and node B
+If d=1, then node A obtains the direct pairwise key between itself and node B according to the following theorem 1
+If d=1, then there exists a direct pairwise key between nodes A and B .
+Poof
+1) If d1=1, d2=0
+Supposing that nodes A, B belong to the same cluster l, then from d1=1 ? There is only one position different between i1i2¡Kin and i"1i"2¡Ki"n .
+Let it=i"t, when 1 ? t ? n 1, and in ¡Ú i"n ? f n iiil n >< ?121 ,...,,, (in,i"n)= f n iiil n >¡¬¡¬¡¬< ?121 ,...,,, (i"n,in) .
+So, there exists a direct pairwise key f n iiil n >< ?121 ,...,,, (in,i"n) between nodes A and B .
+2) If d1=0, d2=1
+Let jt=j"t, when 1 ? t ? m1, and jm ¡Ú j"m .
+Since d1=0 ? i1i2¡Kin equals to i"1i"2¡Ki"n ? f m jjjinii m >< ?121 ,...,,,,...,2,1 (jm, j"m)= f m jjji nii m >¡¬¡¬¡¬¡¬¡¬¡¬< ?121 ,...,,,,...,2,1 (j"m,jm) .
+So, there exists a direct pairwise key f m jjjinii m >< ?121 ,...,,,,...,2,1 (jm, j"m) between nodes A and B .
+According to theorem 1, we present the detailed description of the direct pairwise key discovery algorithm as follows
+And then turn to the following path key discovery process .
+6.3 Path Key Discovery If d>1, then node A can establish path key with node B according to the following theorem 2
+If d>1, then there exists a path key between nodes A and B .
+Proof
+Obviously, nodes A(i1i2¡Kin, j1j2¡Kjm) ,(i'1i2 i3¡Kin, j1j2¡Kjm),(i'1i'2 i3¡Kin, j1j2¡Kjm),¡K,(i'1i'2¡Ki'n, j1j2¡Kjm) belong to the same cluster .
+So, according to the supposing condition of The nodes in the same cluster form a connected graph, there is a route among those nodes .
+In addition, in those nodes, the distance between any two neighboring nodes is 1, so from theorem 1, it is easy to know that there exists direct pairwise key between any two neighboring nodes among those nodes .
+For nodes (i'1i'2¡Ki'n,j1j2¡Kjm), (i'1i'2¡Ki'n,j'1 j2 j3¡Kjm), (i'1i'2¡Ki'n,j'1j'2 j3¡Kjm 1 jm),¡K, (i'1i'2¡Ki'n,j'1j'2¡Kj'm 1jm), since they have the same Out Cluster Hypercube Node Codes with the node B(i'1i'2¡Ki'n,j'1j'2¡Kj'm), so nodes (i'1i'2¡Ki'n,j1j2¡Kjm), (i'1i'2¡Ki'n,j'1 j2 j3¡Kjm), (i'1i'2¡Ki'n,j'1j'2 j3¡Kjm 1 jm),¡K, (i'1i'2¡Ki'n,j'1j'2¡Kj'm 1 jm) and node B belong to a same logical hypercube .
+Obviously, from the supposing condition of The whole sensor network forms a connected graph, there is a route among those nodes .
+In addition, in those nodes, the distance between any two neighboring nodes is 1, so from theorem 1, it is easy to know that there exists direct pairwise key between any two neighboring nodes among those nodes .
+So, it is obvious that there exists a path key between nodes A and B .
+According to theorem 2, we present the detailed description of the path key discovery algorithm as follows
+Step 2
+From theorem 2, it is easy to know that any source node A can compute out a key path P to the destination node B according to the above algorithm, when there are no compromised nodes in the sensor network .
+Once the key path P is computed out, then node A can send messages to B along the path P to establish indirect pairwise key with node B .
+Fig.2 presents a example of key path establishment .
+Figure.2 Key path establishment example .
+For example
+57 According to the properties of H(k,u,m,v,n) model, we can prove that the following theorem by combing the proof of theorem 2
+That is to say, node A can establish indirect pairwise key with node B through t 1 intermediate nodes .
+Proof
+Since d=t, according to the construction properties of H(k,u,m,v,n), it is easy to know that there exist t 1 intermediate nodes I1,¡K,It 1, in the logical space H(k,u,m,v,n), which satisfy that the distance between any two neighboring nodes in the nodes series A, I1,¡K,It1, B equals to 1 .
+So according to the theorem 1, we can know that nodes A, I1,¡K,It 1, B form a correct key path between node A and can communicate directly, then node A can establish indirect pairwise key with node B through those t 1 intermediate nodes .
+6.4 Dynamic Path Key Discovery The path key discovery algorithm proposed in the above section can establish a key path correctly, only when there exist no compromised nodes in the whole sensor network, since the key path is computed out beforehand .
+And the proposed algorithm cannot find an alternative key path when there exist some compromised nodes or some intermediate nodes not in the communication radius, even that there exists other alternative key paths in the sensor network .
+From the following example we can know that there are many parallel paths in the H(k,u,m,v,n) model for any two given source and destination nodes, since the H(k,u,m,v,n) model is high fault tolerant[9,10] .
+Figure.3 Alternative key path establishment example .
+For example
+Since the sensors are source limited, so they are easy to die or out of the communication radius, therefore the algorithm proposed in the above section cannot guarantee to establish correct key path efficiently .
+In this section, we will propose a dynamic path key discovery algorithm as follows, which can improve the probability of key path effectively
+Input
+Output
+Step 1
+Step 2
+Step 3
+Then let I0=C(b1¡Kbn,a"1¡Ka"m), I1=(b1¡Kbn,b"1 a"2¡Ka"m),¡K, Is=B(b1¡Kbn,b"1 b"2¡Kb"s a"s+1¡Ka"m), and each node It in the above nodes series find a route to its neighboring node It+1 on the basis of the location information (Detailed routing algorithms based on location information can see the references[11 14]) .
+Step 4
+If such kind of a correct key path exists, then through which node A can establish an indirect pairwise key with node B .
+Otherwise, node A fails to establish an indirect pairwise key with node B .
+And node A will tries again to establish an indirect pairwise key with node B some time later. .

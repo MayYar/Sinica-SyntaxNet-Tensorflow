@@ -1,0 +1,533 @@
+Information Markets vs. Opinion Pools: 
+content:
+1 ABSTRACT :
+1-1:In this paper, we examine the relative forecast accuracy of information markets versus expert aggregation .
+1-2:We leverage a unique data source of almost 2000 people"s subjective probability judgments on 2003 US National Football League games and compare with the market probabilities given by two different information markets on exactly the same events .
+1-3:We combine assessments of multiple experts via linear and logarithmic aggregation functions to form pooled predictions .
+1-4:Prices in information markets are used to derive market predictions .
+1-5:Our results show that, at the same time point ahead of the game, information markets provide as accurate predictions as pooled expert assessments .
+1-6:In screening pooled expert predictions, we find that arithmetic average is a robust and efficient pooling function; weighting expert assessments according to their past performance does not improve accuracy of pooled predictions; and logarithmic aggregation functions offer bolder predictions than linear aggregation functions .
+1-7:The results provide insights into the predictive performance of information markets, and the relative merits of selecting among various opinion pooling methods .
+1-8:J.4 [Computer Applications]: Social and Behavioral .
+2 INTRODUCTION :
+2-1:Forecasting is a ubiquitous endeavor in human societies .
+2-2:For decades, scientists have been developing and exploring various forecasting methods, which can be roughly divided into statistical and non statistical approaches .
+2-3:Statistical approaches require not only the existence of enough historical data but also that past data contains valuable information about the future event .
+2-4:When these conditions can not be met, non statistical approaches that rely on judgmental information about the future event could be better choices .
+2-5:One widely used non statistical method is to elicit opinions from experts .
+2-6:Since experts are not generally in agreement, many belief aggregation methods have been proposed to combine expert opinions together and form a single prediction .
+2-7:These belief aggregation methods are called opinion pools, which have been extensively studied in statistics [20, 24, 38], and management sciences [8, 9, 30, 31], and applied in many domains such as group decision making [29] and risk analysis [12] .
+2-8:With the fast growth of the Internet, information markets have recently emerged as a promising non statistical forecasting tool .
+2-9:Information markets (sometimes called prediction markets, idea markets, or event markets) are markets designed for aggregating information and making predictions about future events .
+2-10:To form the predictions, information markets tie payoffs of securities to outcomes of events .
+2-11:For example, in an information market to predict the result of a US professional National Football League game, say New England vs Carolina, the security pays a certain amount of money per share to its holders if and only if New England wins the game .
+2-12:Otherwise, it pays off nothing .
+2-13:The security price before the game reflects the consensus expectation of market traders about the probability of New England winning the game .
+2-14:Such markets are becoming very popular .
+2-15:The Iowa Electronic Markets [2] are real money futures markets to predict economic and political events such as elections .
+2-16:The Hollywood Stock Exchange [3] is a virtual (play money) exchange for trading securities to forecast future box office proceeds of new movies, and the outcomes of entertainment awards, etc .
+2-17:TradeSports.com [7], a real money betting exchange registered in Ireland, hosts markets for sports, political, entertainment, and financial events .
+2-18:The Foresight Exchange [4] allows traders to wager play money on unresolved scientific questions or other claims of public interest, and NewsFutures.com"s World News Exchange [1] has 58 popular sports and financial betting markets, also grounded in a play money currency .
+2-19:Despite the popularity of information markets, one of the most important questions to ask is: how accurately can information markets predict? Previous research in general shows that information markets are remarkably accurate .
+2-20:The political election markets at IEM predict the election outcomes better than polls [16, 17, 18, 19] .
+2-21:Prices in HSX and FX have been found to give as accurate or more accurate predictions than judgment of individual experts [33, 34, 37] .
+2-22:However, information markets have not been calibrated against opinion pools, except for Servan Schreiber et .
+2-23:al [36], in which the authors compare two information markets against arithmetic average of expert opinions .
+2-24:Since information markets, in nature, offer an adaptive and selforganized mechanism to aggregate opinions of market participants, it is interesting to compare them with existing opinion pooling methods, to evaluate the performance of information markets from another perspective .
+2-25:The comparison will provide beneficial guidance for practitioners to choose the most appropriate method for their needs .
+2-26:This paper contributes to the literature in two ways: (1) As an initial attempt to compare information markets with opinion pools of multiple experts, it leads to a better understanding of information markets and their promise as an alternative institution for obtaining accurate forecasts; (2) In screening opinion pools to be used in the comparison, we cast insights into relative performances of different opinion pools .
+2-27:In terms of prediction accuracy, we compare two information markets with several linear and logarithmic opinion pools (LinOP and LogOP) at predicting the results of NFL games .
+2-28:Our results show that at the same time point ahead of the game, information markets provide as accurate predictions as our carefully selected opinion pools .
+2-29:In selecting the opinion pools to be used in our comparison, we find that arithmetic average is a robust and efficient pooling function; weighting expert assessments according to their past performances does not improve the prediction accuracy of opinion pools; and LogOP offers bolder predictions than LinOP .
+2-30:The remainder of the paper is organized as follows .
+2-31:Section 2 reviews popular opinion pooling methods .
+2-32:Section 3 introduces the basics of information markets .
+2-33:Data sets and our analysis methods are described in Section 4 .
+2-34:We present results and analysis in Section 5, followed by conclusions in Section 6. .
+3 REVIEW OF OPINION POOLS :
+3-1:Clemen and Winkler [12] classify opinion pooling methods into two broad categories: mathematical approaches and behavioral approaches .
+3-2:In mathematical approaches, the opinions of individual experts are expressed as subjective probability distributions over outcomes of an uncertain event .
+3-3:They are combined through various mathematical methods to form an aggregated probability distribution .
+3-4:Genest and Zidek [24] and French [20] provide comprehensive reviews of mathematical approaches .
+3-5:Mathematical approaches can be further distinguished into axiomatic approaches and Bayesian approaches .
+3-6:Axiomatic approaches apply prespecified functions that map expert opinions, expressed as a set of individual probability distributions, to a single aggregated probability distribution .
+3-7:These pooling functions are justified using axioms or certain desirable properties .
+3-8:Two of the most common pooling functions are the linear opinion pool (LinOP) and the logarithmic opinion pool (LogOP) .
+3-9:Using LinOP, the aggregate probability distribution is a weighted arithmetic mean of individual probability distributions: p(θ) = n i=1 wipi(θ), (1) where pi(θ) is expert i"s probability distribution of uncertain event θ, p(θ) represents the aggregate probability distribution, wi"s are weights for experts, which are usually nonnegative and sum to 1, and n is the number of experts .
+3-10:Using LogOP, the aggregate probability distribution is a weighted geometric mean of individual probability distributions: p(θ) = k n i=1 pi(θ)wi , (2) where k is a normalization constant to ensure that the pooled opinion is a probability distribution .
+3-11:Other axiomatic pooling methods often are extensions of LinOP [22], LogOP [23], or both [13] .
+3-12:Winkler [39] and Morris [29, 30] establish the early framework of Bayesian aggregation methods .
+3-13:Bayesian approaches assume as if there is a decision maker who has a prior probability distribution over event θ and a likelihood function over expert opinions given the event .
+3-14:This decision maker takes expert opinions as evidence and updates its priors over the event and opinions according to Bayes rule .
+3-15:The resulted posterior probability distribution of θ is the pooled opinion .
+3-16:Behavioral approaches have been widely studied in the field of group decision making and organizational behavior .
+3-17:The important assumption of behavioral approaches is that, through exchanging opinions or information, experts can eventually reach an equilibrium where further interaction won"t change their opinions .
+3-18:One of the best known behavioral approaches is the Delphi technique [28] .
+3-19:Typically, this method and its variants do not allow open discussion, but each expert has chance to judge opinions of other experts, and is given feedback .
+3-20:Experts then can reassess their opinions and repeat the process until a consensus or a smaller spread of opinions is achieved .
+3-21:Some other behavioral methods, such as the Nominal Group technique [14], promote open discussions in controlled environments .
+3-22:Each approach has its pros and cons .
+3-23:Axiomatic approaches are easy to use .
+3-24:But they don"t have a normative basis to choose weights .
+3-25:In addition, several impossibility results (e.g., Genest [21]) show that no aggregation function can satisfy all desired properties of an opinion pool, unless the pooled opinion degenerates to a single individual opinion, which effectively implies a dictator .
+3-26:Bayesian approaches are nicely based on the normative Bayesian framework .
+3-27:However, it is sometimes frustratingly difficult to apply because it requires either (1) constructing an obscenely complex joint prior over the event and opinions (often impractical even in terms of storage space complexity, not to mention from an elicitation standpoint) or (2) making strong assumptions about the prior, like conditional independence of experts .
+3-28:Behavior approaches allow experts to dynamically improve their information and revise their opinions during interactions, but many of them are not fixed or completely specified, and can"t guarantee convergence or repeatability .
+3-29:59 .
+4 HOW INFORMATION MARKETS WORK :
+4-1:Much of the enthusiasm for information markets stems from Hayek hypothesis [26] and efficient market hypothesis [15] .
+4-2:Hayek, in his classic critique of central planning in 1940"s, claims that the price system in a competitive market is a very efficient mechanism to aggregate dispersed information among market participants .
+4-3:The efficient market hypothesis further states that, in an efficient market, the price of a security almost instantly incorporates all available information .
+4-4:The market price summarizes all relevant information across traders, hence is the market participants" consensus expectation about the future value of the security .
+4-5:Empirical evidence supports both hypotheses to a large extent [25, 27, 35] .
+4-6:Thus, when associating the value of a security with the outcome of an uncertain future event, market price, by revealing the consensus expectation of the security value, can indirectly predict the outcome of the event .
+4-7:This idea gives rise to information markets .
+4-8:For example, if we want to predict which team will win the NFL game between New England and Carolina, an information market can trade a security $100 if New England defeats Carolina, whose payoff per share at the end of the game is specified as follow: $100 if New England wins the game; $0 otherwise .
+4-9:The security price should roughly equal the expected payoff of the security in an efficient market .
+4-10:The time value of money usually can be ignored because durations of most information markets are short .
+4-11:Assuming exposure to risk is roughly equal for both outcomes, or that there are sufficient effectively risk neutral speculators in the market, the price should not be biased by the risk attitudes of various players in the market .
+4-12:Thus, p = Pr(Patriots win) × 100 + [1 − Pr(Patriots win)] × 0, where p is the price of the security $100 if New England defeats Carolina and Pr(Patriots win) is the probability that New England will win the game .
+4-13:Observing the security price p before the game, we can derive Pr(Patriots win), which is the market participants" collective prediction about how likely it is that New England will win the game .
+4-14:The above security is a winner takes all contract .
+4-15:It is used when the event to be predicted is a discrete random variable with disjoint outcomes (in this case binary) .
+4-16:Its price predicts the probability that a specific outcome will be realized .
+4-17:When the outcome of a prediction problem can be any value in a continuous interval, we can design a security that pays its holder proportional to the realized value .
+4-18:This kind of security is what Wolfers and Zitzewitz [40] called an index contract .
+4-19:It predicts the expected value of a future outcome .
+4-20:Many other aspects of a future event such as median value of outcome can also be predicted in information markets by designing and trading different securities .
+4-21:Wolfers and Zitzewitz [40] provide a summary of the main types of securities traded in information markets and what statistical properties they can predict .
+4-22:In practice, conceiving a security for a prediction problem is only one of the many decisions in designing an effective information market .
+4-23:Spann and Skiera [37] propose an initial framework for designing information markets. .
+5 DESIGN OF ANALYSIS :
+5-1:4.1 Data Sets Our data sets cover 210 NFL games held between September 28th, 2003 and December 28th, 2003 .
+5-2:NFL games are very suitable for our purposes because: (1) two online exchanges and one online prediction contest already exist that provide data on both information markets and the opinions of self identified experts for the same set of games; (2) the popularity of NFL games in the United States provides natural incentives for people to participate in information markets and or the contest, which increases liquidity of information markets and improves the quality and number of opinions in the contest; (3) intense media coverage and analysis of the profiles and strengths of teams and individual players provide the public with much information so that participants of information markets and the contest can be viewed as knowledgeable regarding to the forecasting goal .
+5-3:Information market data was acquired, by using a specially designed crawler program, from TradeSports.com"s Football NFL markets [7] and NewsFutures.com"s Sports Exchange [1] .
+5-4:For each NFL game, both TradeSports and NewsFutures have a winner takes all information market to predict the game outcome .
+5-5:We introduce the design of the two markets according to Spann and Skiera"s three steps for designing an information market [37] as below .
+5-6:• Choice of forecasting goal: Markets at both TradeSports and NewsFutures aim at predicting which one of the two teams will win a NFL football game .
+5-7:They trade similar winner takes all securities that pay off 100 if a team wins the game and 0 if it loses the game .
+5-8:Small differences exist in how they deal with ties .
+5-9:In the case of a tie, TradeSports will unwind all trades that occurred and refund all exchange fees, but the security is worth 50 in NewsFutures .
+5-10:Since the probability of a tie is usually very low (much less the 1%), prices at both markets effectively represent the market participants" consensus assessment of the probability that the team will win .
+5-11:• Incentive for participation and information revelation: TradeSports and NewsFutures use different incentives for participation and information revelation .
+5-12:TradeSports is a real money exchange .
+5-13:A trader needs to open and fund an account with a minimum of $100 to participate in the market .
+5-14:Both profits and losses can occur as a result of trading activity .
+5-15:On the contrary, a trader can register at NewsFutures for free and get 2000 units of Sport Exchange virtual money at the time of registration .
+5-16:Traders at NewsFutures will not incur any real financial loss .
+5-17:They can accumulate virtual money by trading securities .
+5-18:The virtual money can then be used to bid for a few real prizes at NewsFutures" online shop .
+5-19:• Financial market design: Both markets at TradeSports and NewsFutures use the continuous double auction as their trading mechanism .
+5-20:TradeSports charges a small fee on each security transaction and expiry, while NewsFutures does not .
+5-21:We can see that the main difference between two information markets is real money vs .
+5-22:virtual money .
+5-23:Servan Schreiber 60 et .
+5-24:al [36] have compared the effect of money on the performance of the two information markets and concluded that the prediction accuracy of the two markets are at about the same level .
+5-25:Not intending to compare these two markets, we still use both markets in our analysis to ensure that our findings are not accidental .
+5-26:We obtain the opinions of 1966 self identified experts for NFL games from the ProbabilityFootball online contest [5], one of several ProbabilitySports contests [6] .
+5-27:The contest is free to enter .
+5-28:Participants of the contest are asked to enter their subjective probability that a team will win a game by noon on the day of the game .
+5-29:Importantly, the contest evaluates the participants" performance via the quadratic scoring rule: s = 100 − 400 × Prob Lose2 , (3) where s represents the score that a participant earns for the game, and Prob Lose is the probability that the participant assigns to the actual losing team .
+5-30:The quadratic score is one of a family of so called proper scoring rules that have the property that an expert"s expected score is maximized when the expert reports probabilities truthfully .
+5-31:For example, for a game team A vs .
+5-32:team B, if a player assigns 0.5 to both team A and B, his her score for the game is 0 no matter which team wins .
+5-33:If he she assigns 0.8 to team A and 0.2 to team B, showing that he is confident in team A"s winning, he she will score 84 points for the game if team A wins, and lose 156 points if team B wins .
+5-34:This quadratic scoring rule rewards bold predictions that are right, but penalizes bold predictions that turn out to be wrong .
+5-35:The top players, measured by accumulated scores over all games, win the prizes of the contest .
+5-36:The suggested strategy at the contest website is to make picks for each game that match, as closely as possible, the probabilities that each team will win .
+5-37:This strategy is correct if the participant seeks to maximize expected score .
+5-38:However, as prizes are awarded only to the top few winners, participants" goals are to maximize the probability of winning, not maximize expected score, resulting in a slightly different and more risk seeking optimization.1 Still, as far as we are aware, this data offer the closest thing available to true subjective probability judgments from so many people over so many public events that have corresponding information markets .
+5-39:4.2 Methods of Analysis In order to compare the prediction accuracy of information markets and that of opinion pools, we proceed to derive predictions from market data of TradeSports and NewsFutures, form pooled opinions using expert data from ProbabilityFootball contest, and specify the performance measures to be used .
+5-40:4.2.1 Deriving Predictions For information markets, deriving predictions is straightforward .
+5-41:We can take the security price and divide it by 100 to get the market"s prediction of the probability that a team will win .
+5-42:To match the time when participants at the ProbabilityFootball contest are required to report their probability assessments, we derive predictions using the last trade price before noon on the day of the game .
+5-43:For more 1 Ideally, prizes would be awarded by lottery in proportion to accumulated score .
+5-44:than half of the games, this time is only about an hour earlier than the game starting time, while it is several hours earlier for other games .
+5-45:Two sets of market predictions are derived: • NF: Prediction equals NewsFutures" last trade price before noon of the game day divided by 100 .
+5-46:• TS: Prediction equals TradeSports" last trade price before noon of the game day divided by 100 .
+5-47:We apply LinOP and LogOP to ProbabilityFootball data to obtain aggregate expert predictions .
+5-48:The reason that we do not consider other aggregation methods include: (1) data from ProbabilityFootball is only suitable for mathematical pooling methods we can rule out behavioral approaches, (2) Bayesian aggregation requires us to make assumptions about the prior probability distribution of game outcomes and the likelihood function of expert opinions: given the large number of games and participants, making reasonable assumptions is difficult, and (3) for axiomatic approaches, previous research has shown that simpler aggregation methods often perform better than more complex methods [12] .
+5-49:Because the output of LogOP is indeterminate if there are probability assessments of both 0 and 1 (and because assessments of 0 and 1 are dictatorial using LogOP), we add a small number 0.01 to an expert opinion if it is 0, and subtract 0.01 from it if it is 1 .
+5-50:In pooling opinions, we consider two influencing factors: weights of experts and number of expert opinions to be pooled .
+5-51:For weights of experts, we experiment with equal weights and performance based weights .
+5-52:The performancebased weights are determined according to previous accumulated score in the contest .
+5-53:The score for each game is calculated according to equation 3, the scoring rule used in the ProbabilityFootball contest .
+5-54:For the first week, since no previous scores are available, we choose equal weights .
+5-55:For later weeks, we calculate accumulated past scores for each player .
+5-56:Because the cumulative scores can be negative, we shift everyone"s score if needed to ensure the weights are non negative .
+5-57:Thus, wi = cumulative scorei + shift n j=1(cumulative scorej + shift) .
+5-58:(4) where shift equals 0 if the smallest cumulative scorej is non negative, and equals the absolute value of the smallest cumulative scorej otherwise .
+5-59:For simplicity, we call performance weighted opinion pool as weighted, and equally weighted opinion pool as unweighted .
+5-60:We will use them interchangeably in the remaining of the paper .
+5-61:As for the number of opinions used in an opinion pool, we form different opinion pools with different number of experts .
+5-62:Only the best performing experts are selected .
+5-63:For example, to form an opinion pool with 20 expert opinions, we choose the top 20 participants .
+5-64:Since there is no performance record for the first week, we use opinions of all participants in the first week .
+5-65:For week 2, we select opinions of 20 individuals whose scores in the first week are among the top 20 .
+5-66:For week 3, 20 individuals whose cumulative scores of week 1 and 2 are among the top 20s are selected .
+5-67:Experts are chosen in a similar way for later weeks .
+5-68:Thus, the top 20 participants can change from week to week .
+5-69:The possible opinion pools, varied in pooling functions, weighting methods, and number of expert opinions, are shown 61 Table 1: Pooled Expert Predictions # Symbol Description 1 Lin All u Unweighted (equally weighted) LinOP of all experts .
+5-70:2 Lin All w Weighted (performance weighted) LinOP of all experts .
+5-71:3 Lin n u Unweighted (equally weighted) LinOP with n experts .
+5-72:4 Lin n w Weighted (performance weighted) LinOP with n experts .
+5-73:5 Log All u Unweighted (equally weighted) LogOP of all experts .
+5-74:6 Log All w Weighted (performance weighted) LogOP of all experts .
+5-75:7 Log n u Unweighted (equally weighted) LogOP with n experts .
+5-76:8 Log n w Weighted (performance weighted) LogOP with n experts .
+5-77:in Table 1 .
+5-78:Lin represents linear, and Log represents Logarithmic .
+5-79:n is the number of expert opinions that are pooled, and All indicates that all opinions are combined .
+5-80:We use u to symbolize unweighted (equally weighted) opinion pools .
+5-81:w is used for weighted (performance weighted) opinion pools .
+5-82:Lin All u, the equally weighted LinOP with all participants, is basically the arithmetic mean of all participants" opinions .
+5-83:Log All u is simply the geometric mean of all opinions .
+5-84:When a participant did not enter a prediction for a particular game, that participant was removed from the opinion pool for that game .
+5-85:This contrasts with the ProbabilityFootball average reported on the contest website and used by Servan Schreiber et .
+5-86:al [36], where unreported predictions were converted to 0.5 probability predictions .
+5-87:4.2.2 Performance Measures We use three common metrics to assess prediction accuracy of information markets and opinion pools .
+5-88:These measures have been used by Servan Schreiber et .
+5-89:al [36] in evaluating the prediction accuracy of information markets. .
+6 Absolute Error = Prob Lose, :
+6-1:where Prob Lose is the probability assigned to the eventual losing team .
+6-2:Absolute error simply measures the difference between a perfect prediction (1 for winning team) and the actual prediction .
+6-3:A prediction with lower absolute error is more accurate .
+6-4:) .
+6-5:Quadratic score is the scoring function that is used in the ProbabilityFootball contest .
+6-6:It is a linear transformation of squared error, Prob Lose2 , which is one of the mostly used metrics in evaluating forecasting accuracy .
+6-7:Quadratic score can be negative .
+6-8:A prediction with higher quadratic score is more accurate. .
+7 Logarithmic Score = log(Prob W in), :
+7-1:where Prob W in is the probability assigned to the eventual winning team .
+7-2:The logarithmic score, like the quadratic score, is a proper scoring rule .
+7-3:A prediction with higher (less negative) logarithmic score is more accurate. .
+8 EMPIRICAL RESULTS :
+8-1:5.1 Performance of Opinion Pools Depending on how many opinions are used, there can be numerous different opinion pools .
+8-2:We first examine the effect of number of opinions on prediction accuracy by forming opinion pools with the number of expert opinions varying from 1 to 960 .
+8-3:In the ProbabilityFootball Competition, not all 1966 registered participants provide their probability assessments for every game .
+8-4:960 is the smallest number of participants for all games .
+8-5:For each game, we sort experts according to their accumulated quadratic score in previous weeks .
+8-6:Predictions of the best performing n participants are picked to form an opinion pool with n experts .
+8-7:Figure 1 shows the prediction accuracy of LinOP and LogOP in terms of mean values of the three performance measures across all 210 games .
+8-8:We can see the following trends in the figure .
+8-9:opinion pools have similar levels of prediction accuracy, especially for LinOP .
+8-10:general increases or keeps the same the level of prediction accuracy .
+8-11:When there are more than 200 experts, the prediction accuracy of LinOP is stable regarding the number of experts .
+8-12:mean absolute error .
+8-13:But, using all other performance measures, LinOP outperforms LogOP .
+8-14:the prediction accuracy at the beginning .
+8-15:But the curves (including the points with all experts) for mean quadratic score, and mean logarithmic score have slight bell shapes, which represent a decrease in prediction accuracy when the number of experts is very large .
+8-16:The curves for mean absolute error, on the other hand, show a consistent increase of accuracy .
+8-17:The first and second trend above imply that when using LinOP, the simplest way, which has good prediction accuracy, is to average the opinions of all experts .
+8-18:Weighting does not seem to improve performance .
+8-19:Selecting experts according to past performance also does not help .
+8-20:It is a very interesting observation that even if many participants of the ProbabilityFootball contest do not provide accurate individual predictions (they have negative quadratic scores in the contest), including their opinions into the opinion pool still increases the prediction accuracy .
+8-21:One explanation of this phenomena could be that biases of individual judgment can offset with each other when opinions are diverse, which makes the pooled prediction more accurate .
+8-22:The third trend presents a controversy .
+8-23:The relative prediction accuracy of LogOP and LinOP flips when using different accuracy measures .
+8-24:To investigate this disagreement, we plot the absolute error of Log All u and Lin All u for each game in Figure 2 .
+8-25:When the absolute error of an opinion 62 0 100 200 300 400 500 600 700 800 900 All 0.4 0.405 0.41 0.415 0.42 0.425 0.43 0.435 0.44 0.445 0.45 Number of Expert Opinions MeanAbsoluteError Unweighted Linear Weighted Linear Unweighted Logarithmic Weighted Logarithmic Lin−All−u Lin−All−w Log−All−u Log−All−w (a) Mean Absolute Error 0 100 200 300 400 500 600 700 800 900 All 4 5 6 7 8 9 10 11 12 13 14 Number of Expert Opinions MeanQuadraticScore Unweighted Linear Weighted Linear Unweighted Logarithmic Weighted Logarithmic Lin−All−u Lin−All−w Log−All−u Log−All−w 0 100 200 300 400 500 600 700 800 900 All −0.71 −0.7 −0.69 −0.68 −0.67 −0.66 −0.65 −0.64 −0.63 −0.62 Number of Expert Opinions MeanLogarithmicScore Unweighted Linear Weighted Linear Unweighted Logarithmic Weighted Logarithmic Lin−All−u Lin−All−w Log−All−u Log−All−w (b) Mean Quadratic Score (c) Mean Logarithmic Score Figure 1: Prediction Accuracy of Opinion Pools pool for a game is less than 0.5, it means that the team favored by the opinion pool wins the game .
+8-26:If it is greater than 0.5, the underdog wins .
+8-27:Compared with Lin All u, Log All u has lower absolute error when it is less than 0.5, and greater absoluter error when it is greater than 0.5, which indicates that predictions of Log All u are bolder, more close to 0 or 1, than those of Lin All u .
+8-28:This is due to the nature of linear and logarithmic aggregating functions .
+8-29:Because quadratic score and logarithmic score penalize bold predictions that are wrong, LogOP is less accurate when measured in these terms .
+8-30:Similar reasoning accounts for the fourth trend .
+8-31:When there are more than 500 experts, increasing number of experts used in LogOP improves the prediction accuracy measured by absolute error, but worsens the accuracy measured by the other two metrics .
+8-32:Examining expert opinions, we find that participants who rank lower are more frequent in offering extreme predictions (0 or 1) than those ranking high in the list .
+8-33:When we increase the number of experts in an opinion pool, we are incorporating more extreme predictions into it .
+8-34:The resulting LogOP is bolder, and hence has lower mean quadratic score and mean logarithmic score .
+8-35:5.2 Comparison of Information Markets and Opinion Pools Through the first screening of various opinion pools, we select Lin All u, Log All u, Log All w, and Log 200 u to compare with predictions from information markets .
+8-36:Lin All u as shown in Figure 1 can represent what LinOP can achieve .
+8-37:However, the performance of LogOP is not consistent when evaluated using different metrics .
+8-38:Log All u and Log All w offer either the best or the worst predictions .
+8-39:Log 200 u, the LogOP with the 200 top performing experts, provides more stable predictions .
+8-40:We use all of the three to stand for the performance of LogOP in our later comparison .
+8-41:If a prediction of the probability that a team will win a game, either from an opinion pool or an information market, is higher than 0.5, we say that the team is the predicted favorite for the game .
+8-42:Table 2 presents the number and percentage of games that predicted favorites actually win, out of a total of 210 games .
+8-43:All four opinion pools correctly predict a similar number and percentage of games as NF and TS .
+8-44:Since NF, TS, and the four opinion pools form their predictions using information available at noon of the game 63 Table 2: Number and Percentage of Games that Predicted Favorites Win NF TS Lin All u Log All u Log All w Log 200 u Number 142 137 144 144 143 141 Percentage 67.62% 65.24% 68.57% 68.57% 68.10% 67.14% Table 3: Mean of Prediction Accuracy Measures Absolute Error Quadratic Score Logarithmic Score NF 0.4253 15.4352 0.6136 (0.0121) (4.6072) (0.0258) TS 0.4275 15.2739 0.6121 (0.0118) (4.3982) (0.0241) Lin All u 0.4292 13.0525 0.6260 (0.0126) (4.8088) (0.0268) Log All u 0.4024 10.0099 0.6546 (0.0173) (6.6594) (0.0418) Log All w 0.4059 10.4491 0.6497 (0.0168) (6.4440) (0.0398) Log 200 u 0.4266 12.3868 0.6319 (0.0133) (5.0764) (0.0295) *Numbers in parentheses are standard errors .
+8-45:*Best value for each metric is shown in bold .
+8-46:0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Absolute Error of Lin−All−u AbsoluteErrorofLog−All−u 45 Degree Line Absolute Error Figure 2: Absolute Error: Lin All u vs .
+8-47:Log All u day, information markets and opinion pools have comparable potential at the same time point .
+8-48:We then take a closer look at prediction accuracy of information markets and opinion pools using the three performance measures .
+8-49:Table 3 displays mean values of these measures over 210 games .
+8-50:Numbers in parentheses are standard errors, which estimate the standard deviation of the mean .
+8-51:To take into consideration of skewness of distributions, we also report median values of accuracy measures in Table 4 .
+8-52:Judged by the mean values of accuracy measures in Table 3, all methods have similar accuracy levels, with NF and TS slightly better than the opinion pools .
+8-53:However, the median values of accuracy measures indicate that LogAll u and Log All w opinion pools are more accurate than all other predictions .
+8-54:We employ the randomization test [32] to study whether the differences in prediction accuracy presented in Table 3 and Table 4 are statistically significant .
+8-55:The basic idea of randomization test is that, by randomly swapping predictions of two methods numerous times, an empirical distribution for the difference of prediction accuracy can be constructed .
+8-56:Using this empirical distribution, we are then able to evaluate that at what confidence level the observed difference reflects a real difference .
+8-57:For example, the mean absolute error of NF is higher than that of Log All u by 0.0229, as shown in Table 3 .
+8-58:To test whether this difference is statistically significant, we shuﬄe predictions from two methods, randomly label half of predictions as NF and the other half as Log All u, and compute the difference of mean absolute error of the newly formed NF and Log All u data .
+8-59:The above procedure is repeated 10,000 times .
+8-60:The 10,000 differences of mean absolute error results in an empirical distribution of the difference .
+8-61:Comparing our observed difference, 0.0229, with this distribution, we find that the observed difference is greater than 75.37% of the empirical differences .
+8-62:This leads us to conclude that the difference of mean absolute error between NF and Log All u is not statistically significant, if we choose the level of significance to be 0.05 .
+8-63:Table 5 and Table 6 are results of randomization test for mean and median differences respectively .
+8-64:Each cell of the table is for two different prediction methods, represented by name of the row and name of the column .
+8-65:The first lines of table cells are results for absolute error .
+8-66:The second and third lines are dedicated to quadratic score and logarithmic score respectively .
+8-67:We can see that, in terms of mean values of accuracy measures, the differences of all methods are not statistically significant to any reasonable degree .
+8-68:When it 64 Table 4: Median of Prediction Accuracy Measures Absolute Error Quadratic Score Logarithmic Score NF 0.3800 42.2400 0.4780 TS 0.4000 36.0000 0.5108 Lin All u 0.3639 36.9755 0.5057 Log All u 0.3417 53.2894 0.4181 Log All w 0.3498 51.0486 0.4305 Log 200 u 0.3996 36.1300 0.5101 *Best value for each metric is shown in bold .
+8-69:Table 5: Statistical Confidence of Mean Differences in Prediction Accuracy TS Lin All u Log All u Log All w Log 200 u NF 8.92% 22.07% 75.37% 66.47% 7.76% 2.38% 26.60% 50.74% 44.26% 32.24% 2.99% 22.81% 59.35% 56.21% 33.26% TS 10.13% 77.79% 68.15% 4.35% 27.25% 53.65% 44.90% 28.30% 32.35% 57.89% 60.69% 38.84% Lin All u 82.19% 68.86% 9.75% 28.91% 23.92% 6.81% 44.17% 43.01% 17.36% Log All u 11.14% 72.49% 3.32% 18.89% 5.25% 39.06% Log All w 69.89% 18.30% 30.23% *In each table cell, row 1 accounts for absolute error, row 2 for quadratic score, and row 3 for logarithmic score .
+8-70:comes to median values of prediction accuracy, Log All u outperforms Lin All u at a high confidence level .
+8-71:These results indicate that differences in prediction accuracy between information markets and opinion pools are not statistically significant .
+8-72:This may seem to contradict the result of Servan Schreiber et .
+8-73:al [36], in which NewsFutures"s information markets have been shown to provide statistically significantly more accurate predictions than the (unweighted) average of all ProbabilityFootball opinions .
+8-74:The discrepancy emerges in dealing with missing data .
+8-75:Not all 1966 registered ProbabilityFootball participants offer probability assessments for each game .
+8-76:When a participant does not provide a probability assessment for a game, the contest considers their prediction as 0.5. .
+8-77:This makes sense in the context of the contest, since 0.5 always yields 0 quadratic score .
+8-78:The ProbabilityFootball average reported on the contest website and used by Servan Schreiber et .
+8-79:al includes these 0.5 estimates .
+8-80:Instead, we remove participants from games that they do not provide assessments, pooling only the available opinions together .
+8-81:Our treatment increases the prediction accuracy of Lin All u significantly. .
+9 CONCLUSIONS :
+9-1:With the fast growth of the Internet, information markets have recently emerged as an alternative tool for predicting future events .
+9-2:Previous research has shown that information markets give as accurate or more accurate predictions than individual experts and polls .
+9-3:However, information markets, as an adaptive mechanism to aggregate different opinions of market participants, have not been calibrated against many belief aggregation methods .
+9-4:In this paper, we compare prediction accuracy of information markets with linear and logarithmic opinion pools (LinOP and LogOP) using predictions from two markets and 1966 individuals regarding the outcomes of 210 American football games during the 2003 NFL season .
+9-5:In screening for representative opinion pools to compare with information markets, we investigate the effect of weights and number of experts on prediction accuracy .
+9-6:Our results on both the comparison of information markets and opinion pools and the relative performance of different opinion pools are summarized as below .
+9-7:information markets offer as accurate predictions as our selected opinion pools .
+9-8:We have selected four opinion pools to represent the prediction accuracy level that LinOP and LogOP can achieve .
+9-9:With all four performance metrics, our two information markets obtain similar prediction accuracy as the four opinion pools .
+9-10:65 Table 6: Statistical Confidence of Median Differences in Prediction Accuracy TS Lin All u Log All u Log All w Log 200 u NF 48.85% 47.3% 84.8% 77.9% 65.36% 45.26% 44.55% 85.27% 75.65% 66.75% 44.89% 46.04% 84.43% 77.16% 64.78% TS 5.18% 94.83% 94.31% 0% 5.37% 92.08% 92.53% 0% 7.41% 95.62% 91.09% 0% Lin All u 95.11% 91.37% 7.31% 96.10% 92.69% 9.84% 95.45% 95.12% 7.79% Log All u 23.47% 95.89% 26.68% 93.85% 22.47% 96.42% Log All w 91.3% 91.4% 90.37% *In each table cell, row 1 accounts for absolute error, row 2 for quadratic score, and row 3 for logarithmic score .
+9-11:*Confidence above 95% is shown in bold .
+9-12:simple, robust, and efficient opinion pool .
+9-13:Simply averaging across all experts seems resulting in better predictions than individual opinions and opinion pools with a few experts .
+9-14:It is quite robust in the sense that even if the included individual predictions are less accurate, averaging over all opinions still gives better (or equally good) predictions .
+9-15:performance does not seem to significantly improve prediction accuracy of either LinOP or LogOP .
+9-16:Comparing performance weighted opinion pools with equally weighted opinion pools, we do not observe much difference in terms of prediction accuracy .
+9-17:Since we only use one performance weighting method, calculating the weights according to past accumulated quadratic score that participants earned, this might due to the weighting method we chose .
+9-18:LogOP yields predictions that are closer to the extremes, 0 or 1 .
+9-19:An information markets is a self organizing mechanism for aggregating information and making predictions .
+9-20:Compared with opinion pools, it is less constrained by space and time, and can eliminate the efforts to identify experts and decide belief aggregation methods .
+9-21:But the advantages do not compromise their prediction accuracy to any extent .
+9-22:On the contrary, information markets can provide real time predictions, which are hardly achievable through resorting to experts .
+9-23:In the future, we are interested in further exploring: • Performance comparison of information markets with other opinion pools and mathematical aggregation procedures .
+9-24:In this paper, we only compare information markets with two simple opinion pools, linear and logarithmic .
+9-25:It will be meaningful to investigate their relative prediction accuracy with other belief aggregation methods such as Bayesian approaches .
+9-26:There are also a number of theoretical expert algorithms with proven worst case performance bounds [10] whose average case or practical performance would be instructive to investigate .
+9-27:• Whether defining expertise more narrowly can improve predictions of opinion pools .
+9-28:In our analysis, we broadly treat participants of the ProbabilityFootball contest as experts in all games .
+9-29:If we define expertise more narrowly, selecting experts in certain football teams to predict games involving these teams, will the predictions of opinion pools be more accurate? • The possibility of combining information markets with other forecasting methods to achieve better prediction accuracy .
+9-30:Chen, Fine, and Huberman [11] use an information market to determine the risk attitude of participants, and then perform a nonlinear aggregation of their predictions based on their risk attitudes .
+9-31:The nonlinear aggregation mechanism is shown to outperform both the market and the best individual participants .
+9-32:It is worthy of more attention whether information markets, as an alternative forecasting method, can be used together with other methods to improve our predictions. .
+10-1:We thank Brian Galebach, the owner and operator of the ProbabilitySports and ProbabilityFootball websites, for providing us with such unique and valuable data
+10-2:We thank Varsha Dani, Lance Fortnow, Omid Madani, Sumit Sang66 hai, and the anonymous reviewers for useful insights and pointers
+10-3:The authors acknowledge the support of The Penn State eBusiness Research Center.
+11-1:http:  us.newsfutures.com http:  www.biz.uiowa.edu iem  http:  www.hsx.com  http:  www.ideosphere.com fx  http:  www.probabilityfootball.com  http:  www.probabilitysports.com  http:  www.tradesports.com  A
+11-2:H
+11-3:Ashton and R
+11-4:H
+11-5:Ashton
+11-6:Aggregating subjective forecasts: Some empirical results
+11-7:Management Science, 31:1499 1508, 1985
+11-8:R
+11-9:P
+11-10:Batchelor and P
+11-11:Dua
+11-12:Forecaster diversity and the benefits of combining forecasts
+11-13:Management Science, 41:68 75, 1995
+11-14:N
+11-15:Cesa Bianchi, Y
+11-16:Freund, D
+11-17:Haussler, D
+11-18:P
+11-19:Helmbold, R
+11-20:E
+11-21:Schapire, and M
+11-22:K
+11-23:Warmuth
+11-24:How to use expert advice
+11-25:Journal of the ACM, 44(3):427 485, 1997
+11-26:K
+11-27:Chen, L
+11-28:Fine, and B
+11-29:Huberman
+11-30:Predicting the future
+11-31:Information System Frontier, 5(1):47 61, 2003
+11-32:R
+11-33:T
+11-34:Clemen and R
+11-35:L
+11-36:Winkler
+11-37:Combining probability distributions from experts in risk analysis
+11-38:Risk Analysis, 19(2):187 203, 1999
+11-39:R
+11-40:M
+11-41:Cook
+11-42:Experts in Uncertainty: Opinion and Subjective Probability in Science
+11-43:Oxford University Press, New York, 1991
+11-44:A
+11-45:L
+11-46:Delbecq, A
+11-47:H
+11-48:Van de Ven, and D
+11-49:H
+11-50:Gustafson
+11-51:Group Techniques for Program Planners: A Guide to Nominal Group and Delphi Processes
+11-52:Scott Foresman and Company, Glenview, IL, 1975
+11-53:E
+11-54:F
+11-55:Fama
+11-56:Efficient capital market: A review of theory and empirical work
+11-57:Journal of Finance, 25:383 417, 1970
+11-58:R
+11-59:Forsythe and F
+11-60:Lundholm
+11-61:Information aggregation in an experimental market
+11-62:Econometrica, 58:309 47, 1990
+11-63:R
+11-64:Forsythe, F
+11-65:Nelson, G
+11-66:R
+11-67:Neumann, and J
+11-68:Wright
+11-69:Forecasting elections: A market alternative to polls
+11-70:In T
+11-71:R
+11-72:Palfrey, editor, Contemporary Laboratory Experiments in Political Economy, pages 69 111
+11-73:University of Michigan Press, Ann Arbor, MI, 1991
+11-74:R
+11-75:Forsythe, F
+11-76:Nelson, G
+11-77:R
+11-78:Neumann, and J
+11-79:Wright
+11-80:Anatomy of an experimental political stock market
+11-81:American Economic Review, 82(5):1142 1161, 1992
+11-82:R
+11-83:Forsythe, T
+11-84:A
+11-85:Rietz, and T
+11-86:W
+11-87:Ross
+11-88:Wishes, expectations, and actions: A survey on price formation in election stock markets
+11-89:Journal of Economic Behavior and Organization, 39:83 110, 1999
+11-90:S
+11-91:French
+11-92:Group consensus probability distributions: a critical survey
+11-93:Bayesian Statistics, 2:183 202, 1985
+11-94:C
+11-95:Genest
+11-96:A conflict between two axioms for combining subjective distributions
+11-97:Journal of the Royal Statistical Society, 46(3):403 405, 1984
+11-98:C
+11-99:Genest
+11-100:Pooling operators with the marginalization property
+11-101:Canadian Journal of Statistics, 12(2):153 163, 1984
+11-102:C
+11-103:Genest, K
+11-104:J
+11-105:McConway, and M
+11-106:J
+11-107:Schervish
+11-108:Characterization of externally Bayesian pooling operators
+11-109:Annals of Statistics, 14(2):487 501, 1986
+11-110:C
+11-111:Genest and J
+11-112:V
+11-113:Zidek
+11-114:Combining probability distributions: A critique and an annotated bibliography
+11-115:Statistical Science, 1(1):114 148, 1986
+11-116:S
+11-117:J
+11-118:Grossman
+11-119:An introduction to the theory of rational expectations under asymmetric information
+11-120:Review of Economic Studies, 48(4):541 559, 1981
+11-121:F
+11-122:A
+11-123:Hayek
+11-124:The use of knowledge in society
+11-125:American Economic Review, 35(4):519 530, 1945
+11-126:J
+11-127:C
+11-128:Jackwerth and M
+11-129:Rubinstein
+11-130:Recovering probability distribution from options prices
+11-131:Journal of Finance, 51(5):1611 1631, 1996
+11-132:H
+11-133:A
+11-134:Linstone and M
+11-135:Turoff
+11-136:The Delphi Method: Techniques and Applications
+11-137:Addison Wesley, Reading, MA, 1975
+11-138:P
+11-139:A
+11-140:Morris
+11-141:Decision analysis expert use
+11-142:Management Science, 20(9):1233 1241, 1974
+11-143:P
+11-144:A
+11-145:Morris
+11-146:Combining expert judgments: A bayesian approach
+11-147:Management Science, 23(7):679 693, 1977
+11-148:P
+11-149:A
+11-150:Morris
+11-151:An axiomatic approach to expert resolution
+11-152:Management Science, 29(1):24 32, 1983
+11-153:E
+11-154:W
+11-155:Noreen
+11-156:Computer Intensive Methods for Testing Hypotheses: An Introduction
+11-157:Wiley and Sons, Inc., New York, 1989
+11-158:D
+11-159:M
+11-160:Pennock, S
+11-161:Lawrence, C
+11-162:L
+11-163:Giles, and F
+11-164:A
+11-165:Nielsen
+11-166:The real power of artificial markets
+11-167:Science, 291:987 988, February 2002
+11-168:D
+11-169:M
+11-170:Pennock, S
+11-171:Lawrence, F
+11-172:A
+11-173:Nielsen, and C
+11-174:L
+11-175:Giles
+11-176:Extracting collective probabilistic forecasts from web games
+11-177:In Proceedings of the 7th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pages 174 183, San Francisco, CA, 2001
+11-178:C
+11-179:Plott and S
+11-180:Sunder
+11-181:Rational expectations and the aggregation of diverse information in laboratory security markets
+11-182:Econometrica, 56:1085 118, 1988
+11-183:E
+11-184:Servan Schreiber, J
+11-185:Wolfers, D
+11-186:M
+11-187:Pennock, and B
+11-188:Galebach
+11-189:Prediction markets: Does money matter? Electronic Markets, 14(3):243 251, 2004
+11-190:M
+11-191:Spann and B
+11-192:Skiera
+11-193:Internet based virtual stock markets for business forecasting
+11-194:Management Science, 49(10):1310 1326, 2003
+11-195:M
+11-196:West
+11-197:Bayesian aggregation
+11-198:Journal of the Royal Statistical Society
+11-199:Series A
+11-200:General, 147(4):600 607, 1984
+11-201:R
+11-202:L
+11-203:Winkler
+11-204:The consensus of subjective probability distributions
+11-205:Management Science, 15(2):B61 B75, 1968
+11-206:J
+11-207:Wolfers and E
+11-208:Zitzewitz
+11-209:Prediction markets
+11-210:Journal of Economic Perspectives, 18(2):107 126, 2004
+11-211:67
+picture:

@@ -1,0 +1,68 @@
+In a large community of agents, an agent"s behavior is not likely to have a direct effect on most other agents
+However, as these agents respond by adapting their behavior, more agents will feel the consequences and eventually the choices made by a single agent will propagate throughout the entire community .
+This is the intuition behind graphical games, which were introduced by Kearns, Littman and Singh in [13] as a compact representation scheme for games with many players .
+In an n player graphical game, each player is associated with a vertex of an underlying graph G, and the payoffs of each player depend on his action as well as on the actions of his neighbors in the graph .
+If the maximum degree of G is £G, and each player has two actions available to him, then the game can be represented using n2£G+1 numbers .
+In contrast, we need n2n numbers to represent a general n player 2 action game, which is only practical for small values of n .
+For graphical games with constant £G, the size of the game is linear in n .
+One of the most natural problems for a graphical game is that of finding a Nash equilibrium, the existence of which follows from Nash"s celebrated theorem (as graphical games are just a special case of n player games) .
+The first attempt to tackle this problem was made in [13], where the authors consider graphical games with two actions per player in which the underlying graph is a boundeddegree tree .
+They propose a generic algorithm for finding Nash equilibria that can be specialized in two ways
+For any > 0 this algorithm outputs an Nash equilibrium, which is a strategy profile in which no player can improve his payoff by more than by unilaterally changing his strategy .
+While Nash equilibria are often easier to compute than exact Nash equilibria, this solution concept has several drawbacks .
+First, the players may be sensitive to a small loss in payoffs, so the strategy profile that is an Nash equilibrium will not be stable .
+This will be the case even if there is only a small subset of players who are extremely price sensitive, and for a large population of players it may be difficult to choose a value of that will satisfy everyone .
+Second, the strategy profiles that are close to being Nash equilibria may be much better with respect to the properties under consideration than exact Nash equilibria .
+Therefore, the (approximation to the) value of the best solution that corresponds to an Nash equilibrium may not be indicative of what can be achieved under an exact Nash equilibrium .
+This is especially important if the purpose of the approximate solution is to provide a good benchmark for a system of selfish agents, as the benchmark implied by an Nash equilibrium may be unrealistic .
+For these reasons, in this paper we focus on the problem of computing exact Nash equilibria .
+Building on ideas of [14], Elkind et al .
+[9] showed how to find an (exact) Nash equilibrium in polynomial time when the underlying 162 graph has degree 2 (that is, when the graph is a collection of paths and cycles) .
+By contrast, finding a Nash equilibrium in a general degree bounded graph appears to be computationally intractable
+[9] extends this hardness result to the case in which the underlying graph has bounded pathwidth .
+A graphical game may not have a unique Nash equilibrium, indeed it may have exponentially many .
+Moreover, some Nash equilibria are more desirable than others .
+Rather than having an algorithm which merely finds some Nash equilibrium, we would like to have algorithms for finding Nash equilibria with various sociallydesirable properties, such as maximizing overall payoff or distributing profit fairly .
+A useful property of the data structure of [13] is that it simultaneously represents the set of all Nash equilibria of the underlying game .
+If this representation has polynomial size (as is the case for paths, as shown in [9]), one may hope to extract from it a Nash equilibrium with the desired properties .
+In fact, in [13] the authors mention that this is indeed possible if one is interested in finding an (approximate) Nash equilibrium .
+The goal of this paper is to extend this to exact Nash equilibria .
+1.1 Our Results In this paper, we study n player 2 action graphical games on bounded degree trees for which the data structure of [13] has size poly(n) .
+We focus on the problem of finding exact Nash equilibria with certain socially desirable properties .
+In particular, we show how to find a Nash equilibrium that (nearly) maximizes the social welfare, i.e., the sum of the players" payoffs, and we show how to find a Nash equilibrium that (nearly) satisfies prescribed payoff bounds for all players .
+Graphical games on bounded degree trees have a simple algebraic structure .
+One attractive feature, which follows from [13], is that every such game has a Nash equilibrium in which the strategy of every player is a rational number .
+Section 3 studies the algebraic structure of those Nash equilibria that maximize social welfare .
+We show (Theorems 1 and 2) that, surprisingly, the set of Nash equilibria that maximize social welfare is more complex .
+In fact, for any algebraic number £\ ? [0, 1] with degree at most n, we exhibit a graphical game on a path of length O(n) such that, in the unique social welfare maximizing Nash equilibrium of this game, one of the players plays the mixed strategy £\.1 This result shows that it may be difficult to represent an optimal Nash equilibrium .
+It seems to be a novel feature of the setting we consider here, that an optimal Nash equilibrium is hard to represent, in a situation where it is easy to find and represent a Nash equilibrium .
+As the social welfare maximizing Nash equilibrium may be hard to represent efficiently, we have to settle for an approximation .
+However, the crucial difference between our approach and that of previous papers [13, 16, 19] is that we require our algorithm to output an exact Nash equilibrium, though not necessarily the optimal one with respect to our criteria .
+In Section 4, we describe an algorithm that satisfies this requirement .
+Namely, we propose an algorithm that for any > 0 finds a Nash equilibrium whose total payoff is within of optimal .
+It runs in polynomial time (Theorem 3,4) for any graphical game on a bounded degree tree for which the data structure proposed by [13] (the so called best response policy, defined below) is of size poly(n) (note that, as shown in [9], this is always the case when the underlying graph is a path) .
+More pre1 A related result in a different context was obtained by Datta [8], who shows that n player 2 action games are universal in the sense that any real algebraic variety can be represented as the set of totally mixed Nash equilibria of such games .
+cisely, the running time of our algorithm is polynomial in n, Pmax, and 1 , where Pmax is the maximum absolute value of an entry of a payoff matrix, i.e., it is a pseudopolynomial algorithm, though it is fully polynomial with respect to .
+We show (Section 4.1) that under some restrictions on the payoff matrices, the algorithm can be transformed into a (truly) polynomial time algorithm that outputs a Nash equilibrium whose total payoff is within a 1 ? factor from the optimal .
+In Section 5, we consider the problem of finding a Nash equilibrium in which the expected payoff of each player Vi exceeds a prescribed threshold Ti .
+Using the idea from Section 4 we give (Theorem 5) a fully polynomial time approximation scheme for this problem .
+The running time of the algorithm is bounded by a polynomial in n, Pmax, and .
+If the instance has a Nash equilibrium satisfying the prescribed thresholds then the algorithm constructs a Nash equilibrium in which the expected payoff of each player Vi is at least Ti ? .
+In Section 6, we introduce other natural criteria for selecting a good Nash equilibrium and we show that the algorithms described in the two previous sections can be used as building blocks in finding Nash equilibria that satisfy these criteria .
+In particular, in Section 6.1 we show how to find a Nash equilibrium that approximates the maximum social welfare, while guaranteeing that each individual payoff is close to a prescribed threshold .
+In Section 6.2 we show how to find a Nash equilibrium that (nearly) maximizes the minimum individual payoff .
+Finally, in Section 6.3 we show how to find a Nash equilibrium in which the individual payoffs of the players are close to each other .
+1.2 Related Work Our approximation scheme (Theorem 3 and Theorem 4) shows a contrast between the games that we study and two player n action games, for which the corresponding problems are usually intractable .
+For two player n action games, the problem of finding Nash equilibria with special properties is typically NP hard .
+In particular, this is the case for Nash equilibria that maximize the social welfare [11, 6] .
+Moreover, it is likely to be intractable even to approximate such equilibria .
+In particular, Chen, Deng and Teng [4] show that there exists some , inverse polynomial in n, for which computing an Nash equilibrium in 2 player games with n actions per player is PPAD complete .
+Lipton and Markakis [15] study the algebraic properties of Nash equilibria, and point out that standard quantifier elimination algorithms can be used to solve them .
+Note that these algorithms are not polynomial time in general .
+The games we study in this paper have polynomial time computable Nash equilibria in which all mixed strategies are rational numbers, but an optimal Nash equilibrium may necessarily include mixed strategies with high algebraic degree .
+A correlated equilibrium (introduced by Aumann [2]) is a distribution over vectors of players" actions with the property that if any player is told his own action (the value of his own component) from a vector generated by that distribution, then he cannot increase his expected payoff by changing his action .
+Any Nash equilibrium is a CE but the converse does not hold in general .
+In contrast with Nash equilibria, correlated equilibria can be found for low degree graphical games (as well as other classes of conciselyrepresented multiplayer games) in polynomial time [17] .
+But, for graphical games it is NP hard to find a correlated equilibrium that maximizes total payoff [18] .
+However, the NP hardness results apply to more general games than the one we consider here, in particular the graphs are not trees .
+From [2] it is also known that there exist 2 player, 2 action games for which the expected total payoff 163 of the best correlated equilibrium is higher than the best Nash equilibrium, and we discuss this issue further in Section 7. .

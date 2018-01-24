@@ -1,0 +1,79 @@
+BEE predicts the future by observing the emergent behavior of agents representing the entities of interest in a fine grained agent simulation .
+Key elements of the BEE architecture include the model of an individual agent, the pheromone infrastructure through which agents interact, the information sources that guide them, and the overall evolutionary cycle that they execute .
+3.1 Agent Model The agents in BEE are inspired by two bodies of work
+Digital pheromones are scalar variables that agents deposit and sense at their current location a c b d a c b d Figure 1
+a = system state space; b = system trajectory over time; c = recent measurements of system state; d = short range prediction .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 1427 in the environment .
+Agents respond to local concentrations of these variables tropistically, climbing or descending local gradients .
+Their movements change the deposit patterns .
+This feedback loop, together with processes of evaporation and propagation in the environment, support complex patterns of interaction and coordination among the agents [15] .
+Table 1 shows the BEE"s current pheromone flavors .
+For example, a living member of the adversary emits a RED ALIVE pheromone, while roads emit a MOBILITY pheromone .
+Our soldier agents are inspired by EINSTein and MANA .
+EINSTein [6] represents an agent as a set of six weights, each in [ 1, 1], describing the agent"s response to six kinds of information .
+Four of these describe the number of alive friendly, alive enemy, injured friendly, and injured enemy troops within the agent"s sensor range .
+The other two weights relate to the agent"s distance to its own flag and that of the adversary, representing objectives that it seeks to protect and attack, respectively .
+A positive weight indicates attraction to the entity described by the weight, while a negative weight indicates repulsion .
+MANA [9] extends the concepts in EINSTein .
+Friendly and enemy flags are replaced by the waypoints pursued by each side .
+MANA includes low, medium, and high threat enemies .
+In addition, it defines a set of triggers (e.g., reaching a waypoint, being shot at, making contact with the enemy, being injured) that shift the agent from one personality vector to another .
+A default state defines the personality vector when no trigger state is active .
+The personality vectors in MANA and EINSTein reflect both rational and emotive aspects of decision making .
+The notion of being attracted or repelled by friendly or adversarial forces in various states of health is an important component of what we informally think of as emotion (e.g., fear, compassion, aggression), and the use of the term personality in both EINSTein and MANA suggests that the system designers are thinking anthropomorphically, though they do not use emotion to describe the effect they are trying to achieve .
+The notion of waypoints to which an agent is attracted reflects goal oriented rationality .
+BEE uses an integrated rational emotive personality model .
+A BEE agent"s rationality is a vector of seven desires, which are values in [ 1, +1]
+Negative values reverse the sense suggested by the label .
+For example, a negative value of ProtectRed indicates a desire to harm Red, and an agent with a high positive desire to ProtectRed will be attracted to REDALIVE, RED CASUALTY, and MOBILITY pheromone, and will move at maximum speed .
+The emotive component of a BEE"s personality is based on the Ortony Clore Collins framework [11], and is described in detail elsewhere [12] .
+OCC define emotions as valanced reactions to agents, states, or events in the environment .
+This notion of reaction is captured in MANA"s trigger states .
+An important advance in BEE"s emotional model is the recognition that agents may differ in how sensitive they are to triggers .
+For example, threatening situations tend to stimulate the emotion of fear, but a given level of threat will produce more fear in a new recruit than in a seasoned veteran .
+Thus our model includes not only Emotions, but Dispositions .
+Each Emotion has a corresponding Disposition .
+Dispositions are relatively stable, and considered constant over the time horizon of a run of the BEE, while Emotions vary based on the agent"s disposition and the stimuli to which it is exposed .
+Interviews with military domain experts identified the two most crucial emotions for combat behavior as Anger (with the corresponding disposition Irritability) and Fear (whose disposition is Cowardice) .
+Table 2 shows which pheromones trigger which emotions .
+For example, RED CASUALTY pheromone stimulates both Anger and Fear in a Red agent, but not in a Blue agent .
+Emotions are modeled as agent hormones (internal pheromones) that are augmented in the presence of the triggering environmental condition and evaporate over time .
+A non zero emotion modifies the agent"s actions .
+Elevated level Anger increases movement likelihood, weapon firing likelihood, and tendency toward an exposed posture .
+Elevated Fear decreases these likelihoods .
+Figure 2 summarizes the BEE"s personality model .
+The left side is a straightforward BDI model (we prefer the term goal to intention) .
+The right side is the emotive component, where an appraisal of the agent"s beliefs, moderated by the disposition, leads to an emotion that in turn influences the BDI analysis .
+Table 1 .
+Pheromone flavors in BEE Pheromone Flavor Description RedAlive RedCasualty BlueAlive BlueCasualty GreenAlive GreenCasualty Emitted by a living or dead entity of the appropriate group (Red = enemy, Blue = friendly, Green = neutral) WeaponsFire Emitted by a firing weapon KeySite Emitted by a site of particular importance to Red Cover Emitted by locations that afford cover from fire Mobility Emitted by roads and other structures that enhance agent mobility RedThreat BlueThreat Determined by external process (see Section 3.3) Table 2
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 3.2 The BEE Cycle BEE"s major innovation is extending the nonlinear systems technique of Section 2.2 to agent behaviors .
+This section describes this process at a high level, then details the multi page pheromone infrastructure that implements it .
+3.2.1 Overview Figure 3 is an overview of Behavior Evolution and Extrapolation .
+Each active entity in the battlespace has an persistent avatar that continuously generates a stream of ghost agents representing itself .
+We call the combined modeling entity consisting of avatar and ghosts a polyagent [14] .
+Ghosts live on a timeline indexed by that begins in the past and runs into the future .
+is offset with respect to the current time a successive value of .
+The avatar inserts the ghosts at the insertion horizon .
+In our current system, the insertion horizon is at t = 30, meaning that ghosts are inserted into a page representing the state of the world 30 minutes ago .
+At the insertion horizon, each ghost"s behavioral parameters (desires and dispositions) are sampled from distributions to explore alternative personalities of the entity it represents .
+Each page between the insertion horizon and = t (now) records the historical state of the world at the point in the past to which it corresponds .
+As ghosts move from page to page, they interact with this past state, based on their behavioral parameters .
+These interactions mean that their fitness depends not just on their own actions, but also on the behaviors of the rest of the population, which is also evolving .
+Because advances faster than real time, eventually = t (actual time) .
+At this point, each ghost is evaluated based on its location compared with the actual location of its corresponding real world entity .
+The fittest ghosts have three functions .
+rest of the system as the likely personality of that entity .
+This information enables us to characterize individual warriors as unusually cowardly or brave .
+to the insertion horizon to continue the fitting process .
+population of ghosts that run past the avatar's present into the future .
+Each ghost that runs into the future explores a different possible future of the battle, analogous to how some people plan ahead by mentally simulating different ways that a situation might unfold .
+Analysis of the behaviors of these different possible futures yields predictions .
+Thus BEE has three distinct notions of time, all of which may be distinct from real world time .
+modeled .
+If BEE is applied to a real world situation, this time is the same as real world time .
+In our experiments, we apply BEE to a simulated battle, and domain time is the time stamp published by the simulator .
+During actual runs, the simulator is often paused, so domain time runs slower than real time .
+When we replay logs from simulation runs, we can speed them up so that domain time runs faster than real time. .

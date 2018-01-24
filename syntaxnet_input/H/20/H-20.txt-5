@@ -1,0 +1,31 @@
+Traditional NED systems can be classified into two main types on the aspect of detection procedure
+If the highest similarity exceeds threshold£c new, then it is an old story, and put it into the most similar cluster; otherwise it is a new story and create a new cluster .
+Previous work show that the first manner is more accurate than the second one [4][5] .
+Since sometimes stories within a topic drift far away from each other, a story may have very low similarity with its topic .
+So using similarities between stories for determining new story is better than using similarities between story and clusters .
+Nevertheless, the first manner needs much more comparing times which means the first manner is low efficient .
+We propose a new detection procedure which uses comparisons with previous clusters to help find the most similar story in less comparing times, and the final new event decision is made according to the most similar story .
+Therefore, we can get both the accuracy of S S type methods and the efficiency of S C type methods .
+The new procedure creates a news indexing tree dynamically, in which similar stories are put together to form a hierarchy of clusters .
+We index similar stories together by their common ancestor (a cluster node) .
+Dissimilar stories are indexed in different clusters .
+When a story is coming, we use comparisons between the current story and previous hierarchical clusters to help find the most similar story which is useful for new event decision .
+After the new event decision is made, the current story is inserted to the indexing tree for the following detection .
+The news indexing tree is defined formally as follows
+We define a set of constraints for a S Tree
+, is an non terminal node in the treeC i i N i? ? ¡÷ ? .
+, is a terminal node in the treeS i i N i? ? ¡÷ ? .
+, out degree of is at least 2C i i N i? ? ¡÷ ? .
+, is represented as the centroid of its desendantsC i i iN? ? ¡÷ For a news story di, the comparison procedure and inserting procedure based on indexing tree are defined as follows .
+An example is shown by Figure 1 and Figure 2 .
+Figure 1 .
+Comparison procedure Figure 2 .
+Inserting procedure Comparison procedure
+Step 2
+C1 2, compare di to all its direct child nodes, and select £f nodes with highest similarities, e.g .
+C2 2 and d8 .
+Repeat step 2 for all non terminal nodes .
+Step 3
+s5, and the similarity value (0.20) .
+Inserting di to the S tree with r as root
+C1 .

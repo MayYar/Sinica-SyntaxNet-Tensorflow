@@ -1,0 +1,45 @@
+SensorNet testbeds are a critical tool for developing and evaluating SensorNet technology in a controlled and instrumented environment .
+As with many large scale systems, however, resource management is a key problem given that it is not economical for users to each build and operate their own testbed .
+In Mirage [3], testbed resources are spaceshared and allocated using a repeated combinatorial auction in a closed virtual currency environment .
+Users compete for testbed resources by submitting bids which specify resource combinations of interest in space time (e.g., any 32 MICA2 motes for 8 hours anytime in the next two days) along with a maximum value amount the user is willing to pay .
+A combinatorial auction is then periodically run to determine the winning bids based on supply and demand while maximizing aggregate utility delivered to users .
+0 20 40 60 80 100 0 20 40 60 80 100 120 TotalMICA2Utilization(%) Days since Dec 9, 2004 Figure 1
+In Mirage, resources are allocated using a first price combinatorial auction which clears every hour .
+In each round of the auction, a rolling window of future testbed resources is available for allocation with subsets of that window being removed from the pool as resources get allocated .
+In our initial deployment, we used a 72 hour window and deployed the system on a testbed consisting of 148 nodes (97 MICA2 [1] and 51 MICA2DOT sensor nodes or motes) .
+In each round of the auction, users bid for subsets of resources available in the current window .
+When the system is first brought online, a full 148 node กั 72 hour window is available, where each row of the window represents the availability of a particular node across time, and each column represents the availability of the testbed for a given hour .
+The leftmost column of the window represents node availability for the hour immediately following the auction; these node hours will never again be available for auction .
+All other node hours not allocated at this or previous auctions continue to be offered for sale at subsequent auctions .
+In each subsequent round (i.e., every hour), portions of the current window are allocated as bids are matched to available resources and a new rightmost 148 node กั 1 hour column of resources rolls in and replaces the leftmost column of resources which expires .
+There is no time sharing of nodes
+In Mirage, users place combinatorial bids specifying resource combinations of interest in space time along with a maximum value amount the user is willing to pay .
+More specifically, a bid bi = (vi, si, ti, di, fmin, fmax, ni, oki) indicates the user wants any combination of ni motes from the set oki simultaneously for a duration of di hours (di ? {1, 2, .
+.
+.
+, 32}), a start time anywhere between si and ti, and a radio frequency in the range [fmin, fmax].1 The user also is willing to pay up to vi units of virtual currency for these resources .
+In essence, each bid specifies in a succinct manner what subsets of the resource window would serve as acceptable resources that meet the user"s constraints and how important the desired resource allocation is to the user .
+We deployed Mirage on December 9, 2004 and the system has been in continuous production use for over four months .
+In the process, its lifetime has overlapped with several periods of significant resource contention including the SIGCOMM "05 and SenSys "05 conference deadlines .
+Overall, the system has 18 research projects registered to use the system spanning a variety of academic and commercial institutions .
+Of these, 11 have actively bid and received time on the system .
+As of April 8, 2005, the system has received 322 bids, and allocated 312,148 node hours over the testbed"s 148 nodes .
+0 0.2 0.4 0.6 0.8 1 0.0001 0.001 0.01 0.1 1 10 100 Cumulativefractionofbids Bid value per node hour U1 U2 U3 U4 U5 U6 U7 Figure 2
+As a measure of contention, Figure 1 shows the utilization of the 97 MICA2 motes over the past four months .
+It depicts periods of significant contention extending over multiple consecutive days, in particular near major deadlines.2 To quantify user valuations for resources, Figure 2 1 The frequency constraints are used to schedule testbed allocations such that allocations co scheduled in time do not collide by using the same radio frequency .
+In practice, distinct frequencies have not been a scarce resource .
+2 Results for the 51 MICA2DOT motes are similar and omitted for space .
+100 plots distributions of bid values per node hour for the seven most active users in the system .
+This graph shows that user valuations for testbed resources varied substantially, spanning over four orders of magnitude .
+Valuations are also distributed relatively evenly across each order of magnitude, suggesting that these ranges are not due to a few anomalous bids but rather to a wide range of underlying user valuations for testbed resources .
+These dual observations significant resource contention and a wide range of valuations support the use of an auction, which is designed precisely to harness such widely varying valuations to compute an efficient and user utility maximizing node allocation .
+Lastly, as another measure of resource contention and the utility of driving resource allocation via user specified valuations, Figure 3 plots the median per node clearing price for both MICA2 and MICA2DOT motes over time .
+To compute these prices, we price an allocated node hour for a winning bid with value v for n nodes for k hours as v nk .
+Unallocated node hours are assigned a price of 0 .
+For a given hour, we examine all MICA2 motes and plot the median node hour price for that hour and do the same for MICA2DOT motes .
+Of particular interest in this graph are the sequence of prices from days 45 60 and days 105 120 (i.e., periods leading up to conference deadlines) .
+These sequences show that the value of testbed resources, as measured by market prices for motes, increases exponentially (logarithmic y axis) during times of peak contention .
+This suggests that allowing users to express valuations for resources to drive the resource allocation process is important for making effective use of the testbed (e.g., to distinguish important use from low priority activities) .
+However, it also suggests that users become exponentially desperate to acquire resources as deadlines approach .
+As it turns out, it is precisely during these times that users will try their hardest to game the system and, therefore, when the efficacy of a market based mechanism can be best evaluated .
+1e 05 0.0001 0.001 0.01 0.1 1 10 0 20 40 60 80 100 120 Valuepernodehour Days since Dec 9, 2004 MICA2 MICA2DOT Figure 3

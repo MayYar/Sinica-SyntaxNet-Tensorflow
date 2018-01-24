@@ -1,0 +1,41 @@
+Three hypotheses are under consideration .
+The first, and most important, is that using our expert aggregation model to predict relevance produces test collections that are robust enough to be reusable; that is, we can trust the estimates of confidence when we evaluate systems that did not contribute any judgments to the pool .
+The other two hypotheses relate to the improvement we see by using better estimates of relevance than we did in our previous work [8] .
+These are that (a) it takes fewer relevance track no .
+topics no .
+runs no .
+judged no .
+rel ad hoc 94 50 40 97,319 9,805 ad hoc 95 49 33 87,069 6,503 ad hoc 96 50 61 133,681 5,524 ad hoc 97 50 74 72,270 4,611 ad hoc 98 50 103 80,345 4,674 ad hoc 99 50 129 86,830 4,728 web 04 225 74 88,566 1,763 robust 05 50 74 37,798 6,561 terabyte 05 50 58 45,291 10,407 Table 1
+judgments to reach 95% confidence and (b) the accuracy of the predictions is higher than if we were to simply assume pi = 0.5 for all unjudged documents .
+4.1 Data We obtained full ad hoc runs submitted to TRECs 3 through 8 .
+Each run ranks at most 1000 documents for 50 topics (49 topics for TREC 4) .
+Additionally, we obtained all runs from the Web track of TREC 13, the Robust2 track of TREC 14, and the Terabyte (ad hoc) track of TREC 14 .
+These are the tracks that have replaced the ad hoc track since its end in 1999 .
+Statistics are shown in Table 1 .
+We set aside the TREC 4 (ad hoc 95) set for training, TRECs 3 and 5 8 (ad hoc 94 and 96 99) for primary testing, and the remaining sets for additional testing .
+We use the qrels files assembled by NIST as truth .
+The number of relevance judgments made and relevant documents found for each track are listed in Table 1 .
+For computational reasons, we truncate ranked lists at 100 documents .
+There is no reason that we could not go deeper, but calculating variance is O(n3 ) and thus very timeconsuming .
+Because of the reciprocal rank nature of AP, we do not lose much information by truncating at rank 100 .
+4.2 Algorithms We will compare three algorithms for acquiring relevance judgments .
+The baseline is a variation of TREC pooling that we will call incremental pooling .
+This algorithm takes a number k as input and presents the first k documents in rank order (without regard to topic) to be judged .
+It does not estimate the relevance of unjudged documents; it simply assumes any unjudged document is nonrelevant .
+The second algorithm is that presented in Carterette et al .
+[8] (Algorithm 1) .
+Documents are selected based on how interesting they are in determining whether a difference in mean average precision exists .
+For this approach pi = 0.5 for all i; there is no estimation of probabilities .
+We will call this MTC for minimal test collection .
+The third algorithm augments MTC with updated estimates of probabilities of relevance .
+We will call this RTC for robust test collection .
+It is identical to Algorithm 1, except that every 10th iteration we estimate pi for all unjudged documents i using the expert aggregation model of Section 3 .
+RTC has smoothing (prior distribution) parameters that must be set .
+We trained using the ad hoc 95 set .
+We limited 2 Robust here means robust retrieval; this is different from our goal of robust evaluation .
+Algorithm 1 Given two ranked lists and confidence level £\, predict the sign of £GMAP .
+1
+[8] for details) 4
+For expert aggregation, the prior parameters are £\ = £] = 1 .
+4.3 Experimental Design First, we want to know whether we can augment a set of relevance judgments with a set of relevance probabilities in order to reuse the judgments to evaluate a new set of systems .
+For each experimental trial

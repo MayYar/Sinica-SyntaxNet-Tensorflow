@@ -1,0 +1,47 @@
+In its 12 year lifetime, web search had grown tremendously
+One thing, however, has remained constant
+Various studies estimate the average length of a search query between 2.4 and 2.7 words, which by all accounts can carry only a small amount of information .
+Commercial search engines do a remarkably good job in interpreting these short strings, but they are not (yet!) omniscient .
+Therefore, using additional external knowledge to augment the queries can go a long way in improving the search results and the user experience .
+At the same time, better understanding of query meaning has the potential of boosting the economic underpinning of Web search, namely, online advertising, via the sponsored search mechanism that places relevant advertisements alongside search results .
+For instance, knowing that the query SD450 is about cameras while nc4200 is about laptops can obviously lead to more focused advertisements even if no advertiser has specifically bidden on these particular queries .
+In this study we present a methodology for query classification, where our aim is to classify queries onto a commercial taxonomy of web queries with approximately 6000 nodes .
+Given such classifications, one can directly use them to provide better search results as well as more focused ads .
+The problem of query classification is extremely difficult owing to the brevity of queries .
+Observe, however, that in many cases a human looking at a search query and the search query results does remarkably well in making sense of it .
+Of course, the sheer volume of search queries does not lend itself to human supervision, and therefore we need alternate sources of knowledge about the world .
+For instance, in the example above, SD450 brings pages about Canon cameras, while nc4200 brings pages about Compaq laptops, hence to a human the intent is quite clear .
+Search engines index colossal amounts of information, and as such can be viewed as very comprehensive repositories of knowledge .
+Following the heuristic described above, we propose to use the search results themselves to gain additional insights for query interpretation .
+To this end, we employ the pseudo relevance feedback paradigm, and assume the top search results to be relevant to the query .
+Certainly, not all results are equally relevant, and thus we use elaborate voting schemes in order to obtain reliable knowledge about the query .
+For the purpose of this study we first dispatch the given query to a general web search engine, and collect a number of the highest scoring URLs .
+We crawl the Web pages pointed by these URLs, and classify these pages .
+Finally, we use these result page classifications to classify the original query .
+Our empirical evaluation confirms that using Web search results in this manner yields substantial improvements in the accuracy of query classification .
+Note that in a practical implementation of our methodology within a commercial search engine, all indexed pages can be pre classified using the normal text processing and indexing pipeline .
+Thus, at run time we only need to run the voting procedure, without doing any crawling or classification .
+This additional overhead is minimal, and therefore the use of search results to improve query classification is entirely feasible in run time .
+Another important aspect of our work lies in the choice of queries .
+The volume of queries in today"s search engines follows the familiar power law, where a few queries appear very often while most queries appear only a few times .
+While individual queries in this long tail are rare, together they account for a considerable mass of all searches .
+Furthermore, the aggregate volume of such queries provides a substantial opportunity for income through on line advertising.1 Searching and advertising platforms can be trained to yield good results for frequent queries, including auxiliary data such as maps, shortcuts to related structured information, successful ads, and so on .
+However, the tail queries simply do not have enough occurrences to allow statistical learning on a per query basis .
+Therefore, we need to aggregate such queries in some way, and to reason at the level of aggregated query clusters .
+A natural choice for such aggregation is to classify the queries into a topical taxonomy .
+Knowing which taxonomy nodes are most relevant to the given query will aid us to provide the same type of support for rare queries as for frequent queries .
+Consequently, in this work we focus on the classification of rare queries, whose correct classification is likely to be particularly beneficial .
+Early studies in query interpretation focused on query augmentation through external dictionaries [22] .
+More recent studies [18, 21] also attempted to gather some additional knowledge from the Web .
+However, these studies had a number of shortcomings, which we overcome in this paper .
+Specifically, earlier works in the field used very small query classification taxonomies of only a few dozens of nodes, which do not allow ample specificity for online advertising [11] .
+They also used a separate ancillary taxonomy for Web documents, so that an extra level of indirection had to be employed to establish the correspondence between the ancillary and the main taxonomies [18] .
+The main contributions of this paper are as follows .
+First, we build the query classifier directly for the target taxonomy, instead of using a secondary auxiliary structure; this greatly simplifies taxonomy maintenance and development .
+The taxonomy used in this work is two orders of magnitude larger than that used in prior studies .
+The empirical evaluation demonstrates that our methodology for using external knowledge achieves greater improvements than those previously reported .
+Since our taxonomy is considerably larger, the classification problem we face is much more difficult, making the improvements we achieve particularly notable .
+We also report the results of a thorough empirical study of different voting schemes and different depths of knowledge (e.g., using search summaries vs .
+entire crawled pages) .
+We found that crawling the search results yields deeper knowledge and leads to greater improvements than mere summaries .
+This result is in contrast with prior findings in query classification [20], but is supported by research in mainstream text classification [5]. .

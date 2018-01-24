@@ -1,0 +1,70 @@
+During the past four months of operation, Mirage has employed two distinct auction mechanisms and observed four primary types of strategic behavior from users .
+The first auction mechanism, A1, was deployed from December 9, 2004 to March 28, 2005 .
+During this time period, we observed three different types of strategic behavior (S1 S3), the most recent of which (S3) resulted in significant gaming of the system .
+In response to the impact of S3, we deployed a second mechanism, A2, on March 29, 2005 (Day 111 in Figures 1 and 3) .
+While A2 mitigated or eliminated the known shortcomings of A1 in particular the vulnerability strategy S3 exploited that prompted the change in the first place it was soon discovered that A2 remained vulnerable to another strategy, S4, which was predictably discovered and exploited by a motivated user community .
+We are currently in the process of designing a mechanism to address the weakness in A2 that is abused by S4 .
+Of course, ideally we would develop a provably strategyproof mechanism .
+However, this remains an open research problem for repeated combinatorial auctions .
+In this section, we describe the two auction mechanisms A1 and A2, Mirage"s virtual currency policy, the four types of observed strategic behavior S1 S4, and their impact on aggregate utility delivered .
+3.1 Auctions and virtual currency Our first auction mechanism, A1 was a first price, openbid (i.e., users can see all outstanding bids from competing users) combinatorial auction that cleared every hour based on a greedy algorithm .
+In each round of auction, the current set of bids was sorted by value per node hour and bids were greedily fit into the remaining portion of the current window of available resources .
+Like A1, our second auction, A2, was also based on a greedy clearing algorithm .
+Its key differences were that (i) it was a sealed bid auction and (ii) it allocated resources over a 148 node กั 104 hour window with bid start times constrained to be within the next 72 hours (the reason for this will become apparent when we discuss strategy S3) .
+In both auctions, winning bids from previous auctions were publicly visible for price feedback and the same virtual currency policy was used .
+Our virtual currency policy assigns two numbers to each user"s bank account
+When created, each bank account is initialized to its baseline value .
+Once funded, a user can then begin to bid and acquire testbed resources through Mirage .
+In each round of the auction, accounts for winning bids are debited and the proceeds are redistributed through a proportional profit sharing policy based on bank account share values .
+The primary purpose of this policy is to reward users who refrain from using the system during times of peak demand and penalize those who use resources aggressively during periods of scarcity .
+These rewards result in transient bursts of credit and are balanced by another mechanism, a savings tax, to prevent idle users from sitting on large amounts of excess credit forever (a use it or lose it policy) .
+In our deployment, an administrator set the virtual currency policy .
+Bank accounts for external users were assigned baseline and shares value set to 1000, while bank accounts for internal users (U4 and U5) were assigned larger allocations with baseline and share values set to 2000 .
+3.2 Strategic behavior The following are descriptions of the four primary bidding strategies observed over the past four months .
+S1
+In A1, all outstanding bids were publicly visible .
+Consequently, when users would observe a lack of demand, some users would bid correspondingly low amounts rather than their true values .
+For example, one user would frequently bid 1 or 2 when no other bids were present .
+While underbidding in the absence of competition is not a problem per se, it does raise two 101 issues .
+First, if a seller was collecting revenue for profit, such bidding leads to suboptimal outcomes for the seller .
+Second, should other users enter competing bids before the auction clears, users will need to refine their bids to allow the system to compute an allocation that maximizes aggregate utility .
+This second problem then leads to strategy S2 .
+S2
+Because users are allowed to modify their bids and A1 was an open auction, iteratively refining one"s bid value in response to other users" bid values should, in theory, have no effect on who wins the auction; users with higher valuations who may also be underbiddingshould eventually outbid those with lower valuations after sufficient iteration .
+The problem is that users do not behave this (rational) way .
+Usability overhead matters
+The end result is that inefficiencies may arise since the auction may clear with bid values that are understated .
+While bidding proxies that automatically adjust user bids in response to other bids are effective in single good auctions, it is unclear how such proxies could be generally effective in a combinatorial auction without actually implementing the same clearing algorithm used by Mirage (which could be computationally expensive) .
+In summary, S1 and S2 both point toward the need for a strategyproof auction mechanism in Mirage .
+In such an auction, a user"s optimal strategy is always to bid truthfully the first time .
+Thus, rational users will never underbid and iterative bidding is unnecessary .
+S3
+Unlike auctions for tangible goods, resource allocation in computer systems fundamentally involves time, since sharing of resources implies that a resource cannot be assigned to a given user process forever .
+In Mirage, we addressed the issue of time by selling resources over a rolling window 72 hours into the future with users able to bid for blocks 1, 2, .
+.
+.
+, or 32 hours in length .
+What we did not anticipate, however, was what would happen when the entire window of resources becomes fully allocated .
+In this scenario, which was the norm near the recent SenSys "05 deadline, the entire 148 node กั 72hour window is allocated .
+A user bidding for, say, 32 hours thus needs to minimally wait 32 hours for 32 new 148 node กั 1 hour columns of resources to become available .
+The problem here is that a user can game the system by observing other bids and simply requesting fewer hours .
+Since 16 columns will roll into the resource window before 32 columns, a user bidding for 16 hours outbids a 32 hour bid independent of each bid"s value because resources for the 32 hour bid are not available when the auction clears .
+Of course, if other users also begin bidding for 16 hours, this opportunity disappears but then moves to durations shorter than 16 hours .
+In the limit, all users bid for 1 hour blocks, thereby eliminating the possibility of obtaining longer resource allocations which may be critical to the underlying SensorNet experiment .
+In practice, we observed this type of gaming push winning bid durations down to 2 hours .
+With rampant gaming of the system occurring through S3, we responded by implementing and deploying auction A2 .
+As mentioned, a key difference of A2 compared to A1 is that it allocates resources over a 104 hour window with bid start times constrained to be within the next 72 hours .
+In expanding the window and expanding (while still constraining) the range of start times, A2 eliminates strategy S3 .
+When the entire 148 node กั 72 hour window is allocated, a pending 16 hour bid and a pending 32 hour bid will both Time Project Value Nodes Hours 04 02 2005 03
+have their first opportunity for an allocation when 32 new columns become available .
+At that point, both the 16 hour bid and the 32 hour bid will have an opportunity to obtain an allocation .
+Such allocations are then determined by the usual greedy clearing algorithm .
+S4
+While A2 eliminated S3 and significantly reduced S1 and S2, it still retained a weakness of A1 that had yet to be discovered and exploited .
+In the auction sandwich attack, a user exploits two pieces of information
+In this particular case, a user employs a strategy of splitting a bid for 97 MICA2 motes across several bids, only one of which has a high value per node hour .
+Since the high value bid is likely to win due to the greedy nature of the auction clearing algorithm and since all other users at the time were all requesting 97 motes (based on the historical information and the fact that the SenSys "05 deadline was imminent requiring experiments at scale), no other bids could backfill the remaining slots; the user"s remaining bids would then fit those slots at a low price .
+An actual occurrence is shown in Table 1 .
+Here, user U1 uses three bids, the main one being a bid with value 130 (value per node hour 130 (4 กP 40) = 0.813) which is used to outbid a bid with value 1590 (value per node hour 1590 (32 กP 97) = 0.0512) .
+Once the high valued 40 node bid has occupied its portion of the resource window, no other 97 node bids can be matched .
+Consequently, the user backfills on the remaining 57 nodes using two bids

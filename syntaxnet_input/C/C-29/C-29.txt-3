@@ -1,0 +1,30 @@
+CONFLEX [1] is an efficient conformational space search program, which can predominately and exhaustively search the conformers in the lower energy region .
+Applications of CONFLEX include the elucidation of the reactivity and selectivity of drugs and possible drug materials with regard to their conformational flexibility .
+2.1 Algorithm of ConformationalSpaceSearch The basic strategy of CONFLEX is an exhaustive search of only the low energy regions .
+The original CONFLEX performs the following four major steps
+(An input structure is used as the first initial structure at the beginning of a search execution only.) to the selected initial structure .
+structures .
+structures with the other conformers stored in a conformation database, and preservation of newly discovered unique conformers in the database .
+Figure 1 shows the outline of CONFLEX, the original conformational space search algorithm .
+These procedures incorporate two unique strategies .
+Figure 2 shows the strategies for generating local perturbations in CONFLEX .
+The first strategy involves both corner flapping and edge flipping for the ring atoms and stepwise rotation for side chains or backbone chains .
+These methods provide a highly efficient way to produce several good trial structures .
+These perturbations can be considered to mimic 155 Stepwise Rotation Corner Flap Edge Flip Figure 2
+a barrier crossing step in the elementary process of the thermal conformational inter conversion .
+Actually, the perturbations of an initial structure correspond to the precise performance around the space of the initial structure because of localization and weakness of the perturbation .
+The selection rule of the initial structure, the LowestConformer First rule, is the second strategy for directing the conformation search expanded to the low energy regions .
+The initial structure is selected as the set of lowest energy conformers stored in the conformation database .
+This rule is effective in moving down the search space toward lower energy regions, like water from a stream running into an empty reservoir, while filling local depressions along the way .
+Therefore, these tactical procedures of the CONFLEX search are referred to as the Reservoir Filling Algorithm .
+In order to remain in the low energy region and perform an exhaustive search, the search limit (SEL), which determines the maximum energy of the initial structures, is pre defined .
+Gradually increasing SEL allows only the lowenergy conformers to be searched and avoids straying into unnecessarily high energy regions .
+2.2 Parallelization of CONFLEX for Cluster For application to over 100 atoms, CONFLEX was improved using high performance parallel computing techniques .
+In the CONFLEX search algorithm, the geometry optimization procedures always take 95% of the elapsed time of the search execution .
+Therefore, we parallelized this optimization using the Master Worker parallelization technique .
+We modified the search procedures as follows .
+After trial structures are generated (step 2), they are temporarily stored in a task pool on the master node .
+Then, each worker node is dynamically supplied with one trial structure from the master node .
+After an optimization on a worker node is finished, the worker is immediately supplied with another trial structure .
+When all of the trial structures related to a given initial structure are optimized, only the master procedure is used in comparison .
+By parallelizing CONFLEX, the speedup of searching molecular conformers obtained is as reported in[11]. .

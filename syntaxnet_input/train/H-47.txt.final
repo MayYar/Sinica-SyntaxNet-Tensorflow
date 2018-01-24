@@ -1,0 +1,464 @@
+A Semantic Approach to Contextual Advertising 
+content:
+1 ABSTRACT :
+1-1:Contextual advertising or Context Match refers to the placement of commercial textual advertisements within the content of a generic web page, while Sponsored Search advertising consists in placing ads on result pages from a web search engine, with ads driven by the originating query .
+1-2:In CM there is usually an intermediary commercial ad network entity in charge of optimizing the ad selection with the twin goal of increasing revenue (shared between the publisher and the ad network) and improving the user experience .
+1-3:With these goals in mind it is preferable to have ads relevant to the page content, rather than generic ads .
+1-4:The SS market developed quicker than the CM market, and most textual ads are still characterized by bid phrases representing those queries where the advertisers would like to have their ad displayed .
+1-5:Hence, the first technologies for CM have relied on previous solutions for SS, by simply extracting one or more phrases from the given page content, and displaying ads corresponding to searches on these phrases, in a purely syntactic approach .
+1-6:However, due to the vagaries of phrase extraction, and the lack of context, this approach leads to many irrelevant ads .
+1-7:To overcome this problem, we propose a system for contextual ad matching based on a combination of semantic and syntactic features .
+1-8:Categories and Subject Descriptors: H.3.3 [Information Storage and Retrieval]: Selection process .
+2 INTRODUCTION :
+2-1:Web advertising supports a large swath of today"s Internet ecosystem .
+2-2:The total internet advertiser spend in US alone in 2006 is estimated at over 17 billion dollars with a growth rate of almost 20% year over year .
+2-3:A large part of this market consists of textual ads, that is, short text messages usually marked as sponsored links or similar .
+2-4:The main advertising channels used to distribute textual ads are: consists in placing ads on the result pages from a web search engine, with ads driven by the originating query .
+2-5:All major current web search engines (Google, Yahoo!, and Microsoft) support such ads and act simultaneously as a search engine and an ad agency .
+2-6:to the placement of commercial ads within the content of a generic web page .
+2-7:In contextual advertising usually there is a commercial intermediary, called an ad network, in charge of optimizing the ad selection with the twin goal of increasing revenue (shared between publisher and ad network) and improving user experience .
+2-8:Again, all major current web search engines (Google, Yahoo!, and Microsoft) provide such ad networking services but there are also many smaller players .
+2-9:The SS market developed quicker than the CM market, and most textual ads are still characterized by bid phrases representing those queries where the advertisers would like to have their ad displayed .
+2-10:(See [5] for a brief history) .
+2-11:However, today, almost all of the for profit non transactional web sites (that is, sites that do not sell anything directly) rely at least in part on revenue from context match .
+2-12:CM supports sites that range from individual bloggers and small niche communities to large publishers such as major newspapers .
+2-13:Without this model, the web would be a lot smaller! The prevalent pricing model for textual ads is that the advertisers pay a certain amount for every click on the advertisement (pay per click or PPC) .
+2-14:There are also other models used: pay per impression, where the advertisers pay for the number of exposures of an ad and pay per action where the advertiser pays only if the ad leads to a sale or similar transaction .
+2-15:For simplicity, we only deal with the PPC model in this paper .
+2-16:Given a page, rather than placing generic ads, it seems preferable to have ads related to the content to provide a better user experience and thus to increase the probability of clicks .
+2-17:This intuition is supported by the analogy to conventional publishing where there are very successful magazines (e.g .
+2-18:Vogue) where a majority of the content is topical advertising (fashion in the case of Vogue) and by user studies that have confirmed that increased relevance increases the number of ad clicks [4, 13] .
+2-19:Previous published approaches estimated the ad relevance based on co occurrence of the same words or phrases within the ad and within the page (see [7, 8] and Section 3 for more details) .
+2-20:However targeting mechanisms based solely on phrases found within the text of the page can lead to problems: For example, a page about a famous golfer named John Maytag might trigger an ad for Maytag dishwashers since Maytag is a popular brand .
+2-21:Another example could be a page describing the Chevy Tahoe truck (a popular vehicle in US) triggering an ad about Lake Tahoe vacations .
+2-22:Polysemy is not the only culprit: there is a (maybe apocryphal) story about a lurid news item about a headless body found in a suitcase triggering an ad for Samsonite luggage! In all these examples the mismatch arises from the fact that the ads are not appropriate for the context .
+2-23:In order to solve this problem we propose a matching mechanism that combines a semantic phase with the traditional keyword matching, that is, a syntactic phase .
+2-24:The semantic phase classifies the page and the ads into a taxonomy of topics and uses the proximity of the ad and page classes as a factor in the ad ranking formula .
+2-25:Hence we favor ads that are topically related to the page and thus avoid the pitfalls of the purely syntactic approach .
+2-26:Furthermore, by using a hierarchical taxonomy we allow for the gradual generalization of the ad search space in the case when there are no ads matching the precise topic of the page .
+2-27:For example if the page is about an event in curling, a rare winter sport, and contains the words Alpine Meadows, the system would still rank highly ads for skiing in Alpine Meadows as these ads belong to the class skiing which is a sibling of the class curling and both of these classes share the parent winter sports .
+2-28:In some sense, the taxonomy classes are used to select the set of applicable ads and the keywords are used to narrow down the search to concepts that are of too small granularity to be in the taxonomy .
+2-29:The taxonomy contains nodes for topics that do not change fast, for example, brands of digital cameras, say Canon .
+2-30:The keywords capture the specificity to a level that is more dynamic and granular .
+2-31:In the digital camera example this would correspond to the level of a particular model, say Canon SD450 whose advertising life might be just a few months .
+2-32:Updating the taxonomy with new nodes or even new vocabulary each time a new model comes to the market is prohibitively expensive when we are dealing with millions of manufacturers .
+2-33:In addition to increased click through rate due to increased relevance, a significant but harder to quantify benefit of the semantic syntactic matching is that the resulting page has a unified feel and improves the user experience .
+2-34:In the Chevy Tahoe example above, the classifier would establish that the page is about cars automotive and only those ads will be considered .
+2-35:Even if there are no ads for this particular Chevy model, the chosen ads will still be within the automotive domain .
+2-36:To implement our approach we need to solve a challenging problem: classify both pages and ads within a large taxonomy (so that the topic granularity would be small enough) with high precision (to reduce the probability of mis match) .
+2-37:We evaluated several classifiers and taxonomies and in this paper we present results using a taxonomy with close to 6000 nodes using a variation of the Rocchio"s classifier [9] .
+2-38:This classifier gave the best results in both page and ad classification, and ultimately in ad relevance .
+2-39:The paper proceeds as follows .
+2-40:In the next section we review the basic principles of the contextual advertising .
+2-41:Section 3 overviews the related work .
+2-42:Section 4 describes the taxonomy and document classifier that were used for page and ad classification .
+2-43:Section 5 describes the semanticsyntactic method .
+2-44:In Section 6 we briefly discuss how to search efficiently the ad space in order to return the top k ranked ads .
+2-45:Experimental evaluation is presented in Section 7 .
+2-46:Finally, Section 8 presents the concluding remarks. .
+3 OVERVIEW OF CONTEXTUAL ADVERTISING :
+3-1:ADVERTISING Contextual advertising is an interplay of four players: • The publisher is the owner of the web pages on which the advertising is displayed .
+3-2:The publisher typically aims to maximize advertising revenue while providing a good user experience .
+3-3:• The advertiser provides the supply of ads .
+3-4:Usually the activity of the advertisers are organized around campaigns which are defined by a set of ads with a particular temporal and thematic goal (e.g .
+3-5:sale of digital cameras during the holiday season) .
+3-6:As in traditional advertising, the goal of the advertisers can be broadly defined as the promotion of products or services .
+3-7:• The ad network is a mediator between the advertiser and the publisher and selects the ads that are put on the pages .
+3-8:The ad network shares the advertisement revenue with the publisher .
+3-9:• Users visit the web pages of the publisher and interact with the ads .
+3-10:Contextual advertising usually falls into the category of direct marketing (as opposed to brand advertising), that is advertising whose aim is a direct response where the effect of an campaign is measured by the user reaction .
+3-11:One of the advantages of online advertising in general and contextual advertising in particular is that, compared to the traditional media, it is relatively easy to measure the user response .
+3-12:Usually the desired immediate reaction is for the user to follow the link in the ad and visit the advertiser"s web site and, as noted, the prevalent financial model is that the advertiser pays a certain amount for every click on the advertisement .
+3-13:The revenue is shared between the publisher and the network .
+3-14:Context match advertising has grown from Sponsored Search advertising, which consists in placing ads on the result pages from a web search engine, with ads driven by the originating query .
+3-15:In most networks, the amount paid by the advertiser for each SS click is determined by an auction process where the advertisers place bids on a search phrase, and their position in the tower of ads displayed in conjunction with the result is determined by their bid .
+3-16:Thus each ad is annotated with one or more bid phrases .
+3-17:The bid phrase has no direct bearing on the ad placement in CM .
+3-18:However, it is a concise description of target ad audience as determined by the advertiser and it has been shown to be an important feature for successful CM ad placement [8] .
+3-19:In addition to the bid phrase, an ad is also characterized by a title usually displayed in a bold font, and an abstract or creative, which is the few lines of text, usually less than 120 characters, displayed on the page .
+3-20:The ad network model aligns the interests of the publishers, advertisers and the network .
+3-21:In general, clicks bring benefits to both the publisher and the ad network by providing revenue, and to the advertiser by bringing traffic to the target web site .
+3-22:The revenue of the network, given a page p, can be estimated as: R = X i=1..k P(click|p, ai)price(ai, i) where k is the number of ads displayed on page p and price(ai, i) is the click price of the current ad ai at position i .
+3-23:The price in this model depends on the set of ads presented on the page .
+3-24:Several models have been proposed to determine the price, most of them based on generalizations of second price auctions .
+3-25:However, for simplicity we ignore the pricing model and concentrate on finding ads that will maximize the first term of the product, that is we search for arg max i P(click|p, ai) Furthermore we assume that the probability of click for a given ad and page is determined by its relevance score with respect to the page, thus ignoring the positional effect of the ad placement on the page .
+3-26:We assume that this is an orthogonal factor to the relevance component and could be easily incorporated in the model. .
+4 RELATED WORK :
+4-1:Online advertising in general and contextual advertising in particular are emerging areas of research .
+4-2:The published literature is very sparse .
+4-3:A study presented in [13] confirms the intuition that ads need to be relevant to the user"s interest to avoid degrading the user"s experience and increase the probability of reaction .
+4-4:A recent work by Ribeiro Neto et .
+4-5:al .
+4-6:[8] examines a number of strategies to match pages to ads based on extracted keywords .
+4-7:The ads and pages are represented as vectors in a vector space .
+4-8:The first five strategies proposed in that work match the pages and the ads based on the cosine of the angle between the ad vector and the page vector .
+4-9:To find out the important part of the ad, the authors explore using different ad sections (bid phrase, title, body) as a basis for the ad vector .
+4-10:The winning strategy out of the first five requires the bid phrase to appear on the page and then ranks all such ads by the cosine of the union of all the ad sections and the page vectors .
+4-11:While both pages and ads are mapped to the same space, there is a discrepancy (impendence mismatch) between the vocabulary used in the ads and in the pages .
+4-12:Furthermore, since in the vector model the dimensions are determined by the number of unique words, plain cosine similarity will not take into account synonyms .
+4-13:To solve this problem, Ribeiro Neto et al expand the page vocabulary with terms from other similar pages weighted based on the overall similarity of the origin page to the matched page, and show improved matching precision .
+4-14:In a follow up work [7] the authors propose a method to learn impact of individual features using genetic programming to produce a matching function .
+4-15:The function is represented as a tree composed of arithmetic operators and the log function as internal nodes, and different numerical features of the query and ad terms as leafs .
+4-16:The results show that genetic programming finds matching functions that significantly improve the matching compared to the best method (without page side expansion) reported in [8] .
+4-17:Another approach to contextual advertising is to reduce it to the problem of sponsored search advertising by extracting phrases from the page and matching them with the bid phrase of the ads .
+4-18:In [14] a system for phrase extraction is described that used a variety of features to determine the importance of page phrases for advertising purposes .
+4-19:The system is trained with pages that have been hand annotated with important phrases .
+4-20:The learning algorithm takes into account features based on tf idf, html meta data and query logs to detect the most important phrases .
+4-21:During evaluation, each page phrase up to length 5 is considered as potential result and evaluated against a trained classifier .
+4-22:In our work we also experimented with a phrase extractor based on the work reported in [12] .
+4-23:While increasing slightly the precision, it did not change the relative performance of the explored algorithms. .
+5 PAGE AND AD CLASSIFICATION :
+5-1:4.1 Taxonomy Choice The semantic match of the pages and the ads is performed by classifying both into a common taxonomy .
+5-2:The matching process requires that the taxonomy provides sufficient differentiation between the common commercial topics .
+5-3:For example, classifying all medical related pages into one node will not result into a good classification since both sore foot and flu pages will end up in the same node .
+5-4:The ads suitable for these two concepts are, however, very different .
+5-5:To obtain sufficient resolution, we used a taxonomy of around 6000 nodes primarily built for classifying commercial interest queries, rather than pages or ads .
+5-6:This taxonomy has been commercially built by Yahoo! US .
+5-7:We will explain below how we can use the same taxonomy to classify pages and ads as well .
+5-8:Each node in our source taxonomy is represented as a collection of exemplary bid phrases or queries that correspond to that node concept .
+5-9:Each node has on average around 100 queries .
+5-10:The queries placed in the taxonomy are high volume queries and queries of high interest to advertisers, as indicated by an unusually high cost per click price .
+5-11:The taxonomy has been populated by human editors using keyword suggestions tools similar to the ones used by ad networks to suggest keywords to advertisers .
+5-12:After initial seeding with a few queries, using the provided tools a human editor can add several hundreds queries to a given node .
+5-13:Nevertheless, it has been a significant effort to develop this 6000 nodes taxonomy and it has required several person years of work .
+5-14:A similar in spirit process for building enterprise taxonomies via queries has been presented in [6] .
+5-15:However, the details and tools are completely different .
+5-16:Figure 1 provides some statistics about the taxonomy used in this work .
+5-17:4.2 Classification Method As explained, the semantic phase of the matching relies on ads and pages being topically close .
+5-18:Thus we need to classify pages into the same taxonomy used to classify ads .
+5-19:In this section we overview the methods we used to build a page and an ad classifier pair .
+5-20:The detailed description and evaluation of this process is outside the scope of this paper .
+5-21:Given the taxonomy of queries (or bid phrases we use these terms interchangeably) described in the previous section, we tried three methods to build corresponding page and ad classifiers .
+5-22:For the first two methods we tried to find exemplary pages and ads for each concept as follows: Number of Categories By Level 0 200 400 600 800 1000 1200 1400 1600 1800 2000 1 2 3 4 5 6 7 8 9 Level NumberofCategories Number of Children per Nodes 0 50 100 150 200 250 300 350 400 0 2 4 6 8 10 12 14 16 18 20 22 24 29 31 33 35 52 Number of Children NumberofNodes Queries per Node 0 500 1000 1500 2000 2500 3000 1 50 80 120 160 200 240 280 320 360 400 440 480 Number Queries (up to 500+) NumberofNodes Figure 1: Taxonomy statistics: categories per level; fanout for non leaf nodes; and queries per node We generated a page training set by running the queries in the taxonomy over a Web search index and using the top 10 results after some filtering as documents labeled with the query"s label .
+5-23:On the ad side we generated a training set for each class by selecting the ads that have a bid phrase assigned to this class .
+5-24:Using this training sets we then trained a hierarchical SVM [2] (one against all between every group of siblings) and a log regression [11] classifier .
+5-25:(The second method differs from the first in the type of secondary filtering used .
+5-26:This filtering eliminates low content pages, pages deemed unsuitable for advertising, pages that lead to excessive class confusion, etc.) However, we obtained the best performance by using the third document classifier, based on the information in the source taxonomy queries only .
+5-27:For each taxonomy node we concatenated all the exemplary queries into a single metadocument .
+5-28:We then used the meta document as a centroid for a nearest neighbor classifier based on Rocchio"s framework [9] with only positive examples and no relevance feedback .
+5-29:Each centroid is defined as a sum of the tf idf values of each term, normalized by the number of queries in the class cj = 1 |Cj| X q∈Cj q q where cj is the centroid for class Cj; q iterates over the queries in a particular class .
+5-30:The classification is based on the cosine of the angle between the document d and the centroid meta documents: Cmax = arg max Cj ∈C cj cj · d d = arg max Cj ∈C P i∈|F | ci j· di qP i∈|F |(ci j)2 qP i∈|F |(di)2 where F is the set of features .
+5-31:The score is normalized by the document and class length to produce comparable score .
+5-32:The terms ci and di represent the weight of the ith feature in the class centroid and the document respectively .
+5-33:These weights are based on the standard tf idf formula .
+5-34:As the score of the max class is normalized with regard to document length, the scores for different documents are comparable .
+5-35:We conducted tests using professional editors to judge the quality of page and ad class assignments .
+5-36:The tests showed that for both ads and pages the Rocchio classifier returned the best results, especially on the page side .
+5-37:This is probably a result of the noise induced by using a search engine to machine generate training pages for the SVM and logregression classifiers .
+5-38:It is an area of current investigation how to improve the classification using a noisy training set .
+5-39:Based on the test results we decided to use the Rocchio"s classifier on both the ad and the page side. .
+6 SEMANTIC SYNTACTIC MATCHING :
+6-1:Contextual advertising systems process the content of the page, extract features, and then search the ad space to find the best matching ads .
+6-2:Given a page p and a set of ads A = {a1 .
+6-3:.
+6-4:.
+6-5:as} we estimate the relative probability of click P(click|p, a) with a score that captures the quality of the match between the page and the ad .
+6-6:To find the best ads for a page we rank the ads in A and select the top few for display .
+6-7:The problem can be formally defined as matching every page in the set of all pages P = {p1, .
+6-8:.
+6-9:.
+6-10:ppc} to one or more ads in the set of ads .
+6-11:Each page is represented as a set of page sections pi = {pi,1, pi,2 .
+6-12:.
+6-13:.
+6-14:pi,m} .
+6-15:The sections of the page represent different structural parts, such as title, metadata, body, headings, etc .
+6-16:In turn, each section is an unordered bag of terms (keywords) .
+6-17:A page is represented by the union of the terms in each section: pi = {pws1 1 , pws1 2 .
+6-18:.
+6-19:.
+6-20:pwsi m} where pw stands for a page word and the superscript indicates the section of each term .
+6-21:A term can be a unigram or a phrase extracted by a phrase extractor [12] .
+6-22:Similarly, we represent each ad as a set of sections a = {a1, a2, .
+6-23:.
+6-24:.
+6-25:al}, each section in turn being an unordered set of terms: ai = {aws1 1 , aws1 2 .
+6-26:.
+6-27:.
+6-28:awsj l } where aw is an ad word .
+6-29:The ads in our experiments have 3 sections: title, body, and bid phrase .
+6-30:In this work, to produce the match score we use only the ad page textual information, leaving user information and other data for future work .
+6-31:Next, each page and ad term is associated with a weight based on the tf idf values .
+6-32:The tf value is determined based on the individual ad sections .
+6-33:There are several choices for the value of idf, based on different scopes .
+6-34:On the ad side, it has been shown in previous work that the set of ads of one campaign provide good scope for the estimation of idf that leads to improved matching results [8] .
+6-35:However, in this work for simplicity we do not take into account campaigns .
+6-36:To combine the impact of the term"s section and its tf idf score, the ad page term weight is defined as: tWeight(kwsi ) = weightSection(Si) · tf idf(kw) where tWeight stands for term weight and weightSection(Si) is the weight assigned to a page or ad section .
+6-37:This weight is a fixed parameter determined by experimentation .
+6-38:Each ad and page is classified into the topical taxonomy .
+6-39:We define these two mappings: Tax(pi) = {pci1, .
+6-40:.
+6-41:.
+6-42:pciu} Tax(aj) = {acj1 .
+6-43:.
+6-44:.
+6-45:acjv} where pc and ac are page and ad classes correspondingly .
+6-46:Each assignment is associated with a weight given by the classifier .
+6-47:The weights are normalized to sum to 1: X c∈T ax(xi) cWeight(c) = 1 where xi is either a page or an ad, and cWeights(c) is the class weight normalized confidence assigned by the classifier .
+6-48:The number of classes can vary between different pages and ads .
+6-49:This corresponds to the number of topics a page ad can be associated with and is almost always in the range 1 4 .
+6-50:Now we define the relevance score of an ad ai and page pi as a convex combination of the keyword (syntactic) and classification (semantic) score: Score(pi, ai) = α · TaxScore(Tax(pi), Tax(ai)) +(1 − α) · KeywordScore(pi, ai) The parameter α determines the relative weight of the taxonomy score and the keyword score .
+6-51:To calculate the keyword score we use the vector space model [1] where both the pages and ads are represented in n dimensional space one dimension for each distinct term .
+6-52:The magnitude of each dimension is determined by the tWeight() formula .
+6-53:The keyword score is then defined as the cosine of the angle between the page and the ad vectors: KeywordScore(pi, ai) = P i∈|K| tWeight(pwi)· tWeight(awi) qP i∈|K|(tWeight(pwi))2 qP i∈|K|(tWeight(awi))2 where K is the set of all the keywords .
+6-54:The formula assumes independence between the words in the pages and ads .
+6-55:Furthermore, it ignores the order and the proximity of the terms in the scoring .
+6-56:We experimented with the impact of phrases and proximity on the keyword score and did not see a substantial impact of these two factors .
+6-57:We now turn to the definition of the TaxScore .
+6-58:This function indicates the topical match between a given ad and a page .
+6-59:As opposed to the keywords that are treated as independent dimensions, here the classes (topics) are organized into a hierarchy .
+6-60:One of the goals in the design of the TaxScore function is to be able to generalize within the taxonomy, that is accept topically related ads .
+6-61:Generalization can help to place ads in cases when there is no ad that matches both the category and the keywords of the page .
+6-62:The example in Figure 2 illustrates this situation .
+6-63:In this example, in the absence of ski ads, a page about skiing containing the word Atomic could be matched to the available snowboarding ad for the same brand .
+6-64:In general we would like the match to be stronger when both the ad and the page are classified into the same node Figure 2: Two generalization paths and weaker when the distance between the nodes in the taxonomy gets larger .
+6-65:There are multiple ways to specify the distance between two taxonomy nodes .
+6-66:Besides the above requirement, this function should lend itself to an efficient search of the ad space .
+6-67:Given a page we have to find the ad in a few milliseconds, as this impacts the presentation to a waiting user .
+6-68:This will be further discussed in the next section .
+6-69:To capture both the generalization and efficiency requirements we define the TaxScore function as follows: TaxScore(PC, AC) = X pc∈P C X ac∈AC idist(LCA(pc, ac), ac)·cWeight(pc)·cWeight(ac) In this function we consider every combination of page class and ad class .
+6-70:For each combination we multiply the product of the class weights with the inverse distance function between the least common ancestor of the two classes and the ad class .
+6-71:The inverse distance function idist(c1, c2) takes two nodes on the same path in the class taxonomy and returns a number in the interval [0, 1] depending on the distance of the two class nodes .
+6-72:It returns 1 if the two nodes are the same, and declines toward 0 when LCA(pc, ac) or ac is the root of the taxonomy .
+6-73:The rate of decline determines the weight of the generalization versus the other terms in the scoring formula .
+6-74:To determine the rate of decline we consider the impact on the specificity of the match when we substitute a class with one of its ancestors .
+6-75:In general the impact is topic dependent .
+6-76:For example the node Hobby in our taxonomy has tens of children, each representing a different hobby, two examples being Sailing and Knitting .
+6-77:Placing an ad about Knitting on a page about Sailing does not make lots of sense .
+6-78:However, in the Winter Sports example above, in the absence of better alternative, skiing ads could be put on snowboarding pages as they might promote the same venues, equipment vendors etc .
+6-79:Such detailed analysis on a case by case basis is prohibitively expensive due to the size of the taxonomy .
+6-80:One option is to use the confidences of the ancestor classes as given by the classifier .
+6-81:However we found these numbers not suitable for this purpose as the magnitude of the confidences does not necessarily decrease when going up the tree .
+6-82:Another option is to use explore exploit methods based on machine learning from the click feedback as described in [10] .
+6-83:However for simplicity, in this work we chose a simple heuristic to determine the cost of generalization from a child to a parent .
+6-84:In this heuristic we look at the broadening of the scope when moving from a child to a parent .
+6-85:We estimate the broadening by the density of ads classified in the parent nodes vs the child node .
+6-86:The density is obtained by classifying a large set of ads in the taxonomy using the document classifier described above .
+6-87:Based on this, let nc be the number of document classified into the subtree rooted at c .
+6-88:Then we define: idist(c, p) = nc np where c represents the child node and p is the parent node .
+6-89:This fraction can be viewed as a probability of an ad belonging to the parent topic being suitable for the child topic. .
+7 SEARCHING THE AD SPACE :
+7-1:In the previous section we discussed the choice of scoring function to estimate the match between an ad and a page .
+7-2:The top k ads with the highest score are offered by the system for placement on the publisher"s page .
+7-3:The process of score calculation and ad selection is to be done in real time and therefore must be very efficient .
+7-4:As the ad collections are in the range of hundreds of millions of entries, there is a need for indexed access to the ads .
+7-5:Inverted indexes provide scalable and low latency solutions for searching documents .
+7-6:However, these have been traditionally used to search based on keywords .
+7-7:To be able to search the ads on a combination of keywords and classes we have mapped the classification match to term match and adapted the scoring function to be suitable for fast evaluation over inverted indexes .
+7-8:In this section we overview the ad indexing and the ranking function of our prototype ad search system for matching ads and pages .
+7-9:We used a standard inverted index framework where there is one posting list for each distinct term .
+7-10:The ads are parsed into terms and each term is associated with a weight based on the section in which it appears .
+7-11:Weights from distinct occurrences of a term in an ad are added together, so that the posting lists contain one entry per term ad combination .
+7-12:The next challenge is how to index the ads so that the class information is preserved in the index? A simple method is to create unique meta terms for the classes and annotate each ad with one meta term for each assigned class .
+7-13:However this method does not allow for generalization, since only the ads matching an exact label of the page would be selected .
+7-14:Therefore we annotated each ad with one meta term for each ancestor of the assigned class .
+7-15:The weights of meta terms are assigned according to the value of the idist() function defined in the previous section .
+7-16:On the query side, given the keywords and the class of a page, we compose a keyword only query by inserting one class term for each ancestor of the classes assigned to the page .
+7-17:The scoring function is adapted to the two part scoreone for the class meta terms and another for the text term .
+7-18:During the class score calculation, for each class path we use only the lowest class meta term, ignoring the others .
+7-19:For example, if an ad belongs to the Skiing class and is annotated with both Skiing and its parent Winter Sports, the index will contain the special class meta terms for both Skiing and Winter Sports (and all their ancestors) with the weights according to the product of the classifier confidence and the idist function .
+7-20:When matching with a page classified into Skiing, the query will contain terms for class Skiing and for each of its ancestors .
+7-21:However when scoring an ad classified into Skiing we will use the weight for the Skiing class meta term .
+7-22:Ads classified into Snowboarding will be scored using the weight of the Winter Sports meta term .
+7-23:To make this check efficiently we keep a sorted list of all the class paths and, at scoring time, we search the paths bottom up for a meta term appearing in the ad .
+7-24:The first meta term is used for scoring, the rest are ignored .
+7-25:At runtime, we evaluate the query using a variant of the WAND algorithm [3] .
+7-26:This is a document at a time algorithm [1] that uses a branch and bound approach to derive efficient moves for the cursors associated to the postings lists .
+7-27:It finds the next cursor to be moved based on an upper bound of the score for the documents at which the cursors are currently positioned .
+7-28:The algorithm keeps a heap of current best candidates .
+7-29:Documents with an upper bound smaller than the current minimum score among the candidate documents can be eliminated from further considerations, and thus the cursors can skip over them .
+7-30:To find the upper bound for a document, the algorithm assumes that all cursors that are before it will hit this document (i.e .
+7-31:the document contains all those terms represented by cursors before or at that document) .
+7-32:It has been shown that WAND can be used with any function that is monotonic with respect to the number of matching terms in the document .
+7-33:Our scoring function is monotonic since the score can never decrease when more terms are found in the document .
+7-34:In the special case when we add a cursor representing an ancestor of a class term already factored in the score, the score simply does not change (we add 0) .
+7-35:Given these properties, we use an adaptation of the WAND algorithm where we change the calculation of the scoring function and the upper bound score calculation to reflect our scoring function .
+7-36:The rest of the algorithm remains unchanged. .
+8 EXPERIMENTAL EVALUATION :
+8-1:7.1 Data and Methodology We quantify the effect of the semantic syntactic matching using a set of 105 pages .
+8-2:This set of pages was selected by a random sample of a larger set of around 20 million pages with contextual advertising .
+8-3:Ads for each of these pages have been selected from a larger pool of ads (tens of millions) by previous experiments conducted by Yahoo! US for other purposes .
+8-4:Each page ad pair has been judged by three or more human judges on a 1 to 3 scale: the main subject of the page .
+8-5:For example if the page is about the National Football League and the ad is about tickets for NFL games, it would be scored as 1 .
+8-6:secondary subject of the page, or is related to the main topic of the page in a general way .
+8-7:In the NFL page example, an ad about NFL branded products would be judged as 2 .
+8-8:example a mention of the NFL player John Maytag triggers washing machine ads on a NFL page .
+8-9:pages 105 words per page 868 judgments 2946 judg .
+8-10:inter editor agreement 84% unique ads 2680 unique ads per page 25.5 page classification precision 70% ad classification precision 86% Table 1: Dataset statistics To obtain a score for a page ad pair we average all the scores and then round to the closest integer .
+8-11:We then used these judgments to evaluate how well our methods distinguish the positive and the negative ad assignments for each page .
+8-12:The statistics of the page dataset is given in Table 1 .
+8-13:The original experiments that paired the pages and the ads are loosely related to the syntactic keyword based matching and classification based assignment but used different taxonomies and keyword extraction techniques .
+8-14:Therefore we could not use standard pooling as an evaluation method since we did not control the way the pairs were selected and could not precisely establish the set of ads from which the placed ads were selected .
+8-15:Instead, in our evaluation for each page we consider only those ads for which we have judgment .
+8-16:Each different method was applied to this set and the ads were ranked by the score .
+8-17:The relative effectiveness of the algorithms were judged by comparing how well the methods separated the ads with positive judgment from the ads with negative judgment .
+8-18:We present precision on various levels of recall within this set .
+8-19:As the set of ads per page is relatively small, the evaluation reports precision that is higher than it would be with a larger set of negative ads .
+8-20:However, these numbers still establish the relative performance of the algorithms and we can use it to evaluate performance at different score thresholds .
+8-21:In addition to the precision recall over the judged ads, we also present Kendall"s τ rank correlation coefficient to establish how far from the perfect ordering are the orderings produced by our ranking algorithms .
+8-22:For this test we ranked the judged ads by the scores assigned by the judges and then compared this order to the order assigned by our algorithms .
+8-23:Finally we also examined the precision at position 1, 3 and 5 .
+8-24:7.2 Results Figure 3 shows the precision recall curves for the syntactic matching (keywords only used) vs .
+8-25:a syntactic semantic matching with the optimal value of α = 0.8 (judged by the 11 point score [1]) .
+8-26:In this figure, we assume that the adpage pairs judged with 1 or 2 are positive examples and the 3s are negative examples .
+8-27:We also examined counting only the pairs judged with 1 as positive examples and did not find a significant change in the relative performance of the tested methods .
+8-28:Overlaid are also results using phrases in the keyword match .
+8-29:We see that these additional features do not change the relative performance of the algorithm .
+8-30:The graphs show significant impact of the class information, especially in the mid range of recall values .
+8-31:In the low recall part of the chart the curves meet .
+8-32:This indicates that when the keyword match is really strong (i.e .
+8-33:when the ad is almost contained within the page) the precision 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.2 0.4 0.6 0.8 1 Recall Precision Alpha=.9, no phrase Alpha=0, no phrase Alpha=0, phrase Alpha=.9, phrase Figure 3: Data Set 2: Precision vs .
+8-34:Recall of syntactic match (α = 0) vs .
+8-35:syntactic semantic match (α = 0.8) α Kendall"s τ α = 0 0.086 α = 0.25 0.155 α = 0.50 0.166 α = 0.75 0.158 α = 1 0.136 Table 2: Kendall"s τ for different α values of the syntactic keyword match is comparable with that of the semantic syntactic match .
+8-36:Note however that the two methods might produce different ads and could be used as a complement at level of recall .
+8-37:The semantic components provides largest lift in precision at the mid range of recall where 25% improvement is achieved by using the class information for ad placement .
+8-38:This means that when there is somewhat of a match between the ad and the page, the restriction to the right classes provides a better scope for selecting the ads .
+8-39:Table 2 shows the Kendall"s τ values for different values of each page and averaging the values over all the pages .
+8-40:The ads with tied judgment were given the rank of the middle position .
+8-41:The results show that when we take into account all the ad page pairs, the optimal value of α is around 0.5 .
+8-42:Note that purely syntactic match (α = 0) is by far the weakest method .
+8-43:Figure 4 shows the effect of the parameter α in the scoring .
+8-44:We see that in most cases precision grows or is flat when we increase α, except at the low level of recall where due to small number of data points there is a bit of jitter in the results .
+8-45:Table 3 shows the precision at positions 1, 3 and 5 .
+8-46:Again, the purely syntactic method has clearly the lowest score by individual positions and the total number of correctly placed ads .
+8-47:The numbers are close due to the small number of the ads considered, but there are still some noticeable trends .
+8-48:For position 1 the optimal α is in the range of 0.25 to 0.75 .
+8-49:For positions 3 and 5 the optimum is at α = 1 .
+8-50:This also indicates that for those ads that have a very high keyword score, the semantic information is somewhat less important .
+8-51:If almost all the words in an ad appear in the page, this ad is Precision Vs Alpha for Different Levels of Recall (Data Set 2) 0.45 0.55 0.65 0.75 0.85 0.95 0 0.2 0.4 0.6 0.8 1 Alpha Precision 80% Recall 60% Recall 40% Recall 20% Recall Figure 4: Impact of α on precision for different levels of recall α #1 #3 #5 sum α = 0 80 70 68 218 α = 0.25 89 76 73 238 α = 0.5 89 74 73 236 α = 0.75 89 78 73 240 α = 1 86 79 74 239 Table 3: Precision at position 1, 3 and 5 likely to be relevant for this page .
+8-52:However when there is no such clear affinity, the class information becomes a dominant factor. .
+9-1:Contextual advertising is the economic engine behind a large number of non transactional sites on the Web
+9-2:Studies have shown that one of the main success factors for contextual ads is their relevance to the surrounding content
+9-3:All existing commercial contextual match solutions known to us evolved from search advertising solutions whereby a search query is matched to the bid phrase of the ads
+9-4:A natural extension of search advertising is to extract phrases from the page and match them to the bid phrase of the ads
+9-5:However, individual phrases and words might have multiple meanings and or be unrelated to the overall topic of the page leading to miss matched ads
+9-6:In this paper we proposed a novel way of matching advertisements to web pages that rely on a topical (semantic) match as a major component of the relevance score
+9-7:The semantic match relies on the classification of pages and ads into a 6000 nodes commercial advertising taxonomy to determine their topical distance
+9-8:As the classification relies on the full content of the page, it is more robust than individual page phrases
+9-9:The semantic match is complemented with a syntactic match and the final score is a convex combination of the two sub scores with the relative weight of each determined by a parameter α
+9-10:We evaluated the semantic syntactic approach against a syntactic approach over a set of pages with different contextual advertising
+9-11:As shown in our experimental evaluation, the optimal value of the parameter α depends on the precise objective of optimization (precision at particular position, precision at given recall)
+9-12:However in all cases the optimal value of α is between 0.25 and 0.9 indicating significant effect of the semantic score component
+9-13:The effectiveness of the syntactic match depends on the quality of the pages used
+9-14:In lower quality pages we are more likely to make classification errors that will then negatively impact the matching
+9-15:We demonstrated that it is feasible to build a large scale classifier that has sufficient good precision for this application
+9-16:We are currently examining how to employ machine learning algorithms to learn the optimal value of α based on a collection of features of the input pages.
+10-1:R
+10-2:Baeza Yates and B
+10-3:Ribeiro Neto
+10-4:Modern Information Retrieval
+10-5:ACM, 1999
+10-6:Bernhard E
+10-7:Boser, Isabelle Guyon, and Vladimir Vapnik
+10-8:A training algorithm for optimal margin classifiers
+10-9:In Computational Learning Theory, pages 144 152, 1992
+10-10:A
+10-11:Z
+10-12:Broder, D
+10-13:Carmel, M
+10-14:Herscovici, A
+10-15:Soffer, and J
+10-16:Zien
+10-17:Efficient query evaluation using a two level retrieval process
+10-18:In CIKM "03: Proc
+10-19:of the twelfth intl
+10-20:conf
+10-21:on Information and knowledge management, pages 426 434, New York, NY, 2003
+10-22:ACM
+10-23:P
+10-24:Chatterjee, D
+10-25:L
+10-26:Hoffman, and T
+10-27:P
+10-28:Novak
+10-29:Modeling the clickstream: Implications for web based advertising efforts
+10-30:Marketing Science, 22(4):520 541, 2003
+10-31:D
+10-32:Fain and J
+10-33:Pedersen
+10-34:Sponsored search: A brief history
+10-35:In In Proc
+10-36:of the Second Workshop on Sponsored Search Auctions, 2006
+10-37:Web publication, 2006
+10-38:S
+10-39:C
+10-40:Gates, W
+10-41:Teiken, and K. Shin F
+10-42:Cheng
+10-43:Taxonomies by the numbers: building high performance taxonomies
+10-44:In CIKM "05: Proc
+10-45:of the 14th ACM intl
+10-46:conf
+10-47:on Information and knowledge management, pages 568 577, New York, NY, 2005
+10-48:ACM
+10-49:A
+10-50:Lacerda, M
+10-51:Cristo, M
+10-52:Andre; G., W
+10-53:Fan, N
+10-54:Ziviani, and B
+10-55:Ribeiro Neto
+10-56:Learning to advertise
+10-57:In SIGIR "06: Proc
+10-58:of the 29th annual intl
+10-59:ACM SIGIR conf., pages 549 556, New York, NY, 2006
+10-60:ACM
+10-61:B
+10-62:Ribeiro Neto, M
+10-63:Cristo, P
+10-64:B
+10-65:Golgher, and E
+10-66:S
+10-67:de Moura
+10-68:Impedance coupling in content targeted advertising
+10-69:In SIGIR "05: Proc
+10-70:of the 28th annual intl
+10-71:ACM SIGIR conf., pages 496 503, New York, NY, 2005
+10-72:ACM
+10-73:J
+10-74:Rocchio
+10-75:Relevance feedback in information retrieval
+10-76:In The SMART Retrieval System: Experiments in Automatic Document Processing, pages 313 323
+10-77:PrenticeHall, 1971
+10-78:P
+10-79:Sandeep, D
+10-80:Agarwal, D
+10-81:Chakrabarti, and V
+10-82:Josifovski
+10-83:Bandits for taxonomies: A model based approach
+10-84:In In Proc
+10-85:of the SIAM intl
+10-86:conf
+10-87:on Data Mining, 2007
+10-88:T
+10-89:Santner and D
+10-90:Duffy
+10-91:The Statistical Analysis of Discrete Data
+10-92:Springer Verlag, 1989
+10-93:R
+10-94:Stata, K
+10-95:Bharat, and F
+10-96:Maghoul
+10-97:The term vector database: fast access to indexing terms for web pages
+10-98:Computer Networks, 33(1 6):247 255, 2000
+10-99:C
+10-100:Wang, P
+10-101:Zhang, R
+10-102:Choi, and M
+10-103:D
+10-104:Eredita
+10-105:Understanding consumers attitude toward advertising
+10-106:In Eighth Americas conf
+10-107:on Information System, pages 1143 1148, 2002
+10-108:W
+10-109:Yih, J
+10-110:Goodman, and V
+10-111:R
+10-112:Carvalho
+10-113:Finding advertising keywords on web pages
+10-114:In WWW "06: Proc
+10-115:of the 15th intl
+10-116:conf
+10-117:on World Wide Web, pages 213 222, New York, NY, 2006
+10-118:ACM
+picture:

@@ -1,0 +1,120 @@
+Our approach to high bandwidth data dissemination centers around the techniques depicted in Figure 1 .
+First, we split the target data stream into blocks which are further subdivided into individual (typically packet sized) objects .
+Depending on the requirements of the target applications, objects may be encoded [17, 26] to make data recovery more efficient .
+Next, we purposefully disseminate disjoint objects 283 S A C Original data stream
+to different clients at a rate determined by the available bandwidth to each client .
+We use the equation based TFRC protocol to communicate among all nodes in the overlay in a congestion responsive and TCP friendly manner .
+Given the above techniques, data is spread across the overlay tree at a rate commensurate with the available bandwidth in the overlay tree .
+Our overall goal however is to deliver more bandwidth than would otherwise be available through any tree .
+Thus, at this point, nodes require a scalable technique for locating and retrieving disjoint data from their peers .
+In essence, these perpendicular links across the overlay form a mesh to augment the bandwidth available through the tree .
+In Figure 1, node D only has sufficient bandwidth to receive 3 objects per time unit from its parent .
+However, it is able to locate two peers, C and E, who are able to transmit missing data objects, in this example increasing delivered bandwidth from 3 objects per time unit to 6 data objects per time unit .
+Locating appropriate remote peers cannot require global state or global communication .
+Thus, we propose the periodic dissemination of changing, uniformly random subsets of global state to each overlay node once per configurable time period .
+This random subset contains summary tickets of the objects available at a subset of the nodes in the system .
+Each node uses this information to request data objects from remote nodes that have significant divergence in object membership .
+It then attempts to establish a number of these peering relationships with the goals of minimizing overlap in the objects received from each peer and maximizing the total useful bandwidth delivered to it .
+In the remainder of this section, we provide brief background on each of the techniques that we employ as fundamental building blocks for our work .
+Section 3 then presents the details of the entire Bullet architecture .
+2.1 Data Encoding Depending on the type of data being distributed through the system, a number of data encoding schemes can improve system efficiency .
+For instance, if multimedia data is being distributed to a set of heterogeneous receivers with variable bandwidth, MDC [17] allows receivers obtaining different subsets of the data to still maintain a usable multimedia stream .
+For dissemination of a large file among a set of receivers, Erasure codes enable receivers not to focus on retrieving every transmitted data packet .
+Rather, after obtaining a threshold minimum number of packets, receivers are able to decode the original data stream .
+Of course, Bullet is amenable to a variety of other encoding schemes or even the null encoding scheme, where the original data stream is transmitted best effort through the system .
+In this paper, we focus on the benefits of a special class of erasure correcting codes used to implement the digital fountain [7] approach .
+Redundant Tornado [26] codes are created by performing XOR operations on a selected number of original data packets, and then transmitted along with the original data packets .
+Tornado codes require any (1+ )k correctly received packets to reconstruct the original k data packets, with the typically low reception overhead ( ) of 0.03 ? 0.05 .
+In return, they provide significantly faster encoding and decoding times .
+Additionally, the decoding algorithm can run in real time, and the reconstruction process can start as soon as sufficiently many packets have arrived .
+Tornado codes require a predetermined stretch factor (n k, where n is the total number of encoded packets), and their encoding time is proportional to n .
+LT codes [25] remove these two limitations, while maintaining a low reception overhead of 0.05 .
+2.2 RanSub To address the challenge of locating disjoint content within the system, we use RanSub [24], a scalable approach to distributing changing, uniform random subsets of global state to all nodes of an overlay tree .
+RanSub assumes the presence of some scalable mechanism for efficiently building and maintaining the underlying tree .
+A number of such techniques are described in [1, 18, 21, 24, 34] .
+RanSub distributes random subsets of participating nodes throughout the tree using collect and distribute messages .
+Collect messages start at the leaves and propagate up the tree, leaving state at each node along the path to the root .
+Distribute messages start at the root and travel down the tree, using the information left at the nodes during the previous collect round to distribute uniformly random subsets to all participants .
+Using the collect and distribute messages, RanSub distributes a random subset of participants to each node once per epoch .
+The lower bound on the length of an epoch is determined by the time it takes to propagate data up then back down the tree, or roughly twice the height of the tree .
+For appropriately constructed trees, the minimum epoch length will grow with the logarithm of the number of participants, though this is not required for correctness .
+As part of the distribute message, each participant sends a uniformly random subset of remote nodes, called a distribute set, down to its children .
+The contents of the distribute set are constructed using the collect set gathered during the previous collect phase .
+During this phase, each participant sends a collect set consisting of a random subset of its descendant nodes up the tree to the root along with an estimate of its total number of descendants .
+After the root receives all collect sets and the collect phase completes, the distribute phase begins again in a new epoch .
+One of the key features of RanSub is the Compact operation .
+This is the process used to ensure that membership in a collect set propagated by a node to its parent is both random and uniformly representative of all members of the sub tree rooted at that node .
+Compact takes multiple fixedsize subsets and the total population represented by each subset as input, and generates a new fixed size subset .
+The 284 A CSC={Cs}, CSD={Ds} CSF={Fs}, CSG={Gs} CSB={Bs,Cs,Ds}, CSE={Es,Fs,Gs} B C E D GF B C A E D GF DSE={As,Bs,Cs, Ds} DSB={As,Es,Fs,Gs} DSG={As,Bs,Cs, Ds,Es,Fs} DSD={As,Bs, Cs,Es,Fs,Gs} DSF={As,Bs,Cs, Ds,Es,Gs} DSC={As,Bs, Ds,Es,Fs,Gs} Figure 2
+The collect phase is shown on the left, where the collect sets are traveling up the overlay to the root .
+The distribute phase on the right shows the distribute sets traveling down the overlay to the leaf nodes .
+members of the resulting set are uniformly random representatives of the input subset members .
+RanSub offers several ways of constructing distribute sets .
+For our system, we choose the RanSub nondescendants option .
+In this case, each node receives a random subset consisting of all nodes excluding its descendants .
+This is appropriate for our download structure where descendants are expected to have less content than an ancestor node in most cases .
+A parent creates RanSub nondescendants distribute sets for each child by compacting collect sets from that child"s siblings and its own distribute set .
+The result is a distribute set that contains a random subset representing all nodes in the tree except for those rooted at that particular child .
+We depict an example of RanSub"s collect distribute process in Figure 2 .
+In the figure, AS stands for node A"s state .
+2.3 Informed Content Delivery Techniques Assuming we can enable a node to locate a peer with disjoint content using RanSub, we need a method for reconciling the differences in the data .
+Additionally, we require a bandwidth efficient method with low computational overhead .
+We chose to implement the approximate reconciliation techniques proposed in [6] for these tasks in Bullet .
+To describe the content, nodes maintain working sets .
+The working set contains sequence numbers of packets that have been successfully received by each node over some period of time .
+We need the ability to quickly discern the resemblance between working sets from two nodes and decide whether a fine grained reconciliation is beneficial .
+Summary tickets, or min wise sketches [5], serve this purpose .
+The main idea is to create a summary ticket that is an unbiased random sample of the working set .
+A summary ticket is a small fixed size array .
+Each entry in this array is maintained by a specific permutation function .
+The goal is to have each entry populated by the element with the smallest permuted value .
+To insert a new element into the summary ticket, we apply the permutation functions in order and update array values as appropriate .
+The permutation function can be thought of as a specialized hash function .
+The choice of permutation functions is important as the quality of the summary ticket depends directly on the randomness properties of the permutation functions .
+Since we require them to have a low computational overhead, we use simple permutation functions, such as Pj(x) = (ax+b)mod|U|, where U is the universe size (dependant on the data encoding scheme) .
+To compute the resemblance between two working sets, we compute the number of summary ticket entries that have the same value, and divide it by the total number of entries in the summary tickets .
+Figure 3 shows the way the permutation functions are used to populate the summary ticket .
+12 10 2 27 7 2 18 19 40 1 Workingset 14 42 17 33 38 15 12 P1 33 29 28 44 57 15 P2 22 28 45 61 14 51 Pn¡K ¡K Summary ticket minminmin 10 2 Figure 3
+To perform approximate fine grain reconciliation, a peer A sends its digest to peer B and expects to receive packets not described in the digest .
+For this purpose, we use a Bloom filter [4], a bit array of size m with k independent associated hash functions .
+An element s from the set of received keys S = {so, s2, .
+.
+.
+, sn?1} is inserted into the filter by computing the hash values h0, h1, .
+.
+.
+, hk?1 of s and setting the bits in the array that correspond to the hashed 285 values .
+To check whether an element x is in the Bloom filter, we hash it using the hash functions and check whether all positions in the bit array are set .
+If at least one is not set, we know that the Bloom filter does not contain x .
+When using Bloom filters, the insertion of different elements might cause all the positions in the bit array corresponding to an element that is not in the set to be nonzero .
+In this case, we have a false positive .
+Therefore, it is possible that peer B will not send a packet to peer A even though A is missing it .
+On the other hand, a node will never send a packet that is described in the Bloom filter, i.e .
+there are no false negatives .
+The probability of getting a false positive pf on the membership query can be expressed as a function of the ratio m n and the number of hash functions k
+We can therefore choose the size of the Bloom filter and the number of hash functions that will yield a desired false positive ratio .
+2.4 TCP Friendly Rate Control Although most traffic in the Internet today is best served by TCP, applications that require a smooth sending rate and that have a higher tolerance for loss often find TCP"s reaction to a single dropped packet to be unnecessarily severe .
+TCP Friendly Rate Control, or TFRC, targets unicast streaming multimedia applications with a need for less drastic responses to single packet losses [15] .
+TCP halves the sending rate as soon as one packet loss is detected .
+Alternatively, TFRC is an equation based congestion control protocol that is based on loss events, which consist of multiple packets being dropped within one round trip time .
+Unlike TCP, the goal of TFRC is not to find and use all available bandwidth, but instead to maintain a relatively steady sending rate while still being responsive to congestion .
+To guarantee fairness with TCP, TFRC uses the response function that describes the steady state sending rate of TCP to determine the transmission rate in TFRC .
+The formula of the TCP response function [27] used in TFRC to describe the sending rate is
+TFRC senders and receivers must cooperate to achieve a smooth transmission rate .
+The sender is responsible for computing the weighted round trip time estimate R between sender and receiver, as well as determining a reasonable retransmit timeout value tRT O .
+In most cases, using the simple formula tRT O = 4R provides the necessary fairness with TCP .
+The sender is also responsible for adjusting the sending rate T in response to new values of the loss event rate p reported by the receiver .
+The sender obtains a new measure for the loss event rate each time a feedback packet is received from the receiver .
+Until the first loss is reported, the sender doubles its transmission rate each time it receives feedback just as TCP does during slow start .
+The main role of the receiver is to send feedback to the sender once per round trip time and to calculate the loss event rate included in the feedback packets .
+To obtain the loss event rate, the receiver maintains a loss interval array that contains values for the last eight loss intervals .
+A loss interval is defined as the number of packets received correctly between two loss events .
+The array is continually updated as losses are detected .
+A weighted average is computed based on the sum of the loss interval values, and the inverse of the sum is the reported loss event rate, p .
+When implementing Bullet, we used an unreliable version of TFRC .
+We wanted a transport protocol that was congestion aware and TCP friendly .
+Lost packets were more easily recovered from other sources rather than waiting for a retransmission from the initial sender .
+Hence, we eliminate retransmissions from TFRC .
+Further, TFRC does not aggressively seek newly available bandwidth like TCP, a desirable trait in an overlay tree where there might be multiple competing flows sharing the same links .
+For example, if a leaf node in the tree tried to aggressively seek out new bandwidth, it could create congestion all the way up to the root of the tree .
+By using TFRC we were able to avoid these scenarios. .

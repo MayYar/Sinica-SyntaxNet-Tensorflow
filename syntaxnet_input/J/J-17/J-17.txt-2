@@ -1,0 +1,89 @@
+Mechanism design studies algorithmic constructions under the presence of strategic players who hold the inputs to the algorithm .
+Algorithmic mechanism design has focused mainly on settings were the social planner or designer wishes to maximize the social welfare (or equivalently, minimize social cost), or on auction settings where revenuemaximization is the main goal .
+Alternative optimization goals, such as those that incorporate fairness criteria (which have been investigated algorithmically and in social choice theory), have received very little or no attention .
+In this paper, we consider such an alternative goal in the context of machine scheduling, namely, makespan minimization .
+There are n jobs or tasks that need to be assigned to m machines, where each job has to be assigned to exactly one machine .
+Assigning a job j to a machine i incurs a load (cost) of pij ? 0 on machine i, and the load of a machine is the sum of the loads incurred due to the jobs assigned to it; the goal is to schedule the jobs so as to minimize the maximum load of a machine, which is termed the makespan of the schedule .
+Makespan minimization is a common objective in scheduling environments, and has been well studied algorithmically in both the Computer Science and Operations Research communities (see, e.g., the survey [12]) .
+Following the work of Nisan and Ronen [22], we consider each machine to be a strategic player or agent who privately knows its own processing time for each job, and may misrepresent these values in order to decrease its load (which is its incurred cost) .
+Hence, we approach the problem via mechanism design
+Such a mechanism is called a truthful mechanism .
+The makespan minimization objective is quite different from the classic goal of social welfare maximization, where one wants to maximize the total welfare (or minimize the total cost) of all players .
+Instead, it 252 corresponds to maximizing the minimum welfare and the notion of max min fairness, and appears to be a much harder problem from the viewpoint of mechanism design .
+In particular, the celebrated VCG [26, 9, 10] family of mechanisms does not apply here, and we need to devise new techniques .
+The possibility of constructing a truthful mechanism for makespan minimization is strongly related to assumptions on the players" processing times, in particular, the dimensionality of the domain .
+Nisan and Ronen considered the setting of unrelated machines where the pij values may be arbitrary .
+This is a multidimensional domain, since a player"s private value is its entire vector of processing times (pij)j .
+Very few positive results are known for multidimensional domains in general, and the only positive results known for multidimensional scheduling are O(m) approximation truthful mechanisms [22, 20] .
+We emphasize that regardless of computational considerations, even the existence of a truthful mechanism with a significantly better (than m) approximation ratio is not known for any such scheduling domain .
+On the negative side, [22] showed that no truthful deterministic mechanism can achieve approximation ratio better than 2, and strengthened this lower bound to m for two specific classes of deterministic mechanisms .
+Recently, [20] extended this lower bound to randomized mechanisms, and [8] improved the deterministic lower bound .
+In stark contrast with the above state of affairs, much stronger (and many more) positive results are known for a special case of the unrelated machines problem, namely, the setting of related machines .
+Here, we have pij = pj si for every i, j, where pj is public knowledge, and the speed si is the only private parameter of machine i .
+This assumption makes the domain of players" types single dimensional .
+Truthfulness in such domains is equivalent to a convenient value monotonicity condition [21, 3], which appears to make it significantly easier to design truthful mechanisms in such domains .
+Archer and Tardos [3] first considered the related machines setting and gave a randomized 3 approximation truthful in expectation mechanism .
+The gap between the single dimensional and multidimensional domains is perhaps best exemplified by the fact that [3] showed that there exists a truthful mechanism that always outputs an optimal schedule .
+(Recall that in the multidimensional unrelated machines setting, it is impossible to obtain a truthful mechanism with approximation ratio better than 2.) Various follow up results [2, 4, 1, 13] have strengthened the notion of truthfulness and or improved the approximation ratio .
+Such difficulties in moving from the single dimensional to the multidimensional setting also arise in other mechanism design settings (e.g., combinatorial auctions) .
+Thus, in addition to the specific importance of scheduling in strategic environments, ideas from multidimensional scheduling may also have a bearing in the more general context of truthful mechanism design for multidimensional domains .
+In this paper, we consider the makespan minimization problem for a special case of unrelated machines, where the processing time of a job is either low or high on each machine .
+More precisely, in our setting, pij ? {Lj, Hj} for every i, j, where the Lj, Hj values are publicly known (Lj ¡Ýlow, Hj ¡Ýhigh) .
+We call this model the jobdependent two values case .
+This model generalizes the classic restricted machines setting, where pij ? {Lj, ¡Û} which has been well studied algorithmically .
+A special case of our model is when Lj = L and Hj = H for all jobs j, which we denote simply as the two values scheduling model .
+Both of our domains are multidimensional, since the machines are unrelated
+Thus, the private information of each machine is a vector specifying which jobs are low and high on it .
+Thus, they retain the core property underlying the hardness of truthful mechanism design for unrelated machines, and by studying these special settings we hope to gain some insights that will be useful for tackling the general problem .
+Our Results and Techniques We present various positive results for our multidimensional scheduling domains .
+Our first result is a general method to convert any capproximation algorithm for the job dependent two values setting into a 3c approximation truthful in expectation mechanism .
+This is one of the very few known results that use an approximation algorithm in a black box fashion to obtain a truthful mechanism for a multidimensional problem .
+Our result implies that there exists a 3 approximation truthfulin expectation mechanism for the Lj Hj setting .
+Interestingly, the proof of truthfulness is not based on supplying explicit prices, and our construction does not necessarily yield efficiently computable prices (but the allocation rule is efficiently computable) .
+Our second result applies to the twovalues setting (Lj = L, Hj = H), for which we improve both the approximation ratio and strengthen the notion of truthfulness .
+We obtain a deterministic 2 approximation truthful mechanism (along with prices) for this problem .
+These are the first truthful mechanisms with non trivial performance guarantees for a multidimensional scheduling domain .
+Complementing this, we observe that even this seemingly simple setting does not admit truthful mechanisms that return an optimal schedule (unlike in the case of related machines) .
+By exploiting the multidimensionality of the domain, we prove that no truthful deterministic mechanism can obtain an approximation ratio better than 1.14 to the makespan (irrespective of computational considerations) .
+The main technique, and one of the novelties, underlying our constructions and proofs, is that we do not rely on explicit price specifications in order to prove the truthfulness of our mechanisms .
+Instead we exploit certain algorithmic monotonicity conditions that characterize truthfulness to first design an implementable algorithm, i.e., an algorithm for which prices ensuring truthfulness exist, and then find these prices (by further delving into the proof of implementability) .
+This kind of analysis has been the method of choice in the design of truthful mechanisms for singledimensional domains, where value monotonicity yields a convenient characterization enabling one to concentrate on the algorithmic side of the problem (see, e.g., [3, 7, 4, 1, 13]) .
+But for multidimensional domains, almost all positive results have relied on explicit price specifications in order to prove truthfulness (an exception is the work on unknown single minded players in combinatorial auctions [17, 7]), a fact that yet again shows the gap in our understanding of multidimensional vs .
+single dimensional domains .
+Our work is the first to leverage monotonicity conditions for truthful mechanism design in arbitrary domains .
+The monotonicity condition we use, which is sometimes called cycle monotonicity, was first proposed by Rochet [23] (see also [11]) .
+It is a generalization of value monotonicity and completely characterizes truthfulness in every domain .
+Our methods and analyses demonstrate the potential benefits 253 of this characterization, and show that cycle monotonicity can be effectively utilized to devise truthful mechanisms for multidimensional domains .
+Consider, for example, our first result showing that any c approximation algorithm can be exported to a 3c approximation truthful in expectation mechanism .
+At the level of generality of an arbitrary approximation algorithm, it seems unlikely that one would be able to come up with prices to prove truthfulness of the constructed mechanism .
+But, cycle monotonicity does allow us to prove such a statement .
+In fact, some such condition based only on the underlying algorithm (and not on the prices) seems necessary to prove such a general statement .
+The method for converting approximation algorithms into truthful mechanisms involves another novel idea .
+Our randomized mechanism is obtained by first constructing a truthful mechanism that returns a fractional schedule .
+Moving to a fractional domain allows us to plug in truthfulness into the approximation algorithm in a rather simple fashion, while losing a factor of 2 in the approximation ratio .
+We then use a suitable randomized rounding procedure to convert the fractional assignment into a random integral assignment .
+For this, we use a recent rounding procedure of Kumar et al .
+[14] that is tailored for unrelated machine scheduling .
+This preserves truthfulness, but we lose another additive factor equal to the approximation ratio .
+Our construction uses and extends some observations of Lavi and Swamy [16], and further demonstrates the benefits of fractional mechanisms in truthful mechanism design .
+Related Work Nisan and Ronen [22] first considered the makespan minimization problem for unrelated machines .
+They gave an m approximation positive result and proved various lower bounds .
+Recently, Mu"alem and Schapira [20] proved a lower bound of 2 on the approximation ratio achievable by truthful in expectation mechanisms, and Christodoulou, Koutsoupias, and Vidali [8] proved a (1 + ¡Ô 2) lower bound for deterministic truthful mechanisms.Archer and Tardos [3] first considered the related machines problem and gave a 3 approximation truthful in expectation mechanism .
+This been improved in [2, 4, 1, 13] to
+The algorithmic problem (i.e., without requiring truthfulness) of makespan minimization on unrelated machines is well understood and various 2 approximation algorithms are known .
+Lenstra, Shmoys and Tardos [18] gave the first such algorithm .
+Shmoys and Tardos [25] later gave a 2approximation algorithm for the generalized assignment problem, a generalization where there is a cost cij for assigning a job j to a machine i, and the goal is to minimize the cost subject to a bound on the makespan .
+Recently, Kumar, Marathe, Parthasarathy, and Srinivasan [14] gave a randomized rounding algorithm that yields the same bounds .
+We use their procedure in our randomized mechanism .
+The characterization of truthfulness for arbitrary domains in terms of cycle monotonicity seems to have been first observed by Rochet [23] (see also Gui et al .
+[11]) .
+This generalizes the value monotonicity condition for single dimensional domains which was given by Myerson [21] and rediscovered by [3] .
+As mentioned earlier, this condition has been exploited numerous times to obtain truthful mechanisms for single dimensional domains [3, 7, 4, 1, 13] .
+For convex domains (i.e., each players" set of private values is convex), it is known that cycle monotonicity is implied by a simpler condition, called weak monotonicity [15, 6, 24] .
+But even this simpler condition has not found much application in truthful mechanism design for multidimensional problems .
+Objectives other than social welfare maximization and revenue maximization have received very little attention in mechanism design .
+In the context of combinatorial auctions, the problems of maximizing the minimum value received by a player, and computing an envy minimizing allocation have been studied briefly .
+Lavi, Mu"alem, and Nisan [15] showed that the former objective cannot be implemented truthfully; Bezakova and Dani [5] gave a 0.5 approximation mechanism for two players with additive valuations .
+Lipton et al .
+[19] showed that the latter objective cannot be implemented truthfully .
+These lower bounds were strengthened in [20]. .

@@ -1,0 +1,88 @@
+In this section, we will introduce our Clustering with Local and Global Regularization algorithm in detail .
+First let"s see the how the documents are represented throughout this paper .
+2.1 Document Representation In our work, all the documents are represented by the weighted term frequency vectors .
+Let W = {w1, w2, ¡P ¡P ¡P , wm} be the complete vocabulary set of the document corpus (which is preprocessed by the stopwords removal and words stemming operations) .
+The term frequency vector xi of document di is defined as xi = [xi1, xi2, ¡P ¡P ¡P , xim]T , xik = tik log n idfk , where tik is the term frequency of wk ? W, n is the size of the document corpus, idfk is the number of documents that contain word wk .
+In this way, xi is also called the TFIDF representation of document di .
+Furthermore, we also normalize each xi (1 i n) to have a unit length, so that each document is represented by a normalized TF IDF vector .
+2.2 Local Regularization As its name suggests, CLGR is composed of two parts
+In this subsection we will introduce the local regularization part in detail .
+2.2.1 Motivation As we know that clustering is one type of learning techniques, it aims to organize the dataset in a reasonable way .
+Generally speaking, learning can be posed as a problem of function estimation, from which we can get a good classification function that will assign labels to the training dataset and even the unseen testing dataset with some cost minimized [24] .
+For example, in the two class classification scenario1 (in which we exactly know the label of each document), a linear classifier with least square fit aims to learn a column vector w such that the squared cost J = 1 n (wT xi ? yi)2 (1) is minimized, where yi ? {+1, ?1} is the label of xi .
+By taking ?J ?w = 0, we get the solution w? = n i=1 xixT i ?1 n i=1 xiyi , (2) which can further be written in its matrix form as w? = XXT ?1 Xy, (3) where X = [x1, x2, ¡P ¡P ¡P , xn] is an m ¡Ñ n document matrix, y = [y1, y2, ¡P ¡P ¡P , yn]T is the label vector .
+Then for a test document t, we can determine its label by l = sign(w?T u), (4) where sign(¡P) is the sign function .
+A natural problem in Eq.(3) is that the matrix XXT may be singular and thus not invertable (e.g .
+when m n) .
+To avoid such a problem, we can add a regularization term and minimize the following criterion J = 1 n n i=1 (wT xi ? yi)2 + £f w 2 , (5) where £f is a regularization parameter .
+Then the optimal solution that minimize J is given by w? = XXT + £fnI ?1 Xy, (6) where I is an m ¡Ñ m identity matrix .
+It has been reported that the regularized linear classifier can achieve very good results on text classification problems [29] .
+However, despite its empirical success, the regularized linear classifier is on earth a global classifier, i.e .
+w? is estimated using the whole training set .
+According to [24], this may not be a smart idea, since a unique w? may not be good enough for predicting the labels of the whole input space .
+In order to get better predictions, [6] proposed to train classifiers locally and use them to classify the testing points .
+For example, a testing point will be classified by the local classifier trained using the training points located in the vicinity 1 In the following discussions we all assume that the documents coming from only two classes .
+The generalizations of our method to multi class cases will be discussed in section 2.5 .
+of it .
+Although this method seems slow and stupid, it is reported that it can get better performances than using a unique global classifier on certain tasks [6] .
+2.2.2 Constructing the Local Regularized Predictors Inspired by their success, we proposed to apply the local learning algorithms for clustering .
+The basic idea is that, for each document vector xi (1 i n), we train a local label predictor based on its k nearest neighborhood Ni, and then use it to predict the label of xi .
+Finally we will combine all those local predictors by minimizing the sum of their prediction errors .
+In this subsection we will introduce how to construct those local predictors .
+Due to the simplicity and effectiveness of the regularized linear classifier that we have introduced in section 2.2.1, we choose it to be our local label predictor, such that for each document xi, the following criterion is minimized Ji = 1 ni xj ?Ni wT i xj ? qj 2 + £fi wi 2 , (7) where ni = |Ni| is the cardinality of Ni, and qj is the cluster membership of xj .
+Then using Eq.(6), we can get the optimal solution is w? i = XiXT i + £finiI ?1 Xiqi, (8) where Xi = [xi1, xi2, ¡P ¡P ¡P , xini ], and we use xik to denote the k th nearest neighbor of xi .
+qi = [qi1, qi2, ¡P ¡P ¡P , qini ]T with qik representing the cluster assignment of xik .
+The problem here is that XiXT i is an m ¡Ñ m matrix with m ni, i.e .
+we should compute the inverse of an m ¡Ñ m matrix for every document vector, which is computationally prohibited .
+Fortunately, we have the following theorem
+w? i in Eq.(8) can be rewritten as w? i = Xi XT i Xi + £finiIi ?1 qi, (9) where Ii is an ni ¡Ñ ni identity matrix .
+Proof .
+Since w? i = XiXT i + £finiI ?1 Xiqi, then XiXT i + £finiI w? i = Xiqi =? XiXT i w? i + £finiw? i = Xiqi =? w? i = (£fini)?1 Xi qi ? XT i w? i .
+Let £] = (£fini)?1 qi ? XT i w? i , then w? i = Xi£] =? £fini£] = qi ? XT i w? i = qi ? XT i Xi£] =? qi = XT i Xi + £finiIi £] =? £] = XT i Xi + £finiIi ?1 qi .
+Therefore w? i = Xi£] = Xi XT i Xi + £finiIi ?1 qi 2 Using theorem 1, we only need to compute the inverse of an ni ¡Ñ ni matrix for every document to train a local label predictor .
+Moreover, for a new testing point u that falls into Ni, we can classify it by the sign of qu = w?T i u = uT wi = uT Xi XT i Xi + £finiIi ?1 qi .
+This is an attractive expression since we can determine the cluster assignment of u by using the inner products between the points in {u ¡å Ni}, which suggests that such a local regularizer can easily be kernelized [21] as long as we define a proper kernel function .
+2.2.3 Combining the Local Regularized Predictors After all the local predictors having been constructed, we will combine them together by minimizing Jl = n i=1 w?T i xi ? qi 2 , (10) which stands for the sum of the prediction errors for all the local predictors .
+Combining Eq.(10) with Eq.(6), we can get Jl = n i=1 w?T i xi ? qi 2 = n i=1 xT i Xi XT i Xi + £finiIi ?1 qi ? qi 2 = Pq ? q 2 , (11) where q = [q1, q2, ¡P ¡P ¡P , qn]T , and the P is an n ¡Ñ n matrix constructing in the following way .
+Let £\i = xT i Xi XT i Xi + £finiIi ?1 , then Pij = £\i j, if xj ? Ni 0, otherwise , (12) where Pij is the (i, j) th entry of P, and £\i j represents the j th entry of £\i .
+Till now we can write the criterion of clustering by combining locally regularized linear label predictors Jl in an explicit mathematical form, and we can minimize it directly using some standard optimization techniques .
+However, the results may not be good enough since we only exploit the local informations of the dataset .
+In the next subsection, we will introduce a global regularization criterion and combine it with Jl, which aims to find a good clustering result in a local global way .
+2.3 Global Regularization In data clustering, we usually require that the cluster assignments of the data points should be sufficiently smooth with respect to the underlying data manifold, which implies (1) the nearby points tend to have the same cluster assignments; (2) the points on the same structure (e.g .
+submanifold or cluster) tend to have the same cluster assignments [31] .
+Without the loss of generality, we assume that the data points reside (roughly) on a low dimensional manifold M2 , and q is the cluster assignment function defined on M, i.e .
+2 We believe that the text data are also sampled from some low dimensional manifold, since it is impossible for them to for ?x ? M, q(x) returns the cluster membership of x .
+The smoothness of q over M can be calculated by the following Dirichlet integral [2] D[q] = 1 2 M q(x) 2 dM, (13) where the gradient q is a vector in the tangent space T Mx, and the integral is taken with respect to the standard measure on M .
+If we restrict the scale of q by q, q M = 1 (where ¡P, ¡P M is the inner product induced on M), then it turns out that finding the smoothest function minimizing D[q] reduces to finding the eigenfunctions of the Laplace Beltrami operator L, which is defined as Lq ?div q, (14) where div is the divergence of a vector field .
+Generally, the graph can be viewed as the discretized form of manifold .
+We can model the dataset as an weighted undirected graph as in spectral clustering [22], where the graph nodes are just the data points, and the weights on the edges represent the similarities between pairwise points .
+Then it can be shown that minimizing Eq.(13) corresponds to minimizing Jg = qT Lq = n i=1 (qi ? qj)2 wij, (15) where q = [q1, q2, ¡P ¡P ¡P , qn]T with qi = q(xi), L is the graph Laplacian with its (i, j) th entry Lij = ? ? ? di ? wii, if i = j ?wij, if xi and xj are adjacent 0, otherwise, (16) where di = j wij is the degree of xi, wij is the similarity between xi and xj .
+If xi and xj are adjacent3 , wij is usually computed in the following way wij = e ? xi?xj 2 2£m2 , (17) where £m is a dataset dependent parameter .
+It is proved that under certain conditions, such a form of wij to determine the weights on graph edges leads to the convergence of graph Laplacian to the Laplace Beltrami operator [3][18] .
+In summary, using Eq.(15) with exponential weights can effectively measure the smoothness of the data assignments with respect to the intrinsic data manifold .
+Thus we adopt it as a global regularizer to punish the smoothness of the predicted data assignments .
+2.4 Clustering with Local and Global Regularization Combining the contents we have introduced in section 2.2 and section 2.3 we can derive the clustering criterion is minq J = Jl + £fJg = Pq ? q 2 + £fqT Lq s.t .
+qi ? {?1, +1}, (18) where P is defined as in Eq.(12), and £f is a regularization parameter to trade off Jl and Jg .
+However, the discrete fill in the whole high dimensional sample space .
+And it has been shown that the manifold based methods can achieve good results on text classification tasks [31] .
+3 In this paper, we define xi and xj to be adjacent if xi ? N(xj) or xj ? N(xi) .
+constraint of pi makes the problem an NP hard integer programming problem .
+A natural way for making the problem solvable is to remove the constraint and relax qi to be continuous, then the objective that we aims to minimize becomes J = Pq ? q 2 + £fqT Lq = qT (P ? I)T (P ? I)q + £fqT Lq = qT (P ? I)T (P ? I) + £fL q, (19) and we further add a constraint qT q = 1 to restrict the scale of q .
+Then our objective becomes minq J = qT (P ? I)T (P ? I) + £fL q s.t .
+qT q = 1 (20) Using the Lagrangian method, we can derive that the optimal solution q corresponds to the smallest eigenvector of the matrix M = (P ? I)T (P ? I) + £fL, and the cluster assignment of xi can be determined by the sign of qi, i.e .
+xi will be classified as class one if qi > 0, otherwise it will be classified as class 2 .
+2.5 Multi Class CLGR In the above we have introduced the basic framework of Clustering with Local and Global Regularization for the two class clustering problem, and we will extending it to multi class clustering in this subsection .
+First we assume that all the documents belong to C classes indexed by L = {1, 2, ¡P ¡P ¡P , C} .
+qc is the classification function for class c (1 c C), such that qc (xi) returns the confidence that xi belongs to class c .
+Our goal is to obtain the value of qc (xi) (1 c C, 1 i n), and the cluster assignment of xi can be determined by {qc (xi)}C c=1 using some proper discretization methods that we will introduce later .
+Therefore, in this multi class case, for each document xi (1 i n), we will construct C locally linear regularized label predictors whose normal vectors are wc? i = Xi XT i Xi + £finiIi ?1 qc i (1 c C), (21) where Xi = [xi1, xi2, ¡P ¡P ¡P , xini ] with xik being the k th neighbor of xi, and qc i = [qc i1, qc i2, ¡P ¡P ¡P , qc ini ]T with qc ik = qc (xik) .
+Then (wc? i )T xi returns the predicted confidence of xi belonging to class c .
+Hence the local prediction error for class c can be defined as J c l = n i=1 (wc? i ) T xi ? qc i 2 , (22) And the total local prediction error becomes Jl = C c=1 J c l = C c=1 n i=1 (wc? i ) T xi ? qc i 2 .
+(23) As in Eq.(11), we can define an n¡Ñn matrix P (see Eq.(12)) and rewrite Jl as Jl = C c=1 J c l = C c=1 Pqc ? qc 2 .
+(24) Similarly we can define the global smoothness regularizer in multi class case as Jg = C c=1 n i=1 (qc i ? qc j )2 wij = C c=1 (qc )T Lqc .
+(25) Then the criterion to be minimized for CLGR in multi class case becomes J = Jl + £fJg = C c=1 Pqc ? qc 2 + £f(qc )T Lqc = C c=1 (qc )T (P ? I)T (P ? I) + £fL qc = trace QT (P ? I)T (P ? I) + £fL Q , (26) where Q = [q1 , q2 , ¡P ¡P ¡P , qc ] is an n ¡Ñ c matrix, and trace(¡P) returns the trace of a matrix .
+The same as in Eq.(20), we also add the constraint that QT Q = I to restrict the scale of Q .
+Then our optimization problem becomes minQ J = trace QT (P ? I)T (P ? I) + £fL Q s.t .
+QT Q = I, (27) From the Ky Fan theorem [28], we know the optimal solution of the above problem is Q? = [q? 1, q? 2, ¡P ¡P ¡P , q? C ]R, (28) where q? k (1 k C) is the eigenvector corresponds to the k th smallest eigenvalue of matrix (P ? I)T (P ? I) + £fL, and R is an arbitrary C ¡Ñ C matrix .
+Since the values of the entries in Q? is continuous, we need to further discretize Q? to get the cluster assignments of all the data points .
+There are mainly two approaches to achieve this goal

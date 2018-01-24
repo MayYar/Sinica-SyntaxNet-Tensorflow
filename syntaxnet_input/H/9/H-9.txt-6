@@ -1,0 +1,22 @@
+We construct our data set based on the MSN search log data set released by the Microsoft Live Labs in 2006 [14] .
+In total, this log data spans 31 days from 05 01 2006 to 05 31 2006 .
+There are 8,144,000 queries, 3,441,000 distinct queries, and 4,649,000 distinct URLs in the raw data .
+To test our algorithm, we separate the whole data set into two parts according to the time
+In the history collection, we clean the data by only keeping those frequent, well formatted, English queries (queries which only contain characters ¡¥a", ¡¥b", ..., ¡¥z", and space, and appear more than 5 times) .
+After cleaning, we get 169,057 unique queries in our history data collection totally .
+On average, each query has 3.5 distinct clicks .
+We build the pseudo documents for all these queries as described in Section 3 .
+The average length of these pseudo documents is 68 words and the total data size of our history collection is 129MB .
+We construct our test data from the last 1 3 data .
+According to the time, we separate this data into two test sets equally for cross validation to set parameters .
+For each test set, we use every session as a test case .
+Each session contains a single query and several clicks .
+(Note that we do not aggregate sessions for test cases .
+Different test cases may have the same queries but possibly different clicks.) Since it is infeasible to ask the original user who submitted a query to judge the results for the query, we follow the work [11] and opt to use the clicks associated with the query in a session to approximate relevant documents .
+Using clicks as judgments, we can then compare different algorithms for organizing search results to see how well these algorithms can help users reach the clicked URLs .
+Organizing search results into different aspects is expected to help informational queries .
+It thus makes sense to focus on the informational queries in our evaluation .
+For each test case, i.e., each session, we count the number of different clicks and filter out those test cases with fewer than 4 clicks under the assumption that a query with more clicks is more likely to be an informational query .
+Since we want to test whether our algorithm can learn from the past queries, we also filter out those test cases whose queries can not retrieve at least 100 pseudo documents from our history collection .
+Finally, we obtain 172 and 177 test cases in the first and second test sets respectively .
+On average, we have 6.23 and 5.89 clicks for each test case in the two test sets respectively. .

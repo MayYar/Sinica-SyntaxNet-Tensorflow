@@ -1,0 +1,23 @@
+Apocrita uses the Lucene framework [7], which is a project under development by the Apache Software Foundation .
+Apache Lucene is a high performance, full featured text search engine library written entirely in Java .
+In the current implementation, Apocrita is only capable of indexing plain text documents .
+Apocrita uses the JXTA framework [5] as a peer to peer transport library between nodes .
+JXTA is used to pass both messages and files between nodes in the search network .
+By using JXTA, Apocrita takes advantage of a reliable, and proven peer to peer transport mechanism .
+It uses the pipe facility in order to pass messages and files between nodes .
+The pipe facility provides many different types of pipe advertisements .
+This includes an unsecured unicast pipe, a secured unicast pipe, and a propagated unsecured pipe .
+Message passing is used to pass status messages between nodes in order to aid in indexing, searching, and retrieval .
+For example, a node attempting to find an idle node to participate in indexing will query nodes via the message facility .
+Idle nodes will reply with a status message to indicate they are available to start indexing .
+File passing is used within Apocrita for file transfer .
+After a file has been searched for and located within the peer group, a JXTA socket will be opened and file transfer will take place .
+A JXTA socket is similar to a standard Java socket, however a JXTA socket uses JXTA pipes in underlying network transport .
+File passing uses an unsecured unicast pipe in order to transfer data .
+File passing is also used within Apocrita for index transfer .
+Index transfer works exactly like a file transfer .
+In fact, the index transfer actually passes the index as a file .
+However, there is one key difference between file transfer and index transfer .
+In the case of file transfer, a socket is created between only two nodes .
+In the case of index transfer, a socket must be created between all nodes in the network in order to pass the index, which allows for all nodes to have a full and complete index of the entire network .
+In order to facilitate this transfer efficiently, index transfer will use an unsecured propagated pipe to communicate with all nodes in the Apocrita network. .

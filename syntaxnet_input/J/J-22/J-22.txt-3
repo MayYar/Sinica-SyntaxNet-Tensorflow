@@ -1,0 +1,49 @@
+We consider permutation betting, or betting on the outcome of a competition among n candidates .
+The final outcome or state s ? S is an ordinal ranking of the n candidates .
+For example, the candidates could be horses in a race and the outcome the list of horses in increasing order of their finishing times .
+The state space S contains all n! mutually exclusive and exhaustive permutations of candidates .
+In a typical horse race, people bet on properties of the outcome like horse A will win, horse A will show, or finish in either first or second place, or horses A and B will finish in first and second place, respectively .
+In practice at the racetrack, each of these different types of bets are processed in separate pools or groups .
+In other words, all the win bets are processed together, and all the show bets are processed together, but the two types of bets do not mix .
+This separation can hurt liquidity and information aggregation .
+For example, even though horse A is heavily favored to win, that may not directly boost the horse"s odds to show .
+Instead, we describe a central exchange where all bets on the outcome are processed together, thus aggregating liquidity and ensuring that informational inference happens automatically .
+Ideally, we"d like to allow traders to bet on any property of the final ordering they like, stated in exactly the language they prefer .
+In practice, allowing too flexible a language creates a computational burden for the auctioneer attempting to match willing traders .
+We explore the tradeoff between the expressiveness of the bidding language and the computational complexity of the matching problem .
+We consider a framework where people propose to buy securities that pay $1 if and only if some property of the final ordering is true .
+Traders state the price they are willing to pay per share and the number of shares they would like to purchase .
+(Sell orders may not be explicitly needed, since buying the negation of an event is equivalent to selling the event.) A divisible order permits the trader to receive fewer shares than requested, as long as the price constraint is met; an indivisible order is an all or nothing order .
+The description of bets in terms of prices and shares is without loss of generality
+In principle, we can do everything we want by explicitly offering n! securities, one for every state s ? S (or in fact any set of n! linearly independent securities) .
+This is the so called complete Arrow Debreu securities market [1] for our setting .
+In practice, traders do not want to deal with low level specification of complete orderings
+Moreover, operating n! securities is infeasible in practice from a computational point of view as n grows .
+A very simple bidding language might allow traders to bet only on who wins the competition, as is done in the win pool at racetracks .
+The corresponding matching problem is polynomial, however the language is not very expressive .
+A trader who believes that A will defeat B, but that neither will win outright cannot usefully impart his information to the market .
+The price space of the market reveals the collective estimates of win probabilities but nothing else .
+Our goal is to find languages that are as expressive and intuitive as possible and reveal as much information as possible, while maintaining computational feasibility .
+Our work is in direct analogy to work by Fortnow et .
+al .
+[6] .
+Whereas we explore permutation combinatorics, Fortnow et .
+al .
+explore Boolean combinatorics .
+The authors consider a state space of the 2n possible outcomes of n binary variables .
+Traders express bets in Boolean logic .
+The authors show that divisible matching is co NP complete and indivisible matching is £Up 2 complete .
+Hanson [9] describes a market scoring rule mechanism which can allow betting on combinatorial number of outcomes .
+The market starts with a joint probability distribution across all outcomes .
+It works like a sequential version of a scoring rule .
+Any trader can change the probability distribution as long as he agrees to pay the most recent trader 327 according to the scoring rule .
+The market maker pays the last trader .
+Hence, he bears risk and may incur loss .
+Market scoring rule mechanisms have a nice property that the worst case loss of the market maker is bounded .
+However, the computational aspects on how to operate the mechanism have not been fully explored .
+Our mechanisms have an auctioneer who does not bear any risk and only matches orders .
+Research on bidding languages and winner determination in combinatorial auctions [4, 14, 18] considers similar computational challenges in finding an allocation of items to bidders that maximizes the auctioneer"s revenue .
+Combinatorial auctions allow bidders to place distinct values on bundles of goods rather than just on individual goods .
+Uncertainty and risk are typically not considered and the central auctioneer problem is to maximize social welfare .
+Our mechanisms allow traders to construct bets for an event with n! outcomes .
+Uncertainty and risk are considered and the auctioneer problem is to explore arbitrage opportunities and risklessly match up wagers. .

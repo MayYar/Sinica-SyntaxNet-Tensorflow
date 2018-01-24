@@ -1,0 +1,36 @@
+Many variants of language models have been proposed for information retrieval .
+Most existing models are based on multinomial distribution and would score documents based on query likelihood computed based on a query generation probabilistic model .
+In this paper, we propose and study a new family of query generation models based on Poisson distribution .
+We show that while in their simplest forms, the new family of models and the existing multinomial models are equivalent, they behave differently for many smoothing methods .
+We show that the Poisson model has several advantages over the multinomial model, including naturally accommodating per term smoothing and allowing for more accurate background modeling .
+We present several variants of the new model corresponding to different smoothing methods, and evaluate them on four representative TREC test collections .
+The results show that while their basic models perform comparably, the Poisson model can outperform multinomial model with per term smoothing .
+The performance can be further improved with two stage smoothing .
+Categories and Subject Descriptors
+Among many variants of language models proposed, the most popular and fundamental one is the query generation language model [21, 13], which leads to the query likelihood scoring method for ranking documents .
+In such a model, given a query q and a document d, we compute the likelihood of generating query q with a model estimated based on document d, i.e., the conditional probability p(q|d) .
+We can then rank documents based on the likelihood of generating the query .
+Virtually all the existing query generation language models are based on either multinomial distribution [19, 6, 28] or multivariate Bernoulli distribution [21, 18] .
+The multinomial distribution is especially popular and also shown to be quite effective .
+The heavy use of multinomial distribution is partly due to the fact that it has been successfully used in speech recognition, where multinomial distribution is a natural choice for modeling the occurrence of a particular word in a particular position in text .
+Compared with multivariate Bernoulli, multinomial distribution has the advantage of being able to model the frequency of terms in the query; in contrast, multivariate Bernoulli only models the presence and absence of query terms, thus cannot capture different frequencies of query terms .
+However, multivariate Bernoulli also has one potential advantage over multinomial from the viewpoint of retrieval
+Note that term absence is also indirectly captured in a multinomial model through the constraint that all the term probabilities must sum to 1 .
+In this paper, we propose and study a new family of query generation models based on the Poisson distribution .
+In this new family of models, we model the frequency of each term independently with a Poisson distribution .
+To score a document, we would first estimate a multivariate Poisson model based on the document, and then score it based on the likelihood of the query given by the estimated Poisson model .
+In some sense, the Poisson model combines the advantage of multinomial in modeling term frequency and the advantage of the multivariate Bernoulli in accommodating per term smoothing .
+Indeed, similar to the multinomial distribution, the Poisson distribution models term frequencies, but without the constraint that all the term probabilities must sum to 1, and similar to multivariate Bernoulli, it models each term independently, thus can easily accommodate per term smoothing .
+As in the existing work on multinomial language models, smoothing is critical for this new family of models .
+We derive several smoothing methods for Poisson model in parallel to those used for multinomial distributions, and compare the corresponding retrieval models with those based on multinomial distributions .
+We find that while with some smoothing methods, the new model and the multinomial model lead to exactly the same formula, with some other smoothing methods they diverge, and the Poisson model brings in more flexibility for smoothing .
+In particular, a key difference is that the Poisson model can naturally accommodate perterm smoothing, which is hard to achieve with a multinomial model without heuristic twist of the semantics of a generative model .
+We exploit this potential advantage to develop a new term dependent smoothing algorithm for Poisson model and show that this new smoothing algorithm can improve performance over term independent smoothing algorithms using either Poisson or multinomial model .
+This advantage is seen for both one stage and two stage smoothing .
+Another potential advantage of the Poisson model is that its corresponding background model for smoothing can be improved through using a mixture model that has a closed form formula .
+This new background model is shown to outperform the standard background model and reduce the sensitivity of retrieval performance to the smoothing parameter .
+The rest of the paper is organized as follows .
+In Section 2, we introduce the new family of query generation models with Poisson distribution, and present various smoothing methods which lead to different retrieval functions .
+In Section 3, we analytically compare the Poisson language model with the multinomial language model, from the perspective of retrieval .
+We then design empirical experiments to compare the two families of language models in Section 4 .
+We discuss the related work in 5 and conclude in 6. .

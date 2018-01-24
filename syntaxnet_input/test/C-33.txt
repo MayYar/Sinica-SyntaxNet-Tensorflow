@@ -1,0 +1,339 @@
+Rewards-Based Negotiation for Providing Context 
+content:
+1 ABSTRACT :
+1-1:How to provide appropriate context information is a challenging problem in context aware computing .
+1-2:Most existing approaches use a centralized selection mechanism to decide which context information is appropriate .
+1-3:In this paper, we propose a novel approach based on negotiation with rewards to solving such problem .
+1-4:Distributed context providers negotiate with each other to decide who can provide context and how they allocate proceeds .
+1-5:In order to support our approach, we have designed a concrete negotiation model with rewards .
+1-6:We also evaluate our approach and show that it indeed can choose an appropriate context provider and allocate the proceeds fairly .
+1-7:C.2.4 [Distributed Systems]: Distributed .
+2 INTRODUCTION :
+2-1:Context awareness is a key concept in pervasive computing .
+2-2:Context informs both recognition and mapping by providing a structured, unified view of the world in which the system operates [1] .
+2-3:Context aware applications exploit context information, such as location, preferences of users and so on, to adapt their behaviors in response to changing requirements of users and pervasive environments .
+2-4:However, one specific kind of context can often be provided by different context providers (sensors or other data sources of context information) with different quality levels .
+2-5:For example, in a smart home, thermometer A"s measurement precision is 0.1 ◦ C, and thermometer B"s measurement precision is 0.5 ◦ information about temperature than B .
+2-6:Moreover, sometimes different context providers may provide conflictive context information .
+2-7:For example, different sensors report that the same person is in different places at the same time .
+2-8:Because context aware applications utilize context information to adapt their behaviors, inappropriate context information may lead to inappropriate behavior .
+2-9:Thus we should design a mechanism to provide appropriate context information for current context aware applications .
+2-10:In pervasive environments, context providers considered as relatively independent entities, have their own interests .
+2-11:They hope to get proceeds when they provide context information .
+2-12:However, most existing approaches consider context providers as entities without any personal interests, and use a centralized arbitrator provided by the middleware to decide who can provide appropriate context .
+2-13:Thus the burden of the middleware is very heavy, and its decision may be unfair and harm some providers" interests .
+2-14:Moreover, when such arbitrator is broken down, it will cause serious consequences for context aware applications .
+2-15:In this paper, we let distributed context providers themselves decide who provide context information .
+2-16:Since high reputation could help providers get more opportunities to provide context and get more proceeds in the future, providers try to get the right to provide good context to enhance their reputation .
+2-17:In order to get such right, context providers may agree to share some portion of the proceeds with its opponents .
+2-18:Thus context providers negotiate with each other to reach agreement on the issues who can provide context and how they allocate the proceeds .
+2-19:Our approach has some specific advantages: middleware of pervasive computing to decide who provides context .
+2-20:Thus it will reduce the burden of the middleware .
+2-21:decide who provide context, because it can avoid the serious consequences caused by a breakdown of a centralized arbitrator .
+2-22:proceeds allocation when providers negotiate with each other to reach agreement on their concerned problems .
+2-23:automatically .
+2-24:It does not need any applications and users" intervention .
+2-25:The negotiation model we have designed to support our approach is also a novel model in negotiation domain .
+2-26:This model can help negotiators reach agreement in the present negotiation process by providing some guarantees over the outcome of next negotiation process (i.e .
+2-27:rewards) .
+2-28:Negotiator may find current offer and reward worth more than counter offer which will delay the agreement, and accepts current offer and reward .
+2-29:Without the reward, it may find current offer worth less than the counter offer, and proposes its counter offer .
+2-30:It will cost more time to reach agreement .
+2-31:It also expands the negotiation space considered in present negotiation process, and therefore provides more possibilities to find better agreement .
+2-32:The remainder of this paper is organized as follows .
+2-33:Section 2 presents some assumptions .
+2-34:Section 3 describes our approach based on negotiation detailedly, including utility functions, negotiation protocol and context providers" strategies .
+2-35:Section 4 evaluates our approach .
+2-36:In section 5 we introduce some related work and conclude in section 6. .
+3 SOME ASSUMPTIONS :
+3-1:Before introducing our approach, we would like to give some assumptions: During the negotiation process, they exchange information honestly .
+3-2:Rewards confirmed in this negotiation process will be fulfilled in the next negotiation process .
+3-3:They should provide appropriate context information for current applications .
+3-4:After guaranteeing the system"s interest, they can try to maximize their own personal interests .
+3-5:The assumption is reasonable, because when an inappropriate context provider gets the right to provide bad context, as a punishment, its reputation will decrease, and the proceeds is also very small .
+3-6:influence their negotiation stance and behavior are private and not available to their opponents .
+3-7:Their utility functions are also private .
+3-8:environments, time is a critical factors .
+3-9:The current application often hopes to get context information as quickly as possible, so the time cost to reach agreement should be as short as possible .
+3-10:Context providers often have strict deadline by when the negotiation must be completed .
+3-11:After presenting these assumptions, we will propose our approach based on negotiation with rewards in the next section. .
+4 OUR APPROACH :
+4-1:In the beginning, we introduce the concepts of reputation and Quality of Context (QoC) attributes .
+4-2:Both will be used in our approach .
+4-3:Reputation of an agent is a perception regarding its behavior norms, which is held by other agents, based on experiences and observation of its past actions [7] .
+4-4:Here agent means context provider .
+4-5:Each provider"s reputation indicates its historical ability to provide appropriate context information .
+4-6:Quality of Context (QoC) attributes characterize the quality of context information .
+4-7:When applications require context information, they should specify their QoC requirements which express constraints of QoC attributes .
+4-8:Context providers can specify QoC attributes for the context information they deliver .
+4-9:Although we can decide who provides appropriate context according to QoC requirements and context providers" QoC information, applications" QoC requirements might not reflect the actual quality requirements .
+4-10:Thus, in addition to QoC, reputation information of context providers is another factor affecting the decision who can provide context information .
+4-11:Negotiation is a process by which a joint decision is made by two or more parties .
+4-12:The parties first verbalize contradictory demands and then move towards agreement by a process of concession making or search for new alternatives [2] .
+4-13:In pervasive environments, all available context providers negotiate with each other to decide who can provide context information .
+4-14:This process will be repeated because a kind of context is needed more than one time .
+4-15:Negotiation using persuasive arguments (such as threats, promises of future rewards, and appeals) allows negotiation parties to influence each others" preferences to reach better deals effectively and efficiently [9] .
+4-16:This pervasive negotiation is effective in repeated interaction because arguments can be constructed to directly impact future encounters .
+4-17:In this paper, for simplicity, we let negotiation take place between two providers .
+4-18:We extend Raiffa"s basic model for bilateral negotiation [8], and allow negotiators to negotiate with each other by exchanging arguments in the form of promises of future rewards or requests for future rewards .
+4-19:Rewards mean some extra proceeds in the next negotiation process .
+4-20:They can influence outcomes of current and future negotiation .
+4-21:In our approach, as described by Figure 1, the current application requires Context Manager to provide a specific type of context information satisfying QoC requirements .
+4-22:Context Manager finds that provider A and B can provide such kind of context with different quality levels .
+4-23:Then the manager tells A and B to negotiate to reach agreement on who can provide the context information and how they will allocate the proceeds .
+4-24:Both providers get reputation information from the database Reputation of Context Providers and QoC requirements, and then negotiate with each other according to our negotiation model .
+4-25:When negotiation is completed, the chosen provider will provide the context information to Context Manager, and then Context Manager delivers such information to the application and also stores it in Context Knowledge Base where current and historical context information is stored .
+4-26:The current application gives the feedback information about the provided context, and then Context Manager will update the chosen provider"s reputation information according to the feedback information .
+4-27:Context Manager also provides the proceeds to providers according to the feedback information and the time cost on negotiation .
+4-28:In the following parts of this section, we describe our negotiation model in detail, including context providers" utility functions to evaluate offers and rewards, negotiation protocol, and strategies to generate offers and rewards .
+4-29:Context Knowledge Base Reputation of Context Providers Context provider A Context Manager Negotiate Application"s QoC requirements and feedback Provide QoC requirements and proceeds Manage Context Provide Context Getreputation Getreputation Update reputation information according to feedback Context provider B Figure 1: Negotiate to provide appropriate context information .
+4-30:3.1 Utility function During the negotiation process, one provider proposes an offer and a reward to the other provider .
+4-31:An offer is noted as o = (c, p): c indicates the chosen context provider and its domain is Dc (i.e .
+4-32:the two context providers participating in the negotiation); p means the proposer"s portion of the proceeds, and its domain is Dp = [0,1] .
+4-33:Its opponent"s portion of the proceeds is 1−p .
+4-34:The reward ep"s domain is Dep = [ 1,1], and |ep| means the extra portion of proceeds the proposer promises to provide or requests in the next negotiation process .
+4-35:ep < 0 means the proposer promises to provide reward, ep > 0 means the proposer requests reward and ep =0 means no reward .
+4-36:The opponent evaluates the offer and reward to decide to accept them or propose a counter offer and a reward .
+4-37:Thus context providers should have utility functions to evaluate offers and rewards .
+4-38:Time is a critical factor, and only at times in the set T = {0, 1, 2, .
+4-39:.
+4-40:.
+4-41:tdeadline}, context providers can propose their offers .
+4-42:The set O include all available offers .
+4-43:Context provider A"s utility function of the offer and reward at time t UA : O × Dep × T → [−1, 1] is defined as: UA(o,ep,t)=(wA 1 ·UA c (c)+wA 2 ·UA p (p)+wA 3 ·UA ep(ep))·δA(t) (1) Similarly, the utility function of A"s opponent (i.e .
+4-44:B) can be defined as: UB(o,ep,t)=(wB 1 ·UB c (c)+wB 2 ·UB p (1−p)+wB 3 ·UB ep(−ep))·δB(t) In (1), wA 1 , wA 2 and wA 3 are weights given to c, p and ep respectively, and wA 1 + wA 2 + wA 3 =1 .
+4-45:Usually, the context provider pays the most attention to the system"s interests, pays the least attention to the reward, thus wA 1 > wA 2 > wA 3 .
+4-46:UA c : Dc → [−1, 1] is the utility function of the issue who provides context .
+4-47:This function is determined by two factors: the distance between c"s QoC and current application"s QoC requirements, and c"s reputation .
+4-48:The two negotiators acquire c"s QoC information from c, and we use the approach proposed in [4] to calculate the distance between c"s QoC and the application"s Qoc requirements .
+4-49:The required context has n QoC attributes and let the application"s wishes for this context be a = (a1, a2 .
+4-50:.
+4-51:.
+4-52:an) (where ai = means the application"s indifference to the i th QoC attribute), c"s QoC attributes cp = (cp1, cp2 .
+4-53:.
+4-54:.
+4-55:cpn) (where cpi = means c"s inability to provide a quantitative value for the i th QoC attribute) .
+4-56:Because numerical distance values of different properties are combined, e.g .
+4-57:location precision in metres with refresh rate in Hz, thus a standard scale for all dimension is needed .
+4-58:The scaling factors for the QoC attributes are s = (s1, s2 .
+4-59:.
+4-60:.
+4-61:sn) .
+4-62:In addition, different QoC attributes may have different weights: w = (w1, w2 .
+4-63:.
+4-64:.
+4-65:wn) .
+4-66:Then d = (d1, d2 .
+4-67:.
+4-68:.
+4-69:dn) di = (cpi − ai) · si · wi where cpi−ai = 0 for ai = and cpi−ai = o(ai) for cpi = ( o(.) determines the application"s satisfaction or dissatisfaction when c is unable to provide an estimate of a QoC attribute, given the value wished for by the application) .
+4-70:The distance can be linear distance (1 norm), Euclidean distance (2 norm), or the maximum distance (max norm): |d| = |d1| + |d2| + .
+4-71:.
+4-72:.
+4-73:+ |dn| (1 − norm) ||d||2 = |d1|2 + |d2|2 + .
+4-74:.
+4-75:.
+4-76:+ |dn|2 (2 − norm) ||d||∞ = max{|d1|, |d2| .
+4-77:.
+4-78:.
+4-79:|dn|} (max − norm) The detail description of this calculation can be found in [4] .
+4-80:Reputation of c can be acquired from the database Reputation of Context Providers .
+4-81:UA c (c) : R × Drep → [−1, 1] can be defined as: UA c (c) = wA c1 · UA d (d) + wA c2 · UA rep(rep) wA c1 and wA c2 are weights given to the distance and reputation respectively, and wA c1 + wA c2 = 1 .
+4-82:Drep is the domain of reputation information .
+4-83:UA d : R → [0, 1] is a monotonedecreasing function and UA rep : Drep → [−1, 1] is a monotoneincreasing function .
+4-84:UA p : Dp → [0, 1] is the utility function of the portion of proceeds A will receive and it is also a monotone increasing function .
+4-85:A"s utility function of reward ep UA ep : Dep → [−1, 1] is also a monotone increasing function and UA ep(0) = 0 .
+4-86:δA : T → [0, 1] is the time discount function .
+4-87:It is also a monotone decreasing function .
+4-88:When time t cost on negotiation increases, δA(t) will decrease, and the utility will also decrease .
+4-89:Thus both negotiators want to reach agreement as quickly as possible to avoid loss of utility .
+4-90:3.2 Negotiation protocol When provider A and B have got QoC requirements and reputation information, they begin to negotiate .
+4-91:They first set their reserved (the lowest acceptable) utility which can guarantee the system"s interests and their personal interests .
+4-92:When the context provider finds the utility of an offer and a reward is lower than its reserved utility, it will reject this proposal and terminate the negotiation process .
+4-93:The provider who starts the negotiation is chosen randomly .
+4-94:We assume A starts the negotiation, and it proposes offer o and reward ep to B according to its strategy (see subsection 3.3) .
+4-95:When B receives the proposal from A, it uses its utility function to evaluate it .
+4-96:If it is lower than its reserved utility, the provider terminates the negotiation .
+4-97:Otherwise, if UB(o, ep, t) ≥ UB(o , ep , t + 1) i.e .
+4-98:the utility of o and ep proposed by A at time t is greater than the utility of offer o" and reward ep" which B will propose to A at time t + 1, B will accept this offer and reward .
+4-99:The negotiation is completed .
+4-100:However, if UB(o, ep, t) < UB(o , ep , t + 1) then B will reject A"s proposal, and propose its counter offer and reward to A .
+4-101:When A receives B"s counter offer and reward, A evaluates them using its utility function, and compares the utility with the utility of offer and reward it wants to propose to B at time t+2, decides to accept it or give its counter offer and reward .
+4-102:This negotiation process continues and in each negotiation round, context providers concede in order to reach agreement .
+4-103:The negotiation will be successfully finished when agreement is reached, or be terminated forcibly due to deadline or the utility lower than reserved utility .
+4-104:When negotiation is forced to be terminated, Context manager will ask A and B to calculate UA c (A), UA c (B), UB c and UB c respectively .
+4-105:If UA c + UB c > UA c + UB c Context Manager let A provide context .
+4-106:If UA c + UB c < UA c + UB c then B will get the right to provide context information .
+4-107:When UA c + UB c = UA c + UB c Context Manager will select a provider from A and B randomly .
+4-108:In addition, Context Manager allocates the proceeds between the two providers .
+4-109:Although we can select one provider when negotiation is terminated forcibly, however, this may lead to the unfair allocation of the proceeds .
+4-110:Moreover, more time negotiators cost on negotiation, less proceeds will be given .
+4-111:Thus negotiators will try to reach agreement as soon as possible in order to avoid unnecessary loss .
+4-112:When the negotiation is finished, the chosen provider provides the context information to Context Manager which will deliver the information to current application .
+4-113:According to the application"s feedback information about this context, Context Manager updates the provider"s reputation stored in Reputation of Context Providers .
+4-114:The provider"s reputation may be enhanced or decreased .
+4-115:In addition, according to the feedback and the negotiation time, Context Manager will give proceeds to the provider .
+4-116:Then the provider will share the proceeds with its opponent according to the negotiation outcome and the reward confirmed in the last negotiation process .
+4-117:For example, in the last negotiation process A promised to give reward ep (0 ≤ ep < 1) to B, and A"s portion of the proceeds is p in current negotiation .
+4-118:Then A"s actual portion of the proceeds is p · (1 − ep), and its opponent B"s portion of the proceeds is 1−p+p·ep .
+4-119:3.3 Negotiation strategy The context provider might want to pursue the right to provide context information blindly in order to enhance its reputation .
+4-120:However when it finally provides bad context information, its reputation will be decreased and the proceeds is also very small .
+4-121:Thus the context provider should take action according to its strategy .
+4-122:The aim of provider"s negotiation strategy is to determine the best course of action which will result in a negotiation outcome maximizing its utility function (i.e how to generate an offer and a reward) .
+4-123:In our negotiation model, the context provider generates its offer and reward according to its pervious offer and reward and the last one sent by its opponent .
+4-124:At the beginning of the negotiation, context providers initialize their offers and rewards according to their beliefs and their reserved utility .
+4-125:If context provider A considers that it can provide good context and wants to enhance reputation, then it will propose that A provides the context information, shares some proceeds with its opponent B, and even promises to give reward .
+4-126:However, if A considers that it may provide bad context, A will propose that its opponent B provide the context, and require B to share some proceeds and provide reward .
+4-127:During the negotiation process, we assume that at time t A proposes offer ot and reward ept to B, at time t + 1, B proposes counter offer ot+1 and reward ept+1 to A .
+4-128:Then at time t + 2, when the utility of B"s proposal is greater than A"s reserved utility, A gives its response .
+4-129:Now we calculate the expected utility to be conceded at time t +2, we use Cu to express the conceded utility .
+4-130:Cu = (UA(ot, ept, t) − UA(ot+1, ept+1, t + 1)) · cA(t + 2) (UA(ot, ept, t) > UA(ot+1, ept+1, t + 1), otherwise, A will accept B"s proposal) where cA : T → [0, 1] is a monotoneincreasing function .
+4-131:cA(t) indicates A"s utility concession rate1 .
+4-132:A concedes a little in the beginning before conceding significantly towards the deadline .
+4-133:Then A generates its offer ot+2 = (ct+2, pt+2) and reward ept+2 at time t + 2 .
+4-134:The expected utility of A at time t + 2 is: UA(ot+2, ept+2, t + 2) = UA(ot, ept, t + 2) − Cu If UA(ot+2, ept+2, t + 2) ≤ UA(ot+1, ept+1, t + 1) then A will accept B"s proposal (i.e .
+4-135:ot+1 and ept+1) .
+4-136:Otherwise, A will propose its counter offer and reward based on Cu .
+4-137:We assume that Cu is distributed evenly on c, p and ep (i.e .
+4-138:the utility to be conceded on c, p and ep is 1 3 Cu respectively) .
+4-139:If |UA c (ct)−(UA c (ct)− 1 3 Cu δA(t+2) )| ≤ |UA c (ct+1)−(UA c (ct)− 1 3 Cu δA(t+2) )| i.e .
+4-140:the expected utility of c at time t+2 is UA c (ct)− 1 3 Cu δA(t+2) and it is closer to the utility of A"s proposal ct at time t, then at time t + 2, ct+2 = ct, else the utility is closer to B"proposal ct+1 and ct+2 = ct+1 .
+4-141:When ct+2 is equal to ct, the actual conceded utility of c is 0, and the total concession of p and ep is Cu .
+4-142:We divide the total concession of p and ep evenly, and get the conceded utility of p and ep respectively .
+4-143:We calculate pt+2 and ept+2 as follows: pt+2 = (UA p )−1 (UA p (pt) − 1 2 Cu δA(t + 2) ) ept+2 = (UA ep)−1 (UA ep(ept) − 1 2 Cu δA(t + 2) ) When ct+2 is equal to ct+1, the actual conceded utility of c is |UA c (ct+2) − UA c (ct)|, the total concession of p and ep is Cu δA(t+2) − |UA c (ct+2) − UA c (ct)|, then: pt+2 = (UA p )−1 (UA p (pt)− 1 2 ( Cu δA(t + 2) −|UA c (ct+2)−UA c (ct)|)) ept+2 = (UA ep)−1 (UA ep(ept)−1 2 ( Cu δA(t+2) −|UA c (ct+2)−UA c (ct)|)) Now, we have generated the offer and reward A will propose at time t + 2 .
+4-144:Similarly, B also can generate its offer and reward .
+4-145:1 For example, cA(t) = ( t tdeadline ) 1 β (0 < β < 1) Utility function and weight of c, p and ep Uc, w1 Up, w2 Uep, w3 A 0.5(1 − dA 500 ) + 0.5repA 1000 , 0.6 0.9p, 0.3 0.9ep, 0.1 B 0.52(1 − dB 500 ) + 0.48repB 1000 , 0.5 0.9p, 0.45 0.8ep, 0.05 Table 1: Utility functions and weights of c, p and ep for each provider .
+5 EVALUATION :
+5-1:In this section, we evaluate the effectiveness of our approach by simulated experiments .
+5-2:Context providers A and B negotiate to reach agreement .
+5-3:They get QoC requirements and calculate the distance between Qoc requirements and their QoC .
+5-4:For simplicity, in our experiments, we assume that the distance has been calculated, and dA represents distance between QoC requirements and A"s QoC, dB represents distance between QoC requirements and B"s QoC .
+5-5:The domain of dA and dB is [0,500] .
+5-6:We assume reputation value is a real number and its domain is [ 1000, 1000], repA represents A"s reputation value and repB represents B"s reputation value .
+5-7:We assume that both providers pay the most attention to the system"s interests, and pay the least attention to the reward, thus w1 > w2 > w3, and the weight of Ud approximates the weight of Urep .
+5-8:A and B"s utility functions and weights of c, p and ep are defined in Table 1 .
+5-9:We set deadline tdeadline = 100, and define time discount function δ(t) and concession rate function c(t) of A and B as follows: δA(t) = 0.9t δB(t) = 0.88t cA(t) = ( t tdeadline ) 1 0.8 cB(t) = ( t tdeadline ) 1 0.6 Given different values of dA, dB, repA and repB, A and B negotiate to reach agreement .
+5-10:The provider that starts the negotiation is chosen at random .
+5-11:We hope that when dA dB and repA repB, A will get the right to provide context and get a major portion of the proceeds, and when ∆d = dA − dB is in a small range (e.g .
+5-12:[ 50,50]) and ∆rep = repA − repB is in a small range (e.g .
+5-13:[ 50,50]), A and B will get approximately equal opportunities to provide context, and allocate the proceeds evenly .
+5-14:When dA−dB 500 approximates to dA−dB 1000 (i.e .
+5-15:the two providers" abilities to provide context information are approximately equal), we also hope that A and B get equal opportunities to provide context and allocate the proceeds evenly .
+5-16:According to the three situations above, we make three experiments as follows: Experiment 1 : In this experiment, A and B negotiate with each other for 50 times, and at each time, we assign different values to dA, dB, repA, repB (satisfying dA dB and repA repB) and the reserved utilities of A and B .
+5-17:When the experiment is completed, we find 3 negotiation games are terminated due to the utility lower than the reserved utility .
+5-18:A gets the right to provide context for 47 times .
+5-19:The average portion of proceeds A get is about 0.683, and B"s average portion of proceeds is 0.317 .
+5-20:The average time cost to reach agreement is 8.4 .
+5-21:We also find that when B asks A to provide context in its first offer, B can require and get more portion of the proceeds because of its goodwill .
+5-22:Experiment 2 : A and B also negotiate with each other for 50 times in this experiment given different values of dA, dB, repA, repB (satisfying −50 ≤ ∆d = dA − dB ≤ 50 and −50 ≤ ∆rep = drep −drep ≤ 50) and the reserved utilities of A and B .
+5-23:After the experiment, we find that there are 8 negotiation games terminated due to the utility lower than the reserved utility .
+5-24:A and B get the right to provide context for 20 times and 22 times respectively .
+5-25:The average portion of proceeds A get is 0.528 and B"s average portion of the proceeds is 0.472 .
+5-26:The average time cost on negotiation is 10.5 .
+5-27:Experiment 3 : In this experiment, A and B also negotiate with each other for 50 times given dA, dB, repA, repB (satisfying −0.2 ≤ dA−dB 500 − dA−dB 1000 ≤ 0.2) and the reserved utilities of A and B .
+5-28:There are 6 negotiation games terminated forcibly .
+5-29:A and B get the right to provide context for 21 times and 23 times respectively .
+5-30:The average portion of proceeds A get is 0.481 and B"s average portion of the proceeds is 0.519 .
+5-31:The average time cost on negotiation is 9.2 .
+5-32:One thing should be mentioned is that except for d, rep, p and ep, other factors (e.g .
+5-33:weights, time discount function δ(t) and concession rate function c(t)) could also affect the negotiation outcome .
+5-34:These factors should be adjusted according to providers" beliefs at the beginning of each negotiation process .
+5-35:In our experiments, for similarity, we assign values to them without any particularity in advance .
+5-36:These experiments" results prove that our approach can choose an appropriate context provider and can provide a relatively fair proceeds allocation .
+5-37:When one provider is obviously more appropriate than the other provider, the provider will get the right to provide context and get a major portion of the proceeds .
+5-38:When both providers have the approximately same abilities to provide context, their opportunities to provide context are equal and they can get about a half portion of the proceeds respectively. .
+6 RELATED WORK :
+6-1:In [4], Huebscher and McCann have proposed an adaptive middleware design for context aware applications .
+6-2:Their adaptive middleware uses utility functions to choose the best context provider (given the QoC requirements of applications and the QoC of alternative means of context acquisition) .
+6-3:In our negotiation model, the calculation of utility function Uc was inspired by this approach .
+6-4:Henricksen and Indulska propose an approach to modelling and using imperfect information in [3] .
+6-5:They characterize various types and sources of imperfect context information and present a set of novel context modelling constructs .
+6-6:They also outline a software infrastructure that supports the management and use of imperfect context information .
+6-7:Judd and Steenkiste in [5] describe a generic interface to query context services allowing clients to specify their quality requirements as bounds on accuracy, confidence, update time and sample interval .
+6-8:In [6], Lei et al .
+6-9:present a context service which accepts freshness and confidence meta data from context sources, and passes this along to clients so that they can adjust their level of trust accordingly .
+6-10:[10] presents a framework for realizing dynamic context consistency management .
+6-11:The framework supports inconsistency detection based on a semantic matching and inconsistency triggering model, and inconsistency resolution with proactive actions to context sources .
+6-12:Most approaches to provide appropriate context utilize a centralized arbitrator .
+6-13:In our approach, we let distributed context providers themselves decide who can provide appropriate context information .
+6-14:Our approach can reduce the burden of the middleware, because we do not need the middleware to provide a context selection mechanism .
+6-15:It can avoid the serious consequences caused by a breakdown of the arbitrator .
+6-16:Also, it can guarantee context providers" interests. .
+7 CONCLUSION AND FUTURE WORK :
+7-1:How to provide the appropriate context information is a challenging problem in pervasive computing .
+7-2:In this paper, we have presented a novel approach based on negotiation with rewards to attempt to solve such problem .
+7-3:Distributed context providers negotiate with each other to reach agreement on the issues who can provide the appropriate context and how they allocate the proceeds .
+7-4:The results of our experiments have showed that our approach can choose an appropriate context provider, and also can guarantee providers" interests by a relatively fair proceeds allocation .
+7-5:In this paper, we only consider how to choose an appropriate context provider from two providers .
+7-6:In the future work, this negotiation model will be extended, and more than two context providers can negotiate with each other to decide who is the most appropriate context provider .
+7-7:In the extended negotiation model, how to design efficient negotiation strategies will be a challenging problem .
+7-8:We assume that the context provider will fulfill its promise of reward in the next negotiation process .
+7-9:In fact, the context provider might deceive its opponent and provide illusive promise .
+7-10:We should solve this problem in the future .
+7-11:We also should deal with interactions which are interrupted by failing communication links in the future work. .
+8-1:The work is funded by 973 Project of China(2002CB312002, 2006CB303000), NSFC(60403014) and NSFJ(BK2006712).
+9-1:J
+9-2:Coutaz, J
+9-3:L
+9-4:Crowley, S
+9-5:Dobson, and D
+9-6:Garlan
+9-7:Context is key
+9-8:Commun
+9-9:ACM, 48(3):49  53, March 2005
+9-10:D.G.Pruitt
+9-11:Negotiation behavior
+9-12:Academic Press, 1981
+9-13:K
+9-14:Henricksen and J
+9-15:Indulska
+9-16:Modelling and using imperfect context information
+9-17:In Proceedings of the Second IEEE Annual Conference on Pervasive Computing and Communications Workshops, pages 33 37, 2004
+9-18:M
+9-19:C
+9-20:Huebscher and J
+9-21:A
+9-22:McCann
+9-23:Adaptive middleware for context aware applications in smart homes
+9-24:In Proceedings of the 2nd workshop on Middleware for pervasive and ad hoc computing MPAC "04, pages 111 116, October 2004
+9-25:G
+9-26:Judd and P
+9-27:Steenkiste
+9-28:Providing contextual information to pervasive computing applications
+9-29:In Proceedings of the First IEEE International Conference on Pervasive Computing and Communications, pages 133 142, 2003
+9-30:H
+9-31:Lei, D
+9-32:M
+9-33:Sow, J
+9-34:S
+9-35:Davis, G
+9-36:Banavar, and M
+9-37:R
+9-38:Ebling
+9-39:The design and applications of a context service
+9-40:ACM SIGMOBILE Mobile Computing and Communications Review, 6(4):45 55, 2002
+9-41:J
+9-42:Liu and V
+9-43:Issarny
+9-44:Enhanced reputation mechanism for mobile ad hoc networks
+9-45:In Trust Management: Second International Conference, iTrust, 2004
+9-46:H
+9-47:Raiffa
+9-48:The Art and Science of Negotiation
+9-49:Harvard University Press, 1982
+9-50:S
+9-51:D
+9-52:Ramchurn, N
+9-53:R
+9-54:Jennings, and C
+9-55:Sierra
+9-56:Persuasive negotiation for autonomous agents: A rhetorical approach
+9-57:In C
+9-58:Reed, editor, Workshop on the Computational Models of Natural Argument, IJCAI, pages 9 18, 2003
+9-59:C
+9-60:Xu and S
+9-61:C
+9-62:Cheung
+9-63:Inconsistency detection and resolution for context aware middleware support
+9-64:In Proceedings of the 10th European software engineering conference, pages 336 345, 2005
+picture:

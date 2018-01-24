@@ -1,0 +1,371 @@
+Event Threading within News Topics 
+content:
+1 ABSTRACT :
+1-1:With the overwhelming volume of online news available today, there is an increasing need for automatic techniques to analyze and present news to the user in a meaningful and efficient manner .
+1-2:Previous research focused only on organizing news stories by their topics into a flat hierarchy .
+1-3:We believe viewing a news topic as a flat collection of stories is too restrictive and inefficient for a user to understand the topic quickly .
+1-4:In this work, we attempt to capture the rich structure of events and their dependencies in a news topic through our event models .
+1-5:We call the process of recognizing events and their dependencies event threading .
+1-6:We believe our perspective of modeling the structure of a topic is more effective in capturing its semantics than a flat list of on topic stories .
+1-7:We formally define the novel problem, suggest evaluation metrics and present a few techniques for solving the problem .
+1-8:Besides the standard word based features, our approaches take into account novel features such as temporal locality of stories for event recognition and time ordering for capturing dependencies .
+1-9:Our experiments on a manually labeled data sets show that our models effectively identify the events and capture dependencies among them .
+1-10:H.3.3 [Information Search and Retrieval]: Clustering .
+2 INTRODUCTION :
+2-1:News forms a major portion of information disseminated in the world everyday .
+2-2:Common people and news analysts alike are very interested in keeping abreast of new things that happen in the news, but it is becoming very difficult to cope with the huge volumes of information that arrives each day .
+2-3:Hence there is an increasing need for automatic techniques to organize news stories in a way that helps users interpret and analyze them quickly .
+2-4:This problem is addressed by a research program called Topic Detection and Tracking [3] that runs an open annual competition on standardized tasks of news organization .
+2-5:One of the shortcomings of current TDT evaluation is its view of news topics as flat collection of stories .
+2-6:For example, the detection task of TDT is to arrange a collection of news stories into clusters of topics .
+2-7:However, a topic in news is more than a mere collection of stories: it is characterized by a definite structure of inter related events .
+2-8:This is indeed recognized by TDT which defines a topic as ‘a set of news stories that are strongly related by some seminal realworld event" where an event is defined as ‘something that happens at a specific time and location" [3] .
+2-9:For example, when a bomb explodes in a building, that is the seminal event that triggers the topic .
+2-10:Other events in the topic may include the rescue attempts, the search for perpetrators, arrests and trials and so on .
+2-11:We see that there is a pattern of dependencies between pairs of events in the topic .
+2-12:In the above example, the event of rescue attempts is ‘influenced" by the event of bombing and so is the event of search for perpetrators .
+2-13:In this work we investigate methods for modeling the structure of a topic in terms of its events .
+2-14:By structure, we mean not only identifying the events that make up a topic, but also establishing dependencies generally causal among them .
+2-15:We call the process of recognizing events and identifying dependencies among them event threading, an analogy to email threading that shows connections between related email messages .
+2-16:We refer to the resulting interconnected structure of events as the event model of the topic .
+2-17:Although this paper focuses on threading events within an existing news topic, we expect that such event based dependency structure more accurately reflects the structure of news than strictly bounded topics do .
+2-18:From a user"s perspective, we believe that our view of a news topic as a set of interconnected events helps him her get a quick overview of the topic and also allows him her navigate through the topic faster .
+2-19:The rest of the paper is organized as follows .
+2-20:In section 2, we discuss related work .
+2-21:In section 3, we define the problem and use an example to illustrate threading of events within a news topic .
+2-22:In section 4, we describe how we built the corpus for our problem .
+2-23:Section 5 presents our evaluation techniques while section 6 describes the techniques we use for modeling event structure .
+2-24:In section 7 we present our experiments and results .
+2-25:Section 8 concludes the paper with a few observations on our results and comments on future work .
+2-26:446 .
+3 RELATED WORK :
+3-1:The process of threading events together is related to threading of electronic mail only by name for the most part .
+3-2:Email usually incorporates a strong structure of referenced messages and consistently formatted subject headings though information retrieval techniques are useful when the structure breaks down [7] .
+3-3:Email threading captures reference dependencies between messages and does not attempt to reflect any underlying real world structure of the matter under discussion .
+3-4:Another area of research that looks at the structure within a topic is hierarchical text classification of topics [9, 6] .
+3-5:The hierarchy within a topic does impose a structure on the topic, but we do not know of an effort to explore the extent to which that structure reflects the underlying event relationships .
+3-6:Barzilay and Lee [5] proposed a content structure modeling technique where topics within text are learnt using unsupervised methods, and a linear order of these topics is modeled using hidden Markov models .
+3-7:Our work differs from theirs in that we do not constrain the dependency to be linear .
+3-8:Also their algorithms are tuned to work on specific genres of topics such as earthquakes, accidents, etc., while we expect our algorithms to generalize over any topic .
+3-9:In TDT, researchers have traditionally considered topics as flatclusters [1] .
+3-10:However, in TDT 2003, a hierarchical structure of topic detection has been proposed and [2] made useful attempts to adopt the new structure .
+3-11:However this structure still did not explicitly model any dependencies between events .
+3-12:In a work closest to ours, Makkonen [8] suggested modeling news topics in terms of its evolving events .
+3-13:However, the paper stopped short of proposing any models to the problem .
+3-14:Other related work that dealt with analysis within a news topic includes temporal summarization of news topics [4]. .
+4 PROBLEM DEFINITION AND NOTATION :
+4-1:In this work, we have adhered to the definition of event and topic as defined in TDT .
+4-2:We present some definitions (in italics) and our interpretations (regular faced) below for clarity .
+4-3:to users .
+4-4:In TDT, a story is assumed to refer to only a single topic .
+4-5:In this work, we also assume that each story discusses a single event .
+4-6:In other words, a story is the smallest atomic unit in the hierarchy (topic event story) .
+4-7:Clearly, both the assumptions are not necessarily true in reality, but we accept them for simplicity in modeling .
+4-8:time and place [10] .
+4-9:In our work, we represent an event by a set of stories that discuss it .
+4-10:Following the assumption of atomicity of a story, this means that any set of distinct events can be represented by a set of non overlapping clusters of news stories .
+4-11:event .
+4-12:We expand on this definition and interpret a topic as a series of related events .
+4-13:Thus a topic can be represented by clusters of stories each representing an event and a set of (directed or undirected) edges between pairs of these clusters representing the dependencies between these events .
+4-14:We will describe this representation of a topic in more detail in the next section .
+4-15:detects clusters of stories that discuss the same topic; Topic tracking detects stories that discuss a previously known topic [3] .
+4-16:Thus TDT concerns itself mainly with clustering stories into topics that discuss them .
+4-17:topic, and also captures the dependencies among the events .
+4-18:Thus the main difference between event threading and TDT is that we focus our modeling effort on microscopic events rather than larger topics .
+4-19:Additionally event threading models the relatedness or dependencies between pairs of events in a topic while TDT models topics as unrelated clusters of stories .
+4-20:We first define our problem and representation of our model formally and then illustrate with the help of an example .
+4-21:We are given a set of Ò news stories Ë ×½ ¡ ¡ ¡ ×Ò on a given topic Ì and their time of publication .
+4-22:We define a set of events ½ ¡ ¡ ¡ Ñ with the following constraints: ¾ ¾ Ë (1) × Ø (2) × ¾ × Ø × ¾ (3) While the first constraint says that each event is an element in the power set of S, the second constraint ensures that each story can belong to at most one event .
+4-23:The last constraint tells us that every story belongs to one of the events in .
+4-24:In fact this allows us to define a mapping function from stories to events as follows: ´× µ iff × ¾ (4) Further, we also define a set of directed edges ´ µ which denote dependencies between events .
+4-25:It is important to explain what we mean by this directional dependency: While the existence of an edge itself represents relatedness of two events, the direction could imply causality or temporal ordering .
+4-26:By causal dependency we mean that the occurrence of event B is related to and is a consequence of the occurrence of event A .
+4-27:By temporal ordering, we mean that event B happened after event A and is related to A but is not necessarily a consequence of A .
+4-28:For example, consider the following two events: ‘plane crash" (event A) and ‘subsequent investigations" (event B) in a topic on a plane crash incident .
+4-29:Clearly, the investigations are a result of the crash .
+4-30:Hence an arrow from A to B falls under the category of causal dependency .
+4-31:Now consider the pair of events ‘Pope arrives in Cuba"(event A) and ‘Pope meets Castro"(event B) in a topic that discusses Pope"s visit to Cuba .
+4-32:Now events A and B are closely related through their association with the Pope and Cuba but event B is not necessarily a consequence of the occurrence of event A .
+4-33:An arrow in such scenario captures what we call time ordering .
+4-34:In this work, we do not make an attempt to distinguish between these two kinds of dependencies and our models treats them as identical .
+4-35:A simpler (and hence less controversial) choice would be to ignore direction in the dependencies altogether and consider only undirected edges .
+4-36:This choice definitely makes sense as a first step but we chose the former since we believe directional edges make more sense to the user as they provide a more illustrative flow chart perspective to the topic .
+4-37:To make the idea of event threading more concrete, consider the example of TDT3 topic 30005, titled ‘Osama bin Laden"s Indictment" (in the 1998 news) .
+4-38:This topic has 23 stories which form 5 events .
+4-39:An event model of this topic can be represented as in figure indictment .
+4-40:The occurrence of event 2, namely ‘Trial and Indictment of Osama" is dependent on the event of ‘evidence gathered by CIA", i.e., event 1 .
+4-41:Similarly, event 2 influences the occurrences of events 3, 4 and 5, namely ‘Threats from Militants", ‘Reactions 447 from Muslim World" and ‘announcement of reward" .
+4-42:Thus all the dependencies in the example are causal .
+4-43:Extending our notation further, we call an event A a parent of B and B the child of A, if ´ µ ¾ .
+4-44:We define an event model Å ´ µ to be a tuple of the set of events and set of dependencies .
+4-45:Trial and (5) (3) (4) CIA announces reward Muslim world Reactions from Islamic militants Threats from (2) (1) Osama Indictment of CIA gathered by Evidence Figure 1: An event model of TDT topic ‘Osama bin Laden"s indictment" .
+4-46:Event threading is strongly related to topic detection and tracking, but also different from it significantly .
+4-47:It goes beyond topics, and models the relationships between events .
+4-48:Thus, event threading can be considered as a further extension of topic detection and tracking and is more challenging due to at least the following difficulties. .
+5 The number of events is unknown. :
+5-1:metrics and benchmark data is available .
+5-2:In the next few sections, we will describe our attempts to tackle these problems. .
+6 LABELED DATA :
+6-1:We picked 28 topics from the TDT2 corpus and 25 topics from the TDT3 corpus .
+6-2:The criterion we used for selecting a topic is that it should contain at least 15 on topic stories from CNN headline news .
+6-3:If the topic contained more than 30 CNN stories, we picked only the first 30 stories to keep the topic short enough for annotators .
+6-4:The reason for choosing only CNN as the source is that the stories from this source tend to be short and precise and do not tend to digress or drift too far away from the central theme .
+6-5:We believe modeling such stories would be a useful first step before dealing with more complex data sets .
+6-6:We hired an annotator to create truth data .
+6-7:Annotation includes defining the event membership for each story and also the dependencies .
+6-8:We supervised the annotator on a set of three topics that we did our own annotations on and then asked her to annotate the 28 topics from TDT2 and 25 topics from TDT3 .
+6-9:In identifying events in a topic, the annotator was asked to broadly follow the TDT definition of an event, i.e., ‘something that happens at a specific time and location" .
+6-10:The annotator was encouraged to merge two events A and B into a single event C if any of the stories discusses both A and B .
+6-11:This is to satisfy our assumption that each story corresponds to a unique event .
+6-12:The annotator was also encouraged to avoid singleton events, events that contain a single news story, if possible .
+6-13:We realized from our own experience that people differ in their perception of an event especially when the number of stories in that event is small .
+6-14:As part of the guidelines, we instructed the annotator to assign titles to all the events in each topic .
+6-15:We believe that this would help make her understanding of the events more concrete .
+6-16:We however, do not use or model these titles in our algorithms .
+6-17:In defining dependencies between events, we imposed no restrictions on the graph structure .
+6-18:Each event could have single, multiple or no parents .
+6-19:Further, the graph could have cycles or orphannodes .
+6-20:The annotator was however instructed to assign a dependency from event A to event B if and only if the occurrence of B is ‘either causally influenced by A or is closely related to A and follows A in time" .
+6-21:From the annotated topics, we created a training set of 26 topics and a test set of 27 topics by merging the 28 topics from TDT2 and 25 from TDT3 and splitting them randomly .
+6-22:Table 1 shows that the training and test sets have fairly similar statistics .
+6-23:Feature Training set Test set Num .
+6-24:topics 26 27 Avg .
+6-25:Num .
+6-26:Stories Topic 28.69 26.74 Avg .
+6-27:Doc .
+6-28:Len .
+6-29:64.60 64.04 Avg .
+6-30:Num .
+6-31:Stories Event 5.65 6.22 Avg .
+6-32:Num .
+6-33:Events Topic 5.07 4.29 Avg .
+6-34:Num .
+6-35:Dependencies Topic 3.07 2.92 Avg .
+6-36:Num .
+6-37:Dependencies Event 0.61 0.68 Avg .
+6-38:Num .
+6-39:Days Topic 30.65 34.48 Table 1: Statistics of annotated data .
+7 EVALUATION :
+7-1:A system can generate some event model Å¼ ´ ¼ ¼µ using certain algorithms, which is usually different from the truth model Å ´ µ (we assume the annotator did not make any mistake) .
+7-2:Comparing a system event model Å¼ with the true model Å requires comparing the entire event models including their dependency structure .
+7-3:And different event granularities may bring huge discrepancy between Å¼ and Å .
+7-4:This is certainly non trivial as even testing whether two graphs are isomorphic has no known polynomial time solution .
+7-5:Hence instead of comparing the actual structure we examine a pair of stories at a time and verify if the system and true labels agree on their event memberships and dependencies .
+7-6:Specifically, we compare two kinds of story pairs: ¯ Cluster pairs ( ´Åµ): These are the complete set of unordered pairs ´× × µ of stories × and × that fall within the same event given a model Å .
+7-7:Formally, ´Åµ ´× × µ × × ¾ Ë ´× µ ´× µ (5) where is the function in Å that maps stories to events as defined in equation 4 .
+7-8:¯ Dependency pairs ( ´Åµ): These are the set of all ordered pairs of stories ´× × µ such that there is a dependency from the event of × to the event of × in the model Å .
+7-9:´Åµ ´× × µ ´ ´× µ ´× µµ ¾ (6) Note the story pair is ordered here, so ´× × µ is not equivalent to ´× × µ .
+7-10:In our evaluation, a correct pair with wrong 448 (B >D) Cluster pairs (A,C) Dependency pairs (A >B) (C >B) (B >D) D,E D,E (D,E) (D,E) (A >C) (A >E) (B >C) (B >E) (B >E) Cluster precision: 1 2 Cluster Recall: 1 2 Dependency Recall: 2 6 Dependency Precision: 2 4 (A >D) True event model System event model A,B C A,C B Cluster pairs (A,B) Dependency pairs Figure 2: Evaluation measures direction will be considered a mistake .
+7-11:As we mentioned earlier in section 3, ignoring the direction may make the problem simpler, but we will lose the expressiveness of our representation .
+7-12:Given these two sets of story pairs corresponding to the true event model Å and the system event model Å¼, we define recall and precision for each category as follows .
+7-13:¯ Cluster Precision (CP): It is the probability that two randomly selected stories × and × are in the same true event given that they are in the same system event .
+7-14:È È´ ´× µ ´× µ ¼´× µ ¼´× µµ ´Åµ ´Å¼µ ´Å¼µ (7) where ¼ is the story event mapping function corresponding to the model Å¼ .
+7-15:¯ Cluster Recall(CR): It is the probability that two randomly selected stories × and × are in the same system event given that they are in the same true event .
+7-16:Ê È´ ¼´× µ ¼´× µ ´× µ ´× µµ ´Åµ ´Å¼µ ´Åµ (8) ¯ Dependency Precision(DP): It is the probability that there is a dependency between the events of two randomly selected stories × and × in the true model Å given that they have a dependency in the system model Å¼ .
+7-17:Note that the direction of dependency is important in comparison .
+7-18:È È´´ ´× µ ´× µµ ¾ ´ ¼´× µ ¼´× µµ ¾ ¼µ ´Åµ ´Å¼µ ´Å¼µ (9) ¯ Dependency Recall(DR): It is the probability that there is a dependency between the events of two randomly selected stories × and × in the system model Å¼ given that they have a dependency in the true model Å .
+7-19:Again, the direction of dependency is taken into consideration .
+7-20:Ê È´´ ¼´× µ ¼´× µµ ¾ ¼ ´ ´× µ ´× µµ ¾ µ ´Åµ ´Å¼µ ´Åµ (10) The measures are illustrated by an example in figure 2 .
+7-21:We also combine these measures using the well known F1 measure commonly used in text classification and other research areas as shown below .
+7-22:¾ ¢ È ¢ Ê È · Ê ¾ ¢ È ¢ Ê È · Ê Â ¾ ¢ ¢ · (11) where and are the cluster and dependency F1 measures respectively and Â is the Joint F1 measure (Â ) that we use to measure the overall performance. .
+8 TECHNIQUES :
+8-1:The task of event modeling can be split into two parts: clustering the stories into unique events in the topic and constructing dependencies among them .
+8-2:In the following subsections, we describe techniques we developed for each of these sub tasks .
+8-3:6.1 Clustering Each topic is composed of multiple events, so stories must be clustered into events before we can model the dependencies among them .
+8-4:For simplicity, all stories in the same topic are assumed to be available at one time, rather than coming in a text stream .
+8-5:This task is similar to traditional clustering but features other than word distributions may also be critical in our application .
+8-6:In many text clustering systems, the similarity between two stories is the inner product of their tf idf vectors, hence we use it as one of our features .
+8-7:Stories in the same event tend to follow temporal locality, so the time stamp of each story can be a useful feature .
+8-8:Additionally, named entities such as person and location names are another obvious feature when forming events .
+8-9:Stories in the same event tend to be related to the same person(s) and locations(s) .
+8-10:In this subsection, we present an agglomerative clustering algorithm that combines all these features .
+8-11:In our experiments, however, we study the effect of each feature on the performance separately using modified versions of this algorithm .
+8-12:6.1.1 Agglomerative clustering with time decay We initialize our events to singleton events (clusters), i.e., each cluster contains exactly one story .
+8-13:So the similarity between two events, to start with, is exactly the similarity between the corresponding stories .
+8-14:The similarity Û×ÙÑ´×½ ×¾µ between two stories ×½ and ×¾ is given by the following formula: Û×ÙÑ´×½ ×¾µ ½ Ó×´×½ ×¾µ · ¾ÄÓ ´×½ ×¾µ · ¿È Ö´×½ ×¾µ (12) Here ½, ¾, ¿ are the weights on different features .
+8-15:In this work, we determined them empirically, but in the future, one can consider more sophisticated learning techniques to determine them .
+8-16:Ó×´×½ ×¾µ is the cosine similarity of the term vectors .
+8-17:ÄÓ ´×½ ×¾µ is 1 if there is some location that appears in both stories, otherwise it is 0 .
+8-18:È Ö´×½ ×¾µ is similarly defined for person name .
+8-19:We use time decay when calculating similarity of story pairs, i.e., the larger time difference between two stories, the smaller their similarities .
+8-20:The time period of each topic differs a lot, from a few days to a few months .
+8-21:So we normalize the time difference using the whole duration of that topic .
+8-22:The time decay adjusted similarity 449 × Ñ´×½ ×¾µ is given by × Ñ´×½ ×¾µ Û×ÙÑ´×½ ×¾µ  « Ø½ Ø¾ Ì (13) where Ø½ and Ø¾ are the time stamps for story 1 and 2 respectively .
+8-23:T is the time difference between the earliest and the latest story in the given topic .
+8-24:« is the time decay factor .
+8-25:In each iteration, we find the most similar event pair and merge them .
+8-26:We have three different ways to compute the similarity between two events Ù and Ú: ¯ Average link: In this case the similarity is the average of the similarities of all pairs of stories between Ù and Ú as shown below: × Ñ´ Ù Ú µ È×Ù¾ Ù È×Ú¾ Ú × Ñ´×Ù ×Ú µ Ù Ú (14) ¯ Complete link: The similarity between two events is given by the smallest of the pair wise similarities .
+8-27:× Ñ´ Ù Ú µ Ñ Ò ×Ù¾ Ù ×Ú¾ Ú × Ñ´×Ù ×Ú µ (15) ¯ Single link: Here the similarity is given by the best similarity between all pairs of stories .
+8-28:× Ñ´ Ù Ú µ Ñ Ü ×Ù¾ Ù ×Ú¾ Ú × Ñ´×Ù ×Ú µ (16) This process continues until the maximum similarity falls below the threshold or the number of clusters is smaller than a given number .
+8-29:6.2 Dependency modeling Capturing dependencies is an extremely hard problem because it may require a ‘deeper understanding" of the events in question .
+8-30:A human annotator decides on dependencies not just based on the information in the events but also based on his her vast repertoire of domain knowledge and general understanding of how things operate in the world .
+8-31:For example, in Figure 1 a human knows ‘Trial and indictment of Osama" is influenced by ‘Evidence gathered by CIA" because he she understands the process of law in general .
+8-32:We believe a robust model should incorporate such domain knowledge in capturing dependencies, but in this work, as a first step, we will rely on surface features such as time ordering of news stories and word distributions to model them .
+8-33:Our experiments in later sections demonstrate that such features are indeed useful in capturing dependencies to a large extent .
+8-34:In this subsection, we describe the models we considered for capturing dependencies .
+8-35:In the rest of the discussion in this subsection, we assume that we are already given the mapping ¼ Ë and we focus only on modeling the edges ¼ .
+8-36:First we define a couple of features that the following models will employ .
+8-37:First we define a 1 1 time ordering function Ø Ë ½ ¡ ¡ ¡ Ò that sorts stories in ascending order by their time of publication .
+8-38:Now, the event time ordering function Ø is defined as follows .
+8-39:Ø ½ ¡ ¡ ¡ Ñ × Ø Ù Ú ¾ Ø ´ Ùµ Ø ´ Úµ ´µ Ñ Ò ×Ù¾ Ù Ø´×Ùµ Ñ Ò ×Ú¾ Ú Ø´×Úµ (17) In other words, Ø time orders events based on the time ordering of their respective first stories .
+8-40:We will also use average cosine similarity between two events as a feature and it is defined as follows .
+8-41:Ú Ë Ñ´ Ù Ú µ È×Ù¾ Ù È×Ú¾ Ú Ó×´×Ù ×Ú µ Ù Ú (18) 6.2.1 Complete Link model In this model, we assume that there are dependencies between all pairs of events .
+8-42:The direction of dependency is determined by the time ordering of the first stories in the respective events .
+8-43:Formally, the system edges are defined as follows .
+8-44:¼ ´ Ù Ú µ Ø ´ Ùµ Ø ´ Ú µ (19) where Ø is the event time ordering function .
+8-45:In other words, the dependency edge is directed from event Ù to event Ú , if the first story in event Ù is earlier than the first story in event Ú .
+8-46:We point out that this is not to be confused with the complete link algorithm in clustering .
+8-47:Although we use the same names, it will be clear from the context which one we refer to .
+8-48:6.2.2 Simple Thresholding This model is an extension of the complete link model with an additional constraint that there is a dependency between any two events Ù and Ú only if the average cosine similarity between event Ù and event Ú is greater than a threshold Ì .
+8-49:Formally, ¼ ´ Ù Úµ Ú Ë Ñ´ Ù Ú µ Ì Ø ´ Ùµ Ø ´ Ú µ (20) 6.2.3 Nearest Parent Model In this model, we assume that each event can have at most one parent .
+8-50:We define the set of dependencies as follows .
+8-51:¼ ´ Ù Úµ Ú Ë Ñ´ Ù Ú µ Ì Ø ´ Úµ Ø ´ Ùµ · ½ (21) Thus, for each event Ú , the nearest parent model considers only the event preceding it as defined by Ø as a potential candidate .
+8-52:The candidate is assigned as the parent only if the average similarity exceeds a pre defined threshold Ì .
+8-53:6.2.4 Best Similarity Model This model also assumes that each event can have at most one parent .
+8-54:An event Ú is assigned a parent Ù if and only if Ù is the most similar earlier event to Ú and the similarity exceeds a threshold Ì .
+8-55:Mathematically, this can be expressed as: ¼ ´ Ù Ú µ Ú Ë Ñ´ Ù Úµ Ì Ù Ö Ñ Ü Û Ø ´ Ûµ Ø ´ Úµ Ú Ë Ñ´ Û Ú µ (22) 6.2.5 Maximum Spanning Tree model In this model, we first build a maximum spanning tree using a greedy algorithm on the following fully connected weighted, undirected graph whose vertices are the events and whose edges are defined as follows: ´ Ù Ú µ Û´ Ù Ú µ Ú Ë Ñ´ Ù Úµ (23) Let ÅËÌ´ µ be the set of edges in the maximum spanning tree of ¼ ´ Ù Ú µ ´ Ù Ú µ ¾ ÅËÌ´ µ Ø ´ Ùµ Ø ´ Úµ Ú Ë Ñ´ Ù Ú µ Ì (24) 450 Thus in this model, we assign dependencies between the most similar events in the topic. .
+9 EXPERIMENTS :
+9-1:Our experiments consists of three parts .
+9-2:First we modeled only the event clustering part (defining the mapping function ¼) using clustering algorithms described in section 6.1 .
+9-3:Then we modeled only the dependencies by providing to the system the true clusters and running only the dependency algorithms of section 6.2 .
+9-4:Finally, we experimented with combinations of clustering and dependency algorithms to produce the complete event model .
+9-5:This way of experimentation allows us to compare the performance of our algorithms in isolation and in association with other components .
+9-6:The following subsections present the three parts of our experimentation .
+9-7:7.1 Clustering We have tried several variations of the Ì algorithm to study the effects of various features on the clustering performance .
+9-8:All the parameters are learned by tuning on the training set .
+9-9:We also tested the algorithms on the test set with parameters fixed at their optimal values learned from training .
+9-10:We used agglomerative clusModel best T CP CR CF P value cos+1 lnk 0.15 0.41 0.56 0.43cos+all lnk 0.00 0.40 0.62 0.45cos+Loc+avg lnk 0.07 0.37 0.74 0.45cos+Per+avg lnk 0.07 0.39 0.70 0.46cos+TD+avg lnk 0.04 0.45 0.70 0.53 2.9e 4* cos+N(T)+avg lnk 0.41 0.62 0.48 7.5e 2 cos+N(T)+T+avg lnk 0.03 0.42 0.62 0.49 2.4e 2* cos+TD+N(T)+avg lnk 0.44 0.66 0.52 7.0e 3* cos+TD+N(T)+T+avg lnk 0.03 0.47 0.64 0.53 1.1e 3* Baseline(cos+avg lnk) 0.05 0.39 0.67 0.46Table 2: Comparison of agglomerative clustering algorithms (training set) tering based on only cosine similarity as our clustering baseline .
+9-11:The results on the training and test sets are in Table 2 and 3 respectively .
+9-12:We use the Cluster F1 measure averaged over all topics as our evaluation criterion .
+9-13:Model CP CR CF P value cos+1 lnk 0.43 0.49 0.39cos+all lnk 0.43 0.62 0.47cos+Loc+avg lnk 0.37 0.73 0.45cos+Per+avg lnk 0.44 0.62 0.45cos+TD+avg lnk 0.48 0.70 0.54 0.014* cos+N(T)+avg lnk 0.41 0.71 0.51 0.31 cos+N(T)+T+avg lnk 0.43 0.69* 0.52 0.14 cos+TD+N(T)+avg lnk 0.43 0.76 0.54 0.025* cos+TD+N(T)+T+avg lnk 0.47 0.69 0.54 0.0095* Baseline(cos+avg lnk) 0.44 0.67 0.50Table 3: Comparison of agglomerative clustering algorithms (test set) P value marked with a £ means that it is a statistically significant improvement over the baseline (95% confidence level, one tailed T test) .
+9-14:The methods shown in table 2 and 3 are: ¯ Baseline: tf idf vector weight, cosine similarity, average link in clustering .
+9-15:In equation 12, ½ ½, ¾ ¿ ¼ .
+9-16:And « ¼ in equation 13 .
+9-17:This F value is the maximum obtained by tuning the threshold .
+9-18:¯ cos+1 lnk: Single link comparison (see equation 16) is used where similarity of two clusters is the maximum of all story pairs, other configurations are the same as the baseline run .
+9-19:¯ cos+all lnk: Complete link algorithm of equation 15 is used .
+9-20:Similar to single link but it takes the minimum similarity of all story pairs .
+9-21:¯ cos+Loc+avg lnk: Location names are used when calculating similarity .
+9-22:¾ ¼ ¼ in equation 12 .
+9-23:All algorithms starting from this one use average link (equation 14), since single link and complete link do not show any improvement of performance .
+9-24:¯ cos+Per+avg lnk: ¿ ¼ ¼ in equation 12, i.e., we put some weight on person names in the similarity .
+9-25:¯ cos+TD+avg lnk: Time Decay coefficient « ½ in equation 13, which means the similarity between two stories will be decayed to ½ if they are at different ends of the topic .
+9-26:¯ cos+N(T)+avg lnk: Use the number of true events to control the agglomerative clustering algorithm .
+9-27:When the number of clusters is fewer than that of truth events, stop merging clusters .
+9-28:¯ cos+N(T)+T+avg lnk: similar to N(T) but also stop agglomeration if the maximal similarity is below the threshold Ì .
+9-29:¯ cos+TD:+N(T)+avg lnk: similar to N(T) but the similarities are decayed, « ½ in equation 13 .
+9-30:¯ cos+TD+N(T)+T+avg lnk: similar to TD+N(Truth) but calculation halts when the maximal similarity is smaller than the threshold Ì .
+9-31:Our experiments demonstrate that single link and complete link similarities perform worse than average link, which is reasonable since average link is less sensitive to one or two story pairs .
+9-32:We had expected locations and person names to improve the result, but it is not the case .
+9-33:Analysis of topics shows that many on topic stories share the same locations or persons irrespective of the event they belong to, so these features may be more useful in identifying topics rather than events .
+9-34:Time decay is successful because events are temporally localized, i.e., stories discussing the same event tend to be adjacent to each other in terms of time .
+9-35:Also we noticed that providing the number of true events improves the performance since it guides the clustering algorithm to get correct granularity .
+9-36:However, for most applications, it is not available .
+9-37:We used it only as a cheat experiment for comparison with other algorithms .
+9-38:On the whole, time decay proved to the most powerful feature besides cosine similarity on both training and test sets .
+9-39:7.2 Dependencies In this subsection, our goal is to model only dependencies .
+9-40:We use the true mapping function and by implication the true events Î .
+9-41:We build our dependency structure ¼ using all the five models described in section 6.2 .
+9-42:We first train our models on the 26 training topics .
+9-43:Training involves learning the best threshold Ì for each of the models .
+9-44:We then test the performances of all the trained models on the 27 test topics .
+9-45:We evaluate our performance 451 using the average values of Dependency Precision (DP), Dependency Recall and Dependency F measure .
+9-46:We consider the complete link model to be our baseline since for each event, it trivially considers all earlier events to be parents .
+9-47:Table 4 lists the results on the training set .
+9-48:We see that while all the algorithms except MST outperform the baseline complete link algorithm , the nearest Parent algorithm is statistically significant from the baseline in terms of its DF value using a one tailed paired T test at 95% confidence level .
+9-49:Model best Ì DP DR DF P value Nearest Parent 0.025 0.55 0.62 0.56 0.04* Best Similarity 0.02 0.51 0.62 0.53 0.24 MST 0.0 0.46 0.58 0.48Simple Thresh .
+9-50:0.045 0.45 0.76 0.52 0.14 Complete link 0.36 0.93 0.48Table 4: Results on the training set: Best Ì is the optimal value of the threshold Ì .
+9-51:* indicates the corresponding model is statistically significant compared to the baseline using a one tailed, paired T test at 95% confidence level .
+9-52:In table 5 we present the comparison of the models on the test set .
+9-53:Here, we do not use any tuning but set the threshold to the corresponding optimal values learned from the training set .
+9-54:The results throw some surprises: The nearest parent model, which was significantly better than the baseline on training set, turns out to be worse than the baseline on the test set .
+9-55:However all the other models are better than the baseline including the best similarity which is statistically significant .
+9-56:Notice that all the models that perform better than the baseline in terms of DF, actually sacrifice their recall performance compared to the baseline, but improve on their precision substantially thereby improving their performance on the DF measure .
+9-57:We notice that both simple thresholding and best similarity are better than the baseline on both training and test sets although the improvement is not significant .
+9-58:On the whole, we observe that the surface level features we used capture the dependencies to a reasonable level achieving a best value of 0.72 DF on the test set .
+9-59:Although there is a lot of room for improvement, we believe this is a good first step .
+9-60:Model DP DR DF P value Nearest Parent 0.61 0.60 0.60Best Similarity 0.71 0.74 0.72 0.04* MST 0.70 0.68 0.69 0.22 Simple Thresh .
+9-61:0.57 0.75 0.64 0.24 Baseline (Complete link) 0.50 0.94 0.63Table 5: Results on the test set 7.3 Combining Clustering and Dependencies Now that we have studied the clustering and dependency algorithms in isolation, we combine the best performing algorithms and build the entire event model .
+9-62:Since none of the dependency algorithms has been shown to be consistently and significantly better than the others, we use all of them in our experimentation .
+9-63:From the clustering techniques, we choose the best performing Cos+TD .
+9-64:As a baseline, we use a combination of the baselines in each components, i.e., cos for clustering and complete link for dependencies .
+9-65:Note that we need to retrain all the algorithms on the training set because our objective function to optimize is now JF, the joint F measure .
+9-66:For each algorithm, we need to optimize both the clustering threshold and the dependency threshold .
+9-67:We did this empirically on the training set and the optimal values are listed in table 6 .
+9-68:The results on the training set, also presented in table 6, indicate that cos+TD+Simple Thresholding is significantly better than the baseline in terms of the joint F value JF, using a one tailed paired Ttest at 95% confidence level .
+9-69:On the whole, we notice that while the clustering performance is comparable to the experiments in section 7.1, the overall performance is undermined by the low dependency performance .
+9-70:Unlike our experiments in section 7.2 where we had provided the true clusters to the system, in this case, the system has to deal with deterioration in the cluster quality .
+9-71:Hence the performance of the dependency algorithms has suffered substantially thereby lowering the overall performance .
+9-72:The results on the test set present a very similar story as shown in table 7 .
+9-73:We also notice a fair amount of consistency in the performance of the combination algorithms .
+9-74:cos+TD+Simple Thresholding outperforms the baseline significantly .
+9-75:The test set results also point to the fact that the clustering component remains a bottleneck in achieving an overall good performance. .
+10-1:In this paper, we have presented a new perspective of modeling news topics
+10-2:Contrary to the TDT view of topics as flat collection of news stories, we view a news topic as a relational structure of events interconnected by dependencies
+10-3:In this paper, we also proposed a few approaches for both clustering stories into events and constructing dependencies among them
+10-4:We developed a timedecay based clustering approach that takes advantage of temporallocalization of news stories on the same event and showed that it performs significantly better than the baseline approach based on cosine similarity
+10-5:Our experiments also show that we can do fairly well on dependencies using only surface features such as cosinesimilarity and time stamps of news stories as long as true events are provided to the system
+10-6:However, the performance deteriorates rapidly if the system has to discover the events by itself
+10-7:Despite that discouraging result, we have shown that our combined algorithms perform significantly better than the baselines
+10-8:Our results indicate modeling dependencies can be a very hard problem especially when the clustering performance is below ideal level
+10-9:Errors in clustering have a magnifying effect on errors in dependencies as we have seen in our experiments
+10-10:Hence, we should focus not only on improving dependencies but also on clustering at the same time
+10-11:As part of our future work, we plan to investigate further into the data and discover new features that influence clustering as well as dependencies
+10-12:And for modeling dependencies, a probabilistic framework should be a better choice since there is no definite answer of yes no for the causal relations among some events
+10-13:We also hope to devise an iterative algorithm which can improve clustering and dependency performance alternately as suggested by one of the reviewers
+10-14:We also hope to expand our labeled corpus further to include more diverse news sources and larger and more complex event structures
+10-15:Acknowledgments We would like to thank the three anonymous reviewers for their valuable comments
+10-16:This work was supported in part by the Center 452 Model Cluster T Dep
+10-17:T CP CR CF DP DR DF JF P value cos+TD+Nearest Parent 0.055 0.02 0.51 0.53 0.49 0.21 0.19 0.19 0.27cos+TD+Best Similarity 0.04 0.02 0.45 0.70 0.53 0.21 0.33 0.23 0.32cos+TD+MST 0.04 0.00 0.45 0.70 0.53 0.22 0.35 0.25 0.33cos+TD+Simple Thresholding 0.065 0.02 0.56 0.47 0.48 0.23 0.61 0.32 0.38 0.0004* Baseline (cos+Complete link) 0.10  0.58 0.31 0.38 0.20 0.67 0.30 0.33Table 6: Combined results on the training set Model CP CR CF DP DR DF JF P value cos+TD+Nearest Parent 0.57 0.50 0.50 0.27 0.19 0.21 0.30cos+TD+Best Similarity 0.48 0.70 0.54 0.31 0.27 0.26 0.35cos+TD+MST 0.48 0.70 0.54 0.31 0.30 0.28 0.37cos+TD+Simple Thresholding 0.60 0.39 0.44 0.32 0.66 0.42 0.43 0.0081* Baseline (cos+Complete link) 0.66 0.27 0.36 0.30 0.72 0.43 0.39Table 7: Combined results on the test set for Intelligent Information Retrieval and in part by SPAWARSYSCENSD grant number N66001 02 1 8903
+10-18:Any opinions, findings and conclusions or recommendations expressed in this material are the authors" and do not necessarily reflect those of the sponsor.
+11-1:J
+11-2:Allan, J
+11-3:Carbonell, G
+11-4:Doddington, J
+11-5:Yamron, and Y
+11-6:Yang
+11-7:Topic detection and tracking pilot study: Final report
+11-8:In Proceedings of the DARPA Broadcast News Transcription and Understanding Workshop, pages 194 218, 1998
+11-9:J
+11-10:Allan, A
+11-11:Feng, and A
+11-12:Bolivar
+11-13:Flexible intrinsic evaluation of hierarchical clustering for tdt
+11-14:volume In the Proc
+11-15:of the ACM Twelfth International Conference on Information and Knowledge Management, pages 263 270, Nov 2003
+11-16:James Allan, editor
+11-17:Topic Detection and Tracking:Event based Information Organization
+11-18:Kluwer Academic Publishers, 2000
+11-19:James Allan, Rahul Gupta, and Vikas Khandelwal
+11-20:Temporal summaries of new topics
+11-21:In Proceedings of the 24th annual international ACM SIGIR conference on Research and development in information retrieval, pages 10 18
+11-22:ACM Press, 2001
+11-23:Regina Barzilay and Lillian Lee
+11-24:Catching the drift: Probabilistic content models, with applications to generation and summarization
+11-25:In Proceedings of Human Language Technology Conference and North American Chapter of the Association for Computational Linguistics(HLT NAACL), pages 113 120, 2004
+11-26:D
+11-27:Lawrie and W
+11-28:B
+11-29:Croft
+11-30:Discovering and comparing topic hierarchies
+11-31:In Proceedings of RIAO 2000 Conference, pages 314 330, 1999
+11-32:David D
+11-33:Lewis and Kimberly A
+11-34:Knowles
+11-35:Threading electronic mail: a preliminary study
+11-36:Inf
+11-37:Process
+11-38:Manage., 33(2):209 217, 1997
+11-39:Juha Makkonen
+11-40:Investigations on event evolution in tdt
+11-41:In Proceedings of HLT NAACL 2003 Student Workshop, pages 43 48, 2004
+11-42:Aixin Sun and Ee Peng Lim
+11-43:Hierarchical text classification and evaluation
+11-44:In Proceedings of the 2001 IEEE International Conference on Data Mining, pages 521 528
+11-45:IEEE Computer Society, 2001
+11-46:Yiming Yang, Jaime Carbonell, Ralf Brown, Thomas Pierce, Brian T
+11-47:Archibald, and Xin Liu
+11-48:Learning approaches for detecting and tracking news events
+11-49:In IEEE Intelligent Systems Special Issue on Applications of Intelligent Information Retrieval, volume 14 (4), pages 32 43, 1999
+11-50:453
+picture:

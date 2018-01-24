@@ -1,0 +1,29 @@
+We now describe a novel algorithm which can handle singledocument segmentation, shared topic detection, and multidocument segmentation and alignment based on MI or WMI .
+4.1 Mutual Information MI I(X; Y ) is a quantity to measure the amount of information which is contained in two or more random variables [8, 10] .
+For the case of two random variables, we have I(X; Y ) = x?X y?Y p(x, y)log p(x, y) p(x)p(y) , (1) Obviously, when random variables X and Y are independent, I(X; Y ) = 0 .
+Thus, intuitively, the value of MI depends on how random variables are dependent on each other .
+The optimal co clustering is the mapping Clux 
+This is the criterion of MI for clustering .
+In the case of topic segmentation, the two random variables are the term variable T and the segment variable S, and each sample is an occurrence of a term T = t in a particular segment S = s .
+I(T; S) is used to measure how dependent T and S are .
+However, I(T; S) cannot be computed for documents before segmentation, since we do not have a set of S due to the fact that sentences of Document d, si ? Sd, is not aligned with other documents .
+Thus, instead of minimizing the loss of MI, we can maximize MI after topic segmentation, computed as
+Note that here a segment ?s includes sentences about the the same topic among all documents .
+The optimal solution is the mapping Clut 
+4.2 Weighted Mutual Information In topic segmentation and alignment of multiple documents, if P(D, ?S, T) is known, based on the marginal distributions P(D|T) and P( ?S|T) for each term t ? T, we can categorize terms into four types in the data set
+? Document dependent stop words that depends on the personal writing style are common only along the dimension of segments for some documents .
+? Cue words are the most important elements for segmentation .
+They are common along the dimension of documents only for the same segment, and they are not common along the dimensions of segments .
+? Noisy words are other words which are not common along both dimensions .
+Entropy based on P(D|T) and P( ?S|T) can be used to identify different types of terms .
+To reinforce the contribution of cue words in the MI computation, and simultaneously reduce the effect of the other three types of words, similar as the idea of the tf idf weight [22], we use entropies of each term along the dimensions of document D and segment ?S, i.e .
+ED(?t) and E?S(?t), to compute the weight .
+A cue word usually has a large value of ED(?t) but a small value of E?S(?t) .
+We introduce term weights (or term cluster weights) w?t = ( ED(?t) max?t ? ?T (ED(?t )) )a (1 ? E?S(?t) max?t ? ?T (E?S(?t )) )b , (3) where ED(?t) = d?D p(d|?t)log|D| 1 p(d|?t) , E?S(?t) = ?s? ?S p(?s|?t)log| ?S| 1 p(?s|?t) , and a > 0 and b > 0 are powers to adjust term weights .
+Usually a = 1 and b = 1 as default, and max?t ? ?T (ED(?t )) and max?t ? ?T (E?S(?t )) are used to normalize the entropy values .
+Term cluster weights are used to adjust p(?t, ?s), pw(?t, ?s) = w?tp(?t, ?s) ?t? ?T ;?s? ?S w?tp(?t, ?s) , (4) and Iw( ?T; ?S) = ?t? ?T ?s? ?S pw(?t, ?s)log pw(?t, ?s) pw(?t)pw(?s) , (5) where pw(?t) and pw(?s) are marginal distributions of pw(?t, ?s) .
+However, since we do not know either the term weights or P(D, ?S, T), we need to estimate them, but w?t depends on p(?s|t) and ?S, while ?S and p(?s|t) also depend on w?t that is still unknown .
+Thus, an iterative algorithm is required to estimate term weights w?t and find the best segmentation and alignment to optimize the objective function Iw concurrently .
+After a document is segmented into sentences Input
+Output
+Initialization

@@ -1,0 +1,95 @@
+In this section, we evaluate the performance of our proposed algorithm on a large image database .
+To demonstrate the effectiveness of our proposed LOD algorithm, we compare it with Laplacian Regularized Regression (LRR, [2]), Support Vector Machine (SVM), Support Vector Machine Active Learning (SVMactive) [14], and A Optimal Design .
+Both SVMactive, AOD, and LOD are active learning algorithms, while LRR and SVM are standard classification algorithms .
+SVM only makes use of the labeled images, while LRR is a semi supervised learning algorithm which makes use of both labeled and unlabeled images .
+For SVMactive, AOD, and LOD, 10 training images are selected by the algorithms themselves at each iteration .
+While for LRR and SVM, we use the top 10 images as training data .
+It would be important to note that SVMactive is based on the ordinary SVM, LOD is based on LRR, and AOD is based on the ordinary regression .
+The parameters £f1 and £f2 in our LOD algorithm are empirically set to be 0.001 and 0.00001 .
+For both LRR and LOD algorithms, we use the same graph structure (see Eq .
+4) and set the value of p (number of nearest neighbors) to be 5 .
+We begin with a simple synthetic example to give some intuition about how LOD works .
+6.1 Simple Synthetic Example A simple synthetic example is given in Figure 1 .
+The data set contains two circles .
+Eight points are selected by AOD and LOD .
+As can be seen, all the points selected by AOD are from the big circle, while LOD selects four points from the big circle and four from the small circle .
+The numbers beside the selected points denote their orders to be selected .
+Clearly, the points selected by our LOD algorithm can better represent the original data set .
+We did not compare our algorithm with SVMactive because SVMactive can not be applied in this case due to the lack of the labeled points .
+6.2 Image Retrieval Experimental Design The image database we used consists of 7,900 images of 79 semantic categories, from COREL data set .
+It is a large and heterogeneous image set .
+Each image is represented as a 128 dimensional vector as described in Section 5.1 .
+Figure 2 shows some sample images .
+To exhibit the advantages of using our algorithm, we need a reliable way of evaluating the retrieval performance and the comparisons with other algorithms .
+We list different aspects of the experimental design below .
+6.2.1 Evaluation Metrics We use precision scope curve and precision rate [10] to evaluate the effectiveness of the image retrieval algorithms .
+The scope is specified by the number of top ranked images presented to the user .
+The precision is the ratio of the number of relevant images presented to the user to the (a) Data set 1 2 3 4 5 6 7 8 (b) AOD 1 2 3 4 5 6 7 8 (c) LOD Figure 1
+The numbers beside the selected points denote their orders to be selected .
+Clearly, the points selected by our LOD algorithm can better represent the original data set .
+Note that, the SVMactive algorithm can not be applied in this case due to the lack of labeled points .
+(a) (b) (c) Figure 2
+scope N .
+The precision scope curve describes the precision with various scopes and thus gives an overall performance evaluation of the algorithms .
+On the other hand, the precision rate emphasizes the precision at a particular value of scope .
+In general, it is appropriate to present 20 images on a screen .
+Putting more images on a screen may affect the quality of the presented images .
+Therefore, the precision at top 20 (N = 20) is especially important .
+In real world image retrieval systems, the query image is usually not in the image database .
+To simulate such environment, we use five fold cross validation to evaluate the algorithms .
+More precisely, we divide the whole image database into five subsets with equal size .
+Thus, there are 20 images per category in each subset .
+At each run of cross validation, one subset is selected as the query set, and the other four subsets are used as the database for retrieval .
+The precisionscope curve and precision rate are computed by averaging the results from the five fold cross validation .
+6.2.2 Automatic Relevance Feedback Scheme We designed an automatic feedback scheme to model the retrieval process .
+For each submitted query, our system retrieves and ranks the images in the database .
+10 images were selected from the database for user labeling and the label information is used by the system for re ranking .
+Note that, the images which have been selected at previous iterations are excluded from later selections .
+For each query, the automatic relevance feedback mechanism is performed for four iterations .
+It is important to note that the automatic relevance feedback scheme used here is different from the ones described in [8], [11] .
+In [8], [11], the top four relevant and irrelevant images were selected as the feedback images .
+However, this may not be practical .
+In real world image retrieval systems, it is possible that most of the top ranked images are relevant (or, irrelevant) .
+Thus, it is difficult for the user to find both four relevant and irrelevant images .
+It is more reasonable for the users to provide feedback information only on the 10 images selected by the system .
+6.3 Image Retrieval Performance In real world, it is not practical to require the user to provide many rounds of feedbacks .
+The retrieval performance after the first two rounds of feedbacks (especially the first round) is more important .
+Figure 3 shows the average precision scope curves of the different algorithms for the first two feedback iterations .
+At the beginning of retrieval, the Euclidean distances in the original 128 dimensional space are used to rank the images in database .
+After the user provides relevance feedbacks, the LRR, SVM, SVMactive, AOD, and LOD algorithms are then applied to re rank the images .
+In order to reduce the time complexity of active learning algorithms, we didn"t select the most informative images from the whole database but from the top 500 images .
+For LRR and SVM, the user is required to label the top 10 images .
+For SVMactive, AOD, and LOD, the user is required to label 10 most informative images selected by these algorithms .
+Note that, SVMactive can only be ap(a) Feedback Iteration 1 (b) Feedback Iteration 2 Figure 3
+The LOD algorithm performs the best on the entire scope .
+Note that, at the first round of feedback, the SVMactive algorithm can not be applied .
+It applies the ordinary SVM to build the initial classifier .
+(a) Precision at Top 10 (b) Precision at Top 20 (c) Precision at Top 30 Figure 4
+(a) Precision at top 10, (b) Precision at top 20, and (c) Precision at top 30 .
+As can be seen, our LOD algorithm consistently outperforms the other four algorithms .
+plied when the classifier is already built .
+Therefore, it can not be applied at the first round and we use the standard SVM to build the initial classifier .
+As can be seen, our LOD algorithm outperforms the other four algorithms on the entire scope .
+Also, the LRR algorithm performs better than SVM .
+This is because that the LRR algorithm makes efficient use of the unlabeled images by incorporating a locality preserving regularizer into the ordinary regression objective function .
+The AOD algorithm performs the worst .
+As the scope gets larger, the performance difference between these algorithms gets smaller .
+By iteratively adding the user"s feedbacks, the corresponding precision results (at top 10, top 20, and top 30) of the five algorithms are respectively shown in Figure 4 .
+As can be seen, our LOD algorithm performs the best in all the cases and the LRR algorithm performs the second best .
+Both of these two algorithms make use of the unlabeled images .
+This shows that the unlabeled images are helpful for discovering the intrinsic geometrical structure of the image space and therefore enhance the retrieval performance .
+In real world, the user may not be willing to provide too many relevance feedbacks .
+Therefore, the retrieval performance at the first two rounds are especially important .
+As can be seen, our LOD algorithm achieves 6.8% performance improvement for top 10 results, 5.2% for top 20 results, and 4.1% for top 30 results, comparing to the second best algorithm after the first two rounds of relevance feedbacks .
+6.4 Discussion Several experiments on Corel database have been systematically performed .
+We would like to highlight several interesting points
+There is a significant increase in performance from using the active learning methods .
+Especially, out of the three active learning methods (SVMactive, AOD, LOD), our proposed LOD algorithm performs the best .
+feedback image retrieval, there are generally two ways of reducing labor intensive manual labeling task .
+One is active learning which selects the most informative samples to label, and the other is semi supervised learning which makes use of the unlabeled samples to enhance the learning performance .
+Both of these two strategies have been studied extensively in the past [14], [7], [5], [8] .
+The work presented in this paper is focused on active learning, but it also takes advantage of the recent progresses on semi supervised learning [2] .
+Specifically, we incorporate a locality preserving regularizer into the standard regression framework and find the most informative samples with respect to the new objective function .
+In this way, the active learning and semi supervised learning techniques are seamlessly unified for learning an optimal classifier .
+retrieval .
+For all the five algorithms, the retrieval performance improves with more feedbacks provided by the user. .

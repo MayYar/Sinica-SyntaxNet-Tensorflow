@@ -1,0 +1,44 @@
+Improvements in network connectivity erode the distinction between local and wide area computing and, increasingly, users expect their work environment to follow them wherever they go .
+Nevertheless, distributed applications may perform poorly in wide area network environments .
+Network bandwidth problems will improve in the foreseeable future, but improvement in network latency is fundamentally limited .
+BuddyCache is a new object caching technique that addresses the network latency problem for collaborative applications in wide area network environment .
+Collaborative applications provide a shared work environment for groups of networked users collaborating on a common task, for example a team of engineers jointly overseeing a construction project .
+Strong consistency collaborative applications, for example CAD systems, use client server transactional object storage systems to ensure consistent access to shared persistent data .
+Up to now however, users have rarely considered running consistent network storage systems over wide area networks as performance would be unacceptable [24] .
+For transactional storage systems, the high cost of wide area network interactions to maintain data consistency is the main cost limiting the performance and therefore, in wide area network environments, collaborative applications have been adapted to use weaker consistency storage systems [22] .
+Adapting an application to use weak consistency storage system requires significant effort since the application needs to be rewritten to deal with a different storage system semantics .
+If shared persistent objects could be accessed with low latency, a new field of distributed strong consistency applications could be opened .
+Cooperative web caching [10, 11, 15] is a well known approach to reducing client interaction with a server by allowing one client to obtain missing objects from a another client instead of the server .
+Collaborative applications seem a particularly good match to benefit from this approach since one of the hard problems, namely determining what objects are cached where, becomes easy in small groups typical of collaborative settings .
+However, cooperative web caching techniques do not provide two important properties needed by collaborative applications, strong consistency and efficient 26 access to fine grained objects .
+Cooperative object caching systems [2] provide these properties .
+However, they rely on interaction with the server to provide fine grain cache coherence that avoids the problem of false sharing when accesses to unrelated objects appear to conflict because they occur on the same physical page .
+Interaction with the server increases latency .
+The contribution of this work is extending cooperative caching techniques to provide strong consistency and efficient access to fine grain objects in wide area environments .
+Consider a team of engineers employed by a construction company overseeing a remote project and working in a shed at the construction site .
+The engineers use a collaborative CAD application to revise and update complex project design documents .
+The shared documents are stored in transactional repository servers at the company home site .
+The engineers use workstations running repository clients .
+The workstations are interconnected by a fast local Ethernet but the network connection to the home repository servers is slow .
+To improve access latency, clients fetch objects from repository servers and cache and access them locally .
+A coherence protocol ensures that client caches remain consistent when objects are modified .
+The performance problem facing the collaborative application is coordinating with the servers consistent access to shared objects .
+With BuddyCache, a group of close by collaborating clients, connected to storage repository via a high latency link, can avoid interactions with the server if needed objects, updates or coherency information are available in some client in the group .
+BuddyCache presents two main technical challenges .
+One challenge is how to provide efficient access to shared finegrained objects in the collaborative group without imposing performance overhead on the entire caching system .
+The other challenge is to support fine grain cache coherence in the presence of slow and failed nodes .
+BuddyCache uses a redirection approach similar to one used in cooperative web caching systems [11] .
+A redirector server, interposed between the clients and the remote servers, runs on the same network as the collaborating group and, when possible, replaces the function of the remote servers .
+If the client request can not be served locally, the redirector forwards it to a remote server .
+When one of the clients in the group fetches a shared object from the repository, the object is likely to be needed by other clients .
+BuddyCache redirects subsequent requests for this object to the caching client .
+Similarly, when a client creates or modifies a shared object, the new data is likely to be of potential interest to all group members .
+BuddyCache uses redirection to support peer update, a lightweight application level multicast technique that provides group members with consistent access to the new data committed within the collaborating group without imposing extra overhead outside the group .
+Nevertheless, in a transactional system, redirection interferes with shared object availability .
+Solo commit, is a validation technique used by BuddyCache to avoid the undesirable client dependencies that reduce object availability when some client nodes in the group are slow, or clients fail independently .
+A salient feature of solo commit is supporting fine grained validation using inexpensive coarse grained coherence information .
+Since redirection supports the performance benefits of reducing interaction with the server but introduces extra processing cost due to availability mechanisms and request forwarding, this raises the question is the cure worse than the disease? We designed and implemented a BuddyCache prototype and studied its performance benefits and costs using analytical modeling and system measurements .
+We compared the storage system performance with and without BuddyCache and considered how the cost benefit balance is affected by network latency .
+Analytical results, supported by measurements based on the multi user 007 benchmark, indicate that for typical Internet latencies BuddyCache provides significant performance benefits, e.g .
+for latencies ranging from 40 to 80 milliseconds round trip time, clients using the BuddyCache can reduce by up to 50% the latency of access to shared objects compared to the clients accessing the repository directly .
+These strong performance gains could make transactional object storage systems more attractive for collaborative applications in wide area environments. .

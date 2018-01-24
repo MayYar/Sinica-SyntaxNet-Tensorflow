@@ -1,0 +1,32 @@
+Visibility determination has been widely explored in the field of 3D graphics .
+Various local rendering algorithms have been proposed to eliminate unnecessary objects before rendering or at any stage in the rendering pipeline .
+View frustum culling, back face culling, and occlusion culling are some of the well known visibility culling techniques [6] .
+However, these algorithms assume that all the candidate visible objects have been stored locally .
+If the target objects are stored on remote servers, the clients receive the geometry items that are necessary for rendering from the server databases .
+Teller et al .
+described a geometry data scheduling algorithm that maximizes the quality of the frame rate over time in remote walkthroughs of complex 3D scenes from a user"s navigational path [5] .
+Funkhouser et al .
+showed that multi resolutional representation, such as Levels Of Detail (LOD), can be used to improve rendering frame rates and memory utilization during interactive visualization [7] .
+However, these online optimization algorithms fail to address performance issue at the server in highly crowded environments .
+On the other hand, our visibility computation model, a representative of this category, is based on different assumptions on the data representation of virtual entities .
+In the graphics area, there has been little work on supporting real time visibility computations for a massive number of moving objects and users .
+Here we recognize that such graphics related issues have a very close similarity to spatial database problems .
+Recently, a number of publications have addressed the scalability issue on how to support massive numbers of objects and queries in highly dynamic environments .
+To support frequent updates, two partitioning policies have been studied in depth
+The R tree is a well known spatial index structure that allows overlapping between the regions in different branches which are represented by Minimum Bounding Rectangles .
+The grid based partitioning model is a special case of fixed partitioning .
+Recently, it has been re discovered since it can be efficient in highly dynamic environments .
+Many studies have reported that the R tree and its variants (R+ tree, R? tree) suffer from unacceptable performance degradation in a highly dynamic environment, primarily due to the computational complexity of the split algorithm [8, 9, 10, 11, 12] .
+A bottom up update strategy proposed for R trees [9] optimizes update operations of the index while maintaining a top down query processing mechanism .
+Instead of traversing a tree from the root node for frequent update requests (top down approach), it directly accesses the leaf node of the object to be updated via an object hash table .
+Q Index [13, 11] is one of the earlier work that re discovers the usefulness of grid based space partitioning for emerging moving object environments .
+In contrast to traditional spatial indexing methods that construct an index on the moving objects, it builds an index on the continuous range queries, assuming that the queries move infrequently while the objects move freely .
+The basic idea of the Q+Rtree [14] is to separate indexing structures for quasistationary objects and moving objects
+SINA [10] was proposed to provide efficient query evaluations for any combination of stationary moving objects and stationary moving queries .
+Specifically, this approach only detects newly discovered (positive) or no longer relevant (negative) object updates efficiently .
+Unlike other spatial indexing methods that focus on reducing the query evaluation cost, Hu et al .
+[12] proposed a general framework that minimizes the communication cost for location updates by maintaining a rectangular area called a safe region around moving objects .
+As long as any object resides in this region, all the query results are guaranteed to be valid in the system .
+If objects move out of their region, location update requests should be delivered to the database server and the affected queries are re evaluated on the fly .
+Our indexing method is very similar to the above approaches .
+The major difference is that we are more concentrating on real time visibility determination while others assume loose timing constraints. .

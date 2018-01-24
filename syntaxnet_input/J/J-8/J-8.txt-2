@@ -1,0 +1,50 @@
+Computational game theory has introduced the issue of incentives to many of the classical combinatorial optimization problems .
+The view that the demand side is many times not under the control of a central authority that optimizes the global performance, but rather under the control of individuals with different incentives, has led already to many important insights .
+Consider classical routing and transportation problems such as multicast or multi commodity problems, which are many times viewed as follows .
+We are given a graph with edge costs and connectivity demands between nodes, and our goal is to find a minimal cost solution .
+The classical centralized approach assumes that all the individual demands can both be completely coordinated and have no individual incentives .
+The game theory point of view would assume that each individual demand is controlled by a player that optimizes its own utility, and the resulting outcome could be far from the optimal solution .
+When considering individual incentives one needs to discuss the appropriate solution concept .
+Much of the research in computational game theory has focused on the classical Nash equilibrium as the primary solution concept .
+Indeed Nash equilibrium has many benefits, and most importantly it always exists (in mixed strategies) .
+However, the solution concept of Nash equilibrium is resilient only to unilateral deviations, while in reality, players may be able to coordinate their actions .
+A strong equilibrium [4] is a state from which no coalition (of any size) can deviate and improve the utility of every member of the coalition (while possibly lowering the utility 84 of players outside the coalition) .
+This resilience to deviations by coalitions of the players is highly attractive, and one can hope that once a strong equilibrium is reached it is highly likely to sustain .
+From a computational game theory point of view, an additional benefit of a strong equilibrium is that it has a potential to reduce the distance between the optimal solution and the solution obtained as an outcome of selfish behavior .
+The strong price of anarchy (SPoA), introduced in [1], is the ratio between the cost of the worst strong equilibrium and the cost of an optimal solution .
+Obviously, SPoA is meaningful only in those cases where a strong equilibrium exists .
+A major downside of strong equilibrium is that most games do not admit any strong equilibrium .
+Even simple classical games like the prisoner"s dilemma do not posses any strong equilibrium (which is also an example of a congestion game that does not posses a strong equilibrium1 concentration in strong equilibrium, despite its highly attractive properties .
+Yet, [1] have identified two broad families of games, namely job scheduling and network formation, where a strong equilibrium always exists and the SPoA is significantly lower than the price of anarchy (which is the ratio between the worst Nash equilibrium and the optimal solution [15, 18, 5, 6]) .
+In this work we concentrate on cost sharing connection games, introduced by [3, 2] .
+In such a game, there is an underlying directed graph with edge costs, and individual users have connectivity demands (between a source and a sink) .
+We consider two models .
+The fair cost connection model [2] allows each player to select a path from the source to the sink2 .
+In this game the cost of an edge is shared equally between all the players that selected the edge, and the cost of the player is the sum of its costs on the edges it selected .
+The general connection game [3] allows each player to offer prices for edges .
+In this game an edge is bought if the sum of the offers at least covers its cost, and the cost of the player is the sum of its offers on the bought edges (in both games we assume that the player has to guarantee the connectivity between its source and sink) .
+In this work we focus on two important issues .
+The first one is identifying under what conditions the existence of a strong equilibrium is guaranteed, and the second one is the quality of the strong equilibria .
+For the existence part, we identify families of graph topologies that possess some strong equilibrium for any assignment of edge costs .
+One can view this separation between the graph topology and the edge costs, as a separation between the underlying infrastructure and the costs the players observe to purchase edges .
+While one expects the infrastructure to be stable over long periods of time, the costs the players observe can be easily modified over short time periods .
+Such a topological characterization of the underlying infrastructure provides a network designer topological conditions that will ensure stability in his network .
+Our results are as follows .
+For the single commodity case (all the players have the same source and sink), there is a strong equilibrium in any graph (both for fair and general connection games) .
+Moreover, the strong equilibrium is also 1 while any congestion game is known to admit at least one Nash equilibrium in pure strategies [16] .
+2 The fair cost sharing scheme is also attractive from a mechanism design point of view, as it is a strategyproof costsharing mechanism [14] .
+the optimal solution (namely, the players share a shortest path from the common source to the common sink) .
+For the case of a single source and multiple sinks (for example, in a multicast tree), we show that in a fair connection game there is a strong equilibrium if the underlying graph is a series parallel graph, and we show an example of a nonseries parallel graph that does not have a strong equilibrium .
+For the case of multi commodity (multi sources and sinks), we show that in a fair connection game if the graph is an extension parallel graph then there is always a strong equilibrium, and we show an example of a series parallel graph that does not have a strong equilibrium .
+As far as we know, we are the first to provide a topological characterization for equilibrium existence in multi commodity and single source network games .
+For any fair connection game we show that if there exists a strong equilibrium it is at most a factor of £K(log n) from the optimal solution, where n is the number of players .
+This should be contrasted with the £K(n) bound that exists for the price of anarchy [2] .
+For single source general connection games, we show that any series parallel graph possesses a strong equilibrium, and we show an example of a graph that does not have a strong equilibrium .
+In this case we also show that any strong equilibrium is optimal .
+Related work Topological characterizations for single commodity network games have been recently provided for various equilibrium properties, including equilibrium existence [12, 7, 8], equilibrium uniqueness [10] and equilibrium efficiency [17, 11] .
+The existence of pure Nash equilibrium in single commodity network congestion games with player specific costs or weights was studied in [12] .
+The existence of strong equilibrium was studied in both utility decreasing (e.g., routing) and utility increasing (e.g., fair cost sharing) congestion games .
+[7, 8] have provided a full topological characterization for a SE existence in single commodity utility decreasing congestion games, and showed that a SE always exists if and only if the underlying graph is extension parallel .
+[19] have shown that in single commodity utility increasing congestion games, the topological characterization is essentially equivalent to parallel links .
+In addition, they have shown that these results hold for correlated strong equilibria as well (in contrast to the decreasing setting, where correlated strong equilibria might not exist at all) .
+While the fair cost sharing games we study are utility increasing network congestion games, we derive a different characterization than [19] due to the different assumptions regarding the players" actions.3 .

@@ -1,0 +1,199 @@
+We build upon the approach used by [13] for optimizing ROCArea .
+Unlike ROCArea, however, MAP does not decompose linearly in the examples and requires a substantially extended algorithm, which we describe in this section .
+Recall that the true ranking is a weak ranking with two rank values (relevant and non relevant) .
+Let Cx and C¡Âx denote the set of relevant and non relevant documents of C for query x, respectively .
+We focus on functions which are parametrized by a weight vector w, and thus wish to find w to minimize the empirical risk, R? S (w) ¡Ý R? S (h(¡P; w)) .
+Our approach is to learn a discriminant function F 
+Given query x, we can derive a prediction by finding the ranking y that maximizes the discriminant function
+(1) We assume F to be linear in some combined feature representation of inputs and outputs £Z(x, y) ? RN , i.e., F(x, y; w) = wT £Z(x, y) .
+(2) The combined feature function we use is £Z(x, y) = 1 |Cx| ¡P |C¡Âx| X i
+We represent rankings as a matrix of pairwise orderings, Y ? {?1, 0, +1}|C|¡Ñ|C| .
+For any y ? Y, yij = +1 if di is ranked ahead of dj, and yij = ?1 if dj is ranked ahead of di, and yij = 0 if di and dj have equal rank .
+We consider only matrices which correspond to valid rankings (i.e, obeying antisymmetry and transitivity) .
+Intuitively, £Z is a summation over the vector differences of all relevant non relevant document pairings .
+Since we assume predicted rankings to be complete rankings, yij is either +1 or ?1 (never 0) .
+Given a learned weight vector w, predicting a ranking (i.e .
+solving equation (1)) given query x reduces to picking each yij to maximize wT £Z(x, y) .
+As is also discussed in [13], this is attained by sorting the documents by wT £p(x, d) in descending order .
+We will discuss later the choices of £p we used for our experiments .
+3.1 Structural SVMs The above formulation is very similar to learning a straightforward linear model while training on the pairwise difference of relevant non relevant document pairings .
+Many SVM based approaches optimize over these pairwise differences (e.g., [5, 10, 13, 4]), although these methods do not optimize for MAP during training .
+Previously, it was not clear how to incorporate non linear multivariate loss functions such as MAP loss directly into global optimization problems such as SVM training .
+We now present a method based on structural SVMs [19] to address this problem .
+We use the structural SVM formulation, presented in Optimization Problem 1, to learn a w ? RN .
+Optimization Problem 1 .
+(Structural SVM) min w,£i?0 1 2 w 2 + C n nX i=1 £ii (3) s.t .
+?i, ?y ? Y \ yi 
+As is usual in SVM training, C is a 2 For example, one dimension might be the number of times the query words appear in the document .
+Algorithm 1 Cutting plane algorithm for solving OP 1 within tolerance .
+1
+.
+.
+, (xn, yn), C, 2
+.
+.
+, n 3
+.
+.
+, n do 5
+For each (xi, yi) in the training set, a set of constraints of the form in equation (4) is added to the optimization problem .
+Note that wT £Z(x, y) is exactly our discriminant function F(x, y; w) (see equation (2)) .
+During prediction, our model chooses the ranking which maximizes the discriminant (1) .
+If the discriminant value for an incorrect ranking y is greater than for the true ranking yi (e.g., F(xi, y; w) > F(xi, yi; w)), then corresponding slack variable, £ii, must be at least ?(yi, y) for that constraint to be satisfied .
+Therefore, the sum of slacks, P £ii, upper bounds the MAP loss .
+This is stated formally in Proposition 1 .
+Proposition 1 .
+Let £i? (w) be the optimal solution of the slack variables for OP 1 for a given weight vector w .
+Then 1 n Pn i=1 £ii is an upper bound on the empirical risk R? S (w) .
+(see [19] for proof) Proposition 1 shows that OP 1 learns a ranking function that optimizes an upper bound on MAP error on the training set .
+Unfortunately there is a problem
+The algorithm starts with no constraints, and iteratively finds for each example (xi, yi) the output ?y associated with the most violated constraint .
+If the corresponding constraint is violated by more than we introduce ?y into the working set Wi of active constraints for example i, and re solve (3) using the updated W .
+It can be shown that Algorithm 1"s outer loop is guaranteed to halt within a polynomial number of iterations for any desired precision .
+Theorem 1 .
+Let ¡ÂR = maxi maxy £Z(xi, yi) ? £Z(xi, y) , ¡Â? = maxi maxy ?(yi, y), and for any > 0, Algorithm 1 terminates after adding at most max Æ® 2n ¡Â? , 8C ¡Â? ¡ÂR2 2 ff constraints to the working set W .
+(see [19] for proof) However, within the inner loop of this algorithm we have to compute argmaxy?Y H(y; w), where H(y; w) = ?(yi, y) + wT £Z(xi, y) ? wT £Z(xi, yi), or equivalently, argmax y?Y ?(yi, y) + wT £Z(xi, y), since wT £Z(xi, yi) is constant with respect to y .
+Though closely related to the classification procedure, this has the substantial complication that we must contend with the additional ?(yi, y) term .
+Without the ability to efficiently find the most violated constraint (i.e., solve argmaxy?Y H(y, w)), the constraint generation procedure is not tractable .
+3.2 Finding the Most Violated Constraint Using OP 1 and optimizing to ROCArea loss (?roc), the problem of finding the most violated constraint, or solving argmaxy?Y H(y, w) (henceforth argmax H), is addressed in [13] .
+Solving argmax H for ?map is more difficult .
+This is primarily because ROCArea decomposes nicely into a sum of scores computed independently on each relative ordering of a relevant non relevant document pair .
+MAP, on the other hand, does not decompose in the same way as ROCArea .
+The main algorithmic contribution of this paper is an efficient method for solving argmax H for ?map .
+One useful property of ?map is that it is invariant to swapping two documents with equal relevance .
+For example, if documents da and db are both relevant, then swapping the positions of da and db in any ranking does not affect ?map .
+By extension, ?map is invariant to any arbitrary permutation of the relevant documents amongst themselves and of the non relevant documents amongst themselves .
+However, this reshu?ing will affect the discriminant score, wT £Z(x, y) .
+This leads us to Observation 1 .
+Observation 1 .
+Consider rankings which are constrained by fixing the relevance at each position in the ranking (e.g., the 3rd document in the ranking must be relevant) .
+Every ranking which satisfies the same set of constraints will have the same ?map .
+If the relevant documents are sorted by wT £p(x, d) in descending order, and the non relevant documents are likewise sorted by wT £p(x, d), then the interleaving of the two sorted lists which satisfies the constraints will maximize H for that constrained set of rankings .
+Observation 1 implies that in the ranking which maximizes H, the relevant documents will be sorted by wT £p(x, d), and the non relevant documents will also be sorted likewise .
+By first sorting the relevant and non relevant documents, the problem is simplified to finding the optimal interleaving of two sorted lists .
+For the rest of our discussion, we assume that the relevant documents and non relevant documents are both sorted by descending wT £p(x, d) .
+For convenience, we also refer to relevant documents as {dx 1 , .
+.
+.
+dx |Cx|} = Cx , and non relevant documents as {d¡Âx 1 , .
+.
+.
+d¡Âx |C¡Âx|} = C¡Âx .
+We define £_j(i1, i2), with i1 < i2, as the change in H from when the highest ranked relevant document ranked after d¡Âx j is dx i1 to when it is dx i2 .
+For i2 = i1 + 1, we have £_j(i, i + 1) = 1 |Cx| ? j j + i ? j ? 1 j + i ? 1 ? ? 2 ¡P (sx i ? s¡Âx j ), (5) where si = wT £p(x, di) .
+The first term in (5) is the change in ?map when the ith relevant document has j non relevant documents ranked before it, as opposed to j ?1 .
+The second term is the change in the discriminant score, wT £Z(x, y), when yij changes from +1 to ?1 .
+.
+.
+.
+, dx i , d¡Âx j , dx i+1, .
+.
+.
+.
+.
+.
+, d¡Âx j , dx i , dx i+1, .
+.
+.
+Figure 1
+The bottom ranking differs from the top only where d¡Âx j slides up one rank .
+The difference in the value of H for these two rankings is exactly £_j(i, i + 1) .
+For any i1 < i2, we can then define £_j(i1, i2) as £_j(i1, i2) = i2?1 X k=i1 £_j(k, k + 1), (6) or equivalently, £_j(i1, i2) = i2?1 X k=i1 ? 1 |Cx| ? j j + k ? j ? 1 j + k ? 1 ? ? 2 ¡P (sx k ? s¡Âx j ) .
+Let o1, .
+.
+.
+, o|C¡Âx| encode the positions of the non relevant documents, where dx oj is the highest ranked relevant document ranked after the jth non relevant document .
+Due to Observation 1, this encoding uniquely identifies a complete ranking .
+We can recover the ranking as yij = 8 >>>< >>>
+(7) We can now reformulate H into a new objective function, H (o1, .
+.
+.
+, o|C¡Âx||w) = H(¡Ây|w) + |C¡Âx | X k=1 £_k(ok, |Cx | + 1), where ¡Ây is the true (weak) ranking .
+Conceptually H starts with a perfect ranking ¡Ây, and adds the change in H when each successive non relevant document slides up the ranking .
+We can then reformulate the argmax H problem as argmax H = argmax o1,...,o|C¡Âx| |C¡Âx | X k=1 £_k(ok, |Cx | + 1) (8) s.t .
+o1 ? .
+.
+.
+? o|C¡Âx| .
+(9) Algorithm 2 describes the algorithm used to solve equation (8) .
+Conceptually, Algorithm 2 starts with a perfect ranking .
+Then for each successive non relevant document, the algorithm modifies the solution by sliding that document up the ranking to locally maximize H while keeping the positions of the other non relevant documents constant .
+3.2.1 Proof of Correctness Algorithm 2 is greedy in the sense that it finds the best position of each non relevant document independently from the other non relevant documents .
+In other words, the algorithm maximizes H for each non relevant document, d¡Âx j , Algorithm 2 Finding the Most Violated Constraint (argmax H) for Algorithm 1 with ?map 1
+.
+.
+, |Cx | 4
+.
+.
+, |C¡Âx | 5
+.
+.
+, |C¡Âx | do 6
+In order for the solution to be feasible, the jth non relevant document must be ranked after the first j ? 1 non relevant documents, thus satisfying opt1 ? opt2 ? .
+.
+.
+? opt|C¡Âx| .
+(10) If the solution is feasible, the it clearly solves (8) .
+Therefore, it suffices to prove that Algorithm 2 satisfies (10) .
+We first prove that £_j(¡P, ¡P) is monotonically decreasing in j .
+Lemma 1 .
+For any 1 ? i1 < i2 ? |Cx | + 1 and 1 ? j < |C¡Âx |, it must be the case that £_j+1(i1, i2) ? £_j(i1, i2) .
+Proof .
+Recall from (6) that both £_j(i1, i2) and £_j+1(i1, i2) are summations of i2 ? i1 terms .
+We will show that each term in the summation of £_j+1(i1, i2) is no greater than the corresponding term in £_j(i1, i2), or £_j+1(k, k + 1) ? £_j(k, k + 1) for k = i1, .
+.
+.
+, i2 ? 1 .
+Each term in £_j(k, k +1) and £_j+1(k, k +1) can be further decomposed into two parts (see (5)) .
+We will show that each part of £_j+1(k, k + 1) is no greater than the corresponding part in £_j(k, k + 1) .
+In other words, we will show that both j + 1 j + k + 1 ? j j + k ? j j + k ? j ? 1 j + k ? 1 (11) and ?2 ¡P (sx k ? s¡Âx j+1) ? ?2 ¡P (sx k ? s¡Âx j ) (12) are true for the aforementioned values of j and k .
+It is easy to see that (11) is true by observing that for any two positive integers 1 ? a < b, a + 1 b + 1 ? a b ? a b ? a ? 1 b ? 1 , and choosing a = j and b = j + k .
+The second inequality (12) holds because Algorithm 2 first sorts d¡Âx in descending order of s¡Âx , implying s¡Âx j+1 ? s¡Âx j .
+Thus we see that each term in £_j+1 is no greater than the corresponding term in £_j, which completes the proof .
+The result of Lemma 1 leads directly to our main correctness result
+In Algorithm 2, the computed values of optj satisfy (10), implying that the solution returned by Algorithm 2 is feasible and thus optimal .
+Proof .
+We will prove that optj ? optj+1 holds for any 1 ? j < |C¡Âx |, thus implying (10) .
+Since Algorithm 2 computes optj as optj = argmax k £_j(k, |Cx | + 1), (13) then by definition of £_j (6), for any 1 ? i < optj, £_j(i, optj) = £_j(i, |Cx | + 1) ? £_j(optj, |Cx | + 1) < 0 .
+Using Lemma 1, we know that £_j+1(i, optj) ? £_j(i, optj) < 0, which implies that for any 1 ? i < optj, £_j+1(i, |Cx | + 1) ? £_j+1(optj, |Cx | + 1) < 0 .
+Suppose for contradiction that optj+1 < optj .
+Then £_j+1(optj+1, |Cx | + 1) < £_j+1(optj, |Cx | + 1), which contradicts (13) .
+Therefore, it must be the case that optj ? optj+1, which completes the proof .
+3.2.2 Running Time The running time of Algorithm 2 can be split into two parts .
+The first part is the sort by wT £p(x, d), which requires O(n log n) time, where n = |Cx | + |C¡Âx The main goal of our experiments is to evaluate whether directly optimizing MAP leads to improved MAP performance compared to conventional SVM methods that optimize a substitute loss such as accuracy or ROCArea .
+We empirically evaluate our method using two sets of TREC Web Track queries, one each from TREC 9 and TREC 10 (topics 451 500 and 501 550), both of which used the WT10g corpus .
+For each query, TREC provides the relevance judgments of the documents .
+We generated our features using the scores of existing retrieval functions on these queries .
+While our method is agnostic to the meaning of the features, we chose to use existing retrieval functions as a simple yet effective way of acquiring useful features .
+As such, our 3 http
+We compare our method against the best retrieval functions trained on (henceforth base functions), as well as against previously proposed SVM methods .
+Comparing with the best base functions tests our method"s ability to learn a useful combination .
+Comparing with previous SVM methods allows us to test whether optimizing directly for MAP (as opposed to accuracy or ROCArea) achieves a higher MAP score in practice .
+The rest of this section describes the base functions and the feature generation method in detail .
+4.1 Choosing Retrieval Functions We chose two sets of base functions for our experiments .
+For the first set, we generated three indices over the WT10g corpus using Indri5 .
+The first index was generated using default settings, the second used Porter stemming, and the last used Porter stemming and Indri"s default stopwords .
+For both TREC 9 and TREC 10, we used the description portion of each query and scored the documents using five of Indri"s built in retrieval methods, which are Cosine Similarity, TFIDF, Okapi, Language Model with Dirichlet Prior, and Language Model with Jelinek Mercer Prior .
+All parameters were kept as their defaults .
+We computed the scores of these five retrieval methods over the three indices, giving 15 base functions in total .
+For each query, we considered the scores of documents found in the union of the top 1000 documents of each base function .
+For our second set of base functions, we used scores from the TREC 9 [8] and TREC 10 [9] Web Track submissions .
+We used only the non manual, non short submissions from both years .
+For TREC 9 and TREC 10, there were 53 and 18 such submissions, respectively .
+A typical submission contained scores of its top 1000 documents .
+b ca wT £p(x,d) f(d|x) Figure 2
+For each doc5 http
+0.204 39 11 ** 0.181 37 13 ** 2nd Best 0.199 38 12 ** 0.174 43 7 ** 3rd Best 0.188 34 16 ** 0.174 38 12 ** Table 6
+From a high level, we are expressing the score of each retrieval function using |Kf | + 1 bins .
+Since we are using linear kernels, one can think of the learning problem as finding a good piecewise constant combination of the scores of the retrieval functions .
+Figure 2 shows an example of our feature mapping method .
+In this example we have a single feature F = {f} .
+Here, Kf = {a, b, c}, and the weight vector is w = wa, wb, wc .
+For any document d and query x, we have wT £p(x, d) = 8 >>< >>
+This is expressed qualitatively in Figure 2, where wa and wb are positive, and wc is negative .
+We ran our main experiments using four choices of F
+For each F and each function f ? F, we chose 50 values for Kf which are reasonably spaced and capture the sensitive region of f .
+Using the four choices of F, we generated four datasets for our main experiments .
+Table 5 contains statistics of the generated datasets .
+There are many ways to generate features, and we are not advocating our method over others .
+This was simply an efficient means to normalize the outputs of different functions and allow for a more expressive model. .

@@ -1,0 +1,154 @@
+Ai ) is true when agent Ai holds an object profile for agent Aj .
+Definition 1 .
+Full conflict (FulConf ) describes a zerosum interaction where only a single goal of the goals in conflict can be completed .
+FulConf(G? Ai , G? Aj ) ? (?£\ ? CAi , ?w, £] ? CAj ) (Achieve(G? Ai , £\, w) ? ?Achieve(G? Aj , £], w)) ? (?£] ? CAj , ?w, £\ ? CAi )(Achieve(G? Aj , £], w) ? ?Achieve(G? Ai , £\, w)) Definition 2 .
+Adversarial Knowledge (AdvKnow) is a function returning a value which represents the amount of The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 551 knowledge agent Ai has on the profile of agent Aj, at time Tn .
+The higher the value, the more knowledge agent Ai has .
+AdvKnow 
+Eval This evaluation function returns an estimated expected utility value for an agent in A, after completing an action from CA in some world state w .
+Eval 
+TrH (Threshold) is a numerical constant in the [0,1] range that represents an evaluation function (Eval) threshold value .
+An action that yields an estimated utility evaluation above the TrH is regarded as a highly beneficial action .
+The Eval value is an estimation and not the real utility function, which is usually unknown .
+Using the real utility value for a rational agent would easily yield the best outcome for that agent .
+However, agents usually do not have the real utility functions, but rather a heuristic estimate of it .
+There are two important properties that should hold for the evaluation function
+The evaluation function should state that the most desirable world state is one in which the goal is achieved .
+Therefore, after the goal has been satisfied, there can be no future action that can put the agent in a world state with higher Eval value .
+(?Ai, G? Ai , £\, £] ? CAi , w ? W) Achieve(G? Ai , £\, w) ? Eval(Ai, £\, w) ? Eval(Ai, £], w) Property 2 .
+The evaluation function should project an action that causes a completion of a goal or a subgoal to a value which is greater than TrH (a highly beneficial action) .
+(?Ai, G? Ai ? GAi , £\ ? CAi , w ? W, g? GAi ? gGAi ) Achieve(G? Ai , £\, w) ? Achieve(g? GAi , £\, w) ? Eval(Ai, £\, w) ? TrH .
+Definition 5 .
+SetAction We define a set action (SetAction) as a set of action operations (either complex or basic actions) from some action sets CAi and CAj which, according to agent Ai"s belief, are attached together by a temporal and consequential relationship, forming a chain of events (action, and its following consequent action) .
+(?£\1 , .
+.
+.
+, £\u ? CAi , £]1 , .
+.
+.
+, £]v ? CAj , w ? W) SetAction(£\1 , .
+.
+.
+, £\u , £]1 , .
+.
+.
+, £]v , w) ? ((Do(Ai, £\1 , T£\1 , w) ? Do(Aj, £]1 , T£]1 , w)) ? Do(Ai, £\2 , T£\2 , w) ? .
+.
+.
+? Do(Ai, £\u , T£\u , w)) The consequential relation might exist due to various environmental constraints (when one action forces the adversary to respond with a specific action) or due to the agent"s knowledge about the profile of its adversary .
+Property 3 .
+As the knowledge we have about our adversary increases we will have additional beliefs about its behavior in different situations which in turn creates new set actions .
+Formally, if our AdvKnow at time Tn+1 is greater than AdvKnow at time Tn, then every SetAction known at time Tn is also known at time Tn+1 .
+AdvKnow(P Aj Ai , Tn+1) > AdvKnow(P Aj Ai , Tn) ? (?£\1 , .
+.
+.
+, £\u ? CAi , £]1 , .
+.
+.
+, £]v ? CAj ) Bel(Aag, SetAction(£\1 , .
+.
+.
+, £\u , £]1 , .
+.
+.
+, £]v ), Tn) ? Bel(Aag, SetAction(£\1 , .
+.
+.
+, £\u , £]1 , .
+.
+.
+, £]v ), Tn+1) 2.3 The Environment Formulation The following axioms provide the formal definition for a simple, zero sum Adversarial Environment .
+Satisfaction of these axioms means that the agent is situated in such an environment .
+It provides specifications for agent Aag to interact with its set of adversaries A with respect to goals G? Aag and G? A at time TCo at some world state w .
+AE(Aag, A, G? Aag , A1, .
+.
+.
+, Ak, G? A1 , .
+.
+.
+, G? Ak , Tn, w) (?£\ ? CAag , T£\) Int.Th(Aag, Achieve(G? Aag , £\), Tn, T£\, AE) pursuing full conflicting goals
+.
+.
+, Ak}) Bel(Aag, FulConf(G? Aag , G? Ao ), Tn) Int.Th his conflicting goal G? Aoi will be completed
+.
+.
+, Ak})(?£] ? CAo , T£]) Bel(Aag, Int.Th(Ao, Achieve(G? Ao , £]), TCo, T£], AE), Tn) adversaries (?Ao ? {A1, .
+.
+.
+, Ak}) (?PAo Aag ? PAag )Bel(Aag, Profile(Ao, PAo Aag ), Tn) To build an agent that will be able to operate successfully within such an AE, we must specify behavioral guidelines for its interactions .
+Using a naive Eval maximization strategy to a certain search depth will not always yield satisfactory results for several reasons
+The following axioms specify the behavioral principles that can be used to differentiate between successful and less successful agents in the above Adversarial Environment .
+Those axioms should be used as specification principles when designing and implementing agents that should be able to perform well in such Adversarial Environments .
+The behavioral axioms represent situations in which the agent will adopt potential intentions to (Pot.Int.To(...)) perform an action, which will typically require some means end reasoning to select a possible course of action .
+This reasoning will lead to the adoption of an Int.To(...) (see [4]) .
+A1 .
+Goal Achieving Axiom .
+The first axiom is the simplest case; when the agent Aag believes that it is one action (£\) away from achieving his conflicting goal G? Aag , it should adopt the potential intention to do £\ and complete its goal .
+(?Aag, £\ ? CAag , Tn, T£\, w ? W) (Bel(Aag, Do(Aag, £\, T£\, w) ? Achieve(G? Aag , £\, w)) ? Pot.Int.To(Aag, £\, Tn, T£\, w) This somewhat trivial behavior is the first and strongest axiom .
+In any situation, when the agent is an action away from completing the goal, it should complete the action .
+Any fair Eval function would naturally classify £\ as the maximal value action (property 1) .
+However, without explicit axiomatization of such behavior there might be situations where the agent will decide on taking another action for various reasons, due to its bounded decision resources .
+A2 .
+Preventive Act Axiom .
+Being in an adversarial situation, agent Aag might decide to take actions that will damage one of its adversary"s plans to complete its goal, even if those actions do not explicitly advance Aag towards its conflicting goal G? Aag .
+Such preventive action will take place when agent Aag has a belief about the possibility of its adversary Ao doing an action £] that will give it a high 552 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) utility evaluation value (> TrH) .
+Believing that taking action £\ will prevent the opponent from doing its £], it will adopt a potential intention to do £\ .
+(?Aag, Ao ? A, £\ ? CAag , £] ? CAo , Tn, T£], w ? W) (Bel(Aag, Do(Ao, £], T£], w) ? Eval(Ao, £], w) > TrH, Tn) ? Bel(Aag, Do(Aag, £\, T£\, w) ? ?Do(Ao, £], T£], w), Tn) ? Pot.Int.To(Aag, £\, Tn, T£\, w) This axiom is a basic component of any adversarial environment .
+For example, looking at a Chess board game, a player could realize that it is about to be checkmated by its opponent, thus making a preventive move .
+Another example is a Connect Four game
+A specific instance of A1 occurs when the adversary is one action away from achieving its goal, and immediate preventive action needs to be taken by the agent .
+Formally, we have the same beliefs as stated above, with a changed belief that doing action £] will cause agent Ao to achieve its goal .
+Proposition 1
+(?Aag, Ao ? A, £\ ? CAag , £] ? CAo , G? Ao , Tn, T£\, T£], w ? W) Bel(Aag, Do(Ao, £], T£], w) ? Achieve(G? Ao , £], w), Tn) ? Bel(Aag, Do(Aag, £\, T£\, w) ? ?Do(Ao, £], T£], w)) ? Pot.Int.To(Aag, £\, Tn, T£\, w) Sketch of proof
+The preventive act behavior will occur implicitly when the Eval function is equal to the real world utility function .
+However, being bounded rational agents and dealing with an estimated evaluation function we need to explicitly axiomatize such behavior, for it will not always occur implicitly from the evaluation function .
+A3 .
+Suboptimal Tactical Move Axiom .
+In many scenarios a situation may occur where an agent will decide not to take the current most beneficial action it can take (the action with the maximal utility evaluation value), because it believes that taking another action (with lower utility evaluation value) might yield (depending on the adversary"s response) a future possibility for a highly beneficial action .
+This will occur most often when the Eval function is inaccurate and differs by a large extent from the Utility function .
+Put formally, agent Aag believes in a certain SetAction that will evolve according to its initial action and will yield a high beneficial value (> TrH) solely for it .
+(?Aag, Ao ? A, Tn, w ? W) (?£\1 , .
+.
+.
+, £\u ? CAi , £]1 , .
+.
+.
+, £]v ? CAj , T£\1 ) Bel(Aag, SetAction(£\1 , .
+.
+.
+, £\u , £]1 , .
+.
+.
+, £]v ), Tn) ? Bel(Aag, Eval(Ao, £]v , w) < TrH < Eval(Aag, £\u , w), Tn) ? Pot.Int.To(Aag, £\1 , Tn, T£\1 , w) An agent might believe that a chain of events will occur for various reasons due to the inevitable nature of the domain .
+For example, in Chess, we often observe the following
+The agent might also believe in a chain of events based on its knowledge of its adversary"s profile, which allows it to foresee the adversary"s movements with high accuracy .
+A4 .
+Profile Detection Axiom .
+The agent can adjust its adversary"s profiles by observations and pattern study (specifically, if there are repeated encounters with the same adversary) .
+However, instead of waiting for profile information to be revealed, an agent can also initiate actions that will force its adversary to react in a way that will reveal profile knowledge about it .
+Formally, the axiom states that if all actions (£^) are not highly beneficial actions (< TrH), the agent can do action £\ in time T£\ if it believes that it will result in a non highly beneficial action £] from its adversary, which in turn teaches it about the adversary"s profile, i.e., gives a higher AdvKnow(P Aj Ai , T£]) .
+(?Aag, Ao ? A, £\ ? CAag , £] ? CAo , Tn, T£\, T£], w ? W) Bel(Aag, (?£^ ? CAag )Eval(Aag, £^, w) < TrH, Tn) ? Bel(Aag, Do(Aag, £\, T£\, w) ? Do(Ao, £], T£], w), Tn) ? Bel(Aag, Eval(Ao, £], w) < TrH) ? Bel(Aag, AdvKnow(P Aj Ai , T£]) > AdvKnow(P Aj Ai , Tn), Tn) ? Pot.Int.To(Aag, £\, Tn, T£\, w) For example, going back to the Chess board game scenario, consider starting a game versus an opponent about whom we know nothing, not even if it is a human or a computerized opponent .
+We might start playing a strategy that will be suitable versus an average opponent, and adjust our game according to its level of play .
+A5 .
+Alliance Formation Axiom The following behavioral axiom is relevant only in a multilateral instantiation of the adversarial environment (obviously, an alliance cannot be formed in a bilateral, zero sum encounter) .
+In different situations during a multilateral interaction, a group of agents might believe that it is in their best interests to form a temporary alliance .
+Such an alliance is an agreement that constrains its members" behavior, but is believed by its members to enable them to achieve a higher utility value than the one achievable outside of the alliance .
+As an example, we can look at the classical Risk board game, where each player has an individual goal of being the sole conquerer of the world, a zero sum game .
+However, in order to achieve this goal, it might be strategically wise to make short term ceasefire agreements with other players, or to join forces and attack an opponent who is stronger than the rest .
+An alliance"s terms defines the way its members should act .
+It is a set of predicates, denoted as Terms, that is agreed upon by the alliance members, and should remain true for the duration of the alliance .
+For example, the set Terms in the Risk scenario, could contain the following predicates
+The set Terms specifies inter group constraints on each of the alliance member"s (?Aal i ? Aal ? A) set of actions Cal i ? C .
+Definition 6 .
+Al val the total evaluation value that agent Ai will achieve while being part of Aal is the sum of Evali (Eval for Ai) of each of Aal j Eval values after taking their own £\ actions (via the agent(£\) predicate)
+Al TrH is a number representing an Al val The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 553 threshold; above it, the alliance can be said to be a highly beneficial alliance .
+The value of Al TrH will be calculated dynamically according to the progress of the interaction, as can be seen in [7] .
+After an alliance is formed, its members are now working in their normal adversarial environment, as well as according to the mental states and axioms required for their interactions as part of the alliance .
+The following Alliance model specifies the conditions under which the group Aal can be said to be in an alliance and working with a new and constrained set of actions Cal , at time Tn .
+AL(Aal , Cal , w, Tn) .

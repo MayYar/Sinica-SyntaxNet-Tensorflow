@@ -1,0 +1,740 @@
+Computing Good Nash Equilibria in Graphical Games ∗ 
+content:
+1 ABSTRACT :
+1-1:This paper addresses the problem of fair equilibrium selection in graphical games .
+1-2:Our approach is based on the data structure called the best response policy, which was proposed by Kearns et al .
+1-3:[13] as a way to represent all Nash equilibria of a graphical game .
+1-4:In [9], it was shown that the best response policy has polynomial size as long as the underlying graph is a path .
+1-5:In this paper, we show that if the underlying graph is a bounded degree tree and the best response policy has polynomial size then there is an efficient algorithm which constructs a Nash equilibrium that guarantees certain payoffs to all participants .
+1-6:Another attractive solution concept is a Nash equilibrium that maximizes the social welfare .
+1-7:We show that, while exactly computing the latter is infeasible (we prove that solving this problem may involve algebraic numbers of an arbitrarily high degree), there exists an FPTAS for finding such an equilibrium as long as the best response policy has polynomial size .
+1-8:These two algorithms can be combined to produce Nash equilibria that satisfy various fairness criteria .
+1-9:F.2 [Theory of Computation]: Analysis of Algorithms and .
+2 INTRODUCTION :
+2-1:In a large community of agents, an agent"s behavior is not likely to have a direct effect on most other agents: rather, it is just the agents who are close enough to him that will be affected .
+2-2:However, as these agents respond by adapting their behavior, more agents will feel the consequences and eventually the choices made by a single agent will propagate throughout the entire community .
+2-3:This is the intuition behind graphical games, which were introduced by Kearns, Littman and Singh in [13] as a compact representation scheme for games with many players .
+2-4:In an n player graphical game, each player is associated with a vertex of an underlying graph G, and the payoffs of each player depend on his action as well as on the actions of his neighbors in the graph .
+2-5:If the maximum degree of G is Δ, and each player has two actions available to him, then the game can be represented using n2Δ+1 numbers .
+2-6:In contrast, we need n2n numbers to represent a general n player 2 action game, which is only practical for small values of n .
+2-7:For graphical games with constant Δ, the size of the game is linear in n .
+2-8:One of the most natural problems for a graphical game is that of finding a Nash equilibrium, the existence of which follows from Nash"s celebrated theorem (as graphical games are just a special case of n player games) .
+2-9:The first attempt to tackle this problem was made in [13], where the authors consider graphical games with two actions per player in which the underlying graph is a boundeddegree tree .
+2-10:They propose a generic algorithm for finding Nash equilibria that can be specialized in two ways: an exponential time algorithm for finding an (exact) Nash equilibrium, and a fully polynomial time approximation scheme for finding an approximation to a Nash equilibrium .
+2-11:For any > 0 this algorithm outputs an Nash equilibrium, which is a strategy profile in which no player can improve his payoff by more than by unilaterally changing his strategy .
+2-12:While Nash equilibria are often easier to compute than exact Nash equilibria, this solution concept has several drawbacks .
+2-13:First, the players may be sensitive to a small loss in payoffs, so the strategy profile that is an Nash equilibrium will not be stable .
+2-14:This will be the case even if there is only a small subset of players who are extremely price sensitive, and for a large population of players it may be difficult to choose a value of that will satisfy everyone .
+2-15:Second, the strategy profiles that are close to being Nash equilibria may be much better with respect to the properties under consideration than exact Nash equilibria .
+2-16:Therefore, the (approximation to the) value of the best solution that corresponds to an Nash equilibrium may not be indicative of what can be achieved under an exact Nash equilibrium .
+2-17:This is especially important if the purpose of the approximate solution is to provide a good benchmark for a system of selfish agents, as the benchmark implied by an Nash equilibrium may be unrealistic .
+2-18:For these reasons, in this paper we focus on the problem of computing exact Nash equilibria .
+2-19:Building on ideas of [14], Elkind et al .
+2-20:[9] showed how to find an (exact) Nash equilibrium in polynomial time when the underlying 162 graph has degree 2 (that is, when the graph is a collection of paths and cycles) .
+2-21:By contrast, finding a Nash equilibrium in a general degree bounded graph appears to be computationally intractable: it has been shown (see [5, 12, 7]) to be complete for the complexity class PPAD .
+2-22:[9] extends this hardness result to the case in which the underlying graph has bounded pathwidth .
+2-23:A graphical game may not have a unique Nash equilibrium, indeed it may have exponentially many .
+2-24:Moreover, some Nash equilibria are more desirable than others .
+2-25:Rather than having an algorithm which merely finds some Nash equilibrium, we would like to have algorithms for finding Nash equilibria with various sociallydesirable properties, such as maximizing overall payoff or distributing profit fairly .
+2-26:A useful property of the data structure of [13] is that it simultaneously represents the set of all Nash equilibria of the underlying game .
+2-27:If this representation has polynomial size (as is the case for paths, as shown in [9]), one may hope to extract from it a Nash equilibrium with the desired properties .
+2-28:In fact, in [13] the authors mention that this is indeed possible if one is interested in finding an (approximate) Nash equilibrium .
+2-29:The goal of this paper is to extend this to exact Nash equilibria .
+2-30:1.1 Our Results In this paper, we study n player 2 action graphical games on bounded degree trees for which the data structure of [13] has size poly(n) .
+2-31:We focus on the problem of finding exact Nash equilibria with certain socially desirable properties .
+2-32:In particular, we show how to find a Nash equilibrium that (nearly) maximizes the social welfare, i.e., the sum of the players" payoffs, and we show how to find a Nash equilibrium that (nearly) satisfies prescribed payoff bounds for all players .
+2-33:Graphical games on bounded degree trees have a simple algebraic structure .
+2-34:One attractive feature, which follows from [13], is that every such game has a Nash equilibrium in which the strategy of every player is a rational number .
+2-35:Section 3 studies the algebraic structure of those Nash equilibria that maximize social welfare .
+2-36:We show (Theorems 1 and 2) that, surprisingly, the set of Nash equilibria that maximize social welfare is more complex .
+2-37:In fact, for any algebraic number α ∈ [0, 1] with degree at most n, we exhibit a graphical game on a path of length O(n) such that, in the unique social welfare maximizing Nash equilibrium of this game, one of the players plays the mixed strategy α.1 This result shows that it may be difficult to represent an optimal Nash equilibrium .
+2-38:It seems to be a novel feature of the setting we consider here, that an optimal Nash equilibrium is hard to represent, in a situation where it is easy to find and represent a Nash equilibrium .
+2-39:As the social welfare maximizing Nash equilibrium may be hard to represent efficiently, we have to settle for an approximation .
+2-40:However, the crucial difference between our approach and that of previous papers [13, 16, 19] is that we require our algorithm to output an exact Nash equilibrium, though not necessarily the optimal one with respect to our criteria .
+2-41:In Section 4, we describe an algorithm that satisfies this requirement .
+2-42:Namely, we propose an algorithm that for any > 0 finds a Nash equilibrium whose total payoff is within of optimal .
+2-43:It runs in polynomial time (Theorem 3,4) for any graphical game on a bounded degree tree for which the data structure proposed by [13] (the so called best response policy, defined below) is of size poly(n) (note that, as shown in [9], this is always the case when the underlying graph is a path) .
+2-44:More pre1 A related result in a different context was obtained by Datta [8], who shows that n player 2 action games are universal in the sense that any real algebraic variety can be represented as the set of totally mixed Nash equilibria of such games .
+2-45:cisely, the running time of our algorithm is polynomial in n, Pmax, and 1 , where Pmax is the maximum absolute value of an entry of a payoff matrix, i.e., it is a pseudopolynomial algorithm, though it is fully polynomial with respect to .
+2-46:We show (Section 4.1) that under some restrictions on the payoff matrices, the algorithm can be transformed into a (truly) polynomial time algorithm that outputs a Nash equilibrium whose total payoff is within a 1 − factor from the optimal .
+2-47:In Section 5, we consider the problem of finding a Nash equilibrium in which the expected payoff of each player Vi exceeds a prescribed threshold Ti .
+2-48:Using the idea from Section 4 we give (Theorem 5) a fully polynomial time approximation scheme for this problem .
+2-49:The running time of the algorithm is bounded by a polynomial in n, Pmax, and .
+2-50:If the instance has a Nash equilibrium satisfying the prescribed thresholds then the algorithm constructs a Nash equilibrium in which the expected payoff of each player Vi is at least Ti − .
+2-51:In Section 6, we introduce other natural criteria for selecting a good Nash equilibrium and we show that the algorithms described in the two previous sections can be used as building blocks in finding Nash equilibria that satisfy these criteria .
+2-52:In particular, in Section 6.1 we show how to find a Nash equilibrium that approximates the maximum social welfare, while guaranteeing that each individual payoff is close to a prescribed threshold .
+2-53:In Section 6.2 we show how to find a Nash equilibrium that (nearly) maximizes the minimum individual payoff .
+2-54:Finally, in Section 6.3 we show how to find a Nash equilibrium in which the individual payoffs of the players are close to each other .
+2-55:1.2 Related Work Our approximation scheme (Theorem 3 and Theorem 4) shows a contrast between the games that we study and two player n action games, for which the corresponding problems are usually intractable .
+2-56:For two player n action games, the problem of finding Nash equilibria with special properties is typically NP hard .
+2-57:In particular, this is the case for Nash equilibria that maximize the social welfare [11, 6] .
+2-58:Moreover, it is likely to be intractable even to approximate such equilibria .
+2-59:In particular, Chen, Deng and Teng [4] show that there exists some , inverse polynomial in n, for which computing an Nash equilibrium in 2 player games with n actions per player is PPAD complete .
+2-60:Lipton and Markakis [15] study the algebraic properties of Nash equilibria, and point out that standard quantifier elimination algorithms can be used to solve them .
+2-61:Note that these algorithms are not polynomial time in general .
+2-62:The games we study in this paper have polynomial time computable Nash equilibria in which all mixed strategies are rational numbers, but an optimal Nash equilibrium may necessarily include mixed strategies with high algebraic degree .
+2-63:A correlated equilibrium (introduced by Aumann [2]) is a distribution over vectors of players" actions with the property that if any player is told his own action (the value of his own component) from a vector generated by that distribution, then he cannot increase his expected payoff by changing his action .
+2-64:Any Nash equilibrium is a CE but the converse does not hold in general .
+2-65:In contrast with Nash equilibria, correlated equilibria can be found for low degree graphical games (as well as other classes of conciselyrepresented multiplayer games) in polynomial time [17] .
+2-66:But, for graphical games it is NP hard to find a correlated equilibrium that maximizes total payoff [18] .
+2-67:However, the NP hardness results apply to more general games than the one we consider here, in particular the graphs are not trees .
+2-68:From [2] it is also known that there exist 2 player, 2 action games for which the expected total payoff 163 of the best correlated equilibrium is higher than the best Nash equilibrium, and we discuss this issue further in Section 7. .
+3 PRELIMINARIES AND NOTATION :
+3-1:We consider graphical games in which the underlying graph G is an n vertex tree, in which each vertex has at most Δ children .
+3-2:Each vertex has two actions, which are denoted by 0 and 1 .
+3-3:A mixed strategy of a player V is represented as a single number v ∈ [0, 1], which denotes the probability that V selects action 1 .
+3-4:For the purposes of the algorithm, the tree is rooted arbitrarily .
+3-5:For convenience, we assume without loss of generality that the root has a single child, and that its payoff is independent of the action chosen by the child .
+3-6:This can be achieved by first choosing an arbitrary root of the tree, and then adding a dummy parent of this root, giving the new parent a constant payoff function, e.g., 0 .
+3-7:Given an edge (V, W ) of the tree G, and a mixed strategy w for W , let G(V,W ),W =w be the instance obtained from G by (1) deleting all nodes Z which are separated from V by W (i.e., all nodes Z such that the path from Z to V passes through W ), and (2) restricting the instance so that W is required to play mixed strategy w .
+3-8:Definition 1 .
+3-9:Suppose that (V, W ) is an edge of the tree, that v is a mixed strategy for V and that w is a mixed strategy for W .
+3-10:We say that v is a potential best response to w (denoted by v ∈ pbrV (w)) if there is an equilibrium in the instance G(V,W ),W =w in which V has mixed strategy v .
+3-11:We define the best response policy for V , given W , as B(W, V ) = {(w, v) | v ∈ pbrV (w), w ∈ [0, 1]} .
+3-12:The upstream pass of the generic algorithm of [13] considers every node V (other than the root) and computes the best response policy for V given its parent .
+3-13:With the above assumptions about the root, the downstream pass is straightforward .
+3-14:The root selects a mixed strategy w for the root W and a mixed strategy v ∈ B(W, V ) for each child V of W .
+3-15:It instructs each child V to play v .
+3-16:The remainder of the downward pass is recursive .
+3-17:When a node V is instructed by its parent to adopt mixed strategy v, it does the following for each child U It finds a pair (v, u) ∈ B(V, U) (with the same v value that it was given by its parent) and instructs U to play u .
+3-18:The best response policy for a vertex U given its parent V can be represented as a union of rectangles, where a rectangle is defined by a pair of closed intervals (IV , IU ) and consists of all points in IV × IU ; it may be the case that one or both of the intervals IV and IU consists of a single point .
+3-19:In order to perform computations on B(V, U), and to bound the number of rectangles, [9] used the notion of an event point, which is defined as follows .
+3-20:For any set A ⊆ [0, 1]2 that is represented as a union of a finite number of rectangles, we say that a point u ∈ [0, 1] on the U axis is a Uevent point of A if u = 0 or u = 1 or the representation of A contains a rectangle of the form IV × IU and u is an endpoint of IU ; V event points are defined similarly .
+3-21:For many games considered in this paper, the underlying graph is an n vertex path, i.e., a graph G = (V, E) with V = {V1, .
+3-22:.
+3-23:.
+3-24:, Vn} and E = {(V1, V2), .
+3-25:.
+3-26:.
+3-27:, (Vn−1, Vn)} .
+3-28:In [9], it was shown that for such games, the best response policy has only polynomially many rectangles .
+3-29:The proof that the number of rectangles in B(Vj+1, Vj) is polynomial proceeds by first showing that the number of event points in B(Vj+1, Vj ) cannot exceed the number of event points in B(Vj, Vj−1) by more than 2, and using this fact to bound the number of rectangles in B(Vj+1, Vj ) .
+3-30:Let P0 (V ) and P1 (V ) be the expected payoffs to V when it plays 0 and 1, respectively .
+3-31:Both P0 (V ) and P1 (V ) are multilinear functions of the strategies of V "s neighbors .
+3-32:In what follows, we will frequently use the following simple observation .
+3-33:CLAIM 1 .
+3-34:For a vertex V with a single child U and parent W , given any A, B, C, D ∈ Q, A , B , C , D ∈ Q, one can select the payoffs to V so that P0 (V ) = Auw + Bu + Cw + D, P1 (V ) = A uw + B u + C w + D .
+3-35:Moreover, if all A, B, C, D, A , B , C , D are integer, the payoffs to V are integer as well .
+3-36:PROOF .
+3-37:We will give the proof for P0 (V ); the proof for P1 (V ) is similar .
+3-38:For i, j = 0, 1, let Pij be the payoff to V when U plays i, V plays 0 and W plays j .
+3-39:We have P0 (V ) = P00(1 − u)(1 − w) + P10u(1 − w) + P01(1 − u)w + P11uw .
+3-40:We have to select the values of Pij so that P00 − P10 − P01 + P11 = A, −P00 + P10 = B, −P00 + P01 = C, P00 = D .
+3-41:It is easy to see that the unique solution is given by P00 = D, P01 = C + D, P10 = B + D, P11 = A + B + C + D .
+3-42:The input to all algorithms considered in this paper includes the payoff matrices for each player .
+3-43:We assume that all elements of these matrices are integer .
+3-44:Let Pmax be the greatest absolute value of any element of any payoff matrix .
+3-45:Then the input consists of at most n2Δ+1 numbers, each of which can be represented using log Pmax bits. .
+4 NASH EQUILIBRIA THAT MAXIMIZE THE SOCIAL WELFARE: SOLUTIONS :
+4-1:THE SOCIAL WELFARE: SOLUTIONS IN R \ Q From the point of view of social welfare, the best Nash equilibrium is the one that maximizes the sum of the players" expected payoffs .
+4-2:Unfortunately, it turns out that computing such a strategy profile exactly is not possible: in this section, we show that even if all players" payoffs are integers, the strategy profile that maximizes the total payoff may have irrational coordinates; moreover, it may involve algebraic numbers of an arbitrary degree .
+4-3:3.1 Warm up: quadratic irrationalities We start by providing an example of a graphical game on a path of length 3 with integer payoffs such that in the Nash equilibrium that maximizes the total payoff, one of the players has a strategy in R \ Q .
+4-4:In the next subsection, we will extend this example to algebraic numbers of arbitrary degree n; to do so, we have to consider paths of length O(n) .
+4-5:THEOREM 1 .
+4-6:There exists an integer payoff graphical game G on a 3 vertex path UV W such that, in any Nash equilibrium of G that maximizes social welfare, the strategy, u, of the player U and the total payoff, p, satisfy u, p ∈ R \ Q .
+4-7:PROOF .
+4-8:The payoffs to the players in G are specified as follows .
+4-9:The payoff to U is identically 0, i.e., P0 = P1 = 0 .
+4-10:Using Claim 1, we select the payoffs to V so that P0 (V ) = −uw + 3w and P1 (V ) = P0 (V ) + w(u + 2) − (u + 1), where u and w are the (mixed) strategies of U and W , respectively .
+4-11:It follows that V is indifferent between playing 0 and 1 if and only if w = f(u) = u+1 u+2 .
+4-12:Observe that for any u ∈ [0, 1] we have f(u) ∈ [0, 1] .
+4-13:The payoff to W is 0 if it selects the same action as V and 1 otherwise .
+4-14:CLAIM 2 .
+4-15:All Nash equilibria of the game G are of the form (u, 1 2, f(u)) .
+4-16:That is, in any Nash equilibrium, V plays v = 1 2 and W plays w = f(u) .
+4-17:Moreover, for any value of u, the vector of strategies (u, 1 2, f(u)) constitutes a Nash equilibrium .
+4-18:PROOF .
+4-19:It is easy to check that for any u ∈ [0, 1], the vector (u, 1 2, f(u)) is a Nash equilibrium .
+4-20:Indeed, U is content to play 164 any mixed strategy u no matter what V and W do .
+4-21:Furthermore, V is indifferent between 0 and 1 as long as w = f(u), so it can play 1 2 .
+4-22:Finally, if V plays 0 and 1 with equal probability, W is indifferent between 0 and 1, so it can play f(u) .
+4-23:Conversely, suppose that v > 1 2 .
+4-24:Then W strictly prefers to play 0, i.e., w = 0 .
+4-25:Then for V we have P1 (V ) = P0 (V ) − (u + 1), i.e., P1 (V ) < P0 (V ), which implies v = 0, a contradiction .
+4-26:Similarly, if v < 1 2, player W prefers to play 1, so we have w = 1 .
+4-27:Hence, P1 (V ) = P0 (V ) + (u + 2) − (u + 1), i.e., P1 (V ) > P0 (V ), which implies v = 1, a contradiction .
+4-28:Finally, if v = 1 2, but w = f(u), player V is not indifferent between 0 and 1, so he would deviate from playing 1 2 .
+4-29:This completes the proof of Claim 2 .
+4-30:By Claim 2, the total payoff in any Nash equilibrium of this game is a function of u .
+4-31:More specifically, the payoff to U is 0, the payoff to V is −uf(u) + 3f(u), and the payoff to W is 1 2 .
+4-32:Therefore, the Nash equilibrium with the maximum total payoff corresponds to the value of u that maximizes g(u) = −u (u + 1) u + 2 + 3 u + 1 u + 2 = − (u − 3)(u + 1) u + 2 .
+4-33:To find extrema of g(u), we compute h(u) = − d du g(u) .
+4-34:We have h(u) = (2u − 2)(u + 2) − (u − 3)(u + 1) (u + 2)2 = u2 + 4u − 1 (u + 2)2 .
+4-35:Hence, h(u) = 0 if and only if u ∈ {−2 + √ 5, −2 − √ 5} .
+4-36:Note that −2 + √ 5 ∈ [0, 1] .
+4-37:The function g(u) changes sign at −2, −1, and 3 .
+4-38:We have g(u) < 0 for g > 3, g(u) > 0 for u < −2, so the extremum of g(u) that lies between 1 and 3, i.e., u = −2 + √ 5, is a local maximum .
+4-39:We conclude that the social welfare maximizing Nash equilibrium for this game is given by the vector of strategies (−2+√ 5, 1 2, (5 − √ 5) 5) .
+4-40:The respective total payoff is 0 − ( √ 5 − 5)( √ 5 − 1) √ 5 + 1 2 = 13 2 − 2 √ 5 .
+4-41:This concludes the proof of Theorem 1 .
+4-42:3.2 Strategies of arbitrary degree We have shown that in the social welfare maximizing Nash equilibrium, some players" strategies can be quadratic irrationalities, and so can the total payoff .
+4-43:In this subsection, we will extend this result to show that we can construct an integer payoff graphical game on a path whose social welfare maximizing Nash equilibrium involves arbitrary algebraic numbers in [0, 1] .
+4-44:THEOREM 2 .
+4-45:For any degree n algebraic number α ∈ [0, 1], there exists an integer payoff graphical game on a path of length O(n) such that, in all social welfare maximizing Nash equilibria of this game, one of the players plays α .
+4-46:PROOF .
+4-47:Our proof consists of two steps .
+4-48:First, we construct a rational expression R(x) and a segment [x , x ] such that x , x ∈ Q and α is the only maximum of R(x) on [x , x ] .
+4-49:Second, we construct a graphical game whose Nash equilibria can be parameterized by u ∈ [x , x ], so that at the equilibrium that corresponds to u the total payoff is R(u) and, moreover, some player"s strategy is u .
+4-50:It follows that to achieve the payoff maximizing Nash equilibrium, this player has to play α .
+4-51:The details follow .
+4-52:LEMMA 1 .
+4-53:Given an algebraic number α ∈ [0, 1], deg(α) = n, there exist K2, .
+4-54:.
+4-55:.
+4-56:, K2n+2 ∈ Q and x , x ∈ (0, 1) ∩ Q such that α is the only maximum of R(x) = K2 x + 2 + · · · + K2n+2 x + 2n + 2 on [x , x ] .
+4-57:PROOF .
+4-58:Let P(x) be the minimal polynomial of α, i.e., a polynomial of degree n with rational coefficients whose leading coefficient is 1 such that P(α) = 0 .
+4-59:Let A = {α1, .
+4-60:.
+4-61:.
+4-62:, αn} be the set of all roots of P(x) .
+4-63:Consider the polynomial Q1(x) = −P2 (x) .
+4-64:It has the same roots as P(x), and moreover, for any x ∈ A we have Q1(x) < 0 .
+4-65:Hence, A is the set of all maxima of Q1(x) .
+4-66:Now, set R(x) = Q1(x) (x+2)...(x+2n+1)(x+2n+2) .
+4-67:Observe that R(x) ≤ 0 for all x ∈ [0, 1] and R(x) = 0 if and only if Q1(x) = 0 .
+4-68:Hence, the set A is also the set of all maxima of R(x) on [0, 1] .
+4-69:Let d = min{|αi − α| | αi ∈ A, αi = α}, and set α = max{α − d 2, 0}, α = min{α + d 2, 1} .
+4-70:Clearly, α is the only zero (and hence, the only maximum) of R(x) on [α , α ] .
+4-71:Let x and x be some rational numbers in (α , α) and (α, α ), respectively; note that by excluding the endpoints of the intervals we ensure that x , x = 0, 1 .
+4-72:As [x , x ] ⊂ [α , α ], we have that α is the only maximum of R(x) on [x , x ] .
+4-73:As R(x) is a proper rational expression and all roots of its denominator are simple, by partial fraction decomposition theorem, R(x) can be represented as R(x) = K2 x + 2 + · · · + K2n+2 x + 2n + 2 , where K2, .
+4-74:.
+4-75:.
+4-76:, K2n+2 are rational numbers .
+4-77:Consider a graphical game on the path U−1V−1U0V0U1V1 .
+4-78:.
+4-79:.
+4-80:Uk−1Vk−1Uk, where k = 2n + 2 .
+4-81:Intuitively, we want each triple (Ui−1, Vi−1, Ui) to behave similarly to the players U, V , and W from the game described in the previous subsection .
+4-82:More precisely, we define the payoffs to the players in the following way .
+4-83:• The payoff to U−1 is 0 no matter what everyone else does .
+4-84:• The expected payoff to V−1 is 0 if it plays 0 and u0 − (x − x )u−1 −x if it plays 1, where u0 and u−1 are the strategies of U0 and U−1, respectively .
+4-85:• The expected payoff to V0 is 0 if it plays 0 and u1(u0 + 1)− u0 if it plays 1, where u0 and u1 are the strategies of U0 and U1, respectively .
+4-86:• For each i = 1, .
+4-87:.
+4-88:.
+4-89:, k − 1, the expected payoff to Vi when it plays 0 is P0 (Vi) = Aiuiui+1 − Aiui+1, and the expected payoff to Vi when it plays 1 is P1 (Vi) = P0 (Vi) + ui+1(2 − ui) − 1, where Ai = −Ki+1 and ui+1 and ui are the strategies of Ui+1 and Ui, respectively .
+4-90:• For each i = 0, .
+4-91:.
+4-92:.
+4-93:, k, the payoff to Ui does not depend on Vi and is 1 if Ui and Vi−1 select different actions and 0 otherwise .
+4-94:We will now characterize the Nash equilibria of this game using a sequence of claims .
+4-95:CLAIM 3 .
+4-96:In all Nash equilibria of this game V−1 plays 1 2, and the strategies of u−1 and u0 satisfy u0 = (x − x )u−1 + x .
+4-97:Consequently, in all Nash equilibria we have u0 ∈ [x , x ] .
+4-98:165 PROOF .
+4-99:The proof is similar to that of Claim 2 .
+4-100:Let f(u−1) = (x − x )u−1 + x .
+4-101:Clearly, the player V−1 is indifferent between playing 0 and 1 if and only if u0 = f(u−1) .
+4-102:Suppose that v−1 < 1 2 .
+4-103:Then U0 strictly prefers to play 1, i.e., u0 = 1, so we have P1 (V−1) = P0 (V−1) + 1 − (x − x )u−1 − x .
+4-104:As 1 − x ≤ 1 − (x − x )u−1 − x ≤ 1 − x for u−1 ∈ [0, 1] and x < 1, we have P1 (V−1) > P0 (V−1), so V−1 prefers to play 1, a contradiction .
+4-105:Similarly, if v−1 > 1 2, the player U0 strictly prefers to play 0, i.e., u0 = 0, so we have P1 (V−1) = P0 (V−1) − (x − x )u−1 − x .
+4-106:As x < x , x > 0, we have P1 (V−1) < P0 (V−1), so V−1 prefers to play 0, a contradiction .
+4-107:Finally, if V−1 plays 1 2, but u0 = f(u−1), player V−1 is not indifferent between 0 and 1, so he would deviate from playing 1 2 .
+4-108:Also, note that f(0) = x , f(1) = x , and, moreover, f(u−1) ∈ [x , x ] if and only if u−1 ∈ [0, 1] .
+4-109:Hence, in all Nash equilibria of this game we have u0 ∈ [x , x ] .
+4-110:CLAIM 4 .
+4-111:In all Nash equilibria of this game for each i = 0, .
+4-112:.
+4-113:.
+4-114:, k − 1, we have vi = 1 2, and the strategies of the players Ui and Ui+1 satisfy ui+1 = fi(ui), where f0(u) = u (u + 1) and fi(u) = 1 (2 − u) for i > 0 .
+4-115:PROOF .
+4-116:The proof of this claim is also similar to that of Claim 2 .
+4-117:We use induction on i to prove that the statement of the claim is true and, additionally, ui = 1 for i > 0 .
+4-118:For the base case i = 0, note that u0 = 0 by the previous claim (recall that x , x are selected so that x , x = 0, 1) and consider the triple (U0, V0, U1) .
+4-119:Let v0 be the strategy of V0 .
+4-120:First, suppose that v0 > 1 2 .
+4-121:Then U1 strictly prefers to play 0, i.e., u1 = 0 .
+4-122:Then for V0 we have P1 (V0) = P0 (V0) − u0 .
+4-123:As u0 = 0, we have P1 (V0) < P0 (V0), which implies v1 = 0, a contradiction .
+4-124:Similarly, if v0 < 1 2, player U1 prefers to play 1, so we have u1 = 1 .
+4-125:Hence, P1 (V0) = P0 (V0) + 1 .
+4-126:It follows that P1 (V0) > P0 (V0), which implies v0 = 1, a contradiction .
+4-127:Finally, if v0 = 1 2, but u1 = u0 (u0 + 1), player V0 is not indifferent between 0 and 1, so he would deviate from playing 1 2 .
+4-128:Moreover, as u1 = u0 (u0 + 1) and u0 ∈ [0, 1], we have u1 = 1 .
+4-129:The argument for the inductive step is similar .
+4-130:Namely, suppose that the statement is proved for all i < i and consider the triple (Ui, Vi, Ui+1) .
+4-131:Let vi be the strategy of Vi .
+4-132:First, suppose that vi > 1 2 .
+4-133:Then Ui+1 strictly prefers to play 0, i.e., ui+1 = 0 .
+4-134:Then for Vi we have P1 (Vi) = P0 (Vi)−1, i.e., P1 (Vi) < P0 (Vi), which implies vi = 0, a contradiction .
+4-135:Similarly, if vi < 1 2, player Ui+1 prefers to play 1, so we have ui+1 = 1 .
+4-136:Hence, P1 (Vi) = P0 (Vi) + 1 − ui .
+4-137:By inductive hypothesis, we have ui < 1 .
+4-138:Consequently, P1 (Vi) > P0 (Vi), which implies vi = 1, a contradiction .
+4-139:Finally, if vi = 1 2, but ui+1 = 1 (2 − ui), player Vi is not indifferent between 0 and 1, so he would deviate from playing 1 2 .
+4-140:Moreover, as ui+1 = 1 (2 − ui) and ui < 1, we have ui+1 < 1 .
+4-141:CLAIM 5 .
+4-142:Any strategy profile of the form (u−1, 1 2, u0, 1 2, u1, 1 2, .
+4-143:.
+4-144:.
+4-145:, uk−1, 1 2, uk), where u−1 ∈ [0, 1], u0 = (x − x )u−1 + x , u1 = u0 (u0 + 1), and ui+1 = 1 (2 − ui) for i ≥ 1 constitutes a Nash equilibrium .
+4-146:PROOF .
+4-147:First, the player U−1"s payoffs do not depend on other players" actions, so he is free to play any strategy in [0, 1] .
+4-148:As long as u0 = (x −x )u−1 +x , player V−1 is indifferent between 0 and 1, so he is content to play 1 2; a similar argument applies to players V0, .
+4-149:.
+4-150:.
+4-151:, Vk−1 .
+4-152:Finally, for each i = 0, .
+4-153:.
+4-154:.
+4-155:, k, the payoffs of player Ui only depend on the strategy of player Vi−1 .
+4-156:In particular, as long as vi−1 = 1 2, player Ui is indifferent between playing 0 and 1, so he can play any mixed strategy ui ∈ [0, 1] .
+4-157:To complete the proof, note that (x − x )u−1 + x ∈ [0, 1] for all u−1 ∈ [0, 1], u0 (u0 + 1) ∈ [0, 1] for all u0 ∈ [0, 1], and 1 (2 − ui) ∈ [0, 1] for all ui ∈ [0, 1], so we have ui ∈ [0, 1] for all i = 0, .
+4-158:.
+4-159:.
+4-160:, k .
+4-161:Now, let us compute the total payoff under a strategy profile of the form given in Claim 5 .
+4-162:The payoff to U−1 is 0, and the expected payoff to each of the Ui, i = 0, .
+4-163:.
+4-164:.
+4-165:, k, is 1 2 .
+4-166:The expected payoffs to V−1 and V0 are 0 .
+4-167:Finally, for any i = 1, .
+4-168:.
+4-169:.
+4-170:, k − 1, the expected payoff to Vi is Ti = Aiuiui+1 − Aiui+1 .
+4-171:It follows that to find a Nash equilibrium with the highest total payoff, we have to maximize Pk−1 i=1 Ti subject to conditions u−1 ∈ [0, 1], u0 = (x −x )u−1+x , u1 = u0 (u0+1), and ui+1 = 1 (2−ui) for i = 1, .
+4-172:.
+4-173:.
+4-174:, k − 1 .
+4-175:We would like to express Pk−1 i=1 Ti as a function of u0 .
+4-176:To simplify notation, set u = u0 .
+4-177:LEMMA 2 .
+4-178:For i = 1, .
+4-179:.
+4-180:.
+4-181:, k, we have ui = u+i−1 u+i .
+4-182:PROOF .
+4-183:The proof is by induction on i .
+4-184:For i = 1, we have u1 = u (u + 1) .
+4-185:Now, for i ≥ 2 suppose that ui−1 = (u + i − 2) (u + i − 1) .
+4-186:We have ui = 1 (2 − ui−1) = (u + i − 1) (2u + 2i − 2 − u − i + 2) = (u + i − 1) (u + i) .
+4-187:It follows that for i = 1, .
+4-188:.
+4-189:.
+4-190:, k − 1 we have Ti = Ai u + i − 1 u + i u + i u + i + 1 − Ai u + i u + i + 1 = −Ai 1 u + i + 1 = Ki+1 u + i + 1 .
+4-191:Observe that as u−1 varies from 0 to 1, u varies from x to x .
+4-192:Therefore, to maximize the total payoff, we have to choose u ∈ [x , x ] so as to maximize K2 u + 2 + · · · + Kk u + k = R(u) .
+4-193:By construction, the only maximum of R(u) on [x , x ] is α .
+4-194:It follows that in the payoff maximizing Nash equilibrium of our game U0 plays α .
+4-195:Finally, note that the payoffs in our game are rational rather than integer .
+4-196:However, it is easy to see that we can multiply all payoffs to a player by their greatest common denominator without affecting his strategy .
+4-197:In the resulting game, all payoffs are integer .
+4-198:This concludes the proof of Theorem 2. .
+5 APPROXIMATING THE SOCIALLY  OPTIMAL NASH EQUILIBRIUM :
+5-1:OPTIMAL NASH EQUILIBRIUM We have seen that the Nash equilibrium that maximizes the social welfare may involve strategies that are not in Q .
+5-2:Hence, in this section we focus on finding a Nash equilibrium that is almost optimal from the social welfare perspective .
+5-3:We propose an algorithm that for any > 0 finds a Nash equilibrium whose total payoff is within from optimal .
+5-4:The running time of this algorithm is polynomial in 1 , n and |Pmax| (recall that Pmax is the maximum absolute value of an entry of a payoff matrix) .
+5-5:While the negative result of the previous section is for graphical games on paths, our algorithm applies to a wider range of scenarios .
+5-6:Namely, it runs in polynomial time on bounded degree trees 166 as long as the best response policy of each vertex, given its parent, can be represented as a union of a polynomial number of rectangles .
+5-7:Note that path graphs always satisfy this condition: in [9] we showed how to compute such a representation, given a graph with maximum degree 2 .
+5-8:Consequently, for path graphs the running time of our algorithm is guaranteed to be polynomial .
+5-9:(Note that [9] exhibits a family of graphical games on bounded degree trees for which the best response policies of some of the vertices, given their parents, have exponential size, when represented as unions of rectangles.) Due to space restrictions, in this version of the paper we present the algorithm for the case where the graph underlying the graphical game is a path .
+5-10:We then state our result for the general case; the proof can be found in the full version of this paper [10] .
+5-11:Suppose that s is a strategy profile for a graphical game G .
+5-12:That is, s assigns a mixed strategy to each vertex of G .
+5-13:let EPV (s) be the expected payoff of player V under s and let EP(s) =P V EPV (s) .
+5-14:Let M(G) = max{EP(s) | s is a Nash equilibrium for G} .
+5-15:THEOREM 3 .
+5-16:Suppose that G is a graphical game on an nvertex path .
+5-17:Then for any > 0 there is an algorithm that constructs a Nash equilibrium s for G that satisfies EP(s ) ≥ M(G)− .
+5-18:The running time of the algorithm is O(n4 P3 max 3 ) PROOF .
+5-19:Let {V1, .
+5-20:.
+5-21:.
+5-22:, Vn} be the set of all players .
+5-23:We start by constructing the best response policies for all Vi, i = 1, .
+5-24:.
+5-25:.
+5-26:, n − 1 .
+5-27:As shown in [9], this can be done in time O(n3 ) .
+5-28:Let N > 5n be a parameter to be selected later, set δ = 1 N, and define X = {jδ | j = 0, .
+5-29:.
+5-30:.
+5-31:, N} .
+5-32:We say that vj is an event point for a player Vi if it is a Vi event point for B(Vi, Vi−1) or B(Vi+1, Vi) .
+5-33:For each player Vi, consider a finite set of strategies Xi given by Xi = X ∪ {vj |vj is an event point for Vi} .
+5-34:It has been shown in [9] that for any i = 2, .
+5-35:.
+5-36:.
+5-37:, n, the best response policy B(Vi, Vi−1) has at most 2n + 4 Vi event points .
+5-38:As we require N > 5n, we have |Xi| ≤ 2N; assume without loss of generality that |Xi| = 2N .
+5-39:Order the elements of Xi in increasing order as x1 i = 0 < x2 i < · · · < x2N i .
+5-40:We will refer to the strategies in Xi as discrete strategies of player Vi; a strategy profile in which each player has a discrete strategy will be referred to as a discrete strategy profile .
+5-41:We will now show that even we restrict each player Vi to strategies from Xi, the players can still achieve a Nash equilibrium, and moreover, the best such Nash equilibrium (with respect to the social welfare) has total payoff at least M(G) − as long as N is large enough .
+5-42:Let s be a strategy profile that maximizes social welfare .
+5-43:That is, let s = (s1, .
+5-44:.
+5-45:.
+5-46:, sn) where si is the mixed strategy of player Vi and EP(s) = M(G) .
+5-47:For i = 1, .
+5-48:.
+5-49:.
+5-50:, n, let ti = max{xj i | xj i ≤ si} .
+5-51:First, we will show that the strategy profile t = (t1, .
+5-52:.
+5-53:.
+5-54:, tn) is a Nash equilibrium for G .
+5-55:Fix any i, 1 < i ≤ n, and let R = [v1, v2]×[u1, u2] be the rectangle in B(Vi, Vi−1) that contains (si, si−1) .
+5-56:As v1 is a Vi event point of B(Vi, Vi−1), we have v1 ≤ ti, so the point (ti, si−1) is inside R .
+5-57:Similarly, the point u1 is a Vi−1 event point of B(Vi, Vi−1), so we have u1 ≤ ti−1, and therefore the point (ti, ti−1) is inside R .
+5-58:This means that for any i, 1 < i ≤ n, we have ti−1 ∈ pbrVi−1 (ti), which implies that t = (t1, .
+5-59:.
+5-60:.
+5-61:, tn) is a Nash equilibrium for G .
+5-62:Now, let us estimate the expected loss in social welfare caused by playing t instead of s .
+5-63:LEMMA 3 .
+5-64:For any pair of strategy profiles t, s such that |ti − si| ≤ δ we have |EPVi (s) − EPVi (t)| ≤ 24Pmaxδ for any i = 1, .
+5-65:.
+5-66:.
+5-67:, n .
+5-68:PROOF .
+5-69:Let Pi klm be the payoff of the player Vi, when he plays k, Vi−1 plays l, and Vi+1 plays m .
+5-70:Fix i = 1, .
+5-71:.
+5-72:.
+5-73:, n and for k, l, m ∈ {0, 1}, set tklm = tk i−1(1 − ti−1)1−k tl i(1 − ti)1−l tm i+1(1 − ti+1)1−m sklm = sk i−1(1 − si−1)1−k sl i(1 − si)1−l sm i+1(1 − si+1)1−m .
+5-74:We have |EPVi (s) − EPVi (t)| ≤ X k,l,m=0,1 |Pi klm(tklm − sklm )| ≤ 8Pmax max klm |tklm − sklm | We will now show that for any k, l, m ∈ {0, 1} we have |tklm − sklm | ≤ 3δ; clearly, this implies the lemma .
+5-75:Indeed, fix k, l, m ∈ {0, 1} .
+5-76:Set x = tk i−1(1 − ti−1)1−k , x = sk i−1(1 − si−1)1−k , y = tl i(1 − ti)1−l , y = sl i(1 − si)1−l , z = tm i+1(1 − ti+1)1−m , z = sm i+1(1 − si+1)1−m .
+5-77:Observe that if k = 0 then x − x = (1 − ti−1) − (1 − si−1), and if k = 1 then x − x = ti−1 − si−1, so |x − x | ≤ δ .
+5-78:A similar argument shows |y − y | ≤ δ, |z − z | ≤ δ .
+5-79:Also, we have x, x , y, y , z, z ∈ [0, 1] .
+5-80:Hence, |tklm −sklm | = |xyz−x y z | = |xyz − x yz + x yz − x y z + x y z − x y z | ≤ |x − x |yz + |y − y |x z + |z − z |x y ≤ 3δ .
+5-81:Lemma 3 implies Pn i=1 |EPVi (s) − EPVi (t)| ≤ 24nPmaxδ, so by choosing δ < (24nPmax), or, equivalently, setting N > 24nPmax , we can ensure that the total expected payoff for the strategy profile t is within from optimal .
+5-82:We will now show that we can find the best discrete Nash equilibrium (with respect to the social welfare) using dynamic programming .
+5-83:As t is a discrete strategy profile, this means that the strategy profile found by our algorithm will be at least as good as t .
+5-84:Define ml,k i to be the maximum total payoff that V1, .
+5-85:.
+5-86:.
+5-87:, Vi−1 can achieve if each Vj , j ≤ i, chooses a strategy from Xj , for each j < i the strategy of Vj is a potential best response to the strategy of Vj+1, and, moreover, Vi−1 plays xl i−1, Vi plays xk i .
+5-88:If there is no way to choose the strategies for V1, .
+5-89:.
+5-90:.
+5-91:, Vi−1 to satisfy these conditions, we set ml,k i = −∞ .
+5-92:The values ml,k i , i = 1, .
+5-93:.
+5-94:.
+5-95:, n; k, l = 1, .
+5-96:.
+5-97:.
+5-98:, N, can be computed inductively, as follows .
+5-99:We have ml,k 1 = 0 for k, l = 1, .
+5-100:.
+5-101:.
+5-102:, N .
+5-103:Now, suppose that we have already computed ml,k j for all j < i; k, l = 1, .
+5-104:.
+5-105:.
+5-106:, N .
+5-107:To compute mk,l i , we first check if (xk i , xl i−1) ∈ B(Vi, Vi−1) .
+5-108:If this is not the case, we have ml,k i = −∞ .
+5-109:Otherwise, consider the set Y = Xi−2 ∩ pbrVi−2 (xl i−1), i.e., the set of all discrete strategies of Vi−2 that are potential best responses to xl i−1 .
+5-110:The proof of Theorem 1 in [9] implies that the set pbrVi−2 (xl i−1) is non empty: the player Vi−2 has a potential best response to any strategy of Vi−1, in particular, xl i−1 .
+5-111:By construction of the set Xi−2, this implies that Y is not empty .
+5-112:For each xj i−2 ∈ Y , let pjlk be the payoff that Vi−1 receives when Vi−2 plays xj i−2, Vi−1 plays xl i−1, and Vi plays xk i .
+5-113:Clearly, pjlk can be computed in constant time .
+5-114:Then we have ml,k i = max{mj,l i−1 + pjlk | xj i−2 ∈ Y } .
+5-115:Finally, suppose that we have computed ml,k n for l, k = 1, .
+5-116:.
+5-117:.
+5-118:, N .
+5-119:We still need to take into account the payoff of player Vn .
+5-120:Hence, 167 we consider all pairs (xk n, xl n−1) that satisfy xl n−1 ∈ pbrVn−1 (xk n), and pick the one that maximizes the sum of mk,l n and the payoff of Vn when he plays xk n and Vn−1 plays xl n−1 .
+5-121:This results in the maximum total payoff the players can achieve in a Nash equilibrium using discrete strategies; the actual strategy profile that produces this payoff can be reconstructed using standard dynamic programming techniques .
+5-122:It is easy to see that each ml,k i can be computed in time O(N), i.e., all of them can be computed in time O(nN3 Another natural way to define what is a good Nash equilibrium is to require that each player"s expected payoff exceeds a certain threshold .
+5-123:These thresholds do not have to be the same for all players .
+5-124:In this case, in addition to the payoff matrices of the n players, we are given n numbers T1, .
+5-125:.
+5-126:.
+5-127:, Tn, and our goal is to find a Nash equilibrium in which the payoff of player i is at least Ti, or report that no such Nash equilibrium exists .
+5-128:It turns out that we can design an FPTAS for this problem using the same techniques as in the previous section .
+5-129:THEOREM 5 .
+5-130:Given a graphical game G on an n vertex path and n rational numbers T1, .
+5-131:.
+5-132:.
+5-133:, Tn, suppose that there exists a strategy profile s such that s is a Nash equilibrium for G and EPVi (s) ≥ Ti for i = 1, .
+5-134:.
+5-135:.
+5-136:, n .
+5-137:Then for any > 0 we can find in time O(max{nP3 max 3 , n4 3 }) a strategy profile s such that s is a Nash equilibrium for G and EPVi (s ) ≥ Ti − for i = 1, .
+5-138:.
+5-139:.
+5-140:, n .
+5-141:PROOF .
+5-142:The proof is similar to that of Theorem 3 .
+5-143:First, we construct the best response policies for all players, choose N > 5n, and construct the sets Xi, i = 1, .
+5-144:.
+5-145:.
+5-146:, n, as described in the proof of Theorem 3 .
+5-147:Consider a strategy profile s such that s is a Nash equilibrium for G and EPVi (s) ≥ Ti for i = 1, .
+5-148:.
+5-149:.
+5-150:, n .
+5-151:We construct a strategy profile ti = max{xj i | xj i ≤ si} and use the same argument as in the proof of Theorem 3 to show that t is a Nash equilibrium for G .
+5-152:By Lemma 3, we have |EPVi (s) − EPVi (t)| ≤ 24Pmaxδ, so choosing δ < (24Pmax), or, equivalently, N > max{5n, 24Pmax }, we can ensure EPVi (t) ≥ Ti − for i = 1, .
+5-153:.
+5-154:.
+5-155:, n .
+5-156:Now, we will use dynamic programming to find a discrete Nash equilibrium that satisfies EPVi (t) ≥ Ti − for i = 1, .
+5-157:.
+5-158:.
+5-159:, n .
+5-160:As t is a discrete strategy profile, our algorithm will succeed whenever there is a strategy profile s with EPVi (s) ≥ Ti− for i = 1, .
+5-161:.
+5-162:.
+5-163:, n .
+5-164:Let zl,k i = 1 if there is a discrete strategy profile such that for any j < i the strategy of the player Vj is a potential best response to the strategy of Vj+1, the expected payoff of Vj is at least Tj − , and, moreover, Vi−1 plays xl i−1, Vi plays xk i .
+5-165:Otherwise, let zl,k i = 0 .
+5-166:We can compute zl,k i , i = 1, .
+5-167:.
+5-168:.
+5-169:, n; k, l = 1, .
+5-170:.
+5-171:.
+5-172:, N inductively, as follows .
+5-173:We have zl,k 1 = 1 for k, l = 1, .
+5-174:.
+5-175:.
+5-176:, N .
+5-177:Now, suppose that we have already computed zl,k j for all j < i; k, l = 1, .
+5-178:.
+5-179:.
+5-180:, N .
+5-181:To compute zk,l i , we first check if (xk i , xl i−1) ∈ B(Vi, Vi−1) .
+5-182:If this 168 is not the case, clearly, zk,l i = 0 .
+5-183:Otherwise, consider the set Y = Xi−2 ∩pbrVi−2 (xl i−1), i.e., the set of all discrete strategies of Vi−2 that are potential best responses to xl i−1 .
+5-184:It has been shown in the proof of Theorem 3 that Y = ∅ .
+5-185:For each xj i−2 ∈ Y , let pjlk be the payoff that Vi−1 receives when Vi−2 plays xj i−2, Vi−1 plays xl i−1, and Vi plays xk i .
+5-186:Clearly, pjlk can be computed in constant time .
+5-187:If there exists an xj i−2 ∈ Y such that zj,l i−1 = 1 and pjlk ≥ Ti−2 − , set zl,k i = 1 .
+5-188:Otherwise, set zl,k i = 0 .
+5-189:Having computed zl,k n , l, k = 1, .
+5-190:.
+5-191:.
+5-192:, N, we check if zl,k n = 1 for some pair (l, k) .
+5-193:if such a pair of indices exists, we instruct Vn to play xk n and use dynamic programming techniques (or, equivalently, the downstream pass of the algorithm of [13]) to find a Nash equilibrium s that satisfies EPVi (s ) ≥ Ti − for i = 1, .
+5-194:.
+5-195:.
+5-196:, n (recall that Vn is a dummy player, i.e., we assume Tn = 0, EPn(s ) = 0 for any choice of s ) .
+5-197:If zl,k n = 0 for all l, k = 1, .
+5-198:.
+5-199:.
+5-200:, N, there is no discrete Nash equilibrium s that satisfies EPVi (s ) ≥ Ti − for i = 1, .
+5-201:.
+5-202:.
+5-203:, n and hence no Nash equilibrium s (not necessarily discrete) such that EPVi (s) ≥ Ti for i = 1, .
+5-204:.
+5-205:.
+5-206:, n .
+5-207:The running time analysis is similar to that for Theorem 3; we conclude that the running time of our algorithm is O(nN3 ) = O(max{nP3 max 3 , n4 3 }) .
+5-208:REMARK 1 .
+5-209:Theorem 5 can be extended to trees of bounded degree in the same way as Theorem 4 .
+5-210:5.1 Exact Computation Another approach to finding Nash equilibria with bounded payoffs is based on inductively computing the subsets of the best response policies of all players so as to exclude the points that do not provide sufficient payoffs to some of the players .
+5-211:Formally, we say that a strategy v of the player V is a potential best response to a strategy w of its parent W with respect to a threshold vector T = (T1, .
+5-212:.
+5-213:.
+5-214:, Tn), (denoted by v ∈ pbrV (w, T)) if there is an equilibrium in the instance G(V,W ),W =w in which V plays mixed strategy v and the payoff to any player Vi downstream of V (including V ) is at least Ti .
+5-215:The best response policy for V with respect to a threshold vector T is defined as B(W, V, T) = {(w, v) | v ∈ pbrV (w, T), w ∈ [0, 1]} .
+5-216:It is easy to see that if any of the sets B(Vj, Vj−1, T), j = 1, .
+5-217:.
+5-218:.
+5-219:, n, is empty, it means that it is impossible to provide all players with expected payoffs prescribed by T .
+5-220:Otherwise, one can apply the downstream pass of the original algorithm of [13] to find a Nash equilibrium .
+5-221:As we assume that Vn is a dummy vertex whose payoff is identically 0, the Nash equilibrium with these payoffs exists as long as Tn ≤ 0 and B(Vn, Vn−1, T) is not empty .
+5-222:Using the techniques developed in [9], it is not hard to show that for any j = 1, .
+5-223:.
+5-224:.
+5-225:, n, the set B(Vj , Vj−1, T) consists of a finite number of rectangles, and one can compute B(Vj+1, Vj , T) given B(Vj , Vj−1, T) .
+5-226:The advantage of this approach is that it allows us to represent all Nash equilibria that provide required payoffs to the players .
+5-227:However, it is not likely to be practical, since it turns out that the rectangles that appear in the representation of B(Vj , Vj−1, T) may have irrational coordinates .
+5-228:CLAIM 6 .
+5-229:There exists a graphical game G on a 3 vertex path UV W and a vector T = (T1, T2, T3) such that B(V, W, T) cannot be represented as a union of a finite number of rectangles with rational coordinates .
+5-230:PROOF .
+5-231:We define the payoffs to the players in G as follows .
+5-232:The payoff to U is identically 0, i.e., P0 = P1 = 0 .
+5-233:Using Claim 1, we select the payoffs to V so that P0 (V ) = uw, P1 (V ) = P0 (V ) + w − .8u − .1, where u and w are the (mixed) strategies of U and W , respectively .
+5-234:It follows that V is indifferent between playing 0 and 1 if and only if w = f(u) = .8u + .1; observe that for any u ∈ [0, 1] we have f(u) ∈ [0, 1] .
+5-235:It is not hard to see that we have B(W, V ) = [0, .1]×{0} ∪ [.1, .9]×[0, 1] ∪ [.9, 1]×{1} .
+5-236:The payoffs to W are not important for our construction; for example, set P0(W ) = P0(W ) = 0 .
+5-237:Now, set T = (0, 1 8, 0), i.e., we are interested in Nash equilibria in which V "s expected payoff is at least 1 8 .
+5-238:Suppose w ∈ [0, 1] .
+5-239:The player V can play a mixed strategy v when W is playing w as long as U plays u = f−1 (w) = 5w 4 − 1 8 (to ensure that V is indifferent between 0 and 1) and P0 (V ) = P1 (V ) = uw = w(5w 4 − 1 8) ≥ 1 8 .
+5-240:The latter condition is satisfied if w ≤ (1 − √ 41) 20 < 0 or w ≥ (1 + √ 41) 20 .
+5-241:Note that we have .1 < (1 + √ 41) 20 < .9 .
+5-242:For any other value of w, any strategy of U either makes V prefer one of the pure strategies or does not provide it with a sufficient expected payoff .
+5-243:There are also some values of w for which V can play a pure strategy (0 or 1) as a potential best response to W and guarantee itself an expected payoff of at least 1 8; it can be shown that these values of w form a finite number of segments in [0, 1] .
+5-244:We conclude that any representation of B(W, V, T) as a union of a finite number of rectangles must contain a rectangle of the form [(1 + √ 41) 20, w ]×[v , v ] for some w , v , v ∈ [0, 1] .
+5-245:On the other hand, it can be shown that for any integer payoff matrices and threshold vectors and any j = 1, .
+5-246:.
+5-247:.
+5-248:, n − 1, the sets B(Vj+1, Vj, T) contain no rectangles of the form [u , u ]×{v} or {v}×[w , w ], where v ∈ R\Q .
+5-249:This means that if B(Vn, Vn−1, T) is non empty, i.e., there is a Nash equilibrium with payoffs prescribed by T, then the downstream pass of the algorithm of [13] can always pick a strategy profile that forms a Nash equilibrium, provides a payoff of at least Ti to the player Vi, and has no irrational coordinates .
+5-250:Hence, unlike in the case of the Nash equilibrium that maximizes the social welfare, working with irrational numbers is not necessary, and the fact that the algorithm discussed in this section has to do so can be seen as an argument against using this approach. .
+6 OTHER CRITERIA FOR SELECTING A NASH EQUILIBRIUM :
+6-1:NASH EQUILIBRIUM In this section, we consider several other criteria that can be useful in selecting a Nash equilibrium .
+6-2:6.1 Combining welfare maximization with bounds on payoffs In many real life scenarios, we want to maximize the social welfare subject to certain restrictions on the payoffs to individual players .
+6-3:For example, we may want to ensure that no player gets a negative expected payoff, or that the expected payoff to player i is at least Pi max − ξ, where Pi max is the maximum entry of i"s payoff matrix and ξ is a fixed parameter .
+6-4:Formally, given a graphical game G and a vector T1, .
+6-5:.
+6-6:.
+6-7:, Tn, let S be the set of all Nash equilibria s of G that satisfy Ti ≤ EPVi (s) for i = 1, .
+6-8:.
+6-9:.
+6-10:, n, and let ˆs = argmaxs∈S EP(s) .
+6-11:If the set S is non empty, we can find a Nash equilibrium ˆs that is close to satisfying the payoff bounds and is within from ˆs with respect to the total payoff by combining the algorithms of Section 4 and Section 5 .
+6-12:Namely, for a given > 0, choose δ as in the proof of Theorem 3, and let Xi be the set of all discrete strategies of player Vi (for a 169 formal definition, see the proof of Theorem 3) .
+6-13:Combining the proofs of Theorem 3 and Theorem 5, we can see that the strategy profile ˆt given by ˆti = max{xj i | xj i ≤ ˆsi} satisfies EPVi (ˆt) ≥ Ti − , |EP(ˆs) − EP(ˆt)| ≤ .
+6-14:Define ˆml,k i to be the maximum total payoff that V1, .
+6-15:.
+6-16:.
+6-17:, Vi−1 can achieve if each Vj, j ≤ i, chooses a strategy from Xj , for each j < i the strategy of Vj is a potential best response to the strategy of Vj+1 and the payoff to player Vj is at least Tj − , and, moreover, Vi−1 plays xl i−1, Vi plays xk i .
+6-18:If there is no way to choose the strategies for V1, .
+6-19:.
+6-20:.
+6-21:, Vi−1 to satisfy these conditions, we set ml,k i = −∞ .
+6-22:The ˆml,k i can be computed by dynamic programming similarly to the ml,k i and zl,k i in the proofs of Theorems 3 and 5 .
+6-23:Finally, as in the proof of Theorem 3, we use ml,k n to select the best discrete Nash equilibrium subject to the payoff constraints .
+6-24:Even more generally, we may want to maximize the total payoff to a subset of players (who are assumed to be able to redistribute the profits fairly among themselves) while guaranteeing certain expected payoffs to (a subset of) the other players .
+6-25:This problem can be handled similarly .
+6-26:6.2 A minimax approach A more egalitarian measure of the quality of a Nash equilibrium is the minimal expected payoff to a player .
+6-27:The optimal solution with respect to this measure is a Nash equilibrium in which the minimal expected payoff to a player is maximal .
+6-28:To find an approximation to such a Nash equilibrium, we can combine the algorithm of Section 5 with binary search on the space of potential lower bounds .
+6-29:Note that the expected payoff to any player Vi given a strategy s always satisfies −Pmax ≤ EPVi (s) ≤ Pmax .
+6-30:For a fixed > 0, we start by setting T = −Pmax, T = Pmax, T∗ = (T + T ) 2 .
+6-31:We then run the algorithm of Section 5 with T1 = · · · = Tn = T∗ .
+6-32:If the algorithm succeeds in finding a Nash equilibrium s that satisfies EPVi (s ) ≥ T∗ − for all i = 1, .
+6-33:.
+6-34:.
+6-35:, n, we set T = T∗ , T∗ = (T + T ) 2; otherwise, we set T = T∗ , T∗ = (T + T ) 2 and loop .
+6-36:We repeat this process until |T − T | ≤ .
+6-37:It is not hard to check that for any p ∈ R, if there is a Nash equilibrium s such that mini=1,...,n EPVi (s) ≥ p, then our algorithm outputs a Nash equilibrium s that satisfies mini=1,...,n EPVi (s) ≥ p−2 .
+6-38:The running time of our algorithm is O(max{nP3 max log −1 3 , n4 log −1 3 }) .
+6-39:6.3 Equalizing the payoffs When the players" payoff matrices are not very different, it is reasonable to demand that the expected payoffs to the players do not differ by much either .
+6-40:We will now show that Nash equilibria in this category can be approximated in polynomial time as well .
+6-41:Indeed, observe that the algorithm of Section 5 can be easily modified to deal with upper bounds on individual payoffs rather than lower bounds .
+6-42:Moreover, we can efficiently compute an approximation to a Nash equilibrium that satisfies both the upper bound and the lower bound for each player .
+6-43:More precisely, suppose that we are given a graphical game G, 2n rational numbers T1, .
+6-44:.
+6-45:.
+6-46:, Tn, T1, .
+6-47:.
+6-48:.
+6-49:, Tn and > 0 .
+6-50:Then if there exists a strategy profile s such that s is a Nash equilibrium for G and Ti ≤ EPVi (s) ≤ Ti for i = 1, .
+6-51:.
+6-52:.
+6-53:, n, we can find a strategy profile s such that s is a Nash equilibrium for G and Ti − ≤ EPVi (s ) ≤ Ti + for i = 1, .
+6-54:.
+6-55:.
+6-56:, n .
+6-57:The modified algorithm also runs in time O(max{nP3 max 3 , [4]n4 3 }) .
+6-58:This observation allows us to approximate Nash equilibria in which all players" expected payoffs differ by at most ξ for any fixed ξ > 0 .
+6-59:Given an > 0, we set T1 = · · · = Tn = −Pmax, T1 = · · · = Tn = −Pmax + ξ + , and run the modified version of the algorithm of Section 5 .
+6-60:If it fails to find a solution, we increment all Ti, Ti by and loop .
+6-61:We continue until the algorithm finds a solution, or Ti ≥ Pmax .
+6-62:Suppose that there exists a Nash equilibrium s that satisfies |EPVi (s) − EPVj (s)| ≤ ξ for all i, j = 1, .
+6-63:.
+6-64:.
+6-65:, n .
+6-66:Set r = mini=1,...,n EPVi (s); we have r ≤ EPVi (s) ≤ r + ξ for all i = 1, .
+6-67:.
+6-68:.
+6-69:, n .
+6-70:There exists a k ≥ 0 such that −Pmax + (k − 1) ≤ r ≤ −Pmax + k .
+6-71:During the kth step of the algorithm, we set T1 = · · · = Tn = −Pmax +(k−1) , i.e., we have r− ≤ Ti ≤ r, r + ξ ≤ Ti ≤ r + ξ + .
+6-72:That is, the Nash equilibrium s satisfies Ti ≤ r ≤ EPVi (s) ≤ r + ξ ≤ Ti , which means that when Ti is set to −Pmax + (k − 1) , our algorithm is guaranteed to output a Nash equilibrium t that satisfies r − 2 ≤ Ti − ≤ EPVi (t) ≤ Ti + ≤ r +ξ +2 .
+6-73:We conclude that whenever such a Nash equilibrium s exists, our algorithm outputs a Nash equilibrium t that satisfies |EPVi (t) − EPVj (t)| ≤ ξ + 4 for all i, j = 1, .
+6-74:.
+6-75:.
+6-76:, n .
+6-77:The running time of this algorithm is O(max{nP3 max 4 , n4 4 }) .
+6-78:Note also that we can find the smallest ξ for which such a Nash equilibrium exists by combining this algorithm with binary search over the space ξ = [0, 2Pmax] .
+6-79:This identifies an approximation to the fairest Nash equilibrium, i.e., one in which the players" expected payoffs differ by the smallest possible amount .
+6-80:Finally, note that all results in this section can be extended to bounded degree trees. .
+7-1:We have studied the problem of equilibrium selection in graphical games on bounded degree trees
+7-2:We considered several criteria for selecting a Nash equilibrium, such as maximizing the social welfare, ensuring a lower bound on the expected payoff of each player, etc
+7-3:First, we focused on the algebraic complexity of a social welfare maximizing Nash equilibrium, and proved strong negative results for that problem
+7-4:Namely, we showed that even for graphical games on paths, any algebraic number α ∈ [0, 1] may be the only strategy available to some player in all social welfaremaximizing Nash equilibria
+7-5:This is in sharp contrast with the fact that graphical games on trees always possess a Nash equilibrium in which all players" strategies are rational numbers
+7-6:We then provided approximation algorithms for selecting Nash equilibria with special properties
+7-7:While the problem of finding approximate Nash equilibria for various classes of games has received a lot of attention in recent years, most of the existing work aims to find Nash equilibria that satisfy (or are close to satisfying) certain properties
+7-8:Our approach is different in that we insist on outputting an exact Nash equilibrium, which is close to satisfying a given requirement
+7-9:As argued in the introduction, there are several reasons to prefer a solution that constitutes an exact Nash equilibrium
+7-10:Our algorithms are fully polynomial time approximation schemes, i.e., their running time is polynomial in the inverse of the approximation parameter , though they may be pseudopolynomial with respect to the input size
+7-11:Under mild restrictions on the inputs, they can be modified to be truly polynomial
+7-12:This is the strongest positive result one can derive for a problem whose exact solutions may be hard to represent, as is the case for many of the problems considered here
+7-13:While we prove our results for games on a path, they can be generalized to any tree for which the best response policies have compact representations as unions of rectangles
+7-14:In the full version of the paper we describe our algorithms for the general case
+7-15:Further work in this vein could include extensions to the kinds of guarantees sought for Nash equilibria, such as guaranteeing total payoffs for subsets of players, selecting equilibria in which some players are receiving significantly higher payoffs than their peers, etc
+7-16:At the moment however, it is perhaps more important to inves170 tigate whether Nash equilibria of graphical games can be computed in a decentralized manner, in contrast to the algorithms we have introduced here
+7-17:It is natural to ask if our results or those of [9] can be generalized to games with three or more actions
+7-18:However, it seems that this will make the analysis significantly more difficult
+7-19:In particular, note that one can view the bounded payoff games as a very limited special case of games with three actions per player
+7-20:Namely, given a two action game with payoff bounds, consider a game in which each player Vi has a third action that guarantees him a payoff of Ti no matter what everyone else does
+7-21:Then checking if there is a Nash equilibrium in which none of the players assigns a nonzero probability to his third action is equivalent to checking if there exists a Nash equilibrium that satisfies the payoff bounds in the original game, and Section 5.1 shows that finding an exact solution to this problem requires new ideas
+7-22:Alternatively it may be interesting to look for similar results in the context of correlated equilibria (CE), especially since the best CE may have higher value (total expected payoff) than the best NE
+7-23:The ratio between these values is called the mediation value in [1]
+7-24:It is known from [1] that the mediation value of 2 player, 2 action games with non negative payoffs is at most 4 3 , and they exhibit a 3 player game for which it is infinite
+7-25:Furthermore, a 2 player, 3action example from [1] also has infinite mediation value.
+8-1:I
+8-2:Ashlagi, D
+8-3:Monderer and M
+8-4:Tenneholtz, On the Value of Correlation, Proceedings of Dagstuhl seminar 05011 (2005) R
+8-5:Aumann, Subjectivity and Correlation in Randomized Strategies, Journal of Mathematical Economics 1 pp
+8-6:67 96 (1974) B
+8-7:Blum, C
+8-8:R
+8-9:Shelton, and D
+8-10:Koller, A Continuation Method for Nash Equilibria in Structured Games, Proceedings of IJCAI"03 X
+8-11:Chen, X
+8-12:Deng and S
+8-13:Teng, Computing Nash Equilibria: Approximation and Smoothed Complexity, Proceedings of FOCS"06 X
+8-14:Chen, X
+8-15:Deng, Settling the Complexity of 2 Player Nash Equilibrium, Proceedings of FOCS"06 V
+8-16:Conitzer and T
+8-17:Sandholm, Complexity Results about Nash Equilibria, Proceedings of IJCAI"03 C
+8-18:Daskalakis, P
+8-19:W
+8-20:Goldberg and C
+8-21:H
+8-22:Papadimitriou, The Complexity of Computing a Nash Equilibrium, Proceedings of STOC"06 R
+8-23:S
+8-24:Datta, Universality of Nash Equilibria, Mathematics of Operations Research 28:3, 2003 E
+8-25:Elkind, L
+8-26:A
+8-27:Goldberg, and P
+8-28:W
+8-29:Goldberg, Nash Equilibria in Graphical games on Trees Revisited, Proceedings of ACM EC"06 E
+8-30:Elkind, L
+8-31:A
+8-32:Goldberg, and P
+8-33:W
+8-34:Goldberg, Computing Good Nash Equilibria in Graphical Games, http:  arxiv.org abs cs.GT 0703133 I
+8-35:Gilboa and E
+8-36:Zemel, Nash and Correlated Equilibria: Some Complexity Considerations, Games and Economic Behavior, 1 pp
+8-37:80 93 (1989) P
+8-38:W
+8-39:Goldberg and C
+8-40:H
+8-41:Papadimitriou, Reducibility Among Equilibrium Problems, Proceedings of STOC"06 M
+8-42:Kearns, M
+8-43:Littman, and S
+8-44:Singh, Graphical Models for Game Theory, Proceedings of UAI"01 M
+8-45:Littman, M
+8-46:Kearns, and S
+8-47:Singh, An Efficient Exact Algorithm for Singly Connected Graphical Games, Proceedings of NIPS"01 R
+8-48:Lipton and E
+8-49:Markakis, Nash Equilibria via Polynomial Equations, Proceedings of LATIN"04 L
+8-50:Ortiz and M
+8-51:Kearns, Nash Propagation for Loopy Graphical Games, Proceedings of NIPS"03 C.H
+8-52:Papadimitriou, Computing Correlated Equilibria in Multi Player Games, Proceedings of STOC"05 C.H
+8-53:Papadimitriou and T
+8-54:Roughgarden, Computing Equilibria in Multi Player Games, Proceedings of SODA"05 D
+8-55:Vickrey and D
+8-56:Koller, Multi agent Algorithms for Solving Graphical Games, Proceedings of AAAI"02 171
+picture:

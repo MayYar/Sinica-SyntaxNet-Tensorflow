@@ -1,0 +1,31 @@
+It is difficult to objectively benchmark the results obtained through Apocrita because there is no other system currently available with the same goals as Apocrita .
+We have, however, evaluated the performance of the critical sections of the system .
+The critical sections were determined to be the processes that are the most time intensive .
+The evaluation was completed on standard lab computers on a 100Mb s Ethernet LAN; the machines run Windows XP with a Pentium 4 CPU running at 2.4GHz with 512 MB of RAM .
+The indexing time has been run against both
+Each document ranges in size between 4KB and 8KB .
+As Figure 4 demonstrates, the number of nodes involved in the indexing process affects the time taken to complete the indexing processsometimes even drastically .
+Figure 4 .
+Node vs .
+index time .
+The difference in going from one indexing node to two indexing nodes is the most drastic and equates to an indexing time 37% faster than a single indexing node .
+The different between two 177 indexing nodes and three indexing nodes is still significant and represents a 16% faster time than two indexing nodes .
+As the number of indexing nodes increases the results are less dramatic .
+This can be attributed to the time overhead associated with having many nodes perform indexing .
+The time needed to communicate with a node is constant, so as the number of nodes increases, this constant becomes more prevalent .
+Also, the complexity of joining the indexing results is a complex operation and is complicated further as the number of indexing nodes increases .
+Socket performance is also a very important part of Apocrita .
+Benchmarks were performed using a 65MB file on a system with both the client and server running locally .
+This was done to isolate possible network issues .
+Although less drastic, similar results were shown when the client and server run on independent hardware .
+In order to mitigate possible unexpected errors, each test was run 10 times .
+Figure 5 .
+Java sockets vs .
+JXTA sockets .
+As Figure 5 demonstrates, the performance of JXTA sockets is abysmal as compared to the performance of standard Java sockets .
+The minimum transfer rate obtained using Java sockets is 81,945KB s while the minimum transfer rater obtained using JXTA sockets is much lower at 3, 805KB s .
+The maximum transfer rater obtain using Java sockets is 97,412KB s while the maximum transfer rate obtained using JXTA sockets is 5,530KB s .
+Finally, the average transfer rate using Java sockets is 87,540KB s while the average transfer rate using JXTA sockets is 4,293KB s .
+The major problem found in these benchmarks is that the underlying network transport mechanism does not perform as quickly or efficiently as expected .
+In order to garner a performance increase, the JXTA framework needs to be substituted with a more traditional approach .
+The indexing time is also a bottleneck and will need to be improved for the overall quality of Apocrita to be improved. .

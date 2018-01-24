@@ -1,0 +1,19 @@
+Our solution framework combines two basic principles for coping with the problem of managing multi agent schedules in an uncertain and time stressed execution environment .
+First is the use of a STN based flexible times representation of solution constraints, which allows execution to be driven by a set of schedules rather than a single point solution .
+This provides a basic hedge against temporal uncertainty and can be used to modulate the need for solution revision .
+The second principle is to first respond locally to exceptional events, and then, as time permits, explore nonlocal options (i.e., options involving change by 2 or more agents) for global solution improvement .
+This provides a means for keeping pace with execution, and for tying the amount of effort spent in more global multi agent solution improvement to the time available .
+Both local and non local problem solving time is further minimized by the use of a core incremental scheduling procedure .
+Figure 3
+Our solution framework is made concrete in the agent architecture depicted in Figure 3 .
+In its most basic form, an agent comprises four principal components an Executor, a Scheduler, a Distributed State Manager (DSM), and an Options Manager all of which share a common model of the current problem and solution state that couples a domainlevel representation of the subjective c taems task structure to an underlying STN .
+At any point during operation, the currently installed schedule dictates the timing and sequence of domain level activities that will be initiated by the agent .
+The Executor, running in its own thread, continually monitors the enabling conditions of various pending activities, and activates the next pending activity as soon as all of its causal and temporal constraints are satisfied .
+When execution results are received back from the environment and or changes to assumed external constraints are received from other agents, the agent"s model of current state is updated .
+In cases where this update leads to inconsistency in the STN or it is otherwise recognized that the current local schedule might now be improved, the Scheduler, running on a separate thread, is invoked to revise the current solution and install a new schedule .
+Whenever local schedule constraints change either in response to a current state update or through manipulation by the Scheduler, the DSM is invoked to communicate these changes to interested agents (i.e., those agents that share dependencies and have overlapping subjective views) .
+After responding locally to a given state update and communicating consequences, the agent will use any remaining computation time to explore possibilities for improvement through joint change .
+The Option Manager utilizes the Scheduler (in this case in hypothetical mode) to generate one or more non local options, i.e., identifying changes to the schedule of one or more other agents that will enable the local agent to raise the quality of its schedule .
+These options are formulated and communicated as queries to the appropriate remote agents, who in turn hypothetically evaluate the impact of proposed changes from their local perspective .
+In those cases where global improvement is verified, joint changes are committed to .
+In the following sections we consider the mechanics of these components in more detail. .

@@ -1,0 +1,371 @@
+﻿SMILE: Sound Multi-agent Incremental LEarning ;-)∗ 
+content:
+1 ABSTRACT :
+1-1:This article deals with the problem of collaborative learning in a multi agent system .
+1-2:Here each agent can update incrementally its beliefs B (the concept representation) so that it is in a way kept consistent with the whole set of information K (the examples) that he has received from the environment or other agents .
+1-3:We extend this notion of consistency (or soundness) to the whole MAS and discuss how to obtain that, at any moment, a same consistent concept representation is present in each agent .
+1-4:The corresponding protocol is applied to supervised concept learning .
+1-5:The resulting method SMILE (standing for Sound Multiagent Incremental LEarning) is described and experimented here .
+1-6:Surprisingly some difficult boolean formulas are better learned, given the same learning set, by a Multi agent system than by a single agent .
+1-7:I.2.6 [Artificial Intelligence]: Learning Concept .
+2 INTRODUCTION :
+2-1:This article deals with the problem of collaborative concept learning in a multi agent system .
+2-2:[6] introduces a characterisation of learning in multi agent system according to the level of awareness of the agents .
+2-3:At level 1, agents learn ∗The primary author of this paper is a student .
+2-4:in the system without taking into account the presence of other agents, except through the modification brought upon the environment by their action .
+2-5:Level 2 implies direct interaction between the agents as they can exchange messages to improve their learning .
+2-6:Level 3 would require agents to take into account the competencies of other agents, and be able to learn from observation of the other agents" behaviour (while considering them as independant entities and not indetermined part of the environment as in level 1) .
+2-7:We focus in this paper on level 2, studying direct interaction between agents involved in a learning process .
+2-8:Each agent is assumed to be able to learn incrementally from the data he receives, meaning that each agent can update his belief set B to keep it consistent with the whole set of information K that he has received from the environment or from other agents .
+2-9:In such a case, we will say that he is a consistent .
+2-10:Here, the belief set B represents hypothetical knowledge that can therefore be revised, whereas the set of information K represents certain knowledge, consisting of non revisable observations and facts .
+2-11:Moreover, we suppose that at least a part Bc of the beliefs of each agent is common to all agents and must stay that way .
+2-12:Therefore, an update of this common set Bc by agent r must provoke an update of Bc for the whole community of agents .
+2-13:It leads us to define what is the mas consistency of an agent with respect to the community .
+2-14:The update process of the community beliefs when one of its members gets new information can then be defined as the consistency maintenance process ensuring that every agent in the community will stay masconsistent .
+2-15:This mas consistency maintenance process of an agent getting new information gives him the role of a learner and implies communication with other agents acting as critics .
+2-16:However, agents are not specialised and can in turn be learners or critics, none of them being kept to a specific role .
+2-17:Pieces of information are distributed among the agents, but can be redundant .
+2-18:There is no central memory .
+2-19:The work described here has its origin in a former work concerning learning in an intentional multi agent system using a BDI formalism [6] .
+2-20:In that work, agents had plans, each of them being associated with a context defining in which conditions it can be triggered .
+2-21:Plans (each of them having its own context) were common to the whole set of agents in the community .
+2-22:Agents had to adapt their plan contexts depending on the failure or success of executed plans, using a learning mechanism and asking other agents for examples (plans successes or failures) .
+2-23:However this work lacked a collective learning protocol enabling a real autonomy of the multi agent system .
+2-24:The study of such a protocol is the object of the present paper .
+2-25:In section 2 we formally define the mas consistency of an update mechanism for the whole MAS and we propose a generic update mechanism proved to be mas consistent .
+2-26:In section 3 we describe SMILE, an incremental multi agent concept learner applying our mas consistent update mechanism to collaborative concept learning .
+2-27:Section 4 describes various experiments on SMILE and discusses various issues including how the accuracy and the simplicity of the current hypothesis vary when comparing single agent learning and mas learning .
+2-28:In section 5 we briefly present some related works and then conclude in section 6 by discussing further investigations on mas consistent learning. .
+3 FORMAL MODEL :
+3-1:2.1 Definitions and framework In this section, we present a general formulation of collective incremental learning in a cognitive multi agent system .
+3-2:We represent a MAS as a set of agents r1, ..., rn .
+3-3:Each agent ri has a belief set Bi consisting of all the revisable knowledge he has .
+3-4:Part of these knowledges must be shared with other agents .
+3-5:The part of Bi that is common to all agents is denoted as BC .
+3-6:This common part provokes a dependency between the agents .
+3-7:If an agent ri updates his belief set Bi to Bi, changing in the process BC into BC , all other agents rk must then update their belief set Bk to Bk so that BC ⊆ Bk .
+3-8:Moreover, each agent ri has stored some certain information Ki .
+3-9:We suppose that some consistency property Cons(Bi, Ki) can be verified by the agent itself between its beliefs Bi and its information Ki .
+3-10:As said before, Bi represents knowledge that might be revised whereas Ki represents observed facts, taken as being true, and which can possibly contradict Bi .
+3-11:Definition 1 .
+3-12:a consistency of an agent An agent ri is a consistent iff Cons(Bi, Ki) is true .
+3-13:Example 1 .
+3-14:Agent r1 has a set of plans which are in the common part BC of B1 .
+3-15:Each plan P has a triggering context d(P) (which acts as a pre condition) and a body .
+3-16:Some piece of information k could be plan P, triggered in situation s, has failed in spite of s being an instance of d(P) .
+3-17:If this piece of information is added to K1, then agent r1 is not a consistent anymore: Cons(B1, K1 ∪ k) is false .
+3-18:We also want to define some notion of consistency for the whole MAS depending on the belief and information sets of its constituting elements .
+3-19:We will first define the consistency of an agent ri with respect to its belief set Bi and its own information set Ki together with all information sets K1...Kn from the other agents of the MAS .
+3-20:We will simply do that by considering what would be the a consistency of the agent if he has the information of all the other agents .
+3-21:We call this notion the mas consistency: Definition 2 .
+3-22:mas consistency of an agent An agent ri is mas consistent iff Cons(Bi, Ki ∪ K) is true, where K = ∪j∈{1,..,n}−{i}Kj 1 is the set of all information from other agents of the MAS .
+3-23:1 We will note this ∪ Kj when the context is similar .
+3-24:Example 2 .
+3-25:Using the previous example, suppose that the piece of information k is included in the information K2 of agent r2 .
+3-26:As long as the piece of information is not transmitted to r1, and so added to K1 , r1 remains a consistent .
+3-27:However, r1 is not mas consistent as k is in the set K of all information of the MAS .
+3-28:The global consistency of the MAS is then simply the mas consistency of all its agents .
+3-29:Definition 3 .
+3-30:Consistency of a MAS A MAS r1,...,rn is consistent iff all its agents ri are masconsistent .
+3-31:We now define the required properties for a revision mechanism M updating an agent ri when it gets a piece of information k .
+3-32:In the following, we will suppose that: • Update is always possible, that is, an agent can always modify its belief set Bi in order to regain its a consistency .
+3-33:We will say that each agent is locally efficient .
+3-34:• Considering two sets of information Cons(Bi, K1) and Cons(Bi, K2), we also have Cons(Bi, K1 ∪ K2) .
+3-35:That is, a consistency of the agents is additive .
+3-36:• If a piece of information k concerning the common set BC is consistent with an agent, it is consistent with all agents: for all pair of agents (ri,rj) such that Cons(Bi, Ki) and Cons(Bj, Kj) are true, we have, for all piece of information k: Cons(Bi, Ki ∪ k) iff Cons(Bj, Kj ∪ k) .
+3-37:In such a case, we will say that the MAS is coherent .
+3-38:This last condition simply means that the common belief set BC is independent of the possible differences between the belief sets Bi of each agent ri .
+3-39:In the simplest case, B1 = .. .
+3-40:= Bn = BC .
+3-41:M will also be viewed as an incremental learning mechanism and represented as an application changing Bi in Bi .
+3-42:In the following, we shall note ri(Bi, Ki) for ri when it is useful .
+3-43:Definition 4 .
+3-44:a consistency of a revision An update mechanism M is a consistent iff for any agent ri and any piece of information k reaching ri, the a consistency of this agent is preserved .
+3-45:In other words, iff: ri(Bi, Ki) a consistent ⇒ ri(Bi, Ki) a consistent, where Bi = M(Bi) and Ki = Ki ∪ k is the set of all information from other agents of the MAS .
+3-46:In the same way, we define the mas consistency of a revision mechanism as the a consistency of this mechanism should the agents dispose of all information in the MAS .
+3-47:In the following, we shall note, if needed, ri(Bi, Ki, K) for the agent ri in MAS r1 .
+3-48:.
+3-49:.
+3-50:rn .
+3-51:Definition 5 .
+3-52:mas consistency of a revision An update mechanism Ms is mas consistent iff for all agent ri and all pieces of information k reaching ri, the masconsistency of this agent is preserved .
+3-53:In other words, if: ri(Bi, Ki, K) mas consistent ⇒ ri(Bi, Ki, K) mas consistent, where Bi = Ms(Bi), Ki = Ki ∪ k, and K = ∪Kj is the set of all information from the MAS .
+3-54:The Sixth Intl .
+3-55:Joint Conf .
+3-56:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 165 At last, when a mas consistent mechanism is applied by an agent getting a new piece of information, a desirable sideeffect of the mechanism should be that all others agents remains mas consistent after any modification of the common part BC , that is, the MAS itself should become consistent again .
+3-57:This property is defined as follows: Definition 6 .
+3-58:Strong mas consistency of a revision An update mechanism Ms is strongly mas consistent iff Ms is mas consistent, and the application of Ms by an agent preserves the consistency of the MAS .
+3-59:2.2 A strongly mas consistent update mechanism The general idea is that, since information is distributed among all the agents of the MAS, there must be some interaction between the learner agent and the other agents in a strongly mas consistent update mechanism Ms .
+3-60:In order to ensure its mas consistency, Ms will be constituted of reiterated applications by the learner agent ri of an internal a consistent mechanism M, followed by some interactions between ri and the other agents, until ri regain its masconsistency .
+3-61:We describe below such a mechanism, first with a description of an interaction, then an iteration, and finally a statement of the termination condition of the mechanism .
+3-62:The mechanism is triggered by an agent ri upon receipt of a piece of information k disrupting the mas consistency .
+3-63:We shall note M(Bi) the belief set of the learner agent ri after an update, BC the common part modified by ri, and Bj the belief set of another agent rj induced by the modification of its common part BC in BC .
+3-64:An interaction I(ri, rj) between the learner agent ri and another agent rj, acting as critic is constituted of the following steps: • agent ri sends the update BC of the common part of its beliefs .
+3-65:Having applied its update mechanism, ri is a consistent .
+3-66:• agent rj checks the modification Bj of its beliefs induced by the update BC .
+3-67:If this modification preserve its a consistency, rj adopts this modification .
+3-68:• agent rj sends either an acceptation of BC or a denial along with one (or more) piece(s) of information k such that Cons(Bj, k ) is false .
+3-69:An iteration of Ms will then be composed of: • the reception by the learner agent ri of a piece of information and the update M(Bi) restoring its aconsistency • a set of interactions I(ri, rj) (in which several critic agents can possibly participate) .
+3-70:If at least one piece of information k is transmitted to ri, the addition of k will necessarily make ri a inconsistent and a new iteration will then occur .
+3-71:This mechanism Ms ends when no agent can provide such a piece of information k .
+3-72:When it is the case, the masconsistency of the learner agent ri is restored .
+3-73:Proposition 1 .
+3-74:Let r1,...,rn be a consistent MAS in which agent ri receives a piece of information k breaking its aconsistency, and M an a consistent internal update mechanism .
+3-75:The update mechanism Ms described above is strongly mas consistent .
+3-76:Proof .
+3-77:The proof directly derives from the mechanism description .
+3-78:This mechanism ensures that each time an agent receives an event, its mas consistency will be restored .
+3-79:As the other agents all adopt the final update BC , they are all mas consistent, and the MAS is consistent .
+3-80:Therefore Ms is a strongly consistent update mechanism .
+3-81:In the mechanism Ms described above, the learner agent is the only one that receives and memorizes information during the mechanism execution .
+3-82:It ensures that Ms terminates .
+3-83:The pieces of information transmitted by other agents and memorized by the learner agent are redundant as they are already present in the MAS, more precisely in the memory of the critic agents that transmitted them .
+3-84:Note that the mechanism Ms proposed here does not explicitly indicate the order nor the scope of the interactions .
+3-85:We will consider in the following that the modification proposal BC is sent sequentially to the different agents (synchronous mechanism) .
+3-86:Moreover, the response of a critic agent will only contain one piece of information inconsistent with the proposed modification .
+3-87:We will say that the response of the agent is minimal .
+3-88:This mechanism Ms, being synchronous with minimal response, minimizes the amount of information transmitted by the agents .
+3-89:We will now illustrate it in the case of multi agent concept learning. .
+4 SOUNDMULTI AGENTINCREMENTAL LEARNING :
+4-1:LEARNING 3.1 The learning task We experiment the mechanism proposed above in the case of incremental MAS concept learning .
+4-2:We consider here a hypothesis language in which a hypothesis is a disjunction of terms .
+4-3:Each term is a conjunction of atoms from a set A .
+4-4:An example is represented by a tag + or − and a description 2 composed of a subset of atoms e ⊆ A .
+4-5:A term covers an example if its constituting atoms are included in the example .
+4-6:A hypothesis covers an example if one of its term covers it .
+4-7:This representation will be used below for learning boolean formulae .
+4-8:Negative literals are here represented by additional atoms, like not − a .
+4-9:The boolean formulae f =(a ∧ b) ∨ (b ∧ ¬c) will then be written (a ∧ b) ∨ (b ∧ not − c) .
+4-10:A positive example of f, like {not − a, b, not − c}, represents a model for f .
+4-11:3.2 Incremental learning process The learning process is an update mechanism that, given a current hypothesis H, a memory E = E+ ∪ E− filled with the previously received examples, and a new positive or negative example e, produces a new updated hypothesis .
+4-12:Before this update, the given hypothesis is complete, meaning that it covers all positive examples of E+ , and 2 When no confusion is possible, the word example will be used to refer to the pair (tag, description) as well as the description alone .
+4-13:166 The Sixth Intl .
+4-14:Joint Conf .
+4-15:on Autonomous Agents and Multi Agent Systems (AAMAS 07) coherent, meaning that it does not cover any negative example of E− .
+4-16:After the update, the new hypothesis must be complete and coherent with the new memory state E ∪ {e} .
+4-17:We describe below our single agent update mechanism, inspired from a previous work on incremental learning[7] .
+4-18:In the following, a hypothesis H for the target formula f is a list of terms h, each of them being a conjunction of atoms .
+4-19:H is coherent if all terms h are coherent, and H is complete if each element of E+ is covered by at least one term h of generalization) of a subset of positives instances {e1, ..., en}[5], that is the most specific term covering {e1, ..., en} .
+4-20:The lgg operator is defined by considering examples as terms, so we denote as lgg(e) the most specific term that covers e, and as lgg(h, e) the most specific term which is more general than h and that covers e .
+4-21:Restricting the term to lgg is the basis of a lot of Bottom Up learning algorithms (for instance [5]) .
+4-22:In the typology proposed by [9], our update mechanism is an incremental learner with full instance memory: learning is made by successive updates and all examples are stored .
+4-23:The update mechanism depends of the ongoing hypothesis H, the ongoing examples E+ and E− , and the new example In the following, we will learn a boolean formula that is a difficult test for the learning method: the 11 multiplexer (see [4]) .
+4-24:It concerns 3 address boolean attributes a0, a1, a2 and 8 data boolean attributes d0, ..., d7 .
+4-25:Formulae f11 is satisfied if the number coded by the 3 address attributes is the number of a data attribute whose value is 1 .
+4-26:Its formula is the following: f11 = (a0 ∧a1 ∧a2 ∧d7)∨(a0 ∧a1 ∧¬a2 ∧d6)∨(a0 ∧¬a1 ∧ a2 ∧d5)∨(a0 ∧¬a1 ∧¬a2 ∧d4)∨(¬a0 ∧a1 ∧a2 ∧d3)∨(¬a0 ∧ a1 ∧¬a2 ∧d2)∨(¬a0 ∧¬a1 ∧a2 ∧d1)∨(¬a0 ∧¬a1 ∧¬a2 ∧d0) .
+4-27:There are 2048 = 211 possible examples, half of whom are positive (meaning they satisfy f11) while the other half is negative .
+4-28:An experiment is typically composed of 50 trials .
+4-29:Each run corresponds to a sequence of 600 examples that are incrementally learned by a Multi Agent System with n agents The Sixth Intl .
+4-30:Joint Conf .
+4-31:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 167 (n MAS) .
+4-32:A number of variables such as accuracy, (i.e .
+4-33:the frequency of correct classification of a set of unseen examples), hypothesis size (i.e .
+4-34:the number of terms in the current formula) or number of stored examples, is recorded each time 25 examples are received by the system during those runs .
+4-35:In the protocol that is used here, a new example is sent to a random agent when the MAS is consistent .
+4-36:The next example will be sent in turn to an other agent when the MAS consistency will have been restored .
+4-37:In such a way we simulate a kind of slow learning: the frequency of example arrivals is slow compared to the time taken by an update .
+4-38:4.1 Efficiency of MAS concept learning 4.1.1 Execution time We briefly discuss here execution time of learning in the MAS .
+4-39:Note that the whole set of action and interaction in the MAS is simulated on a single processor .
+4-40:Figure 1 shows that time linearly depends on the number of agents .
+4-41:At the end of the most active part of learning (200 examples), a 16MAS has taken 4 times more learning time than a 4 MAS .
+4-42:This execution time represents the whole set of learning and Figure 1: Execution time of a n MAS (from n = 2 at the bottom to n = 20 on the top) .
+4-43:communication activity and hints at the cost of maintaining a consistent learning hypothesis in a MAS composed of autonomous agents .
+4-44:4.1.2 Redundancy in the MAS memory We study now the distribution of the examples in the MAS memory .
+4-45:Redundancy is written RS = nS ne, where nS is the total number of examples stored in the MAS, that is the sum of the sizes of agents examples memories Ei, and ne is the total number of examples received from the environment in the MAS .
+4-46:In figure 2, we compare redundancies in 2 to 20 agents MAS .
+4-47:There is a peak, slowly moving from 80 to 100 examples, that represents the number of examples for which the learning is most active .
+4-48:For 20 agents, maximal redundancy is no more than 6, which is far less than the maximal theoretical value of 20 .
+4-49:Note that when learning becomes less active, redundancy tends towards its minimal value 1: when there is no more updates, examples are only Figure 2: Redundancy of examples stored in a nMAS (from n = 2 at the bottom to n = 20 on the top) .
+4-50:stored by the agent that receives them .
+4-51:4.1.3 A n MAS selects a simpler solution than a single agent The proposed mechanism tends to minimize the number of terms in the selected hypothesis .
+4-52:During learning, the size of the current hypothesis grows up beyond the optimum, and then decreases when the MAS converges .
+4-53:In the Multiplexer 11 testbed, the optimal number of terms is 8, but there also exist equivalent formulas with more terms .
+4-54:It is interesting to note that in this case the 10 MAS converges towards an exact solution closer to the optimal number of terms (here 8) (see Figure 3) .
+4-55:After 1450 examples have been presented both 1 MAS and 10 MAS have exactly learned the concept (the respective accuracies are 0.9999 and 1) but the single agent expresses in average the result as a 11.0 terms DNF whereas the 10 MAS expresses it as a 8.8 terms DNF .
+4-56:However for some other boolean functions we found that during learning 1 MAS always produces larger hypotheses than 10 MAS but that both MAS converge to hypotheses with similar size results .
+4-57:4.1.4 A n MAS is more accurate than a single agent Figure 4 shows the improvement brought by a MAS with n agents compared to a single agent .
+4-58:This improvement was not especially expected, because whether we have one or n agents, when N examples are given to the MAS it has access to the same amount of information, maintains only on ongoing hypothesis and uses the same basic revision algorithm whenever an agent has to modify the current hypothesis .
+4-59:Note that if the accuracy of 1, 2, 4 and 10 MAS are significantly different, getting better as the number of agents increases, there is no clear difference beyond this point: the accuracy curve of the 100 agents MAS is very close to the one of the 10 agents MAS .
+4-60:4.1.4.1 Boolean formulas .
+4-61:To evaluate this accuracy improvement, we have experimented our protocol on other problems of boolean function learning, As in the Multiplexer 11 case, these functions 168 The Sixth Intl .
+4-62:Joint Conf .
+4-63:on Autonomous Agents and Multi Agent Systems (AAMAS 07) Figure 3: Size of the hypothesis built by 1 and 10MAS: the M11 case .
+4-64:Figure 4: Accuracy of a n MAS: the M11 case (from bottom to top, n = 1, 2, 4, 10, 100) .
+4-65:are learnt in the form of more or less syntactically complex DNF3 (that is with more or less conjunctive terms in the DNF), but are also more or less difficult to learn as it can be difficult to get its way in the hypothesis space to reach them .
+4-66:Furthermore, the presence in the description of irrelevant attributes (that is attributes that does not belong to the target DNF) makes the problem more difficult .
+4-67:The following problems have been selected to experiment our protocol: (i) the multiplexer 11 with 9 irrelevant attributes: M11 9, (ii) the 20 multiplexer M20 (with 4 address bits and 16 data bits), (iii) a difficult parity problem (see [4]) the Xorp m: there must be an odd number of bits with value 1 in the p first attributes for the instance to be positive, the p others bits being irrelevant, and (iv) a simple DNF formula (a ∧ b ∧ c) ∨ (c ∧ d ∧ e)(e ∧ f ∧ g) ∧ (g ∧ h ∧ i) with 19 irrelevant attributes .
+4-68:The following table sums up some information about these problems, giving the total number of attributes including irrelevant ones, the number of irrelevant 3 Disjunctive Normal Forms attributes, the minimal number of terms of the corresponding DNF, and the number of learning examples used .
+4-69:Pb att .
+4-70:irre .
+4-71:att .
+4-72:terms ex .
+4-73:M11 11 0 8 200 M11 9 20 9 8 200 M20 20 0 16 450 Xor3 25 28 25 4 200 Xor5 5 10 5 16 180 Xor5 15 20 15 16 600 Simple4 9 19 28 19 4 200 Below are given the accuracy results of our learning mechanism with a single agent and a 10 agents MAS, along with the results of two standard algorithms implemented with the learning environment WEKA[16]: JRip (an implementation of RIPPER[2]) and Id3[12] .
+4-74:For the experiments with JRip and Id3, we measured the mean accuracy on 50 trials, each time randomly separating examples in a learning set and a test set .
+4-75:JRip and Id3 parameters are default parameters, except that JRip is used without pruning .
+4-76:The following table shows the results: Pb JRip Id3 Sm 1 Sm 10 M11 88.3 80.7 88.7 95.5 M11 9 73.4 67.9 66.8 83.5 M20 67.7 62.7 64.6 78.2 Xor3 25 54.4 55.2 71.4 98.5 Xor5 5 52.6 60.8 71.1 78.3 Xor5 15 50.9 51.93 62.4 96.1 Simple4 9 19 99.9 92.3 87.89 98.21 It is clear that difficult problems are better solved with more agents (see for instance xor5 15) .
+4-77:We think that these benefits, which can be important with an increasing number of agents, are due to the fact that each agent really memorizes only part of the total number of examples, and this part is partly selected by other agents as counter examples, which cause a greater number of current hypothesis updates and therefore, a better exploration of the hypotheses space .
+4-78:4.1.4.2 ML database problems .
+4-79:We did also experiments with some non boolean problems .
+4-80:We considered only two classes (positive negative) problems, taken from the UCI"s learning problems database[3] .
+4-81:In all these problems, examples are described as a vector of couples (attribute, value) .
+4-82:The value domains can be either boolean, numeric (wholly ordered set), or nominal (non ordered set) .
+4-83:An adequate set of atoms A must be constituted for each problem .
+4-84:For instance, if a is a numeric attribute, we define at most k threshold si, giving k+1 intervals of uniform density4 .
+4-85:Therefore, each distinct threshold si gives two atoms a ≤ si and a > si .
+4-86:In our experiments, we took a maximal number of threshold k = 8 .
+4-87:For instance, in the iono problem case, there were 34 numeric attributes, and an instance is described with 506 atoms .
+4-88:Below are given the accuracy results of our system along with previous results .
+4-89:The column Nb ex .
+4-90:refer to the 4 The probability for the value of a to be in any interval is constant The Sixth Intl .
+4-91:Joint Conf .
+4-92:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 169 number of examples used for learning5 .
+4-93:Column (1) represents minimal and maximal accuracy values for the thirty three classifiers tested in [8] .
+4-94:Column (2) represents the results of [13], where various learning methods are compared to ensemble learning methods using weighted classifiers sets .
+4-95:Column S 1 and S 10 gives the accuracy of SMILE with respectively 1 and 10 agents .
+4-96:Pb Nb ex .
+4-97:(1) (2) S 1 S 10 ttt 862 574 76.2 99.7 99.7 99.9 kr vs kp 2876 958 91.4 99.4 96.8 97.3 iono 315 88.0 91.8 87.2 88.1 bupa 310 57 72 58 69.3 62.5 63.3 breastw 614 91 97 94.3 97.3 94.7 94.7 vote 391 94 96 95.3 96 91.9 92.6 pima 691 71.5 73.4 65.0 65.0 heart 243 66 86 77.1 84.1 69.5 70.7 This table shows that the incremental algorithm corresponding to the single agent case, gives honorable results relatively to non incremental classical methods using larger and more complex hypotheses .
+4-98:In some cases, there is an accuracy improvement with a 10 agents MAS .
+4-99:However, with such benchmarks data, which are often noisy, the difficulty does not really come from the way in which the search space is explored, and therefore the improvement observed is not always significant .
+4-100:The same kind of phenomenon have been observed with methods dedicated to hard boolean problems [4] .
+4-101:4.2 MAS synchronization Here we consider that n single agents learn without interactions and at a given time start interacting thus forming a MAS .
+4-102:The purpose is to observe how the agents take advantage of collaboration when they start from different states of beliefs and memories .
+4-103:We compare in this section a 1 MAS, a 10 MAS (ref) and a 10 MAS (100sync) whose agents did not communicate during the arrival of the first 100 examples (10 by agents) .
+4-104:The three accuracy curves are shown in figure 5 .
+4-105:By comparing the single agent curve and the synchronized 10 MAS, we can observe that after the beginning of the synchronization, that is at 125 examples, accuracies are identical .
+4-106:This was expected since as soon as an example e received by the MAS contradicts the current hypothesis of the agent ra receiving it, this agent makes an update and its new hypothesis is proposed to the others agents for criticism .
+4-107:Therefore, this first contradictory example brings the MAS to reach consistency relatively to the whole set of examples present in agents" memories .
+4-108:A higher accuracy, corresponding to a 10 MAS is obtained later, from the 175th example .
+4-109:In other words, the benefit of a better exploration of the research space is obtained slightly later in the learning process .
+4-110:Note that this synchronization happens naturally in all situations where agents have, for some reason, a divergence between their hypothesis and the system memory .
+4-111:This includes the fusion of two MAS into a single one or the arrival of new agents in an existing MAS .
+4-112:4.3 Experiments on asynchronous learning: the effect of a large data stream 5 For ttt and kr vs kp, our protocol did not use more than respectively 574 and 958 learning examples, so we put another number in the column .
+4-113:Figure 5: Accuracies of a 1 MAS, a 10 MAS, and a 10 MAS synchronized after 100 examples .
+4-114:In this experiment we relax our slow learning mode: the examples are sent at a given rate to the MAS .
+4-115:The resulting example stream is measured in ms−1 , and represents the number of examples sent to the MAS each ms .
+4-116:Whenever the stream is too large, the MAS cannot reach MAS consistency on reception of an example from the environment before a new example arrives .
+4-117:This means that the update process, started by agent r0 as he received an example, may be unfinished when a new example is received by r0 or another agent r1 .
+4-118:As a result, a critic agent may have at instant t to send counterexamples of hypotheses sent by various agents .
+4-119:However as far as the agents, in our setting, memorizes all the examples they receive whenever the stream ends, the MAS necessarily reaches MAS consistency with respect to all the examples received so far .
+4-120:In our experiments, though its learning curve is slowed down during the intense learning phase (corresponding to low accuracy of the current hypotheses), the MAS still reaches a satisfying hypothesis later on as there are less and less counterexamples in the example stream .
+4-121:In Figure 6 we compare the accuracies of two 11 MAS respectively submitted to example streams of different rates when learning the M11 formula .
+4-122:The learning curve of the MAS receiving an example at a 1 33 ms−1 rate is almost not altered (see Figure 4) whereas the 1 16 ms−1 MAS is first severely slowed down before catching up with the first one. .
+5 RELATED WORKS :
+5-1:Since 96 [15], various work have been performed on learning in MAS, but rather few on concept learning .
+5-2:In [11] the MAS performs a form of ensemble learning in which the agents are lazy learners (no explicit representation is maintained) and sell useless examples to other agents .
+5-3:In [10] each agent observes all the examples but only perceive a part of their representation .
+5-4:In mutual online concept learning [14] the agents converge to a unique hypothesis, but each agent produces examples from its own concept representation, thus resulting in a kind of synchronization rather than in pure concept learning .
+5-5:170 The Sixth Intl .
+5-6:Joint Conf .
+5-7:on Autonomous Agents and Multi Agent Systems (AAMAS 07) Figure 6: Accuracies of two asynchronous 11 MAS (1 33ms−1 and 1 16ms−1 example rates) . .
+6 ABSTRACT :
+6-1:We have presented here and experimented a protocol for MAS online concept learning
+6-2:The main feature of this collaborative learning mechanism is that it maintains a consistency property: though during the learning process each agent only receives and stores, with some limited redundancy, part of the examples received by the MAS, at any moment the current hypothesis is consistent with the whole set of examples
+6-3:The hypotheses of our experiments do not address the issues of distributed MAS such as faults (for instance messages could be lost or corrupted) or other failures in general (crash, byzantine faults, etc.)
+6-4:Nevertheless, our framework is open, i.e., the agents can leave the system or enter it while the consistency mechanism is preserved
+6-5:For instance if we introduce a timeout mechanism, even when a critic agent crashes or omits to answer, the consistency with the other critics (within the remaining agents) is entailed
+6-6:In [1], a similar approach has been applied to MAS abduction problems: the hypotheses to maintain, given an incomplete information, are then facts or statements
+6-7:Further work concerns first coupling induction and abduction in order to perform collaborative concept learning when examples are only partially observed by each agent, and second, investigating partial memory learning: how learning is preserved whenever one agent or the whole MAS forgets some selected examples
+6-8:Aknowledgments We are very grateful to Dominique Bouthinon for implementing late modifications in SMILE, so much easing our experiments
+6-9:Part of this work has been performed during the first author"s visit to the Atelier De BioInformatique of Paris VI university, France.
+7 ABSTRACT :
+7-1:G
+7-2:Bourgne, N
+7-3:Maudet, and S
+7-4:Pinson
+7-5:When agents communicate hypotheses in critical situations
+7-6:In DALT 2006, May 2006
+7-7:W
+7-8:W
+7-9:Cohen
+7-10:Fast effective rule induction
+7-11:In ICML, pages 115 123, 1995
+7-12:C
+7-13:B
+7-14:D.J
+7-15:Newman, S
+7-16:Hettich and C
+7-17:Merz
+7-18:UCI repository of machine learning databases, 1998
+7-19:S
+7-20:Esmeir and S
+7-21:Markovitch
+7-22:Lookahead based algorithms for anytime induction of decision trees
+7-23:In ICML"O4, pages 257 264
+7-24:Morgan Kaufmann, 2004
+7-25:J
+7-26:F¨urnkranz
+7-27:A pathology of bottom up hill climbing in inductive rule learning
+7-28:In ALT, volume 2533 of LNCS, pages 263 277
+7-29:Springer, 2002
+7-30:A
+7-31:Guerra Hern´andez, A
+7-32:ElFallah Seghrouchni, and H
+7-33:Soldano
+7-34:Learning in BDI multi agent systems
+7-35:In CLIMA IV, volume 3259, pages 218 233
+7-36:Springer Verlag, 2004
+7-37:M
+7-38:Henniche
+7-39:Mgi: an incremental bottom up algorithm
+7-40:In IEEE Aust
+7-41:and New Zealand Conference on Intelligent Information Systems, pages 347 351, 1994
+7-42:T. S
+7-43:Lim, W. Y
+7-44:Loh, and Y. S
+7-45:Shih
+7-46:A comparison of prediction accuracy, complexity, and training time of thirty three old and new classification algorithms
+7-47:Machine Learning, 40(3):203 228, 2000
+7-48:M
+7-49:A
+7-50:Maloof and R
+7-51:S
+7-52:Michalski
+7-53:Incremental learning with partial instance memory
+7-54:Artif
+7-55:Intell., 154(1 2):95 126, 2004
+7-56:P
+7-57:J
+7-58:Modi and W. M
+7-59:Shen
+7-60:Collaborative multiagent learning for classification tasks
+7-61:In AGENTS "01, pages 37 38
+7-62:ACM Press, 2001
+7-63:S
+7-64:Onta˜non and E
+7-65:Plaza
+7-66:Recycling data for multi agent learning
+7-67:In ICML "05, pages 633 640
+7-68:ACM Press, 2005
+7-69:J
+7-70:R
+7-71:Quinlan
+7-72:Induction of decision trees
+7-73:Machine Learning, 1(1):81 106, 1986
+7-74:U
+7-75:R¨uckert and S
+7-76:Kramer
+7-77:Towards tight bounds for rule learning
+7-78:In ICML "04 (International conference on Machine learning), page 90, New York, NY, USA, 2004
+7-79:ACM Press
+7-80:J
+7-81:Wang and L
+7-82:Gasser
+7-83:Mutual online concept learning for multiple agents
+7-84:In AAMAS, pages 362 369
+7-85:ACM Press, 2002
+7-86:G
+7-87:Weiß and S
+7-88:Sen, editors
+7-89:Adaption and Learning in Multi Agent Systems, volume 1042 of Lecture Notes in Computer Science
+7-90:Springer, 1996
+7-91:I
+7-92:H
+7-93:Witten and E
+7-94:Frank
+7-95:Data Mining: Practical Machine Learning Tools and Techniques with Java Implementations
+7-96:Morgan Kaufmann, October 1999
+7-97:The Sixth Intl
+7-98:Joint Conf
+7-99:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 171
+picture:

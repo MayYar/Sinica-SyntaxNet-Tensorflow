@@ -1,0 +1,75 @@
+In this section, we describe an abstract betting game, the projection game; in the following sections, we will argue that both the MSR and the DPM are strategically similar to the projection game .
+The projection game is conceptually simpler than MSR and DPM, and hence should prove easier to analyze .
+For clarity of exposition, here and in the rest of the paper we assume the space is two dimensional, i.e., there are only two possible events .
+Our results easily generalize to more than two dimensions .
+We also assume throughout that players are risk neutral .
+Suppose there are two mutually exclusive and exhaustive events, A and B .
+(In other words, B is the same as not A.) There are n agents who may have information about the likelihood of A and B, and we (the designers) would like to aggregate their information .
+We invite them to play the game described below
+Intuitively, x corresponds to the 2 Here, we are referring only to manipulation of the information market for later gain from the market itself; we do not consider the possibility of traders having vested interests in the underlying events .
+317 total holding of shares in A, and y corresponds to the holding of shares in B .
+In each move of the game, one player (say i) plays an arrow (or segment) from (x, y) to (x , y ) .
+We use the notation [(x, y) ¡÷ (x , y )] or [x, x ] to denote this move .
+The game starts at (0, 0), but the market maker makes the first move; without loss of generality, we can assume the move is to (1, 1) .
+All subsequent moves are made by players, in an arbitrary (and potentially repeating) sequence .
+Each move has a cost associated with it, given by C[x, x ] = |x | ? |x|, where | ¡P | denotes the Euclidean norm, |x| = p x2 + y2 .
+Note that none of the variables are constrained to be nonnegative, and hence, the cost of a move can be negative .
+The cost can be expressed in an alternative form, that is also useful .
+Suppose player i moves from (x, y) to (x , y ) .
+We can write (x , y ) as (x + lex, y + ley), such that l ? 0 and |ex|2 + |ey|2 = 1 .
+We call l the volume of the move, and (ex, ey) the direction of the move .
+At any point (?x, ?y), there is an instantaneous price charged, defined as follows
+Note that the price depends only on the angle between the line joining the vector (?x, ?y) and the segment [(x, y), (x , y )], and not the lengths .
+The total cost of the move is the price integrated over the segment [(x, y) ¡÷ (x , y )], i.e., C[(x, y) ¡÷ (x , y )] = Z l w=0 c((x+wex, y +wey), (ex, ey))dw We assume that the game terminates after a finite number of moves .
+At the end of the game, the true probability p of event A is determined, and the agents receive payoffs for the moves they made .
+Let q = (qx, qy) = (p,1?p) |(p,1?p)| .
+The payoff to agent i for a segment [(x, y) ¡÷ (x , y )] is given by
+Note that the payoff, too, may be negative .
+One drawback of the definition of a projection game is that implementing the payoffs requires us to know the actual probability p .
+This is feasible if the probability can eventually be determined statistically, such as when predicting the relative frequency of different recurring events, or vote shares .
+It is also feasible for one off events in which there is reason to believe that the true probability is either 0 or 1 .
+For other one off events, it cannot be implemented directly (unlike scoring rules, which can be implemented in expectation) .
+However, we believe that even in these cases, the projection game can be useful as a conceptual and analytical tool .
+The moves, costs and payoffs have a natural geometric representation, which is shown in Figure 1 for three players with one move each .
+The players append directed line segments in turn, and the payoff player i finally receives for a move is the projection of her segment onto the line with slope (1 ? p) p .
+Her cost is the difference of distances of the endpoints of her move to the origin .
+2.1 Strategicproperties oftheprojectiongame We begin our strategic analysis of the projection game by observing the following simple path independence property .
+1?p p 3"s m ove 1"s payoff M M m ove 1"s move 2"smove 3"s payoff 2"s payoff x y Figure 1
+[Path Independence] Suppose there is a sequence of moves leading from (x, y) to (x , y ) .
+Then, the total cost of all the moves is equal to the cost of the single move [(x, y) ¡÷ (x , y )], and the total payoff of all the moves is equal to the payoff of the single move [(x, y) ¡÷ (x , y )] .
+Proof .
+The proof follows trivially from the definition of the costs and payoffs
+Although simple, path independence of profits is vitally important, because it implies (and is implied by) the absence of arbitrage in the market .
+In other words, there is no sequence of moves that start and end at the same point, but result in a positive profit .
+On the other hand, if there were two paths from (x, y) to (x , y ) with different profits, there would be a cyclic path with positive profit .
+For ease of reference, we summarize some more useful properties of the cost and payoff functions in the projection game .
+Lemma 2 .
+the origin is 1 or ?1, when the move is away or toward the origin respectively .
+The instantaneous price along a circle centered at the origin is 0 .
+point ¡Âx on the positive p line, the corresponding payoff is P(x, ¡Âx) = |x| ? x ¡P q, and the cost is C[x, ¡Âx] = 0 .
+C[x, x ] = Z l w=0 cos(x + we, e)dw = |x |?|x| ?x, x , where e is the unit vector giving the direction of move .
+In addition, when x moves along the positive p line, the payoff is equal to the cost, P(x, x ) = |x | ? |x| .
+Proof .
+1 .
+The instantaneous price is c(x, e) = x ¡P e |x| = cos(x, e), where e is the direction of movement, and the result follows .
+P(x, ¡Âx) = q ¡P (¡Âx ? x) = |x| ? x ¡P q; the cost is 0 from the definition .
+318 is C[x, 0] = Z l w=0 cos(x + we, e)dw = Z l w=0 (?1)dw = ?|x|, where l = |x|, e = x |x| .
+By the path independence property, C[x, x ] = C[x, 0] + C[0, x ] = |x | ? |x| .
+Finally, a point on the positive p line gets projected to itself, namely q ¡P x = |x| so when the movement is along the positive p line, P(x, x ) = q ¡P (x ? x) = |x | ? |x| = C[x, x ] .
+We now consider the question of which moves are profitable in this game .
+The eventual profit of a move [x, x ], where x = x + l.(ex, ey), is profit[x, x ] = P[x, x ] ? C[x, x ] = lq.e ? C[x, x ] Differentiating with respect to l, we get d(profit) dl = q.e ? c(x + le, e) = q.e ? x + le |x + le| .e We observe that this is 0 if p(y + ley) = (1 ? p)(x + lex), in other words, when the vectors q and (x + le) are exactly aligned .
+Further, we observe that the price is non decreasing with increasing l .
+Thus, along the direction e, the profit is maximized at the point of intersection with the p line .
+By Lemma 2, there is always a path from x to the positive p line with 0 cost, which is given by an arc of the circle with center at the origin and radius |x| .
+Also, any movement along the p line has 0 additional profit .
+Thus, for any point x, we can define the profit potential £p(x, p) by £p(x, p) = |x| ? x ¡P q .
+Note, the potential is positive for x off the positive p line and zero for x on the line .
+Next we show that a move to a lower potential is always profitable .
+Lemma 3 .
+The profit of a move [x, x ] is equal to the difference in potential £p(x, p) ? £p(x , p) .
+Proof .
+Denote z = |x|q and z = |x |q, i.e., these are the points of intersection of the positive p line with the circles centered at the origin with radii |x| and |x | respectively .
+By the path independence property and Lemma 2, the profit of move [x, x ] is profit(x, x ) = profit(x, z) + profit(z, z ) + profit(z , x ) = (|x| ? x ¡P q) + 0 + (x ¡P q ? |x |) = £p(x, p) ? £p(x , p) .
+Thus, the profit of the move is equal to the change in profit potential between the endpoints .
+This lemma offers another way of seeing that it is optimal to move to the point of lowest potential, namely to the p line .
+p y 1?p x x x" z z" profit = |x|?x.q profit = x".q?|x"| profit = 0 Figure 2

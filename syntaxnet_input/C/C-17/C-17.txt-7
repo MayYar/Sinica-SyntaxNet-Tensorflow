@@ -1,0 +1,82 @@
+6.1 Selecting the Streams Similar to SipConf in [27], a Conference Server [17] has the function of supporting the conference; it is responsible for handling audio streams using RTP .
+It can also double to convert audio stream formats for a given client if necessary and can work as Translators Mixers of RTP specification behind firewalls .
+We have based the design of our CS on H.323 Multipoint Processor [9] .
+In short, the MP receives audio streams from the endpoints involved in a centralized or hybrid multipoint conference, processes them and returns them to the endpoints .
+An MP that processes audio prepares NMax audio outputs from M input streams after selection, mixing, or both .
+Audio mixing requires decoding the input audio to linear signals (PCM or analog), performing a linear combination of the signals and reencoding the result in an appropriate audio format .
+The MP may eliminate or attenuate some of the input signals in order to reduce noise and unwanted components .
+Fig .
+2 .
+Schematic diagram of a CS The limitation of H.323 is that it does not address the scalability of a conference .
+The architecture proposes a cascaded or daisy chain topology [10], which can be shown that it cannot scale up for a large conference .
+A CS serves many clients in the same conference .
+Thus it handles only one conference at a time .
+Multiple CSs may coexist in a domain, as when there are several conferences under way .
+Signaling related messages of CSs are dealt in [11] .
+The working of a CS is illustrated on Fig .
+2
+It may possibly receive and sends these to CSs 2 to P .
+The set of packets sent is denoted as ToOtherCSs .
+In the same mixing interval, it also receives the best NMax audio packets (out of possibly M2) from CS 2, similarly the best NMax (out of possibly MP) from CS P .
+For simplicity, we ignore propagation delay between CSs which indeed can be taken into account; it is beyond the scope of this presentation .
+The set of packets received is denoted as FromOtherCSs .
+Finally, it selects the best NMax packets from the set {ToOtherCSs union FromOtherCSs} and passes these packets to its own group .
+It can be seen that the set {ToOtherCSs union FromOtherCSs} is the same at all CSs .
+This ensures that any client in the conference finally receives the same set of packets for mixing .
+Hence all clients obtain a common view of the conference .
+Similarly, for each time slot (packet time), a subset, F of all clients is selected (using the same criterion) from the pool of packets from all other CSs plus the NMax clients selected locally .
+Their packets are mixed and played out at the clients .
+According to [15], the cardinality of F, |F| is NMax and is fixed at three .
+In our conferencing setup, selection is by the Master Conference Server (M CS), which comes into the picture exclusively for media handling .
+Note that even if the SIP specification enables direct UA to UA media communication in a one to one call, it is also possible to use the Conference Server for two party calls, especially because it is then more functional to create a real conference by adding a third and subsequently more participant(s) .
+There are cases wherein the processing capacity of an M CS is exceeded as it may have too many packets from local domains and from remote domains to process .
+In that case, the M CS will create one or many S CS (Fig .
+6) and transfer its own clients as well as the new clients to them .
+In this configuration, the algorithm outlined above will be slightly modified, as the audio packets will go from clients to their dedicated S CS that will select NMax packets to send to the local M CS, which will then select NMax packets from all its S CSs in the domain before sending them to the remote domains .
+The incoming packets from other domains will be received by the M CS, select NMax of them and send them directly to the domain clients, bypassing the SCSs .
+This change implies that at most three intermediate entities exist for each audio packet, instead of two in the conventional setup .
+As the extra hop happens inside the LAN supposed to have a high speed connectivity, we consider that it should not prevent us from using this hierarchy of CSs when there"s a need to do so .
+6.2 Loudness Number A basic question to be answered by the CS is the following .
+In a mixing interval, how should it choose NMax packets out of the M it might possibly receive? One way is to rank the M packets received according to their energies, and choose the top NMax .
+However, this is usually found to be inadequate because random fluctuations in packet energies can lead to poor audio quality .
+This indicates the need for a metric different from mere individual packet energies .
+The metric should have the following characteristics [12]
+This implies that a speaker"s speech history should be given some weight .
+This is often referred to as Persistence or Hangover .
+? A participant who wants to interrupt a speaker will have to (i) speak loudly and (ii) keep trying for a little while .
+In a face to face conference, body language often indicates the intent to interrupt .
+But in a blind conference under discussion, a participant"s intention to interrupt can be conveyed effectively through LN .
+A floor control mechanism empowered to cut off a speaker forcefully must be ensured .
+These requirements are met by Loudness Number [12], which changes smoothly with time so that the selection (addition and deletion) of clients for conference is graceful .
+LN (= ) is a function of the amplitude of the current audio stream plus the activity and amplitude over a specific window in the past .
+Fig .
+3 .
+The different windows used for LN computation The Loudness Number is updated on a packet by packet basis .
+The basic parameter used here is packet amplitude, which is calculated as root mean square (rms) of the energies in audio samples of a packet, and denoted by XK .
+Three windows are defined as shown in Fig .
+3 .
+The present amplitude level of the speaker is found by calculating the moving average of packet amplitude within a window called Recent Past Window starting from the present instant to some past time .
+The past activity of the speaker is found by calculating the moving average of the packet amplitude within a window called Distant Past Window, which starts at the point where the Recent Past window ends and stretches back in the past for a pre defined interval .
+The activity of the speaker in the past is found with a window called Activity Horizon, which spans the recent past window as well as the distant past window and beyond if necessary .
+Though the contribution of the activity horizon looks similar to the contribution of the recent past and distant past windows, past activity is computed from activity horizon window in a differently .
+Define the quantities during these three intervals as L1, L2 and L3 .
+L1 quantifies the Recent Past speech activity, L2 the Distant Past speech activity and L3 gives a number corresponding to the speech activity in the Activity Horizon window quantifying how active the speaker was in the past few intervals .
+L3 yields a quantity that is proportional to the fraction of packets having energies above a pre defined threshold (Eq .
+3) .
+The threshold is invariant across clients .
+? +? = = 1 1 1 RPP P Wt tK K RP X W L (1) ? +?? ?= = 1 2 1 DPRPP RPP WWt WtK K DP X W L (2) ? +? = ?= 1 }{3 * 1 AHP P K Wt tK X AH I W L £c£c (3) Where ifI KX 1}{ =?£c £c?KX = otherwise,0 The threshold is a constant .
+is set at 10 20 percent of the amplitude of the voice samples of a packet in our implementation here .
+Loudness Number £f for the present time instant (or the present packet) is calculated as, 332211 *L*L*L £\£\£\£f ++= (4) Here 1 2 DQG 3 are chosen such that
+6.3 Safety, Liveness and Fairness The £f parameter KDV VRPH PHPRU\ GHSHQGLQJ RQ WKH VSUHDG RI the windows .
+After one conferee becomes silent, another can take the floor .
+Also, as there is more than one channel, interruption is enabled .
+A loud conferee is more likely to be heard because of elevated £f .
+This ensures fairness to all conferees .
+After all, even in a face to face conference, a more vocal speaker grabs special attention .
+All these desirable characteristics are embedded into the LN .
+A comprehensive discussion on selection of the various parameters and the dynamics of LN are beyond the scope of this paper .
+6.4 Selection Algorithm using the LN Following the developments in subsections 6.1 and 6.2, we present the simple algorithm that runs at each Master Conference Server (Algorithm .
+1) .
+This algorithm is based on the discussions in section 6.1 .
+The globally unique set F is found using this procedure .
+Repeat for each time slot at each M CS { .

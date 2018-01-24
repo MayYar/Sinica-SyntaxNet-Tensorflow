@@ -1,0 +1,27 @@
+BluScreen is based on the notion of a scalable, extendable, advertising framework whereby adverts can be efficiently displayed to as many relevant users as possible, within a knowledge poor environment .
+To achieve these goals, several requirements have been identified
+devices, so that future deployments within public arenas will not require uptake of new hardware .
+appear on different displays at different times .
+audience should be exploited to facilitate inference of user interests which can be exploited by the system .
+To date, a prototype systems that addresses the first two goals has been demonstrated [8] .
+This system uses a 23 inch flat screen display deployed within an office environment to advertise events and news items .
+Rather than requiring the deployment of specialised hardware, such as active badges (see [11] for details), BluScreen detects the presence of users in the vicinity of each display through the Bluetooth enabled devices that they carry with them everyday1 .
+1 Devices must be in discovery mode to detectable .
+264 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) Device Type Unique Samples Devices Occasional < 10 135 Frequent 10 ? 1000 70 Persistent > 1000 6 Table 1
+This approach is attractive since the Bluetooth wireless protocol is characterised by its relative maturity, market penetration, and emphasis on short range communication .
+Table 1 summarises the number of devices detected by this prototype installation over a six month period .
+Of the 212 Bluetooth devices detected, approximately 70 were detected regularly, showing that Bluetooth is a suitable proxy for detecting individuals in front of the screen .
+In order to achieve a scalable and extendable solution a multiagent systems design philosophy is adopted whereby a number of different agents types interact (see figure 2) .
+The interactions of these agents are implemented through a web services protocol2 , and they constitute a decentralised marketplace that allocates advertising space in an efficient and timely manner .
+In more detail, the responsibilities of each agent types are
+It keeps historical records of the arrival and departure of Bluetooth devices, and makes this information available to advertising agents as requested .
+Marketplace Agent
+A single marketplace agent represents each BluScreen display, and access to this screen is divided into discrete advertising cycles of fixed duration .
+Before the start of each advertising cycle, the marketplace agent holds a sealed bid auction (see section 4 for more details) .
+The winner of this auction is allocated access to the display during the next cycle .
+Advertising Agent
+It interacts with the device detection agent in order to collect information regarding the number and identity of users who are currently in front of the display .
+On the basis of this information, its past experiences, and its bidding strategy, it calculates the value of the bid that it should submit to the marketplace agent .
+Thus, having described the prototype BluScreen system, we next go on to describe the details of the auction mechanism that we consider in this work, and then the advanced bidding agent that operates bids within this auction. .

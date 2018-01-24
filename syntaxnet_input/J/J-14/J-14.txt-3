@@ -1,0 +1,45 @@
+We consider graphical games in which the underlying graph G is an n vertex tree, in which each vertex has at most £G children .
+Each vertex has two actions, which are denoted by 0 and 1 .
+A mixed strategy of a player V is represented as a single number v ? [0, 1], which denotes the probability that V selects action 1 .
+For the purposes of the algorithm, the tree is rooted arbitrarily .
+For convenience, we assume without loss of generality that the root has a single child, and that its payoff is independent of the action chosen by the child .
+This can be achieved by first choosing an arbitrary root of the tree, and then adding a dummy parent of this root, giving the new parent a constant payoff function, e.g., 0 .
+Given an edge (V, W ) of the tree G, and a mixed strategy w for W , let G(V,W ),W =w be the instance obtained from G by (1) deleting all nodes Z which are separated from V by W (i.e., all nodes Z such that the path from Z to V passes through W ), and (2) restricting the instance so that W is required to play mixed strategy w .
+Definition 1 .
+Suppose that (V, W ) is an edge of the tree, that v is a mixed strategy for V and that w is a mixed strategy for W .
+We say that v is a potential best response to w (denoted by v ? pbrV (w)) if there is an equilibrium in the instance G(V,W ),W =w in which V has mixed strategy v .
+We define the best response policy for V , given W , as B(W, V ) = {(w, v) | v ? pbrV (w), w ? [0, 1]} .
+The upstream pass of the generic algorithm of [13] considers every node V (other than the root) and computes the best response policy for V given its parent .
+With the above assumptions about the root, the downstream pass is straightforward .
+The root selects a mixed strategy w for the root W and a mixed strategy v ? B(W, V ) for each child V of W .
+It instructs each child V to play v .
+The remainder of the downward pass is recursive .
+When a node V is instructed by its parent to adopt mixed strategy v, it does the following for each child U It finds a pair (v, u) ? B(V, U) (with the same v value that it was given by its parent) and instructs U to play u .
+The best response policy for a vertex U given its parent V can be represented as a union of rectangles, where a rectangle is defined by a pair of closed intervals (IV , IU ) and consists of all points in IV ¡Ñ IU ; it may be the case that one or both of the intervals IV and IU consists of a single point .
+In order to perform computations on B(V, U), and to bound the number of rectangles, [9] used the notion of an event point, which is defined as follows .
+For any set A ? [0, 1]2 that is represented as a union of a finite number of rectangles, we say that a point u ? [0, 1] on the U axis is a Uevent point of A if u = 0 or u = 1 or the representation of A contains a rectangle of the form IV ¡Ñ IU and u is an endpoint of IU ; V event points are defined similarly .
+For many games considered in this paper, the underlying graph is an n vertex path, i.e., a graph G = (V, E) with V = {V1, .
+.
+.
+, Vn} and E = {(V1, V2), .
+.
+.
+, (Vn?1, Vn)} .
+In [9], it was shown that for such games, the best response policy has only polynomially many rectangles .
+The proof that the number of rectangles in B(Vj+1, Vj) is polynomial proceeds by first showing that the number of event points in B(Vj+1, Vj ) cannot exceed the number of event points in B(Vj, Vj?1) by more than 2, and using this fact to bound the number of rectangles in B(Vj+1, Vj ) .
+Let P0 (V ) and P1 (V ) be the expected payoffs to V when it plays 0 and 1, respectively .
+Both P0 (V ) and P1 (V ) are multilinear functions of the strategies of V "s neighbors .
+In what follows, we will frequently use the following simple observation .
+CLAIM 1 .
+For a vertex V with a single child U and parent W , given any A, B, C, D ? Q, A , B , C , D ? Q, one can select the payoffs to V so that P0 (V ) = Auw + Bu + Cw + D, P1 (V ) = A uw + B u + C w + D .
+Moreover, if all A, B, C, D, A , B , C , D are integer, the payoffs to V are integer as well .
+PROOF .
+We will give the proof for P0 (V ); the proof for P1 (V ) is similar .
+For i, j = 0, 1, let Pij be the payoff to V when U plays i, V plays 0 and W plays j .
+We have P0 (V ) = P00(1 ? u)(1 ? w) + P10u(1 ? w) + P01(1 ? u)w + P11uw .
+We have to select the values of Pij so that P00 ? P10 ? P01 + P11 = A, ?P00 + P10 = B, ?P00 + P01 = C, P00 = D .
+It is easy to see that the unique solution is given by P00 = D, P01 = C + D, P10 = B + D, P11 = A + B + C + D .
+The input to all algorithms considered in this paper includes the payoff matrices for each player .
+We assume that all elements of these matrices are integer .
+Let Pmax be the greatest absolute value of any element of any payoff matrix .
+Then the input consists of at most n2£G+1 numbers, each of which can be represented using log Pmax bits. .

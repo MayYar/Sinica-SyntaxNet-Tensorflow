@@ -1,0 +1,131 @@
+This paper brings together two IR areas
+There exists a vast amount of algorithms for both domains .
+However, not much has been done specifically aimed at combining them .
+In this section we thus present a separate analysis, first introducing some approaches to personalize search, as this represents the main goal of our research, and then discussing several query expansion techniques and their relationship to our algorithms .
+2.1 Personalized Search Personalized search comprises two major components
+This section splits the relevant background according to the focus of each article into either one of these elements .
+Approaches focused on the User Profile .
+Sugiyama et al .
+[32] analyzed surfing behavior and generated user profiles as features (terms) of the visited pages .
+Upon issuing a new query, the search results were ranked based on the similarity between each URL and the user profile .
+Qiu and Cho [26] used Machine Learning on the past click history of the user in order to determine topic preference vectors and then apply Topic Sensitive PageRank [13] .
+User profiling based on browsing history has the advantage of being rather easy to obtain and process .
+This is probably why it is also employed by several industrial search engines (e.g., Yahoo! MyWeb2 DESKTOP DATA Desktop data represents a very rich repository of profiling information .
+However, this information comes in a very unstructured way, covering documents which are highly diverse in format, content, and even language characteristics .
+In this section we first tackle this problem by proposing several lexical analysis algorithms which exploit user"s PIR to extract keyword expansion terms at various granularities, ranging from term frequency within Desktop documents up to utilizing global co occurrence statistics over the personal information repository .
+Then, in the second part of the section we empirically analyze the performance of each approach .
+3.1 Algorithms This section presents the five generic approaches for analyzing user"s Desktop data in order to provide expansion terms for Web search .
+In the proposed algorithms we gradually increase the amount of personal information utilized .
+Thus, in the first part we investigate three local analysis techniques focused only on those Desktop documents matching user"s query best .
+We append to the Web query the most relevant terms, compounds, and sentence summaries from these documents .
+In the second part of the section we move towards a global Desktop analysis, proposing to investigate term co occurrences, as well as thesauri, in the expansion process .
+3.1.1 Expanding with Local Desktop Analysis Local Desktop Analysis is related to enhancing Pseudo Relevance Feedback to generate query expansion keywords from the PIR best hits for user"s Web query, rather than from the top ranked Web search results .
+We distinguish three granularity levels for this process and we investigate each of them separately .
+Term and Document Frequency .
+As the simplest possible measures, TF and DF have the advantage of being very fast to compute .
+Previous experiments with small data sets have showed them to yield very good results [11] .
+We thus independently associate a score with each term, based on each of the two statistics .
+The TF based one is obtained by multiplying the actual frequency of a term with a position score descending as the term first appears closer to the end of the document .
+This is necessary especially for longer documents, because more informative terms tend to appear towards their beginning [10] .
+The complete TF based keyword extraction formula is as follows
+The identification of suitable expansion terms is even simpler when using DF
+This query orientation is necessary, since the DF scores are computed at the level of the entire PIR and would produce too noisy suggestions otherwise .
+Once the set of candidate terms has been identified, the selection proceeds by ordering them according to the DF scores they are associated with .
+Ties are resolved using the corresponding TF scores .
+Note that a hybrid TFxIDF approach is not necessarily efficient, since one Desktop term might have a high DF on the Desktop, while being quite rare in the Web .
+For example, the term PageRank would be quite frequent on the Desktop of an IR scientist, thus achieving a low score with TFxIDF .
+However, as it is rather rare in the Web, it would make a good resolution of the query towards the correct topic .
+Lexical Compounds .
+Anick and Tipirneni [2] defined the lexical dispersion hypothesis, according to which an expression"s lexical dispersion (i.e., the number of different compounds it appears in within a document or group of documents) can be used to automatically identify key concepts over the input document set .
+Although several possible compound expressions are available, it has been shown that simple approaches based on noun analysis are almost as good as highly complex part of speech pattern identification algorithms [1] .
+We thus inspect the matching Desktop documents for all their lexical compounds of the following form
+Moreover, once identified, they can be further sorted depending on their dispersion within each document in order to facilitate fast retrieval of the most frequent compounds at run time .
+Sentence Selection .
+This technique builds upon sentence oriented document summarization
+Sentence selection is the most comprehensive local analysis approach, as it produces the most detailed expansions (i.e., sentences) .
+Its downside is that, unlike with the first two algorithms, its output cannot be stored efficiently, and consequently it cannot be computed off line .
+We generate sentence based summaries by ranking the document sentences according to their salience score, as follows [21]
+A word is significant in a document if its frequency is above a threshold as follows
+The second term is a position score set to (Avg(NS) ? SentenceIndex) Avg2 for the first ten sentences, and to 0 otherwise, Avg(NS) being the average number of sentences over all Desktop items .
+This way, short documents such as emails are not affected, which is correct, since they usually do not contain a summary in the very beginning .
+However, as longer documents usually do include overall descriptive sentences in the beginning [10], these sentences are more likely to be relevant .
+The final term biases the summary towards the query .
+It is the ratio between the square number of query terms present in the sentence and the total number of terms from the query .
+It is based on the belief that the more query terms contained in a sentence, the more likely will that sentence convey information highly related to the query .
+3.1.2 Expanding with Global Desktop Analysis In contrast to the previously presented approach, global analysis relies on information from across the entire personal Desktop to infer the new relevant query terms .
+In this section we propose two such techniques, namely term co occurrence statistics, and filtering the output of an external thesaurus .
+Term Co occurrence Statistics .
+For each term, we can easily compute off line those terms co occurring with it most frequently in a given collection (i.e., PIR in our case), and then exploit this information at run time in order to infer keywords highly correlated with the user query .
+Our generic co occurrence based query expansion algorithm is as follows
+Co occurrence based keyword similarity search .
+Off line computation
+.
+.
+, 20% ¡P N] 2
+2
+The off line computation needs an initial trimming phase (step 1) for optimization purposes .
+In addition, we also restricted the algorithm to computing co occurrence levels across nouns only, as they contain by far the largest amount of conceptual information, and as this approach reduces the size of the co occurrence matrix considerably .
+During the run time phase, having the terms most correlated with each particular query keyword already identified, one more operation is necessary, namely calculating the correlation of every output term with the entire query .
+Two approaches are possible
+We considered the following formulas for Similarity Coefficients [17]
+DFx is the Document Frequency of term x, and DFx,y is the number of documents containing both x and y .
+To further increase the quality of the generated scores we limited the latter indicator to cooccurrences within a window of W terms .
+We set W to be the same as the maximum amount of expansion keywords desired .
+Dunning"s Likelihood Ratio £f [9] is a co occurrence based metric similar to £q2 .
+It starts by attempting to reject the null hypothesis, according to which two terms A and B would appear in text independently from each other .
+This means that P(A B) = P(A?B) = P(A), where P(A?B) is the probability that term A is not followed by term B .
+Consequently, the test for independence of A and B can be performed by looking if the distribution of A given that B is present is the same as the distribution of A given that B is not present .
+Of course, in reality we know these terms are not independent in text, and we only use the statistical metrics to highlight terms which are frequently appearing together .
+We compare the two binomial processes by using likelihood ratios of their associated hypotheses .
+First, let us define the likelihood ratio for one hypothesis
+Since the maxima are obtained with p1 = k1 n1 , p2 = k2 n2 , and p = k1+k2 n1+n2 , we have
+Taking the logarithm of the likelihood, we obtain
+Finally, if we write O11 = P(A B), O12 = P(?A B), O21 = P(A ?B), and O22 = P(?A?B), then the co occurrence likelihood of terms A and B becomes
+Large scale thesauri encapsulate global knowledge about term relationships .
+Thus, we first identify the set of terms closely related to each query keyword, and then we calculate the Desktop co occurrence level of each of these possible expansion terms with the entire initial search request .
+In the end, those suggestions with the highest frequencies are kept .
+The algorithm is as follows
+Filtered thesaurus based query expansion .
+1
+We observe three types of term relationships (steps 2a 2c)
+As they represent quite different types of association, we investigated them separately .
+We limited the output expansion set (step 7) to contain only terms appearing at least T times on the Desktop, in order to avoid noisy suggestions, with T = min( N DocsPerTopic , MinDocs) .
+We set DocsPerTopic = 2, 500, and MinDocs = 5, the latter one coping with the case of small PIRs .
+3.2 Experiments 3.2.1 Experimental Setup We evaluated our algorithms with 18 subjects (Ph.D .
+and PostDoc .
+students in different areas of computer science and education) .
+First, they installed our Lucene based search engine3 and 3 Clearly, if one had already installed a Desktop search application, then this overhead would not be present .
+indexed all their locally stored content
+Without loss of generality, we focused the experiments on single user machines .
+Then, they chose 4 queries related to their everyday activities, as follows
+In order to connect such a query to each user"s interests, we added an off line preprocessing phase
+To further ensure a real life scenario, users were allowed to reject the proposed query and ask for a new one, if they considered it totally outside their interest areas .
+? One randomly selected log query, filtered using the same procedure as above .
+? One self selected specific query, which they thought to have only one meaning .
+? One self selected ambiguous query, which they thought to have at least three meanings .
+The average query lengths were 2.0 and 2.3 terms for the log queries, as well as 2.9 and 1.8 for the self selected ones .
+Even though our algorithms are mainly intended to enhance search when using ambiguous query keywords, we chose to investigate their performance on a wide span of query types, in order to see how they perform in all situations .
+The log queries evaluate real life requests, in contrast to the self selected ones, which target rather the identification of top and bottom performances .
+Note that the former ones were somewhat farther away from each subject"s interest, thus being also more difficult to personalize on .
+To gain an insight into the relationship between each query type and user interests, we asked each person to rate the query itself with a score of 1 to 5, having the following interpretations
+The obtained grades were 3.11 for the top log queries, 3.72 for the randomly selected ones, 4.45 for the self selected specific ones, and 4.39 for the self selected ambiguous ones .
+For each query, we collected the Top 5 URLs generated by 20 versions of the algorithms4 presented in Section 3.1 .
+These results were then shuffled into one set containing usually between 70 and 90 URLs .
+Thus, each subject had to assess about 325 documents for all four queries, being neither aware of the algorithm, nor of the ranking of each assessed URL .
+Overall, 72 queries were issued and over 6,000 URLs were evaluated during the experiment .
+For each of these URLs, the testers had to give a rating ranging from 0 to 2, dividing the relevant results in two categories, (1) relevant and (2) highly relevant .
+Finally, the quality of each ranking was assessed using the normalized version of Discounted Cumulative Gain [15] .
+DCG is a rich measure, as it gives more weight to highly ranked documents, while also incorporating different relevance levels by giving them different gain values
+We used G(i) = 1 for relevant results, and G(i) = 2 for highly relevant ones .
+As queries having more relevant output documents will have a higher DCG, we also normalized its value to a score between 0 (the worst possible DCG given the ratings) and 1 (the best possible DCG given the ratings) to facilitate averaging over queries .
+All results were tested for statistical significance using T tests .
+4 Note that all Desktop level parts of our algorithms were performed with Lucene using its predefined searching and ranking functions .
+Algorithmic specific aspects .
+The main parameter of our algorithms is the number of generated expansion keywords .
+For this experiment we set it to 4 terms for all techniques, leaving an analysis at this level for a subsequent investigation .
+In order to optimize the run time computation speed, we chose to limit the number of output keywords per Desktop document to the number of expansion keywords desired (i.e., four) .
+For all algorithms we also investigated bigger limitations .
+This allowed us to observe that the Lexical Compounds method would perform better if only at most one compound per document were selected .
+We therefore chose to experiment with this new approach as well .
+For all other techniques, considering less than four terms per document did not seem to consistently yield any additional qualitative gain .
+We labeled the algorithms we evaluated as follows

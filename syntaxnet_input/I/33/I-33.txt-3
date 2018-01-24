@@ -1,0 +1,171 @@
+Social theory usually thinks of institutions as the rules of the game ([18, 23]) .
+From an agent perspective institutions are, to paraphrase this quote, the rules of the various games agents can play in order to interact with one another .
+To assume an institutional perspective on MASs means therefore to think of MASs in normative terms
+We use the term to refer to any set of interacting agents whose behavior can usefully be regarded as governed by norms ([15], p.276) .
+The normative system perspective on institutions is, as such, nothing original and it is already a quite acknowledged position within the community working on electronic institutions, or eInstitutions ([26]) .
+What has not been sufficiently investigated and understood with formal methods is, in our view, the question
+For moral entities do not arise from the intrinsic substantial principles of things but are superadded to things already existent and physically complete ([21], pp .
+100 101) .
+By ignoring for a second the philosophical jargon of the Seventeenth century we can easily extract an illuminating message from the excerpt
+That is to say, institutions provide descriptions of entities by making use of conceptualizations that are not proper of the common descriptions of those entities .
+For example, that cars have wheels is a common factual property, whereas the fact that cars count as vehicles in some technical legal sense is a property that law imposes on the concept car .
+To say it with [25], the fact that cars have wheels is a brute fact, while the fact that cars are vehicles is an institutional fact .
+Institutions build structured descriptions of institutional properties upon brute descriptions of a given domain .
+At this point, the step toward eInstitutions is natural .
+eInstitutions impose properties on the possible states of a MAS
+They do this via linking some institutional properties of the possible states and transitions of the system (e.g., agent i enacts role r) to some brute properties of those states and transitions (e.g., agent i performs protocol No.56) .
+An institutional property is therefore a property of system states or system transitions (i.e., a state type or a transition type) that does not belong to a merely technical, or factual, description of the system .
+To sum up, institution are viewed as sets of norms (normative system perspective), and norms are thought of as the imposition of an institutional description of the system upon its description in terms of brute properties .
+In a nutshell, institutions are impositions of institutional terminologies upon brute ones .
+The following sections provide a formal analysis of this thesis and show its explanatory power in delivering a rigorous understanding of key features of institutions .
+Because of its suitability for representing complex domain descriptions, the formal framework we will make use of is the one of Description Logics .
+The use of such formalism will also stress the idea of viewing institutions as the impositions of domain descriptions .
+2.1 Preliminaries
+Following a notational convention common within DL we denote this language with ALCH( ,?,?,id) .
+DEFINITION 1 .
+(Syntax of ALCH( ,?,?,id) ) transition types and state type constructs are defined by the following BNF
+It is worth providing the intuitive reading of a couple of the operators and the constructs just introduced .
+In particular ?£\.£^ has to be read as
+The operator ? denotes the concatenation of transition types .
+The operator id applies to a state description £^ and yields a transition description, namely, the transition ending in £^ states .
+It is the description logic variant of the test operator in Dynamic Logic ([5]) .
+Notice that we use the same symbols and ? for denoting the boolean operators of disjunction and negation of both state and transition types .
+Atomic state types c are often indexed by an agent identifier i in order to express agent properties (e.g., dutch(i)), and atomic transition types a are often indexed by a pair of agent identifiers (i, j) (e.g., PAY(i, j)) denoting the actor and, respectively, the recipient of the transition .
+By removing the agent identifiers from state types and transition types we obtain state type forms (e.g., dutch or rea(r)) and transition type form (e.g., PAY) .
+A terminological box (henceforth TBox) T = £F, A consists of a finite set £F of state type inclusion assertions (£^1 £^2), and of a finite set A of transition type inclusion assertions (£\1 £\2) .
+The semantics of ALCH( ,?,?,id) is model theoretical and it is given in terms of interpreted transition systems .
+As usual, state types are interpreted as sets of states and transition types as sets of state pairs .
+DEFINITION 2 .
+(Semantics of ALCH( ,?,?,id) ) An interpreted transition system m for ALCH( ,?,?,id) is a structure S, I where S is a non empty set of states and I is a function such that
+It is a model of a transition type inclusion assertion £\1 £\2 if I(£\1) ? I(£\2) .
+An interpreted transition system m is a model of a TBox T = £F, A if m is a model of each inclusion assertion in £F and A .
+REMARK 1 .
+(Derived constructs) The correspondence between description logic and dynamic logic is well known ([3]) .
+In fact, the language presented in Definitions 1 and 2 is a notational variant of the language of Dynamic Logic ([5]) without the iteration operator of transition types .
+As a consequence, some key constructs are still definable in ALCH( ,?,?,id) .
+In particular we will make use of the following definition of the if then else transition type
+Boolean operators are defined as usual .
+We will come back to some complexity features of this logic in Section 2.5 .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 629 2.2 Institutions as terminologies We have upheld that institutions impose new system descriptions which are formulated in terms of sets of norms .
+The step toward a formal grounding of this view of institutions is now short
+An institution can be specified as a terminological box Ins = £Fins, Ains , where each inclusion statement in £Fins and Ains models a norm of the institution .
+Obviously, not every TBox can be considered to be an institution specification .
+In particular, an institution specification Ins must have some precise linguistic relationship with the ¡¥brute" descriptions upon which the institution is specified .
+We denote by Lins the non logical alphabet containing only institutional state and transition types, and by Lbrute the nonlogical alphabet containing those types taken to talk about, instead, ¡¥brute" states and transitions1 .
+DEFINITION 3 .
+(Institutions as TBoxes) A TBox Ins = £Fins, Ains is an institution specification if
+In symbols
+and Abridge ? Ains such that either the left hand side of these axioms is always a description expressed in Lbrute and the right hand side a description expressed in Lins, or those axioms are definitions .
+In symbols
+The clause for Abridge is analogous .
+and Ains\Abridge are all expressed in Lins .
+In symbols
+The definition states that an institution specification needs to be expressed on a language including institutional as well as brute terms (1); that a part of the specification concerns a description of mere institutional terms (3); and that there needs to be a part of the specification which connects institutional terms to brute ones (2) .
+Terminological axioms in £Fbridge and Abridge formalize in DL the Searlean notion of counts as conditional ([25]), that is, rules stating what kind of meaning an institution gives to certain brute facts and transitions (e.g., checking box No.4 in form No.2 counts as accepting your personal data to be used for research purposes) .
+A formal theory of counts as statements has been thoroughly developed in a series of papers among which [10, 13] .
+The technical content of the present paper heavily capitalizes on that work .
+Notice also that given the semantics presented in Definition 2, if institutions can be specified via TBoxes then the meaning of such specifications is a set of interpreted transition systems, i.e., the models of those TBoxes .
+These transitions systems can be in turn thought of as all the possible MASs which model the specified institution .
+REMARK 2 .
+(Lbrute from a designer"s perspective) From a design perspective language Lbrute has to be thought of as the language on which a designer would specify a system instantiating a given institution2 .
+Definition 3 shows that for such a design task 1 Symbols from Lins and Lbrute will be indexed (especially with agent identifiers) to add some syntactic sugar .
+2 To make a concrete example, the AMELI middleware [7] can be viewed as a specification tool at a Lbrute level .
+it is needed to formally specify an explicit bridge between the concepts used in the description of the actual system and the institutional ¡¥abstract" concepts .
+We will come back to this issue in Section 3 .
+2.3 From abstract to concrete norms To illustrate Definition 3, and show its explanatory power, an example follows which depicts an essential phenomenon of institutions .
+EXAMPLE 1 .
+(From abstract to concrete norms) Consider an institution supposed to regulate access to a set of public web services .
+It may contain the following norm
+Suppose now a system has to be built which complies with this norm .
+The first question is
+The problem can be represented as follows .
+The abstract norm is formalized by Formula 1 by making use of a standard reduction technique of deontic notions (see [16])
+Together with the norm also some intuitive background knowledge about the discrimination action needs to be formalized .
+Here, as well as in the rest of the examples in the paper, we provide just that part of the formalization which is strictly functional to show how the formalism works in practice .
+Formulae 2 and 3 express two effect laws
+All formulae have to be read as schemata determining a finite number of subsumption expressions depending on the number of agents i, j considered .
+?DISCR(i, j).viol ¡Ý (1) dutch(j) ?DISCR(i, j).accepted(j) (2) ?dutch(j) ?DISCR(i, j).?accepted(j) (3) The rest of the axioms concern the translation of the abstract type DISCR(i, j) to concrete transition types .
+Formula 4 refines it by making explicit that a precise if then else procedure counts as a discriminatory act of agent i .
+Formulae 5 and 6 specify which messages of i to j count as acceptance and rejection .
+If the designer uses transition types SEND(msg33, i, j) and SEND(msg38, i, j) for the concrete system specification, then Formulae 5 and 6 can be thought of as bridge axioms connecting notions belonging to the institutional alphabet (to accept, and to reject) to concrete ones (to send specific messages) .
+Finally, Formulae 7 and 8 state two intuitive effect laws concerning the ACCEPT(i, j) and REJECT(i, j) types .
+if dutch(j)then ACCEPT(i, j) else REJECT(i, j) DISCR(i, j) (4) SEND(msg33, i, j) ACCEPT(i, j) (5) SEND(msg38, i, j) REJECT(i, j) (6) ?ACCEPT(i, j).accepted(j) ¡Ý (7) ?REJECT(i, j).?accepted(j) ¡Ý (8) It is easy to see, on the grounds of the semantics exposed in Definition 2, that the following concrete inclusion statement holds w.r.t .
+630 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) the specified institution
+Current formal approaches to institutions, such as ISLANDER [6], do not allow for the formal specification of explicit translations of abstract norms into concrete ones, and focus only on norms that can be specified at the concrete system specification level .
+What Example 1 shows is that the problem of the abstractness of norms in institutions can be formally addressed and can be given a precise formal semantics .
+The scenario suggests that, just by modifying an appropriate set of terminological axioms, it is possible for the designer to obtain a different institution by just modifying the sets of bridge axioms without touching the terminological axioms expressed only in the institutional language Lins .
+In fact, it is the case that a same set of abstract norms can be translated to different and even incompatible sets of concrete norms .
+This translation can nevertheless not be arbitrary ([1]) .
+EXAMPLE 2 .
+(Acceptable and unacceptable translations of abstract norms) Reconsider again the scenario sketched in Example complex procedure composed by concrete transition types .
+Would any translation do? Consider an alternative institution specification Ins containing Formulae 1 3 and the following translation rule
+Needless to say this is not intuitive, because the abstract transition type DISCR(i, j) obeys some intuitive conceptual constraints (Formulae 2 and 3) that all its translations should also obey .
+In fact, the following inclusions would then hold in Ins 
+The problem is that the meaning of ¡¥paying" is not intuitively subsumed by the meaning of ¡¥discriminating" .
+In other words, a transition type PAY(j, i, e10) does not intuitively yield the effects that a sub type of DISCR(i, j) yields .
+It is on the contrary perfectly intuitive that Formula 9 obeys the constraints in Formulae 2 and 3, which it does, as it can be easily checked on the grounds of the semantics .
+It is worth stressing that without providing a model theoretic semantics for the translation rules linking the institutional notions to the brute ones, it would not be so straightforward to model the logical constraints to which the translations are subjected (Example 2) .
+This is precisely the advantage of viewing translation rules as specific terminological axioms, i.e., £Fbridge and Abridge, working as a bridge between two languages (Definition 3) .
+In [12], we have thoroughly compared this approach with approaches such as [9] which conceive of translation rules as inference rules .
+The two examples have shown how our approach can account for some essential features of institutions .
+In the next section the same framework is applied to provide a formal analysis of the notion of role .
+2.4 Institutional modules and roles Viewing institutions as the impositions of institutional descriptions on systems" states and transitions allows for analyzing the normative system perspective itself (i.e., institutions are sets of norms) at a finer granularity .
+We have seen that the terminological axioms specifying an institution concern complex descriptions of new institutional notions .
+Some of the institutional state types occurring in the institution specification play a key role in structuring the specification of the institution itself .
+The paradigmatic example in this sense ([25]) are facts such as agent i enacts role r which will be denoted by state types rea(i, r) .
+By stating how an agent can enact and ¡¥deact" a role r, and what normative consequences follow from the enactment of r, an institution describes expected forms of agents" behavior while at the same time abstracting from the concrete agents taking part to the system .
+The sets of norms specifying an institution can be clustered on the grounds of the rea state types .
+For each relevant institutional state type (e.g., rea(i, r)), the terminological axioms which define an institution, i.e., its norms, can be clustered in (possibly overlapping) sets of three different types
+Borrowing the terminology from work in legal and institutional theory ([23, 25]), these clusters of norms can be called, respectively, institutive, terminative and status modules .
+Status modules We call status modules those sets of terminological axioms which specify the institutional consequences of the occurrence of a given institutional state of affairs, for instance, the fact that agent i enacts role r .
+EXAMPLE 3 .
+(A status module for roles) Enacting a role within an institution bears some institutional consequences that are grouped under the notion of status
+Some of these consequences are deontic and concern the obligations, rights, permissions under which the agent puts itself once it enacts the role .
+An example which pertains to the normative description of the status of both a buyer and a seller roles is the following
+Notice that Formula 13 formalizes at the same time an obligation pertaining to the role buyer and a right pertaining to the role seller .
+Of particular interest are then those consequences that attribute powers to agents enacting specific roles
+Formula 15 states how the bidding action can be executed by sending a specific message to j (SEND(i, j, msg49)) .
+Some observations are in order .
+As readers acquainted with deontic logic have probably already noticed, our treatment of the notion The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 631 of obligation (Formula 13) makes again use of a standard reduction approach ([16]) .
+More interesting is instead how the notion of institutional power is modeled .
+Essentially, the empowerment phenomenon is analyzed in term of two rules
+Systems of rules of this type empower the agents enacting some relevant role by establishing a connection between the brute actions of the agents and some institutional effect .
+Whether the agents are actually able to execute the required ¡¥brute" actions is a different issue, since agent i can be in some states (or even all states) unable to effectuate a SEND(i, j, msg49) transition .
+This is the case also in human societies
+There is a difference between being entitled to make a bid and being in state of making a bid ([4]) .
+In other words, Formulae 14 and 15 express only that agents playing the buyer role are entitled to make bids .
+The actual possibility of performing the required ¡¥brute" actions is not an institutional issue, but rather an issue concerning the implementation of an institution in a concrete system .
+We address this issue extensively in Section 33 .
+Institutive modules We call institutive modules those sets of terminological axioms of an institution specification describing how states with certain institutional properties can be reached, for instance, how an agent i can reach a state in which it enacts role r .
+They can be seen as procedures that the institution define in order for the agents to bring institutional states of affairs about .
+EXAMPLE 4 .
+(An institutive module for roles) The fact that an agent i enacts a role r (rea(i, r)) is the effect of a corresponding enactment action ENACT(i, r) performed under certain circumstances (Formula 16), namely that the agent does not already enact the role, and that the agent satisfies given conditions (cond(i, r)), which might for instance pertain the computational capabilities required for an agent to play the chosen role, or its capability to interact with some specific system"s infrastructures .
+Formula 17 specifies instead the procedure counting as an action of type ENACT(i, r) .
+Such a procedure is performed through a system infrastructure s, which notifies to i that it has been registered as enacting role r after sending the necessary piece of data d (SEND(i, s, d)), e.g., a valid credit card number .
+?rea(i, r) cond(i, r) ENACT(i, r).rea(i, r) (16) SEND(i, s, d) ? NOTIFY(s, i) ENACT(i, r) (17) Terminative modules Analogously, we call terminative modules those sets of terminological axioms stating how a state with certain institutional properties can be left .
+Rules of this kind state for instance how an agent can stop enacting a certain role .
+They can be thus thought of as procedures that the institution defines in order for the agent to see to it that certain institutional states stop holding .
+EXAMPLE 5 .
+(A terminative module for roles) Terminative modules for roles specify, for instance, how a transition type DEACT(i, r) can be executed which has as consequence the reaching of a state of type ?rea(i, r)
+Examples 3 5 have shown how roles can be formalized in our framework thereby getting a formal semantics
+It is worth noticing that this modeling option is aligned with work on social theory addressing the concept of role such as [20] .
+2.5 Tractable specifications of institutions In the previous sections we fully deployed the expressivity of the language introduced in Section 2.1 and used its semantics to provide a formal understanding of many essential aspects of institutions in terms of transition systems .
+This section spends a few words about the viability of performing automated reasoning in the logic presented .
+The satisfiability problem4 in logic ALCH( ,?,?,id) is undecidable since transition type inclusion axioms correspond to a version of what in Description Logic are known as role value maps and logics extending ALC with role value maps are known to be undecidable ([3]) .
+Tractable (i.e., polynomial time decidable) fragments of logic ALCH( ,?,?,id) can however be isolated which still exhibit some key expressive features .
+One of them is logic ELH(?) .
+It is obtained from description logic EL, which contains only state types intersection , existential restriction ? and 5 , but extended with the ¡æ state type and with transition type inclusion axioms of a complex form
+.
+.?an a (with n finite number) .
+Logic ELH(?) is also a fragment of the well investigated description logic EL++ whose satisfiability problem has been shown in [2] to be decidable in polynomial time .
+Despite the very limited expressivity of this fragment, some rudimentary institutional specifications can still be successfully represented .
+Specifically, institutive and terminative modules can be represented which contain transition types inclusion axioms .
+Restricted versions of status modules can also be represented enabling two essential deontic notions
+To this aim language Lins would need to be expanded with a set of state types {legal(i)}0?i?n whose intuitive meaning is to denote legal states as opposed to states of type viol(i) .
+Fragments like ELH(?) could be used as target logics within theory approximation approaches ([24]) by aiming at compiling TBoxes expressed in ALCH( ,?,?,id) into approximations in those fragments. .

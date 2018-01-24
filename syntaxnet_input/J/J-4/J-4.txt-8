@@ -1,0 +1,46 @@
+To add a measure of reality to our simulations, we fit distributions for value and relevance to Yahoo! bid and clickthrough rate data for a certain keyword that draws over a million searches per month .
+(We do not reveal the identity of the keyword to respect the privacy of the advertisers.) We obtained click and impression data for the advertisers bidding on the keyword .
+From this we estimated advertiser and position effects using a maximum likelihood criterion .
+We found that, indeed, position effects are monotonically decreasing with lower rank .
+We then fit a beta distribution to the advertiser effects resulting in parameters a = 2.71 and b = 25.43 .
+We obtained bids of advertisers for the keyword .
+Using Varian"s [11] technique, we derived bounds on the bidders" actual values given these bids .
+By this technique, upper and lower bounds are obtained on bidder values given the bids according to inequality (3) .
+If the interval for a given value is empty, i.e .
+its upper bound lies below its lower bound, then we compute the smallest perturbation to the bids necessary to make the interval non empty, which involves solving a quadratic program .
+We found that the mean absolute deviation required to fit bids to symmetric equilibrium was 0 1 2 3 4 5 6 7 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 Value Density 0 0.05 0.1 0.15 0.2 0.25 0 2 4 6 8 10 Relevance Density Figure 1
+always at most 0.08, and usually significantly less, over different days in a period of two weeks.6 We fit a lognormal distribution to the lower bounds on the bidders" values, resulting in parameters £g = 0.35 and £m = 0.71 .
+The empirical distributions of value and relevance together with the fitted lognormal and beta curves are given in Figure 1 .
+It appears that mixtures of beta and lognormal distributions might be better fits, but since these distributions are used mainly for illustration purposes, we err on the side of simplicity .
+We used a Gaussian copula to create dependence between value and relevance.7 Given the marginal distributions for value and relevance together with this copula, we simulated the revenue effect of varying q for different levels of Spearman correlation, with 12 slots and 13 bidders .
+The results are shown in Figure 2.8 It is apparent from the figure that the optimal choice of q moves to the right as correlation decreases; this agrees with our intuition from Section 5 .
+The choice is very sensitive to the level of correlation .
+If choosing only between rankby bid and rank by revenue, rank by bid is best for positive correlation whereas rank by revenue is best for negative correlation .
+At zero correlation, they give about the same expected revenue in this instance .
+Figure 2 also shows that in principle, the optimal q may be negative .
+It may also occur beyond 1 for different distributions, but we do not know if these would be realistic .
+The trends in efficiency and relevance are as described in the results from Section 6 .
+(Any small deviation from these trends is due to the randomness inherent in the simulations.) The curves level off as q ¡÷ +¡Û because eventually agents are ranked purely according to relevance, and similarly as q ¡÷ ?¡Û .
+A typical Spearman correlation between value and relevance for the keyword was about 0.4 for different days in a week the correlation lay within [0.36, 0.55] .
+Simulation results with this correlation are in Figure 3 .
+In this instance rank by bid is in fact optimal, yielding 25% more revenue than rank by revenue .
+However, at q = 0 efficiency and relevance are 9% and 17% lower than at q = 1, respectively .
+Imposing a bound of, say, 5% on efficiency and relevance loss from the baseline at q = 1, the optimal setting is q = 0.6, yielding 11% more revenue than the baseline .
+6 See Varian [11] for a definition of mean absolute deviation .
+7 A copula is a function that takes marginal distributions and gives a joint distribution with these marginals .
+It can be designed so that the variables are correlated .
+See for example Nelsen [10] .
+8 The y axes in Figures 2 4 have been normalized because the simulations are based on proprietary data .
+Only relative values are meaningful .
+54 0 1 2 3 4 5 6 7 2 1.5 1 0.5 0 0.5 1 1.5 2 R(q) q Revenue 0 1 2 3 4 5 6 7 8 9 10 2 1.5 1 0.5 0 0.5 1 1.5 2 V(q) q Efficiency 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2 1.5 1 0.5 0 0.5 1 1.5 2 L(q) q Relevance Figure 2
+Estimated standard errors are less than 1% of the values shown .
+1 0.5 0 0.5 1 1 1.5 2 2.5 3 3.5 2 1.5 1 0.5 0 0.5 1 1.5 2 R(q) q Revenue 2 2.5 3 3.5 4 4.5 5 5.5 6 6.5 7 7.5 2 1.5 1 0.5 0 0.5 1 1.5 2 V(q) q Efficiency 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2 1.5 1 0.5 0 0.5 1 1.5 2 L(q) q Relevance Figure 3
+Estimated standard errors are less than 1% of the values shown .
+We also looked into the effect of introducing a reserve score .
+Results are shown in Figure 4 .
+Naturally, both efficiency and relevance suffer with an increasing reserve score .
+The optimal setting is r = 0.2, which gives only an 8% increase in revenue from r = 0 .
+However, it results in a 13% efficiency loss and a 26% relevance loss .
+Tuning weights seems to be a much more desirable approach than introducing a reserve score in this instance .
+The reason why efficiency and relevance suffer more with a reserve score is that this approach will often exclude bidders entirely, whereas this never occurs when tuning weights .
+The two approaches are not mutually exclusive, however, and some combination of the two might prove better than either alone, although we did not investigate this possibility. .

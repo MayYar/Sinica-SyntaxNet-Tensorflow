@@ -1,0 +1,87 @@
+PATHWIDTH GRAPHICAL GAMES In the previous section, we showed that for graphical games on trees that are almost but not quite paths, two pass algorithms fail to find Nash equilibria in polynomial time .
+We next show that a milder path like graph property allows us to construct graphical games for which it is unlikely that any polynomial time algorithm will find Nash equilibria .
+7.1 Pathwidth A path decomposition of a graph G = (V, E) is a sequence of subset Si(V ) ? V such that for each edge (v, v ) ? E, v, v ? Si(V ) for some i, and furthermore, for each v ? V , if v ? Si(V ) and v ? Sj(V ) for j > i, then v ? Sk(V ) for all i ? k ? j .
+The path decomposition has width k if all sets Si(V ) have cardinality at most k + 1 .
+The pathwidth of G is the minimum width of any path decomposition of G .
+107 Pathwidth is a restriction of treewidth (in which one would seek a tree whose vertices were the sets Si(V ), and the sets containing some vertex would have to form a subtree) .
+For any constant k it can be decided in polynomial time whether a graph has pathwidth (or treewidth) k .
+Furthermore many graph theoretic problems seem easier to solve in polynomial time, when restricted to fixed treewidth, or pathwidth, graphs, see [1] for an overview .
+Note that a path has pathwidth 1 and a cycle has pathwidth 2 .
+7.2 PPAD completeness We review some basic definitions from the computational complexity theory of search problems .
+A search problem associates any input (here, a graphical game) with a set of solutions (here, the Nash equilibria of the input game), where the description length of any solution should be polynomially bounded as a function of the description length of its input .
+In a total search problem, there is a guarantee that at least one solution exists for any input .
+Nash"s theorem assures us that the problem of finding Nash equilibria is total .
+A reduction from search problem S to problem S is a mechanism that shows that any polynomial time algorithm for S implies a polynomial time algorithm for S .
+It consists of functions f and g, computable in polynomial time, where f maps inputs of S to inputs of S , and g maps solutions of S to solutions of S, in such a way that if IS is an input to S, and SS is a solution to f(IS), then g(SS ) is a solution to IS .
+Observe that total search problems do not allow the above reductions from problems such as CIRCUIT SAT (where the input is a boolean circuit, and solutions are input vectors that make the output true) due to the fact that CIRCUIT SAT and other NP complete problems have inputs with empty solution sets .
+Instead, recent work on the computational complexity of finding a Nash equilibrium [7, 4, 5, 2, 3] has related it to the following problem .
+Definition 4 .
+END OF THE LINE .
+Input
+Solution
+S and P can be thought of as standing for successor and predecessor .
+Observe that by computing Si (0n ) (for i = 0, 1, 2, .
+.
+.) and comparing with P(Si+1 (0n )), we must eventually find a solution to END OF THE LINE .
+END OF THE LINE characterizes the complexity class PPAD (standing for parity argument on a graph, directed version), introduced in Papadimitriou [11], and any search problem S is PPAD complete if END OF THE LINE reduces to sandwich hyperplane, and finding market equilibria in an exchange economy (see [11] for more detailed descriptions of these problems) .
+3 GRAPHICAL NASH is the problem of finding a Nash equilibrium for a graphical game whose graph has degree 3 .
+Daskalakis et al .
+[4] show PPAD completeness of 3 GRAPHICAL NASH by a reduction from 3 DIMENSIONAL BROUWER, introduced in [4] and defined as follows .
+Definition 5 .
+3 DIMENSIONAL BROUWER .
+Input
+The input bits define a cubelet of the unit cube, consisting of the 3 coordinates of its points, given to n bits of precision .
+The output represents one of four colours assigned by C to a cubelet .
+C is restricted so as to assign colour 1 to cubelets adjacent to the (y, z) plane, colour 2 to remaining cubelets adjacent to the (x, z) plane, colour 3 to remaining cubelets on the (x, y) plane, and colour 0 to all other cubelets on the surface of the unit cube .
+A solution is a panchromatic vertex, a vertex adjacent to cubelets that have 4 distinct colours .
+The reason why a solution is guaranteed to exist, is that an associated Brouwer function £p can be constructed, i.e .
+a continuous function from the unit cube to itself, such that panchromatic vertices correspond to fixpoints of £p .
+Brouwer"s Fixpoint Theorem promises the existence of a fixpoint .
+The proof of Theorem 4 uses a modification of the reduction of [4] from 3 DIMENSIONAL BROUWER to 3 GRAPHICAL NASH .
+To prove the theorem, we begin with some preliminary results as follows .
+Each player has 2 actions, denoted 0 and 1 .
+For a player at vertex V let p[V ] denote the probability that the player plays 1 .
+LEMMA 5 .
+[7] There exists a graphical game Gshift of fixed size having vertices V , V where p[V ] is the fractional part of 2p[V ] .
+COROLLARY 1 .
+There exists a graphical game Gn?shift of size £K(n) of constant pathwidth, having vertices V , Vn where p[Vn] is the fractional part of 2n .p[V ] .
+PROOF .
+Make a chain of n copies of Gshift in Lemma 5 .
+Each subset of vertices in the path decomposition is the vertices in a copy of Gshift .
+Let In(x) denote the n th bit of the binary expansion of x, where we interpret 1 as true and 0 as false .
+The following uses gadgets from [7, 4] .
+COROLLARY 2 .
+There exists k such that for all n, and for all n1, n2, n3 ? n, there exists a graphical game of size O(n) with pathwidth k, having vertices V1, V2, V3 where p[V3] = p[V1] + 2?n3 (In1 p[V1] ? In2 p[V2]) .
+PROOF OF THEOREM 4 .
+Let C be the boolean circuit describing an instance of 3 DIMENSIONAL BROUWER .
+Let g1, .
+.
+.
+, gp(n) be the gates of C indexed in such a way that the input(s) to any gate are the output(s) of lower indexed gates .
+g1, .
+.
+.
+, g3n will be the 3n inputs to C .
+All players in the graphical game G constructed in [4] have 2 actions denoted 0 and 1 .
+The probability that V plays 1 is denoted p[V ] .
+G has 3 players Vx, Vy and Vz for which p[Vx], p[Vy] and p[Vz] represent the coordinates of a point in the unit cube .
+G is designed to incentivize Vx, Vy and Vz to adjust their probabilities in directions given by a Brouwer function which is itself specified by the circuit C .
+In a Nash equilibrium, p[Vx], p[Vy] and p[Vz] represent coordinates of a fixpoint of a function that belongs to the class of functions represented by 3 DIMENSIONAL BROUWER .
+For 1 ? i ? p(n) we introduce a vertex V (i) C such that for 1 ? j ? i, Ij(p[V (i) C ]) is the output of gate gj; for i < j ? p(n), Ij(p[V (i) C ]) is 0 .
+Construct V (i) C from V (i?1) C using Corollary 2 .
+Let G(i) be the graphical game that does this .
+Let S1(G(i) ), .
+.
+.
+, Sn(G(i) ) be a length n path decomposition of G(i) , where V (i?1) C ? S1(G(i) ) and V (i) C ? Sn(G(i) ) .
+Then, a path decomposition of ¡å1?i?p(n)G(i) is obtained by taking the union of the separate path decompositions, together with Sn(G(i?1) ) ¡å S1(G(i) ) for 2 ? i ? p(n) .
+Let GC be the above graphical game that simulates C .
+GC has 3n inputs, consisting of the first n bits of the binary expansions of p[Vx], p[Vy] and p[Vz] .
+Similarly to [4], the output of GC affects Vx, Vy and Vz as follows .
+Colour 0 incentivizes Vx, Vy and Vz 108 to adjust their probabilities p[Vx], p[Vy] and p[Vz] in the direction (?1, ?1, ?1); colour 2 incentivizes them to move in direction (1, 0, 0); colour 2, direction (0, 1, 0); colour 3, direction (0, 0, 1) .
+We need to ensure that at points at the boundaries of adjacent cubelets, the change of direction will be approximately the average of directions of surrounding points .
+That way, all four colors directions must be nearby so that they can cancel each other out (and we are at a panchromatic vertex) .
+This is achieved using the same trick as [4], in which we make a constant number M of copies of GC, which differ in that each copy adds a tiny displacement vector to its copies of p[Vx], p[Vy] and p[Vz] (which are derived from the original using the addition gadget of [7]) .
+Using the addition and multiplication gadgets of [7] we average the directions and add a small multiple of this average to (p[Vx], p[Vy], p[Vz]) .
+At a Nash equilibrium the outputs of each copy will cancel each other out .
+The pathwidth of the whole game is at most M times the pathwidth GC. .

@@ -1,0 +1,136 @@
+In this section, we focus on the case when the underlying graph is a path, i.e., its vertex set is {V1, .
+.
+.
+, Vn}, and its edge set is {(Vj , Vj+1) | j = 1, .
+.
+.
+, n ? 1} .
+We show that in this case the best response policy for each vertex can be represented as a union of a polynomial number of rectangles, where a rectangle is defined by a pair of closed intervals (IV , IU ) and consists of all points in IV ¡Ñ IU ; it may be the case that one or both of the intervals IV and IU consists of a single point .
+THEOREM 5 .
+For any j = 1, .
+.
+.
+, n, the set B(Vj , Vj?1) can be represented as a disjoint union of at most (j + 4)2 rectangles .
+Moreover, given such representation of B(Vj , Vj?1), one can compute a representation of B(Vj+1, Vj) in time O(j2 ) .
+PROOF .
+For any set A ? [0, 1]2 that is represented as a union of a finite number of rectangles, we say that a point u ? [0, 1] on the U axis is a U event point of A if u = 0 or u = 1 or A contains a rectangle of the form IV ¡Ñ IU and u is an endpoint of IU ; V event points are defined similarly .
+Observe that for any u ? [0, 1], the number of connected components of [0, 1]¡Ñ{u} ¡ä A is at most the number of V event points of A .
+We use induction on j to show that for each Vj the statement of the theorem holds and, additionally, each B(Vj , Vj?1) has at most 2j + 4 event points .
+To simplify the base case, we modify the graphical game by appending a dummy vertex V0 to the beginning of the path
+For j = 0, we have B(V1, V0) = [0, 1]2 , so the statement of the theorem is trivially true .
+Now, suppose that j > 0, set V = Vj and let U = Vj?1 and W = Vj+1 be the vertices that precede and follow V , respectively .
+The payoffs to V are described by a 2¡Ñ2¡Ñ2 matrix P
+Suppose that U plays 1 with probability u and W plays 1 with probability w .
+Then V "s expected payoff from playing 0 is P0 =(1?u)(1?w)P000+(1?u)wP001+u(1?w)P100+uwP101, while its expected payoff from playing 1 is P1 =(1?u)(1?w)P010+(1?u)wP011+u(1?w)P110+uwP111 .
+If P 0 > P1 , V strictly prefers to play 0, if P0 < P1 , V strictly prefers to play 1, and if P0 = P1 , V is indifferent, i.e., can play any (mixed) strategy .
+Since P0 and P1 are linear in w and u, there exist some constants A1, A0, B1, and B0 that depend on the matrix P, but not on u and w, such that P0 ? P1 = w(B1u + B0) ? (A1u + A0) .
+(1) Depending on the values of A1, A0, B1, and B0, we subdivide the rest of the proof into the following cases .
+? B1 = 0, B0 = 0 .
+In this case, P0 > P1 if and only if A1u + A0 < 0 .
+If also A1 = 0, A0 = 0, clearly, B(W, V ) = [0, 1]2 , and the statement of the theorem is trivially true .
+Otherwise, the vertex V is indifferent between 0 and 1 if and only if A1 = 0 and u = ?A0 A1 .
+Let V = {v | v ? (0, 1), ?A0 A1 ? pbrU (v)} .
+By the inductive hypothesis, V consists of at most 2(j ? 1) + 4 segments and isolated points .
+For any v ? V, we have B(W, V )|V =v = [0, 1]
+On the other hand, for any v ? (0, 1) \ V we have B(W, V )|V =v = ?
+To complete the description of B(W, V ), it remains to analyze the cases v = 0 and v = 1 .
+The vertex V prefers to play 0 if A1 > 0 and u ? ?A0 A1, or A1 < 0 and u ? ?A0 A1, or 103 A1 = 0 and A0 < 0 .
+Assume for now that A1 > 0; the other two cases can be treated similarly .
+In this case 0 ? pbrV (w) for some w ? [0, 1] if and only if there exists a u ? pbrU (0) such that u ? ?A0 A1
+Therefore, the set B(W, V ) consists of at most 2j + 4 ? (j + 4)2 rectangles
+Similarly, its total number of event points is at most 2j + 4
+? B1u + B0 ¡Ý 0, A1 = £\B1, A0 = £\B0 for some £\ ? R .
+In this case, V is indifferent between 0 and 1 if and only if w = £\, or B1 = 0 and u = ?B0 B1 = ?A0 A1 .
+Similarly to the previous case, we can show that B(W, V )¡ä[0, 1]¡Ñ(0, 1) consists of the rectangle {£\}¡Ñ[0, 1] and at most 2j + 2 rectangles of the form [0, 1]¡ÑIV , where each IV corresponds to a connected component of B(V, U)|U=?B0 B1 .
+Furthermore, V prefers to play 0 if B1u + B0 > 0 and w ? £\ or B1u + B0 < 0 and w ? £\ .
+Therefore, if B1u? + B0 > 0 for some u? ? pbrU (0), then B(W, V )|V =0 contains [£\, +¡Û) ¡ä [0, 1] and if B1u?? + B0 < 0 for some u?? ? pbrU (0), then B(W, V )|V =0 contains [?¡Û, £\] ¡ä [0, 1]; if both u? and u?? exist, B(W, V )|V =0 = [0, 1] .
+The set B(W, V )|V =1 can be described in a similar manner .
+By the inductive hypothesis, B(V, U) has at most 2j + 2 event points; as at least two of these are U event points, it has at most 2j V event points .
+Since each V event point of B(W, V ) is a Vevent point of B(V, U) and B(W, V ) has at most 3 W event points (0, 1, and £\), its total number of event points is at most 2j + 3 < 2j +4 .
+Also, similarly to the previous case it follows that B(W, V ) consists of at most 2j + 4 < (j + 4)2 rectangles .
+? B1u + B0 ¡Ý 0, £\(B1u + B0) ¡Ý A1u + A0 .
+In this case, one can define the indifference function f(¡P) as f(u) = A(u) B(u) = A1u+A0 B1u+B0 , where A(u) and B(u) never turn into zero simultaneously .
+Observe that whenever w = f(u) and u, w ? [0, 1], V is indifferent between playing 0 and 1 .
+For any A ? [0, 1]2 , we define a function ?fV by ?fV = {(f(u), v) | (v, u) ? A}; note that ?fV maps subsets of [0, 1]2 to subsets of R¡Ñ[0, 1] .
+Sometimes we drop the subscript V when it is clear from the context .
+LEMMA 1 .
+For any (w, v) ? [0, 1]¡Ñ(0, 1) we have (w, v) ? B(W, V ) if and only if there exists a u ? [0, 1] such that (v, u) ? B(V, U) and w = f(u) .
+PROOF .
+Fix an arbitrary v ? (0, 1) .
+Suppose that U plays some u ? pbrU (v), w = f(u) satisfies w ? [0, 1], and W plays w .
+There exists a vector of strategies v1, .
+.
+.
+, vj?1 = u, vj = v such that for each Vk, k < j, its strategy is a best response to its neighbours" strategies .
+Since w = f(u), V is indifferent between playing 0 and 1; in particular, it can play v .
+Therefore, if we define vj+1 = w, the vector of strategies (v1, .
+.
+.
+, vj+1) will satisfy the conditions in the definition of potential best response, i.e., we have v ? pbrV (w) .
+Conversely, suppose v ? pbrV (w) for some w ? [0, 1], v = 0, 1 .
+Then there exists a vector of strategies v1, .
+.
+.
+, vj?1, vj = v, vj+1 = w such that for each Vk, k ? j, its strategy is a best response to its neighbours" strategies .
+As v = 0, 1, V is, in fact, indifferent between playing 0 and 1, which is only possible if w = f(vj?1) .
+Choose u = vj?1; by construction, u ? pbrU (v) .
+Lemma 1 describes the situations when V is indifferent between playing 0 and playing 1 .
+However, to fully characterize B(W, V ), we also need to know when V prefers a pure strategy .
+Define ?f(0) = ¡åu?pbrU (0)Ru, where Ru = ? [f(u), +¡Û)¡Ñ{0} if B(u) > 0, (?¡Û, f(u)]¡Ñ{0} if B(u) < 0 .
+and ?f(1) = ¡åu?pbrU (1)Ru, where Ru = ? [f(u), +¡Û)¡Ñ{1} if B(u) < 0, (?¡Û, f(u)]¡Ñ{1} if B(u) > 0 .
+LEMMA 2 .
+For any w ? [0, 1], we have (w, 0) ? ?f(0) if and only if 0 ? pbrV (w) and (w, 1) ? ?f(1) if and only if 1 ? pbrV (w) .
+PROOF .
+Consider an arbitrary u0 ? pbrU (0) .
+If B(u0) > 0, for u = u0 the inequality P0 ? P1 is equivalent to w ? f(u0) .
+Therefore, when U plays u0 and W plays w, w ? f(u0), V prefers to play 0; as u0 ? pbrU (u), it follows that 0 ? pbrV (w) .
+The argument for the case B(u0) < 0 is similar .
+Conversely, if 0 ? pbrV (w) for some w ? [0, 1], there exists a vector (v1, .
+.
+.
+, vj?1, vj = 0, vj+1 = w) such that for each Vk, k ? j, Vk plays vk, and this strategy is a best response to the strategies of Vk"s neighbours .
+Note that for any such vector we have vj?1 ? pbrU (0) .
+By way of contradiction, assume (w, 0) ? ? u?pbrU (0) Ru .
+Then it must be the case that for any u0 ? pbrU (0) either f(u0) < w and Ru0 = (?¡Û, f(u0)]¡Ñ{0} or f(u0) > w and Ru0 = [f(u0), +¡Û)¡Ñ{0} .
+In both cases, when V plays 0, U plays u0, and V plays w, the inequality between f(u0) and w is equivalent to P0 < P1 , i.e., V would benefit from switching to 1 .
+The argument for ?f(1) is similar .
+Together, Lemma 1 and Lemma 2 completely describe the set B(W, V )
+It remains to show that B(W, V ) can be represented as a union of at most (j + 4)2 rectangles, has at most 2j + 4 event points, and can be computed in O(j2 ) time .
+Set u? = ?B0 B1 .
+2 Consider an arbitrary rectangle R = [v1, v2]¡Ñ[u1, u2] ? B(V, U) .
+If u? ? [u1, u2], the function f(¡P) is continuous on [u1, u2] and hence ?f(R) = [fmin, fmax]¡Ñ[v1, v2], where fmin = min{f(u1), f(u2)}, fmax = max{f(u1), f(u2)}, i.e., in this case ?f(R) ¡ä [0, 1]2 consists of a single rectangle .
+Now, suppose that R is intersected by the line [0, 1]¡Ñ{u? }; as was noted earlier, there are at most 2j+2 such rectangles .
+Suppose that limu¡÷u?? f(u) = +¡Û; as f(¡P) is a fractional linear function, this implies that limu¡÷u?+ f(u) = ?¡Û and also f(u1) > f(u2) .
+Since f(¡P) is continuous on [u1, u? ) and (u? , u2], it is easy to see that ?f([v1, v2]¡Ñ[u1, u? )) = [f(u1), +¡Û)¡Ñ[v1, v2] 2 The case B1 = 0 causes no special problems .
+For completeness, set u? to be any value outside of [0, 1] in this case .
+104 v u v u* 1 f(0) f(a)f(b) f(1) a b (0, 0) w v 2 v (0, 0) 1 1 1 v 2 v 1 1 Figure 4
+and ?f([v1, v2]¡Ñ(u? , u2]) = (?¡Û, f(u2)]¡Ñ[v1, v2], i.e., in this case ?f(R) ¡ä [0, 1]2 consists of at most two rectangles .
+The case limu¡÷u?? f(u) = ?¡Û is similar .
+As ?f(B(V, U)) = ? R?B(V,U) ?f(R), it follows that ?f(B(V, U)) consists of at most (j + 3)2 + 2j + 2 rectangles .
+Also, it is easy to see that both ?f(0) and ?f(1) consist of at most 2 line segments each .
+We conclude that B(W, V ) can be represented as a union of at most (j + 3)2 + 2j + 6 < (j + 4)2 rectangles .
+Moreover, if v is a V event point of B(W, V ), then v is a Vevent point of B(V, U) (this includes the cases v = 0 and v = 1, as 0 and 1 are V event points of B(V, U)) and if w is a W event point of B(W, V ), then either w = 0 or w = 1 or there exists some u ? [0, 1] such that w = f(u) and u is a U event point of B(V, U) .
+Hence, B(W, V ) has at most 2j + 4 event points .
+The O(j2 ) bound on the running time in Theorem 5 follows from our description of the algorithm .
+The O(n3 ) bound on the overall running time for finding a Nash equilibrium (and a representation of all Nash equilibria) follows .
+4.1 Finding a Single Nash Equilibrium in O(n2 ) Time The upper bound on the running time of our algorithm is tight, at least assuming the straightforward implementation, in which each B(Vj+1, Vj) is stored as a union of rectangles
+However, in some cases it is not necessary to represent all Nash equilibria; rather, the goal is to find an arbitrary equilibrium of the game .
+In this section, we show that this problem can be solved in quadratic time, thus obtaining a proof of Theorem 1 .
+Our solution is based on the idea of [9], i.e., working with subsets of the best response policies rather than the best response policies themselves; following [9], we will refer to such subsets as breakpoint policies .
+While it is not always possible to construct a breakpoint policy as defined in [9], we show how to modify this definition so as to ensure that a breakpoint policy always exists; moreover, we prove that for a path graph, the breakpoint policy of any vertex can be stored in a data structure whose size is linear in the number of descendants this vertex has .
+Definition 3 .
+A breakpoint policy ?B(V, U) for a vertex U whose parent is V is a non self intersecting curve of the form X1 ¡å Y1 ¡å ¡P ¡P ¡P ¡å Ym?1 ¡å Xm, where Xi = [vi?1, vi]¡Ñ{ui}, Yi = {vi}¡Ñ[ui, ui+1] and ui, vi ? [0, 1] for i = 0, .
+.
+.
+, m .
+We say that a breakpoint policy is valid if v0 = 0, vm = 1, and ?B(V, U) ? B(V, U) .
+We will sometimes abuse notation by referring to ?B(V, U) as a collection of segments Xi, Yi rather than their union .
+Note that we do not require that vi ? vi+1 or ui ? ui+1; consequently, in any argument involving breakpoint policies, all segments are to be treated as directed segments .
+Observe that any valid breakpoint policy ?B(V, U) can be viewed as a continuous 1 1 mapping £^(t) = (£^v(t), £^u(t)), £^ 
+.
+.
+, t2m?2 = 1 such that {£^(t) | t2k ? t ? t2k+1} = Xk+1, {£^(t) | t2k+1 ? t ? t2k+2} = Yk+1 .
+As explained in Section 3, we can use a valid breakpoint policy instead of the best response policy during the downstream pass, and still guarantee that in the end, we will output a Nash equilibrium .
+Theorem 6 shows that one can inductively compute valid breakpoint policies for all vertices on the path; the proof of this theorem can be found in the full version of this paper [6] .
+THEOREM 6 .
+For any V = Vj, one can find in polynomial time a valid breakpoint policy ?B(W, V ) that consists of at most 2j + 1 segments. .

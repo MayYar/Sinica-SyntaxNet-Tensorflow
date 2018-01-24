@@ -1,0 +1,77 @@
+Virtual organizations [17] allow various parties to come together to share resources and engage in problem solving .
+This paradigm has found strong applications in Web service orchestration [14], e Science [16] and the Grid [9] .
+VOs, in their most generic formulation, can be seen as coordination artifacts, allowing software and human agents to engage in sophisticated forms of interaction .
+We formally represent our VOs as finite state machines in which the actions of individual agents label the edges between discrete states .
+This provides us with a lowest common denominator
+We show in Figure 1 a simple VO graphically represented as a finite state machine1 .
+The labels on the edges con ?>=<89
+We define our virtual organizations as follows
+1 .
+A virtual organization I is the triple S, s0, E, T where S = {s1, .
+.
+.
+, sn} is a finite and non empty set of states, s0 ? S is the initial state, E is a finite set of edges (s, s , ?), s, s ? S connecting s to s with a first order atomic formula ? as a label, and T ? S is the set of terminal states .
+Notice that edges are directed, so (s, t, ?) = (t, s, ?) .
+The sample VO of Figure 1 is formally represented as I = {0, 1, 2}, 0, {(0, 0, p(X)), (0, 1, q(Y, Z)), (1, 2, s(A, B)}, {2} .
+We assume an implicit existential quantification on any variables in ?, so that, for instance, s(A, B) stands for ?A, B s(A, B) .
+VOs should allow for two kinds of non determinism corresponding to choices autonomous agents can make, viz., i) the one arising when there is more than one edge leaving a state; and ii) the one arising from variables in the formulae ? labelling an edge, for which the agent carrying out the action instantiates .
+These kinds of non determinism are desirable as they help define generic and flexible coordination mechanisms .
+Another important concept we use is the roles of agents in VOs .
+Roles, as exploited in, for instance, [18] and [20], help us abstract from individual agents and define a pattern of behaviour to which any agent that adopts a role ought to conform .
+Moreover, all agents with the same role are guaranteed the same rights, duties and opportunities .
+We shall make use of two finite, non empty sets, Agents = {ag1, .
+.
+.
+, agn} and Roles = {r1, .
+.
+.
+, rm}, representing, respectively, the sets of agent identifiers and role labels .
+We refer generically to first order terms, i.e., constants, variables, and (nested) functions as £n .
+2.1 Semantics of VOs The specification of a VO as a finite state machine gives rise to a possibly infinite set of histories of computational behaviours, in which the actions labelling the paths from the initial state to a final state are recorded .
+Although the actions comprising a VO are carried out distributedly, we propose an explicit global account of all events .
+In practice, this can be achieved if we require individual 1 We adopt Prolog"s convention [1] and use strings starting with a capital letter to represent variables and strings starting with a small letter to represent constants .
+agents to declare inform whatever actions they have carried out; this assumes trustworthy agents, naturally2 .
+In order to record the authorship of the action, we annotate the formulae with the agents" unique identification .
+Our explicit global account of all events is a set of ground atomic formulae ?, that is, we only allow constants to appear as terms of formulae .
+Each formula is a truthful record of an action specified in the VO .
+Notice, however, that in the VO specification we do not restrict the syntax of the formulae
+We thus define
+2 .
+A global execution state of a VO, denoted as £Q, is a finite, possibly empty, set of tuples a 
+For instance, ag1
+Given a VO I = S, s0, E, T , an execution state £Q and a state s ? S, we can define a function which obtains a possible next execution state, viz., h(I, £Q, s) = £Q ¡å { a
+Such function h must address the two kinds of non determinism above, as well as the choice on the potential agents that can carry out the action and their adopted roles .
+We also define a function to compute the set of all possible execution states, h? (I, £Q, s) = {£Q ¡å { a
+2.2 Norm Regulated VOs We advocate a separation of concerns whereby the virtual organization is complemented with an explicit and separate set of norms that further regulates the behaviour of agents as they take part in the enactment of an organization .
+The freedom of choice given to agents (captured via the non determinism of VOs, explained above) must be curtailed in some circumstances .
+For instance, we might need to describe that whoever carried out ? is obliged to carry out ? , so that if there is a choice point in which ? appears as a label of an edge, then that edge should be followed .
+Rather than embedding such normative aspects into the agents" design (say, by explicitly encoding normative aspects in the agents" behaviour) or into the VO itself (say, by addressing exceptions and deviant behaviour in the mechanism itself), we adopt the view that a VO should be supplemented with a separate set of norms that further regulates the behaviour of agents as they take part in the enactment of the organization .
+This separation of concerns should facilitate the design of MASs; however, the different components (VOs and norms) must come together at some point in the design process .
+Our norms are defined as below
+3 .
+A norm, generically referred to as £h, is any construct of the form O£n
+We adopt the notation of [18]
+P£n
+We shall assume that sorts are used to properly manipulate variables for agent identifiers and role labels .
+We propose to formally represent the normative positions of all agents enacting a VO .
+By normative position we mean the social burden associated to individuals [12], that is, their obligations, permissions and prohibitions
+This approach was introduced in [12] and is explained in section 5 .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 645 DEF .
+4 .
+A global normative state £[ is a finite and possibly empty set of tuples £s = £h, td, ta, te where £h is a norm as above and td, ta, te ? IN are, respectively, the time when £h was declared (introduced), when £h becomes active and when £h expires, td ? ta < te .
+It is worth noticing that we do not require the atomic formulae of norms to be ground
+We assume an implicit universal quantification on the variables A, R of norms XA
+We also refer to the tuples in £[ as norms .
+Global normative states complement the execution states of VOs with information on the normative positions of individual agents .
+We can relate them via a function to obtain a norm regulated next execution state of a VOs, that is, g(I, £Q, s, £[, t) = £Q , t standing for the time of the update .
+For instance, we might want all prohibited actions to be excluded from the next execution state, that is, g(I, £Q, s, £[, t) = £Q ¡å { a 
+We might equally wish that only permitted actions be chosen for the next execution state .
+We do not legislate, or indeed recommend, any particular way to regulate VOs .
+We do, however, offer simple underpinnings to allow arbitrary policies to be put in place .
+In the same way that a normative state is useful to obtain the next execution state of a VO, we can use an execution state to update a normative state .
+For instance, we might want to remove any obligation specific to an agent and role, which has been carried out by that specific agent and role, that is, f(£Q, £[) = £[ ? Obls, Obls = { Oa
+The management (i.e., creation and updating) of global normative states is an interesting area of research .
+A simple but useful approach is reported in [11]
+In this paper our focus is not to propose how £["s should be managed; we assume some mechanism which does that. .

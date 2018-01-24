@@ -1,0 +1,24 @@
+that are not marked as center .
+Mark all the selected neighbors as satellites .
+marked .
+Each cluster is star shaped, which consists a single center and several satellites .
+There is only one parameter £m in the star clustering algorithm .
+A big £m enforces that the connected documents have high similarities, and thus the clusters tend to be small .
+On the other hand, a small £m will make the clusters big and less coherent .
+We will study the impact of this parameter in our experiments .
+A good feature of the star clustering algorithm is that it outputs a center for each cluster .
+In the past query collection Hq, each document corresponds to a query .
+This center query can be regarded as the most representative one for the whole cluster, and thus provides a label for the cluster naturally .
+All the clusters obtained are related to the input query q from different perspectives, and they represent the possible aspects of interests about query q of users .
+4.3 Categorizing Search Results In order to organize the search results according to users" interests, we use the learned aspects from the related past queries to categorize the search results .
+Given the top m Web pages returned by a search engine for q
+In principle, any categorization algorithm can be used here .
+Here we use a simple centroid based method for categorization .
+Naturally, more sophisticated methods such as SVM [21] may be expected to achieve even better performance .
+Based on the pseudo documents in each discovered aspect Ci, we build a centroid prototype pi by taking the average of all the vectors of the documents in Ci
+All these pi"s are used to categorize the search results .
+Specifically, for any search result sj, we build a TF IDF vector .
+The centroid based method computes the cosine similarity between the vector representation of sj and each centroid prototype pi .
+We then assign sj to the aspect with which it has the highest cosine similarity score .
+All the aspects are finally ranked according to the number of search results they have .
+Within each aspect, the search results are ranked according to their original search engine ranking. .

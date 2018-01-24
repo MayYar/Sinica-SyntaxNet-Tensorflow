@@ -1,0 +1,57 @@
+Online search is now ubiquitous and Internet search companies such as Google, Yahoo! and MSN let companies and individuals advertise based on search queries posed by users .
+Conventional media outlets, such as TV stations or newspapers, price their ad slots individually, and the advertisers buy the ones they can afford .
+In contrast, Internet search companies find it difficult to set a price explicitly for the advertisements they place in response to user queries .
+This difficulty arises because supply (and demand) varies widely and unpredictably across the user queries, and they must price slots for billions of such queries in real time .
+Thus, they rely on the market to determine suitable prices by using auctions amongst the advertisers .
+It is a challenging problem to set up the auction in order to effect a stable market in which all the parties (the advertisers, users as well as the Internet search company) are adequately satisfied .
+Recently there has been systematic study of the issues involved in the game theory of the auctions [5, 1, 2], revenue maximization [10], etc .
+The perspective in this paper is not of the Internet search company that displays the advertisements, but rather of the advertisers .
+The challenge from an advertiser"s point of view is to understand and interact with the auction mechanism .
+The advertiser determines a set of keywords of their interest and then must create ads, set the bids for each keyword, and provide a total (often daily) budget .
+When a user poses a search query, the Internet search company determines the advertisers whose keywords match the query and who still have budget left over, runs an auction amongst them, and presents the set of ads corresponding to the advertisers who win the auction .
+The advertiser whose ad appears pays the Internet search company if the user clicks on the ad .
+The focus in this paper is on how the advertisers bid .
+For the particular choice of keywords of their interest1 , an advertiser wants to optimize the overall effect of the advertising campaign .
+While the effect of an ad campaign in any medium is a complicated phenomenon to quantify, one commonly accepted (and easily quantified) notion in searchbased advertising on the Internet is to maximize the number of clicks .
+The Internet search companies are supportive to1 The choice of keywords is related to the domain knowledge of the advertiser, user behavior and strategic considerations .
+Internet search companies provide the advertisers with summaries of the query traffic which is useful for them to optimize their keyword choices interactively .
+We do not directly address the choice of keywords in this paper, which is addressed elsewhere [13] .
+40 wards advertisers and provide statistics about the history of click volumes and prediction about the future performance of various keywords .
+Still, this is a complex problem for the following reasons (among others)
+? There are complex interactions between keywords because a user query may match two or more keywords, since the advertiser is trying to cover all the possible keywords in some domain .
+In effect the advertiser ends up competing with herself .
+As a result, the advertisers face a challenging optimization problem .
+The focus of this paper is to solve this optimization problem .
+1.1 The Budget Optimization Problem We present a short discussion and formulation of the optimization problem faced by advertisers; a more detailed description is in Section 2 .
+A given advertiser sees the state of the auctions for searchbased advertising as follows .
+There is a set K of keywords of interest; in practice, even small advertisers typically have a large set K .
+There is a set Q of queries posed by the users .
+For each query q ? Q, there are functions giving the clicksq(b) and costq(b) that result from bidding a particular amount b in the auction for that query, which we model more formally in the next section .
+There is a bipartite graph G on the two vertex sets representing K and Q .
+For any query q ? Q, the neighbors of q in K are the keywords that are said to match the query q.2 The budget optimization problem is as follows .
+Given graph G together with the functions clicksq(¡P) and costq(¡P) on the queries, as well as a budget U, determine the bids bk for each keyword k ? K such that P q clicksq(bq) is maximized subject to P q costq(bq) ? U, where the effective bid bq on a query is some function of the keyword bids in the neighborhood of q .
+While we can cast this problem as a traditional optimization problem, there are different challenges in practice depending on the advertiser"s access to the query and graph information, and indeed the reliability of this information (e.g., it could be based on unstable historical data) .
+Thus it is important to find solutions to this problem that not only get many clicks, but are also simple, robust and less reliant on the information .
+In this paper we define the notion of a uniform strategy which is essentially a strategy that bids uniformly on all keywords .
+Since this type of strategy obviates the need to know anything about the particulars of the graph, and effectively aggregates the click and cost functions on the queries, it is quite robust, and thus desirable in practice .
+What is surprising is that uniform strategy actually performs well, which we will prove .
+2 The particulars of the matching rule are determined by the Internet search company; here we treat the function as arbitrary .
+1.2 Our Main Results and Technical Overview We present positive and negative results for the budget optimization problem .
+In particular, we show
+In cases slightly more general than the formulation above, where the clicks have weights, the problem is inapproximable better than a factor of 1 ? 1 e , unless P=NP .
+? We give a (1?1 e) approximation algorithm for the budget optimization problem .
+The strategy found by the algorithm is a two bid uniform strategy, which means that it randomizes between bidding some value b1 on all keywords, and bidding some other value b2 on all keywords until the budget is exhausted3 .
+We show that this approximation ratio is tight for uniform strategies .
+We also give a (1 2) approximation algorithm that offers a single bid uniform strategy, only using one value b1 .
+(This is tight for single bid uniform strategies.) These strategies can be computed in time nearly linear in |Q| + |K|, the input size .
+Uniform strategies may appear to be naive in first consideration because the keywords vary significantly in their click and cost functions, and there may be complex interaction between them when multiple keywords are relevant to a query .
+After all, the optimum can configure arbitrary bids on each of the keywords .
+Even for the simple case when the graph is a matching, the optimal algorithm involves placing different bids on different keywords via a knapsack like packing (Section 2) .
+So, it might be surprising that a simple two bid uniform strategy is 63% or more effective compared to the optimum .
+In fact, our proof is stronger, showing that this strategy is 63% effective against a strictly more powerful adversary who can bid independently on the individual queries, i.e., not be constrained by the interaction imposed by the graph G .
+Our proof of the 1 ? 1 e approximation ratio relies on an adversarial analysis .
+We define a factor revealing LP (Section 4) where primal solutions correspond to possible instances, and dual solutions correspond to distributions over bidding strategies .
+By deriving the optimal solution to this LP, we obtain both the proof of the approximation ratio, and a tight worst case instance .
+We have conducted simulations using real auction data from Google .
+The results of these simulations, which are highlighted at the end of Section 4, suggest that uniform bidding strategies could be useful in practice .
+However, important questions remain about (among other things) alternate bidding goals, on line or stochastic bidding models [11], and game theoretic concerns [3], which we briefly discuss in Section 8. .

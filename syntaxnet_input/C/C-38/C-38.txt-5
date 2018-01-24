@@ -1,0 +1,38 @@
+The PS mechanism at each peer is essentially a progressive search within the local image for a subset of parent peers such that the following design goals are achieved
+Whenever these goals are in conflict, a receiver optimizes the goal with the highest priority .
+Currently, our framework does not directly consider diversity of paths from different parents as a criteria for parent selection .
+However, the indirect effect of shared path among parents is addressed because of its potential impact on available bandwidth from a parent when two or more parents are behind the same bottleneck .
+The number of active parents (nopi(t)) for each receiver should be within a configured range [min nop, max nop] .
+Each receiver tries to maximize its delivered bandwidth with the minimum number of parents .
+If this goal can not be achieved after evaluation of a certain number of new parents, the receiver will gradually increase its number of parents .
+This flexibility is important in order to utilize available bandwidth from low bandwidth parents, i.e., cope with bandwidth heterogeneity .
+min nop determines minimum degree of resilience to parent departure, and minimum level of path diversity (whenever diverse paths are available) .
+The number of children for each peer should not be limited .
+Instead, each peer only limits maximum outgoing bandwidth that it is able (or willing) to provide to its children .
+This allows child peers to compete for congestion controlled bandwidth from a parent which motivates child peers with poor bandwidth connectivity to look for other parents (i.e., properly reshape the overlay) .
+Design of a PS mechanism should address three main questions as follows
+PRO adopts a conservative approach where each peer selects a new parent in a demand driven fashion .
+This should significantly reduce number of new parent selections, which in turn improves scalability (by minimizing the interference caused by new connections) and stability of the overlay structure .
+A new parent is selected in the following scenarios
+(ii) Replacing a Poorly Performing Parent
+Each receiver selects a random delay proportional to its available bandwidth from the parent peer [8] .
+This approach dampens potential oscillation in the overlay while increasing the chance for receivers with higher bandwidth connectivity to keep a parent (i.e., properly reshapes the overlay) .
+(iii) Improvement in Performance
+This strategy allows gradual improvement of the parent subset as new peers are discovered (or joined) the overlay .
+The available information for each peer in the image is used as a heuristic to predict performance of a new peer .
+Such an improvement should be examined infrequently .
+A hysteresis mechanism 5 The target bandwidth is the lower value between maximum stream bandwidth and receiver"s incoming bandwidth .
+46 is implemented in scenario (ii) and (iii) to dampen any potential oscillation in the overlay .
+2) Which peer should be selected as a new parent? At any point of time, peers in the local image are the best known candidate peers to serve as parent .
+In PRO, each receiver randomly selects a parent from its current image where the probability of selecting a parent is proportional to its utility .
+Deploying this selection strategy by all peers lead to proportional utilization of outgoing bandwidth of all peers without making the selection heavily biased towards high bandwidth peers .
+This approach (similar to [5]) leverages heterogeneity among peers since number of children for each peer is proportional to its outgoing bandwidth .
+3) How should a new parent be examined? Each receiver continuously monitors available bandwidth from all parents and potential correlation between bandwidth of two or more connections as signal for shared bottleneck .
+The degree of such correlation also reveals the level of multiplexing at the bottleneck link, and could serve as an indicator for separating remote bottlenecks from a local one .
+Such a monitoring should use average bandwidth of each flow over a relatively long time scale (e.g., hundreds of RTT) to filter out any transient variations in bandwidth .
+To avoid selecting a poorly performing parent in the near future, the receiver associates a timer to each parent and exponentially backs off the timer after each failed experience [13] .
+After the initial phase, each receiver maintains a fixed number of parents at any point of time (nopi(t)) .
+Thus, a new parent should replace one of the active parents .
+However, to ensure monotonic improvement in overall performance of active parents, a new parent is always added before one of the existing parents is dropped (i.e., a receiver can temporarily have one extra parent) .
+Given the available bandwidth from all parents (including the new one) and possible correlation among them, a receiver can use one of the following criteria to drop a parent
+Finally, if the aggregate bandwidth from all parents remains below the required bandwidth after examining certain number of new parents (and nopi(t) < max nop), the receiver can increase the total number of parents by one. .

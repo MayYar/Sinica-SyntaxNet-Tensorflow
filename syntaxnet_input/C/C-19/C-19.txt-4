@@ -1,0 +1,42 @@
+FRAMEWORK DESIGN Most existing protocol frameworks are event based .
+Examples are Cactus [5, 2], Appia [1, 16] and Ensemble [12, 17] .
+In this section, we define the notion of an event in protocol frameworks .
+We also explain how protocol modules are structured in event based frameworks .
+Events .
+An event is a special object for indirect communication between protocol modules in the same stack .
+Events may transport some information, e.g .
+a network message or some other data .
+With events, the communication is indirect, i.e .
+a protocol module that triggers an event is not aware of the module(s) that handle the event .
+Events enable one to many communication within a protocol stack .
+Triggering an event can be done either synchronously or asynchronously .
+In the former case, the thread that triggers an event e is blocked until all protocol modules that handle e have terminated handling of event e .
+In the latter case, the thread that triggers the event is not blocked .
+Protocol Modules .
+In event based protocol frameworks, a protocol module consists of a set of handlers .
+Each handler is dedicated to handling of a specific event .
+Handlers of the same protocol module may share data .
+Handlers can be dynamically bound to events .
+Handlers can also be unbound dynamically .
+Upon triggering some event e, all handlers bound to e are executed .
+If no handler is bound, the behavior is usually unspecified .
+Stack 1 P1 Q1 R1 S1 Network f e gg deliver send h Figure 2
+Events are represented by small letters, e.g .
+e, f, .. .
+The fact that a protocol module can trigger an event is represented by an arrow starting from the module .
+A white trapezoid inside a module box represents a handler defined by the protocol module .
+To mark that some handler is bound to event e, we use an arrow pointing to the handler (the label on the arrow represents the event e) .
+For example, the protocol module P1 triggers event e and handles event f (see Fig .
+2) .
+Note that the network is represented as a special protocol module that handles the send event (to send a message to another machine) and triggers the deliver event (upon receipt of a message from another machine) .
+Specific Features .
+Some protocol frameworks have unique features .
+Below, we present the features that influence composition and implementation of protocol modules .
+In Cactus [5, 2], the programmer can give a priority number to a handler upon binding it to an event .
+When an event is triggered, all handlers are executed following the order of priority .
+A handler h is also able to cancel the execution of an event trigger
+Appia [1, 16] and Eva [3] introduce the notion of channels .
+Channels allow to build routes of events in protocol stacks .
+Each protocol module has to subscribe to one or many channels .
+All events are triggered by specifying a channel they belong to .
+When a protocol module triggers an event e specifying channel c, all handlers bound to e that are part of a protocol that subscribes to c are executed (in the order prescribed by the definition of channel c). .

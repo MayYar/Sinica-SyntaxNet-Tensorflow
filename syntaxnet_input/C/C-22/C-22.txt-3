@@ -1,0 +1,13 @@
+In general, an object oriented application consists of objects collaborating to provide the functionality required by a given problem domain .
+Mobile object frameworks allow some of these objects to be tagged as mobile objects, providing middleware support for such objects to be moved at runtime to other hosts .
+At a minimum, a mobile object framework with at least one running mobile application consists of the following components
+A runtime is a container process for the management of mobile objects .
+For example, in FarGo [15] this component is known as a core and in most systems separate runtimes are required to allow different applications to run independently, although this is not the case with MobJeX, which can run multiple applications in a single runtime using threads .
+The applications themselves comprise mobile objects, which interact with each other through proxies [14] .
+Proxies, which have the same method interface as the object itself but add remote communication and object tracking functionality, are required for each target object that a source object communicates with .
+Upon migration, proxy objects move with the source object .
+The Java based system MobJeX, which is used as the implementation platform for the metrics collection solution described in this paper, adds a number of additional middleware components .
+Firstly, a host manager (known as a service in MobJeX) provides a central point of communication by running on a known port on a per host basis, thus facilitating the enumeration or lookup of components such as runtimes or mobile objects .
+Secondly, MobJeX has a per application mobile object container called a transport manager .
+As such the host and transport managers are considered in the solution provided in the next section but could be omitted in the general case .
+Finally, depending on adaptation mode, MobJeX can have a centralised system controller incorporating a global adaptation engine for performing system wide optimisation. .

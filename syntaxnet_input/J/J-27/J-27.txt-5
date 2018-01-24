@@ -1,0 +1,66 @@
+In a supervised learning problem, a learning algorithm is given a finite sample of labeled observations as input and is required to return a model of the functional relationship underlying the labeling .
+This model, referred to as a hypothesis, is usually a computable function that is used to forecast the labels of future observations .
+The labels are usually binary values indicating the membership of the observed points in the set that is being learned .
+However, we are not limited to binary values and, indeed, in the demand functions we are studying the labels are real vectors .
+The learning problem has three major components
+The estimation problem is concerned with the tradeoff between the size of the sample given to the algorithm and the degree of confidence we have in the forecast it produces .
+The approximation problem is concerned with the ability of hypotheses from a certain class to approximate target functions from a possibly different class .
+The complexity problem is concerned with the computational complexity of finding a hypothesis that approximates the target function .
+A parametric paradigm assumes that the underlying functional relationship comes from a well defined family, such as the Cobb Douglas production functions; the system must learn the parameters characterizing this family .
+Suppose that a learning algorithm observes a finite set of production data which it assumes comes from a Cobb Douglas production function and returns a hypothesis that is a polynomial of bounded degree .
+The estimation problem in this case would be to assess the sample size needed to obtain a good estimate of the coefficients .
+The approximation problem would be to assess the error sustained from approximating a rational function by a polynomial .
+The complexity problem would be the assessment of the time required to compute the polynomial coefficients .
+In the probably approximately correct paradigm, the learning of a target function is done by a class of hypothesis functions, that does or does not include the target function itself; it does not necessitate any parametric assumptions on this class .
+It is also assumed that the observations are generated independently by some distribution on the domain of the relation and that this distribution is fixed .
+If the class of target functions has finite "dimensionality" then a function in the class is characterized by its values on a finite number of points .
+The basic idea is to observe the labeling of a finite number of points and find a function from a class of hypotheses which tends to agree with this labeling .
+The theory tells us that if the sample is large enough then any function that tends to agree with the labeling will, with high probability, be a good approximation of the target function for future observations .
+The prime objective of PAC theory is to develop the relevant notion of dimensionality and to formalize the tradeoff between dimensionality, sample size and the level of confidence in the forecast .
+In the revealed preference setting, our objective is to use a set of observations of prices and demand to forecast demand for unobserved prices .
+Thus the target function is a mapping from prices to bundles, namely f 
+As we have seen in section 4 the number of observations required to PAC learn the demand depends on the fat shattering dimension of the class of demand functions which in turn depends on the class of utility functions they are derived from .
+We compute the fat shattering dimension for two classes of demands .
+The first is the class of all demand functions, we show that this class has infinite shattering dimension (we give two proofs) and is therefore not PAC learnable .
+The second class we consider is the class of demand functions derived from utilities with bounded support and income Lipschitz .
+We show that the class has a finite fat shattering dimension that depends on the support and the income Lipschitz constant .
+Theorem 5 .
+Let C be a set of demand functions from Rd + to Rd + then fatC(£^) = ¡Û Proof 1
+.
+.
+, n be a set of price vectors inducing parallel budget sets Bi and let x1, .
+.
+.
+, xn be the intersection of these hyperplanes with an orthogonal line passing through the center .
+Let H0 and H1 be hyperplanes that are not parallel to p and let xi ? Bi ¡ä (xi + H+ 0 ) and xi ? Bi ¡ä (xi + H? 1 ) for i = 1 .
+.
+.
+n (see figure 1) .
+For any labeling b = (b1, .
+.
+.
+, bn) ? {0, 1}n let y = y(b) = (y1, .
+.
+.
+, yn) be a set of demands such that yi = xi if bi = 0 and yi = xi if bi = 1 (we omit an additional index b in y for notational convenience) .
+To show that p1, .
+.
+.
+, pn is shattered it suffices to find for every b a demand function fb supported by concave utility such that fb(pi) = yb i .
+To show that such a function exists it suffices to show that Afriat"s conditions are satisfied .
+Since yi are in the budget 40 set yi ¡P 2?i p = 1, therefore pi ¡P (yj ? yi) = 2j?i ? 1 .
+This shows that pi ¡P (yj ? yi) ? 0 iff j < i hence there can be no negative cycles and the condition is met .
+? Proof 2
+In fact, pick a utility function whose level sets are parallel to the budget constraint .
+Therefore the shattering of the prices p1, .
+.
+.
+, pn is the result of indifference rather than genuine preference .
+To avoid this problem we reprove the theorem by constructing utility functions u such that u(xi) = u(xi ) for all i and therefore a distinct utility function is associated with each labeling .
+For i = 1, .
+.
+.
+n let pi1, .
+.
+.
+, pid be price vectors satisfying the following conditions

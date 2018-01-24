@@ -1,0 +1,54 @@
+Maintaining a flexible times schedule enables us to use a conflict driven approach to schedule repair
+Consequently, computation (producing a new schedule) and communication costs (informing other agents of changes that affect them) are minimized .
+One basic mechanism needed to model execution in the STN is a dynamic model for current time .
+We employ a model proposed by [7] that establishes a ¡¥current time" time point and includes a link between it and the calendar zero time point .
+As each method is scheduled, a simple precedence constraint between the current time time point and the method is established .
+When the scheduler receives a current time update, the link between calendar zero and current time is modified to reflect this new time, and the constraint propagates to all scheduled methods .
+A second issue concerns synchronization between the executor and the scheduler, as producer and consumer of the schedule running on different threads within a given agent .
+This coordination must be robust despite the fact that the The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 487 executor needs to start methods for execution in real time even while the scheduler may be reassessing the schedule to maximize quality, and or transmitting a revised schedule .
+If the executor, for example, slates a method for execution based on current time while the scheduler is instantiating a revised schedule in which that method is no longer nextto be executed, an inconsistent state may arise within the agent architecture .
+This is addressed in part by introducing a freeze window; a specified short (and adjustable) time period beyond current time within which any activity slated as eligible to start in the current schedule cannot be rescheduled by the scheduler .
+The scheduler is triggered in response to various environmental messages .
+There are two types of environmental message classes that we discuss here as execution dynamics
+Such messages are termed updates and are treated by the scheduler as directives to permanently modify parameters in its model .
+We discuss these update types in turn here and defer until later the discussion of queries to the scheduler, a "what if" mode initiated by a remote agent that is pursuing higher global quality .
+Whether it is invoked via an update or a query, the scheduler"s response is an option; essentially a complete schedule of activities the agent can execute along with associated quality metrics .
+We define a local option as a valid schedule for an agent"s activities, which does not require change to any other agent"s schedule .
+The overarching design for handling execution dynamics aims at anytime scheduling behavior in which a local option maximizing the local view of quality is returned quickly, possibly followed by globally higher quality schedules that entail inter agent coordination if available scheduler cycles permit .
+As such, the default scheduling mode for updates is to seek the highest quality local option according to the scheduler"s search strategy, instantiate the option as its current schedule, and notify the executor of the revision .
+5.1 Responding to Activity Execution As suggested earlier, a committed schedule consists of a sequence of methods, each with a designated [est, lst] start time window (as provided by the underlying STN representation) .
+The executor is free to execute a method any time within its start time window, once any additional enabling conditions have been confirmed .
+These scheduled start time windows are established using the expected duration of each scheduled method (derived from associated method duration distributions during schedule construction) .
+Of course as execution unfolds, actual method durations may deviate from these expectations .
+In these cases, the flexibility retained in the schedule can be used to absorb some of this unpredictability and modulate invocation of a schedule revision process .
+Consider the case of a method completion message, one of the environmental messages that could be communicated to the scheduler as an execution state update .
+If the completion time is coincident with the expected duration (i.e., it completes exactly as expected), then the scheduler"s response is to simply mark it as ¡¥completed" and the agent can proceed to communicate the time at which it has accumulated quality to any remote agents linked to this method .
+However if the method completes with a duration shorter than expected a rescheduling action might be warranted .
+The posting of the actual duration in the STN introduces no potential for conflict in this case, either with the latest start times (lsts) of local or remote methods that depend on this method as an enabler, or to successively scheduled methods on the agent"s timeline .
+However, it may present a possibility for exploiting the unanticipated scheduling slack .
+The flexible times representation afforded by the STN provides a quick means of assessing whether the next method on the timeline can begin immediate execution instead of waiting for its previously established earliest start time (est) .
+If indeed the est of the next scheduled method can spring back to current time once the actual duration constraint is substituted for the expected duration constraint, then the schedule can be left intact and simply communicated back to the executor .
+If alternatively, other problem constraints prevent this relaxation of the est, then there is forced idle time that may be exploited by revising the schedule, and the scheduler is invoked (always respecting the freeze period) .
+If the method completes later than expected, then there is no need for rescheduling under flexible times scheduling unless 1) the method finishes later than the lst of the subsequent scheduled activity, or 2) it finishes later than its deadline .
+Thus we only invoke the scheduler if, upon posting the late finish in the STN, a constraint violation occurs .
+In the latter case no quality is accrued and rescheduling is mandated even if there are no conflicts with subsequent scheduled activities .
+Other execution status updates the agent may receive include
+A method cannot start earlier than when it is transmitted by the executor but it is possible for it to start later than requested .
+If the posted start time causes an inconsistency in the STN (e.g .
+because the expected method duration can no longer be accommodated) the duration constraint in the STN is shortened based on the known distribution until either consistency is restored or rescheduling is mandated .
+? method failure Any method under execution may fail unexpectedly, garnering no quality for the agent .
+At this point rescheduling is mandated as the method may enable other activities or significantly impact quality in the absence of local repair .
+Again, the executor will proceed with execution of the next method if its start time arrives before the revised schedule is committed, and the scheduler accommodates this by respecting the freeze window .
+? current time advances An update on "current time" may arrive either alone or as part of any of the previously discussed updates .
+If, when updating the currenttime link in the STN (as described above), a conflict results, the execution state is inconsistent with the schedule .
+In this case, the scheduler proceeds as if execution were consistent with its expectations, subject to possible later updates .
+488 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 5.2 Responding to Model Updates The agent can also dynamically receive changes to the agent"s underlying C TAEMS model .
+Dynamic revisions in the outcome distributions for methods already in an agent"s subjective view may impact the assessed quality and or duration values that shaped the current schedule .
+Similarly, dynamic revisions in the designated release times and deadlines for methods and tasks already in an agent"s subjective view can invalidate an extant schedule or present opportunities to boost quality .
+It is also possible during execution to receive updates in which new methods and possibly entire task structures are given to the agent for inclusion in its subjective view .
+Model changes that involve temporal constraints are handled in much the same fashion as described for method starts and completions, i.e, rescheduling is required only when the posting of the revised constraints leads to an STN conflict .
+In the case of non temporal model changes, rescheduling action is currently always initiated. .

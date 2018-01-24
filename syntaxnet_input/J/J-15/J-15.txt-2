@@ -1,0 +1,334 @@
+4.1 Construction In this section we apply measurable value to represent differences of willingness to pay for outcomes .
+We assume that the agent has a preference order over outcome space, represented by a set of attributes A, and an attribute p representing monetary consequence .
+Note that in evaluating a purchase decision, p would correspond to the agent"s money holdings net of the transaction (i.e., wealth after purchase), not the purchase price .
+An outcome in this space is represented for example by (£c , p ), where £c is an instantiation of A and p is a value of p .
+We further assume that preferences are quasi linear in p, that is there exists a value function of the form v(A, p) = u(A) + L(p), where L is a positive linear function.2 The quasi linear form immediately qualifies money as a measure of preference differences, and establishes a monetary scale for u(A) .
+DEFINITION 8 .
+Let v(A, p) = u(A)+L(p) represent , where p is the attribute representing money .
+We call u(A) a willingnessto pay (wtp) function .
+Note that wtp may also refer to the seller"s willingness to accept function .
+The wtp u(A) is a cardinal function, unique up to a positive linear transformation .
+Since (£c1, p ) (£c2, p ) ? u(£c1) ? u(£c2) ? L(p ? p ), (where £c1, £c1 ? £K, the domain of A) the wtp function can be used to choose among priced outcomes .
+1 This proof and most other proofs in this paper are omitted for space consideration, and are available in an online appendix .
+2 In many procurement applications, the deals in question are small relative to the enterprises involved, so the quasi linearity assumption is warranted .
+This assumption can be relaxed to a condition called corresponding tradeoffs [17], which does not require the value over money to be linear .
+To simplify the presentation, however, we maintain the stronger assumption .
+Naturally, elicitation of wtp function is most intuitive when using direct monetary values .
+In other words, we elicit a function in which L(p) = p, so v(A, p) = u(A) + p .
+We define a reference outcome (£c0 , p0 ), and assuming continuity of p, for any assignment ?£c there exists a ?p such that (?£c, ?p) ? (£c0 , p0 5.1 The Multiattribute Procurement Problem In the procurement setting a single buyer wishes to procure a single good, in some configuration £c ? £K from one of the candidate sellers s1, .
+.
+.
+, sn .
+The buyer has some private valuation function (wtp) ub 
+For compliance with the procurement literature we refer to seller si"s valuation as a cost function, denoted by ci .
+The multiattribute allocation problem [19] is the welfare optimization problem in procurement over a discrete domain, and it is defined as
+(5) To illustrate the need for a GAI price space we consider the case of traders with non additive preferences bidding in an additive price space such as in PK"s auction AD .
+If the buyer"s preferences are not additive, choosing preferred levels per attribute (as in auction AD) admits undesired combinations and fails to guide the sellers to the efficient configurations .
+Non additive sellers face an exposure problem, somewhat analogous to traders with complementary preferences that participate in simultaneous auctions .
+A value a1 for attribute a may be optimal given that the value of another attribute b is b1 , and arbitrarily suboptimal given other values of b .
+Therefore bidding a1 and b1 may result in a poor allocation if the seller is outbid on b1 but left holding a1 .4 Instead of assuming full additivity, the auction designer can come up with a GAI preference structure that captures the set of common interdependencies between attributes .
+If traders could bid on clusters of interdependent attributes, it would solve the problems discussed above .
+For example, if a and b are interdependent (meaning CDI(a, b) does not hold), we should be able to bid on the cluster ab .
+If b in turn depends on c, we need another cluster bc .
+This is still better than a general pricing structure that solicits bids for the cluster abc .
+We stress that each trader may have a different set of interdependencies, and therefore to be completely general the 4 If only the sellers are non additive, the auction design could potentially alleviate this problem by collecting a new set of bids each round and forgetting bids from previous rounds, and also guiding non additive sellers to bid on only one level per attribute in order to avoid undesired combinations .
+ya yb    yc Z Z Z (i)   ? ?a, b   ? ?b, c (ii) Figure 1
+(ii) The corresponding GAI network .
+GAI structure needs to account for all.5 However, in practice many domains have natural dependencies that are mutual to traders .
+5.2 GAI Trees Assume that preferences of all traders are reflected in a GAI structure I1, .
+.
+.
+, Ig .
+We call each Ir a GAI element, and any assignment to Ir a sub configuration .
+We use £cr to denote the subconfiguration formed by projecting configuration £c to element Ir .
+DEFINITION 9 .
+Let £\ be an assignment to Ir and £] an assignment to Ir .
+The sub configurations £\ and £] are consistent if for any attribute aj ? Ir ¡ä Ir , £\ and £] agree on the value of aj .
+A collection £h of sub configurations is consistent if all pairs £\, £] ? £h are consistent .
+The collection is called a cover if it contains exactly one sub configuration £\r corresponding to each element Ir, r ? {1, .
+.
+.
+, g} .
+Note that a consistent cover {£\1, .
+.
+.
+, £\g} represents a full configuration, which we denote by (£\1, .
+.
+.
+, £\g) .
+A GAI network is a graph G whose nodes correspond to the GAI elements I1, .
+.
+.
+, Ig, with an edge between Ir, Ir iff Ir ¡ä Ir = ? .
+Equivalently, a GAI network is the clique graph of a CDI map .
+In order to justify the compact pricing structure we require that for any set of optimal configurations (wrt a given utility function), with a corresponding collection of sub configurations £^, all consistent covers in £^ must be optimal configurations as well .
+To ensure this (see Lemmas 8 and 10), we assume a GAI decomposition in the form of a tree or a forest (the GAI tree) .
+A tree structure can be achieved for any set of CDI conditions by triangulation of the CDI map prior to construction of the clique graph (GAI networks and GAI trees are defined by Gonzales and Perny [14], who also provide a triangulation algorithm) .
+Under GAI, the buyer"s value function ub and sellers" cost functions ci can be decomposed as in (1) .
+We use fb,r and fi,r to denote the local functions of buyer and sellers (respectively), according to (4) .
+For example, consider the procurement of a good with three attributes, a, b, c .
+Each attribute"s domain has two values (e.g., {a1 , a2 } is the domain of A) .
+Let the GAI structure be I1 = {a, b}, I2 = {b, c} .
+Figure 1 shows the simple CDI map and the corresponding GAI network, which is a GAI tree .
+Here, subconfigurations are assignments of the form a1 b1 , a1 b2 , b1 c1 , and so on .
+The set of sub configurations {a1 b1 , b1 c1 } is a consistent cover, corresponding to the configuration a1 b1 c1 .
+In contrast, the set {a1 b1 , b2 c1 } is inconsistent .
+5.3 The GAI Auction We define an iterative multiattribute auction that maintains a GAI pricing structure
+The price of a configuration £c at time t is defined as pt (£c) = g X r=1 pt (£cr) ? £G .
+5 We relax this requirement in Section 6 .
+231 Bidders submit sub bids on sub configurations and on an additional global discount term £G.6 Sub bids are always submitted for current prices, and need to be resubmitted at each round, therefore they do not need to explicitly carry the price .
+The set of full bids of a seller contains all consistent covers that can be generated from that seller"s current set of sub bids .
+The existence of a full bid over a configuration £c represents the seller"s willingness to accept the price pt (£c) for supplying £c .
+At the start of the auction, the buyer reports (to the auction, not to sellers) her complete valuation in GAI form .
+The initial prices of sub configurations are set at some level above the buyer"s valuations, that is, p1 (£cr) > fb,r(£cr) for all £cr .
+The discount £G is initialized to zero .
+The auction has the dynamics of a descending clock auction
+A seller is considered active in a round if she submits at least one full bid .
+In round t > 1, only sellers who where active in round t ? 1 are allowed to participate, and the auction terminates when no more than a single seller is active .
+We denote the set of sub bids submitted by si by Bt i , and the corresponding set of full bids is Bt i = {£c = (£c1, .
+.
+.
+, £cg) ? £K | ?r.£cr ? Bt i } .
+In our example, a seller could submit sub bids on a set of subconfigurations such as a1 b1 and b1 c1 , and that combines to a full bid on a1 b1 c1 .
+The auction proceeds in two phases .
+In the first phase (A), at each round t the auction computes a set of preferred sub configurations Mt .
+Section 5.4 shows how to define Mt to ensure convergence, and Section 5.5 shows how to efficiently compute it .
+In phase A, the auction adjusts prices after each round, reducing the price of every sub configuration that has received a bid but is not in the preferred set .
+Let be the prespecified price increment parameter .
+Specifically, the phase A price change rule is applied to all £cr ? Sn i=1 Bt i \ Mt 
+[A] The RHS maximum ensures that prices do not get reduced below the buyer"s valuation in phase A .
+Let Mt denote the set of configurations that are consistent covers in Mt 
+.
+.
+, £cg) ? £K | ?r.£cr ? Mt } The auction switches to phase B when all active sellers have at least one full bid in the buyer"s preferred set
+Bt i = ? ? Bt i ¡ä Mt = ? .
+[SWITCH] Let T be the round at which [SWITCH] becomes true .
+At this point, the auction selects the buyer optimal full bid £bi for each seller si .
+£bi = arg max £c?BT i (ub(£c) ? pT (£c)) .
+(6) In phase B, si may bid only on £bi .
+The prices of sub configurations are fixed at pT (¡P) during this phase .
+The only adjustment in phase B is to £G, which is increased in every round by .
+The auction terminates when at most one seller (if exactly one, designate it s?i) is active .
+There are four distinct cases
+The auction returns with no allocation .
+6 The discount term could be replaced with a uniform price reduction across all sub configurations .
+auction selects the best seller (s?i) from the preceding round, and applies the applicable case below .
+buyer"s valuation, pT (£b?i) ? £G > ub(£b?i) .
+The auction offers the winner s?i an opportunity to supply £b?i at price ub(£b?i) .
+(£b?i)? £G ? ub(£b?i) .
+This is the ideal situation, where the auction allocates the chosen configuration and seller at this resulting price .
+The overall auction is described by high level pseudocode in Algorithm 1 .
+As explained in Section 5.4, the role of phase A is to guide the traders to their efficient configurations .
+Phase B is a one dimensional competition over the surplus that remaining seller candidates can provide to the buyer .
+In Section 5.5 we discuss the computational tasks associated with the auction, and Section 5.6 provides a detailed example .
+Algorithm 1 GAI based multiattribute auction collect a reported valuation, ?v from the buyer set high initial prices, p1 (£cr) on each level £cr, and set £G = 0 while not [SWITCH] do collect sub bids from sellers compute Mt apply price change by [A] end while compute £bi while more than one active seller do increase £G by collect bids on (£bi, £G) from sellers end while implement allocation and payment to winning seller 5.4 Economic Analysis When the optimal solution to MAP (5) provides negative welfare and sellers do not bid below their cost, the auction terminates in phase A, no trade occurs and the auction is trivially efficient .
+We therefore assume throughout the analysis that the optimal (seller,configuration) pair provides non negative welfare .
+The buyer profit from a configuration £c is defined as7 £kb(£c) = ub(£c) ? p(£c) and similarly £ki(£c) = p(£c) ? ci(£c) is the profit of si .
+In addition, for £g ? {1, .
+.
+.
+, g} we denote the corresponding set of subconfigurations by £c£g, and define the profit from a configuration £c over the subset £g as £kb(£c£g) = X r?£g (fb,r(£cr) ? p(£cr)) .
+£ki(£c£g) is defined similarly for si .
+Crucially, for any £g and its complement ¡Â£g and for any trader £n, £k£n (£c) = £k£n (£c£g) + £k£n (£c¡Â£g) .
+The function £mi 
+For any price system p, £mi(£c) = £kb(£c) + £ki(£c) .
+7 We drop the t superscript in generic statements involving price and profit functions, understanding that all usage is with respect to the (currently) applicable prices .
+232 Since we do not assume anything about the buyer"s strategy, the analysis refers to profit and surplus with respect to the face value of the buyer"s report .
+The functions £ki and £mi refer to the true cost functions of si .
+DEFINITION 10 .
+A seller is called Straightforward Bidder if at each round t she bids on Bt i as follows
+Otherwise let £[t i ? arg max £c?£K £kt i (£c) Bt i = {£cr | £c ? £[t i, r ? {1, .
+.
+.
+, g}} .
+Intuitively, an SB seller follows a myopic best response strategy (MBR), meaning they bid myopically rather than strategically by optimizing their profit with respect to current prices .
+To calculate Bt i sellers need to optimize their current profit function, as discussed in Section 4.2 .
+The following lemma bridges the apparent gap between the compact pricing and bid structure and the global optimization performed by the traders .
+LEMMA 8 .
+Let £Z be a set of configurations, all maximizing profit for a trader £n (seller or buyer) at the relevant prices .
+Let £X = {£cr | £c ? £Z, r ? {1, .
+.
+.
+, g} .
+Then any consistent cover in £X is also a profit maximizing configuration for £n .
+Proof sketch (full proof in the online appendix)
+Starting from the supposedly suboptimal cover £c1 , we build a series of covers £c1 , .
+.
+.
+, £cL .
+At each £cj we flip the value of a set of sub configurations £gj corresponding to a subtree, with the sub configurations of the configuration ?£cj ? £Z which is the source of the parent £^j of £gj .
+That ensures that all elements in £gj ¡å {£^j} have a mutual source ?£cj .
+We show that all £cj are consistent and that they must all be suboptimal as well, and since all elements of £cL have a mutual source, meaning £cL = ?£cL ? £Z, it contradicts optimality of £Z .
+COROLLARY 9 .
+For SB seller si, ?t, ?£c ? Bt i , £kt i (£c ) = max £c?£K £kt i (£c) .
+Next we consider combinations of configurations that are only within some £_ of optimality .
+LEMMA 10 .
+Let £Z be a set of configurations, all are within £_ of maximizing profit for a trader £n at the prices, and £X defined as in Lemma 8 .
+Then any consistent cover in £X is within £_g of maximizing utility for £n .
+This bound is tight, that is for any GAI tree and a non trivial domain we can construct a set £Z as above in which there exists a consistent cover whose utility is exactly £_g below the maximal .
+Next we formally define Mt .
+For connected GAI trees, Mt is the set of sub configurations that are part of a configuration within of optimal .
+When the GAI tree is in fact a forest, we apportion the error proportionally across the disconnected trees .
+Let G be comprised of trees G1, .
+.
+.
+, Gh .
+We use £cj to denote the projection of a configuration £c on the tree Gj , and gj denotes the number of GAI elements in Gj .
+Mt j = {£cr | £kt b(£cj) ? max £cj ?£Kj £kt b(£cj ) ? gj g , r ? Gj } Then define Mt = Sh j=1 Mt j .
+Let ej = gj ?1 denote the number of edges in Gj .
+We define the connectivity parameter, e = maxj=1,...,h ej .
+As shown below, this connectivity parameter is an important factor in the performance of the auction .
+COROLLARY 11 .
+?£c ? Mt , £kt b(£c ) ? max £c?£K £kt b(£c) ? (e + 1) In the fully additive case this loss of efficiency reduces to .
+On the other extreme, if the GAI network is connected then e+1 = g .
+We also note that without assuming any preference structure, meaning that the CDI map is fully connected, g = 1 and the efficiency loss is again .
+Lemmas 12 through 15 show that through the price system, the choice of buyer preferred configurations, and price change rules, Phase A leads the buyer and each of the sellers to their mutually efficient configuration .
+LEMMA 12 .
+max£c?£K £kt b(£c) does not change in any round t of phase A .
+PROOF .
+We prove the lemma per each tree Gj .
+The optimal values for disconnected components are independent of each other hence if the maximal profit for each component does not change the combined maximal profit does not change as well .
+If the price of £cj was reduced during phase A, that is pt+1 (£cj) = pt (£cj ) ? £_, it must be the case that some w ? gj sub configurations of £cj are not in Mt j, and £_ = w g .
+The definition of Mt j ensures £kt b(£cj ) < max £c?£K £kt b(£cj) ? gj g .
+Therefore, £kt+1 b (£c ) = £kt (£c ) + £_ = £kt (£c ) + w g ? max £c?£K £kt b(£cj) .
+This is true for any configuration whose profit improves, therefore the maximal buyer profit does not change during phase A .
+LEMMA 13 .
+The price of at least one sub configuration must be reduced at every round in phase A .
+PROOF .
+In each round t < T of phase A there exists an active seller i for whom Bt i ¡ä Mt = ? .
+However to be active in round t, Bt i = ? .
+Let ?£c ? Bt i .
+If ?r.?£cr ? Mt , then ?£c ? Mt by definition of Mt .
+Therefore there must be ?£cr ? Mt .
+We need to prove that for at least one of these sub configurations, £kt b(?£cr) < 0 to ensure activation of rule [A] .
+Assume for contradiction that for any ?£cr ? ¡ÂMt , £kt b(?£cr) ? 0 .
+For simplicity we assume that for any £cr, £k1 b (£cr) is some product of g (that can be easily done), and that ensures that £kt b(?£cr) = 0 because once profit hits 0 it cannot increase by rule [A] .
+If ?£cr ? ¡ÂMt , ?r = 1, .
+.
+.
+, g then £kt b(?£c) = 0 .
+This contradicts Lemma 12 since we set high initial prices .
+Therefore some of the sub configurations of ?£c are in Mt , and WLOG we assume it is ?£c1, .
+.
+.
+, ?£ck .
+To be in Mt these k sub configurations must have been in some preferred full configuration, meaning there exists £c ? Mt such that £c = (?£c1, .
+.
+.
+, ?£ck, £ck+1, .
+.
+.
+, £cg) Since ?£c ? Mt It must be that case that £kt b(?£c) < £kt b(£c ) .
+Therefore £kt b(£ck+1, .
+.
+.
+, £cg) > £kt b(?£ck+1, .
+.
+.
+, ?£cg) = 0 Hence for at least one r ? {k + 1, .
+.
+.
+, g}, £kt b(£cr) > 0 contradicting rule [A] .
+233 LEMMA 14 .
+When the solution to MAP provides positive surplus, and at least the best seller is SB, the auction must reach phase B .
+PROOF .
+By Lemma 13 prices must go down in every round of phase A .
+Rule [A] sets a lower bound on all prices therefore the auction either terminates in phase A or must reach condition [SWITCH] .
+We set the initial prices are high such that max£c?£K £k1 b (£c) < 0, and by Lemma 12 max£c?£K £kt b(£c) < 0 during phase A .
+We assume that the efficient allocation (£c? , i? ) provides positive welfare, that is £mi? (£c? ) = £kt b(£c? ) + £kt i? (£c? ) > 0 .
+si? is SB therefore she will leave the auction only when £kt i? (£c? ) < 0 .
+This can happen only when £kt b(£c? ) > 0, therefore si? does not drop in phase A hence the auction cannot terminate before reaching condition [SWITCH] .
+LEMMA 15 .
+For SB seller si, £bi is (e + 1) efficient .
+PROOF .
+£bi is chosen to maximize the buyer"s surplus out of Bt i at the end of phase A .
+Since Bt i ¡ä Mt = ?, clearly £bi ? Mt .
+From Corollary 11 and Corollary 9, for any ?£c, £kT b (£bi) ? £kT b (?£c) ? (e + 1) £kT i (£bi) ? £kT i (?£c) ? £mi(£bi) ? £mi(?£c) ? (e + 1) This establishes the approximate bilateral efficiency of the results of Phase A (at this point under the assumption of SB) .
+Based on Phase B"s simple role as a single dimensional bidding competition over the discount, we next assert that the overall result is efficient under SB, which in turn proves to be an approximately ex post equilibrium strategy in the two phases .
+LEMMA 16 .
+If sellers si and sj are SB, and si is active at least as long as sj is active in phase B, then £mi(£bi) ? max £c?£K £mj(£c) ? (e + 2) .
+THEOREM 17 .
+Given a truthful buyer and SB sellers, the auction is (e+2) efficient
+Following PK, we rely on an equivalence to the one sided VCG auction to establish incentive properties for the sellers .
+In the onesided multiattribute VCG auction, buyer and sellers report valuation and cost functions ?ub, ?ci, and the buyer pays the sell side VCG payment to the winning seller .
+DEFINITION 11 .
+Let (£c? , i? ) be the optimal solution to MAP .
+Let (?£c,?i) be the best solution to MAP when i? does not participate .
+The sell side VCG payment is V CG(?ub, ?ci) = ?ub(£c? ) ? (?ub(?£c) ? ?c?i(?£c)) .
+It is well known that truthful bidding is a dominant strategy for sellers in the one sided VCG auction .
+It is also shown by PK that the maximal regret for buyers from bidding truthfully in this mechanism is ub(£c? ) ? ci? (£c? ) ? (ub(?£c) ? ?c?i(?£c)), that is, the marginal product of the efficient seller .
+Usually in iterative auctions the VCG outcome is only nearly achieved, but the deviation is bounded by the minimal price change .
+We show a similar result, and therefore define £_ VCG payments .
+DEFINITION 12 .
+Sell side £_ VCG payment for MAP is a payment p such that V CG(?ub, ?ci) ? £_ ? p ? V CG(?ub, ?ci) + £_ .
+When payment is guaranteed to be £_ VCG sellers can only affect their payment within that range, therefore their gain by falsely reporting their cost is bounded by 2£_ .
+LEMMA 18 .
+When sellers are SB, the payment in the end of GAI auction is sell side (e + 2) VCG .
+THEOREM 19 .
+SB is an (3e + 5) ex post Nash Equilibrium for sellers in GAI auction .
+That is, sellers cannot gain more than (3e + 5) by deviating .
+In practice, however, sellers are unlikely to have the information that would let them exploit that potential gain .
+They are much more likely to lose from bidding on their less attractive configurations .
+5.5 Computation and Complexity The size of the price space maintained in the auction is equal to the total number of sub configurations, meaning it is exponential in maxr |Ir| .
+This is also equivalent to the tree width (plus one) of the original CDI map .
+For the purpose of the computational analysis let dj denote the domain of attribute aj, and I = Sg r=1 Q j?Ir dj, the collection of all sub configurations .
+The first purpose of this sub section is to show that the complexity of all the computations required for the auction depends only on |I|, i.e., no computation depends on the size of the full exponential domain .
+We are first concerned with the computation of Mt .
+Since Mt grows monotonically with t, a naive application of optimization algorithm to generate the best outcomes sequentially might end up enumerating significant portions of the fully exponential domain .
+However as shown below this plain enumeration can be avoided .
+PROPOSITION 20 .
+The computation of Mt can be done in time O(|I|2 auction is O(|I|(|I| + T)) .
+The bounds are in practice significantly lower, based on results on similar problems from the probabilistic reasoning literature [18] .
+One of the benefits of the compact pricing structure is the compact representation it lends for bids
+Since the computation tasks
+Next, we analyze the number of rounds it takes for the auction to terminate .
+Phase B requires maxi=1,...n £kT i (£bi)1 .
+Since this is equivalent to price only auctions, the concern is only with the time complexity of phase A .
+Since prices cannot go below fb,r(£cr), an upper bound on the number of rounds required is T ? X £cr?I (p1 (£cr) ? fb,r(£cr)) g However phase A may converge faster .
+Let the initial negative profit chosen by the auctioneer be m = max£c?£K £k1 b (£c) .
+In the worst case phase A needs to run until ?£c ? £K.£kb(£c) = m .
+This happens for example when ?£cr ? I.pt (£cr) = fb,r(£cr) + m g .
+In general, the closer the initial prices reflect buyer valuation, the faster phase A converges .
+One extreme is to choose p1 (£cr) = 234 I1 I2 a1 b1 a2 b1 a1 b2 a2 b2 b1 c1 b2 c1 b1 c2 b2 c2 fb 65 50 55 70 50 85 60 75 f1 35 20 30 70 65 65 70 61 f2 35 20 25 25 55 110 70 95 Table 1
+fb represents the buyer"s valuation, and f1 and f2 costs of the sellers s1 and s2 .
+fb,r(£cr) + m g .
+That would make phase A redundant, at the cost of full initial revelation of buyer"s valuation as done in other mechanisms discussed below .
+Between this option and the other extreme, which is ?£\, ?£\ ? I, p1 (£\) = p1 (?£\) the auctioneer has a range of choices to determine the right tradeoff between convergence time and information revelation .
+In the example below the choice of a lower initial price for the domain of I1 provides some speedup by revealing a harmless amount of information .
+Another potential concern is the communication cost associated with the Japanese auction style .
+The sellers need to send their bids over and over again at each round .
+A simple change can be made to avoid much of the redundant communication
+Since combinations of sub bids from different rounds can yield sub optimal configurations, each sub bid should be tagged with the number of the latest round in which it was submitted, and only consistent combinations from the same round are considered to be full bids .
+With this implementation sellers need not resubmit their bid until a price of at least one sub configuration has changed .
+5.6 Example We use the example settings introduced in Section 5.2 .
+Recall that the GAI structure is I1 = {a, b}, I2 = {b, c} (note that e = 1) .
+Table 1 shows the GAI utilities for the buyer and the two sellers s1, s2 .
+The efficient allocation is (s1, a1 b2 c1 ) with a surplus of 45 .
+The maximal surplus of the second best seller, s2, is 25, achieved by a1 b1 c1 , a2 b1 c1 , and a2 b2 c2 .
+We set all initial prices over I1 to 75, and all initial prices over I2 to 90 .
+We set = 8, meaning that price reduction for sub configurations is 4 .
+Though with these numbers it is not guaranteed by Theorem 17, we expect s1 to win on either the efficient allocation or on a1 b2 c2 which provides a surplus of 39 .
+The reason is that these are the only two configurations which are within (e + 1) = 16 of being efficient for s1 (therefore one of them must be chosen by Phase A), and both provide more than surplus over s2"s most efficient configuration (and this is sufficient in order to win in Phase B) .
+Table 2 shows the progress of phase A .
+Initially all configuration have the same cost (165), so sellers bid on their lowest cost configuration which is a2 b1 c1 for both (with profit 80 to s1 and 90 to s2), and that translates to sub bids on a2 b1 and b1 c1 .
+M1 contains the sub configurations a2 b2 and b2 c1 of the highest value configuration a2 b2 c1 .
+Price is therefore decreased on a2 b1 and b1 c1 .
+After the price change, s1 has higher profit (74) on a1 b2 c2 and she therefore bids on a1 b2 and b2 c2 .
+Now (round 2) their prices go down, reducing the profit on a1 b2 c2 to 66 and therefore in round 3 s1 prefers a2 b1 c2 (profit 67) .
+After the next price change the configurations a1 b2 c1 and a1 b2 c2 both become optimal (profit 66), and the subbids a1 b2 , b2 c1 and b2 c2 capture the two .
+These configurations stay optimal for another round (5), with profit 62 .
+At this point s1 has a full bid (in fact two full bids
+Sell bids and designation of Mt (using ?) are shown below the price of each subconfiguration .
+therefore she no longer changes her bids since the price of her optimal configurations does not decrease .
+s2 sticks to a2 b1 c1 during the first four rounds, switching to a1 b1 c1 in round 5 .
+It takes four more rounds for s2 and Mt to converge (M10 ¡äB10 2 = {a1 b1 c1 }) .
+After round 9 the auction sets £b1 = a1 b2 c1 (which yields more buyer profit than a1 b2 c2 ) and £b2 = a1 b1 c1 .
+For the next round (10) £G = 8, increased by 8 for each subsequent round .
+Note that p9 (a1 b1 c1 ) = 133, and c2(a1 b1 c1 ) = 90, therefore £kT 2 (£b2) = 43 .
+In round 15, £G = 48 meaning p15 (a1 b1 c1 ) = 85 and that causes s2 to drop out, setting the final allocation to (s1, a1 b2 c1 ) and p15 (a1 b2 c1 ) = 157 ? 48 = 109 .
+That leaves the buyer with a profit of 31 and s1 with a profit of 14, less than below the VCG profit 20 .
+The welfare achieved in this case is optimal .
+To illustrate how some efficiency loss could occur consider the case that c1(b2 c2 ) = 60 .
+In that case, in round 3 the configuration a1 b2 c2 provides the same profit (67) as a2 b1 c2 , and s1 bids on both .
+While a2 b1 c2 is no longer optimal after the price change, a1 b2 c2 remains optimal on subsequent rounds because b2 c2 ? Mt , and the price change of a1 b2 affects both a1 b2 c2 and the efficient configuration a1 b2 c1 .
+When phase A ends B10 1 ¡ä M10 = {a1 b2 c2 } so the auction terminates with the slightly suboptimal configuration and surplus 40. .

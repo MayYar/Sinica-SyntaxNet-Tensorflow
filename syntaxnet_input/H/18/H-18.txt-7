@@ -1,0 +1,114 @@
+In this section, single document segmentation, shared topic detection, and multi document segmentation will be tested .
+Different hyper parameters of our method are studied .
+For convenience, we refer to the method using I as MIk if w = 0, and Iw as WMIk if w = 2 or as WMIk if w = 1, where k is the number of term clusters, and if k = l, where l is the total number of terms, then no term clustering is required, i.e .
+MIl and WMIl .
+5.1 Single document Segmentation 5.1.1 Test Data and Evaluation The first data set we tested is a synthetic one used in previous research [6, 15, 25] and many other papers .
+It has 700 samples .
+Each is a concatenation of ten segments .
+Each segment is the first n sentence selected randomly from the Brown corpus, which is supposed to have a different topic from each other .
+Currently, the best results on this data set is achieved by Ji et.al .
+[15] .
+To compare the performance of our methods, the criterion used widely in previous research is applied, instead of the unbiased criterion introduced in [20] .
+It chooses a pair of words randomly .
+If they are in different segments (different) for the real segmentation (real), but predicted (pred) as in the same segment, it is a miss .
+If they are in the same segment (same), but predicted as in different segments, it is a false alarm .
+Thus, the error rate is computed using the following equation
+5.1.2 Experiment Results We tested the case when the number of segments is known .
+Table 1 shows the results of our methods with different hyper parameter values and three previous approaches, C99[25], U00[6], and ADDP03[15], on this data set when the segment number is known .
+In WMI for single document segmentation, the term weights are computed as follows
+For this case, our methods MIl and WMIl both outperform all the previous approaches .
+We compared our methods with ADDP03using one sample one sided t test and p values are shown in Table 2 .
+From the p values, we can see that mostly the differences are very Table 1
+We also compare the error rates between our two methods using two sample two sided t test to check the hypothesis that they are equal .
+We cannot reject the hypothesis that they are equal, so the difference are not significant, even though all the error rates for MIl are smaller than WMIl .
+However, we can conclude that term weights contribute little in single document segmentation .
+The results also show that MI using term co clustering (k = 100) decreases the performance .
+We tested different number of term clusters, and found that the performance becomes better when the cluster number increases to reach l .
+WMIk<l has similar results that we did not show in the table .
+As mentioned before, using MI may be inconsistent on optimal boundaries given different numbers of segments .
+This situation occurs especially when the similarities among segments are quite different, i.e .
+some transitions are very obvious, while others are not .
+This is because usually a document is a hierarchical structure instead of only a sequential structure .
+When the segments are not at the same level, this situation may occur .
+Thus, a hierarchical topic segmentation approach is desired, and the structure highly depends on the number of segments for each internal node and the stop criteria of splitting .
+For this data set of singledocument segmentation, since it is just a synthetic set, which is just a concatenation of several segments about different topics, it is reasonable that approaches simply based on term frequency have a good performance .
+Usually for the tasks of segmenting coherent documents for sub topics, the effectiveness decreases much .
+5.2 Shared Topic Detection 5.2.1 Test Data and Evaluation The second data set contains 80 news articles from Google News .
+There are eight topics and each has 10 articles .
+We randomly split the set into subsets with different document numbers and each subset has all eight topics .
+We compare our approach MIl and WMIl with LDA [4] .
+LDA treats a document in the data set as a bag of words, finds its distribution on topics, and its major topic .
+MIl and WMIl views each sentence as a bag of words and tag it with a topic label .
+Then for each pair of documents, LDA determines if they are on the same topic, while MIl and Table 3
+That is, in MIl and WMIl, for a pair of documents d, d , if [ s?Sd,s ?Sd 1(topics=topics ) min(|Sd|, |Sd|)] > £c, where Sd is the set of sentences of d, and |Sd| is the number of sentences of d, then d and d have the shared topic .
+For a pair of documents selected randomly, the error rate is computed using the following equation
+If they are on different topics (diff), but predicted as on the same topic, it is a false alarm .
+5.2.2 Experiment Results The results are shown in Table 3 .
+If most documents have different topics, in WMIl, the estimation of term weights in Equation (3) is not correct .
+Thus, WMIl is not expected to have a better performance than MIl, when most documents have different topics .
+When there are fewer documents in a subset with the same number of topics, more documents have different topics, so WMIl is more worse than MIl .
+We can see that for most cases MIl has a better (or at least similar) performance than LDA .
+After shared topic detection, multi document segmentation of documents with the shared topics is able to be executed .
+5.3 Multi document Segmentation 5.3.1 Test Data and Evaluation For multi document segmentation and alignment, our goal is to identify these segments about the same topic among multiple similar documents with shared topics .
+Using Iw is expected to perform better than I, since without term weights the result is affected seriously by document dependent stop words and noisy words which depends on the personal writing style .
+It is more likely to treat the same segments of different documents as different segments under the effect of document dependent stop words and noisy words .
+Term weights can reduce the effect of document dependent stop words and noisy words by giving cue terms more weights .
+The data set for multi document segmentation and alignment has 102 samples and 2264 sentences totally .
+Each is the introduction part of a lab report selected from the course of Biol 240W, Pennsylvania State University .
+Each sample has two segments, introduction of plant hormones and the content in the lab .
+The length range of samples is from two to 56 sentences .
+Some samples only have one part and some have a reverse order the these two segments .
+It is not hard to identify the boundary between two segments for human .
+We labelled each sentence manually for evaluation .
+The criterion of evaluation is just using the proportion of the number of sentences with wrong predicted segment labels in the total number of sentences in the whole training Table 4
+In order to show the benefits of multi document segmentation and alignment, we compared our method with different parameters on different partitions of the same training set .
+Except the cases that the number of documents is 102 and one (they are special cases of using the whole set and the pure single document segmentation), we randomly divided the training set into m partitions, and each has 51, 34, 20, 10, 5, and 2 document samples .
+Then we applied our methods on each partition and calculated the error rate of the whole training set .
+Each case was repeated for 10 times for computing the average error rates .
+For different partitions of the training set, different k values are used, since the number of terms increases when the document number in each partition increases .
+5.3.2 Experiment Results From the experiment results in Table 4, we can see the following observations
+Only from one to two documents, MIl has decrease a little .
+We can observe this from Figure 3 at the point of document number = 2 .
+Most curves even have the worst results at this point .
+There are two reasons .
+First, because samples vote for the best multi document segmentation and alignment, but if only two documents are compared with each other, the one with missing segments or a totally different sequence will affect the correct segmentation and alignment of the other .
+Second, as noted at the beginning of this section, if two documents have more document dependent stop words or noisy words than cue words, then the algorithm may view them as two different segments and the other segment is missing .
+Generally, we can only expect a better performance when the number of documents is larger than the number of segments .
+(2) Except single document segmentation, WMIl is always better than MIl, and when the number of documents is reaching one or increases to a very large number, their performances become closer .
+Table 5 shows p values of twosample one sided t test between MIl and WMIl .
+We also can see this trend from p values .
+When document number = 5, we reached the smallest p value and the largest difference between error rates of MIl and WMIl .
+For single document Table 6
+The reason is that for singledocument segmentation, we cannot estimate term weights accurately, since multiple documents are unavailable .
+(3) Using term clustering usually gets worse results than MIl and WMIl.(4) Using term clustering in WMIk is even worse than in MIk, since in WMIk term clusters are found first using I before using Iw .
+If the term clusters are not correct, then the term weights are estimated worse, which may mislead the algorithm to reach even worse results .
+From the results we also found that in multi document segmentation and alignment, most documents with missing segments and a reverse order are identified correctly .
+Table 6 illustrates the experiment results for the case of 20 partitions (each has five document samples) of the training set and topic segmentation and alignment using MIk with different numbers of term clusters k .
+Notice that when the number of term clusters increases, the error rate becomes smaller .
+Without term clustering, we have the best result .
+We did not show results for WMIk with term clustering, but the results are similar .
+We also tested WMIl with different hyper parameters of a and b to adjust term weights .
+The results are presented in Figure 3 .
+It was shown that the default case WMIl 
+We can see the trend that when the document number is very small or large, the difference between MIl 
+When the document number is not large (about from 2 to 10), all the cases using term weights have better performances than MIl 
+When the document number becomes very large, they are even worse than cases with small document numbers .
+This means that a proper way to estimate term weights for the criterion of WMI is very important .
+Figure 4 shows the term weights learned from the whole training set .
+Four types of words are categorized roughly even though the transition among them are subtle .
+Figure 5 illustrates the change in (weighted) mutual information for MIl and WMIl .
+As expected, mutual information for MIl increases monotonically with the number of steps, while WMIl does not .
+Finally, MIl and WMIl are scalable, with computational complexity shown in Figure 6 .
+One advantage for our approach based on MI is that removing stop words is not required .
+Another important advantage is that there are no necessary hyper parameters to adjust .
+In single document segmentation, the performance based on MI is even better for that based on WMI, so no extra hyper parameter is required .
+In multi document segmentation, we show in the experiment, a = 1 and b = 1 is the best .
+Our method gives more weights to cue terms .
+However, usually cue terms or sentences appear at the beginning of a segment, while the end of the segment may be 1 2 5 10 20 34 51 102 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 Document Number ErrorRate MIl 
+0 0.2 0.4 0.6 0.8 1 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 Normalized Document Entropy NormalizedSegmentEntropy Noisy words Cue words Common stop words Doc?dep stop words Figure 4
+0 100 200 300 400 500 600 0.06 0.08 0.1 0.12 0.14 0.16 0.18 Number of Steps (Weighted)MutualInformation MI l WMI l Figure 5
+0 20 40 60 80 100 120 0 200 400 600 800 1000 1200 1400 1600 1800 2000 Document Number TimetoConverge(sec) MI l WMI l Figure 6
+much noisy .
+One possible solution is giving more weights to terms at the beginning of each segment .
+Moreover, when the length of segments are quite different, long segments have much higher term frequencies, so they may dominate the segmentation boundaries .
+Normalization of term frequencies versus the segment length may be useful. .

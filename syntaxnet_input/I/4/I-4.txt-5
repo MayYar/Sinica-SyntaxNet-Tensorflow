@@ -1,0 +1,49 @@
+To verify and evaluate the mechanisms presented for the negotiation chain problem, we implemented the scenario described in Figure 1 .
+New tasks were randomly generated with decommitment penalty rate p ? [0, 1], early finish reward rate e ? [0, 0.3], and deadline dl ? [10, 60] (this range allows different flexibilities available for those sub contracted tasks), and arrived at the store agent periodically .
+We performed two sets of experiments to study The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 55 Table 2
+In this experiment, agents need to make decision on negotiation ordering and feature assignment for multiple attributes including
+To focus on the study of flexibility, in this experiment, the regular rewards for each type of tasks are fixed and not under negotiation .
+Here we only describe how agents handle the negotiation duration and negotiation deadlines because they are the attributes affected by the pre negotiation phase .
+All other attributes involved in negotiation are handled according to how they affect the feasibility of local schedule (time related attributes) and how they affect the negotiation success probability (time and cost related attributes) and how they affect the expect utility .
+A search algorithm [10] and a set of partial order scheduling algorithms are used to handle these attributes .
+We tried two different flexibility policies .
+success probability (ps(v) = pbs(v)), according to its local knowledge and estimation .
+pbs(v) ? (2 £k) ? (arctan(f(v) + c))) to model the success probability .
+It also adjusts those parameters (pbs(v) and c) according to the meta level information obtained in prenegotiation phase as described in Section 4 .
+Table 2 shows the values of those parameters for some negotiations .
+Figure 6 shows the results of this experiment .
+This set of experiments includes 10 system runs, and each run is for 1000 simulating time units .
+In the first 200 time units, agents are learning about the task characteristics, which will be used to calculate the conflict probabilities Pcij .
+At time 200, agents perform meta level information communication, and in the next 800 time units, agents use the meta level information in their local reasoning process .
+The data was collected over the 800 time units after the pre negotiation Figure 7
+One Purchase Computer task is generated every 20 time units, and two Purchase Memory tasks are generated every 20 time units .
+The deadline for task Purchase Computer is randomly generated in the range of [30, 60], the deadline for task Purchase Memory is in the range of [10, 30] .
+The decommitment penalty rate is randomly generated in the range of [0, 1] .
+This setting creates multiple concurrent negotiation chain situations; there is one long chain
+All agents perform better in this example (gain more utility) when they are using the meta level information to adjust their local control through the parameters in the success probability function (meta info flex policy) .
+Especially for those agents in the middle of the negotiation chain, such as the PC Manufacturer and the Distribution Center, the flexibility policy makes a significant difference .
+When the agent has a better understanding of the global negotiation scenario, it is able to allocate more flexibility for those tasks that involve complicated negotiations and resource contentions .
+Therefore, the success probability increases and fewer tasks are rejected or canceled (90% of the tasks have been successfully negotiated over when using meta level information, compared to 39% when no pre negotiation is used), resulting in both the agent and the system achieving better performance .
+In the second set of experiments studies, we compare three negotiation deadline policies described in Section 4.2 when using the meta info flexibility policy described above .
+The initial result shows that the same deadline policy and the meta info deadline policy perform almost the same when the amount of system workload level is moderate, tasks can be accommodated given sufficient flexibility .
+In this situation, with either of the policies, most negotiations are successful, and there are few decommitment occurrences, so the ordering of negotiations does not make too much difference .
+Therefore, in this second set of experiments, we increase the number of new tasks generated to raise the average workload in the system .
+One Purchase Computer task is generated every 15 time units, three Purchase Memory tasks are generated every 2 We only measure the utility collected after the learning phase because that the learning phase is relatively short comparing to the evaluation phase, also during the learning phase, no meta level information is used, so some of the policies are invalid .
+56 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 15 time units, and one task Deliver Gift (directly from the customer to the Transporter) is generated every 10 time units .
+This setup generates a higher level of system workload, which results in some tasks not being completed no matter what negotiation ordering is used .
+In this situation, we found the meta info deadline policy performs much better than same deadline policy (See Figure 7) .
+When an agent uses the same deadline policy, all negotiations have to be performed in parallel .
+In the case that one negotiation fails, all related tasks have to be canceled, and the agent needs to pay multiple decommitment penalties .
+When the agent uses the meta info deadline policy, complicated negotiations are allocated more time and, correspondingly, simpler negotiations are allocated less time .
+This also has the effect of allowing some negotiations to be performed in sequence .
+The consequence of sequencing negotiation is that, if there is failure, an agent can simply cancel the other related negotiations that have not been started .
+In this way, the agent does not have to pay decommitment penalty for those canceled negotiations because no commitment has been established yet .
+The evenly divided deadline policy performs much worse than the meta info deadline policy .
+In the evenly divideddeadline policy, the agent allocates negotiation time evenly among the related negotiations, hence the complicated negotiation does not get enough time to complete .
+The above experiment results show that the meta level information transferred among agents during the pre negotiation phase is critical in building a more accurate model of the negotiation problem .
+The reasoning process based on this more accurate model produces an efficient negotiation solution, which improves the agent"s and the system"s overall utility significantly .
+This conclusion holds for those environments where the system is facing moderate heavy load and tasks have relatively tight time deadline (our experiment setup is to produce such environment); the efficient negotiation is especially important in such environments. .

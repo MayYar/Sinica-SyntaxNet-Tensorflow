@@ -1,0 +1,64 @@
+325 Structure Function Example Infection, Infection Vector Executable is run Protection & Stealthiness Disable McAfee (Staying Alive) Propagation Send email to everyone in address book Goal Based Action DDoS www.sco.com Everything else, often called payload Figure 1
+The presence of these attributes distinguishes swarm worms from otherwise regular worms, or other types of malware such as Zombies .
+In figure ??, the generic model of a worm is expanded to included these set of actions .
+Within this context then, a worm like Slammer cannot be categorized as a swarm worm due to the fact that new instances of the worm do not coordinate their actions or share information .
+On the other hand, Zombies and many other forms of DDoS, which at first glance may be consider swarm worms are not .
+This is simply due to fact that in the case of Zombies, control is not distributed but rather centralized, and no emergent behaviors arise .
+The latter, the potential emergence of intelligence or new behaviors is what makes swarm worms so potentially dangerous .
+Finally, when one considers the majority of recent disruptions to the Internet Infrastructure, and in light of our description of swarm attacks, then said disruptions can be easily categorized as precursors to truly swarm behavior .
+Specifically, ? DDOS Large number of compromised hosts send useless packets requiring processing (Stacheldraht, http 
+DDoS attacks are the early precursors to Swarm Attacks due to the large number of agents involved .
+? Code Red CrV1, Code Red II, Nimbda Exhibit early notions of swarm attacks, including a backdoor communication channel .
+? Staniford & Paxson in How to Own the Internet in Your Spare Time? explore modifications to CrV1, Code Red I, II with a swarm like type of behavior .
+For example, they speculate on new worms which employ direct worm to worm communication, and employ programmable updates .
+For example the Warhol worm, and Permutation Scanning (self coordinating) worms .
+2.6 Swarm Worm
+For this reason, we selected as the first instance Structure Function Example Infection, Infection Vector Executable is run Protection & Stealthiness Disable McAfee (Staying Alive) Propagation Send email to everyone in address book Learning, Communication, Pheromones Flags (Test and Distributed Control if Worm is already present) Time bombs, Learning Algorithms, IRC channel Goal Based Action DDoS www.sco.com Everything else, often called payload Figure 2
+The objective of this worm simply is to infect a host by sequentially attempting to login into the host using well known passwords (dictionary attack), passwords that have been discovered previously by any member of the swarm, and random passwords .
+Once, a host is infected, the worm will create communication channels with both its known neighbors at that time, as well as with any offsprings that it successfully generates .
+In this context a successful generation of an offspring means simply infecting a new host and replicating an exact copy of itself in such a host .
+We call this swarm worm the ZachiK worm in honor of one of its creators .
+As it can be seen from this description, the ZachiK worm exhibits all of the elements described before .
+In the following sections, we described in detail each one of the elements of the ZachiK worm .
+2.7 Infection Vector The infection vector used for ZachiK worm is the secure shell protocol SSH .
+A modified client which is capable of receiving passwords from the command line was written, and integrated with a script that supplies it with various passwords
+When a password is found for an appropriate target, the infection process begins .
+After the root password of a host is discovered, the worm infects the target host and replicates itself .
+The worm creates a new directory in the target host, copies the modified ssh client, the script, the communications servers, and the updated versions of data files (list of known passwords and a list of current neighbors) .
+It then runs the modified script on the newly infected hosts, which spawns the communications server, notifies the neighbors and starts looking for new targets .
+It could be argued, correctly, that the ZachiK worm can be easily defeated by current countermeasure techniques present on most systems today, such as disallowing direct root logins from the network .
+Within this context ZachiK can quickly be discarded as very simple and harmless worm that does not require further study .
+However, the reader should consider the following
+For example, it could be programmed to guess common user names and their passwords; gain 326 access to a system, then guess the root password or use other well know vulnerabilities to gain root privileges; of ZachiK is that it incorporates all of the behaviors of a swarm worm including, but not restricted to, distributed control, communication amongst agents, and learning; operating independently which lends itself naturally to parallel algorithms such as a parallel search of the IPV4 address space .
+Within this context, SLAMMER, does incorporate a parallel search capability of potentially susceptible addresses .
+However, unlike ZachiK, the knowledge discovered by the search is never shared amongst the agents .
+For this reasons, and many others, one should not discard the potential of this new class of worms but rather embrace its study .
+2.8 Self Preservation In the case of ZachiK worm, the main self preservation techniques used are simply keeping the payload small .
+In this context, this simply means restricting the number of passwords that an offspring inherits, masquerading worm messages as common http requests, and restricting the number of neighbors to a maximum of five (5) .
+2.9 Propagation Choosing the next target(s) in an efficient matter requires thought .
+In the past, known and proposed worms, see [5], have applied propagation techniques that varied .
+These include
+In our test and simulation environments, we will apply a combination of locally biased and totally random selection of potential vulnerable hosts .
+However, due to the fact that the ZachiK worm is a swarm worm, address discovery (that is when non existent addresses are discovered) information will be shared amongst members of the swarm .
+The infection and propagation threads do the following set of activities repeatedly
+Specifically, to choose an address, the instance may either
+Password are either chosen from the list of known passwords or newly generated .
+When an infection of a valid address fails, it is added to a list of handoffs, which is sent to the neighbors to try to work on .
+2.10 Learning, CommunicationandDistributed Control 2.10.1 Communication The concept of a swarm is based on transfer of information amongst neighbors, which relay their new incoming messages to their neighbors, and so on until every worm instance in the swarm is aware of these messages .
+There are two classes of messages
+The command messages are meant for an external user (a.k.a., hackers and or crackers) to control the actions of the instances, and are currently not implemented .
+The information messages are currently of three kinds
+The new member messages are messages that a new instance sends to the neighbors on its (short) list of initial neighbors .
+The neighbors then register these instances in their neighbor list .
+These are messages that form the multi connectivity of the swarm, and without them, the topology will be a treelike structure, where eliminating a single node would cause the instances beneath it to be inaccessible .
+The passwords messages inform instances of newly discovered passwords, and by informing all instances, the swarm as whole collects this information, which allows it to infect new instances more effectively .
+The handoffs messages inform instances of valid addresses that could not be compromised (fail at breaking the password for the root account) .
+Since the address space is rather sparse, it takes a relatively long time (i.e .
+many trials) to discover a valid address .
+Therefore, by handing off discovered valid addresses, the swarm is (a) conserving energy by not re discovering the same addresses (b) attacking more effectively .
+In a way, this is a simple instance of coordinated activity of a swarm .
+2.10.2 Coordination When a worm instance is born, it relays its existence to all neighbors on its list .
+The main thread then spawns a few infection threads, and continues to handle incoming messages (registering neighbors, adding new passwords, receiving addresses and relaying these messages) .
+2.10.3 Distributed Control Control in the ZachiK worm is distributed in the sense that each instance of the worm performs a set of actions independently of every other instance while at the same time benefiting from the learning achieve by its immediate neighbors .
+2.11 Goal Based Actions The first instantiation of the ZachiK worm has two basic goals .
+These are

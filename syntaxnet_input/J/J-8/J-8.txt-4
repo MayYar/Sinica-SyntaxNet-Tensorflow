@@ -1,0 +1,199 @@
+This section derives our results for fair connection games
+3.1 Existence of Strong Equilibrium While it is known that every fair connection game possesses a Nash equilibrium in pure strategies [2], this is not necessarily the case for a strong equilibrium
+In this section, we study the existence of strong equilibrium in fair connection games
+We begin with a simple case, showing that every symmetric fair connection game possesses a strong equilibrium
+Theorem 3.1
+In every symmetric fair connection game there exists a strong equilibrium
+Proof
+Let s be the source and t be the sink of all the players
+We show that a profile S in which all the players choose the same shortest path Q (from the source s to the sink t ) is a strong equilibrium
+Suppose by contradiction that S is not a SE
+Then there is a coalition £F that can deviate to a new profile S such that the cost of every player j ? £F decreases
+Let Qj be a new path used by player j ? £F
+Since Q is a shortest path, it holds that c(Qj \ (Q ¡ä Qj)) ? c(Q \ (Q ¡ä Qj)), for any path Qj
+Therefore for every player j ? £F we have that cj(S ) ? cj(S)
+However, this contradicts the fact that all players in £F reduce their cost
+(In fact, no player in £F has reduced its cost.) While every symmetric fair connection game admits a SE, it does not hold for every fair connection game
+In what follows, we study the network topologies that admit a strong equilibrium for any assignment of edge costs, and give examples of topologies for which a strong equilibrium does not exist
+The following lemma, whose proof appears in the full version, plays a major role in our proofs of the existence of SE
+Lemma 3.2
+Let £N be a fair connection game on a series parallel graph G with source s and sink t
+Assume that player i has si = s and ti = t and that £N has some SE
+Let S be a SE that minimizes the cost of player i (out of all SE), i.e., ci(S) = minT ?SE(£N) ci(T) and let S? be the profile that minimizes the cost of player i (out of all possible profiles), i.e., ci(S? ) = minT ?£U ci(T)
+Then, ci(S) = ci(S? )
+The next lemma considers parallel composition
+Lemma 3.3
+Let £N be a fair connection game on graph G = G1||G2, where G1 and G2 are series parallel graphs
+If every fair connection game on the graphs G1 and G2 possesses a strong equilibrium, then the game £N possesses a strong equilibrium
+Proof
+Let G1 = (V1, E1) and G2 = (V2, E2) have sources s1 and s2 and sinks t1 and t2, respectively
+Let Ti be the set of players with an endpoint in Vi \ {s, t}, for i ? {1, 2}
+(An endpoint is either a source or a sink of a player)
+Let T3 be the set of players j such that sj = s and tj = t
+Let £N1 and £N2 be the original game on the respective graphs G1 and G2 with players T1 ¡å T3 and T2 ¡å T3, respectively
+Let S and S be the SE in £N1 and £N2 that minimizes the cost of players in T3, respectively
+Assume w.l.o.g
+that ci(S ) ? ci(S ) where player i ? T3
+In addition, let £N2 be the game on the graph G2 with players T2 and let ¡ÂS be a SE in £N2
+We will show that the profile S = S ¡å ¡ÂS is a SE in £N
+Suppose by contradiction that S is not a SE
+Then, there is a coalition £F that can deviate such that the cost of every player j ? £F decreases
+By Lemma 3.2 and the assumption that ci(S ) ? ci(S ), a player j ? T3 cannot improve his cost
+Therefore, £F ? T1 ¡å T2
+But this is a contradiction to S being a SE in £N1 or ¡ÂS being a SE in £N2
+The following theorem considers the case of single source fair connection games
+Theorem 3.4
+Every single source fair connection game on a series parallel graph possesses a strong equilibrium
+Proof
+We prove the theorem by induction on the network size |V |
+The claim obviously holds if |V | = 2
+We show the claim for a series composition, i.e., G = G1 ¡÷ G2, and for a parallel composition, i.e., G = G1||G2, where G1 = (V1, E1) and G2 = (V2, E2) are SPG"s with sources s1, s2, and sinks t1, t2, respectively
+series composition
+Let G = G1 ¡÷ G2
+Let T1 be the set of players j such that tj ? V1, and T2 be the set of players j such that tj ? V2 \ {s2}
+Let £N1 and £N2 be the original game on the respective graphs G1 and G2 with players T1 ¡å T2 and T2, respectively
+For every player i ? T2 with action Si in the game £N let Si ¡äE1 be his induced action in the game £N1, and let Si ¡äE2 be his induced action in the game £N2
+Let S be a SE in £N1 that minimizes the cost of players in T2 (such a SE exists by the induction hypothesis and Lemma 3.2)
+Let S be any SE in £N2
+We will show that the profile S = S ¡å S is a SE in the game £N, i.e., for player j ? T2 we use the profile Sj = Sj ¡å Sj
+Suppose by contradiction that S is not a SE
+Then, there is a coalition £F that can deviate such that the cost of every player j ? £F decreases
+Now, there are two cases
+This is a contradiction to S being a SE
+Case 2
+By Lemma 3.2, player j cannot improve his cost in £N1 so the improvement is due to £N2
+Consider the coalition £F ¡ä T2, it would still improve its cost
+However, this contradicts the fact that S is a SE in £N2
+parallel composition
+Follows from Lemma 3.3
+While multi commodity fair connection games on series parallel graphs do not necessarily possess a SE (see Theorem 3.6), fair connection games on extension parallel graphs always possess a strong equilibrium
+Theorem 3.5
+Every fair connection game on an extension parallel graph possesses a strong equilibrium
+87 t2 t1 s1 s2 2 2 1 3 3 1 (b)(a) a b e f c d Figure 1
+Proof
+We prove the theorem by induction on the network size |V |
+Let £N be a fair connection game on an EPG G = (V, E)
+The claim obviously holds if |V | = 2
+If the graph G is a parallel composition of two EPG graphs G1 and G2, then the claim follows from Lemma 3.3
+It remains to prove the claim for extension composition
+Suppose the graph G is an extension composition of the graph G1 consisting of a single edge e = (s1, t1) and an EPG G2 = (V2, E2) with terminals s2, t2, such that s = s1 and t = t2
+(The case that G2 is a single edge is similar.) Let T1 be the set of players with source s1 and sink t1 (i.e., their path is in G1)
+Let T2 be the set of players with source and sink in G2
+Let T3 be the set of players with source s1 and sink in V2 \ t1
+Let £N1 and £N2 be the original game on the respective graphs G1 and G2 with players T1 ¡å T3 and T2 ¡å T3, respectively
+Let S , S be SE in £N1 and £N2 respectively
+We will show that the profile S = S ¡å S is a SE in the game £N
+Suppose by contradiction that S is not a SE
+Then, there is a coalition £F of minimal size that can deviate such that the cost of any player j ? £F decreases
+Clearly, T1 ¡ä£F = £p, since players in T1 have a single strategy
+Hence, £F ? T2 ¡åT3
+Any player j ? T2 ¡åT3 cannot improve his cost in £N1
+Therefore, any player j ? T2 ¡å T3 improves his cost in £N2
+However, this contradicts the fact that S is a SE in £N2
+In the following theorem we provide a few examples of topologies in which a strong equilibrium does not exist, showing that our characterization is almost tight
+Theorem 3.6
+The following connection games exist
+(2) There exists a single source fair connection game that does not possess a strong equilibrium
+Proof
+For claim (1) consider the graph depicted in Figure 1(a)
+This game has a unique NE where S1 = {e, c}, S2 = {b, f}, and each player has a cost of 5.7 However, consider the following coordinated deviation S
+S1 = {a, b, c}, 7 In any NE of the game, player 1 will buy the edge e and player 2 will buy the edge f
+This is since the alternate path, in the respective part, will cost the player 2.5
+Thus, player 1 (player 2) will buy the edge c (edge b) alone, and each player will have a cost of 5
+s 2 + 2 2 1 ? 2 1 + 3 1 2 ? 3 1 1 1 2 ? 3 t1 t2 a c d e f h g b Figure 2
+and S2 = {b, c, d}
+In this profile, each player pays a cost of 4, and thus improves its cost
+For claim (2) consider a single source fair connection game on the graph G depicted in Figure 2
+There are two players
+Player i = 1, 2 wishes to connect the source s to its sink ti and the unique NE is S1 = {a, b}, S2 = {a, c}, and each player has a cost of 2
+8 Then, both players can deviate to S1 = {h, f, d} and S2 = {h, f, e}, and decrease their costs to 2 ?  2
+Unfortunately, our characterization is not completely tight
+The graph in Figure 1(b) is an example of a non extension parallel graph which always admits a strong equilibrium
+3.2 Strong Price of Anarchy While the price of anarchy in fair connection games can be as bad as n, the following theorem shows that the strong price of anarchy is bounded by H(n) = n i=1 1 i = £K(log n)
+Theorem 3.7
+The strong price of anarchy of a fair connection game with n players is at most H(n)
+Proof
+Let £N be a fair connection game on the graph G
+We denote by £N(£F) the game played on the graph G by a set of players £F, where the action of player i ? £F remains £Ui (the same as in £N)
+Let S = (S1,
+, Sn) be a profile in the game £F in the game £N(£F)
+Let ne(S(£F)) denote the load of edge e under the profile S(£F) in the game £N(£F), i.e., ne(S(£F)) = |{j|j ? £F, e ? Sj}|
+Similar to congestion games [16, 13] we denote by £X(S(£F)) the potential function of the profile S(£F) in the game £N(£F), where £X(S(£F)) = e?E ne(S(£F)) j=1 fe(j), and define £X(S(£p)) = 0
+In our case, it holds that £X(S) = e?E ce ¡P H(ne(S))
+(1) Let S be a SE, and let S? be the profile of the optimal solution
+We define an order on the players as follows
+Let £Fn = {1, ..., n} be the set of all the players
+For each k = 8 We can show that this is the unique NE by a simple case analysis
+(ii) If S1 = {h, g} and S2 = {h, f, e}, then player 2 can deviate to S2 = {a, c} and decrease his cost
+(iii) If S1 = {h, g} and S2 = {a, c}, then player 1 can deviate to S1 = {a, b} and decrease his cost
+88 n,
+, 1, since S is a SE, there exists a player in £Fk, w.l.o.g
+call it player k, such that, ck(S) ? ck(S?£Fk , S? £Fk In this section, we derive our results for general connection games
+4.1 Existence of Strong Equilibrium We begin with a characterization of the existence of a strong equilibrium in symmetric general connection games
+Similar to Theorem 3.1 (using a similar proof) we establish, Theorem 4.1
+In every symmetric fair connection game there exists a strong equilibrium
+While every single source general connection game possesses a pure Nash equilibrium [3], it does not necessarily admit some strong equilibrium.11 10 This is a variation on the example given in [2]
+11 We thank Elliot Anshelevich, whose similar topology for the fair connection game inspired this example
+Theorem 4.2
+There exists a single source general connection game that does not admit any strong equilibrium
+Proof
+Consider single source general connection game with 3 players on the graph depicted in Figure 4
+Player i wishes to connect the source s with its sink ti.We need to consider only the NE profiles
+(ii) if two of the players use an edge of cost 2? jointly, and the third player uses a different edge of cost 2 ? , then, the players with non zero payments can deviate to the path with the edge of cost 3 and reduce their costs (since before the deviation the total payments of the players is 4 ? 2 )
+We showed that none of the NE are SE, and thus the game does not possess any SE
+Next we show that for the class of series parallel graphs, there is always a strong equilibrium in the case of a single source
+Theorem 4.3
+In every single source general connection game on a series parallel graph, there exists a strong equilibrium
+Proof
+Let £N be a single source general connection game on a SPG G = (V, E) with source s and sink t
+We present an algorithm that constructs a specific SE
+We first consider the following partial order between the players
+For players i and j, we have that i ¡÷ j if there is a directed path from ti to tj
+We complete the partial order to a full order (in an arbitrary way), and w.l.o.g
+we assume that 1 ¡÷ 2 ¡÷ ¡P ¡P ¡P ¡÷ n
+The algorithm COMPUTE SE, considers the players in an increasing order, starting with player 1
+Each player i will fully buy a subset of the edges, and any player j > i will consider the cost of those (bought) edges as zero
+When COMPUTE SE considers player j, the cost of the edges that players 1 to j?1 have bought is set to zero, and player j fully buys a shortest path Qj from s to tj
+Namely, for every edges e ? Qj \ ¡åi<jQi we have pj(e) = ce and otherwise pj(e) = 0
+We next show that the algorithm COMPUTESE computes a SE
+Assume by way of contradiction that the profile p is not a SE
+Then, there exists a coalition that can improve the costs of all its players by a deviation
+Let £F be such a coalition of minimal size and let player i = max{j ? £F}
+For a player j ? £F let ¡ÂQj and ¡Âpj be the path and payment of player j after the deviation, respectively
+Let Q be a path from the sink of player i, i.e
+ti, to the sink of G, i.e
+t
+Then Q = ¡ÂQi ¡å Q is a path from the source s to the sink t
+For any player j < i, let yj be the intersecting vertex of Q and tj (by Lemma 2.1 one is guarantee to exist)
+Let y be the furthest vertex on the path Q such that y = yj for some j < i
+The path from the source s to node y was fully paid for by players j < i in p (before the deviation)
+There are two cases we consider
+case a
+This is a contradiction to the minimality of the coalition £F size, since the players in £F \ {i} can form a smaller coalition with payments ¡Âp
+case b
+ci(¡Âp), is at least his cost before the deviation, i.e
+ci(p), contradicting the fact that player i improved his cost
+Recall that given two vertices u, v on path ¡ÂQ we denote by ¡ÂQu,v the subpath of ¡ÂQ from u to v
+90 Before the deviation of the coalition £F, a path from s to y was fully paid for by the players j < i
+Next we show that no player k > i pays for any edge on any path from s to ti
+Consider a player k > i and let Qk = Qk ¡å Qk , where Qk is a path connecting tk to t
+Let yk be the intersecting vertex of Qk and ti
+Since there exists a path from s to yk that was fully paid for by players j < k before the deviation, in particularly the path Qi s,yk , player k will not pay for any edge on any path connecting s and yk
+Therefore player i fully pays for all edges on the path ¡ÂQi y,ti , i.e., ¡Âpi(e) = ce for all edges e ? ¡ÂQi y,ti
+Now consider the algorithm COMPUTESE at the step when player i selects a shortest path from the source s to its sink ti and determines his payment pi
+At this point, player i could buy the path ¡ÂQi y,ti , since a path from s to y was already paid for by players j < i
+Hence, ci(¡Âp) ? ci(p)
+This contradicts the fact that player i improved its cost and therefore not all the players in £F reduce their cost
+This implies that p is a strong equilibrium
+4.2 Strong Price of Anarchy While for every single source general connection game, it holds that PoS = 1 [3], the price of anarchy can be as large as n, even for two parallel edges
+Here, we show that any strong equilibrium in single source general connection games yields the optimal cost
+Theorem 4.4
+In single source general connection game, if there exists a strong equilibrium, then the strong price of anarchy is 1
+Proof
+Let p = (p1,
+, pn) be a strong equilibrium, and let T? be the minimum cost Steiner tree on all players, rooted at the (single) source s
+Let T? e be the subtree of T? disconnected from s when edge e is removed
+Let £F(Te) be the set of players which have sinks in Te
+For a set of edges E, let c(E) = e?E ce
+Let P(Te) = i?£F(Te) ci(p)
+Assume by way of contradiction that c(p) > c(T?

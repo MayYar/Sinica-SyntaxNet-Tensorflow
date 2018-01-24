@@ -1,0 +1,85 @@
+1.1 Background One of the most striking characteristics of modern computer networks in particular the Internet is that different parts of it are owned and operated by different individuals, firms, and organizations .
+The analysis and design of protocols for this environment thus naturally needs to take into account the different selfish economic interests of the different participants .
+Indeed, the last few years have seen much work addressing this issue using game theoretic notions (see [7] for an influential survey) .
+A significant part of the difficulty stems from underlying asymmetries of information
+In particular, the field of algorithmic mechanism design [6] uses appropriate incentives to extract the private information from the participants .
+This paper deals with the complementary lack of knowledge, that of hidden actions .
+In many cases the actual behaviors actions of the different participants are hidden from others and only influence the final outcome indirectly .
+Hidden here covers a wide range of situations including not precisely measurable, costly to determine, or even non contractible meaning that it can not be formally used in a legal contract .
+An example that was discussed in [3] is Quality of Service routing in a network
+While the final outcome of whether a packet reached its destination is clearly visible, it is rarely feasible to monitor the exact amount of effort exerted by each intermediate link how can we ensure that they really do exert the appropriate amount of effort? Many other complex resource allocation problems exhibit similar hidden actions, e.g., a task that runs on a collection of shared servers may be allocated, by each server, an unknown percentage of the CPU"s processing power or of the physical memory .
+How can we ensure that the right combination of allocations is actually made by the different servers? A related class of examples concerns security issues
+How can we ensure that the desired level of 18 collective security is obtained? Our approach to this problem is based on the well studied principal agent problem in economic theory
+whether he exerts effort or not) is invisible to the principal and only the final outcome, which is probabilistic and also influenced by other factors, is visible .
+This problem is well studied in many contexts in classical economic theory and we refer the readers to introductory texts on economic theory such as [5] Chapter 14 .
+The solution is based on the observation that a properly designed contract, in which the payments are contingent upon the final outcome, can influence a rational agent to exert the required effort .
+In this paper we initiate a general study of handling combinations of agents rather than a single agent .
+While much work was already done on motivating teams of agents [4], our emphasis is on dealing with the complex combinatorial structure of dependencies between agents" actions .
+In the general case, each combination of efforts exerted by the n different agents may result in a different expected gain for the principal .
+The general question asks which conditional payments should the principal offer to which agents as to maximize his net utility? In our setting and unlike in previous work (see, e.g., [12]), the main challenge is to determine the optimal amount of effort desired from each agent .
+This paper suggest models for and provides some interesting initial results about this combinatorial agency problem .
+We believe that we have only scratched the surface and leave many open questions, conjectures, and directions for further research .
+We believe that this type of analysis may also find applications in regular economic activity .
+Consider for example a firm that sub contracts a family of related tasks to many individuals (or other firms) .
+It will often not be possible to exactly monitor the actual effort level of each sub contractor (e.g., in cases of public relations activities, consulting activities, or any activities that require cooperation between different sub contractors.) When the dependencies between the different subtasks are complex, we believe that combinatorial agency models can offer a foundation for the design of contracts with appropriate incentives .
+It may also be useful to view our work as part of a general research agenda stemming from the fact that all types of economic activity are increasingly being handled with the aid of sophisticated computer systems .
+In general, in such computerized settings, complex scenarios involving multiple agents and goods can naturally occur, and they need to be algorithmically handled .
+This calls for the study of the standard issues in economic theory in new complex settings .
+The principal agent problem is a prime example where such complex settings introduce new challenges .
+1.2 Our Models We start by presenting a general model
+The main part of the specification of a problem in this model is a function that specifies this distribution for each n tuple of agents" actions .
+Additionally, the problem specifies the principal"s utility for each possible outcome, and for each agent, the agent"s cost for each possible action .
+The principal motivates the agents by offering to each of them a contract that specifies a payment for each possible outcome of the whole project1 .
+Key here is that the actions of the players are non observable and thus the contract cannot make the payments directly contingent on the actions of the players, but rather only on the outcome of the whole project .
+Given a set of contracts, the agents will each optimize his own utility
+will choose the action that maximizes his expected payment minus the cost of his action .
+Since the outcome depends on the actions of all players together, the agents are put in a game and are assumed to reach a Nash equilibrium2 .
+The principal"s problem, our problem in this paper, is of designing an optimal set of contracts
+contracts that maximize his expected utility from the outcome, minus his expected total payment .
+The main difficulty is that of determining the required Nash equilibrium point .
+In order to focus on the main issues, the rest of the paper deals with the basic binary case
+It seems that this case already captures the main interesting ingredients3 .
+In this case, each agent"s problem boils down to whether to exert effort or not, and the principal"s problem boils down to which agents should be contracted to exert effort .
+This model is still pretty abstract, and every problem description contains a complete table specifying the success probability for each subset of the agents who exert effort .
+We then consider a more concrete model which concerns a subclass of problem instances where this exponential size table is succinctly represented .
+This subclass will provide many natural types of problem instances .
+In this subclass every agent performs a subtask which succeeds with a low probability £^ if the agent does not exert effort and with a higher probability £_ > £^, if the agent does exert effort .
+The whole project succeeds as a deterministic Boolean function of the success of the subtasks .
+This Boolean function can now be represented in various ways .
+Two basic examples are the AND function in which the project succeeds only if all subtasks succeed, and the OR function which succeeds if any of the subtasks succeeds .
+A more complex example considers a communication network, where each agent controls a single edge, and success of the subtask means that a message is forwarded by that edge .
+Effort by the edge increases this success probability .
+The complete project succeeds if there is a complete path of successful edges between a given source and sink .
+Complete definitions of the models appear in Section 2 .
+1.3 Our Results 1 One could think of a different model in which the agents have intrinsic utility from the outcome and payments may not be needed, as in [10, 11] .
+2 In this paper our philosophy is that the principal can suggest a Nash equilibrium point to the agents, thus focusing on the best Nash equilibrium .
+One may alternatively study the worst case equilibrium as in [12], or alternatively, attempt modeling some kind of an extensive game between the agents, as in [9, 10, 11] .
+3 However, some of the more advanced questions we ask for this case can be viewed as instances of the general model .
+19 We address a host of questions and prove a large number of results .
+We believe that despite the large amount of work that appears here, we have only scratched the surface .
+In many cases we were not able to achieve the general characterization theorems that we desired and had to settle for analyzing special cases or proving partial results .
+In many cases, simulations reveal structure that we were not able to formally prove .
+We present here an informal overview of the issues that we studied, what we were able to do, and what we were not .
+The full treatment of most of our results appears only in the extended version [2], and only some are discussed, often with associated simulation results, in the body of the paper .
+Our first object of study is the structure of the class of sets of agents that can be contracted for a given problem instance .
+Let us fix a given function describing success probabilities, fix the agent"s costs, and let us consider the set of contracted agents for different values of the principal"s associated value from success .
+For very low values, no agent will be contracted since even a single agent"s cost is higher than the principal"s value .
+For very high values, all agents will always be contracted since the marginal contribution of an agent multiplied by the principal"s value will overtake any associated payment .
+What happens for intermediate principal"s values? We first observe that there is a finite number of transitions between different sets, as the principal"s project value increases .
+These transitions behave very differently for different functions .
+For example, we show that for the AND function only a single transition occurs
+For the OR function, the situation is opposite
+We are able to fully characterize the types of functions for which these two extreme types of transitions behavior occur .
+However, the structure of these transitions in general seems quite complex, and we were not able to fully analyze them even in simple cases like the Majority function (the project succeeds if a majority of subtasks succeeds) or very simple networks .
+We do have several partial results, including a construction with an exponential number of transitions .
+During the previous analysis we also study what we term the price of unaccountability
+More general analysis remains an open problem .
+Our analysis of these questions sheds light on the difficulty of the various natural associated algorithmic problems .
+In particular, we observe that the optimal contract can be found in time polynomial in the explicit representation of the probability function .
+We prove a lower bound that shows that the optimal contract cannot be found in number of queries that is polynomial just in the number of agents, in a general black box model .
+We also show that when the probability function is succinctly represented as 4 The non strategic case is often referred to as the case with contractible actions or the principal"s first best solution .
+a read once network, the problem becomes #P hard .
+The status of some algorithmic questions remains open, in particular that of finding the optimal contract for technologies defined by serial parallel networks .
+In a follow up paper [1] we deal with equilibria in mixed strategies and show that the principal can gain from inducing a mixed Nash equilibrium between the agents rather than a pure one .
+We also show cases where the principal can gain by asking agents to reduce their effort level, even when this effort comes for free .
+Both phenomena can not occur in the non strategic setting. .

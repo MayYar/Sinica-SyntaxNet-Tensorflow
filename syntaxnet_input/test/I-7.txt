@@ -1,0 +1,564 @@
+Commitment and Extortion 
+content:
+1 ABSTRACT :
+1-1:Making commitments, e.g., through promises and threats, enables a player to exploit the strengths of his own strategic position as well as the weaknesses of that of his opponents .
+1-2:Which commitments a player can make with credibility depends on the circumstances .
+1-3:In some, a player can only commit to the performance of an action, in others, he can commit himself conditionally on the actions of the other players .
+1-4:Some situations even allow for commitments on commitments or for commitments to randomized actions .
+1-5:We explore the formal properties of these types of (conditional) commitment and their interrelationships .
+1-6:So as to preclude inconsistencies among conditional commitments, we assume an order in which the players make their commitments .
+1-7:Central to our analyses is the notion of an extortion, which we define, for a given order of the players, as a profile that contains, for each player, an optimal commitment given the commitments of the players that committed earlier .
+1-8:On this basis, we investigate for different commitment types whether it is advantageous to commit earlier rather than later, and how the outcomes obtained through extortions relate to backward induction and Pareto efficiency .
+1-9:General Terms Economics, Theory .
+2 INTRODUCTION :
+2-1:I.2.11 [Distributed Artificial Intelligence]: Multiagent Systems; On one view, the least one may expect of game theory is that it provides an answer to the question which actions maximize an agent"s expected utility in situations of interactive decision making .
+2-2:A slightly divergent view is expounded by Schelling when he states that strategy [ .
+2-3:.
+2-4:.
+2-5:] is not concerned with the efficient application of force but with the exploitation of potential force [9, page 5] .
+2-6:From this perspective, the formal model of a game in strategic form only outlines the strategic features of an interactive situation .
+2-7:Apart from merely choosing and performing an action from a set of actions, there may also be other courses open to an agent .
+2-8:E.g., the strategic lie of the land may be such that a promise, a threat, or a combination of both would be more conductive to his ends .
+2-9:The potency of a promise, however, essentially depends on the extent the promisee can be convinced of the promiser"s resolve to see to its fulfillment .
+2-10:Likewise, a threat only succeeds in deterring an agent if the latter can be made to believe that the threatener is bound to execute the threat, should it be ignored .
+2-11:In this sense, promises and threats essentially involve a commitment on the part of the one who makes them, thus purposely restricting his freedom of choice .
+2-12:Promises and threats epitomize one of the fundamental and at first sight perhaps most surprising phenomena in game theory: it may occur that a player can improve his strategic position by limiting his own freedom of action .
+2-13:By commitments we will understand such limitations of one"s action space .
+2-14:Action itself could be seen as the ultimate commitment .
+2-15:Performing a particular action means doing so to the exclusion of all other actions .
+2-16:Commitments come in different forms and it may depend on the circumstances which ones can and which ones cannot credibly be made .
+2-17:Besides simply committing to the performance of an action, an agent might make his commitment conditional on the actions of other agents, as, e.g., the kidnapper does, when he promises to set free a hostage on receiving a ransom, while threatening to cut off another toe, otherwise .
+2-18:Some situations even allow for commitments on commitments or for commitments to randomized actions .
+2-19:By focusing on the selection of actions rather than on commitments, it might seem that the conception of game theory as mere interactive decision theory is too narrow .
+2-20:In this respect, Schelling"s view might seem to evince a more comprehensive understanding of what game theory tries to accomplish .
+2-21:One might object, that commitments could be seen as the actions of a larger game .
+2-22:In reply to this criticism Schelling remarks: While it is instructive and intellectually satisfying to see how such tactics as threats, commitments, and promises can be absorbed in an enlarged, abstract supergame (game in normal form), it should be emphasized that we cannot learn anything about those tactics by studying games that are already in normal form .
+2-23:[ .
+2-24:.
+2-25:.
+2-26:] What we want is a theory that systematizes the study of the various universal ingredients that make up the move structure of games; too abstract a model will miss them .
+2-27:[9, pp .
+2-28:156 7] 108 978 81 904262 7 5 c 2007 IFAAMAS Our concern is with these commitment tactics, be it that our analysis is confined to situations in which the players can commit in a given order and where we assume the commitments the players can make are given .
+2-29:Despite Schelling"s warning for too abstract a framework, our approach will be based on the formal notion of an extortion, which we will propose in Section 4 as a uniform tactic for a comprehensive class of situations in which commitments can be made sequentially .
+2-30:On this basis we tackle such issues as the usefulness of certain types of commitment in different situations (strategic games) or whether it is better to commit early rather than late .
+2-31:We also provide a framework for the assessment of more general game theoretic matters like the relationship of extortions to backward induction or Pareto efficiency .
+2-32:Insight into these matters has proved itself invaluable for a proper understanding of diplomatic policy during the Cold War .
+2-33:Nowadays, we believe, these issues are equally significant for applications and developments in such fields as multiagent systems, distributed computing and electronic markets .
+2-34:For example, commitments have been argued to be of importance for interacting software agents as well as for mechanism design .
+2-35:In the former setting, the inability to re program a software agent on the fly can be seen as a commitment to its specification and thus exploited to strengthen its strategic position in a multiagent setting .
+2-36:A mechanism, on the other hand, could be seen as a set of commitments that steers the players" behavior in a certain desired way (see, e.g., [2]) .
+2-37:Our analysis is conceptually similar to that of Stackelberg or leadership games [15], which have been extensively studied in the economic literature (cf., [16]) .
+2-38:These games analyze situations in which a leader commits to a pure or mixed strategy, and a number of followers, who then act simultaneously .
+2-39:Our approach, however, differs in that it is assumed that the players all move in a particular order first, second, third and so on and that it is specifically aimed at incorporating a wide range of possible commitments, in particular conditional commitments .
+2-40:After briefly discussing related work in Section 2, we present the formal game theoretic framework, in which we define the notions of a commitment type as well as conditional and unconditional commitments (Section 3) .
+2-41:In Section 4 we propose the generic concept of an extortion, which for each commitment type captures the idea of an optimal commitment profile .
+2-42:We point out an equivalence between extortions and backward induction solutions, and investigate whether it is advantageous to commit earlier rather than later and how the outcomes obtained through extortions relate to Pareto efficiency .
+2-43:Section 5 briefly reviews some other commitment types, such as inductive, mixed and mixed conditional commitments .
+2-44:The paper concludes with an overview of the results and an outlook for future research in Section 6. .
+3 RELATED WORK :
+3-1:Commitment is a central concept in game theory .
+3-2:The possibility to make commitments distinguishes cooperative from noncooperative game theory [4, 6] .
+3-3:Leadership games, as mentioned in the introduction, analyze commitments to pure or mixed strategies in what is essentially a two player setting [15, 16] .
+3-4:Informally, Schelling [9] has emphasized the importance of promises, threats and the like for a proper understanding of social interaction .
+3-5:On a more formal level, threats have also figured in bargaining theory .
+3-6:Nash"s threat game [5] and Harsanyi"s rational threats [3] are two important early examples .
+3-7:Also, commitments have played a significant role in the theory of equilibrium selection (see, e.g., [13] .
+3-8:Over the last few years, game theory has become almost indispensable as a research tool for computer science and (multi)agent research .
+3-9:Commitments have by no means gone unnoticed (see, ⎡ ⎢⎢⎢⎢⎣ (1, 3) (3, 2) (0, 0) (2, 1) ⎤ ⎥⎥⎥⎥⎦ Figure 1: Committing to a dominated strategy can be advantageous .
+3-10:e.g., [1, 11]) .
+3-11:Recently, also the strategic aspects of commitments have attracted the attention of computer scientists .
+3-12:Thus, Conitzer and Sandholm [2] have studied the computational complexity of computing the optimal strategy to commit to in normal form and Bayesian games .
+3-13:Sandholm and Lesser [8] employ levelled commitments for the design of multiagent systems in which contractual agreements are not fully binding .
+3-14:Another connection between commitments and computer science has been pointed out by Samet [7] and Tennenholtz [12] .
+3-15:Their point of departure is the observation that programs can be used to formulate commitments that are conditional on the programs of other systems .
+3-16:Our approach is similar to the Stackleberg setting in that we assume an order in which the players commit .
+3-17:We, however, consider a number of different commitment types, among which conditional commitments, and propose a generic solution concept. .
+4 COMMITMENTS :
+4-1:By committing, an agent can improve his strategic position .
+4-2:It may even be advantageous to commit to a strategy that is strongly dominated, i.e., one for which there is another strategy that yields a better payoff no matter how the other agents act .
+4-3:Consider for example the 2×2 game in Figure 1, in which one player, Row, chooses rows and another, Col, chooses columns .
+4-4:The entries in the matrix indicate the payoffs to Row and Col, respectively .
+4-5:Then, top left is the solution obtained by iterative elimination of strongly dominated strategies: for Row, playing top is always better than playing bottom, and assuming that Row will therefore never play bottom, left is always better than right for Col .
+4-6:However, if Row succeeds in convincing Col of his commitment to play bottom, the latter had better choose the right column .
+4-7:Thus, Row attains a payoff of two instead of one .
+4-8:Along a similar line of reasoning, however, Col would wish to commit to the left column, as convincing Row of this commitment guarantees him the most desirable outcome .
+4-9:If, on the other hand, both players actually commit themselves in this way but without convincing the other party of their having done so, the game ends in misery for both .
+4-10:Important types of commitments, however, cannot simply be analyzed as unconditional commitments to actions .
+4-11:The essence of a threat, for example, is deterrence .
+4-12:If successful, it is not carried out .
+4-13:(This is also the reason why the credibility of a threat is not necessarily undermined if its putting into effect means that the threatener is also harmed.) By contrast, promises are made to entice and, as such, meant to be fulfilled .
+4-14:Thus, both threats and promises would be strategically void if they were unconditional .
+4-15:Figure 2 shows an example, in which Col can guarantee himself a payoff of three by threatening to choose the right column if Row chooses top .
+4-16:(This will suffice to deter Row, and there is no need for an additional promise on the part of Col.) He cannot do so by merely committing unconditionally, and neither can Row if he were to commit first .
+4-17:In the case of conditional commitments, however, a particular kind of inconsistency can arise .
+4-18:It is not in general the case that any two commitments can both be credible .
+4-19:In a 2 × 2 game, it could occur that Row commits conditionally on playing top if the The Sixth Intl .
+4-20:Joint Conf .
+4-21:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 109 ⎡ ⎢⎢⎢⎢⎣ (2, 2) (0, 0) (1, 3) (3, 1) ⎤ ⎥⎥⎥⎥⎦ Figure 2: The column player Col can guarantee himself a payoff of three by threatening to play right if the row player Row plays top .
+4-22:Col plays left, and bottom, otherwise .
+4-23:If now, Col simultaneously were able to commit to the conditional strategy to play right if Row plays top, and left, otherwise, there is no strategy profile that can be played without one of the players" bluff being called .
+4-24:To get around this problem, one can write down conditional commitments in the form of rules and define appropriate fixed point constructions, as suggested by Samet [7] and Tennenholtz [12] .
+4-25:Since checking the semantic equivalence of two commitments (or commitment conditions) is undecidable in general, Tennenholtz bases his definition of program equilibrium on syntactic equivalence .
+4-26:We, by contrast, try to steer clear from fixed point constructions by assuming that the players make their commitment in a particular order .
+4-27:Each player can then make his commitments dependent on the actions of the players to commit after him, but not on the commitments of the players that committed before .
+4-28:On the issue how this order comes about we do not here enter .
+4-29:Rather, we assume it to be determined by the circumstances, which may force or permit some players to commit earlier and others later .
+4-30:We will find that it is not always beneficial to commit earlier than later or vice versa .
+4-31:Another point to heed is that we only consider the case in which the commitments are considered absolutely binding .
+4-32:We do not take into account commitments that can be violated .
+4-33:Intuitively, this could be understood as that the possibility of violation fatally undermines the credibility of the commitment .
+4-34:We also assume commitments to be complete, in the sense that they fully lay down a player"s behavior in all foreseeable circumstances .
+4-35:These assumptions imply that the outcome of the game is entirely determined by the commitments the players make .
+4-36:Although these might be implausible assumptions for some situations, we had better study the idealized case first, before tackling the complications of the more general case .
+4-37:To make these concepts formally precise, we first have to fix some notation .
+4-38:3.1 Strategic Games A strategic game is a tuple (N, (Ai)i∈N, (ui)i∈N), where N = {1, .
+4-39:.
+4-40:.
+4-41:, n} is a finite set of players, Ai is a set of actions available to player i and ui a real valued utility function for player i on the set of (pure) strategy profiles S = A1×· · ·×An .
+4-42:We call a game finite if for all players i the action set Ai is finite .
+4-43:A mixed strategy σi for a player i is a probability distribution over Ai .
+4-44:We write Σi for the set of mixed strategies available to player i, and Σ = Σ1 × · · · × Σn for the set of mixed strategy profiles .
+4-45:We further have σ(a) and σi(a) denote the probability of action a in mixed strategy profile σ or mixed strategy σi, respectively .
+4-46:In settings involving expected utility, we will generally assume that utility functions represent von Neumann Morgenstern preferences .
+4-47:For a player i and (mixed) strategy profiles σ and τ we write σ i τ if ui (σ) ui (τ) .
+4-48:3.2 Conditional Commitments Relative to a strategic game (N, (Ai)i∈N, (ui)i∈N) and an ordering π = (π1, .
+4-49:.
+4-50:.
+4-51:, πn) of the players, we define the set Fπi of (pure) conditional commitments of a player πi as the set of functions from Aπ1 × · · · × Aπi−1 to Aπi .
+4-52:For π1 we have the set of conditional commitments coincide with Aπ1 .
+4-53:By a conditional commitment profile f we understand any combination of conditional commitments in Fπ1 × · · · × Fπn .
+4-54:Intuitively, π reflects the sequential order in which the players can make their commitments, with πn committing first, πn−1 second, and so on .
+4-55:Each player can condition his action on the actions of all players that are to commit after him .
+4-56:In this manner, each conditional commitment profile f can be seen to determine a unique strategy profile, denoted by f , which will be played if all players stick to their conditional commitments .
+4-57:More formally, the strategy profile f = (fπ1 , .
+4-58:.
+4-59:.
+4-60:, fπn ) for a conditional commitment profile f is defined inductively as fπ1 =df .
+4-61:fπ1 , fπi+1 =df .
+4-62:fπi+1 (fπ1 , .
+4-63:.
+4-64:.
+4-65:, fπi ) .
+4-66:The sequence fπ1 , (fπ1 , fπ2 ), .
+4-67:.
+4-68:.
+4-69:, (fπ1 , .
+4-70:.
+4-71:.
+4-72:, fπn ) will be called the path of f .
+4-73:E.g., in the two player game of Figure 2 and given the order (Row, Col), Row has two conditional commitments, top and bottom, which we will henceforth denote t and b .
+4-74:Col, on the other hand, has four conditional commitments, corresponding to the different functions mapping strategies of Row to those of Col .
+4-75:If we consider a conditional commitment f for Col such that f (t) = l and f (b) = r, then (t, f ) is a conditional commitment profile and (t, f ) = (t, f (t)) = (t, l) .
+4-76:There is a natural way in which a strategic game G together with an ordering (π1, .
+4-77:.
+4-78:.
+4-79:, πn) of the players can be interpreted as an extensive form game with perfect information (see, e.g., [4, 6])1 , in which π1 chooses his action first, π2 second, and so on .
+4-80:Observe that under this assumption the strategies in the extensive form game and the conditional commitments in the strategic game G with ordering π are mathematically the same objects .
+4-81:Applying backward induction to the extensive form game yields subgame perfect equilibria, which arguably provide appropriate solutions in this setting .
+4-82:From the perspective of conditional commitments, however, players move in reverse order .
+4-83:We will argue that under this interpretation other strategy profiles should be singled out as appropriate .
+4-84:To illustrate this point, consider once more the game in Figure 2 and observe that neither player can improve on the outcome obtained via iterated strong dominance by committing unconditionally to some strategy .
+4-85:Situations like this, in which players can make unconditional commitments in a fixed order, can fruitfully be analyzed as extensive form games, and the most lucrative unconditional commitment can be found through backward induction .
+4-86:Figure 3 shows the extensive form associated with the game of Figure 2 .
+4-87:The strategies available to the row player are the same as in the strategic form: choosing the top or the bottom row .
+4-88:The strategies for the column player in the extensive game are given by the four functions that map strategies of the row player in the strategic game to one of his own .
+4-89:Transforming this extensive form back into a strategic game (see Figure 4), we find that there exists a second equilibrium besides the one found by means of backward induction .
+4-90:This equilibrium with outcome (1, 3), indicated by the thick lines in Figure 3, has been argued to be unacceptable in the sequential game as it would involve an incredible threat by Col: once Row has played top, Col finds himself confronted with a fait accompli .
+4-91:He had better make the best of a bad bargain and opt for the left column after all .
+4-92:This is in essence the line of thought Selten followed in his famous argument for subgame perfect equilibria [10] .
+4-93:If, however, the strategies of Col in the extensive form are thought of as his conditional commitments he can make in case 1 For a formal definition of a game in extensive form, the reader consult one of the standard textbooks, such as [4] or [6] .
+4-94:In this paper all formal definitions are based on strategic games and orderings of the players only .
+4-95:110 The Sixth Intl .
+4-96:Joint Conf .
+4-97:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 2 2 3 1 0 0 1 3 Row Col Figure 3: Extensive form obtained from the strategic game of Figure 2 when the row player chooses an action first .
+4-98:The backward induction solution is indicated by dashed lines, the conditional commitment solution by solid ones .
+4-99:(The horizontal dotted lines do not indicate information sets, but merely indicate which players are to move when.) he moves first, the situation is radically different .
+4-100:Thus we also assume that it is possible for Col to make credible the threat to choose the right column if Row were to play top, so as to ensure the latter is always better off to play the bottom row .
+4-101:If Col can make a conditional commitment of playing the right column if Row chooses top, and the left column otherwise, this leaves Row with the easy choice between a payoff of zero or one, and Col may expect a payoff of three .
+4-102:This line of reasoning can be generalized to yield an algorithm for finding optimal conditional commitments for general twoplayer games: .
+5 Find a strategy profile s = (sπ1 :
+5-1:, sπ2 ) with maximum payoff to player π2, and set fπ1 = sπ1 and fπ2 (sπ1 ) = sπ2 . .
+6 For each tπ1 :
+6-1:∈ Aπ1 with tπ1 sπ1 , find a strategy tπ2 ∈ Aπ2 that minimizes uπ1 (tπ1 , tπ2 ), and set fπ2 (tπ1 ) = tπ2 . .
+7 If uπ1 :
+7-1:(tπ1 , fπ2 (tπ1 )) uπ1 (sπ1 , sπ2 ) for all tπ1 sπ1 , return f .
+7-2:, sπ2 ) with the highest payoff to π2 among the ones that have not yet been considered .
+7-3:Set fπ1 = sπ1 and fπ2 (sπ1 ) = sπ2 , and continue with Step 2 .
+7-4:Generalizing the idea underlying this algorithm, we present in Section 4 the concept of an extortion, which applies to games with any number of players .
+7-5:For any order of the players an extortion contains, for each player, an optimal commitment given the commitments of the players that committed earlier .
+7-6:3.3 Commitment Types So far, we have distinguished between conditional and unconditional commitments .
+7-7:If made sequentially, both of them determine a unique strategy profile in a given strategic game .
+7-8:This notion of sequential commitment allows for generalization and gives rise to the following definition of a (sequential) commitment type .
+7-9:Definition 3.1 .
+7-10:(Sequential commitment type) A (sequential) commitment type τ associates with each strategic game G and each ordering π of its players, a tuple Xπ1 , .
+7-11:.
+7-12:.
+7-13:, Xπn , φ , where Xπ1 , .
+7-14:.
+7-15:.
+7-16:, Xπn are (abstract) sets of commitments and φ is a function mapping each profile in X = Xπ1 × · · · × Xπn to a (mixed) strategy profile of G .
+7-17:A commitment type Xπ1 , .
+7-18:.
+7-19:.
+7-20:, Xπn , φ is finite whenever Xπi is finite for each i with 1 i n .
+7-21:Thus, the type of unconditional commitments associates with a game and an ordering π of its players the tuple S π1 , .
+7-22:.
+7-23:.
+7-24:, S πn , id , ⎡ ⎢⎢⎢⎢⎣ (2, 2) (2, 2) (0, 0) (0, 0) (1, 3) (3, 1) (1, 3) (3, 1) ⎤ ⎥⎥⎥⎥⎦ Figure 4: The strategic game corresponding to the extensive form of Figure 3 where id is the identity function .
+7-25:Similarly, Fπ1 , .
+7-26:.
+7-27:.
+7-28:, Fπn , is the tuple associated with the same game by the type of (pure) conditional commitments. .
+8 EXTORTIONS :
+8-1:In the introduction, we argued informally how players could improve their position by conditionally committing .
+8-2:How well they can do, could be analyzed by means of an extensive game with the actions of each player being defined as the possible commitments he can make .
+8-3:Here, we introduce for each commitment type a corresponding notion of extortion, which is defined relative to a strategic game and an ordering of the players .
+8-4:Extortions are meant to capture the concept of a profile that contains, for each player, an optimal commitment given the commitments of the players that committed earlier .
+8-5:A complicating factor is that in finding a player"s optimal commitment, one should not only take into account how such a commitment affects other players" actions, but also how it enables them to make their commitments .
+8-6:Definition 4.1 .
+8-7:(Extortions) Let G be a strategic game, π an ordering of its players, and τ a commitment type .
+8-8:Let τ(G, π) be given by Xπ1 , .
+8-9:.
+8-10:.
+8-11:, Xπn , φ .
+8-12:A τ extortion of order 0 is any commitment profile x ∈ Xπ1 × · · · × Xπn .
+8-13:For m > 0, a commitment profile x ∈ Xπ1 × · · · × Xπn is a τ extortion of order m in G given π if x is an τ extortion of order m − 1 with φ yπ1 , .
+8-14:.
+8-15:.
+8-16:, yπm , xπm+1 , .
+8-17:.
+8-18:.
+8-19:, xπn πm φ xπ1 , .
+8-20:.
+8-21:.
+8-22:, xπm , xπm+1 , .
+8-23:.
+8-24:.
+8-25:, xπn for all commitment profiles g in X with (yπ1 , .
+8-26:.
+8-27:.
+8-28:, yπm , xπm+1 , .
+8-29:.
+8-30:.
+8-31:, xπn ) a τ extortion of order m − 1 .
+8-32:A τ extortion is a commitment profile that is a τ extortion of order m for all m with 0 m n .
+8-33:Furthermore, we say that a (mixed) strategy profile σ is τ extortionable if there is some τ extortion x with φ(x) = s .
+8-34:Thus, an extortion of order 1 is a commitment profile in which player π1, makes a commitment that maximizes his payoff, given fixed commitments of the other players .
+8-35:An extortion of order m is an extortion of order m − 1 that maximizes player m"s payoff, given fixed commitments of the players πm+1 through πn .
+8-36:For the type of conditional commitments we have that any conditional commitment profile f is an extortion of order 0 and an extortion of an order m greater than 0 is any extortion of order m − 1 for which: gπ1 , .
+8-37:.
+8-38:.
+8-39:, gπm , fπm+1 , .
+8-40:.
+8-41:.
+8-42:, fπn πm fπ1 , .
+8-43:.
+8-44:.
+8-45:, fπm , fπm+1 , .
+8-46:.
+8-47:.
+8-48:, fπn , for each conditional commitment profile g such that gπ1 , .
+8-49:.
+8-50:.
+8-51:, gπm , fπm+1 , .
+8-52:.
+8-53:.
+8-54:, fπn an extortion of order m − 1 .
+8-55:To illustrate the concept of an extortion for conditional commitments consider the three player game in Figure 5 and assume ⎡ ⎢⎢⎢⎢⎣ (1, 4, 0) (1, 4, 0) (3, 3, 2) (0, 0, 2) ⎤ ⎥⎥⎥⎥⎦ ⎡ ⎢⎢⎢⎢⎣ (4, 1, 1) (4, 0, 0) (3, 3, 2) (0, 0, 2) ⎤ ⎥⎥⎥⎥⎦ Figure 5: A three player strategic game The Sixth Intl .
+8-56:Joint Conf .
+8-57:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 111 ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 1 4 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 3 3 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 4 1 1 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 3 3 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ Row Col Mat ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 1 4 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 4 0 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 0 0 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 0 0 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 1 4 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 3 3 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 4 1 1 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 3 3 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ Row Col Mat ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 1 4 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 4 0 0 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 0 0 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ ⎛ ⎜⎜⎜⎜⎜⎜⎜⎝ 0 0 2 ⎞ ⎟⎟⎟⎟⎟⎟⎟⎠ Figure 6: A conditional extortion f of order 1 (left) and an extortion g of order 3 (right) .
+8-58:(Row, Col, Mat) to be the order in which the players commit .
+8-59:Figure 6 depicts the possible conditional commitments of the players in extensive forms, with the left branch corresponding to Row"s strategy of playing the top row .
+8-60:Let f and g be the conditional commitment strategies indicated by the thick lines in the left and right figures respectively .
+8-61:Both f and g are extortions of order 1 .
+8-62:In both f and g Row guarantees himself the higher payoff given the conditional commitments of Mat and Col .
+8-63:Only g, however, is also an extortion of order 2 .
+8-64:To appreciate that f is not, consider the conditional commitment profile h in which Row chooses top and Col chooses right no matter how Row decides, i.e., h is such that hRow = t and hCol(t) = hCol(b) = r .
+8-65:Then, (hRow, hCol, fMat) is also an extortion of order 1, but yields Col a higher payoff than f does .
+8-66:We leave it to the reader to check that, by contrast, g is an extortion of order 3, and therewith an extortion per se .
+8-67:4.1 Promises and Threats One way of understanding conditional extortions is by conceiving of them as combinations of precisely one promise and a number of threats .
+8-68:From the strategy profiles that can still be realized given the conditional commitments of players that have committed before him, a player tries to enforce the strategy profile that yields him as much payoff as possible .
+8-69:Hence, he chooses his commitment so as to render deviations from the path that leads to this strategy profile as unattractive as possible (‘threats") and the desired strategy profile as appealing as possible (‘promises") for the relevant players .
+8-70:If (sπ1 , .
+8-71:.
+8-72:.
+8-73:, sπn ) is such a desirable strategy profile for player πi and fπi his conditional commitment, the value of fπi (sπ1 , .
+8-74:.
+8-75:.
+8-76:, sπi−1 ) could be taken as his promise, whereas the values of fπi for all other (tπ1 , .
+8-77:.
+8-78:.
+8-79:, tπi−1 ) could be seen as constituting his threats .
+8-80:The higher the payoff is to the other players in a strategy profile a player aims for, the easier it is for him to formulate an effective threat .
+8-81:However, making appropriate threats in this respect does not merely come down to minimizing the payoffs to players to commit later wherever possible .
+8-82:A player should also take into account the commitments, promises and threats the following players can make on the basis of his and his predecessors" commitments .
+8-83:This is what makes extortionate reasoning sometimes so complicated, especially in situations with more than two players .
+8-84:For example, in the game of Figure 5, there is no conditional extortion that ensures Mat a payoff of two .
+8-85:To appreciate this, consider the possible commitments Mat can make in case Row plays top and Col plays left (tl) and in case Row plays top and Col plays right (tr) .
+8-86:If Mat commits to the right matrix in both cases, he virtually promises Row a payoff of four, leaving himself with a payoff of at most one .
+8-87:Otherwise, he puts Col in a position to deter Row from choosing bottom by threatening to choose the right column if the latter does so .
+8-88:Again, Mat cannot expect a payoff higher than one .
+8-89:In short, no matter how Mat conditionally commits, he will either enable Col to threaten Row into playing top or fail to lure Row into playing the bottom row .
+8-90:4.2 Benign Backward Induction The solutions extortions provide can also be obtained by modeling the situation as an extensive form game and applying a backward inductive type of argument .
+8-91:The actions of the players in any such extensive form game are then given by their conditional commitments, which they then choose sequentially .
+8-92:For higher types of commitment, such as conditional commitments, such ‘metagames", however, grow exponentially in the number of strategies available to the players and are generally much larger than the original game .
+8-93:The correspondence between the backward induction solutions in the meta game and the extortions of the original strategic game rather signifies that the concept of an extortion is defined properly .
+8-94:First we define the concept of benign backward induction in general relative to a game in strategic form together with an ordering of the players .
+8-95:Intuitively it reflects the idea that each player chooses for each possible combination of actions of his predecessors the action that yields the highest payoff, given that his successors do similarly .
+8-96:The concept is called benign backward induction, because it implies that a player, when indifferent between a number of actions, chooses the one that benefits his predecessors most .
+8-97:For an ordering π of the players, we have πR denote its reversal (πn, .
+8-98:.
+8-99:.
+8-100:, π1) .
+8-101:Definition 4.2 .
+8-102:(Benign backward induction) Let G be a strategic game and π an ordering of its players .
+8-103:A benign backward induction of order 0 is any conditional commitment profile f subject to π .
+8-104:For m > 0, a conditional commitment strategy profile f is a benign backward induction (solution) of order m if f is a benign backward induction of order m − 1 and (gπR n , .
+8-105:.
+8-106:.
+8-107:, gπR m+1 , gπR m , .
+8-108:.
+8-109:.
+8-110:, gπR 1 ) πR m (gπR n , .
+8-111:.
+8-112:.
+8-113:, gπR m+1 , fπR m , .
+8-114:.
+8-115:.
+8-116:, fπR 1 ) for any backward induction (gπR n ,..., gπR m+1 , gπR m ,..., gπR 1 ) of order m−1 .
+8-117:A conditional commitment profile f is a benign backward induction if it is a benign backward induction of order k for each k with 0 k n .
+8-118:For games with a finite action set for each player, the following result follows straightforwardly from Kuhn"s Theorem (cf .
+8-119:[6, commitments of a finite type .
+8-120:Fact 4.3 .
+8-121:For each finite game and each ordering of the players, benign backward inductions exist .
+8-122:For each game, each ordering of its players and each commitment type, we can define another game G∗ with the the actions of each player i given by his τ commitments Xi in G .
+8-123:The utility 112 The Sixth Intl .
+8-124:Joint Conf .
+8-125:on Autonomous Agents and Multi Agent Systems (AAMAS 07) of a strategy profile (xπ1 , .
+8-126:.
+8-127:.
+8-128:, xπn ) for a player i in G∗ can then be equated to his utility of the strategy profile φ(xπn , .
+8-129:.
+8-130:.
+8-131:, xπ1 ) in G .
+8-132:We now find that the extortions of G can be retrieved as the paths of the benign backward induction solutions of the game G∗ for the ordering πR of the players, provided that the commitment type is finite .
+8-133:Theorem 4.4 .
+8-134:Let G = (N, (Ai)i∈N, (ui)i∈N) be a game and π an ordering of its players with which the finite commitment type τ associates the tuple Xπ1 , .
+8-135:.
+8-136:.
+8-137:, Xπn , φ .
+8-138:Let further G∗ = N, (Xπi )i∈N, (u∗ πi )i∈N , where u∗ πi (xπn , .
+8-139:.
+8-140:.
+8-141:, xπ1 ) = uπi (φ(xπ1 , .
+8-142:.
+8-143:.
+8-144:, xπn )), for each τ commitment profile (xπ1 , .
+8-145:.
+8-146:.
+8-147:, xπn ) .
+8-148:Then, a πcommitment profile (xπ1 , .
+8-149:.
+8-150:.
+8-151:, xπn ) is a τ extortion in G given π if and only if there is some benign backward induction f in G∗ given πR with f = (xπn , .
+8-152:.
+8-153:.
+8-154:, xπ1 ) .
+8-155:Proof .
+8-156:Assume that f is a benign backward induction in G∗ relative to πR .
+8-157:Then, f = (xπn , .
+8-158:.
+8-159:.
+8-160:, xπ1 ), for some commitment profile (xπ1 , .
+8-161:.
+8-162:.
+8-163:, xπn ) of G relative to π .
+8-164:We show by induction that (xπ1 , .
+8-165:.
+8-166:.
+8-167:, xπn ) is an extortion of order m, for all m with 0 m n .
+8-168:For m = 0, the proof is trivial .
+8-169:For the induction step, consider an arbitrary commitment profile (yπ1 , .
+8-170:.
+8-171:.
+8-172:, yπn ) such that (yπ1 , .
+8-173:.
+8-174:.
+8-175:, yπm , xπm+1 , .
+8-176:.
+8-177:.
+8-178:, xπn ) is an extortion of order m − 1 .
+8-179:In virtue of the induction hypothesis, there is a benign backward induction g of order m − 1 in G∗ with g = (xπn , .
+8-180:.
+8-181:.
+8-182:, xπm+1 , yπm , .
+8-183:.
+8-184:.
+8-185:, yπ1 Conditional and unconditional commitments are only two possible commitment types .
+8-186:The definition also provides for types of commitment that allow for committing on commitments, thus achieving a finer adjustment of promises and threats .
+8-187:Similarly, it subsumes commitments on and to mixed strategies .
+8-188:In this section we comment on some of these possibilities .
+8-189:5.1 Inductive Commitments Apart from making commitments conditional on the actions of the players to commit later, one could also commit on the commitments of the following players .
+8-190:Informally, such commitments would have the form of if you only dare to commit in such and such a way, then I do such and such, otherwise I promise to act so and so .
+8-191:For a strategic game G and an ordering π of the players, we define the inductive commitments of the players inductively .
+8-192:The inductive commitments available to π1 coincide with the actions that are available to him .
+8-193:An inductive commitment for player πi+1 is a function mapping each profile of inductive commitments of players π1 through πi to one of his basic actions .
+8-194:Formally we define the type of inductive commitments Fπ1 , .
+8-195:.
+8-196:.
+8-197:, Fπn , such that for each player πi in a game G and given π: Fπ1 =df .
+8-198:Aπ1 , Fπi+1 =df .
+8-199:A Fπ1 ×···×Fπi πi+1 .
+8-200:Let fπi = fπi fπ1 , .
+8-201:.
+8-202:.
+8-203:, fπi−1 , for each player πi and have f denote the pure strategy profile fπ1 , .
+8-204:.
+8-205:.
+8-206:, fπn .
+8-207:Inductive commitments have a greater extortionate power than conditional commitments .
+8-208:To appreciate this, consider once more the game in Figure 5 .
+8-209:We found that the strategy profile in which Row chooses bottom and Col and Mat both choose left is not extortionable through conditional commitments .
+8-210:By means of inductive commitments, however, this is possible .
+8-211:Let f be the inductive commitment profile such that fRow is Row choosing the bottom row (b), fCol is the column player choosing the left column (l) no matter how Row decides, and fMat is defined such that: fMat fRow, fCol = ⎧ ⎪⎪⎨ ⎪⎪⎩ r if fRow = t and fCol (b) = r, l otherwise .
+8-212:Instead of showing formally that f is an inductive extortion of the strategy profile (b, l, l), we point out informally how this can be done .
+8-213:We argued that in order to exact a payoff of two by means of a conditional extortion, Mat would have to lure Row into choosing the bottom row without at the same time putting Col in a position to successfully threaten Row not to choose top .
+8-214:This, we found, is an impossibility if the players can only make conditional commitments .
+8-215:By contrast, if Mat can commit to commitments, he can undermine Col"s efforts to threaten Row by playing the right matrix, if Col were to do so .
+8-216:Yet, Mat can still force Row to choose the bottom row, in case Col desists form making this threat .
+8-217:As can readily be observed, in any game, the inductive commitments of the first two players to commit coincide with their conditional commitments .
+8-218:Hence, as an immediate consequence of Theorem 4.6, it can never harm to be the first to commit to an inductive commitment in the two player case .
+8-219:Similarly, we find that the game depicted in Figure 7 also serves as an example showing that, in case there are more than two players, it is not always better to commit to an inductive commitment early .
+8-220:In this example the strategic position of Mat is so weak if he is to commit first, that even the possibility to commit inductively does not strengthen it, whereas, in a similar fashion as with conditional commitments, Row can enforce a payoff of two to both himself and Mat if he is the first to commit .
+8-221:5.2 Mixed Commitments Types So far we have merely considered commitments to and on pure strategies .
+8-222:A natural extension would be also to consider commitments to and on mixed strategies .
+8-223:We distinguish between conditional, unconditional as well as inductive mixed commitments .
+8-224:We find that they are generally quite incomparable with their pure counterparts: in some situations a player can achieve more using a mixed commitment, in another using a pure commitment type .
+8-225:A complicating factor with mixed commitment types is that they 114 The Sixth Intl .
+8-226:Joint Conf .
+8-227:on Autonomous Agents and Multi Agent Systems (AAMAS 07) can result in a mixed strategy profile being played .
+8-228:This makes that the distinction between promises and threats, as delineated in Section 4.1, gets blurred for mixed commitment types .
+8-229:The type of mixed unconditional commitments associates with each game G and ordering π of its players the tuple Σπ1 , .
+8-230:.
+8-231:.
+8-232:, Σπn , id .
+8-233:The two player case has been extensively studied (e.g., [2, 16]) .
+8-234:As a matter of fact, von Neumann"s famous minimax theorem shows that for two player zero sum games, it does not matter which player commits first .
+8-235:If the second player to commit plays a mixed strategy that ensures his security level, the first player to commit can do no better than to do so as well [14] .
+8-236:In the game of Figure 5 we found that, with conditional commitments, Mat is unable to enforce an outcome that awards him a payoff of two .
+8-237:Recall that the reason of this failure is that any effort to deter Row from choosing the top row is flawed, as it would put Col in an excellent position to threaten Row not to choose the bottom row .
+8-238:If Mat has inductive commitments at his disposal, however, this is a possibility .
+8-239:We now find that in case the players can dispose of unconditional mixed strategies, Mat is in a much similar position .
+8-240:He could randomize uniformly between the left and right matrix .
+8-241:Then, Row"s expected utility is 21 2 if he plays the top row, no matter how Col randomizes .
+8-242:The expected payoff of Col does not exceed 21 2 , either, in case Row chooses top .
+8-243:By purely committing to the left column, Col player entices Row to play bottom, as his expected utility then amounts to 3 .
+8-244:This ensures an expected utility of three for Col as well .
+8-245:However, a player is not always better off with unconditional mixed commitments than with pure conditional commitments .
+8-246:For an example, consider the game in Figure 2 .
+8-247:Using pure conditional commitments, he can ensure a payoff of three, whereas with unconditional mixed commitments 21 2 would be the most he could achieve .
+8-248:Neither is it in general advantageous to commit first to a mixed strategy in a three player game .
+8-249:To appreciate this, consider once more the game in Figure 7 .
+8-250:Again committing to a mixed strategy will not achieve much for Mat if he is to move first, and as before the other players have no reason to commit to anything other than a pure strategy .
+8-251:This holds for all players if Row commits first, Col second and Mat last, be it that in this case Mat obtains the best payoff he can get .
+8-252:Analogous to conditional and inductive commitments one can also define the types of mixed conditional and mixed inductive commitments .
+8-253:With the former, a player can condition his mixed strategies on the mixed strategies of the players to commit after him .
+8-254:These tend to be very large objects and, knowing little about them yet, we shelve their formal analysis for future research .
+8-255:Conceptually, it might not be immediately clear how such mixed conditional commitments can be made with credibility .
+8-256:For one, when one"s commitments are conditional on a particular mixed strategy being played, how can it be recognized that it was in fact this mixed strategy that was played rather than another one? If this proves to be impossible, how can one know how his conditional commitments is to be effectuated? A possible answer would be, that all depends on the circumstances in which the commitments were made .
+8-257:E.g., if the different agents can submit their mixed conditional commitments to an independent party, the latter can execute the randomizations and determine the unique mixed strategy profile that their commitments induce. .
+9-1:In some situations agents can strengthen their strategic position by committing themselves to a particular course of action
+9-2:There are various types of commitment, e.g., pure, mixed and conditional
+9-3:Which type of commitment an agent is in a position in to make essentially depends on the situation under consideration
+9-4:If the agents commit in a particular order, there is a tactic common to making commitments of any type, which we have formalized by means the concept of an extortion
+9-5:This generic concept of extortion can be analyzed in abstracto
+9-6:Moreover, on its basis the various commitment types can be compared formally and systematically
+9-7:We have seen that the type of commitment an agent can make has a profound impact on what an agent can achieve in a gamelike situation
+9-8:In some situations a player is much helped if he is in a position to commit conditionally, whereas in others mixed commitments would be more profitable
+9-9:This raises the question as to the characteristic formal features of the situations in which it is advantageous for a player to be able to make commitments of a particular type
+9-10:Another issue which we leave for future research is the computational complexity of finding an extortion for the different commitment types.
+10-1:A
+10-2:K
+10-3:Chopra and M
+10-4:Singh
+10-5:Contextualizing commitment protocols
+10-6:In Proceedings of the 5th International Joint Conference on Autonomous Agents and Multi Agent Systems (AAMAS), pages 1345 1352
+10-7:ACM Press, 2006
+10-8:V
+10-9:Conitzer and T
+10-10:Sandholm
+10-11:Computing the optimal strategy to commit to
+10-12:In Proceedings of the 7th ACM Conference on Electronic Commerce (ACM EC), pages 82 90
+10-13:ACM Press, 2006
+10-14:J
+10-15:C
+10-16:Harsanyi
+10-17:A simplified bargaining model for the n person cooperative game
+10-18:International Economic Review, 4(2):194 220, 1963
+10-19:R
+10-20:D
+10-21:Luce and H
+10-22:Raiffa
+10-23:Games and Decisions: Introduction and Critical Survey
+10-24:Wiley, 1957
+10-25:J
+10-26:Nash
+10-27:Two person cooperative games
+10-28:Econometrica, 21:128 140, 1953
+10-29:M
+10-30:J
+10-31:Osborne and A
+10-32:Rubinstein
+10-33:A Course in Game Theory
+10-34:MIT Press, 1994
+10-35:D
+10-36:Samet
+10-37:How to commit to cooperation, 2005
+10-38:Invited talk at the 4th International Joint Conference on Autonomous Agents and Multi Agent Systems (AAMAS)
+10-39:T
+10-40:Sandholm and V
+10-41:Lesser
+10-42:Leveled commitment contracting
+10-43:A backtracking instrument for multiagent systems
+10-44:AI Magazine, 23(3):89 100, 2002
+10-45:T
+10-46:C
+10-47:Schelling
+10-48:The Strategy of Conflict
+10-49:Harvard University Press, 1960
+10-50:R
+10-51:Selten
+10-52:Spieltheoretische Behandlung eines Oligopolmodells mit Nachfragetr¨agheit
+10-53:Zeitschrift f¨ur die gesamte Staatswissenschaft, 121:301 324, 1965
+10-54:M
+10-55:P
+10-56:Singh
+10-57:An ontology for commitments in multiagent systems: Toward a unification of normative concepts
+10-58:Artificial Intelligence and Law, 7(1):97 113, 1999
+10-59:M
+10-60:Tennenholtz
+10-61:Program equilibrium
+10-62:Games and Economic Behavior, 49:363 373, 2004
+10-63:E
+10-64:van Damme and S
+10-65:Hurkens
+10-66:Commitment robust equilibria and endogenous timing
+10-67:Games and Economic Behavior, 15:290 311, 1996
+10-68:J
+10-69:von Neumann and O
+10-70:Morgenstern
+10-71:The Theory of Games and Economic Behavior
+10-72:Princeton University Press, 1944
+10-73:H
+10-74:von Stackelberg
+10-75:Marktform und Gleichgewicht
+10-76:Julius Springer Verlag, 1934
+10-77:B
+10-78:von Stengel and S
+10-79:Zamir
+10-80:Leadership with commitment to mixed strategies
+10-81:CDAM Research Report LSE CDAM 2004 01, London School of Economics, 2003
+10-82:The Sixth Intl
+10-83:Joint Conf
+10-84:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 115
+picture:

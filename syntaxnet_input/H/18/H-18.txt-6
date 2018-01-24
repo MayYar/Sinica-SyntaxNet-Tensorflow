@@ -1,0 +1,60 @@
+(0) t , Seg (0) d , and Ali (0) d ; Initialize w (0) ?t using Equation (6) if w = 1; Stage 1
+If Clu, Seg, or Ali changed, go to 2.1; otherwise, if w = 0, return Clu(i), Seg(i), and Ali(i); else j = 0, go to 3.1; Stage 3
+If Iw( ?T; ?S) changes, go to step 6; otherwise, stop and return Clu(i), Seg(i+j), Ali(i+j), and w (i+j) ?t ; Figure 2
+and each sentence is segmented into words, each word is stemmed .
+Then the joint probability distribution P(D, Sd, T) can be estimated .
+Finally, this distribution can be used to compute MI in our algorithm .
+4.3 Iterative Greedy Algorithm Our goal is to maximize the objective function, I( ?T; ?S) or Iw( ?T; ?S), which can measure the dependence of term occurrences in different segments .
+Generally, first we do not know the estimate term weights, which depend on the optimal topic segmentation and alignment, and term clusters .
+Moreover, this problem is NP hard [10], even though if we know the term weights .
+Thus, an iterative greedy algorithm is desired to find the best solution, even though probably only local maxima are reached .
+We present the iterative greedy algorithm in Figure 2 to find a local maximum of I( ?T; ?S) or Iw( ?T; ?S) with simultaneous term weight estimation .
+This algorithm can is iterative and greedy for multi document cases or single document cases with term weight estimation and or term co clustering .
+Otherwise, since it is just a one step algorithm to solve the task of single document segmentation [6, 15, 25], the global maximum of MI is guaranteed .
+We will show later that term co clustering reduces the accuracy of the results and is not necessary, and for singledocument segmentation, term weights are also not required .
+4.3.1 Initialization In Step 0, the initial term clustering Clut and topic segmentation and alignment Segd and Alid are important to avoid local maxima and reduce the number of iterations .
+First, a good guess of term weights can be made by using the distributions of term frequency along sentences for each document and averaging them to get the initial values of w?t
+Then, for the initial segmentation Seg(0) , we can simply segment documents equally by sentences .
+Or we can find the optimal segmentation just for each document d which maximizes the WMI, Seg (0) d = argmax?sIw(T; ?S), where w = w (0) ?t .
+For the initial alignment Ali(0) , we can first assume that the order of segments for each d is the same .
+For the initial term clustering Clu(0) , first cluster labels can be set randomly, and after the first time of Step 3, a good initial term clustering is obtained .
+4.3.2 Different Cases After initialization, there are three stages for different cases .
+Totally there are eight cases, |D| = 1 or |D| > 1, k = l or k < l, w = 0 or w = 1 .
+Single document segmentation without term clustering and term weight estimation (|D| = 1, k = l, w = 0) only requires Stage 1 (Step 1) .
+If term clustering is required (k < l), Stage 2 (Step 2.1, 2.2, and 2.3) is executed iteratively .
+If term weight estimation is required (w = 1), Stage 3 (Step 3.1, 3.2, and 3.3) is executed iteratively .
+If both are required (k < l, w = 1), Stage 2 and 3 run one after the other .
+For multi document segmentation without term clustering and term weight estimation (|D| > 1, k = l, w = 0), only iteration of Step 2.2 and 2.3 are required .
+At Stage 1, the global maximum can be found based on I( ?T; ?S) using dynamic programming in Section 4.4 .
+Simultaneously finding a good term clustering and estimated term weights is impossible, since when moving a term to a new term cluster to maximize Iw( ?T; ?S), we do not know that the weight of this term should be the one of the new cluster or the old cluster .
+Thus, we first do term clustering at Stage 2, and then estimate term weights at Stage 3 .
+At Stage 2, Step 2.1 is to find the best term clustering and Step 2.2 is to find the best segmentation .
+This cycle is repeated to find a local maximum based on MI I until it converges .
+The two steps are
+After finding a good term clustering, term weights are estimated if w = 1 .
+At Stage 3, similar as Stage 2, Step 3.1 is term weight re estimation and Step 3.2 is to find a better segmentation .
+They are repeated to find a local maximum based on WMI Iw until it converges .
+However, if the term clustering in Stage 2 is not accurate, then the term weight estimation at Stage 3 may have a bad result .
+Finally, at Step 3.3, this algorithm converges and return the output .
+This algorithm can handle both single document and multi document segmentation .
+It also can detect shared topics among documents by checking the proportion of overlapped sentences on the same topics, as described in Sec 5.2 .
+4.4 Algorithm Optimization In many previous works on segmentation, dynamic programming is a technique used to maximize the objective function .
+Similarly, at Step 1, 2.2, and 3.2 of our algorithm, we can use dynamic programming .
+For Stage 1, using dynamic programming can still find the global optimum, but for Stage 2 and Stage 3, we can only find the optimum for each step of topic segmentation and alignment of a document .
+Here we only show the dynamic programming for Step 3.2 using WMI (Step 1 and 2.2 are similar but they can use either I or Iw) .
+There are two cases that are not shown in the algorithm in Figure 2
+The alignment mapping function of the former case is simply just Alid(?si) = ?si, while for the latter one"s alignment mapping function Alid(?si) = ?sj, i and j may be different .
+The computational steps for the two cases are listed below
+Then put sentences from i to j into Part k, and compute partial WMI PIw( ?T; ?sk(si, si+1, ..., sj)) ?t? ?T pw(?t, ?sk)log pw(?t, ?sk) pw(?t)pw(?sk) , where Alid(si, si+1, ..., sj) = k, k ? {1, 2, ..., p}, 1 ? i ? j ? nd, and Segd(sq) = ?sk for all i ? q ? j .
+(2) Let M(sm, 1) = PIw( ?T; ?s1(s1, s2, ..., sm)) .
+Then M(sm, L) = maxi[M(si?1, L ? 1) + PIw( ?T; ?sL(si, ..., sm))], where 0 ? m ? nd, 1 < L < p, 1 ? i ? m + 1, and when i > m, no sentences are put into ?sk when compute PIw (note PIw( ?T; ?s(si, ..., sm)) = 0 for single document segmentation) .
+(3) Finally M(snd , p) = maxi[M(si?1, p ? 1)+ PIw( ?T; ?sp(si, ..., snd ))], where 1 ? i ? nd+1 .
+The optimal Iw is found and the corresponding segmentation is the best .
+Case 2 (alignment required)
+(2) Let M(sm, 1, k) = PIw( ?T; ?sk(s1, s2, ..., sm)), where k ? {1, 2, ..., p} .
+Then M(sm, L, kL) = maxi,j[M(si?1, L ? 1, kL j) + PIw( ?T; ?sAlid(?sL )=j(si, si+1, ..., sm))], where 0 ? m ? nd, 1 < L < p, 1 ? i ? m + 1, kL ? Set(p, L), which is the set of all p! L!(p?L)! combinations of L segments chosen from all p segments, j ? kL, the set of L segments chosen from all p segments, and kL j is the combination of L ? 1 segments in kL except Segment j .
+(3) Finally, M(snd , p, kp) = maxi,j[M(si?1, p ? 1, kp j) +PIw( ?T; ?sAlid(?sL )=j(si, si+1, ..., snd ))], where kp is just the combination of all p segments and 1 ? i ? nd + 1, which is the optimal Iw and the corresponding segmentation is the best .
+The steps of Case 1 and 2 are similar, except in Case 2, alignment is considered in addition to segmentation .
+First, basic items of probability for computing Iw are computed excluding Doc d, and then partial WMI by putting every possible sequential segment (including empty segment) of d into every segment of the set .
+Second, the optimal sum of PIw for L segments and the leftmost m sentences, M(sm, L), is found .
+Finally, the maximal WMI is found among different sums of M(sm, p ? 1) and PIw for Segment p. .

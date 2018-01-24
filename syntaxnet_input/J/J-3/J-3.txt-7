@@ -1,0 +1,44 @@
+GRAPHS If a graph has special structure, we can sometimes solve the budget optimization problem exactly .
+Note that the knapsack algorithm in Section 2 solves the problem for the case when the graph is a simple matching .
+Here we generalize this to the case when the graph has a laminar structure, which will allow us to impose a (partial) ordering on the possible bid values, and thereby give a pseudopolynomial algorithm via dynamic programming .
+We first show that to solve the Budget Optimization problem (for general graphs) optimally in pseudopolynomial time, it suffices to provide an algorithm that solves the deterministic case .
+The proof (omitted) uses ideas similar to Observation 1 and Lemma 1 .
+Lemma 9 .
+Let I be an input to the Budget Optimization problem and suppose that we find the optimal deterministic solution for every possible budget U ? U .
+Then we can find the optimal solution in time O(U log U) .
+A collection S of n sets S1, .
+.
+.
+, S2 is laminar if, for any two sets Si and Sj, if Si ¡ä Sj = ? then either Si ? Sj or Sj ? Si .
+Given a keyword interaction graph G, we associate a set of neighboring queries Qk = {q 
+If this collection of sets if laminar, we say that the graph has the laminar property .
+Note that a laminar interaction graph would naturally fall out as a consequence of designing a hierarchical keyword set (e.g., shoes, highheel shoes, athletic shoes) .
+We call a solution deterministic if it consists of one bid vector, rather than a general distribution over bid vectors .
+The following lemma will be useful for giving a structure to the optimal solution, and will allow dynamic programming .
+Lemma 10 .
+For keywords i, j ? K, if Qi ? Qj then there exists an optimal deterministic solution to the Budget Optimization problem with ai ? aj .
+We can view the laminar order as a tree with keyword j as a parent of keyword i if Qj is the minimal set containing Qi .
+In this case we say that j is a child of i .
+Given a keyword j with c children i1, .
+.
+.
+, ic, we now need to enumerate over all ways to allocate the budget among the children and also over all possible minimum bids for the children .
+A complication is that a node may have many children and thus a term of Uc would not even be pseudopolynomial .
+We can solve this problem by showing that given any laminar ordering, there is an equivalent one in which each keyword has at most 2 children .
+Lemma 11 .
+Let G be a graph with the laminar property .
+There exists another graph G with the same optimal solution to the Budget Optimization problem, where each node has at most two children in the laminar ordering .
+Furthermore, G has at most twice as many nodes as G .
+Given a graph with at most two children per node, we define F[i, b, U] to be the maximum number of clicks achievable by bidding at least b on each of keywords j s.t .
+Qj ? Qi (and exactly b on keyword i) while spending at most U .
+For this definition, we use Z(b, U) to denote set of allowable bids and budgets over children
+Now we define F[i, b, U] as max b, b ,U ,U ?Z(b,U) j F[j , b , U ] + F[j , b , U ] + ?t(i, b) ff (5) if (?s(i, b) ? U ? U ? U and i > 0), and F[i, b, U] = 0 otherwise .
+Lemma 12 .
+If the graph G has the laminar property, then, after applying Lemma 11, the dynamic programming recurrence in (5) finds an optimal deterministic solution to the Budget Optimization problem exactly in O(B3 U3 n) time .
+In addition, we can apply Lemma 9 to compute the optimal (randomized) solution .
+Observe that in the dynamic program, we have already solved the instance for every budget U ? U, so we can find the randomized solution with no additional asymptotic overhead .
+48 Lemma 13 .
+If the graph G has the laminar property, then, by applying Lemma 11, the dynamic programming recurrence in (5), and Lemma 9, we can find an optimal solution to the Budget Optimization problem in O(B3 U3 n) time .
+The bounds in this section make pessimistic assumptions about having to try every budget and every level .
+For many problems, you only need to choose from a discrete set of bid levels (e.g., multiples of one cent) .
+Doing so yields the obvious improvement in the bounds. .

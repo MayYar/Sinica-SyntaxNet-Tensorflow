@@ -1,0 +1,102 @@
+By committing, an agent can improve his strategic position .
+It may even be advantageous to commit to a strategy that is strongly dominated, i.e., one for which there is another strategy that yields a better payoff no matter how the other agents act .
+Consider for example the 2¡Ñ2 game in Figure 1, in which one player, Row, chooses rows and another, Col, chooses columns .
+The entries in the matrix indicate the payoffs to Row and Col, respectively .
+Then, top left is the solution obtained by iterative elimination of strongly dominated strategies
+However, if Row succeeds in convincing Col of his commitment to play bottom, the latter had better choose the right column .
+Thus, Row attains a payoff of two instead of one .
+Along a similar line of reasoning, however, Col would wish to commit to the left column, as convincing Row of this commitment guarantees him the most desirable outcome .
+If, on the other hand, both players actually commit themselves in this way but without convincing the other party of their having done so, the game ends in misery for both .
+Important types of commitments, however, cannot simply be analyzed as unconditional commitments to actions .
+The essence of a threat, for example, is deterrence .
+If successful, it is not carried out .
+(This is also the reason why the credibility of a threat is not necessarily undermined if its putting into effect means that the threatener is also harmed.) By contrast, promises are made to entice and, as such, meant to be fulfilled .
+Thus, both threats and promises would be strategically void if they were unconditional .
+Figure 2 shows an example, in which Col can guarantee himself a payoff of three by threatening to choose the right column if Row chooses top .
+(This will suffice to deter Row, and there is no need for an additional promise on the part of Col.) He cannot do so by merely committing unconditionally, and neither can Row if he were to commit first .
+In the case of conditional commitments, however, a particular kind of inconsistency can arise .
+It is not in general the case that any two commitments can both be credible .
+In a 2 ¡Ñ 2 game, it could occur that Row commits conditionally on playing top if the The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 109 ? ????? (2, 2) (0, 0) (1, 3) (3, 1) ? ????? Figure 2
+Col plays left, and bottom, otherwise .
+If now, Col simultaneously were able to commit to the conditional strategy to play right if Row plays top, and left, otherwise, there is no strategy profile that can be played without one of the players" bluff being called .
+To get around this problem, one can write down conditional commitments in the form of rules and define appropriate fixed point constructions, as suggested by Samet [7] and Tennenholtz [12] .
+Since checking the semantic equivalence of two commitments (or commitment conditions) is undecidable in general, Tennenholtz bases his definition of program equilibrium on syntactic equivalence .
+We, by contrast, try to steer clear from fixed point constructions by assuming that the players make their commitment in a particular order .
+Each player can then make his commitments dependent on the actions of the players to commit after him, but not on the commitments of the players that committed before .
+On the issue how this order comes about we do not here enter .
+Rather, we assume it to be determined by the circumstances, which may force or permit some players to commit earlier and others later .
+We will find that it is not always beneficial to commit earlier than later or vice versa .
+Another point to heed is that we only consider the case in which the commitments are considered absolutely binding .
+We do not take into account commitments that can be violated .
+Intuitively, this could be understood as that the possibility of violation fatally undermines the credibility of the commitment .
+We also assume commitments to be complete, in the sense that they fully lay down a player"s behavior in all foreseeable circumstances .
+These assumptions imply that the outcome of the game is entirely determined by the commitments the players make .
+Although these might be implausible assumptions for some situations, we had better study the idealized case first, before tackling the complications of the more general case .
+To make these concepts formally precise, we first have to fix some notation .
+3.1 Strategic Games A strategic game is a tuple (N, (Ai)i?N, (ui)i?N), where N = {1, .
+.
+.
+, n} is a finite set of players, Ai is a set of actions available to player i and ui a real valued utility function for player i on the set of (pure) strategy profiles S = A1¡Ñ¡P ¡P ¡P¡ÑAn .
+We call a game finite if for all players i the action set Ai is finite .
+A mixed strategy £mi for a player i is a probability distribution over Ai .
+We write £Ui for the set of mixed strategies available to player i, and £U = £U1 ¡Ñ ¡P ¡P ¡P ¡Ñ £Un for the set of mixed strategy profiles .
+We further have £m(a) and £mi(a) denote the probability of action a in mixed strategy profile £m or mixed strategy £mi, respectively .
+In settings involving expected utility, we will generally assume that utility functions represent von Neumann Morgenstern preferences .
+For a player i and (mixed) strategy profiles £m and £n we write £m i £n if ui (£m) ui (£n) .
+3.2 Conditional Commitments Relative to a strategic game (N, (Ai)i?N, (ui)i?N) and an ordering £k = (£k1, .
+.
+.
+, £kn) of the players, we define the set F£ki of (pure) conditional commitments of a player £ki as the set of functions from A£k1 ¡Ñ ¡P ¡P ¡P ¡Ñ A£ki?1 to A£ki .
+For £k1 we have the set of conditional commitments coincide with A£k1 .
+By a conditional commitment profile f we understand any combination of conditional commitments in F£k1 ¡Ñ ¡P ¡P ¡P ¡Ñ F£kn .
+Intuitively, £k reflects the sequential order in which the players can make their commitments, with £kn committing first, £kn?1 second, and so on .
+Each player can condition his action on the actions of all players that are to commit after him .
+In this manner, each conditional commitment profile f can be seen to determine a unique strategy profile, denoted by f , which will be played if all players stick to their conditional commitments .
+More formally, the strategy profile f = (f£k1 , .
+.
+.
+, f£kn ) for a conditional commitment profile f is defined inductively as f£k1 =df .
+f£k1 , f£ki+1 =df .
+f£ki+1 (f£k1 , .
+.
+.
+, f£ki ) .
+The sequence f£k1 , (f£k1 , f£k2 ), .
+.
+.
+, (f£k1 , .
+.
+.
+, f£kn ) will be called the path of f .
+E.g., in the two player game of Figure 2 and given the order (Row, Col), Row has two conditional commitments, top and bottom, which we will henceforth denote t and b .
+Col, on the other hand, has four conditional commitments, corresponding to the different functions mapping strategies of Row to those of Col .
+If we consider a conditional commitment f for Col such that f (t) = l and f (b) = r, then (t, f ) is a conditional commitment profile and (t, f ) = (t, f (t)) = (t, l) .
+There is a natural way in which a strategic game G together with an ordering (£k1, .
+.
+.
+, £kn) of the players can be interpreted as an extensive form game with perfect information (see, e.g., [4, 6])1 , in which £k1 chooses his action first, £k2 second, and so on .
+Observe that under this assumption the strategies in the extensive form game and the conditional commitments in the strategic game G with ordering £k are mathematically the same objects .
+Applying backward induction to the extensive form game yields subgame perfect equilibria, which arguably provide appropriate solutions in this setting .
+From the perspective of conditional commitments, however, players move in reverse order .
+We will argue that under this interpretation other strategy profiles should be singled out as appropriate .
+To illustrate this point, consider once more the game in Figure 2 and observe that neither player can improve on the outcome obtained via iterated strong dominance by committing unconditionally to some strategy .
+Situations like this, in which players can make unconditional commitments in a fixed order, can fruitfully be analyzed as extensive form games, and the most lucrative unconditional commitment can be found through backward induction .
+Figure 3 shows the extensive form associated with the game of Figure 2 .
+The strategies available to the row player are the same as in the strategic form
+The strategies for the column player in the extensive game are given by the four functions that map strategies of the row player in the strategic game to one of his own .
+Transforming this extensive form back into a strategic game (see Figure 4), we find that there exists a second equilibrium besides the one found by means of backward induction .
+This equilibrium with outcome (1, 3), indicated by the thick lines in Figure 3, has been argued to be unacceptable in the sequential game as it would involve an incredible threat by Col
+He had better make the best of a bad bargain and opt for the left column after all .
+This is in essence the line of thought Selten followed in his famous argument for subgame perfect equilibria [10] .
+If, however, the strategies of Col in the extensive form are thought of as his conditional commitments he can make in case 1 For a formal definition of a game in extensive form, the reader consult one of the standard textbooks, such as [4] or [6] .
+In this paper all formal definitions are based on strategic games and orderings of the players only .
+110 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 2 2 3 1 0 0 1 3 Row Col Figure 3
+The backward induction solution is indicated by dashed lines, the conditional commitment solution by solid ones .
+(The horizontal dotted lines do not indicate information sets, but merely indicate which players are to move when.) he moves first, the situation is radically different .
+Thus we also assume that it is possible for Col to make credible the threat to choose the right column if Row were to play top, so as to ensure the latter is always better off to play the bottom row .
+If Col can make a conditional commitment of playing the right column if Row chooses top, and the left column otherwise, this leaves Row with the easy choice between a payoff of zero or one, and Col may expect a payoff of three .
+This line of reasoning can be generalized to yield an algorithm for finding optimal conditional commitments for general twoplayer games

@@ -1,0 +1,21 @@
+Cooperative caching techniques [20, 16, 13, 2, 28] provide access to client caches to avoid high disk access latency in an environment where servers and clients run on a fast local area network .
+These techniques use the server to provide redirection and do not consider issues of high network latency .
+Multiprocessor systems and distributed shared memory systems [14, 4, 17, 18, 5] use fine grain coherence techniques to avoid the performance penalty of false sharing but do not address issues of availability when nodes fail .
+Cooperative Web caching techniques, (e.g .
+[11, 15]) investigate issues of maintaining a directory of objects cached in nearby proxy caches in wide area environment, using distributed directory protocols for tracking cache changes .
+This work does not consider issues of consistent concurrent updates to shared fine grained objects .
+Cheriton and Li propose MMO [12] a hybrid web coherence protocol that combines invalidations with updates using multicast delivery channels and receiver reliable protocol, exploiting locality in a way similar to BuddyCache .
+This multicast transport level solution is geared to the single writer semantics of web objects .
+In contrast, BuddyCache uses application level multicast and a sender reliable coherence protocol to provide similar access latency improvements for transactional objects .
+Application level multicast solution in a middle ware system was described by Pendarakis, Shi and Verma in [27] .
+The schema supports small multi sender groups appropriate for collaborative applications and considers coherence issues in the presence of failures but does not support strong consistency or fine grained sharing .
+Yin, Alvisi, Dahlin and Lin [32, 31] present a hierarchical WAN cache coherence scheme .
+The protocol uses leases to provide fault tolerant call backs and takes advantage of nearby caches to reduce the cost of lease extensions .
+The study uses simulation to investigate latency and fault tolerance issues in hierarchical avoidance based coherence scheme .
+In contrast, our work uses implementation and analysis to evaluate the costs and benefits of redirection and fine grained updates in an optimistic system .
+Anderson, Eastham and Vahdat in WebFS [29] present a global file system coherence protocol that allows clients to choose 27 on per file basis between receiving updates or invalidations .
+Updates and invalidations are multicast on separate channels and clients subscribe to one of the channels .
+The protocol exploits application specific methods e.g .
+last writer wins policy for broadcast applications, to deal with concurrent updates but is limited to file systems .
+Mazieres studies a bandwidth saving technique [24] to detect and avoid repeated file fragment transfers across a WAN when fragments are available in a local cache .
+BuddyCache provides similar bandwidth improvements when objects are available in the group cache. .

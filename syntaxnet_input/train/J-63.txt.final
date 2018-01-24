@@ -1,0 +1,405 @@
+Negotiation-Range Mechanisms: 
+content:
+1 ABSTRACT :
+1-1:This paper introduces a new class of mechanisms based on negotiation between market participants .
+1-2:This model allows us to circumvent Myerson and Satterthwaite"s impossibility result and present a bilateral market mechanism that is efficient, individually rational, incentive compatible and budget balanced in the single unit heterogeneous setting .
+1-3:The underlying scheme makes this combination of desirable qualities possible by reporting a price range for each buyer seller pair that defines a zone of possible agreements, while the final price is left open for negotiation .
+1-4:J.4 [Social and Behavioral Sciences]: Economics; K.4.4 .
+2 INTRODUCTION :
+2-1:In this paper we introduce the concept of negotiation based mechanisms in the context of the theory of efficient truthful markets .
+2-2:A market consists of multiple buyers and sellers who wish to exchange goods .
+2-3:The market"s main objective is to produce an allocation of sellers" goods to buyers as to maximize the total gain from trade .
+2-4:A commonly studied model of participant behavior is taken from the field of economic mechanism design [3, 4, 11] .
+2-5:In this model each player has a private valuation function that assigns real values to each possible allocation .
+2-6:The algorithm motivates players to participate truthfully by handing payments to them .
+2-7:The mechanism in an exchange collects buyer bids and seller bids and clears the exchange by computing:(i) a set of trades, and (ii) the payments made and received by players .
+2-8:In designing a mechanism to compute trades and payments we must consider the bidding strategies of self interested players, i.e .
+2-9:rational players that follow expected utility maximizing strategies .
+2-10:We set allocative efficiency as our primary goal .
+2-11:That is the mechanism must compute a set of trades that maximizes gain from trade .
+2-12:In addition we require individual rationality so that all players have positive expected utility to participate, budget balance so that the exchange does not run at a loss, and incentive compatibility so that reporting the truth is a dominant strategy for each player .
+2-13:Unfortunately, Myerson and Satterthwaite"s (1983) well known result demonstrates that in bilateral trade it is impossible to simultaneously achieve perfect efficiency, BB, and IR using an IC mechanism [10] .
+2-14:A unique approach to overcome Myerson and Satterthwaite"s impossibility result was attempted by Parkes, Kalagnanam and Eso [12] .
+2-15:This result designs both a regular and a combinatorial bilateral trade mechanism (which imposes BB and IR) that approximates truth revelation and allocation efficiency .
+2-16:In this paper we circumvent Myerson and Satterthwaite"s impossibility result by introducing a new model of negotiationrange markets .
+2-17:A negotiation range mechanism does not produce payment prices for the market participants .
+2-18:Rather, is assigns each buyer seller pair a price range, called Zone Of Possible Agreements .
+2-19:The buyer is provided with the high end of the range and the seller with the low end of the range .
+2-20:This allows the trading parties to engage in negotiation over the final price with guarantee that the deal is beneficial for both of them .
+2-21:The negotiation process is not considered part of the mechanism but left up to the interested parties, or to some external mechanism to perform .
+2-22:In effect a negotiation range mechanism operates as a mediator between the market participants, offering them the grounds to be able to finalize the terms of the trade by themselves .
+2-23:This concept is natural to many real world market environments such as the real estate market .
+2-24:1 We focus on the single unit heterogeneous setting: n sellers offer one unique good each by placing sealed bids specifying their willingness to sell, and m buyers, interested in buying a single good each, placing sealed bids specifying their willingness to pay for each good they may be interested in .
+2-25:Our main result is a single unit heterogeneous bilateral trade negotiation range mechanism that is efficient, individually rational, incentive compatible and budget balanced .
+2-26:Our result does not contradict Myerson and Satterthwaite"s important theorem .
+2-27:Myerson Satterthwaite"s proof relies on a theorem assuring that in two different efficient IC markets; if the sellers have the same upper bound utility then they will receive the same prices in each market and if the buyers have the same lower bound utility then they will receive the same prices in each market .
+2-28:Our single unit heterogeneous mechanism bypasses Myerson and Satterthwaite"s theorem by producing a price range, defined by a seller"s floor and a buyer"s ceiling, for each pair of matched players .
+2-29:In our market mechanism the seller"s upper bound utility may be the same while the seller"s floor is different and the buyer"s lower bound utility may be the same while the buyer"s ceiling is different .
+2-30:Moreover, the final price is not fixed by the mechanism at all .
+2-31:Instead, it is determined by an independent negotiation between the buyer and seller .
+2-32:More specifically, in a negotiation range mechanism, the range of prices each matched pair is given is resolved by a negotiation stage where a final price is determined .
+2-33:This negotiation stage is crucial for our mechanism to be IC .
+2-34:Intuitively, a negotiation range mechanism is incentive compatible if truth telling promises the best ZOPA from the point of view of the player in question .
+2-35:That is, he would tell the truth if this strategy maximizes the upper and lower bounds on his utility as expressed by the ZOPA boundaries .
+2-36:Yet, when carefully examined it turns out that it is impossible (by [10]) that this goal will always hold .
+2-37:This is simply because such a mechanism could be easily modified to determine final prices for the players (e.g .
+2-38:by taking the average of the range"s boundaries) .
+2-39:Here, the negotiation stage come into play .
+2-40:We show that if the above utility maximizing condition does not hold then it is the case that the player cannot influence the negotiation bound that is assigned to his deal partner no matter what value he declares .
+2-41:This means that the only thing that he may achieve by reporting a false valuation is modifying his own negotiation bound, something that he could alternatively achieve by reporting his true valuation and incorporating the effect of the modified negotiation bound into his negotiation strategy .
+2-42:This eliminates the benefit of reporting false valuations and allows our mechanism to compute the optimal gain from trade according to the players" true values .
+2-43:The problem of computing the optimal allocation which maximizes gain from trade can be conceptualized as the problem of finding the maximum weighted matching in a weighted bipartite graph connecting buyers and sellers, where each edge in the graph is assigned a weight equal to the difference between the respective buyer bid and seller bid .
+2-44:It is well known that this problem can be solved efficiently in polynomial time .
+2-45:VCG IC payment schemes [2, 7, 13] support efficient and IR bilateral trade but not simultaneously BB .
+2-46:Our particular approach adapts the VCG payment scheme to achieve budget balance .
+2-47:The philosophy of the VCG payment schemes in bilateral trade is that the buyer pays the seller"s opportunity cost of not selling the good to another buyer and not keeping the good to herself .
+2-48:The seller is paid in addition to the buyer"s price a compensation for the damage the mechanism did to the seller by not extracting the buyer"s full bid .
+2-49:Our philosophy is a bit different: The seller is paid at least her opportunity cost of not selling the good to another buyer and not keeping the good for herself .
+2-50:The buyer pays at most his alternate seller"s opportunity cost of not selling the good to another buyer and not keeping the alternate good for herself .
+2-51:The rest of this paper is organized as follows .
+2-52:In Section 2 we describe our model and definitions .
+2-53:In section 3 we present the single unit heterogeneous negotiation range mechanism and show that it is efficient, IR, IC and BB .
+2-54:Finally, we conclude with a discussion in Section 4. .
+3 NEGOTIATION MARKETS PRELIMINARIES :
+3-1:PRELIMINARIES Let Π denote the set of players, N the set of n selling players, and M the set of m buying players, where Π = N ∪ M .
+3-2:Let Ψ = {1, ..., t} denote the set of goods .
+3-3:Let Ti ∈ {−1, 0, 1}t denote an exchange vector for a trade, such that player i buys goods {A ∈ Ψ|Ti = 1} and sells goods {A ∈ Ψ|Ti = −1} .
+3-4:Let T = (T1, ..., T|Π|) denote the complete trade between all players .
+3-5:We view T as describing the allocation of goods by the mechanism to the buyers and sellers .
+3-6:In the single unit heterogeneous setting every good belongs to specific seller, and every buyer is interested in buying one good .
+3-7:The buyer may bid for several or all goods .
+3-8:At the end of the auction every good is either assigned to one of the buyers who bid for it or kept unsold by the seller .
+3-9:It is convenient to assume the sets of buyers and sellers are disjoint (though it is not required), i.e .
+3-10:N ∩ M = ∅ .
+3-11:Each seller i is associated with exactly one good Ai, for which she has true valuation ci which expresses the price at which it is beneficial for her to sell the good .
+3-12:If the seller reports a false valuation at an attempt to improve the auction results for her, this valuation is denoted ˆci .
+3-13:A buyer has a valuation vector describing his valuation for each of the goods according to their owner .
+3-14:Specifically, vj(k) denotes buyer j"s valuation for good Ak .
+3-15:Similarly, if he reports a false valuation it is denoted ˆvj(k) .
+3-16:If buyer j is matched by the mechanism with seller i then Ti(Ai) = −1 and Tj(Ai) = 1 .
+3-17:Notice, that in our setting for every k = i, Ti(Ak) = 0 and Tj(Ai) = 0 and also for every z = j, Tz(Ai) = 0 .
+3-18:For a matched buyer j seller i pair, the gain from trade on the deal is defined as vj(i) − ci .
+3-19:Given and allocation T, the gain from trade associated with T is V = j∈M,i∈N (vj(i) − ci) · Tj(Ai) .
+3-20:Let T∗ denote the optimal allocation which maximizes the gain from trade, computed according to the players" true valuations .
+3-21:Let V ∗ denote the optimal gain from trade associated with this allocation .
+3-22:When players" report false valuations we use ˆT∗ and ˆV ∗ to denote the optimal allocation and gain from trade, respectively, when computed according to the reported valuations .
+3-23:2 We are interested in the design of negotiation range mechanisms .
+3-24:In contrast to a standard auction mechanism where the buyer and seller are provided with the prices they should pay, the goal of a negotiation range mechanism is to provide the player"s with a range of prices within which they can negotiate the final terms of the deal by themselves .
+3-25:The mechanism would provide the buyer with the upper bound on the range and the seller with the lower bound on the range .
+3-26:This gives each of them a promise that it will be beneficial for them to close the deal, but does not provide information about the other player"s terms of negotiation .
+3-27:Definition 1 .
+3-28:Negotiation Range: Zone Of Possible Agreements, ZOPA, between a matched buyer and seller .
+3-29:The ZOPA is a range, (L, H), 0 ≤ L ≤ H, where H is an upper bound (ceiling) price for the buyer and L is a lower bound (floor) price for the seller .
+3-30:Definition 2 .
+3-31:Negotiation Range Mechanism: A mechanism that computes a ZOPA, (L, H), for each matched buyer and seller in T∗ , and provides the buyer with the upper bound H and the seller with the lower bound L .
+3-32:The basic assumption is that participants in the auction are self interested players .
+3-33:That is their main goal is to maximize their expected utility .
+3-34:The utility for a buyer who does not participate in the trade is 0 .
+3-35:If he does win some good, his utility is the surplus between his valuation for that good and the price he pays .
+3-36:For a seller, if she keeps the good unsold, her utility is just her valuation of the good, and the surplus is 0 .
+3-37:If she gets to sell it, her utility is the price she is paid for it, and the surplus is the difference between this price and her valuation .
+3-38:Since negotiation range mechanisms assign bounds on the range of prices rather than the final price, it is useful to define the upper and lower bounds on the player"s utilities defined by the range"s limits .
+3-39:Definition 3 .
+3-40:Consider a buyer j seller i pair matched by a negotiation range mechanism and let (L, H) be their associated negotiation range .
+3-41:• The buyer"s top utility is: vj(i) − L, and the buyer"s bottom utility is vj(i) − H .
+3-42:• The seller"s top utility is H, with surplus H − ci, and the seller"s bottom utility is L, with surplus L − ci. .
+4 THE SINGLE UNIT HETEROGENEOUS MECHANISM (ZOPAS) :
+4-1:MECHANISM 3.1 Description of the Mechanism ZOPAS is a negotiation range mechanism, it finds the optimal allocation T∗ and uses it to define a ZOPA for each buyer seller pair .
+4-2:The first stage in applying the mechanism is for the buyers and sellers to submit their sealed bids .
+4-3:The mechanism then allocates buyers to sellers by computing the allocation T ∗ , which results in the optimal gain from trade V ∗ , and defines a ZOPA for each buyer seller pair .
+4-4:Finally, buyers and sellers use the ZOPA to negotiate a final price .
+4-5:Computing T∗ involves solving the maximum weighted bipartite matching problem for the complete bipartite graph Kn,m constructed by placing the buyers on one side of the Find the optimal allocation T ∗ Compute the maximum weighted bipartite matching for the bipartite graph of buyers and sellers, and edge weights equal to the gain from trade .
+4-6:Calculate Sellers" Floors For every buyer j, allocated good Ai Find the optimal allocation (T−j)∗ Li = vj(i) + (V−j)∗ − V ∗ Calculate Buyers" Ceilings For every buyer j, allocated good Ai Find the optimal allocation (T −i )∗ Find the optimal allocation (T −i −j )∗ Hj = vj(i) + (V −i −j )∗ − (V −i )∗ Negotiation Phase For every buyer j and every seller i of good Ai Report to seller i her floor Li and identify her matched buyer j Report to buyer j his ceiling Hj and identify his matched seller i i, j negotiate the good"s final price Figure 1: The ZOPAS mechanism graph, the seller on another and giving the edge between buyer j and seller i weight equal to vj(i) − ci .
+4-7:The maximum weighted matching problem in solvable in polynomial time (e.g., using the Hungarian Method) .
+4-8:This results in a matching between buyers and sellers that maximizes gain from trade .
+4-9:The next step is to compute for each buyer seller pair a seller"s floor, which provides the lower bound of the ZOPA for this pair, and assigns it to the seller .
+4-10:A seller"s floor is computed by calculating the difference between the total gain from trade when the buyer is excluded and the total gain from trade of the other participants when the buyer is included (the VCG principle) .
+4-11:Let (T−j)∗ denote the gain from trade of the optimal allocation when buyer j"s bids are discarded .
+4-12:Denote by (V−j)∗ the total gain from trade in the allocation (T−j)∗ .
+4-13:Definition 4 .
+4-14:Seller Floor: The lowest price the seller should expect to receive, communicated to the seller by the mechanism .
+4-15:The seller floor for player i who was matched with buyer j on good Ai, i.e., Tj(Ai) = 1, is computed as: Li = vj(i) + (V−j)∗ − V ∗ .
+4-16:The seller is instructed not to accept less than this price from her matched buyer .
+4-17:Next, the mechanism computes for each buyer seller pair a buyer ceiling, which provides the upper bound of the ZOPA for this pair, and assigns it to the buyer .
+4-18:Each buyer"s ceiling is computed by removing the buyer"s matched seller and calculating the difference between the total gain from trade when the buyer is excluded and the total gain from trade of the other participants when the 3 buyer is included .
+4-19:Let (T−i )∗ denote the gain from trade of the optimal allocation when seller i is removed from the trade .
+4-20:Denote by (V −i )∗ the total gain from trade in the allocation (T−i )∗ .
+4-21:Let (T−i −j )∗ denote the gain from trade of the optimal allocation when seller i is removed from the trade and buyer j"s bids are discarded .
+4-22:Denote by (V −i −j )∗ the total gain from trade in the allocation (T −i −j )∗ .
+4-23:Definition 5 .
+4-24:Buyer Ceiling: The highest price the seller should expect to pay, communicated to the buyer by the mechanism .
+4-25:The buyer ceiling for player j who was matched with seller i on good Ai, i.e., Tj(Ai) = 1, is computed as: Hj = vj(i) + (V −i −j )∗ − (V −i )∗ .
+4-26:The buyer is instructed not to pay more than this price to his matched seller .
+4-27:Once the negotiation range lower bound and upper bound are computed for every matched pair, the mechanism reports the lower bound price to the seller and the upper bound price to the buyer .
+4-28:At this point each buyer seller pair negotiates on the final price and concludes the deal .
+4-29:A schematic description the ZOPAS mechanism is given in Figure 3.1 .
+4-30:3.2 Analysis of the Mechanism In this section we analyze the properties of the ZOPAS mechanism .
+4-31:Theorem 1 .
+4-32:The ZOPAS market negotiation range mechanism is an incentive compatible bilateral trade mechanism that is efficient, individually rational and budget balanced .
+4-33:Clearly ZOPAS is an efficient polynomial time mechanism .
+4-34:Let us show it satisfies the rest of the properties in the theorem .
+4-35:Claim 1 .
+4-36:ZOPAS is individually rational, i.e., the mechanism maintains nonnegative utility surplus for all participants .
+4-37:Proof .
+4-38:If a participant does not trade in the optimal allocation then his utility surplus is zero by definition .
+4-39:Consider a pair of buyer j and seller i which are matched in the optimal allocation T ∗ .
+4-40:Then the buyer"s utility is at least vj(i) − Hj .
+4-41:Recall that Hj = vj(i) + (V −i −j )∗ − (V −i )∗ , so that vj(i) − Hj = (V −i )∗ − (V −i −j )∗ .
+4-42:Since the optimal gain from trade which includes j is higher than that which does not, we have that the utility is nonnegative: vj(i) − Hj ≥ 0 .
+4-43:Now, consider the seller i .
+4-44:Her utility surplus is at least Li − ci .
+4-45:Recall that Li = vj(i) + (V−j)∗ − V ∗ .
+4-46:If we removed from the optimal allocation T ∗ the contribution of the buyer j seller i pair, we are left with an allocation which excludes j, and has value V ∗ − (vj(i) − ci) .
+4-47:This implies that (V−j)∗ ≥ V ∗ − vj(i) + ci, which implies that Li − ci ≥ 0 .
+4-48:The fact that ZOPAS is a budget balanced mechanism follows from the following lemma which ensures the validity of the negotiation range, i.e., that every seller"s floor is below her matched buyer"s ceiling .
+4-49:This ensures that they can close the deal at a final price which lies in this range .
+4-50:Lemma 1 .
+4-51:For every buyer j seller i pair matched by the mechanism: Li ≤ Hj .
+4-52:Proof .
+4-53:Recall that Li = vj(i) + (V−j)∗ − V ∗ and Hj = vj(i)+(V −i −j )∗ −(V −i )∗ .
+4-54:To prove that Li ≤ Hj it is enough to show that (V −i )∗ + (V−j)∗ ≤ V ∗ + (V −i −j )∗ .
+4-55:(1) The proof of (1) is based on a method which we apply several times in our analysis .
+4-56:We start with the allocations (T−i )∗ and (T−j)∗ which together have value equal to (V −i )∗ + (V−j)∗ .
+4-57:We now use them to create a pair of new valid allocations, by using the same pairs that were matched in the original allocations .
+4-58:This means that the sum of values of the new allocations is the same as the original pair of allocations .
+4-59:We also require that one of the new allocations does not include buyer j or seller i .
+4-60:This means that the sum of values of these new allocations is at most V ∗ + (V −i −j )∗ , which proves (1) .
+4-61:Let G be the bipartite graph where the nodes on one side of G represent the buyers and the nodes on the other side represent the sellers, and edge weights represent the gain from trade for the particular pair .
+4-62:The different allocations represent bipartite matchings in G .
+4-63:It will be convenient for the sake of our argument to think of the edges that belong to each of the matchings as being colored with a specific color representing this matching .
+4-64:Assign color 1 to the edges in the matching (T −i )∗ and assign color 2 to the edges in the matching (T−j)∗ .
+4-65:We claim that these edges can be recolored using colors 3 and 4 so that the new coloring represents allocations T (represented by color 3) and (T−i −j ) (represented by color 4) .
+4-66:This implies the that inequality (1) holds .
+4-67:Figure 2 illustrates the graph G and the colorings of the different matchings .
+4-68:Define an alternating path P starting at j .
+4-69:Let S1 be the seller matched to j in (T −i )∗ (if none exists then P is empty) .
+4-70:Let B1 be the buyer matched to S1 in (T−j)∗ , S2 be the seller matched to B1 in (T−i )∗ , B2 be the buyer matched to S2 in (T−j)∗ , and so on .
+4-71:This defines an alternating path P, starting at j, whose edges" colors alternate between colors 1 and 2 (starting with 1) .
+4-72:This path ends either in a seller who is not matched in (T−j)∗ or in a buyer who is not matched in (T−i )∗ .
+4-73:Since all sellers in this path are matched in (T−i )∗ , we have that seller i does not belong to P .
+4-74:This ensures that edges in P may be colored by alternating colors 3 and 4 (starting with 3) .
+4-75:Since except for the first edge, all others do not involve i or j and thus may be colored 4 and be part of an allocation (T −i −j ) .
+4-76:We are left to recolor the edges that do not belong to P .
+4-77:Since none of these edges includes j we have that the edges that were colored 1, which are part of (T −i )∗ , may now be colored 4, and be included in the allocation (T −i −j ) .
+4-78:It is also clear that the edges that were colored 2, which are part of (T−j)∗ , may now be colored 3, and be included in the allocation T .
+4-79:This completes the proof of the lemma .
+4-80:3.3 Incentive Compatibility The basic requirement in mechanism design is for an exchange mechanism to be incentive compatible .
+4-81:This means that its payment structure enforces that truth telling is the players" weakly dominant strategy, that is that the strategy by which the player is stating his true valuation results 4 .. .
+4-82:jS1 S2 B1 S3 B2 B3S4 S5 B4 S6 B5 S8 B7 S7 B6 .. .
+4-83:Figure 2: Alternating path argument for Lemma 1 (Validity of the Negotiation Range) and Claim 2 (part of Buyer"s IC proof) Colors Bidders 1 32 4 UnmatchedMatched Figure 3: Key to Figure 2 in bigger or equal utility as any other strategy .
+4-84:The utility surplus is defined as the absolute difference between the player"s bid and his price .
+4-85:Negotiation range mechanisms assign bounds on the range of prices rather than the final price and therefore the player"s valuation only influences the minimum and maximum bounds on his utility .
+4-86:For a buyer the minimum (bottom) utility would be based on the top of the negotiation range (ceiling), and the maximum (top) utility would be based on the bottom of the negotiation range (floor) .
+4-87:For a seller it"s the other way around .
+4-88:Therefore the basic natural requirement from negotiation range mechanisms would be that stating the player"s true valuation results in both the higher bottom utility and higher top utility for the player, compared with other strategies .
+4-89:Unfortunately, this requirement is still too strong and it is impossible (by [10]) that this will always hold .
+4-90:Therefore we slightly relax it as follows: we require this holds when the false valuation based strategy changes the player"s allocation .
+4-91:When the allocation stays unchanged we require instead that the player would not be able to change his matched player"s bound (e.g .
+4-92:a buyer cannot change the seller"s floor) .
+4-93:This means that the only thing he can influence is his own bound, something that he can alternatively achieve through means of negotiation .
+4-94:The following formally summarizes our incentive compatibility requirements from the negotiation range mechanism .
+4-95:Buyer"s incentive compatibility: • Let j be a buyer matched with seller i by the mechanism according to valuation vj and the negotiationrange assigned is (Li, Hj) .
+4-96:Assume that when the mechanism is applied according to valuation ˆvj, seller k = i is matched with j and the negotiation range assigned is (ˆLk, ˆHj) .
+4-97:Then vj(i) − Hj ≥ vj(k) − ˆHj .
+4-98:(2) vj(i) − Li ≥ vj(k) − ˆLk .
+4-99:(3) • Let j be a buyer not matched by the mechanism according to valuation vj .
+4-100:Assume that when the mechanism is applied according to valuation ˆvj, seller k = i is matched with j and the negotiation range assigned is (ˆLk, ˆHj) .
+4-101:Then vj(k) − ˆHj ≤ vj(k) − ˆLk ≤ 0 .
+4-102:(4) • Let j be a buyer matched with seller i by the mechanism according to valuation vj and let the assigned bottom of the negotiation range (seller"s floor) be Li .
+4-103:Assume that when the mechanism is applied according to valuation ˆvj, the matching between i and j remains unchanged and let the assigned bottom of the negotiation range (seller"s floor) be ˆLi .
+4-104:Then, ˆLi = Li .
+4-105:(5) Notice that the first inequality of (4) always holds for a valid negotiation range mechanism (Lemma 1) .
+4-106:Seller"s incentive compatibility: • Let i be a seller not matched by the mechanism according to valuation ci .
+4-107:Assume that when the mechanism 5 is applied according to valuation ˆci, buyer z = j is matched with i and the negotiation range assigned is (ˆLi, ˆHz) .
+4-108:Then ˆLi − ci ≤ ˆHz − ci ≤ 0 .
+4-109:(6) • Let i be a buyer matched with buyer j by the mechanism according to valuation ci and let the assigned top of the negotiation range (buyer"s ceiling) be Hj .
+4-110:Assume that when the mechanism is applied according to valuation ˆci, the matching between i and j remains unchanged and let the assigned top of the negotiation range (buyer"s ceiling) be ˆHj .
+4-111:Then, ˆHj = Hj .
+4-112:(7) Notice that the first inequality of (6) always holds for a valid negotiation range mechanism (Lemma 1) .
+4-113:Observe that in the case of sellers in our setting, the case expressed by requirement (6) is the only case in which the seller may change the allocation to her benefit .
+4-114:In particular, it is not possible for seller i who is matched in T ∗ to change her buyer by reporting a false valuation .
+4-115:This fact simply follows from the observation that reducing the seller"s valuation increases the gain from trade for the current allocation by at least as much than any other allocation, whereas increasing the seller"s valuation decreases the gain from trade for the current allocation by exactly the same amount as any other allocation in which it is matched .
+4-116:Therefore, the only case the optimal allocation may change is when in the new allocation i is not matched in which case her utility surplus is 0 .
+4-117:Theorem 2 .
+4-118:ZOPAS is an incentive compatible negotiationrange mechanism .
+4-119:Proof .
+4-120:We begin with the incentive compatibility for buyers .
+4-121:Consider a buyer j who is matched with seller i according to his true valuation v .
+4-122:Consider that j is reporting instead a false valuation ˆv which results in a different allocation in which j is matched with seller k = i .
+4-123:The following claim shows that a buyer j which changed his allocation due to a false declaration of his valuation cannot improve his top utility .
+4-124:Claim 2 .
+4-125:Let j be a buyer matched to seller i in T ∗ , and let k = i be the seller matched to j in ˆT∗ .
+4-126:Then, vj(i) − Hj ≥ vj(k) − ˆHj .
+4-127:(8) Proof .
+4-128:Recall that Hj = vj(i) + (V −i −j )∗ − (V −i )∗ and ˆHj = ˆvj(k) + ( ˆV −k −j )∗ − ( ˆV −k )∗ .
+4-129:Therefore, vj(i) − Hj = (V −i )∗ − (V −i −j )∗ and vj(k) − ˆHj = vj(k) − ˆvj(k) + ( ˆV −k )∗ − ( ˆV −k −j )∗ .
+4-130:It follows that in order to prove (8) we need to show ( ˆV −k )∗ + (V −i −j )∗ ≤ (V −i )∗ + ( ˆV −k −j )∗ + ˆvj(k) − vj(k) .
+4-131:(9) Consider first the case were j is matched to i in ( ˆT−k )∗ .
+4-132:If we remove this pair and instead match j with k we obtain a matching which excludes i, if the gain from trade on the new pair is taken according to the true valuation then we get ( ˆV −k )∗ − (ˆvj(i) − ci) + (vj(k) − ck) ≤ (V −i )∗ .
+4-133:Now, since the optimal allocation ˆT∗ matches j with k rather than with i we have that (V −i −j )∗ + (ˆvj(i) − ci) ≤ ˆV ∗ = ( ˆV −k −j )∗ + (ˆvj(k) − ck), where we have used that ( ˆV −i −j )∗ = (V −i −j )∗ since these allocations exclude j .
+4-134:Adding up these two inequalities implies (9) in this case .
+4-135:It is left to prove (9) when j is not matched to i in ( ˆT−k )∗ .
+4-136:In fact, in this case we prove the stronger inequality ( ˆV −k )∗ + (V −i −j )∗ ≤ (V −i )∗ + ( ˆV −k −j )∗ .
+4-137:(10) It is easy to see that (10) indeed implies (9) since it follows from the fact that k is assigned to j in ˆT∗ that ˆvj(k) ≥ vj(k) .
+4-138:The proof of (10) works as follows .
+4-139:We start with the allocations ( ˆT−k )∗ and (T−i −j )∗ which together have value equal to ( ˆV −k )∗ + (V −i −j )∗ .
+4-140:We now use them to create a pair of new valid allocations, by using the same pairs that were matched in the original allocations .
+4-141:This means that the sum of values of the new allocations is the same as the original pair of allocations .
+4-142:We also require that one of the new allocations does not include seller i and is based on the true valuation v, while the other allocation does not include buyer j or seller k and is based on the false valuation ˆv .
+4-143:This means that the sum of values of these new allocations is at most (V −i )∗ + ( ˆV −k −j )∗ , which proves (10) .
+4-144:Let G be the bipartite graph where the nodes on one side of G represent the buyers and the nodes on the other side represent the sellers, and edge weights represent the gain from trade for the particular pair .
+4-145:The different allocations represent bipartite matchings in G .
+4-146:It will be convenient for the sake of our argument to think of the edges that belong to each of the matchings as being colored with a specific color representing this matching .
+4-147:Assign color 1 to the edges in the matching ( ˆT−k )∗ and assign color 2 to the edges in the matching (T −i −j )∗ .
+4-148:We claim that these edges can be recolored using colors 3 and 4 so that the new coloring represents allocations (T −i ) (represented by color 3) and ( ˆT−k −j ) (represented by color 4) .
+4-149:This implies the that inequality (10) holds .
+4-150:Figure 2 illustrates the graph G and the colorings of the different matchings .
+4-151:Define an alternating path P starting at j .
+4-152:Let S1 = i be the seller matched to j in ( ˆT−k )∗ (if none exists then P is empty) .
+4-153:Let B1 be the buyer matched to S1 in (T−i −j )∗ , S2 be the seller matched to B1 in ( ˆT−k )∗ , B2 be the buyer matched to S2 in (T−i −j )∗ , and so on .
+4-154:This defines an alternating path P, starting at j, whose edges" colors alternate between colors 1 and 2 (starting with 1) .
+4-155:This path ends either in a seller who is not matched in (T −i −j )∗ or in a buyer who is not matched in ( ˆT−k )∗ .
+4-156:Since all sellers in this path are matched in ( ˆT−k )∗ , we have that seller k does not belong to are matched in (T−i −j )∗ we have that seller i as well does not belong to P .
+4-157:This ensures that edges in P may be colored by alternating colors 3 and 4 (starting with 3) .
+4-158:Since S1 = i, we may use color 3 for the first edge and thus assign it to the allocation (T−i ) .
+4-159:All other edges, do not involve i, j or k and thus may be either colored 4 and be part of an allocation ( ˆT−k −j ) or colored 3 and be part of an allocation (T−i ) , in an alternating fashion .
+4-160:We are left to recolor the edges that do not belong to P .
+4-161:Since none of these edges includes j we have that the edges 6 that were colored 1, which are part of ( ˆT−k )∗ , may now be colored 4, and be included in the allocation ( ˆT−k −j ) .
+4-162:It is also clear that the edges that were colored 2, which are part of (T−i −j )∗ , may now be colored 3, and be included in the allocation (T−i ) .
+4-163:This completes the proof of (10) and the claim .
+4-164:The following claim shows that a buyer j which changed his allocation due to a false declaration of his valuation cannot improve his bottom utility .
+4-165:The proof is basically the standard VCG argument .
+4-166:Claim 3 .
+4-167:Let j be a buyer matched to seller i in T ∗ , and k = i be the seller matched to j in ˆT∗ .
+4-168:Then, vj(i) − Li ≥ vj(k) − ˆLk .
+4-169:(11) Proof .
+4-170:Recall that Li = vj(i) + (V−j)∗ − V ∗ , and ˆLk = ˆvj(k) + ( ˆV−j)∗ − ˆV ∗ = ˆvj(k) + (V−j)∗ − ˆV ∗ .
+4-171:Therefore, vj(i) − Li = V ∗ − (V−j)∗ and vj(k) − ˆLk = vj(k) − ˆvj(k) + ˆV ∗ − (V−j)∗ .
+4-172:It follows that in order to prove (11) we need to show V ∗ ≥ vj(k) − ˆvj(k) + ˆV ∗ .
+4-173:(12) The scenario of this claim occurs when j understates his value for Ai or overstated his value for Ak .
+4-174:Consider these two cases: • ˆvj(k) > vj(k): Since Ak was allocated to j in the allocation ˆT∗ we have that using the allocation of ˆT∗ according to the true valuation gives an allocation of value U satisfying ˆV ∗ − ˆvj(k) + vj(k) ≤ U ≤ V ∗ .
+4-175:• ˆvj(k) = vj(k) and ˆvj(i) < vj(i): In this case (12) reduces to V ∗ ≥ ˆV ∗ .
+4-176:Since j is not allocated i in ˆT∗ we have that ˆT∗ is an allocation that uses only true valuations .
+4-177:From the optimality of T ∗ we conclude that V ∗ ≥ ˆV ∗ .
+4-178:Another case in which a buyer may try to improve his utility is when he does not win any good by stating his true valuation .
+4-179:He may give a false valuation under which he wins some good .
+4-180:The following claim shows that doing this is not beneficial to him .
+4-181:Claim 4 .
+4-182:Let j be a buyer not matched in T ∗ , and assume seller k is matched to j in ˆT∗ .
+4-183:Then, vj(k) − ˆLk ≤ 0 .
+4-184:Proof .
+4-185:The scenario of this claim occurs if j did not buy in the truth telling allocation and overstates his value for Ak, ˆvj(k) > vj(k) in his false valuation .
+4-186:Recall that ˆLk = ˆvj(k) + ( ˆV−j)∗ − ˆV ∗ .
+4-187:Thus we need to show that 0 ≥ vj(k) − ˆvj(k) + ˆV ∗ − (V−j)∗ .
+4-188:Since j is not allocated in T∗ then (V−j)∗ = V ∗ .
+4-189:Since j is allocated Ak in ˆT∗ we have that using the allocation of ˆT∗ according to the true valuation gives an allocation of value U satisfying ˆV ∗ − ˆvj(k) + vj(k) ≤ U ≤ V ∗ .
+4-190:Thus we can conclude that 0 ≥ vj(k) − ˆvj(k) + ˆV ∗ − (V−j)∗ .
+4-191:Finally, the following claim ensures that a buyer cannot influence the floor bound of the ZOPA for the good he wins .
+4-192:Claim 5 .
+4-193:Let j be a buyer matched to seller i in T ∗ , and assume that ˆT∗ = T∗ , then ˆLi = Li .
+4-194:Proof .
+4-195:Recall that Li = vj(i) + (V−j)∗ − V ∗ , and ˆLi = ˆvj(i) + ( ˆV−j)∗ − ˆV ∗ = ˆvj(i) + (V−j)∗ − ˆV ∗ .
+4-196:Therefore we need to show that ˆV ∗ = V ∗ + ˆvj(i) − vj(i) .
+4-197:Since j is allocated Ai in T∗ , we have that using the allocation of T∗ according to the false valuation gives an allocation of value U satisfying V ∗ − vj(i) + ˆvj(i) ≤ U ≤ ˆV ∗ .
+4-198:Similarly since j is allocated Ai in ˆT∗ , we have that using the allocation of ˆT∗ according to the true valuation gives an allocation of value U satisfying ˆV ∗ − ˆvj(i)+vj(i) ≤ U ≤ V ∗ , which together with the previous inequality completes the proof .
+4-199:This completes the analysis of the buyer"s incentive compatibility .
+4-200:We now turn to prove the seller"s incentive compatibility properties of our mechanism .
+4-201:The following claim handles the case where a seller that was not matched in T ∗ falsely understates her valuation such that she gets matched n ˆT∗ .
+4-202:Claim 6 .
+4-203:Let i be a seller not matched in T ∗ , and assume buyer z is matched to i in ˆT∗ .
+4-204:Then, ˆHz − ci ≤ 0 .
+4-205:Proof .
+4-206:Recall that ˆHz = vz(i) + ( ˆV −i −z )∗ − ( ˆV −i )∗ .
+4-207:Since i is not matched in T ∗ and ( ˆT−i )∗ involves only true valuations we have that ( ˆV −i )∗ = V ∗ .
+4-208:Since i is matched with z in ˆT∗ it can be obtained by adding the buyer z seller i pair to ( ˆT−i −z)∗ .
+4-209:It follows that ˆV ∗ = ( ˆV −i −z )∗ + vz(i) − ˆci .
+4-210:Thus, we have that ˆHz = ˆV ∗ + ˆci − V ∗ .
+4-211:Now, since i is matched in ˆT∗ , using this allocation according to the true valuation gives an allocation of value U satisfying ˆV ∗ + ˆci − ci ≤ U ≤ V ∗ .
+4-212:Therefore ˆHz −ci = ˆV ∗ +ˆci −V ∗ −ci ≤ 0 .
+4-213:Finally, the following simple claim ensures that a seller cannot influence the ceiling bound of the ZOPA for the good she sells .
+4-214:Claim 7 .
+4-215:Let i be a seller matched to buyer j in T ∗ , and assume that ˆT∗ = T∗ , then ˆHj = Hj .
+4-216:Proof .
+4-217:Since ( ˆV −i −j )∗ = (V −i −j )∗ and ( ˆV −i )∗ = (V −i )∗ it follows that ˆHj = vj(i)+( ˆV −i −j )∗ −( ˆV −i )∗ = vj(i)+(V −i −j )∗ −(V −i )∗ = Hj. .
+5-1:In this paper we suggest a way to deal with the impossibility of producing mechanisms which are efficient, individually rational, incentive compatible and budget balanced
+5-2:To this aim we introduce the concept of negotiation range mechanisms which avoid the problem by leaving the final determination of prices to a negotiation between the buyer and seller
+5-3:The goal of the mechanism is to provide the initial range (ZOPA) for negotiation in a way that it will be beneficial for the participants to close the proposed deals
+5-4:We present a negotiation range mechanism that is efficient, individually rational, incentive compatible and budget balanced
+5-5:The ZOPA produced by our mechanism is based 7 on a natural adaptation of the VCG payment scheme in a way that promises valid negotiation ranges which permit a budget balanced allocation
+5-6:The basic question that we aimed to tackle seems very exciting: which properties can we expect a market mechanism to achieve ? Are there different market models and requirements from the mechanisms that are more feasible than classic mechanism design goals ? In the context of our negotiation range model, is natural to further study negotiation based mechanisms in more general settings
+5-7:A natural extension is that of a combinatorial market
+5-8:Unfortunately, finding the optimal allocation in a combinatorial setting is NP hard, and thus the problem of maintaining BB is compounded by the problem of maintaining IC when efficiency is approximated [1, 5, 6, 9, 11]
+5-9:Applying the approach in this paper to develop negotiationrange mechanisms for combinatorial markets, even in restricted settings, seems a promising direction for research.
+6-1:Y
+6-2:Bartal, R
+6-3:Gonen, and N
+6-4:Nisan
+6-5:Incentive Compatible Multi Unit Combinatorial Auctions
+6-6:Proceeding of 9th TARK 2003, pp
+6-7:72 87, June 2003
+6-8:E
+6-9:H
+6-10:Clarke
+6-11:Multipart Pricing of Public Goods
+6-12:In journal Public Choice 1971, volume 2, pages 17 33
+6-13:J.Feigenbaum, C
+6-14:Papadimitriou, and S
+6-15:Shenker
+6-16:Sharing the Cost of Multicast Transmissions
+6-17:Journal of Computer and System Sciences, 63(1),2001
+6-18:A
+6-19:Fiat, A
+6-20:Goldberg, J
+6-21:Hartline, and A
+6-22:Karlin
+6-23:Competitive Generalized Auctions
+6-24:Proceeding of 34th ACM Symposium on Theory of Computing,2002
+6-25:R
+6-26:Gonen, and D
+6-27:Lehmann
+6-28:Optimal Solutions for Multi Unit Combinatorial Auctions: Branch and Bound Heuristics
+6-29:Proceeding of ACM Conference on Electronic Commerce EC"00, pages 13 20, October 2000
+6-30:R
+6-31:Gonen, and D
+6-32:Lehmann
+6-33:Linear Programming helps solving Large Multi unit Combinatorial Auctions
+6-34:In Proceeding of INFORMS 2001, November, 2001
+6-35:T
+6-36:Groves
+6-37:Incentives in teams
+6-38:In journal Econometrica 1973, volume 41, pages 617 631
+6-39:R
+6-40:Lavi, A
+6-41:Mu"alem and N
+6-42:Nisan
+6-43:Towards a Characterization of Truthful Combinatorial Auctions
+6-44:Proceeding of 44th Annual IEEE Symposium on Foundations of Computer Science,2003
+6-45:D
+6-46:Lehmann, L
+6-47:I
+6-48:O"Callaghan, and Y
+6-49:Shoham
+6-50:Truth revelation in rapid, approximately efficient combinatorial auctions
+6-51:In Proceedings of the First ACM Conference on Electronic Commerce, pages 96 102, November 1999
+6-52:R
+6-53:Myerson, M
+6-54:Satterthwaite
+6-55:Efficient Mechanisms for Bilateral Trading
+6-56:Journal of Economic Theory, 28, pages 265 81, 1983
+6-57:N
+6-58:Nisan and A
+6-59:Ronen
+6-60:Algorithmic Mechanism Design
+6-61:In Proceeding of 31th ACM Symposium on Theory of Computing, 1999
+6-62:D.C
+6-63:Parkes, J
+6-64:Kalagnanam, and M
+6-65:Eso
+6-66:Achieving Budget Balance with Vickrey Based Payment Schemes in Exchanges
+6-67:Proceeding of 17th International Joint Conference on Artificial Intelligence, pages 1161 1168, 2001
+6-68:W
+6-69:Vickrey
+6-70:Counterspeculation, Auctions and Competitive Sealed Tenders
+6-71:In Journal of Finance 1961, volume 16, pages 8 37
+6-72:8
+picture:

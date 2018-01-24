@@ -1,0 +1,42 @@
+Topic Detection and Tracking program aims to develop techniques which can effectively organize, search and structure news text materials from a variety of newswire and broadcast media [1] .
+New Event Detection is one of the five tasks in TDT .
+It is the task of online identification of the earliest report for each topic as soon as that report arrives in the sequence of documents .
+A Topic is defined as a seminal event or activity, along with directly related events and activities [2] .
+An Event is defined as something (non trivial) happening in a certain place at a certain time [3] .
+For instance, when a bomb explodes in a building, the exploding is the seminal event that triggers the topic, and other stories on the same topic would be those discussing salvaging efforts, the search for perpetrators, arrests and trial and so on .
+Useful news information is usually buried in a mass of data generated everyday .
+Therefore, NED systems are very useful for people who need to detect novel information from real time news stream .
+These real life needs often occur in domains like financial markets, news analysis, and intelligence gathering .
+In most of state of the art (currently) NED systems, each news story on hand is compared to all the previous received stories .
+If all the similarities between them do not exceed a threshold, then the story triggers a new event .
+They are usually in the form of cosine similarity or Hellinger similarity metric .
+The core problem of NED is to identify whether two stories are on the same topic .
+Obviously, these systems cannot take advantage of topic information .
+Further more, it is not acceptable in real applications because of the large amount of computation required in the NED process .
+Other systems organize previous stories into clusters (each cluster corresponds to a topic), and new story is compared to the previous clusters instead of stories .
+This manner can reduce comparing times significantly .
+Nevertheless, it has been proved that this manner is less accurate [4, 5] .
+This is because sometimes stories within a topic drift far away from each other, which could lead low similarity between a story and its topic .
+On the other hand, some proposed NED systems tried to improve accuracy by making better use of named entities [10, 11, 12, 13] .
+However, none of the systems have considered that terms of different types (e.g .
+Noun, Verb or Person name) have different effects for different classes of stories in determining whether two stories are on the same topic .
+For example, the names of election candidates (Person name) are very important for stories of election class; the locations (Location name) where accidents happened are important for stories of accidents class .
+So, in NED, there still exist following three problems to be investigated
+Driven by these problems, we have proposed three approaches in this paper .
+(1)To make the detection procedure faster, we propose a new NED procedure based on news indexing tree created dynamically .
+Story indexing tree is created by assembling similar stories together to form news clusters in different hierarchies according to their values of similarity .
+Comparisons between current story and previous clusters could help find the most similar story in less comparing times .
+The new procedure can reduce the amount of comparing times without hurting accuracy .
+(2)We use the clusters of the first floor in the indexing tree as news topics, in which term weights are adjusted dynamically according to term distribution in the clusters .
+In this approach, cluster (topic) information is used properly, so the problem of theme decentralization is avoided .
+(3)Based on observations on the statistics obtained from training data, we found that terms of different types (e.g .
+Noun and Verb) have different effects for different classes of stories in determining whether two stories are on the same topic .
+And we propose to use statistics to optimize the weights of the terms of different types in a story according to the news class that the story belongs to .
+On TDT3 dataset, the new NED model just uses 14.9% comparing times of the basic model, while its minimum normalized cost is 0.5012, which is 0.0797 better than the basic model, and also better than any other results previously reported for this dataset [8, 13] .
+The rest of the paper is organized as follows .
+We start off this paper by summarizing the previous work in NED in section 2 .
+Section 3 presents the basic model for NED that most current systems use .
+Section 4 describes our new detection procedure based on news indexing tree .
+In section 5, two term reweighting methods are proposed to improve NED accuracy .
+Section 6 gives our experimental data and evaluation metrics .
+We finally wrap up with the experimental results in Section 7, and the conclusions and future work in Section 8. .

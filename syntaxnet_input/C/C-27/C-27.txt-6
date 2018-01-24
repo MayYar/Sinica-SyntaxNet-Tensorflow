@@ -1,0 +1,164 @@
+In this section we present the performance evaluation of the Spotlight systems when using the three event distribution functions, i.e .
+Point Scan, Line Scan and Area Cover, described in Section 3 .
+19 For the ?Spotlight system we used 10 Mica2 motes .
+The sensor nodes were attached to a vertically positioned Veltex board .
+By projecting the light to the sensor nodes, we are able to generate well controlled Point, Line and Area events .
+The Spotlight device was able to generate events, i.e .
+project light patterns, covering an area of approximate size 180x140cm2 .
+The screen resolution for the projector was 1024x768, and the movement of the Point Scan and Line Scan techniques was done through increments (in the appropriate direction) of 10 pixels between events .
+Each experimental point was obtained from 10 successive runs of the localization procedure .
+Each set of 10 runs was preceded by a calibration phase, aimed at estimating the total delays (between the Spotlight device and each sensor node) in detecting an event .
+During the calibration, we created an event covering the entire sensor field (illuminated the entire area) .
+The timestamp reported by each sensor node, in conjunction with the timestamp created by the Spotlight device were used to obtain the time offset, for each sensor node .
+More sophisticated calibration procedures have been reported previously [35] .
+In addition to the time offset, we added a manually configurable parameter, called bias .
+It was used to best estimate the center of an event .
+Figure 13 .
+Deployment site for the Spotlight system For the Spotlight system evaluation, we deployed 10 XSM motes in a football field .
+The site is shown in Figure 13 (laser beams are depicted with red arrows and sensor nodes with white dots) .
+Two sets of experiments were run, with the Spotlight device positioned at 46m and at 170m from the sensor field .
+The sensor nodes were aligned and the Spotlight device executed a Point Scan .
+The localization system computed the coordinates of the sensor nodes, and the Spotlight device was oriented, through a GoTo command sent to the telescope mount, towards the computed location .
+In the initial stages of the experiments, we manually measured the localization error .
+For our experimental evaluation, the metrics of interest were as follows
+Localization duration, defined as the time span between the first and last event .
+Localization range, defined as the maximum distance between the Spotlight device and the sensor nodes .
+A Localization Cost function Cost
+The objective is to minimize the Localization Cost function .
+By denoting with ei the localization error for the ith scenario, with di the localization duration for the ith scenario, with max(e) the maximum localization error, with max(d) the maximum localization duration, and with £\ the importance factor, the Localization Cost function is formally defined as
+This metric is used to investigate the effectiveness of the calibration procedure .
+If, for example, all computed locations have a bias in the west direction, a calibration factor can be used to compensate for the difference .
+The parameters that we varied during the performance evaluation of our system were
+5.1 Point Scan £gSpotlight system In this experiment, we investigated how the size of the event and the scanning speed affect the localization error .
+Figure 14 shows the mean localization errors with their standard deviations .
+It can be observed, that while the scanning speed, varying between 35cm sec and 87cm sec has a minor influence on the localization accuracy, the size of the event has a dramatic effect .
+0 2 4 6 8 10 12 14 7.0 10.5 14.0 17.5 21.0 24.5 Event Size [cm] Locationerror[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 14 .
+Localization Error vs .
+Event Size for the Point Scan EDF The obtained localization error varied from as little as 2cm to over 11cm for the largest event .
+This dependence can be explained by our Event Detection algorithm
+The duration of the localization scheme is shown in Figure 15 .
+The dependency of the localization duration on the size of the event and scanning speed is natural .
+A bigger event allows a reduction in the total duration of up to 70% .
+The localization duration is directly proportional to the scanning speed, as expected, and depicted in Figure 15 .
+0 20 40 60 80 100 120 7.0 10.5 14.0 17.5 21.0 24.5 Event Size [cm] LocalizationDuration[sec] 87cm sec 58cm sec 43cm sec 35cm sec Figure 15 .
+Localization Duration vs .
+Event Size for the Point Scan EDF 20 An interesting trade off is between the localization accuracy (usually the most important factor), and the localization time (important in environments where stealthiness is paramount) .
+Figure 16 shows the Localization Cost function, for £\ = 0.5 (accuracy and duration are equally important) .
+As shown in Figure 16, it can be observed that an event size of approximately 10 15cm (depending on the scanning speed) minimizes our Cost function .
+For £\ = 1, the same graph would be a monotonically increasing function, while for £\ = 0, it would be monotonically decreasing function .
+0.40 0.45 0.50 0.55 0.60 0.65 0.70 5.0 10.0 15.0 20.0 25.0 30.0 Event Size [cm] LocalizationCost[%] 87cm sec 58cm sec 43cm sec 35cm sec Figure 16 .
+Localization Cost vs .
+Event Size for the Point Scan EDF 5.2 Line Scan £gSpotlight system In a similar manner to the Point Scan EDF, for the Line Scan EDF we were interested in the dependency of the localization error and duration on the size of the event and scanning speed .
+We represent in Figure 17 the localization error for different event sizes .
+It is interesting to observe the dependency (concave shape) of the localization error vs .
+the event size .
+Moreover, a question that should arise is why the same dependency was not observed in the case of Point Scan EDF .
+0 1 2 3 4 5 6 7 8 9 10 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] Locationerror[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 17 .
+Localization Error vs .
+Event Size for the Line Scan EDF The explanation for this concave dependency is the existence of a bias in location estimation .
+As a reminder, a bias factor was introduced in order to best estimate the central point of events that have a large size .
+What Figure 17 shows is the fact that the bias factor was optimal for an event size of approximately 7cm .
+For events smaller and larger than this, the bias factor was too large, and too small, respectively .
+Thus, it introduced biased errors in the position estimation .
+The reason why we did not observe the same dependency in the case of the Point Scan EDF was that we did not experiment with event sizes below 7cm, due to the long time it would have taken to scan the entire field with events as small as 1.7cm .
+The results for the localization duration as a function of the size of the event are shown in Figure 18 .
+As shown, the localization duration is directly proportional to the scanning speed .
+The size of the event has a smaller influence on the localization duration .
+One can remark the average localization duration of about 10sec, much shorter then the duration obtained in the Point Scan experiment .
+The Localization Cost function dependency on the event size and scanning speed, for £\=0.5, is shown in Figure 19 .
+The dependency on the scanning speed is very small (the Cost Function achieves a minimum in the same 4 6cm range) .
+It is interesting to note that this 4 6cm optimal event size is smaller than the one observed in the case of Point Scan EDF .
+The explanation for this is that the smaller localization duration observed in the Line Scan EDF, allowed a shift (towards smaller event sizes) in the total Localization Cost Function .
+0 5 10 15 20 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] LocalizationDuration[sec] 87cm sec 58cm sec 43cm sec 35cm sec Figure 18 .
+Localization Duration vs .
+Event Size for the Line Scan EDF 0.50 0.55 0.60 0.65 0.70 0.75 0.80 1.0 3.0 5.0 7.0 9.0 11.0 Event Size [cm] LocalizationCost[%] 87cm sec 58cm sec 43cm sec 35cm sec Figure 19 .
+Cost Function vs .
+Event Size for the Line Scan EDF During our experiments with the Line Scan EDF, we observed evidence of a bias in location estimation .
+The estimated locations for all sensor nodes exhibited different biases, for different event sizes .
+For example, for an event size of 17.5cm, the estimated location for sensor nodes was to the upper left size of the actual location .
+This was equivalent to an early detection, since our scanning was done from left to right and from top to bottom .
+The scanning speed did not influence the bias .
+In order to better understand the observed phenomena, we analyzed our data .
+Figure 20 shows the bias in the horizontal direction, for different event sizes (the vertical bias was almost identical, and we omit it, due to space constraints) .
+From Figure 20, one can observe that the smallest observed bias, and hence the most accurate positioning, was for an event of size 7cm .
+These results are consistent with the observed localization error, shown in Figure 17 .
+We also adjusted the measured localization error (shown in Figure 17) for the observed bias (shown in Figure 20) .
+The results of an ideal case of Spotlight Localization system with Line Scan EDF are shown in Figure 21 .
+The errors are remarkably small, varying between 0.1cm and 0.8cm, with a general trend of higher localization errors for larger event sizes .
+21 6 5 4 3 2 1 0 1 2 3 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] HorizontalBias[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 20 .
+Position Estimation Bias for the Line Scan EDF 0.0 0.2 0.4 0.6 0.8 1.0 1.2 1.7 3.5 7.0 10.5 14.0 17.5 Event Size [cm] LocalizationErrorw oBias[cm] 87cm sec 58cm sec 43cm sec 35cm sec Figure 21 .
+Position Estimation w o Bias (ideal), for the Line Scan EDF 5.3 Area Cover £gSpotlight system In this experiment, we investigated how the number of bits used to quantify the entire sensor field, affected the localization accuracy .
+In our first experiment we did not use error correcting codes .
+The results are shown in Figure 22 .
+0.0 0.5 1.0 1.5 2.0 2.5 3.0 3.5 6 8 10 12 Number of Bits Locationerror[cm] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 22 .
+Localization Error vs .
+Event Size for the Area Cover EDF One can observe a remarkable accuracy, with localization error on the order of 0.3 0.6cm .
+What is important to observe is the variance in the localization error .
+In the scenario where 12 bits were used, while the average error was very small, there were a couple of cases, where an incorrect event detection generated a larger than expected error .
+An example of how this error can occur was described in Section 3.4 .
+The experimental results, presented in Figure 22, emphasize the need for error correction of the bit patterns observed and reported by the sensor nodes .
+The localization duration results are shown in Figure 23 .
+It can be observed that the duration is directly proportional with the number of bits used, with total durations ranging from 3sec, for the least accurate method, to 6 7sec for the most accurate .
+The duration of an event had a small influence on the total localization time, when considering the same scenario (same number of bits for the code) .
+The Cost Function dependency on the number of bits in the code, for £\=0.5, is shown in Figure 24 .
+Generally, since the localization duration for the Area Scan can be extremely small, a higher accuracy in the localization is desired .
+While the Cost function achieves a minimum when 10 bits are used, we attribute the slight increase observed when 12 bits were used to the two 12bit scenarios where larger than the expected errors were observed, namely 6 7mm (as shown in Figure 22) .
+0 1 2 3 4 5 6 7 8 9 10 6 8 10 12 Number of Bits LocalizationDuration[sec] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 23 .
+Localization Duration vs .
+Event Size for the Area Cover EDF 0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 4 6 8 10 12 14 Number of Bits CostFunction[%] 20ms event 40ms event 60ms event 80ms event 100ms event Figure 24 .
+Cost Function vs .
+Event Size for the Area Cover EDF 0.4 0.1 0.2 0.5 0.8 1.1 1.4 20 40 60 80 100 Event Duration [ms event] Locationerror[cm] w o ECC w ECC Figure 25 .
+Localization Error w and w o Error Correction The two problematic scenarios (shown in Figure 22, where for 12 bit codes we observed errors larger than the event size, due to errors in detection) were further explored by using error correction codes .
+As described in Section 3.3, we implemented an extended Golay (24, 12) error correction mechanism in our location estimation algorithm .
+The experimental results are depicted in Figure 25, and show a consistent accuracy .
+The scenario without error correction codes, is simply the same 12 bit code scenario, shown in Figure 22 .
+We only investigated the 12 bit scenario, due to its match with the 12bit data required by the Golay encoding scheme (extended Golay producing 24 bit codewords) .
+22 5.4 Point Scan Spotlight system In this section we describe the experiments performed at a football stadium, using our Spotlight system .
+The hardware that we had available allowed us to evaluate the Point Scan technique of the Spotlight system .
+In our evaluation, we were interested to see the performance of the system at different ranges .
+Figures 26 and 27 show the localization error versus the event size at two different ranges
+Figure 26 shows a remarkable accuracy in localization .
+The errors are in the centimeter range .
+Our initial, manual measurements of the localization error were most of the time difficult to make, since the spot of the laser was almost perfectly covering the XSM mote .
+We are able to achieve localization errors of a few centimeters, which only range based localization schemes are able to achieve [25] .
+The observed dependency on the size of the event is similar to the one observed in the £gSpotlight system evaluation, and shown in Figure 14 .
+This proved that the £gSpotlight system is a viable alternative for investigating complex EDFs, without incurring the costs for the necessary hardware .
+0 5 10 15 20 25 0 5 10 15 20 25 30 Event Size [cm] LocalizationError[cm] 0.41m sec 0.81m sec 1.7m sec Figure 26 .
+Localization Error vs .
+Event Size for Spotlight system at 46m In the experiments performed over a much longer distance between the Spotlight device and sensor network, the average localization error remains very small .
+Localization errors of 510cm were measured, as Figure 27 shows .
+We were simply amazed by the accuracy that the system is capable of, when considering that the Spotlight system operated over the length of a football stadium .
+Throughout our experimentation with the Spotlight system, we have observed localization errors that were simply offsets of real locations .
+Since the same phenomenon was observed when experimenting with the £gSpotlight system, we believe that with auto calibration, the localization error can be further reduced .
+0 5 10 15 20 25 6 12 18 Event Size [cm] LocalizationError[cm] 0.7m sec 1.4m sec 3m sec Figure 27 .
+Localization Error vs .
+Event Size for Spotlight system at 170m The time required for localization using the Spotlight system with a Point Scan EDF, is given by
+Figure 28 shows the time for localizing a sensor network deployed in an area of size of a football field using the Spotlight system .
+Here we ignore the message propagation time, from the sensor nodes to the Spotlight device .
+From Figure 28 it can be observed that the very small localization errors are prohibitively expensive in the case of the Point Scan .
+When localization errors of up to 1m are tolerable, localization duration can be as low as 4 minutes .
+Localization durations of 5 10 minutes, and localization errors of 1m are currently state of art in the realm of range free localization schemes .
+And these results are achieved by using the Point Scan scheme, which required the highest Localization Time, as it was shown in Table 1 .
+0 5 10 15 20 25 30 35 40 0 25 50 75 100 125 150 Event Size [cm] LocalizationTime[min] 3m sec 6m sec 9m sec Figure 28 .
+Localization Time vs .
+Event Size for Spotlight system One important characteristic of the Spotlight system is its range .
+The two most important factors are the sensitivity of the photosensor and the power of the Spotlight source .
+We were interested in measuring the range of our Spotlight system, considering our capabilities (MTS310 sensor board and inexpensive, $12 $85, diode laser) .
+As a result, we measured the intensity of the laser beam, having the same focus, at different distances .
+The results are shown in Figure 29 .
+950 1000 1050 1100 0 50 100 150 200 Distance [m] Intensity[ADCcount] 35mW 7mW Figure 29 .
+Localization Range for the Spotlight system From Figure 29, it can be observed that only a minor decrease in the intensity occurs, due to absorption and possibly our imperfect focusing of the laser beam .
+A linear fit of the experimental data shows that distances of up to 6500m can be achieved .
+While we do not expect atmospheric conditions, over large distances, to be similar to our 200m evaluation, there is strong evidence that distances (i.e .
+altitude) of 1000 2000m can easily be achieved .
+The angle between the laser beam and the vertical should be minimized (less than 45¢X), as it reduces the difference between the beam cross section (event size) and the actual projection of the beam on the ground .
+In a similar manner, we were interested in finding out the maximum size of an event, that can be generated by a COTS laser and that is detectable by the existing photosensor .
+For this, we 23 varied the divergence of the laser beam and measured the light intensity, as given by the ADC count .
+The results are shown in Figure 30 .
+It can be observed that for the less powerful laser, an event size of 1.5m is the limit .
+For the more powerful laser, the event size can be as high as 4m .
+Through our extensive performance evaluation results, we have shown that the Spotlight system is a feasible, highly accurate, low cost solution for localization of wireless sensor networks .
+From our experience with sources of laser radiation, we believe that for small and medium size sensor network deployments, in areas of less than 20,000m2 , the Area Cover scheme is a viable solution .
+For large size sensor network deployments, the Line Scan, or an incremental use of the Area Cover are very good options .
+0 200 400 600 800 1000 1200 0 50 100 150 200 Event Size [cm] Intensity[ADCcount] 35mW 7mW Figure 30 .
+Detectable Event Sizes that can be generated by COTS lasers .

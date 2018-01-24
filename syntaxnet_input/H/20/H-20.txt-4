@@ -1,0 +1,19 @@
+In this section, we present the basic New Event Detection model which is similar to what most current systems apply .
+Then, we propose our new model by extending the basic model .
+New Event Detection systems use news story stream as input, in which stories are strictly time ordered .
+Only previously received stories are available when dealing with current story .
+The output is a decision for whether the current story is on a new event or not and the confidence of the decision .
+Usually, a NED model consists of three parts
+3.1 Story Representation Preprocessing is needed before generating story representation .
+For preprocessing, we tokenize words, recognize abbreviations, normalize abbreviations, add part of speech tags, remove stopwords included in the stop list used in InQuery [14], replace words with their stems using K stem algorithm[15], and then generate word vector for each news story .
+We use incremental TF IDF model for term weight calculation [4] .
+In a TF IDF model, term frequency in a news document is weighted by the inverse document frequency, which is generated from training corpus .
+When a new term occurs in testing process, there are two solutions
+df = 1) .
+The new term receives too low weight in the first solution (0) and too high weight in the second solution .
+In incremental TF IDF model, document frequencies are updated dynamically in each time step t
+In this work, each time window includes 50 news stories .
+Thus, each story d received in t is represented as follows
+3.2 Similarity Calculation We use Hellinger distance for the calculation of similarity between two stories, for two stories d and d" at time t, their similarity is defined as follows
+time(d) means the publication time of story d .
+If the score exceeds the threshold£c new, then there exists a sufficiently similar document, thus d is a old story, otherwise, there is no sufficiently similar previous document, thus d is an new story. .

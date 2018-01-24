@@ -1,0 +1,99 @@
+The main purpose of our experimental analysis is to evaluate the model"s behavior and performance in a real adversarial environment .
+This section investigates whether bounded 1 A case where following the completion of £] there exists a £^ which gives high utility for Agent Au ag, cannot occur because Ao uses the same utility, and £^"s existence will cause it to classify £] as a low utility action .
+554 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) rational agents situated in such adversarial environments will be better off applying our suggested behavioral axioms .
+3.1 The Domain To explore the use of the above model and its behavioral axioms, we decided to use the Connect Four game as our adversarial environment .
+Connect Four is a 2 player, zerosum game which is played using a 6x7 matrix like board .
+Each turn, a player drops a disc into one of the 7 columns (the set of 21 discs is usually colored yellow for player 1 and red for player 2; we will use White and Black respectively to avoid confusion) .
+The winner is the first player to complete a horizontal, vertical, or diagonal set of four discs with its color .
+On very rare occasions, the game might end in a tie if all the empty grids are filled, but no player managed to create a 4 disc set .
+The Connect Four game was solved in [1], where it is shown that the first player (playing with the white discs) can force a win by starting in the middle column (column 4) and playing optimally However, the optimal strategy is very complex, and difficult to follow even for complex bounded rational agents, such as human players .
+Before we can proceed checking agent behavior, we must first verify that the domain conforms to the adversarial environment"s definition as given above (which the behavioral axioms are based on) .
+First, when playing a Connect Four game, the agent has an intention to win the game (item 1) .
+Second (item 2), our agent believes that in Connect Four there can only be one winner (or no winner at all in the rare occurrence of a tie) .
+In addition, our agent believes that its opponent to the game will try to win (item 3), and we hope it has some partial knowledge (item 4) about its adversary (this knowledge can vary from nothing, through simple facts such as age, to strategies and weaknesses) .
+Of course, not all Connect Four encounters are adversarial .
+For example, when a parent is playing the game with its child, the following situation might occur
+However, the parent"s point of view might see the environment as an educational one, where its goal is not to win the game, but to cause enjoyment or practice strategic reasoning .
+In such an educational environment, a new set of behavioral axioms might be more beneficial to the parent"s goals than our suggested adversarial behavioral axioms .
+3.2 Axiom Analysis After showing that the Connect Four game is indeed a zero sum, bilateral adversarial environment, the next step is to look at players" behaviors during the game and check whether behaving according to our model does improve performance .
+To do so we have collected log files from completed Connect Four games that were played by human players over the Internet .
+Our collected log file data came from Play by eMail (PBeM) sites .
+These are web sites that host email games, where each move is taken by an email exchange between the server and the players .
+Many such sites" archives contain real competitive interactions, and also maintain a ranking system for their members .
+Most of the data we used can be found in [6] .
+As can be learned from [1], Connect Four has an optimal strategy and a considerable advantage for the player who starts the game (which we call the White player) .
+We will concentrate in our analysis on the second player"s moves (to be called Black) .
+The White player, being the first to act, has the so called initiative advantage .
+Having the advantage and a good strategy will keep the Black player busy reacting to its moves, instead of initiating threats .
+A threat is a combination of three discs of the same color, with an empty spot for the fourth winning disk .
+An open threat is a threat that can be realized in the opponent"s next move .
+In order for the Black player to win, it must somehow turn the tide, take the advantage and start presenting threats to the White player .
+We will explore Black players" behavior and their conformance to our axioms .
+To do so, we built an application that reads log files and analyzes the Black player"s moves .
+The application contains two main components
+The Min Max algorithm will work to a given depth, d and for each move £\ will output the heuristic value for the next action taken by the player as written in the log file, h(£\), alongside the maximum heuristic value, maxh(£\), that could be achieved prior to taking the move (obviously, if h(£\) = maxh(£\), then the player did not do the optimal move heuristically) .
+The threat detector"s job is to notify if some action was taken in order to block an open threat (not blocking an open threat will probably cause the player to lose in the opponent"s next move) .
+The heuristic function used by Min Max to evaluate the player"s utility is the following function, which is simple to compute, yet provides a reasonable challenge to human opponents
+Let Group be an adjacent set of four squares that are horizontal, vertical, or diagonal .
+Groupn b (Groupn w) be a Group with n pieces of the black (white) color and 4?n empty squares .
+h = ((Group1 b ?£\)+(Group2 b ?£])+(Group3 b ?£^)+(Group4 b ?¡Û)) ? ((Group1 w ?£\)+(Group2 w ?£])+(Group3 w ?£^)+(Group4 w ?¡Û)) The values of £\, £] and £_ can vary to form any desired linear combination; however, it is important to value them with the £\ < £] < £_ ordering in mind (we used 1, 4, and 8 as their respective values) .
+Groups of 4 discs of the same color means victory, thus discovery of such a group will result in ¡Û to ensure an extreme value .
+We now use our estimated evaluation function to evaluate the Black player"s actions during the Connect Four adversarial interaction .
+Each game from the log file was input into the application, which processed and output a reformatted log file containing the h value of the current move, the maxh value that could be achieved, and a notification if an open threat was detected .
+A total of 123 games were analyzed (57 with White winning, and 66 with Black winning) .
+A few additional games were manually ignored in the experiment, due to these problems
+In addition, a single tie game was also removed .
+The simulator was run to a search depth of 3 moves .
+We now proceed to analyze the games with respect to each behavioral axiom .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 555 Table 1
+Table 1 shows results and insights from the games" heuristic analysis, when search depth equals 3 (this search depth was selected for the results to be comparable to [9], see Section 3.2.3) .
+The table"s heuristic data is the difference between the present maximal heuristic value and the heuristic value of the action that was eventually taken by the player (i.e., the closer the number is to 0, the closer the action was to the maximum heuristic action) .
+The first row presents the difference values of the action that had the maximal difference value among all the Black player"s actions in a given game, as averaged over all Black"s winning and losing games (see respective columns) .
+In games in which the Black player loses, its average difference value was 17.62, while in games in which the Black player won, its average was 12.02 .
+The second row expands the analysis by considering the 3 highest heuristic difference actions, and averaging them .
+In that case, we notice an average heuristic difference of 5 points between games which the Black player loses and games in which it wins .
+Nevertheless, the importance of those numbers is that they allowed us to take an educated guess on a threshold number of 11.5, as the value of the TrH constant, which differentiates between normal actions and highly beneficial ones .
+After finding an approximated TrH constant, we can proceed with an analysis of the importance of suboptimal moves .
+To do so we took the subset of games in which the minimum heuristic difference value for Black"s actions was 11.5 .
+As presented in Table 2, we can see the different min3 h average of the 3 largest ranges and the respective percentage of games won .
+The first row shows that the Black player won only 12% of the games in which the average of its 3 highest heuristically difference actions (min3 h) was smaller than the suggested threshold, TrH = 11.5 .
+The second row shows a surprising result
+Intuition would suggest that games in which the action evaluation values were closer to the maximal values will result in more winning games for Black .
+However, it seems that in the Connect Four domain, merely responding with somewhat easily expected actions, without initiating a few surprising and suboptimal moves, does not yield good results .
+The last row sums up the main insights from the analysis; most of Black"s wins (83%) came when its min3 h was in the range of 11.5 to 4 .
+A close inspection of those Black winning games shows the following pattern behind the numbers
+White continues to build its threats, while usually disregarding Black"s last move, which in turn uses the isolated disc as an anchor for a future winning threat .
+The results show that it was beneficial for the Black player Table 2
+As it turned out, learning the threshold is an important aspect of success
+3.2.2 Affirming the Profile Monitoring Axiom In the task of showing the importance of monitoring one"s adversaries" profiles, our log files could not be used because they did not contain repeated interactions between players, which are needed to infer the players" knowledge about their adversaries .
+However, the importance of opponent modeling and its use in attaining tactical advantages was already studied in various domains ([3, 9] are good examples) .
+In a recent paper, Markovitch and Reger [9] explored the notion of learning and exploitation of opponent weakness in competitive interactions .
+They apply simple learning strategies by analyzing examples from past interactions in a specific domain .
+They also used the Connect Four adversarial domain, which can now be used to understand the importance of monitoring the adversary"s profile .
+Following the presentation of their theoretical model, they describe an extensive empirical study and check the agent"s performance after learning the weakness model with past examples .
+One of the domains used as a competitive environment was the same Connect Four game (Checkers was the second domain) .
+Their heuristic function was identical to ours with three different variations (H1, H2, and H3) that are distinguished from one another in their linear combination coefficient values .
+The search depth for the players was 3 (as in our analysis) .
+Their extensive experiments check and compare various learning strategies, risk factors, predefined feature sets and usage methods .
+The bottom line is that the Connect Four domain shows an improvement from a 0.556 winning rate before modeling to a 0.69 after modeling (page 22) .
+Their conclusions, showing improved performance when holding and using the adversary"s model, justify the effort to monitor the adversary profile for continuous and repeated interactions .
+An additional point that came up in their experiments is the following
+Nevertheless, regardless of the specific method they chose to work with, all integration methods might cause the agent to take suboptimal decisions; it might cause the agent to prefer actions that are suboptimal at the present decision junction, but which might cause the opponent to react in accordance with its weakness model (as represented by our agent) which in turn will be beneficial for us in the future .
+The agent"s behavior, as demonstrated in [9] further confirms and strengthens our Suboptimal Tactical Axiom as discussed in the previous section .
+556 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 3.2.3 Additional Insights The need for the Goal Achieving, Preventive Act, and Evaluation Maximization axioms are obvious, and need no further verification .
+However, even with respect to those axioms, a few interesting insights came up in the log analysis .
+The Goal achieving and Preventive Act axioms, though theoretically trivial, seem to provide some challenge to a human player .
+In the initial inspection of the logs, we encountered few games2 where a player, for inexplicable reasons, did not block the other from winning or failed to execute its own winning move .
+We can blame those faults on the human"s lack of attention, or a typing error in its move reply; nevertheless, those errors might occur in bounded rational agents, and the appropriate behavior needs to be axiomatized .
+A typical Connect Four game revolves around generating threats and blocking them .
+In our analysis we looked for explicit preventive actions, i.e., moves that block a group of 3 discs, or that remove a future threat (in our limited search horizon) .
+We found that in 83% of the total games there was at least one preventive action taken by the Black player .
+It was also found that Black averaged 2.8 preventive actions per game on the games in which it lost, while averaging 1.5 preventive actions per game when winning .
+It seems that Black requires 1 or 2 preventive actions to build its initial taking position, before starting to present threats .
+If it did not manage to win, it will usually prevent an extra threat or two before succumbing to White. .

@@ -1,0 +1,61 @@
+This section presents the selective sharing mechanism by which the CA learns the distribution function of a probabilistic parameter by taking advantage of data collected by other CAs in its environment .
+We first explain the need for increasing the number of observations used as the basis of estimation and then present a method for determining how much data to adopt from other agents .
+The most straightforward method for the CA to learn the distribution functions associated with the different parameters characterizing an owner is by building a histogram based on the observations it has accumulated up to the estimation point .
+Based on this histogram, the CA can estimate the parameter either by taking into account the entire range of values (e.g., to estimate the mean) or a portion of it (e.g., to find the expected cost when using a reservation value based strategy) .
+The accuracy of the estimation will vary widely if it is based on only a small number of observations .
+For example, Figure 2 illustrates the reservation value based cost calculated according to observations received from an owner with a uniform interruption cost distribution U(0, 100) as a function of the number of accumulated observations used for generating the distribution histogram .
+(In this simulation, device activation cost was taken to be c = 0.5) .
+Figure 2
+Eventually this method yields a very accurate estimation for the expected interruption cost .
+However, in the initial stages of the process, its estimation deviates significantly from the true value .
+This error could seriously degrade the CA"s decision making process
+Any improvement that can be achieved in predicting the cost values, especially in the initial stages of learning, can make a significant difference in performance, especially because the agent is severely limited in the number of times it can interact with its owner in fastpaced domains .
+One way to decrease the deviation from the actual value is by augmenting the data the CA acquires by observing its owner with observations made by other owners" agents .
+Such an approach depends on identifying other owners with distribution functions for the characteristic of interest similar to the CA"s owner .
+This dataaugmentation idea is simple
+Since they are all coordinating on a common overall task and are operating in the same environment, it is reasonable to assume some level of similarity in the distribution function of their modeled parameters .
+People vary in their behavior, so, obviously, there may be different types of owners
+Consequently, an owner"s CA is likely to be able to find some CAs that are working with owners who are similar to its owner .
+When adopting data collected by other agents, the two main questions are which agents the CA should rely on and to what extent it should rely on each of them .
+The selective sharing mechanism relies on a statistical measure of similarity that allows the CA of any specific user to identify the similarity between its owner and other owners dynamically .
+Based on this similarity level, the CA decides if and to what degree to import other CAs" data in order to augment its direct observations, and thus to enable better modeling of its owner"s characteristics .
+It is notable that the cost of transferring observations between different CA modules of different agents is relatively small .
+This information can be transferred as part of regular negotiation communication between agents .
+The volume of such communication is negligible
+In our learning mechanism, the CA constantly updates its estimation of the level of similarity between its owner and the owners represented by other CAs in the environment .
+Each new observation obtained either by that CA or any of the other CAs updates this estimation .
+The similarity level is determined using the Wilcoxon rank sum test (Subsection 3.1) .
+Whenever it is necessary to produce a parameter estimate, the CA decides on the number of additional observations it intends to rely on for extracting its estimation .
+The number of additional observations to be taken from each other agent is a function of the number of observations it currently has from former interactions with its owner and the level of confidence the CA has in the similarity between its owner and other owners .
+In most cases, the number of observations the CA will want to take from another agent is smaller than the overall number of observations the other agent has; thus, it randomly samples (without repetitions) the required number of observations from this other agent"s database .
+The additional observations the CA takes from other agents are used only to model its owner"s characteristics .
+Future similarity level determination is not affected by this information augmentation procedure .
+3.1 The Wilcoxon Test We use a nonparametric method (i.e., one that makes no assumptions about the parametric form of the distributions each set is drawn from), because user characteristics in fast paced domains do not have the structure needed for parametric approaches .
+Two additional advantages of a non parametric approach are their usefulness for dealing with unexpected, outlying observations (possibly problematic for a parametric approach), and the fact that non parametric approaches are computationally very simple and thus ideal for settings in which computational resources are scarce .
+The Wilcoxon rank sum test we use is a nonparametric alternative to the two sample t test [22, 14]2 .
+While the t test compares means, the Wilcoxon test can be used to test the null hypothesis that two populations X and Y have the same continuous distribution .
+We assume that we have independent random samples {x1, x2, ..., xm} and {y1, y2, ..., yn}, of sizes m and n respectively, from each population .
+We then merge the data and rank each measurement from lowest to highest .
+All sequences of ties are assigned an average rank .
+From the sum of the ranks of the smaller 2 Chi Square Goodness of Fit Test is for a single sample and thus not suitable .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 205 sample, we calculate the test statistic and extract the level of confidence for rejecting the null hypothesis .
+This level of confidence becomes the measure for the level of similarity between the two owners .
+The Wilcoxon test does not require that the data originates from a normally distributed population or that the distribution is characterized by a finite set of parameters .
+3.2 Determining Required Information Correctly identifying the right number of additional observations to gather is a key determinant of success of the selective sharing mechanism .
+Obviously, if the CA can identify another owner who has identical characteristics to the owner it represents, then it should use all of the observations collected by that owner"s agent .
+However, cases of identical matches are likely to be very uncommon .
+Furthermore, even to establish that another user is identical to its own, the CA would need substantial sample sizes to have a relatively high level of confidence .
+Thus, usually the CA needs to decide how much to rely on another agent"s data while estimating various levels of similarity with a changing level of confidence .
+At the beginning of its process, the selective sharing mechanism has almost no data to rely on, and thus no similarity measure can be used .
+In this case, the CA module relies heavily on other agents, in the expectation that all owners have some basic level of similarity in their distribution (see Section 2) .
+As the number of its direct observations increases, the CA module refines the number of additional observations required .
+Again, there are two conflicting effects .
+On one hand, the more data the CA has, the better it can determine its level of confidence in the similarity ratings it has for other owners .
+On the other hand, assuming there is some difference among owners (even if not noticed yet), as the number of its direct observations increases, the owner"s own data should gain weight in its analysis .
+Therefore, when CAi decides how many additional observations, Oi j should be adopted from CAj"s database, it calculates Oi j as follows
+The function in Equation 5 ensures that the number of additional observations to be taken from another CA module increases as the confidence in the similarity with the source for these additional observations increases .
+At the same time, it ensures that the level of dependency on external observations decreases as the number of direct observations increases .
+When calculating the parameter £\i,j, we always perform the test over the interval relevant to the originating CA"s distribution function .
+For example, when estimating the cost of interrupting the user, we apply the Wilcoxon test only for observations in the interval that starts from zero and ends slightly to the right of the formerly estimated RV (see Figure 1). .

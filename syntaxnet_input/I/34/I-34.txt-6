@@ -1,0 +1,41 @@
+(£n0, .
+.
+.
+, £nn) ¡P £m = pn (£n0 ¡P £m, .
+.
+.
+, £nn ¡P £m) .
+Where X generically refers to any of the deontic modalities O, P, F .
+Unification between two terms £n, £n consists of finding a substitution £m (also called, in this context, the unifier of £n and £n ) such that £n ¡P £m = £n ¡P £m .
+Many algorithms have been proposed to solve the unification problem, a fundamental issue in automated theorem proving [8], and more recent work provides very efficient ways to obtain unifiers .
+We shall make use of the following definition
+6 .
+Relationship unify(£n, £n , £m) holds iff there is a possibly empty £m such that £n ¡P £m = £n ¡P £m .
+We also define the unification of atomic formulae as unify(pn (£n0, .
+.
+.
+, £nn), pn (£n0, .
+.
+.
+, £nn), £m) which holds iff £ni ¡P £m = £ni ¡P £m, 0 ? i ? n .
+The unify relationship checks if a substitution £m is indeed a unifier for £n, £n but it can also be used to find such £m .
+We assume that unify is a suitable implementation of a unification algorithm which i) always terminates (possibly failing, if a unifier cannot be found); ii) is correct; and iii) has a linear computational complexity .
+3.1 Conflict Detection A norm conflict arises when an atomic formula labelling an edge in the VO, i.e .
+an action, is simultaneously permitted and prohibited [13] .
+In this case, both norms are in conflict with regard to their agents, roles and parameters (terms) of specific actions .
+We propose to use unification to detect when a prohibition and a permission overlap and to employ the unifier to resolve the conflict .
+For instance, PA
+If, however, the variables in Fa
+We thus propose to annotate the prohibitions in £[ with unifiers, called here conflict sets, and use these annotations to determine what the variables of the prohibition cannot be in future unifications in order to avoid a conflict .
+Each prohibition is henceforth regarded as having such an annotation, denoted as (F£n1
+Initially, this annotation is empty .
+We propose to curtail the influence of prohibitions, thus giving agents more choices in the actions they may perform .
+A similar approach could be taken whereby permissions are curtailed, thus limiting the available agents" actions .
+Each of these policies is possible
+In this paper we are interested in formalising such policies within a simple mathematical framework .
+A prohibition can be in conflict with various permissions in £[ .
+We, therefore, have to find the maximal set of conflicting pairs of permissions and prohibitions in £[, by performing a pairwise inspection .
+This requires identifying the substitution between two pairs of norms that characterises a conflict .
+This is formally captured by the following definition
+7 .
+A conflict arises between two tuples £s, £s ? £[ under a substitution £m, denoted as cflct(£s, £s , £m), iff the following conditions hold

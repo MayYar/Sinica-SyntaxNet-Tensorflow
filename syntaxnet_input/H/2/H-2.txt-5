@@ -1,0 +1,38 @@
+using respectively Cosine Similarity, Mutual Information, and Likelihood Ratio as similarity coefficients; expansion with synonyms, sub concepts, and super concepts, respectively .
+Except for the thesaurus based expansion, in all cases we also investigated the performance of our algorithms when exploiting only the Web browser cache to represent user"s personal information .
+This is motivated by the fact that other personal documents such as for example emails are known to have a somewhat different language than that residing on the world wide Web [34] .
+However, as this approach performed visibly poorer than using the entire Desktop data, we omitted it from the subsequent analysis .
+3.2.2 Results Log Queries .
+We evaluated all variants of our algorithms using NDCG .
+For log queries, the best performance was achieved with TF, LC[O], and TC[LR] .
+The improvements they brought were up to 5.2% for top queries (p = 0.14) and 13.8% for randomly selected queries (p = 0.01, statistically significant), both obtained with LC[O] .
+A summary of all results is depicted in Table 1 .
+Both TF and LC[O] yielded very good results, indicating that simple keyword and expression oriented approaches might be sufficient for the Desktop based query expansion task .
+LC[O] was much better than LC, ameliorating its quality with up to 25.8% in the case of randomly selected log queries, improvement which was also significant with p = 0.04 .
+Thus, a selection of compounds spanning over several Desktop documents is more informative about user"s interests than the general approach, in which there is no restriction on the number of compounds produced from every personal item .
+The more complex Desktop oriented approaches, namely sentence selection and all term co occurrence based algorithms, showed a rather average performance, with no visible improvements, except for TC[LR] .
+Also, the thesaurus based expansion usually produced very few suggestions, possibly because of the many technical queries employed by our subjects .
+We observed however that expanding with sub concepts is very good for everyday life terms (e.g., car), whereas the use of super concepts is valuable for compounds having at least one term with low technicality (e.g., document clustering) .
+As expected, the synonym based expansion performed generally well, though in some very Algorithm NDCG Signific .
+NDCG Signific .
+Top vs .
+Google Random vs .
+Google Google 0.42 0.40TF 0.43 p = 0.32 0.43 p = 0.04 DF 0.17 0.23LC 0.39 0.36LC[O] 0.44 p = 0.14 0.45 p = 0.01 SS 0.33 0.36TC[CS] 0.37 0.35TC[MI] 0.40 0.36TC[LR] 0.41 0.42 p = 0.06 WN[SYN] 0.42 0.38WN[SUB] 0.28 0.33WN[SUP] 0.26 0.26Table 1
+Algorithm NDCG Signific .
+NDCG Signific .
+Clear vs .
+Google Ambiguous vs .
+Google Google 0.71 0.39TF 0.66 0.52 p 0.01 DF 0.37 0.31LC 0.65 0.54 p 0.01 LC[O] 0.69 0.59 p 0.01 SS 0.56 0.52 p 0.01 TC[CS] 0.60 0.50 p = 0.01 TC[MI] 0.60 0.47 p = 0.02 TC[LR] 0.56 0.47 p = 0.03 WN[SYN] 0.70 0.36WN[SUB] 0.46 0.32WN[SUP] 0.51 0.29Table 2
+technical cases it yielded rather general suggestions .
+Finally, we noticed Google to be very optimized for some top frequent queries .
+However, even within this harder scenario, some of our personalization algorithms produced statistically significant improvements over regular search (i.e., TF and LC[O]) .
+Self selected Queries .
+The NDCG values obtained with selfselected queries are depicted in Table 2 .
+While our algorithms did not enhance Google for the clear search tasks, they did produce strong improvements of up to 52.9% (which were of course also highly significant with p 0.01) when utilized with ambiguous queries .
+In fact, almost all our algorithms resulted in statistically significant improvements over Google for this query type .
+In general, the relative differences between our algorithms were similar to those observed for the log based queries .
+As in the previous analysis, the simple Desktop based Term Frequency and Lexical Compounds metrics performed best .
+Nevertheless, a very good outcome was also obtained for Desktop based sentence selection and all term co occurrence metrics .
+There were no visible differences between the behavior of the three different approaches to cooccurrence calculation .
+Finally, for the case of clear queries, we noticed that fewer expansion terms than 4 might be less noisy and thus helpful in bringing further improvements .
+We thus pursued this idea with the adaptive algorithms presented in the next section. .

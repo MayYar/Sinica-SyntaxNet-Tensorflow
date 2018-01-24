@@ -1,0 +1,605 @@
+Bid Expressiveness and Clearing Algorithms in 
+content:
+1 ABSTRACT :
+1-1:We investigate the space of two sided multiattribute auctions, focusing on the relationship between constraints on the offers traders can express through bids, and the resulting computational problem of determining an optimal set of trades .
+1-2:We develop a formal semantic framework for characterizing expressible offers, and show conditions under which the allocation problem can be separated into first identifying optimal pairwise trades and subsequently optimizing combinations of those trades .
+1-3:We analyze the bilateral matching problem while taking into consideration relevant results from multiattribute utility theory .
+1-4:Network flow models we develop for computing global allocations facilitate classification of the problem space by computational complexity, and provide guidance for developing solution algorithms .
+1-5:Experimental trials help distinguish tractable problem classes for proposed solution techniques .
+1-6:Categories and Subject Descriptors: F.2 [Theory of Computation]: Analysis Of Algorithms And Problem Complexity; J.4 A multiattribute auction is a market based mechanism where goods are described by vectors of features, or attributes [3, 5, 8, 19] .
+1-7:Such mechanisms provide traders with the ability to negotiate over a multidimensional space of potential deals, delaying commitment to specific configurations until the most promising candidates are identified .
+1-8:For example, in a multiattribute auction for computers, the good may be defined by attributes such as processor speed, memory, and hard disk capacity .
+1-9:Agents have varying preferences (or costs) associated with the possible configurations .
+1-10:For example, a buyer may be willing to purchase a computer with a 2 GHz processor, 500 MB of memory, and a 50 GB hard disk for a price no greater than $500, or the same computer with 1GB of memory for a price no greater than $600 .
+1-11:Existing research in multiattribute auctions has focused primarily on one sided mechanisms, which automate the process whereby a single agent negotiates with multiple potential trading partners [8, 7, 19, 5, 23, 22] .
+1-12:Models of procurement typically assume the buyer has a value function, v, ranging over the possible configurations, X, and that each seller i can similarly be associated with a cost function ci over this domain .
+1-13:The role of the auction is to elicit these functions (possibly approximate or partial versions), and identify the surplus maximizing deal .
+1-14:In this case, such an outcome would be arg maxi,x v(x) − ci(x) .
+1-15:This problem can be translated into the more familiar auction for a single good without attributes by computing a score for each attribute vector based on the seller valuation function, and have buyers bid scores .
+1-16:Analogs of the classic first and second price auctions correspond to firstand second score auctions [8, 7] .
+1-17:In the absence of a published buyer scoring function, agents on both sides may provide partial specifications of the deals they are willing to engage .
+1-18:Research on such auctions has, for example, produced iterative mechanisms for eliciting cost functions incrementally [19] .
+1-19:Other efforts focus on the optimization problem facing the bid taker, for example considering side constraints on the combination of trades comprising an overall deal [4] .
+1-20:Side constraints have also been analyzed in the context of combinatorial auctions [6, 20] .
+1-21:Our emphasis is on two sided multiattribute auctions, where multiple buyers and sellers submit bids, and the objective is to construct a set of deals maximizing overall surplus .
+1-22:Previous research on such auctions includes works by Fink et al .
+1-23:[12] and Gong [14], both of which consider a matching problem for continuous double auctions (CDAs), where deals are struck whenever a pair of compatible bids is identified .
+1-24:In a call market, in contrast, bids accumulate until designated times (e.g., on a periodic or scheduled basis) at which the auction clears by determining a comprehensive match over the entire set of bids .
+1-25:Because the optimization is performed over an aggregated scope, call markets often enjoy liquidity and efficiency advantages over CDAs [10].1 Clearing a multiattribute CDA is much like clearing a one sided multiattribute auction .
+1-26:Because nothing happens between bids, the problem is to match a given new bid (say, an offer to buy) with the existing bids on the other (sell) side .
+1-27:Multiattribute call markets are potentially much more complex .
+1-28:Constructing an optimal overall matching may require consideration of many different combina1 In the interim between clears, call markets may also disseminate price quotes providing summary information about the state of the auction [24] .
+1-29:Such price quotes are often computed based on hypothetical clears, and so the clearing algorithm may be invoked more frequently than actual market clearing operations .
+1-30:110 tions of trades, among the various potential trading partner pairings .
+1-31:The problem can be complicated by restrictions on overall assignments, as expressed in side constraints [16] .
+1-32:The goal of the present work is to develop a general framework for multiattribute call markets, to enable investigation of design issues and possibilities .
+1-33:In particular, we use the framework to explore tradeoffs between expressive power of agent bids and computational properties of auction clearing .
+1-34:We conduct our exploration independent of any consideration of strategic issues bearing on mechanism design .
+1-35:As with analogous studies of combinatorial auctions [18], we intend that tradeoffs quantified in this work can be combined with incentive factors within a comprehensive overall approach to multiattribute auction design .
+1-36:We provide the formal semantics of multiattribute offers in our framework in the next section .
+1-37:We abstract, where appropriate, from the specific language used to express offers, characterizing expressiveness semantically in terms of what deals may be offered .
+1-38:This enables us to identify some general conditions under which the problem of multilateral matching can be decomposed into bilateral matching problems .
+1-39:We then develop a family of network flow problems that capture corresponding classes of multiattribute call market optimizations .
+1-40:Experimental trials provide preliminary confirmation that the network formulations provide useful structure for implementing clearing algorithms. .
+2 MULTIATTRIBUTE OFFERS :
+2-1:2.1 Basic Definitions The distinguishing feature of a multiattribute auction is that the goods are defined by vectors of attributes, x = (x1, .
+2-2:.
+2-3:.
+2-4:, xm), xj ∈ Xj .
+2-5:A configuration is a particular attribute vector, x ∈ X = Qm j=1 Xj .
+2-6:The outcome of the auction is a set of bilateral trades .
+2-7:Trade t takes the form t = (x, q, b, s, π), signifying that agent b buys q > 0 units of configuration x from seller s, for payment π > 0 .
+2-8:For convenience, we use the notation xt to denote the configuration associated with trade t (and similarly for other elements of t) .
+2-9:For a set of trades T, we denote by Ti that subset of T involving agent i (i.e., b = i or s = i) .
+2-10:Let T denote the set of all possible trades .
+2-11:A bid expresses an agent"s willingness to participate in trades .
+2-12:We specify the semantics of a bid in terms of offer sets .
+2-13:Let OT i ⊆ Ti denote agent i"s trade offer set .
+2-14:Intuitively, this represents the trades in which i is willing to participate .
+2-15:However, since the outcome of the auction is a set of trades, several of which may involve agent i, we must in general consider willingness to engage in trade combinations .
+2-16:Accordingly, we introduce the combination offer set of agent i, OC i ⊆ 2Ti .
+2-17:2.2 Specifying Offer Sets A fully expressive bid language would allow specification of arbitrary combination offer sets .
+2-18:We instead consider a more limited class which, while restrictive, still captures most forms of multiattribute bidding proposed in the literature .
+2-19:Our bids directly specify part of the agent"s trade offer set, and include further directives controlling how this can be extended to the full trade and combination offer sets .
+2-20:For example, one way to specify a trade (buy) offer set would be to describe a set of configurations and quantities, along with the maximal payment one would exchange for each (x, q) specified .
+2-21:This description could be by enumeration, or any available means of defining such a mapping .
+2-22:An explicit set of trades in the offer set generally entails inclusion of many more implicit trades .
+2-23:We assume payment monotonicity, which means that agents always prefer more money .
+2-24:That is, for π > π > 0, (x, q, i, s, π) ∈ OT i ⇒ (x, q, i, s, π ) ∈ OT i , (x, q, b, i, π ) ∈ OT i ⇒ (x, q, b, i, π) ∈ OT i .
+2-25:We also assume free disposal, which dictates that for all i, q > q > 0, (x, q , i, s, π) ∈ OT i ⇒ (x, q, i, s, π) ∈ OT i , (x, q, b, i, π) ∈ OT i ⇒ (x, q , b, i, π) ∈ OT i .
+2-26:Note that the conditions for agents in the role of buyers and sellers are analogous .
+2-27:Henceforth, for expository simplicity, we present all definitions with respect to buyers only, leaving the definition for sellers as understood .
+2-28:Allowing agents" bids to comprise offers from both buyer and seller perspectives is also straightforward .
+2-29:An assertion that offers are divisible entails further implicit members in the trade offer set .
+2-30:DEFINITION 1 (DIVISIBLE OFFER) .
+2-31:Agent i"s offer is divisible down to q iff ∀q < q < q .
+2-32:(x, q, i, s, π) ∈ OT i ⇒ (x, q , i, s, q q π) ∈ OT i .
+2-33:We employ the shorthand divisible to mean divisible down to 0 .
+2-34:The definition above specifies arbitrary divisibility .
+2-35:It would likewise be possible to define divisibility with respect to integers, or to any given finite granularity .
+2-36:Note that when offers are divisible, it suffices to specify one offer corresponding to the maximal quantity one is willing to trade for any given configuration, trading partner, and per unit payment (called the price) .
+2-37:At the extreme of indivisibility are all or none offers .
+2-38:DEFINITION 2 (AON OFFER) .
+2-39:Agent i"s offer is all or none iff (x, q, i, s, π) ∈ OT i ∧ (x, q , i, s, π ) ∈ OT i ⇒ [q = q ∨ π = π ] .
+2-40:In many cases, the agent will be indifferent with respect to different trading partners .
+2-41:In that event, it may omit the partner element from trades directly specified in its offer set, and simply assert that its offer is anonymous .
+2-42:DEFINITION 3 .
+2-43:Agent i"s offer is anonymous iff ∀s, s , b, b .
+2-44:(x, q, i, s, π) ∈ OT i ⇔ (x, q, i, s , π) ∈ OT i ∧ (x, q, b, i, π) ∈ OT i ⇔ (x, q, b , i, π) ∈ OT i .
+2-45:Because omitting trading partner qualifications simplifies the exposition, we generally assume in the following that all offers are anonymous unless explicitly specified otherwise .
+2-46:Extending to the non anonymous case is conceptually straightforward .
+2-47:We employ the wild card symbol ∗ in place of an agent identifier to indicate that any agent is acceptable .
+2-48:To specify a trade offer set, a bidder directly specifies a set of willing trades, along with any regularity conditions (e.g., divisibility, anonymity) that implicitly extend the set .
+2-49:The full trade offer set is then defined by the closure of this direct set with respect to payment monotonicity, free disposal, and any applicable divisibility assumptions .
+2-50:We next consider the specification of combination offer sets .
+2-51:Without loss of generality, we restrict each trade set T ∈ OC i to include at most one trade for any combination of configuration and trading partner (multiple such trades are equivalent to one net trade aggregating the quantities and payments) .
+2-52:The key question is to what extent the agent is willing to aggregate deals across configurations or trading partners .
+2-53:One possibility is disallowing any aggregation .
+2-54:111 DEFINITION 4 (NO AGGREGATION) .
+2-55:The no aggregation combinations are given by ONA i = {∅} ∪ {{t} | t ∈ OT i } .
+2-56:Agent i"s offer exhibits non aggregation iff OC i = ONA i .
+2-57:We require in general that OC i ⊇ ONA i .
+2-58:A more flexible policy is to allow aggregation across trading partners, keeping configuration constant .
+2-59:DEFINITION 5 (PARTNER AGGREGATION) .
+2-60:Suppose a particular trade is offered in the same context (set of additional trades, T) with two different sellers, s and s .
+2-61:That is, {(x, q, i, s, π)} ∪ T ∈ OC i ∧ {(x, q, i, s , π)} ∪ T ∈ OC i .
+2-62:Agent i"s offer allows seller aggregation iff in all such cases, {(x, q , i, s, π ), (x, q − q , i, s , π − π )} ∪ T ∈ OC i .
+2-63:In other words, we may create new trade offer combinations by splitting the common trade (quantity and payment, not necessarily proportionately) between the two sellers .
+2-64:In some cases, it might be reasonable to form combinations by aggregating different configurations .
+2-65:DEFINITION 6 (CONFIGURATION AGGREGATION) .
+2-66:Suppose agent i offers, in the same context, the same quantity of two (not necessarily different) configurations, x and x .
+2-67:That is, {(x, q, i, ∗, π)} ∪ T ∈ OC i ∧ {(x , q, i, ∗, π )} ∪ T ∈ OC i .
+2-68:Agent i"s offer allows configuration aggregation iff in all such cases (and analogously when it is a seller), {(x, q , i, ∗, q q π), (x , q − q , i, ∗, q − q q π )} ∪ T ∈ OC i .
+2-69:Note that combination offer sets can accommodate offerings of configuration bundles .
+2-70:However, classes of bundles formed by partner or configuration aggregation are highly regular, covering only a specific type of bundle formed by splitting a desired quantity across configurations .
+2-71:This is quite restrictive compared to the general combinatorial case .
+2-72:2.3 Willingness to Pay An agent"s offer trade set implicitly defines the agent"s willingness to pay for any given configuration and quantity .
+2-73:We assume anonymity to avoid conditioning our definitions on trading partner .
+2-74:DEFINITION 7 (WILLINGNESS TO PAY) .
+2-75:Agent i"s willingness to pay for quantity q of configuration x is given by ˆuB i (x, q) = max π s.t .
+2-76:(x, q, i, ∗, π) ∈ OT i .
+2-77:We use the symbol ˆu to recognize that willingness to pay can be viewed as a proxy for the agent"s utility function, measured in monetary units .
+2-78:The superscript B distinguishes the buyer"s willingnessto pay function from, a seller"s willingness to accept, ˆuS i (x, q), defined as the minimum payment seller i will accept for q units of configuration x .
+2-79:We omit the superscript where the distinction is inessential or clear from context .
+2-80:DEFINITION 8 (TRADE QUANTITY BOUNDS) .
+2-81:Agent i"s minimum trade quantity for configuration x is given by qi(x) = min q s.t .
+2-82:∃π .
+2-83:(x, q, i, ∗, π) ∈ OT i .
+2-84:The agent"s maximum trade quantity for x is ¯qi(x) = max q s.t .
+2-85:∃π .
+2-86:(x, q, i, ∗, π) ∈ OT i ∧ ¬∃q < q .
+2-87:(x, q , i, ∗, π) ∈ OT i .
+2-88:When the agent has no offers involving x, we take qi(x) = ¯qi(x) = 0 .
+2-89:It is useful to define a special case where all configurations are offered in the same quantity range .
+2-90:DEFINITION 9 (CONFIGURATION PARITY) .
+2-91:Agent i"s offers exhibit configuration parity iff qi(x) > 0 ∧ qi(x ) > 0 ⇒ qi(x) = qi(x ) ∧ ¯qi(x) = ¯qi(x ) .
+2-92:Under configuration parity we drop the arguments from trade quantity bounds, yielding the constants ¯q and q which apply to all offers .
+2-93:DEFINITION 10 (LINEAR PRICING) .
+2-94:Agent i"s offers exhibit linear pricing iff for all qi(x) ≤ q ≤ ¯qi(x), ˆui(x, q) = q ¯qi(x) ˆui(x, ¯qi(x)) .
+2-95:Note that linear pricing assumes divisibility down to qi(x) .
+2-96:Given linear pricing, we can define the unit willingness to pay, ˆui(x) = ˆui(x, ¯qi(x)) ¯qi(x), and take ˆui(x, q) = qˆui(x) for all qi(x) ≤ q ≤ ¯qi(x) .
+2-97:In general, an agent"s willingness to pay may depend on a context of other trades the agent is engaging in .
+2-98:DEFINITION 11 (WILLINGNESS TO PAY IN CONTEXT) .
+2-99:Agent i"s willingness to pay for quantity q of configuration x in the context of other trades T is given by ˆuB i (x, q; T) = max π s.t .
+2-100:{(x, q, i, s, π)} ∪ Ti ∈ OC i .
+2-101:LEMMA 1 .
+2-102:If OC i is either non aggregating, or exhibits linear pricing, then ˆuB i (x, q; T) = ˆuB i (x, q). .
+3 MULTIATTRIBUTE ALLOCATION :
+3-1:DEFINITION 12 (TRADE SURPLUS) .
+3-2:The surplus of trade t = (x, q, b, s, π) is given by σ(t) = ˆuB b (x, q) − ˆuS s (x, q) .
+3-3:Note that the trade surplus does not depend on the payment, which is simply a transfer from buyer to seller .
+3-4:DEFINITION 13 (TRADE UNIT SURPLUS) .
+3-5:The unit surplus of trade t = (x, q, b, s, π) is given by σ1 (t) = σ(t) q .
+3-6:Under linear pricing, we can equivalently write σ1 (t) = ˆuB b (x) − ˆuS s (x) .
+3-7:DEFINITION 14 (SURPLUS OF A TRADE IN CONTEXT) .
+3-8:The surplus of trade t = (x, q, b, s, π) in the context of other trades T, σ(t; T), is given by ˆuB b (x, q; T) − ˆuS s (x, q; T) .
+3-9:DEFINITION 15 .
+3-10:The Global Multiattribute Allocation Problem is to find the set of acceptable trades maximizing total surplus, max T ∈2T X t∈T σ(t; T \ {t}) s.t .
+3-11:∀i .
+3-12:Ti ∈ OC i .
+3-13:DEFINITION 16 .
+3-14:The Multiattribute Matching Problem is to find a best trade for a given pair of traders, MMP(b, s) = arg max t∈OT b ∩OT s σ(t) .
+3-15:If OT b ∩ OT s is empty, we say that MMP has no solution .
+3-16:112 Proofs of all the following results are provided in an extended version of this paper available from the authors .
+3-17:THEOREM 2 .
+3-18:Suppose all agents" offers exhibit no aggregation (Definition 4) .
+3-19:Then the solution to GMAP consists of a set of trades, each of which is a solution to MMP for its specified pair of traders .
+3-20:THEOREM 3 .
+3-21:Suppose that each agent"s offer set satisfies one of the following (not necessarily the same) sets of conditions .
+3-22:(Definitions 1, 10, and 9), with combination offer set defined as the minimal set consistent with configuration aggregation (Definition 6).2 Then the solution to GMAP consists of a set of trades, each of which employs a configuration that solves MMP for its specified pair of traders .
+3-23:Let MMPd (b, s) denote a modified version of MMP, where OT b and OT s are extended to assume divisibility (i.e., the offer sets are taken to be their closures under Definition 1) .
+3-24:Then we can extend Theorem 3 to allow aggregating agents to maintain AON or minquantity offers as follows .
+3-25:THEOREM 4 .
+3-26:Suppose offer sets as in Theorem 3, except that agents i satisfying configuration aggregation need be divisible only down to qi, rather than down to 0 .
+3-27:Then the solution to GMAP consists of a set of trades, each of which employs the same configuration as a solution to MMPd for its specified pair of traders .
+3-28:THEOREM 5 .
+3-29:Suppose agents b and s exhibit configuration parity, divisibility, and linear pricing, and there exists configuration x such that ˆub(x) − ˆus(x) > 0 .
+3-30:Then t ∈ MMPd (b, s) iff xt = arg max x {ˆub(x) − ˆus(x)} qt = min(¯qb, ¯qs) .
+3-31:(1) The preceding results signify that under certain conditions, we can divide the global optimization problem into two parts: first find a bilateral trade that maximizes unit surplus for each pair of traders (or total surplus in the non aggregation case), and then use the results to find a globally optimal set of trades .
+3-32:In the following two sections we investigate each of these subproblems. .
+4 UTILITY REPRESENTATION AND MMP :
+4-1:We turn next to consider the problem of finding a best deal between pairs of traders .
+4-2:The complexity of MMP depends pivotally on the representation by bids of offer sets, an issue we have postponed to this point .
+4-3:Note that issues of utility representation and MMP apply to a broad class of multiattribute mechanisms, beyond the multiattribute call markets we emphasize .
+4-4:For example, the complexity results contained in this section apply equally to the bidding problem faced by sellers in reverse auctions, given a published buyer scoring function .
+4-5:The simplest representation of an offer set is a direct enumeration of configurations and associated quantities and payments .
+4-6:This approach treats the configurations as atomic entities, making no use 2 That is, for such an agent i, OC i is the closure under configuration aggregation of ONA i .
+4-7:of attribute structure .
+4-8:A common and inexpensive enhancement is to enable a trader to express sets of configurations, by specifying subsets of the domains of component attributes .
+4-9:Associating a single quantity and payment with a set of configurations expresses indifference among them; hence we refer to such a set as an indifference range.3 Indifference ranges include the case of attributes with a natural ordering, in which a bid specifies a minimum or maximum acceptable attribute level .
+4-10:The use of indifference ranges can be convenient for MMP .
+4-11:The compatibility of two indifference ranges is simply found by testing set intersection for each attribute, as demonstrated by the decision tree algorithm of Fink et al .
+4-12:[12] .
+4-13:Alternatively, bidders may specify willingness to pay functions ˆu in terms of compact functional forms .
+4-14:Enumeration based representations, even when enhanced with indifference ranges, are ultimately limited by the exponential size of attribute space .
+4-15:Functional forms may avoid this explosion, but only if ˆu reflects structure among the attributes .
+4-16:Moreover, even given a compact specification of ˆu, we gain computational benefits only if we can perform the matching without expanding the ˆu values of an exponential number of configuration points .
+4-17:4.1 Additive Forms One particularly useful multiattribute representation is known as the additive scoring function .
+4-18:Though this form is widely used in practice and in the academic literature, it is important to stress the assumptions behind it .
+4-19:The theory of multiattribute representation is best developed in the context where ˆu is interpreted as a utility function representing an underlying preference order [17] .
+4-20:We present the premises of additive utility theory in this section, and discuss some generalizations in the next .
+4-21:DEFINITION 17 .
+4-22:A set of attributes Y ⊂ X is preferentially independent of its complement Z = X \ Y if the conditional preference order over Y given a fixed level Z0 of Z is the same regardless of the choice of Z0 .
+4-23:In other words, the preference order over the projection of X on the attributes in Y is the same for any instantiation of the attributes in Z .
+4-24:DEFINITION 18 .
+4-25:X = {x1, .
+4-26:.
+4-27:.
+4-28:, xm} is mutually preferentially independent if any subset of X is preferentially independent of its complement .
+4-29:THEOREM 6 ([9]) .
+4-30:A preference order over set of attributes X has an additive utility function representation u(x1, .
+4-31:.
+4-32:.
+4-33:, xm) = mX i=1 ui(xi) iff X is mutually preferential independent .
+4-34:A utility function over outcomes including money is quasi linear if the function can be represented as a function over non monetary attributes plus payments, π .
+4-35:Interpreting ˆu as a utility function over non monetary attributes is tantamount to assuming quasi linearity .
+4-36:Even when quasi linearity is assumed, however, MPI over nonmonetary attributes is not sufficient for the quasi linear utility function to be additive .
+4-37:For this, we also need that each of the pairs (π, Xi) for any attribute Xi would be PI of the rest of the attributes .
+4-38:3 These should not be mistaken with indifference curves, which express dependency between the attributes .
+4-39:Indifference curves can be expressed by the more elaborate utility representations discussed below .
+4-40:113 This (by MAUT) in turn implies that the set of attributes including money is MPI and the utility function can be represented as u(x1, .
+4-41:.
+4-42:.
+4-43:, xm, π) = mX i=1 ui(xi) + π .
+4-44:Given that form, a willingness to pay function reflecting u can be represented additively, as ˆu(x) = mX i=1 ui(xi) In many cases the additivity assumption provides practically crucial simplification of offer set elicitation .
+4-45:In addition to compactness, additivity dramatically simplifies MMP .
+4-46:If both sides provide additive ˆu representations, the globally optimal match reduces to finding the optimal match separately for each attribute .
+4-47:A common scenario in procurement has the buyer define an additive scoring function, while suppliers submit enumerated offer points or indifference ranges .
+4-48:This model is still very amenable to MMP: for each element in a supplier"s enumerated set, we optimize each attribute by finding the point in the supplier"s allowable range that is most preferred by the buyer .
+4-49:A special type of scoring (more particularly, cost) function was defined by Bichler and Kalagnanam [4] and called a configurable offer .
+4-50:This idea is geared towards procurement auctions: assuming suppliers are usually comfortable with expressing their preferences in terms of cost that is quasi linear in every attribute, they can specify a price for a base offer, and additional cost for every change in a specific attribute level .
+4-51:This model is essentially a pricing out approach [17] .
+4-52:For this case, MMP can still be optimized on a per attribute basis .
+4-53:A similar idea has been applied to one sided iterative mechanisms [19], in which sellers refine prices on a perattribute basis at each iteration .
+4-54:4.2 Multiattribute Utility Theory Under MPI, the tradeoffs between the attributes in each subset cannot be affected by the value of other attributes .
+4-55:For example, when buying a PC, a weaker CPU may increase the importance of the RAM compared to, say, the type of keyboard .
+4-56:Such relationships cannot be expressed under an additive model .
+4-57:Multiattribute utility theory develops various compact representations of utility functions that are based on weaker structural assumptions [17, 2] .
+4-58:There are several challenges in adapting these techniques to multiattribute bidding .
+4-59:First, as noted above, the theory is developed for utility functions, which may behave differently from willingness to pay functions .
+4-60:Second, computational efficiency of matching has not been an explicit goal of most work in the area .
+4-61:Third, adapting such representations to iterative mechanisms may be more challenging .
+4-62:One representation that employs somewhat weaker assumptions than additivity, yet retains the summation structure is the generalized additive decomposition: u(x) = JX j=1 fj(xj ), xj ∈ Xj , (2) where the Xj are potentially overlapping sets of attributes, together exhausting the space X .
+4-63:A key point from our perspective is that the complexity of the matching is similar to the complexity of optimizing a single function, since the sum function is in the form (2) as well .
+4-64:Recent work by Gonzales and Perny [15] provides an elicitation process for GA decomposable preferences under certainty, as well as an optimization algorithm for the GA decomposed function .
+4-65:The complexity of exact optimization is exponential in the induced width of the graph .
+4-66:However, to become operational for multiattribute bidding this decomposition must be detectable and verifiable by statements over preferences with respect to price outcomes .
+4-67:We are exploring this topic in ongoing work [11]. .
+5 SOLVING GMAP UNDER ALLOCATION CONSTRAINTS :
+5-1:CONSTRAINTS Theorems 2, 3, and 4 establish conditions under which GMAP solutions must comprise elements from constituent MMP solutions .
+5-2:In Sections 5.1 and 5.2, we show how to compute these GMAP solutions, given the MMP solutions, under these conditions .
+5-3:In these settings, traders that aggregate partners also aggregate configurations; hence we refer to them simply as aggregating or nonaggregating .
+5-4:Section 5.3 suggests a means to relax the linear pricing restriction employed in these constructions .
+5-5:Section 5.4 provides strategies for allowing traders to aggregate partners and restrict configuration aggregation at the same time .
+5-6:5.1 Notation and Graphical Representation Our clearing algorithms are based on network flow formulations of the underlying optimization problem [1] .
+5-7:The network model is based on a bipartite graph, in which nodes on the left side represent buyers, and nodes on the right represent sellers .
+5-8:We denote the sets of buyers and sellers by B and S, respectively .
+5-9:We define two graph families, one for the case of non aggregating traders (called single unit), and the other for the case of aggregating traders (called multi unit).4 For both types, a single directed arc is placed from a buyer i ∈ B to a seller j ∈ S if and only if MMP(i, j) is nonempty .
+5-10:We denote by T(i) the set of potential trading partners of trader i (i.e., the nodes connected to buyer or seller i in the bipartite graph .
+5-11:In the single unit case, we define the weight of an arc (i, j) as wij = σ(MMP(i, j)) .
+5-12:Note that free disposal lets a buy offer receive a larger quantity than desired (and similarly for sell offers) .
+5-13:For the multi unit case, the weights are wij = σ1 (MMP(i, j)), and we associate the quantity ¯qi with the node for trader i .
+5-14:We also use the notation qij for the mathematical formulations to denote partial fulfillment of qt for t = MMP(i, j) .
+5-15:5.2 Handling Indivisibility and Aggregation Constraints Under the restrictions of Theorems 2, 3, or 4, and when the solution to MMP is given, GMAP exhibits strong similarity to the problem of clearing double auctions with assignment constraints [16] .
+5-16:A match in our bipartite representation corresponds to a potential trade in which assignment constraints are satisfied .
+5-17:Network flow formulations have been shown to model this problem under the assumption of indivisibility and aggregation for all traders .
+5-18:The novelty in this part of our work is the use of generalized network flow formulations for more complex cases where aggregation and divisibility may be controlled by traders .
+5-19:Initially we examine the simple case of no aggregation (Theorem 2) .
+5-20:Observe that the optimal allocation is simply the solution to the well known weighted assignment problem [1] on the singleunit bipartite graph described above .
+5-21:The set of matches that maximizes the total weight of arcs corresponds to the set of trades that maximizes total surplus .
+5-22:Note that any form of (in)divisibility can 4 In the next section, we introduce a hybrid form of graph accommodating mixes of the two trader categories .
+5-23:114 also be accommodated in this model via the constituent MMP subproblems .
+5-24:The next formulation solves the case in which all traders fall under case 2 of Theorem 3 that is, all traders are aggregating and divisible, and exhibit linear pricing .
+5-25:This case can be represented using the following linear program, corresponding to our multi unit graph: max X i∈B,j∈S wij qij s.t .
+5-26:X i∈T (j) qij ≤ ¯qj j ∈ S X j∈T (i) qij ≤ ¯qi i ∈ B qij ≥ 0 j ∈ S, i ∈ B Recall that the qij variables in the solution represent the number of units that buyer i procures from seller j .
+5-27:This formulation is known as the network transportation problem with inequality constraints, for which efficient algorithms are available [1] .
+5-28:It is a well known property of the transportation problem (and flow problems on pure networks in general) that given integer input values, the optimal solution is guaranteed to be integer as well .
+5-29:Figure 1 demonstrates the transformation of a set of bids to a transportation problem instance .
+5-30:Figure 1: Multi unit matching with two boolean attributes .
+5-31:(a) Bids, with offers to buy in the left column and offers to sell at right .
+5-32:q@p indicates an offer to trade q units at price p per unit .
+5-33:Configurations are described in terms of constraints on attribute values .
+5-34:(b) Corresponding multi unit assignment model .
+5-35:W represents arc weights (unit surplus), s represents source (exogenous) flow, and t represents sink quantity .
+5-36:The problem becomes significantly harder when aggregation is given as an option to bidders, requiring various enhancements to the basic multi unit bipartite graph described above .
+5-37:In general, we consider traders that are either aggregating or not, with either divisible or AON offers .
+5-38:Initially we examine a special case, which at the same time demonstrates the hardness of the problem but still carries computational advantages .
+5-39:We designate one side (e.g., buyers) as restrictive (AON and non aggregating), and the other side (sellers) as unrestrictive (divisible and aggregating) .
+5-40:This problem can be represented using the following integer programming formulation: max X i∈B,j∈S wij qij s.t .
+5-41:X i∈T (j) ¯qiqij ≤ ¯qj j ∈ S X j∈T (i) qij ≤ 1 i ∈ B qij ∈ {0, 1} j ∈ S, i ∈ B (3) This formulation is a restriction of the generalized assignment problem [13] .
+5-42:Although GAP is known to be NP hard, it can be solved relatively efficiently by exact or approximate algorithms .
+5-43:GAP is more general than the formulation above as it allows buyside quantities (¯qi above) to be different for each potential seller .
+5-44:That this formulation is NP hard as well (even the case of a single seller corresponds to the knapsack problem), illustrates the drastic increase in complexity when traders with different constraints are admitted to the same problem instance .
+5-45:Other than the special case above, we found no advantage in limiting AON constraints when traders may specify aggregation constraints .
+5-46:Therefore, the next generalization allows any combination of the two boolean constraints, that is, any trader chooses among four bid types: NI Bid AON and not aggregating .
+5-47:AD Bid allows aggregation and divisibility .
+5-48:AI Bid AON, allows aggregation (quantity can be aggregated across configurations, as long as it sums to the whole amount) .
+5-49:ND No aggregation, divisibility (one trade, but smaller quantities are acceptable) .
+5-50:To formulate an integer programming representation for the problem, we introduce the following variables .
+5-51:Boolean (0 1) variables ri and rj indicate whether buyer i and seller j participate in the solution (used for AON traders) .
+5-52:Another indicator variable, yij , applied to non aggregating buyer i and seller j, is one iff i trades with j .
+5-53:For aggregating traders, yij is not constrained .
+5-54:max X i∈B,j∈S Wij qij (4a) s.t .
+5-55:X j∈T (i) qij = ¯qiri i ∈ AIb (4b) X j∈T (i) qij ≤ ¯qiri i ∈ ADb (4c) X i∈T (j) qij = ¯qirj j ∈ AIs (4d) X i∈T (j) qij ≤ qj rj j ∈ ADs (4e) xij ≤ ¯qiyij i ∈ NDb , j ∈ T(i) (4f) xij ≤ ¯qj yij j ∈ NIs , i ∈ T(j) (4g) X j∈T (i) yij ≤ ri i ∈ NIb ∪ NDb (4h) X i∈T (j) yij ≤ rj j ∈ NIs ∪ NDs (4i) int qij (4j) yij , rj, ri ∈ {0, 1} (4k) 115 Figure 2: Generalized network flow model .
+5-56:B1 is a buyer in AD, B2 ∈ NI, B3 ∈ AI, B4 ∈ ND .
+5-57:V 1 is a seller in ND, V 2 ∈ AI, V 4 ∈ AD .
+5-58:The g values represent arc gains .
+5-59:Problem (4) has additional structure as a generalized min cost flow problem with integral flow.5 A generalized flow network is a network in which each arc may have a gain factor, in addition to the pure network parameters (which are flow limits and costs) .
+5-60:Flow in an arc is then multiplied by its gain factor, so that the flow that enters the end node of an arc equals the flow that entered from its start node, multiplied by the gain factor of the arc .
+5-61:The network model can in turn be translated into an IP formulation that captures such structure .
+5-62:The generalized min cost flow problem is well studied and has a multitude of efficient algorithms [1] .
+5-63:The faster algorithms are polynomial in the number of arcs and the logarithm of the maximal gain, that is, performance is not strongly polynomial but is polynomial in the size of the input .
+5-64:The main benefit of this graphical formulation to our matching problem is that it provides a very efficient linear relaxation .
+5-65:Integer programming algorithms such as branch and bound use solutions to the linear relaxation instance to bound the optimal integer solution .
+5-66:Since network flow algorithms are much faster than arbitrary linear programs (generalized network flow simplex algorithms have been shown to run in practice only 2 or 3 times slower than pure network min cost flow [1]), we expect a branch and bound solver for the matching problem to show improved performance when taking advantage of network flow modeling .
+5-67:The network flow formulation is depicted in Figure 2 .
+5-68:Nonrestrictive traders are treated as in Figure 1 .
+5-69:For a non aggregating buyer, a single unit from the source will saturate up to one of the yij for all j, and be multiplied by ¯qi .
+5-70:If i ∈ ND, the end node of yij will function as a sink that may drain up to ¯qi of the entering flow .
+5-71:For i ∈ NI we use an indicator (0 1) arc ri, on which the flow is multiplied by ¯qi .
+5-72:Trader i trades the full quantity iff ri = 1 .
+5-73:At the seller side, the end node of a qij arc functions as a source for sellers j ∈ ND, in order to let the flow through yij arcs be 0 or ¯qj .
+5-74:The flow is then multiplied by 1 ¯qj so 0 1 flows enter an end node which can drain either 1 or 0 units .
+5-75:for sellers j ∈ NI arcs rj ensure AON similarly to arcs rj for buyers .
+5-76:Having established this framework, we are ready to accommo5 Constraint (4j) could be omitted (yielding computational savings) if non integer quantities are allowed .
+5-77:Here and henceforth we assume the harder problem, where divisibility is with respect to integers .
+5-78:date more flexible versions of side constraints .
+5-79:The first generalization is to replace the boolean AON constraint with divisibility down to q, the minimal quantity .
+5-80:In our network flow instance we simply need to turn the node of the constrained trader i (e.g., the node B3 in Figure 2) to a sink that can drain up to ¯qi − qi units of flow .
+5-81:The integer program (4) can be also easily changed to accommodate this extension .
+5-82:Using gains, we can also apply batch size constraints .
+5-83:If a trader specifies a batch size β, we change the gain on the r arcs to β, and set the available flow of its origin to the maximal number of batches ¯qi β .
+5-84:5.3 Nonlinear Pricing A key assumption in handling aggregation up to this point is linear pricing, which enables us to limit attention to a single unit price .
+5-85:Divisibility without linear pricing allows expression of concave willingness to pay functions, corresponding to convex preference relations .
+5-86:Bidders may often wish to express non convex offer sets, for example, due to fixed costs or switching costs in production settings [21] .
+5-87:We consider nonlinear pricing in the form of enumerated payment schedules that is, defining values ˆu(x, q) for a select set of quantities q .
+5-88:For the indivisible case, these points are distinguished in the offer set by satisfying the following: ∃π .
+5-89:(x, q, i, ∗, π) ∈ OT i ∧ ¬∃q < q .
+5-90:(x, q , i, ∗, π) ∈ OT i .
+5-91:(cf .
+5-92:Definition 8, which defines the maximum quantity, ¯q, as the largest of these.) For the divisible case, the distinguished quantities are those where the unit price changes, which can be formalized similarly .
+5-93:To handle nonlinear pricing, we augment the network to include flow possibilities corresponding to each of the enumerated quantities, plus additional structure to enforce exclusivity among them .
+5-94:In other words, the network treats the offer for a given quantity as in Section 5.2, and embeds this in an XOR relation to ensure that each trader picks only one of these quantities .
+5-95:Since for each such quantity choice we can apply Theorem 3 or 4, the solution we get is in fact the solution to GMAP .
+5-96:The network representation of the XOR relation (which can be embedded into the network of Figure 2) is depicted in Figure 3 .
+5-97:For a trader i with K XOR quantity points, we define dummy variables, zk i , k = 1, .
+5-98:.
+5-99:.
+5-100:, K .
+5-101:Since we consider trades between every pair of quantity points we also have qk ij , k = 1, .
+5-102:.
+5-103:.
+5-104:, K .
+5-105:For buyer i ∈ AI with XOR points at quantities ¯qk i , we replace (4b) with the following constraints: X j∈T (i) qk ij = ¯qk i zk i k = 1, .
+5-106:.
+5-107:.
+5-108:, K KX k=1 zk i = ri zk i ∈ {0, 1} k = 1, .
+5-109:.
+5-110:.
+5-111:, K (5) 5.4 Homogeneity Constraints The model (4) handles constraints over the aggregation of quantities from different trading partners .
+5-112:When aggregation is allowed, the formulation permits trades involving arbitrary combinations of configurations .
+5-113:A homogeneity constraint [4] restricts such combinations, by requiring that configurations aggregated in an overall deal must agree on some or all attributes .
+5-114:116 Figure 3: Extending the network flow model to express an XOR over quantities .
+5-115:B2 has 3 XOR points for 6, 3, or 5 units .
+5-116:In the presence of homogeneity constraints, we can no longer apply the convenient separation of GMAP into MMP plus global bipartite optimization, as the solution to GMAP may include trades not part of any MMP solution .
+5-117:For example, let buyer b specify an offer for maximum quantity 10 of various acceptable configurations, with a homogeneity constraint over the attribute color .
+5-118:This means b is willing to aggregate deals over different trading partners and configurations, as long as all are the same color .
+5-119:If seller s can provide 5 blue units or 5 green units, and seller s can provide only 5 green units, we may prefer that b and s trade on green units, even if the local surplus of a blue trade is greater .
+5-120:Let {x1, .
+5-121:.
+5-122:.
+5-123:, xH} be attributes that some trader constrains to be homogeneous .
+5-124:To preserve the network flow framework, we need to consider, for each trader, every point in the product domain of these homogeneous attributes .
+5-125:Thus, for every assignment ˆx to the homogeneous attributes, we compute MMP(b, s) under the constraint that configurations are consistent with ˆx .
+5-126:We apply the same approach as in Section 5.3: solve the global optimization, such that the alternative ˆx assignments for each trader are combined under XOR semantics, thus enforcing homogeneity constraints .
+5-127:The size of this network is exponential in the number of homogeneous attributes, since we need a node for each point in the product domain of all the homogeneous attributes of each trader.6 Hence this solution method will only be tractable in applications were the traders can be limited to a small number of homogeneous attributes .
+5-128:It is important to note that the graph needs to include a node only for each point that potentially matches a point of the other side .
+5-129:It is therefore possible to make the problem tractable by limiting one of the sides to a less expressive bidding language, and by that limit the set of potential matches .
+5-130:For example, if sellers submit bounded sets of XOR points, we only need to consider the points in the combined set offered by the sellers, and the reduction to network flow is polynomial regardless of the number of homogeneous attributes .
+5-131:If such simplifications do not apply, it may be preferable to solve the global problem directly as a single optimization problem .
+5-132:We provide the formulation for the special case of divisibility (with respect to integers) and configuration parity .
+5-133:Let i index buyers, j sellers, and H homogeneous attributes .
+5-134:Variable xh ij ∈ Xh represents the value of attribute Xh in the trade between buyer i and seller j .
+5-135:Integer variable qij represents the quantity of the trade (zero for no trade) between i and j .
+5-136:6 If traders differ on which attributes they express such constraints, we can limit consideration to the relevant alternatives .
+5-137:The complexity will still be exponential, but in the maximum number of homogeneous attributes for any pair of traders .
+5-138:max X i∈B,j∈S [ˆuB i (xij , qij ) − ˆuS j (xij , qij )] X j∈S qij ≤ ¯qi i ∈ B X i∈B qij ≤ ¯qj j ∈ S xh 1j = xh 2j = · · · = x|B|j j ∈ S, h ∈ {1, .
+5-139:.
+5-140:.
+5-141:, H} xh i1 = xh i2 = · · · = xi|S| i ∈ B, h ∈ {1, .
+5-142:.
+5-143:.
+5-144:, H} (6) Table 1 summarizes the mapping we presented from allocation constraints to the complexity of solving GMAP .
+5-145:Configuration parity is assumed for all cases but the first. .
+6 EXPERIMENTAL RESULTS :
+6-1:We approach the experimental aspect of this work with two objectives .
+6-2:First, we seek a general idea of the sizes and types of clearing problems that can be solved under given time constraints .
+6-3:We also look to compare the performance of a straightforward integer program as in (4) with an integer program that is based on the network formulations developed here .
+6-4:Since we used CPLEX, a commercial optimization tool, the second objective could be achieved to the extent that CPLEX can take advantage of network structure present in a model .
+6-5:We found that in addition to the problem size (in terms of number of traders), the number of aggregating traders plays a crucial role in determining complexity .
+6-6:When most of the traders are aggregating, problems of larger sizes can be solved quickly .
+6-7:For example, our IP model solved instances with 600 buyers and 500 sellers, where 90% of them are aggregating, in less than two minutes .
+6-8:When the aggregating ratio was reduced to 80% for the same data, solution time was just under five minutes .
+6-9:These results motivated us to develop a new network model .
+6-10:Rather than treat non aggregating traders as a special case, the new model takes advantage of the single unit nature of non aggregating trades (treating the aggregating traders as a special case) .
+6-11:This new model outperformed our other models on most problem instances, exceptions being those where aggregating traders constitute a vast majority (at least 80%) .
+6-12:This new model (Figure 4) has a single node for each non aggregating trader, with a single unit arc designating a match to another non aggregating trader .
+6-13:An aggregating trader has a node for each potential match, connected (via y arcs) to a mutual source node .
+6-14:Unlike the previous model we allow fractional flow for this case, representing the traded fraction of the buyer"s total quantity.7 We tested all three models on random data in the form of bipartite graphs encoding MMP solutions .
+6-15:In our experiments, each trader has a maximum quantity uniformly distributed over [30, 70], and minimum quantity uniformly distributed from zero to maximal quantity .
+6-16:Each buyer seller pair is selected as matching with probability 0.75, with matches assigned a surplus uniformly distributed over [10, 70] .
+6-17:Whereas the size of the problem is defined by the number of traders on each side, the problem complexity depends on the product |B| × |S| .
+6-18:The tests depicted in Figures 5 7 are for the worst case |B| = |S|, with each data point averaged over six samples .
+6-19:In the figures, the direct IP (4) is designated SW, our first network model (Figure 2) NW, and our revised network model (Figure 4) NW 2 .
+6-20:7 Traded quantity remains integer .
+6-21:117 Aggregation Hom .
+6-22:attr .
+6-23:Divisibility linear pricing Technique Complexity No aggregation N A Any Not required Assignment problem Polynomial All aggregate None Down to 0 Required Transpor .
+6-24:problem Polynomial One side None Aggr side div .
+6-25:Aggr .
+6-26:side GAP NP hard Optional None Down to q, batch Required Generalized ntwrk flow NP hard Optional Bounded Down to q, batch Bounded size schdl .
+6-27:Generalized ntwrk flow NP hard Optional Not bounded Down to q, batch Not required Nonlinear opt Depends on ˆu(x, q) Table 1: Mapping from combinations of allocation constraints to the solution methods of GMAP .
+6-28:One Side means that one side aggregates and divisible, and the other side is restrictive .
+6-29:Batch means that traders may submit batch sizes .
+6-30:Figure 4: Generalized network flow model .
+6-31:B1 is a buyer in AD, B2 ∈ AI, B3 ∈ NI, B4 ∈ ND .
+6-32:V 1 is a seller in AD, V 2 ∈ AI, V 4 ∈ ND .
+6-33:The g values represent arc gains, and W values represent weights .
+6-34:Figure 5: Average performance of models when 30% of traders aggregate .
+6-35:Figure 6: Average performance of models when 50% of traders aggregate .
+6-36:Figure 7: Average performance of models when 70% of traders aggregate .
+6-37:118 Figure 8: Performance of models when varying percentage of aggregating traders Figure 8 shows how the various models are affected by a change in the percentage of aggregating traders, holding problem size fixed.8 Due to the integrality constraints, we could not test available algorithms specialized for network flow problems on our test problems .
+6-38:Thus, we cannot fully evaluate the potential gain attributable to network structure .
+6-39:However, the model we built based on the insight from the network structure clearly provided a significant speedup, even without using a special purpose algorithm .
+6-40:Model NW 2 provided speedups of a factor of 4 10 over the model SW .
+6-41:This was consistent throughout the problem sizes, including the smaller sizes for which the speedup is not visually apparent on the chart. .
+7 CONCLUSIONS :
+7-1:The implementation and deployment of market exchanges requires the development of bidding languages, information feedback policies, and clearing algorithms that are suitable for the target domain, while paying heed to the incentive properties of the resulting mechanisms .
+7-2:For multiattribute exchanges, the space of feasible such mechanisms is constrained by computational limitations imposed by the clearing process .
+7-3:The extent to which the space of feasible mechanisms may be quantified a priori will facilitate the search for such exchanges in the full mechanism design problem .
+7-4:In this work, we investigate the space of two sided multiattribute auctions, focusing on the relationship between constraints on the offers traders can express through bids, and the resulting computational problem of determining an optimal set of trades .
+7-5:We developed a formal semantic framework for characterizing expressible offers, and introduced some basic classes of restrictions .
+7-6:Our key technical results identify sets of conditions under which the overall matching problem can be separated into first identifying optimal pairwise trades and subsequently optimizing combinations of those trades .
+7-7:Based on these results, we developed network flow models for the overall clearing problem, which facilitate classification of problem versions by computational complexity, and provide guidance for developing solution algorithms and relaxing bidding constraints. .
+8-1:This work was supported in part by NSF grant IIS 0205435, and the STIET program under NSF IGERT grant 0114368
+8-2:We are 8 All tests were performed on Intel 3.4 GHz processors with 2048 KB cache
+8-3:Test that did not complete by the one hour time limit were recorded as 4000 seconds
+8-4:grateful to comments from an anonymous reviewer
+8-5:Some of the underlying ideas were developed while the first two authors worked at TradingDynamics Inc
+8-6:and Ariba Inc
+8-7:in 1999 2001 (cf
+8-8:US Patent 6,952,682)
+8-9:We thank Yoav Shoham, Kumar Ramaiyer, and Gopal Sundaram for fruitful discussions about multiattribute auctions in that time frame.
+9-1:R
+9-2:K
+9-3:Ahuja, T
+9-4:L
+9-5:Magnanti, and J
+9-6:B
+9-7:Orlin
+9-8:Network Flows
+9-9:Prentice Hall, 1993
+9-10:F
+9-11:Bacchus and A
+9-12:Grove
+9-13:Graphical models for preference and utility
+9-14:In Eleventh Conference on Uncertainty in Artificial Intelligence, pages 3 10, Montreal, 1995
+9-15:M
+9-16:Bichler
+9-17:The Future of e Markets: Multi Dimensional Market Mechanisms
+9-18:Cambridge U
+9-19:Press, New York, NY, USA, 2001
+9-20:M
+9-21:Bichler and J
+9-22:Kalagnanam
+9-23:Configurable offers and winner determination in multi attribute auctions
+9-24:European Journal of Operational Research, 160:380 394, 2005
+9-25:M
+9-26:Bichler, M
+9-27:Kaukal, and A
+9-28:Segev
+9-29:Multi attribute auctions for electronic procurement
+9-30:In Proceedings of the 1st IBM IAC Workshop on Internet Based Negotiation Technologies, 1999
+9-31:C
+9-32:Boutilier, T
+9-33:Sandholm, and R
+9-34:Shields
+9-35:Eliciting bid taker non price preferences in (combinatorial) auctions
+9-36:In Nineteenth Natl
+9-37:Conf
+9-38:on Artificial Intelligence, pages 204 211, San Jose, 2004
+9-39:F
+9-40:Branco
+9-41:The design of multidimensional auctions
+9-42:RAND Journal of Economics, 28(1):63 81, 1997
+9-43:Y. K
+9-44:Che
+9-45:Design competition through multidimensional auctions
+9-46:RAND Journal of Economics, 24(4):668 680, 1993
+9-47:G
+9-48:Debreu
+9-49:Topological methods in cardinal utility theory
+9-50:In K
+9-51:Arrow, S
+9-52:Karlin, and P
+9-53:Suppes, editors, Mathematical Methods in the Social Sciences
+9-54:Stanford University Press, 1959
+9-55:N
+9-56:Economides and R
+9-57:A
+9-58:Schwartz
+9-59:Electronic call market trading
+9-60:Journal of Portfolio Management, 21(3), 1995
+9-61:Y
+9-62:Engel and M
+9-63:P
+9-64:Wellman
+9-65:Multiattribute utility representation for willingness to pay functions
+9-66:Tech
+9-67:report, Univ
+9-68:of Michigan, 2006
+9-69:E
+9-70:Fink, J
+9-71:Johnson, and J
+9-72:Hu
+9-73:Exchange market for complex goods: Theory and experiments
+9-74:Netnomics, 6(1):21 42, 2004
+9-75:M
+9-76:L
+9-77:Fisher, R
+9-78:Jaikumar, and L
+9-79:N
+9-80:Van Wassenhove
+9-81:A multiplier adjustment method for the generalized assignment problem
+9-82:Management Science, 32(9):1095 1103, 1986
+9-83:J
+9-84:Gong
+9-85:Exchanges for complex commodities: Search for optimal matches
+9-86:Master"s thesis, University of South Florida, 2002
+9-87:C
+9-88:Gonzales and P
+9-89:Perny
+9-90:GAI networks for decision making under certainty
+9-91:In IJCAI 05 workshop on preferences, Edinburgh, 2005
+9-92:J
+9-93:R
+9-94:Kalagnanam, A
+9-95:J
+9-96:Davenport, and H
+9-97:S
+9-98:Lee
+9-99:Computational aspects of clearing continuous call double auctions with assignment constraints and indivisible demand
+9-100:Electronic Commerce Research, 1(3):221 238, 2001
+9-101:R
+9-102:L
+9-103:Keeney and H
+9-104:Raiffa
+9-105:Decisions with Multiple Objectives: Preferences and Value Tradeoffs
+9-106:Wiley, 1976
+9-107:N
+9-108:Nisan
+9-109:Bidding and allocation in combinatorial auctions
+9-110:In Second ACM Conference on Electronic Commerce, pages 1 12, Minneapolis, MN, 2000
+9-111:D
+9-112:C
+9-113:Parkes and J
+9-114:Kalagnanam
+9-115:Models for iterative multiattribute procurement auctions
+9-116:Management Science, 51:435 451, 2005
+9-117:T
+9-118:Sandholm and S
+9-119:Suri
+9-120:Side constraints and non price attributes in markets
+9-121:In IJCAI 01 Workshop on Distributed Constraint Reasoning, Seattle, 2001
+9-122:L
+9-123:J
+9-124:Schvartzman and M
+9-125:P
+9-126:Wellman
+9-127:Market based allocation with indivisible bids
+9-128:In AAMAS 05 Workshop on Agent Mediated Electronic Commerce, Utrecht, 2005
+9-129:J
+9-130:Shachat and J
+9-131:T
+9-132:Swarthout
+9-133:Procurement auctions for differentiated goods
+9-134:Technical Report 0310004, Economics Working Paper Archive at WUSTL, Oct
+9-135:2003
+9-136:A
+9-137:V
+9-138:Sunderam and D
+9-139:C
+9-140:Parkes
+9-141:Preference elicitation in proxied multiattribute auctions
+9-142:In Fourth ACM Conference on Electronic Commerce, pages 214 215, San Diego, 2003
+9-143:P
+9-144:R
+9-145:Wurman, M
+9-146:P
+9-147:Wellman, and W
+9-148:E
+9-149:Walsh
+9-150:A parametrization of the auction design space
+9-151:Games and Economic Behavior, 35:304 338, 2001
+9-152:119
+picture:

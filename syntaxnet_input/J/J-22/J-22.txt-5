@@ -1,0 +1,28 @@
+The matching problems of the auctioneer in any permutation market, including the subset betting market have n! constraints .
+Brute force methods would take exponential time to solve .
+However, given the special form of the securities in the subset betting market, we can show that the matching problems for divisible orders can be solved in polynomial time .
+Theorem 1 .
+The existence of a match and the optimal match problems with divisible orders in a subset betting market can both be solved in polynomial time .
+329 Proof .
+Consider the linear programming problem (4) for finding an optimal match .
+This linear program has |O| + 1 variables, one variable xi for each order i and the profit variable c .
+It also has exponentially many constraints .
+However, we can solve the program in time polynomial in the number of orders |O| by using the ellipsoid algorithm, as long as we can efficiently solve its corresponding separation problem in polynomial time [7, 8] .
+The separation problem for a linear program takes as input a vector of variable values and returns if the vector is feasible, or otherwise it returns a violated constraint .
+For given values of the variables, a violated constraint in Eq .
+(4) asks whether there is a state or permutation s in which the profit is less than c, and can be rewritten as i Ii(s)qixi < i biqixi ? c ?s ? S .
+(5) Thus it suffices to show how to find efficiently a state s satisfying the above inequality (5) or verify that the opposite inequality holds for all states s .
+We will show that the separation problem can be reduced to the maximum weighted bipartite matching1 problem [3] .
+The left hand side in Eq .
+(5) is the total money that the auctioneer needs to pay back to the winning traders in state collected by the auctioneer and it is fixed for a given solution vector of xi"s and c .
+A weighted bipartite graph can be constructed between the set of candidates and the set of positions .
+For every order of the form £\|£X there are edges from candidate node £\ to every position node in £X .
+For orders of the form £Z|j there are edges from each candidate in £Z to position j .
+For each order i we put weight qixi on each of these edges .
+All multi edges with the same end points are then replaced with a single edge that carries the total weight of the multi edge .
+Every state s then corresponds to a perfect matching in the bipartite graph .
+In addition, the auctioneer pays out to the winners the sum of all edge weights in the perfect matching since every candidate can only stand in one position and every position is taken by one candidate .
+Thus, the auctioneer"s worst cast state and payment are the solution to the maximum weighted bipartite matching problem, which has known polynomial time algorithms [12, 13] .
+Hence, the separation problem can be solved in polynomial time .
+Naturally, if the optimal solution to (4) gives a worst case profit of c? > 0, there exists a matching .
+Thus, the matching problem can be solved in polynomial time also. .

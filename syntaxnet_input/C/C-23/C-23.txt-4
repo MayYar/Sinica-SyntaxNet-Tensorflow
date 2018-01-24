@@ -1,0 +1,39 @@
+AND RELATED WORK The co allocation architecture proposed in [17] consists of three main components
+Figure 1 shows the co allocation of Grid Data transfers, which is an extension of the basic template for resource management [7] provided by Globus Toolkit .
+Applications specify the characteristics of desired data and pass the attribute description to a broker .
+The broker queries available resources and gets replica locations from information services [6] and replica management services [19], and then gets a list of physical locations for the desired files .
+Figure 1 .
+Data Grid Co Allocation Architecture [17] The candidate replica locations are passed to a replica selection service [19], which was presented in a previous work [23] .
+This replica selection service provides estimates of candidate transfer performance based on a cost model and chooses appropriate amounts to request from the better locations .
+The co allocation agent then downloads the data in parallel from the selected servers .
+In these researches, GridFTP [1, 11, 16] was used to enable parallel data transfers .
+GridFTP is a high performance, secure, reliable data transfer protocol optimized for high bandwidth widearea networks .
+Among its many features are security, parallel streams, partial file transfers, third party transfers, and reusable data channels .
+Its partial file transfer ability allows files to be retrieved from data servers by specifying the start and end offsets of file sections .
+Data grids consist of scattered computing and storage resources located in different countries regions yet accessible to users [8] .
+In this study we used the grid middleware Globus Toolkit [16] as the data grid infrastructure .
+The Globus Toolkit provides solutions for such considerations as security, resource management, data management, and information services .
+One of its primary components is MDS [6, 11, 16, 25], which is designed to provide a standard mechanism for discovering and publishing resource status and configuration information .
+It provides a uniform and flexible interface for data collected by lower level information providers in two modes
+And it uses GridFTP [1, 11, 16], a reliable, secure, and efficient data transport protocol to provide efficient management and transfer of terabytes or petabytes of data in a wide area, distributed resource environment .
+As datasets are replicated within Grid environments for reliability and performance, clients require the abilities to discover existing data replicas, and create and register new replicas .
+A Replica Location Service [4] provides a mechanism for discovering and registering existing replicas .
+Several prediction metrics have been developed to help replica selection .
+For instance, Vazhkudai and Schopf [18, 20, 21] used past data transfer histories to estimate current data transfer throughputs .
+In our previous work [23, 24], we proposed a replica selection cost model and a replica selection service to perform replica selection .
+In [17], the author proposes co allocation architecture for co allocating Grid data transfers across multiple connections by exploiting the partial copy feature of GridFTP .
+It also provides Brute Force, History Base, and Dynamic Load Balancing for allocating data block .
+Brute Force Co Allocation
+It does not address the bandwidth differences among the various client server links .
+History based Co Allocation
+Conservative Load Balancing
+The Conservative Load Balancing dynamic co allocation strategy divides requested datasets into k disjoint blocks of equal size .
+Available servers are assigned single blocks to deliver in parallel .
+When a server finishes delivering a block, another is requested, and so on, till the entire file is downloaded .
+The loadings on the co allocated flows are automatically adjusted because the faster servers will deliver more quickly providing larger portions of the file .
+Aggressive Load Balancing
+The Aggressive Load Balancing dynamic co allocation strategy presented in [17] adds functions that change block size de liveries by
+The co allocation strategies described above do not handle the shortcoming of faster servers having to wait for the slowest server to deliver its final block .
+In most cases, this wastes much time and decreases overall performance .
+Thus, we propose an efficient approach called Recursive Adjustment Co Allocation and based 799 on a co allocation architecture .
+It improves dynamic co allocation and reduces waiting time, thus improving overall transfer performance. .

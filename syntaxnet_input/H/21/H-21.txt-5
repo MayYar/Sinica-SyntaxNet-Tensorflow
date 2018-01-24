@@ -1,0 +1,35 @@
+Even though the average length of search queries is steadily increasing over time, a typical query is still shorter than 3 words .
+Consequently, many researchers studied possible ways to enhance queries with additional information .
+One important direction in enhancing queries is through query expansion .
+This can be done either using electronic dictionaries and thesauri [22], or via relevance feedback techniques that make use of a few top scoring search results .
+Early work in information retrieval concentrated on manually reviewing the returned results [16, 15] .
+However, the sheer volume of queries nowadays does not lend itself to manual supervision, and hence subsequent works focused on blind relevance feedback, which basically assumes top returned results to be relevant [23, 12, 4, 14] .
+More recently, studies in query augmentation focused on classification of queries, assuming such classifications to be beneficial for more focused query interpretation .
+Indeed, Kowalczyk et al .
+[10] found that using query classes improved the performance of document retrieval .
+Studies in the field pursue different approaches for obtaining additional information about the queries .
+Beitzel et al .
+[1] used semi supervised learning as well as unlabeled data [2] .
+Gravano et al .
+[6] classified queries with respect to geographic locality in order to determine whether their intent is local or global .
+The 2005 KDD Cup on web query classification inspired yet another line of research, which focused on enriching queries using Web search engines and directories [11, 18, 20, 9, 21] .
+The KDD task specification provided a small taxonomy (67 nodes) along with a set of labeled queries, and posed a challenge to use this training data to build a query classifier .
+Several teams used the Web to enrich the queries and provide more context for classification .
+The main research questions of this approach the are (1) how to build a document classifier, (2) how to translate its classifications into the target taxonomy, and (3) how to determine the query class based on document classifications .
+The winning solution of the KDD Cup [18] proposed using an ensemble of classifiers in conjunction with searching multiple search engines .
+To address issue (1) above, their solution used the Open Directory Project to produce an ODP based document classifier .
+The ODP hierarchy was then mapped into the target taxonomy using word matches at individual nodes .
+A document classifier was built for the target taxonomy by using the pages in the ODP taxonomy that appear in the nodes mapped to the particular target node .
+Thus, Web documents were first classified with respect to the ODP hierarchy, and their classifications were subsequently mapped to the target taxonomy for query classification .
+Compared to this approach, we solved the problem of document classification directly in the target taxonomy by using the queries to produce document classifier as described in Section 2 .
+This simplifies the process and removes the need for mapping between taxonomies .
+This also streamlines taxonomy maintenance and development .
+Using this approach, we were able to achieve good performance in a very large scale taxonomy .
+We also evaluated a few alternatives how to combine individual document classifications when actually classifying the query .
+In a follow up paper [19], Shen et al .
+proposed a framework for query classification based on bridging between two taxonomies .
+In this approach, the problem of not having a document classifier for web results is solved by using a training set available for documents with a different taxonomy .
+For this, an intermediate taxonomy with a training set is used .
+Then several schemes are tried that establish a correspondence between the taxonomies or allow for mapping of the training set from the intermediate taxonomy to the target taxonomy .
+As opposed to this, we built a document classifier for the target taxonomy directly, without using documents from an intermediate taxonomy .
+While we were not able to directly compare the results due to the use of different taxonomies (we used a much larger taxonomy), our precision and recall results are consistently higher even over the hardest query set. .

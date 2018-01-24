@@ -1,0 +1,351 @@
+Design and Implementation of a Distributed Content Management System 
+content:
+1 ABSTRACT :
+1-1:The convergence of advances in storage, encoding, and networking technologies has brought us to an environment where huge amounts of continuous media content is routinely stored and exchanged between network enabled devices .
+1-2:Keeping track of (or managing) such content remains challenging due to the sheer volume of data .
+1-3:Storing live continuous media (such as TV or radio content) adds to the complexity in that this content has no well defined start or end and is therefore cumbersome to deal with .
+1-4:Networked storage allows content that is logically viewed as part of the same collection to in fact be distributed across a network, making the task of content management all but impossible to deal with without a content management system .
+1-5:In this paper we present the design and implementation of the Spectrum content management system, which deals with rich media content effectively in this environment .
+1-6:Spectrum has a modular architecture that allows its application to both stand alone and various networked scenarios .
+1-7:A unique aspect of Spectrum is that it requires one (or more) retention policies to apply to every piece of content that is stored in the system .
+1-8:This means that there are no eviction policies .
+1-9:Content that no longer has a retention policy applied to it is simply removed from the system .
+1-10:Different retention policies can easily be applied to the same content thus naturally facilitating sharing without duplication .
+1-11:This approach also allows Spectrum to easily apply time based policies which are basic building blocks required to deal with the storage of live continuous media, to content .
+1-12:We not only describe the details of the Spectrum architecture but also give typical use cases .
+1-13:C.2.4 [Computer Systems Organization]: .
+2 INTRODUCTION :
+2-1:Manipulating and managing content is and has always been one of the primary functions of a computer .
+2-2:Initial computing applications include text formatters and program compilers .
+2-3:Content was initially managed by explicit user interaction through the use of files and filesystems .
+2-4:As technology has advanced, both the types of content and the way people wish to use it have greatly changed .
+2-5:New content types such as continuous multimedia streams have become commonplace due to the convergence of advances in storage, encoding, and networking technologies .
+2-6:For example, by combining improvements in storage and encoding, it is now possible to store many hours of TV quality encoded video on a single disk drive .
+2-7:This has led to the introduction of stand alone digital video recording or personal video recording systems such as TiVO [8] and ReplayTV [7] .
+2-8:Another example is the combination of encoding and broadband networking technology .
+2-9:This combination has allowed users to access and share multimedia content in both local and remote area networks with the network itself acting as a huge data repository .
+2-10:The proliferation of high quality content enabled by these advances in storage, encoding, and networking technology creates the need for new ways to manipulate and manage the data .
+2-11:The focus of our work is on the storage of media rich content and in particular the storage of continuous media content in either pre packaged or live forms .
+2-12:The need for content management in this area is apparent when one consider the following: • Increases in the capacity and decreases in the cost of storage means that even modest desktop systems today have the ability to store massive amounts of content .
+2-13:Managing such content manually (or more correctly manual non management of such content) lead to great inefficiencies where unwanted and forgotten content waste storage and where wanted content cannot be found .
+2-14:• While true for all types of content the storage of continuous media content is especially problematic .
+2-15:First continuous media content is still very demanding in terms of storage resources which means that a policy less approach to storing it will not work for all but the smallest systems .
+2-16:Second, the storing of live content such as TV or radio is inherently problematic as these signals are continuous streams with no endpoints .
+2-17:This means that before one can even think about managing such content there is a need to abstract it into something that could be manipulated and managed .
+2-18:4 • When dealing with stored continuous media there is a need to manage such content at both a fine grained as well as an aggregate level .
+2-19:For example, an individual PVR user wanting to keep only the highlights of a particular sporting event should not be required to have to store the content pertaining to the complete event .
+2-20:At the same time the user might want to think of content in the aggregate, e.g .
+2-21:remove all of the content that I have not watched for the last month except that content which was explicitly marked for archival .
+2-22:• As indicated above, trying to keep track of content on a standalone system without a content management system is very difficult .
+2-23:However, when the actual storage devices are distributed across a network the task of keeping track of content is almost impossible .
+2-24:This scenario is increasingly common in network based content distribution systems and is likely to also become important in home networking scenarios .
+2-25:It would seem clear then that a content management system that can efficiently handle media rich content while also exploiting the networked capability of storage devices is needed .
+2-26:This system should allow efficient storage of and access to content across heterogeneous network storage devices according to user preferences .
+2-27:The content management system should translate user preferences into appropriate low level storage policies and should allow those preferences to be expressed at a fine level of granularity (while not requiring it in general) .
+2-28:The content management system should allow the user to manipulate and reason about (i.e .
+2-29:change the storage policy associated with) the storage of (parts of) continuous media content .
+2-30:Addressing this distributed content management problem is difficult due to the number of requirements placed on the system .
+2-31:For example: • The content management system must operate on a large number of heterogeneous systems .
+2-32:In some cases the system may be managing content stored on a local filesystem, while in others the content may be stored on a separate network storage appliance .
+2-33:The content manager may be responsible for implementing the policies it uses to reference content or that role may be delegated to a separate computer .
+2-34:A application program interface and associated network protocols are needed in order for the content management system to provide a uniform interface .
+2-35:• The content management system should be flexible and be able to handle differing requirements for content management policies .
+2-36:These policies reflect what content should be obtained, when it should be fetched, how long it should be retained, and under what circumstances it should be discarded .
+2-37:This means that the content management system should allow multiple applications to reference content with a rich set of policies and that it should all work together seamlessly .
+2-38:• The content management system needs to be able to monitor references for content and use that information to place content in the right location in the network for efficient application access .
+2-39:• The content management system must handle the interaction between implicit and explicit population of content at the network edge .
+2-40:• The content system must be able to efficiently manage large sets of content, including continuous streams .
+2-41:It needs to be able to package this content in such a way that it is convenient for users to access .
+2-42:To address these issues we have designed and implemented the Spectrum content management system architecture .
+2-43:Our layered architecture is flexible its API allows the layers to reside either on a single computer or on multiple networked heterogeneous computers .
+2-44:It allows multiple applications to reference content using differing policies .
+2-45:Note that the Spectrum architecture assumes the existence of a content distribution network that can facilitate the efficient distribution of content (for example, the PRISM CDN architecture [2]) .
+2-46:The rest of this paper is organized as follows .
+2-47:Section 2 describes the architecture of our content management system .
+2-48:In Section 3 we describe both our implementation of the Spectrum architecture and examples of its use .
+2-49:Related work is described in Section 4, and Section 5 contains our conclusion and suggestions for future work. .
+3 THE SPECTRUM DISTRIBUTED  CONTENT MANAGEMENT SYSTEM :
+3-1:CONTENT MANAGEMENT SYSTEM ARCHITECTURE The Spectrum architecture consists of three distinct management layers that may or may not be distributed across multiple machines, as shown in Figure 1 .
+3-2:The three layers are: content manager: contains application specific information that is used to manage all of an application"s content according to user preferences .
+3-3:For example, in a personal video recorder application the content manager receives requests for content from a user interface and interacts with the lower layers of the Spectrum architecture to store and manage content on the device .
+3-4:policy manager: implements and enforces various storage polices that the content manager uses to refer to content .
+3-5:The policy manager exports an interface to the content manager that allows the content manager to request that a piece content be treated according to a specific policy .
+3-6:Spectrum allows for arbitrary policies to be realized by providing a fixed set of base policy templates that can easily be parameterized .
+3-7:It is our belief that for most implementations this will be adequate (if not, Spectrum can easily be extended to dynamically load new base policy template code at run time) .
+3-8:A key aspect of the policy manager is that it allows different policies to be simultaneously applied to the same content (or parts of the same content) .
+3-9:Furthermore content can only exist in the system so long as it is referenced by at least one existing policy .
+3-10:Policy conflicts are eliminated by having the policy manager deal exclusively with retention policies rather than with a mix of retention and eviction policies .
+3-11:This means that content with no policy associated with it is immediately and automatically removed from the system .
+3-12:This approach allows us to naturally support sharing of content across different policies which is critical to the efficient storage of large objects .
+3-13:Note that a key difference between the content manager and the policy manager is that the content manager manages references to multiple pieces of content, i.e .
+3-14:it has an applicationview of content .
+3-15:On the other hand, the policy manager is only concerned with the policy used to manage standalone pieces of content .
+3-16:For example, in a PVR application, the content manager layer would know about the different groups of managed content such as keep indefinitely, keep for one day, and keep if available diskspace .
+3-17:However, at the policy manager level, each piece of content has 5 Content Manager Policy Manager Storage Manager Content Manager Content Manager Content Manager Policy Manager Policy Manager Policy Manager Storage Manager Storage Manager Storage Manager Remote Invocation Figure 1: The components of the Spectrum architecture and the four ways they can be configured its own policy (or policies) applied to it and is independent from other content .
+3-18:storage manager: stores content in an efficient manner while facilitating the objectives of the higher layers .
+3-19:Specifically the storage manager stores content in sub object chunks .
+3-20:This approach has advantages for the efficient retrieval of content but more importantly allows policies to be applied at a subobject level which is critically important when dealing with very large objects such as parts of continuous media, e.g .
+3-21:selected pieces of TV content being stored on a PVR .
+3-22:Note that the storage manager has no knowledge of the policies being used by the content and policy managers .
+3-23:Another unique part of our approach is that the interfaces between the layers can either be local or distributed .
+3-24:Figure 1 shows the four possible cases .
+3-25:The case on the far left of the Figure shows the simplest (non distributed) case where all the layers are implemented on a single box .
+3-26:This configuration would be used in selfcontained applications such as PVRs .
+3-27:The next case over corresponds to the case where there is a centralized content manager that controls distributed storage devices each of which is responsible for implementing policy based storage .
+3-28:In this case although the remote devices are controlled by the central manager they operate much more independently .
+3-29:For example, once they receive instructions from the central manager they typically operate in autonomous fashion .
+3-30:An example of this type of configuration is a content distribution network that distributes and stores content based on a schedule determined by some centralized controller .
+3-31:For example, the CDN could pre populate edge devices with content that is expected to be very popular or distribute large files to branch offices during off peak hours in a bandwidth constrained enterprise environment .
+3-32:Allowing a single policy manager to control several storage managers leads to the next combination of functions and the most distributed case .
+3-33:The need for this sort of separation might occur for scalability reasons or when different specialized storage devices or appliances are required to be controlled by a single policy manager .
+3-34:The final case shows a content manager combined with a policy manager controlling a remote storage manager .
+3-35:This separation would be possible if the storage manager is somewhat autonomous and does not require continuous fine grained control by the policy manager .
+3-36:We now examine the function of the three layers in detail .
+3-37:2.1 Content Manager The content manager layer is the primary interface through which specific applications use the Spectrum architecture .
+3-38:As such the content manager layer provides an API for the application to manipulate all aspects of the Spectrum architecture at different levels of granularity .
+3-39:The content manager API has functions that handle: Physical devices: This set of functions allows physical storage devices to be added to Spectrum thereby putting them under control of the content manager and making the storage available to the system .
+3-40:Physical devices can be local or remote this is the only place in the architecture where the application is required to be aware of this distinction .
+3-41:Once a device is mapped into the application through this interface, the system tracks its type and location .
+3-42:Users simply refer to the content through an application provided label .
+3-43:Stores: Stores are subsets of physical storage devices .
+3-44:Through these functions an application can create a store on a physical device and assign resources (e.g .
+3-45:disk space) to it .
+3-46:Stores can only be created in physical devices that are mapped into the system .
+3-47:Policy Groups: Policy groups are the means whereby an application specifies, instantiates, and modifies the policies that are applied to Spectrum content .
+3-48:Typical usage of this set of functions is to select one of a small set of base policies and to parameterize this specific instance of the policy .
+3-49:Policy groups are created within existing stores in the system .
+3-50:The Spectrum architecture has policies that are normally associated with storage that aim to optimize disk usage .
+3-51:In addition a set of policies that take a sophisticated time specification enable storage that is cognizant of time .
+3-52:For example, a simple time based policy could evict content from the system at a certain absolute or relative time .
+3-53:A slightly more involved time based policy enabled by the Spectrum architecture could allow content to be stored in rolling window of a number of hours (for example, the most recent N number of hours is kept in the system) .
+3-54:Time based polices are of particular use when dealing with continuous content like a live broadcast .
+3-55:6 Content: At the finest level of granularity content can be added to or removed from the system .
+3-56:Content is specified to the system by means of a uniform resource locator which concisely indicates the location of the content as well as the protocol to be used to retrieve it .
+3-57:Optionally a time specification can be associated with content .
+3-58:This allows content to be fetched into the system at some future time, or at future time intervals .
+3-59:Again, this is particularly useful for dealing with the storage and management of live content .
+3-60:2.2 Policy Manager The policy manager layer of the Spectrum architecture has two main types of API functions .
+3-61:First, there are functions that operate on managed storage areas and policy based references (prefs) to content stored there .
+3-62:Second, there are sets of functions used to implement each management policy .
+3-63:The first class of functions is used by the content manager layer to access storage .
+3-64:Operations include: create, open, and close: These operations are used by the content manager to control its access to storage .
+3-65:The policy manager"s create operation is used to establish contact with a store for the first time .
+3-66:Once this is done, the store can be open and closed using the appropriate routines .
+3-67:Note that the parameters used to create a store contain information on how to reach it .
+3-68:For example, local stores have a path associated with them, while remote stores have a remote host and remote path associated with them .
+3-69:The information only needs to be passed to the policy manager once at create time .
+3-70:For open operations, the policy manager will use cached information to contact the store .
+3-71:lookup: The lookup operation provides a way for the content manager to query the policy manager about what content is currently present for a given URL .
+3-72:For continuous media time ranges of present media will be returned .
+3-73:resource: The resource routines are used to query the policy manager about its current resource usage .
+3-74:There are two resource routines: one that applies to the store as a whole and another that applies to a particular policy reference .
+3-75:The resource API is extensible, we currently support queries on disk usage and I O load .
+3-76:pref establish update: The pref establish operation is used by the content manager to reference content on the store .
+3-77:If the content is not present, this call will result in the content being fetched (or being scheduled to be fetched if the content is not currently available) .
+3-78:Parameters of this function include the URL to store it under, the URL to fetch data from if it is not present, the policy to store the content under, and the arguments used to parameterize the policy .
+3-79:The result of a successful pref establish operation is a policy reference ID string .
+3-80:This ID can be used with the update operation to either change the storage policy parameters or delete the reference entirely .
+3-81:The second group of policy manager functions are used to implement all the polices supported by Spectrum .
+3-82:We envision a small set of base level policy functions that can be parameterized to produce a wide range of storage polices .
+3-83:For example, a policy that implements recording a repeating time window can be parameterized to function daily, weekly, or monthly .
+3-84:Note that the policy manager is only concerned with executing a specific policy .
+3-85:The higher level reasons for choosing a given policy are handled by the content and application manager .
+3-86:A base policy is implemented using six functions: establish: called when a pref is established with the required URLs and base policy"s parameters .
+3-87:The establish routine references any content already present in the store and then determines the next time it needs to take action (e.g .
+3-88:start a download) and schedules a callback for that time .
+3-89:It can also register to receive callbacks if new content is received for a given URL .
+3-90:update: called to change the parameters of a pref, or to discard the policy reference .
+3-91:newclip: called when a chunk of new content is received for a URL of interest .
+3-92:The base policy typically arranges for newclip to be called for a given URL when the pref is established .
+3-93:When newclip is called, the base policy checks its parameters to determine if it wishes to add a reference to the clip just received .
+3-94:callback: called when the pref schedules a timer based callback .
+3-95:This is a useful wakeup mechanism for prefs that need to be idle for a long period of time (e.g .
+3-96:between programs) .
+3-97:boot shutdown: called when the content management system is booting or shutting down .
+3-98:The boot operation is typically used to schedule initial callbacks or start I O operations .
+3-99:The shutdown operation is used to gracefully shutdown I O streams and save state .
+3-100:2.3 Storage Manager The role of Spectrum"s storage manager is to control all I O operations associated with a given store .
+3-101:Spectrum"s storage manager supports storing content both on a local filesystem and on a remote fileserver (e.g .
+3-102:a storage appliance) .
+3-103:For continuous media, at the storage manager level content is stored as a collection of time based chunks .
+3-104:Depending on the underlying filesystem, a chunk could correspond to a single file or a data node in a storage database .
+3-105:The two main storage manager operations are input and output .
+3-106:The input routine is used to store content in a store under a given name .
+3-107:The output routine is used to send data from the store to a client .
+3-108:For streaming media both the input and output routines take time ranges that schedule when the I O operation should happen, and both routines return an I O handle that can be used to modify or cancel the I O request in the future .
+3-109:Much like the policy manager, the storage manager also provides API functions to create, open, and close stores .
+3-110:It also supports operations to query the resource usages and options supported by the store .
+3-111:Finally, the storage manager also has a discard routine that may be used by the policy manager to inform the store to remove content from the store. .
+4 IMPLEMENTATION AND USE CASES :
+4-1:In this section we describe our implementation of Spectrum and describe how it can be used .
+4-2:3.1 Implementation We have implemented Spectrum"s three layers in C as part of a library that can be linked with Spectrum based applications .
+4-3:Each layer keeps track of its state through a set of local data files that persist across reboots, thus allowing Spectrum to smoothly handle power cycles .
+4-4:For layers that reside on remote systems (e.g .
+4-5:a remote store) only the meta information needed to contact the remote 7 Content Manager Policy Manager Storage Manager Storage Fetcher Program Listings Graphical User Interface Network Enabled DVR Program Information Content DVR Application Figure 2: Spectrum in a Network Enabled DVR node is stored locally .
+4-6:Our test application uses a local policy and storage manager to fetch content and store it in a normal Unixbased filesystem .
+4-7:To efficiently handle communications with layers running on remote systems, all Spectrum"s API calls support both synchronous and asynchronous modes through a uniform interface defined by the reqinfo structure .
+4-8:Each API call takes a pointer to a reqinfo structure as one of its arguments .
+4-9:This structure is used to hold the call state and return status .
+4-10:For async calls, the reqinfo also contains a pointer to a callback function .
+4-11:To use a Spectrum API function, the caller first chooses either the sync or async mode and allocates a reqinfo structure .
+4-12:For sync calls, the reqinfo can be allocated on the stack, otherwise it is allocated with malloc .
+4-13:For async calls, a callback function must be provided when the reqinfo is allocated .
+4-14:Next the caller invokes the desired Spectrum API function passing the reqinfo structure as an argument .
+4-15:For sync calls, the result of the calls is returned immediately in the reqinfo structure .
+4-16:For successful async calls, a call in progress value is returned .
+4-17:Later, when the async call completes or a timeout occurs, the async callback function is called with the appropriate information needed to complete processing .
+4-18:The modular layered design of the Spectrum architecture simplifies the objective of distribution of functionality .
+4-19:Furthermore, communication between functions is typically of a master slave(s) nature .
+4-20:This means that several approaches to distributed operation are possible that would satisfy the architectural requirements .
+4-21:In our implementation we have opted to realize this functionality with a simple modular design .
+4-22:We provide a set of asynchronous remote access stub routines that allow users to select the transport protocol to use and to select the encoding method that should be used with the data to be transferred .
+4-23:Transport protocols can range simple protocols such as UDP up to more complex protocols such as HTTP .
+4-24:We currently are using plain TCP for most of our transport .
+4-25:Function calls across the different Spectrum APIs can be encoded using a variety of formats include plain text, XDR, and XML .
+4-26:We are currently using the eXpat XML library [4] to encode our calls .
+4-27:While we are current transferring our XML encoded messages using a simple TCP connection, in a real world setting this can easily be replaced with an implementation based on secure sockets layer to improve security by adding SSL as a transport protocol .
+4-28:An important aspect of Spectrum is that it can manage content based on a given policy across heterogenous platforms .
+4-29:As we explained previously in Section 2.2, envision a small set of base level policy functions that can be parameterized to produce a wide range of storage polices .
+4-30:In order for this to work properly, all Spectrumbased applications must understand the base level policies and how they can be parameterized .
+4-31:To address this issue, we treat each base level policy as if it was a separate program .
+4-32:Each base level policy should have a well known name and command line options for parameterization .
+4-33:In fact, in our implementation we pass parameters to base level policies as a string that can be parsed using a getopt like function .
+4-34:This format is easily understood and provides portability since byte order is not an issue in a string .
+4-35:Since this part of Spectrum is not on the critical data path, this type of formatting is not a performance issue .
+4-36:3.2 Using the Spectrum Content Management System In this section we show two examples of the use of the Spectrum Content Management System in our environment .
+4-37:The focus of our previous work has been content distribution for streaming media content [2] and network enabled digital video recording [3] .
+4-38:The Spectrum system is applicable to both scenarios as follows .
+4-39:Figure 2 shows the Network Enabled DVR architecture .
+4-40:In this case all layers of the Spectrum architecture reside on the same physical device in a local configuration .
+4-41:The DVR application obtains program listings from some network source, deals with user presentation through a graphical user interface (GUI), and interface with the Spectrum system through the content management layer APIs .
+4-42:This combination of higher level functions allows the user to select both content to be stored and what storage policies to 8 Content Manager Centralized Content Management station Content InformationUser Interface Policy Manager Storage Manager Storage Fetcher Edge Portal Server Policy Manager Storage Manager Storage Fetcher Edge Portal Server Distributed Content To Media Endpoints To Media Endpoints Figure 3: Spectrum in a Content Distribution Architecture apply to such content .
+4-43:Obtaining the content (through the network or locally) and the subsequent storage on the local system is then handled by the policy and storage managers .
+4-44:The use of Spectrum in a streaming content distribution architecture (e.g .
+4-45:PRISM [2]) is depicted in Figure 3 .
+4-46:In this environment streaming media content (both live, canned live and on demand) is being distributed to edge portals from where streaming endpoints are being served .
+4-47:In our environment content distribution and storage is done from a centralized content management station which controls several of the edge portals .
+4-48:The centralized station allows administrators to manage the distribution and storage of content without requiring continuous communication between the content manager and the edge devices, i.e .
+4-49:once instructions have been given to edge devices they can operate independently until changes are to be made .
+4-50:3.3 Spectrum Operational Example To illustrate how Spectrum handles references to content, consider a Spectrum based PVR application programmed to store one days worth of streaming content in a rolling window .
+4-51:To set up the rolling window, the application would use the content manager API to create a policy group and policy reference to the desired content .
+4-52:The establishment of the one day rolling window policy reference would cause the policy manger to ask the storage manager to start receiving the stream .
+4-53:As each chunk of streaming data arrives, the policy manager executes the policy reference"s newclip function .
+4-54:The newclip function adds a reference to each arriving chunk, and schedules a callback a day later .
+4-55:At that time, the policy will drop its now day old reference to the content and the content will be discarded unless it is referenced by some other policy .
+4-56:Now, consider the case where the user decides to save part of the content (e.g .
+4-57:a specific program) in the rolling window for an extra week .
+4-58:To do this, the application requests that the content manager add an additional new policy reference to the part of the content to preserved .
+4-59:Thus, the preserved content has two references to it: one from the rolling window and one from the request to preserve the content for an additional week .
+4-60:After one day the reference from the rolling window will be discarded, but the content will be 9 ref2, etc .
+4-61:base data url1 url2 (media files...) (media files...) meta store (general info...) url1 chunks prefs ranges media chunks, etc.url2 poly host ref1 ref1.files ref1.state Figure 4: Data layout of Spectrum policy store preserved by the second reference .
+4-62:After the additional week has past, the callback function for the second reference will be called .
+4-63:This function will discard the remaining reference to the content and as there are no remaining references the content will be freed .
+4-64:In order to function in scenarios like the ones described above, Spectrum"s policy manager must manage and maintain all the references to various chunks of media .
+4-65:These references are persistent and thus must be able to survive even if the machine maintaining them is rebooted .
+4-66:Our Spectrum policy manager implementation accomplishes this using the file and directory structure shown in Figure 4 .
+4-67:There are three classes of data stored, and each class has its own top level directory .
+4-68:The directories are: data: this directory is used by the storage manager to store each active URL"s chunks of media .
+4-69:The media files can be encoded in any format, for example MPEG, Windows Media, or QuickTime .
+4-70:Note that this directory is used only if the storage manager is local .
+4-71:If the policy manager is using an external storage manager (e.g .
+4-72:a storage appliance), then the media files are stored remotely and are only remotely referenced by the policy manager .
+4-73:meta: this directory contains general meta information about the storage manager being used and the data it is storing .
+4-74:General information is stored in the store subdirectory and includes the location of the store (local or remote) and information about the types of chunks of data the store can handle .
+4-75:The meta directory also contains a subdirectory per URL that contains information about the chunks of data stored .
+4-76:The chunks file contains a list of chunks currently stored and their reference counts .
+4-77:The prefs file contains a list of active policy references that point to this URL .
+4-78:The ranges file contains a list of time ranges of data currently stored .
+4-79:Finally, the media file describes the format of the media being stored under the current URL .
+4-80:poly: this directory contains a set of host subdirectories .
+4-81:Each host subdirectory contains the set of policy references created by that host .
+4-82:Information on each policy reference is broken up into three files .
+4-83:For example, a policy reference named ref1 would be stored in ref1, ref1.files, and ref1.state .
+4-84:The ref1 file contains information about the policy reference that does not change frequently .
+4-85:This information includes the base policy and the parameters used to create the reference .
+4-86:The ref1.files file contains the list of references to chunks that pref ref1 owns .
+4-87:Finally, the ref1.state file contains optional policy specific state information that can change over time .
+4-88:Together, these files and directories are used to track references in our implementation of Spectrum .
+4-89:Note that other implementations are possible .
+4-90:For example, a carrier grade Spectrum manager might store all its policy and reference information in a high performance database system .
+4-91:10 .
+5 RELATED WORK :
+5-1:Several authors have addressed the problem of the management of content in distributed networks .
+5-2:Much of the work focuses on the policy management aspect .
+5-3:For example in [5], the problem of serving multimedia content via distributed servers is considered .
+5-4:Content is distributed among server resources in proportion to user demand using a Demand Dissemination Protocol .
+5-5:The performance of the scheme is benchmarked via simulation .
+5-6:In [1] content is distributed among sub caches .
+5-7:The authors construct a system employing various components, such as a Central Router, Cache Knowledge base, Subcaches, and a Subcache eviction judge .
+5-8:The Cache Knowledge base allows sophisticated policies to be employed .
+5-9:Simulation is used to compare the proposed scheme with well known replacement algorithms .
+5-10:Our work differs in that we are considering more than the policy management aspects of the problem .
+5-11:After carefully considering the required functionality to implement content management in the networked environment, we have partitioned the system into three simple functions, namely Content manager, Policy manager and Storage manager .
+5-12:This has allowed us to easily implement and experiment with a prototype system .
+5-13:Other related work involves so called TV recommendation systems which are used in PVRs to automatically select content for users, e.g .
+5-14:[6] .
+5-15:In the case where Spectrum is used in a PVR configuration this type of system would perform a higher level function and could clearly benefit from the functionalities of the Spectrum architecture .
+5-16:Finally, in the commercial CDN environment vendors (e.g .
+5-17:Cisco and Netapp) have developed and implemented content management products and tools .
+5-18:Unlike the Spectrum architecture which allows edge devices to operate in a largely autonomous fashion, the vendor solutions typically are more tightly coupled to a centralized controller and do not have the sophisticated time based operations offered by Spectrum. .
+6-1:In this paper we presented the design and implementation of the Spectrum content management architecture
+6-2:Spectrum allows storage policies to be applied to large volumes of content to facilitate efficient storage
+6-3:Specifically, the system allows different policies to be applied to the same content without replication
+6-4:Spectrum can also apply policies that are time aware which effectively deals with the storage of continuous media content
+6-5:Finally, the modular design of the Spectrum architecture allows both stand alone and distributed realizations so that the system can be deployed in a variety of applications
+6-6:There are a number of open issues that will require future work
+6-7:Some of these issues include: • We envision Spectrum being able to manage content on systems ranging from large CDNs down to smaller appliances such as TiVO [8]
+6-8:In order for these smaller systems to support Spectrum they will require networking and an external API
+6-9:When that API becomes available, we will have to work out how it can be fit into the Spectrum architecture
+6-10:• Spectrum names content by URL, but we have intentionally not defined the format of Spectrum URLs, how they map back to the content"s actual name, or how the names and URLs should be presented to the user
+6-11:While we previously touched on these issues elsewhere [2], we believe there is more work to be done and that consensus based standards on naming need to be written
+6-12:• In this paper we"ve focused on content management for continuous media objects
+6-13:We also believe the Spectrum architecture can be applied to any type of document including plain files, but we have yet to work out the details necessary to support this in our prototype environment
+6-14:• Any project that helps allow multimedia content to be easily shared over the Internet will have legal hurdles to overcome before it can achieve widespread acceptance
+6-15:Adapting Spectrum to meet legal requirements will likely require more technical work.
+7-1:K
+7-2:
+7-3:Cheng and Y
+7-4:Kambayashi
+7-5:Multicache based Content Management for Web Caching
+7-6:Proceedings of the First International Conference on Web Information Systems Engineering, Jume 2000
+7-7:C
+7-8:Cranor, M
+7-9:Green, C
+7-10:Kalmanek, D
+7-11:Shur, S
+7-12:Sibal, C
+7-13:Sreenan, and J
+7-14:van der Merwe
+7-15:PRISM Architecture: Supporting Enhanced Streaming Services in a Content Distribution Network
+7-16:IEEE Internet Computing, July August 2001
+7-17:C
+7-18:Cranor, C
+7-19:Kalmanek, D
+7-20:Shur, S
+7-21:Sibal, C
+7-22:Sreenan, and J
+7-23:van der Merwe
+7-24:NED: a Network Enabled Digital Video Recorder
+7-25:11th IEEE Workshop on Local and Metropolitan Area Networks, March 2001
+7-26:eXpat
+7-27:expat.sourceforge.net
+7-28:Z
+7-29:Ge, P
+7-30:Ji, and P
+7-31:Shenoy
+7-32:A Demand Adaptive and Locality Aware (DALA) Streaming Media Server Cluster Architecture
+7-33:NOSSDAV, May 2002
+7-34:K
+7-35:Kurapati and S
+7-36:Gutta and D
+7-37:Schaffer and J
+7-38:Martino and J
+7-39:Zimmerman
+7-40:A multi agent TV recommender
+7-41:Proceedings of the UM 2001 workshop, July 2001
+7-42:ReplayTV
+7-43:www.sonicblue.com
+7-44:TiVo
+7-45:www.tivo.com
+7-46:11
+picture:

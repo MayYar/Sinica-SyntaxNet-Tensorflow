@@ -1,0 +1,120 @@
+2.1 The Model In this paper we design a method which given any IR and IC mechanism outputs a mechanism that maintains the IC and IR properties while achieving BB .
+For some classes of mechanisms we bound the competitive approximation of welfare .
+In our model there are N players divided into sets of trade .
+The sets of trade are called procurement sets and are defined (following [2]) as follows
+A procurement set s is the smallest set of players that is required for trade to occur .
+For example, in a double sided auction, a procurement set is a pair consisting of a buyer and a seller .
+In a combinatorial double sided auction a procurement set can consist of a buyer and several sellers .
+We mark the set of all procurement sets as S and assume that any allocation is a disjoint union of procurement sets .
+Each player i, 1 ? i ? n, assigns a real value vi(s) to each possible procurement set s ? S .
+Namely, vi(s) is the valuation of player i on procurement set s .
+We assume that for each player i vi(s) is i"s private value and that i is a single value player, meaning that if vi(sj) > 0 then for every other sk, k = j, either vi(sk) = vi(sj) or vi(sk) = 0 .
+For the ease of notation we will mark by vi the value of player i for any procurement set s such that vi(s) > 0 .
+The set Vi ? R is the set of all possible valuations vi .
+The set of all possible valuations of all the players is denoted by V = V1 ¡Ñ .. .
+¡Ñ Vn .
+Let v?i = (v1, ..., vi?1, vi+1, ..., vn) be the vector of valuations of all the players besides player i, and let V?i be the set of all possible vectors v?i .
+We denote by W(s) the value of a procurement set s ? S such that W(s) = i?s vi(s) + F(s), where F is some function that assigns a constant to procurement sets .
+For example, F can be a (non strategic) transportation cost in a distributed market problem .
+Let the size of a procurement set s be denoted as |s| .
+It is assumed that any allocation is a disjoint union of procurement sets and therefore one can say that an allocation partitions the players into two sets; a set of players that trade and a set of players that do not trade .
+The paper denotes by O the set of possible partitions of an allocation A into procurement sets .
+The value W(A) of an allocation A is the sum of the values of its most efficient partition to procurement sets, that is W(A) = maxS?O s?S W(s) .
+This means that W(A) = i?A vi +maxS?O s?S F(s) .
+In the case where F is identically zero, then W(A) = i?A vi .
+An optimal partition S? is a partition that maximizes the above sum for an allocation A .
+Let the value of A be W(S? (A)) (note that the value can depend on F) .
+We say that the allocation A is efficient if there is no other allocation with a higher value .
+The efficiency of the allocation ?A is W ( ?A) W , where A is a maximal valued allocation .
+We assume w.l.o.g .
+that there are no two allocations with the same value3 .
+A mechanism M defines an allocation and payment rules, M = (R, P) .
+A payment rule P decides i"s payment pi where P is a function P 
+We work with mechanisms 3 Ties can be broken using the identities of the players .
+21 in which players are required to report their values .
+An example of such a mechanism is the VCG mechanism [17, 8, 10] .
+The reported value bi ? Vi of player i is called a bid and might be different from his private value vi .
+Let b ? V be the bids of all players .
+An allocation rule R decides the allocation according to the reported values b ? V .
+We make the standard assumption that players have quasi linear utility so that when player i trades and pays pi then his utility is ui(vi, b?i) = vi ? pi, ui 
+We also assume that players are rational utility maximizers .
+Mechanism M is Budget Balanced if i?N pi ? 0 for any bids b ? V .
+M is Incentive Compatible in dominant strategies if for any player i, value vi and any b?i ? V?i, ui(vi, b?i) ? ui(b) meaning that for any player i, bidding vi maximized i"s utility over all possible bids of the other players .
+M is (ex post) Individually Rational if for any player i value vi, and any b?i ? V?i ui(vi, b?i) ? 0 meaning that for all possible bids of the other players, player"s i utility is non negative .
+Note that since our mechanisms are normalized IR, if a player does not trade then the player pays 0 and has utility 0 .
+Our algorithm presented in the next section employs a commonly used payment scheme, the critical value payment scheme .
+Definition 2.2 .
+Critical value payment scheme
+We denote by Ci the critical value price computed for player i .
+2.2 Competitions and Domains In this paper we present two generalized trade reduction algorithms .
+The two algorithms are such that given an IR and IC mechanism M that solves a problem in some domain (different domains are formally defined below), turns M into IR, IC and BB mechanism .
+The algorithm presented finds procurement sets and removes them in iterations until the right conditions are fulfilled and the mechanism M is turned into a BB one .
+The right conditions that need to be met are conditions of competition among the players in the given problem .
+The following definitions leads us to the competition conditions we are looking for .
+Definition 2.3 .
+For any player i ? N, we say that the set Ri ? N \ {i} is a replacing set of i, if for any procurement set s ? S such that i ? s and Ri¡äs = ?, s\{i}¡åRi ? S .
+For example, in a (homogeneous) double sided auction (see problem B.1) the replacement set for any buyer is simply any other buyer .
+In an auction for transportation slots (see problem B.7), the replacement set of an edge is a path between the endpoints of the edge .
+Note that a set can replace a single player .
+Furthermore, this relationship is transitive but not necessarily symmetric .
+If i is a replacement set for j, it is not necessarily true that j is a replacement set for i .
+Definition 2.4 .
+For any allocation A, procurement set s ? A, and any i ? s we say Ri(A, s) is an internal competition for i with respect to A and s, if Ri(A, s) ? N \ A is a replacement set for i s.t .
+T = s \ {i} ¡å Ri(A, s) ? S and W(T) ? 0 .
+Definition 2.5 .
+For any allocation A and procurement set s ? A and any i ? s we say that Ei(A, s) is an external competition for i with respect to A and s, if Ei(A, s) ? N \ A is a set s.t., T = {i} ¡å Ei(A, s) ? S and W(T) ? 0 .
+We will assume, without loss of generality, that there are no ties between the values of any allocations, and in particular there are no ties between values of procurement sets .
+In case of ties, these can be broken by using the identities of the players4 .
+So for any allocation A, procurement set s and player i with external competition Ei(A, s), there exists exactly one set representing the maximally valued external competition .
+Definition 2.6 .
+A set X ? N is closed under replacement if ?i ? X then Ri ? X The following defines the required competition needed to maintain IC, IR and BB .
+The set X5 denotes this competition and is closed under replacement .
+In the remainder of the paper we will assume that all of our sets which define competition in a mechanism are closed under replacement .
+Definition 2.7 .
+Let X ? N be a set that is closed under replacement, we say that the mechanism is an X external mechanism, if Ri1 (A, s), .
+.
+.
+, Rit (A, s) such that for every iz = iq, Riz (A, s) ¡ä Riq (A, s) = ? For general domains the choice of X can be crucial .
+In fact even for the same domain the welfare (and revenue) can vary widely depending on how X is defined .
+In appendix C we give an example where two possible choices of X yield greatly different results .
+Although we show that X should be chosen as small as possible we do not give any characterization of the optimality of X and this is an important open problem .
+Our two generalized trade reduction algorithms will ensure that for any allocation we have the desired types of competition .
+So given a mechanism M that is IC and IR with allocation A, the goal of the algorithms is to turn M into an X external mechanism .
+The two generalized trade reduction algorithms utilize a dividing function D which divides allocation A into disjoint procurement sets .
+The algorithms order the procurements sets defined by D in order of increasing value .
+For any procurement set there is a desired type of competition that depends only on the players who compose the procurement set .
+The generalized trade reduction algorithms go over the procurement sets in order (from the smallest to the largest) and remove any procurement set that does not have the desired competition when the set is reached .
+The reduction of procurement sets will also be referred to as a trade reduction .
+Formally, 4 The details of how to break ties in allocations are standard and are omitted .
+5 We present some tradeoffs between the different possible sets in Appendix C .
+22 Definition 2.8 .
+D is a dividing function if for any allocation A and the players" value vector v, D divides the allocation into disjoint procurements sets s1, .
+.
+.
+, sk s.t .
+¡åsj = A and for any player i with value vi if i ? sj1 and t ? sj2 s.t .
+j1 ? j2 then for any value vi > vi of player i and division by D into s1, .
+.
+.
+, sk such that i ? sj1 and t ? sj2 then j1 > j2 .
+The two generalized trade reduction algorithms presented accept problems in different domains .
+The formal domain definitions follow
+A domain is a class domain if for all i ? N and all replacement sets of i, Ri, |Ri| = 1 and for all i, j, i = j if j = Ri then i = Rj .
+Intuitively, this means that replacement sets are of size 1 and the replacing relationship is symmetric .
+We define the class of a player i as the set of the player"s replacement sets and denote the class of player i by [i] .
+It is important to note that since replacement sets are transitive relations and since class domains also impose symmetric relations on the replacement sets, the class of a player i, [i] is actually an equivalence class for i .
+Definition 2.10 .
+A domain is a procurement class domain if the domain is a class based domain and if for any player i such that there exists two procurement sets s1, s2 (not necessarily trading simultaneously in any allocation) such that i ? s1 and i ? s2 then there exists a bijection f 
+Example 2.1 .
+A (homogeneous) double sided auction (see problem B.1) is a procurement class based domain .
+For the (homogeneous) double sided auction each procurement set consists of a buyer and a seller .
+The double sided combinatorial auction consisting of a single multi minded buyer and multiple sellers of heterogenous goods (see problem B.9), is a class based domain (as we have a single buyer) but not a procurement class based domain .
+In this case, the buyer is a class and each set of sellers of the same good is a class .
+However, for a buyer there is no bijection between the different the procurement sets of the bundles of goods the buyer is interested in .
+The spatial distributed market with strategic edges (see problem B.6) is not a class based domain (and therefore not a procurement class domain) .
+For example, even for a fixed buyer and a fixed seller there are two different procurement sets consisting of different paths between the buyers and sellers .
+The next sections present two algorithms GTR 1 and GTR2 .
+GTR 1 accepts problems in procurement class based domains, its properties are proved with a general dividing function D .
+The GTR 2 algorithm accepts problems in any domain .
+We prove the GTR 2"s properties with specific dividing function D0 .
+The function will be defined in section impact on welfare (and revenue) the generality of GTR ? 1 (albeit in special domains) can be an important practical consideration. .

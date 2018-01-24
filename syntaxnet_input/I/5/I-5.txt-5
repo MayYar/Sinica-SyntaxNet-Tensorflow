@@ -1,0 +1,125 @@
+ALLOCATION The resource allocation algorithm as described in this section is integrated in each agent .
+The only information required in order to make a resource allocation decision for a task is the server utilisation from completed task allocations at those servers .
+There is no additional information dissemination about server resource utilisation or information about free resources .
+Our solution demonstrates that agents can self organise in a dynamic environment without active monitoring information that causes a lot of network traffic overhead .
+Additionally, we do not have any central controlling authority .
+All behaviour that leads to the resource allocation is created by the effective competition of the agents for shared resources and is a purely emergent effect .
+The agents in our multi agent system compete for resources or a set of resources to execute tasks .
+The collective action of these agents change the environment and, as time goes by, they have to adapt to these changes to compete more effectively in the newly created environment .
+Our approach is based on different agent beliefs, represented by predictors and different information about their environment .
+Agents prefer a task allocation at a server with free resources .
+However, there is no way to be sure of the amount of free server resources in advance .
+All agents have the same preferences and a agent will allocate a task on a server if it expects enough free resources for its execution .
+There is no communication between agents .
+Actions taken by agents influence the actions of other agents indirectly .
+The applied mechanism is inspired by inductive reasoning and bounded rationality principles [2] .
+It is derived from the human way of deciding ill defined problems .
+Humans tend to keep in mind many hypotheses and act on the most plausible one .
+Therefore, each agent keeps track of the performance of a private collection of its predictors and selects the one that is currently most promising for decision making .
+4.1 Resource Allocation Algorithm This section describes the decision mechanism for our selforganising resource allocation .
+All necessary control is integrated in the agents themselves .
+There is no higher controlling authority, management layer for decision support or information distribution .
+All agents have a set of predictors for each resource to forecast the future resource utilisation of these servers for potential task allocation .
+To do so, agents use historical information from past task allocations at those resources .
+Based on the forecasted resource utilisation, the agent will make its resource allocation decision .
+After the task has finished its execution and returned the results back to the agent, the predictor performances are evaluated and history information is updated .
+Algorithm 1 shows the resource allocation algorithm for each agent .
+The agent first predicts the next step"s resource load for each server with historical information (line 3 7) .
+If the predicted resource load plus the task"s resource consumption is below the last known server capacity, this server is added to the list of candidates for the allocation .
+The agent then evaluates if any free shared resources for the task allocation are expected .
+In the case, no free resources are expected (line 9), the agent will explore resources by allocating the task at a randomly selected server from all not predictable servers to gather resource load information .
+This is the standard case at the beginning of the agent life cycle as there is no information about the environment available .
+The resource load prediction itself uses a set of r predictors P(a, l) 
+One predictor pA ? P of each set is called active predictor, which forecasts the next steps resource load .
+Each predictor is a function P 
+For example, a predictor could forecast a resource load equal to the average amount of occupied resources during the last execution at this resource .
+A history H of resource load information is a list of up to m history items hi = (xi, yi), comprising the observation date xi and the observed value yi .
+The most recent history item is h0 .
+Hm(li) = ((x0, y0), ..., (xk, yk))| 0 ? k < m (2) Our algorithm uses a set of predictors rather than only one, to avoid that all agents make the same decision based on the predicted value leading to an invalidation of their beliefs .
+Imagine that only one shared resource is known by a number of agents using one predictor forecasting the 76 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) ResourceLoad Time (a) Predictor6 Predictor7 Predictor 8 Predictor9 Predictor10 Predictor2 Predictor 4 Predictor 3 Predictor5 Predictor1 (b) Figure 2
+(b) Predictor"s probability distribution for selecting the new active predictor .
+same value as the last known server resource utilisation .
+All agents that allocated a task at a server that was slightly overloaded would dismiss another allocation at this server as they expect the server to be overloaded again based on the predictions .
+As the result, the server would have a large amount of free resources .
+A set of different predictors that predict different values avoids this situation of invalidating the beliefs of the agents [19] .
+An example of a collected resource load information from the last 5 visits of an agent at a shared resource can be seen in Fig .
+2(a) .
+It shows that the resource was visited frequently, which means free resources for execution were available and an exploration of other servers was unnecessary .
+This may change in the future as the resource load has significantly increased recently .
+In the case where the set of servers predicted having free resources available is not empty (line 13), the agent selects one of those for allocation .
+We have implemented two alternative algorithms for the selection of a server for the task allocation .
+Algorithm 1 Resource Allocation algorithm of an agent 1 L ¡ö ? server with free resources 2 u ¡ö U(T, t + 1) task resource consumption 3 for all P(a, l)|l ? LS (a) do 4 U(l) ¡ö resourceLoadPrediction(P(a, l), t + 1) 5 if U(l) + u ? C(l) then 6 L ¡ö L ¡å {P(a, l)} 7 end if 8 end for 9 if L = ? then 10 all unpredictable shared resources 11 E ¡ö LS {l ? LS (a)|P(a, l) ? L} 12 allocationServer ¡ö a random element of E 13 else 14 allocationServer ¡ö serverSelection 15 end if 16 return allocationServer Algorithm 2 shows the first method, which is a non deterministic selection according to the predictability of the server resource utilisation .
+A probability distribution is calculated from the confidence levels of the resource predictions .
+The confidence level depends on three factors
+3 .
+The server with the highest confidence level has the biggest chance to be selected as the active server .
+G(P) = w1 ¡P size(H) m + w2 ¡P Age(H) max Age(H) + w3 ¡P g(p) max (g(p)) (3) where
+4 Algorithm 2 serverSelection(L) best predictable server 1 for all P(a, l) ? L do 2 calculate G(P) 3 end for 4 transform all G(P) into a probability distribution 5 return l ? LS selected according to the probability distribution Algorithm 3 serverSelection(L) most free resources 1 for all P(a, l) ? L do 2 c(l) ¡ö C(l) ? Ul 3 end for 4 return l ? LS |c(l) is maximum The second alternative selection method of a server from the set of predicted servers with free resources is deterministic and shown in algorithm 3 .
+The server with most expected free resources from the set L of server with expected free resources is chosen .
+In the case where all agents predict the most free resources for one particular server, all agents will allocate the task at this server, which would invalidate the agent"s beliefs .
+However, our experiments show that different individual history information and the non deterministic active predictor selection usually prevent this situation .
+In the case, the resource allocation algorithm does not return any server (Alg .
+1, line 16), the allocation at a resource in not recommended .
+The agent will not allocate the task at a resource .
+This case happens only if a resource load prediction for all servers is possible but no free resources are expected .
+After the agent execution has finished, the evaluation process described in algorithm 4 is preformed .
+This process is divided into three cases .
+First, the task was not allocated at a resource .
+In this case, the agent cannot decide if the decision not to allocate the task was correct or not .
+The agent then removes old historical data .
+This is necessary for a successful adaptation in the future .
+If the agent would not delete old historical information, the prediction would always forecast that no free resources are available .
+The agent would never allocate a task at one of the resources in the future .
+Old historical information is removed from the agent"s resource history using a decay rate .
+The decay rate is a cumulative distribution function that calculates the probability that a history item is deleted after it has reached a certain The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 77 Age of the history data Decayrate 0 1 older Figure 3
+The current implementation uses a constant probability density function in a configurable domain .
+Figure 3 shows an example of such a cumulative distribution function for the decay rate .
+Depending on the environment, the probability density function must be altered .
+If the number of potential server per agent is high, historical information must be kept longer to avoid the exploration of unexplored resources .
+In addition, a dynamic environment requires more up to date information to make more reliable predictions .
+The second case in the evaluation process (Alg .
+4, line 5) describes the actions taken after a server was visited the first time .
+The agent creates a new predictor set for this server and records the historical information .
+All predictors for this set are chosen randomly from some predefined set .
+g(p) = l i=0 ri (4) where
+4, line 8) is the evaluation after the agent allocated the task at a resource .
+The agent evaluates all predictors of the predictor set for this resource by predicting the resource load with all predictors based on the old historical data .
+Predictors that made a correct prediction meaning the resource allocation was correct, will receive a positive rating .
+This is the case that the resource was not overloaded and free resources for execution were predicted, or the resource was overloaded and this predictor would have prevented the allocation .
+All predictors that predicted values which would lead to wrong decisions will receive negative ratings .
+In all other cases, which includes that no prediction was possible, a neutral rating is given to the predictors .
+Based on these performance ratings, the confidence levels are calculated using equation 4 .
+The confidence for all predictors that cannot predict with the current historical information about the server is set to zero to prevent the selection of those as the new active predictor .
+These values are transformed into a probability distribution .
+According to this probability distribution the new active predictor is chosen, implemented as a roulette wheel selection .
+Figure 2(b) illustrates the probabilities of a set of 10 predictors, which have been calculated from the predictor confidence levels .
+Even if predictor 9 has the highest selection probability, its was not chosen by roulette wheel selection process as the active predictor .
+This non deterministic predictor selection prevents the invalidation of the agents" beliefs in case agents have the same set of predictors .
+The prediction accuracy that is the error of the prediction compared to the observed value is not taken into consideration .
+Suppose the active predictor predicts slightly above the resource capacity which leads not to a allocation on a resources .
+In fact, enough resources for the execution would be available .
+A less accurate prediction which is far below the capacity would lead to the correct decision and is therefore preferred .
+The last action of the evaluation algorithm (Alg .
+4, line 22) updates the history with the latest resource load information of the server .
+The oldest history data is overwritten if already m history values are recorded for the server .
+Algorithm 4 Decision Evaluation 1 if l ? LE then 2 for all P(a, l)|l ? LS (a) do 3 evaporate old historical data 4 end for 5 else if P(a, l) = null then 6 create (P(a, l)) 7 update H(l) 8 else 9 for all p ? P(a, l) do 10 pred ¡ö resourceLoadPrediction(p) 11 if (U(l) ? C(l) AND pred + U(a, t) ? C(l)) OR (U(l) > C(l) AND pred + U(a, t) > C(l)) then 12 addPositiveRating(p) 13 else if U(l) ? C(l) AND pred + U(a, t) > C(l) OR U(l) ? C(l) AND pred + U(a, t) > C(l) then 14 addNegativeRating(p) 15 else 16 addNeutralRating(p) 17 end if 18 end for 19 calculate all g(p); g(p) ¡ö 0, if p is not working 20 transform all g(p) into a probability distribution 21 pA ¡ö p ? P(a, l) is selected according to this probability distribution 22 update H(l) 23 end if 4.2 Remarks and Limitation of the Approach Our prediction mechanism uses a number of different types of simple predictors rather than of one sophisticated predictor .
+This method assures that agents can compete more effectively in a changing environment .
+Different types of predictors are suitable for different situations and environments .
+Therefore, all predictors are being evaluated after each decision and the active predictor is selected .
+This nondeterministic of the new active predictor supports that the agents" beliefs will not be invalidated, which happens in the case that all predictors are making the same decision .
+Especially if there is only one shared resource available and all agents have only the choice to go the this one shared resource or not [19] .
+Our self organising approach is robust against failures of resources or agents in the system .
+If they join or leave, the system can self organise quickly and adapts to the new conditions .
+There is no classical bottleneck or single point of failure like in centralised mechanisms .
+The limitations are the reliance on historical resource utilisation information about other servers .
+A forecast of the resource utilisation of a remote server is only possible if an agent has a number of historical information about a shared resource .
+If the number of servers per agent is very large, there is no efficient way to gather historical information about remote servers .
+This problem occurs if the amount of provided shared resources 78 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) is limited and not enough for all resource consumers .
+In this case, the an agent would randomly try all known servers until it will find one with free resources or there is no one .
+In the worst case, by the time for trying all servers, historical information of the servers is already outdated. .

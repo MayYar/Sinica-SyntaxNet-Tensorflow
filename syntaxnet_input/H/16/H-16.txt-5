@@ -1,0 +1,68 @@
+Caching relies upon the assumption that there is locality in the stream of requests .
+That is, there must be sufficient repetition in the stream of requests and within intervals of time that enable a cache memory of reasonable size to be effective .
+In the query log we used, 88% of the unique queries are singleton queries, and 44% are singleton queries out of the whole volume .
+Thus, out of all queries in the stream composing the query log, the upper threshold on hit ratio is 56% .
+This is because only 56% of all the queries comprise queries that have multiple occurrences .
+It is important to observe, however, that not all queries in this 56% can be cache hits because of compulsory misses .
+A compulsory miss 1 The collection is available from the University of Milan
+URL retrieved 05 2007 .
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 240 260 280 300 320 340 360 Numberofelements Bin number Total terms Terms diff Total queries Unique queries Unique terms Query diff Figure 4
+happens when the cache receives a query for the first time .
+This is different from capacity misses, which happen due to space constraints on the amount of memory the cache uses .
+If we consider a cache with infinite memory, then the hit ratio is 50% .
+Note that for an infinite cache there are no capacity misses .
+As we mentioned before, another possibility is to cache the posting lists of terms .
+Intuitively, this gives more freedom in the utilization of the cache content to respond to queries because cached terms might form a new query .
+On the other hand, they need more space .
+As opposed to queries, the fraction of singleton terms in the total volume of terms is smaller .
+In our query log, only 4% of the terms appear once, but this accounts for 73% of the vocabulary of query terms .
+We show in Section 5 that caching a small fraction of terms, while accounting for terms appearing in many documents, is potentially very effective .
+Figure 4 shows several graphs corresponding to the normalized arrival rate for different cases using days as bins .
+That is, we plot the normalized number of elements that appear in a day .
+This graph shows only a period of 122 days, and we normalize the values by the maximum value observed throughout the whole period of the query log .
+Total queries and Total terms correspond to the total volume of queries and terms, respectively .
+Unique queries and Unique terms correspond to the arrival rate of unique queries and terms .
+Finally, Query diff and Terms diff correspond to the difference between the curves for total and unique .
+In Figure 4, as expected, the volume of terms is much higher than the volume of queries .
+The difference between the total number of terms and the number of unique terms is much larger than the difference between the total number of queries and the number of unique queries .
+This observation implies that terms repeat significantly more than queries .
+If we use smaller bins, say of one hour, then the ratio of unique to volume is higher for both terms and queries because it leaves less room for repetition .
+We also estimated the workload using the document frequency of terms as a measure of how much work a query imposes on a search engine .
+We found that it follows closely the arrival rate for terms shown in Figure 4 .
+To demonstrate the effect of a dynamic cache on the query frequency distribution of Figure 2, we plot the same frequency graph, but now considering the frequency of queries Figure 5
+after going through an LRU cache .
+On a cache miss, an LRU cache decides upon an entry to evict using the information on the recency of queries .
+In this graph, the most frequent queries are not the same queries that were most frequent before the cache .
+It is possible that queries that are most frequent after the cache have different characteristics, and tuning the search engine to queries frequent before the cache may degrade performance for non cached queries .
+The maximum frequency after caching is less than 1% of the maximum frequency before the cache, thus showing that the cache is very effective in reducing the load of frequent queries .
+If we re rank the queries according to after cache frequency, the distribution is still a power law, but with a much smaller value for the highest frequency .
+When discussing the effectiveness of dynamically caching, an important metric is cache miss rate .
+To analyze the cache miss rate for different memory constraints, we use the working set model [6, 14] .
+A working set, informally, is the set of references that an application or an operating system is currently working with .
+The model uses such sets in a strategy that tries to capture the temporal locality of references .
+The working set strategy then consists in keeping in memory only the elements that are referenced in the previous £c steps of the input sequence, where £c is a configurable parameter corresponding to the window size .
+Originally, working sets have been used for page replacement algorithms of operating systems, and considering such a strategy in the context of search engines is interesting for three reasons .
+First, it captures the amount of locality of queries and terms in a sequence of queries .
+Locality in this case refers to the frequency of queries and terms in a window of time .
+If many queries appear multiple times in a window, then locality is high .
+Second, it enables an o?ine analysis of the expected miss rate given different memory constraints .
+Third, working sets capture aspects of efficient caching algorithms such as LRU .
+LRU assumes that references farther in the past are less likely to be referenced in the present, which is implicit in the concept of working sets [14] .
+Figure 6 plots the miss rate for different working set sizes, and we consider working sets of both queries and terms .
+The working set sizes are normalized against the total number of queries in the query log .
+In the graph for queries, there is a sharp decay until approximately 0.01, and the rate at which the miss rate drops decreases as we increase the size of the working set over 0.01 .
+Finally, the minimum value it reaches is 50% miss rate, not shown in the figure as we have cut the tail of the curve for presentation purposes .
+0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 0 0.05 0.1 0.15 0.2 Missrate Normalized working set size Queries Terms Figure 6
+1 10 100 1000 10000 100000 1e+06 Frequency Distance Figure 7
+Compared to the query curve, we observe that the minimum miss rate for terms is substantially smaller .
+The miss rate also drops sharply on values up to 0.01, and it decreases minimally for higher values .
+The minimum value, however, is slightly over 10%, which is much smaller than the minimum value for the sequence of queries .
+This implies that with such a policy it is possible to achieve over 80% hit rate, if we consider caching dynamically posting lists for terms as opposed to caching answers for queries .
+This result does not consider the space required for each unit stored in the cache memory, or the amount of time it takes to put together a response to a user query .
+We analyze these issues more carefully later in this paper .
+It is interesting also to observe the histogram of Figure 7, which is an intermediate step in the computation of the miss rate graph .
+It reports the distribution of distances between repetitions of the same frequent query .
+The distance in the plot is measured in the number of distinct queries separating a query and its repetition, and it considers only queries appearing at least 10 times .
+From Figures 6 and 7, we conclude that even if we set the size of the query answers cache to a relatively large number of entries, the miss rate is high .
+Thus, caching the posting lists of terms has the potential to improve the hit ratio .
+This is what we explore next. .

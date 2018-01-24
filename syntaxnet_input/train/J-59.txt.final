@@ -1,0 +1,474 @@
+Cost Sharing in a Job Scheduling Problem 
+content:
+1 ABSTRACT :
+1-1:A set of jobs need to be served by a single server which can serve only one job at a time .
+1-2:Jobs have processing times and incur waiting costs (linear in their waiting time) .
+1-3:The jobs share their costs through compensation using monetary transfers .
+1-4:We characterize the Shapley value rule for this model using fairness axioms .
+1-5:Our axioms include a bound on the cost share of jobs in a group, efficiency, and some independence properties on the the cost share of a job .
+1-6:J.4 [Social and Behaviorial Sciences]: Economics .
+2 INTRODUCTION :
+2-1:A set of jobs need to be served by a server .
+2-2:The server can process only one job at a time .
+2-3:Each job has a finite processing time and a per unit time waiting cost .
+2-4:Efficient ordering of this queue directs us to serve the jobs in increasing order of the ratio of per unit time waiting cost and processing time .
+2-5:To compensate for waiting by jobs, monetary transfers to jobs are allowed .
+2-6:How should the jobs share the cost equitably amongst themselves (through transfers)? The problem of fair division of costs among agents in a queue has many practical applications .
+2-7:For example, computer programs are regularly scheduled on servers, data are scheduled to be transmitted over networks, jobs are scheduled in shop floor on machines, and queues appear in many public services (post offices, banks) .
+2-8:Study of queueing problems has attracted economists for a long time [7, 17] .
+2-9:Cost sharing is a fundamental problem in many settings on the Internet .
+2-10:Internet can be seen as a common resource shared by many users and the cost incured by using the resource needs to be shared in an equitable manner .
+2-11:The current surge in cost sharing literature from computer scientists validate this claim [8, 11, 12, 6, 24] .
+2-12:Internet has many settings in which our model of job scheduling appears and the agents waiting in a queue incur costs (jobs scheduled on servers, queries answered from a database, data scheduled to be transmitted over a fixed bandwidth network etc.) .
+2-13:We hope that our analysis will give new insights on cost sharing problems of this nature .
+2-14:Recently, there has been increased interest in cost sharing methods with submodular cost functions [11, 12, 6, 24] .
+2-15:While many settings do have submodular cost functions (for example, multi cast transmission games [8]), while the cost function of our game is supermodular .
+2-16:Also, such literature typically does not assume budget balance (transfers adding up to zero), while it is an inherent feature of our model .
+2-17:A recent paper by Maniquet [15] is the closest to our model and is the motivation behind our work 1 .
+2-18:Maniquet [15] studies a model where he assumes all processing times are unity .
+2-19:For such a model, he characterizes the Shapley value rule using classical fairness axioms .
+2-20:Chun [1] interprets the worth of a coalition of jobs in a different manner for the same model and derives a reverse rule .
+2-21:Chun characterizes this rule using similar fairness axioms .
+2-22:Chun [2] also studies the envy properties of these rules .
+2-23:Moulin [22, 21] studies the queueing problem from a strategic point view when per unit waiting costs are unity .
+2-24:Moulin introduces new concepts in the queueing settings such as splitting and merging of jobs, and ways to prevent them .
+2-25:Another stream of literature is on sequencing games, first introduced by Curiel et al .
+2-26:[4] .
+2-27:For a detailed survey, refer to Curiel et al .
+2-28:[3] .
+2-29:Curiel et al .
+2-30:[4] defined sequencing games similar to our model, but in which an initial ordering of jobs is given .
+2-31:Besides, their notion of worth of a coalition is very different from the notions studied in Maniquet [15] and Chun [1] (these are the notions used in our work too) .
+2-32:The particular notion of the worth of a coalition makes the sequencing game of Curiel et al .
+2-33:[4] convex, whereas our game is not convex and does not assume the presence of any initial order .
+2-34:In summary, the focus of this stream of 1 The authors thank Fran¸cois Maniquet for several fruitful discussions .
+2-35:232 research is how to share the savings in costs from the initial ordering to the optimal ordering amongst jobs (also see Hamers et al .
+2-36:[9], Curiel et al .
+2-37:[5]) .
+2-38:Recently, Klijn and S´anchez [13, 14] considered sequencing games without any initial ordering of jobs .
+2-39:They take two approaches to define the worth of coalitions .
+2-40:One of their approaches, called the tail game, is related to the reverse rule of Chun [1] .
+2-41:In the tail game, jobs in a coalition are served after the jobs not in the coalition are served .
+2-42:Klijn and S´anchez [14] showed that the tail game is balanced .
+2-43:Further, they provide expressions for the Shapley value in tail game in terms of marginal vectors and reversed marginal vectors .
+2-44:We provide a simpler expression of the Shapley value in the tail game, generalizing the result in Chun [1] .
+2-45:Klijn and S´anchez [13] study the core of this game in detail .
+2-46:Strategic aspects of queueing problems have also been researched .
+2-47:Mitra [19] studies the first best implementation in queueing models with generic cost functions .
+2-48:First best implementation means that there exists an efficient mechanism in which jobs in the queue have a dominant strategy to reveal their true types and their transfers add up to zero .
+2-49:Suijs [27] shows that if waiting costs of jobs are linear then first best implementation is possible .
+2-50:Mitra [19] shows that among a more general class of queueing problems first best implementation is possible if and only if the cost is linear .
+2-51:For another queueing model, Mitra [18] shows that first best implementation is possible if and only if the cost function satisfies a combinatorial property and an independence property .
+2-52:Moulin [22, 21] studies strategic concepts such as splitting and merging in queueing problems with unit per unit waiting costs .
+2-53:The general cost sharing literature is vast and has a long history .
+2-54:For a good survey, we refer to [20] .
+2-55:From the seminal work of Shapley [25] to recent works on cost sharing in multi cast transmission and optimization problems [8, 6, 23] this area has attracted economists, computer scientists, and operations researchers .
+2-56:1.1 Our Contribution Ours is the first model which considers cost sharing when both processing time and per unit waiting cost of jobs are present .
+2-57:We take a cooperative game theory approach and apply the classical Shapley value rule to the problem .
+2-58:We show that the Shapley value rule satisfies many intuitive fairness axioms .
+2-59:Due to two dimensional nature of our model and one dimensional nature of Maniquet"s model [15], his axioms are insufficient to characterize the Shapley value in our setting .
+2-60:We introduce axioms such as independece of preceding jobs" unit waiting cost and independence of following jobs" processing time .
+2-61:A key axiom that we introduce gives us a bound on cost share of a job in a group of jobs which have the same ratio of unit time waiting cost and processing time (these jobs can be ordered in any manner between themseleves in an efficient ordering) .
+2-62:If such a group consists of just one job, then the axiom says that such a job should at least pay his own processing cost (i.e., the cost it would have incurred if it was the only job in the queue) .
+2-63:If there are multiple jobs in such a group, the probability of any two jobs from such a group inflicting costs on each other is same (1 2 ) in an efficient ordering .
+2-64:Depending on the ordering selected, one job inflicts cost on the other .
+2-65:Our fairness axiom says that each job should at least bear such expected costs .
+2-66:We characterize the Shapley value rule using these fairness axioms .
+2-67:We also extend the envy results in [2] to our setting and discuss a class of reasonable cost sharing mechanisms. .
+3 THE MODEL :
+3-1:There are n jobs that need to be served by one server which can process only one job at a time .
+3-2:The set of jobs are denoted as N = {1, .
+3-3:.
+3-4:.
+3-5:, n} .
+3-6:σ : N → N is an ordering of jobs in N and σi denotes the position of job i in the ordering and Pi(σ) = {j ∈ N : σi > σj} .
+3-7:Every job i is identified by two parameters: (pi, θi) .
+3-8:pi is the processing time and θi is the cost per unit waiting time of job i .
+3-9:Thus, a queueing problem is defined by a list q = (N, p, θ) ∈ Q, where Q is the set of all possible lists .
+3-10:We will denote γi = θi pi .
+3-11:Given an ordering of jobs σ, the cost incurred by job i is given by ci(σ) = piθi + θi   j∈Pi(σ) pj .
+3-12:The total cost incurred by all jobs due to an ordering σ can be written in two ways: (i) by summing the cost incurred by every job and (ii) by summing the costs inflicted by a job on other jobs with their own processing cost .
+3-13:C(N, σ) =   i∈N ci(σ) =   i∈N piθi +   i∈N ¡θi   j∈Pi(σ) pj¢ .
+3-14:=   i∈N piθi +   i∈N ¡pi   j∈Fi(σ) θj¢ .
+3-15:An efficient ordering σ∗ is the one which minimizes the total cost incurred by all jobs .
+3-16:So, C(N, σ∗ ) ≤ C(N, σ) ∀ σ ∈ cost in an efficient ordering of jobs from N as C(N) whenever it is not confusing .
+3-17:Sometimes, we will deal with only a subset of jobs S ⊆ N .
+3-18:The ordering σ will then be defined on jobs in S only and we will write the total cost from an efficient ordering of jobs in S as C(S) .
+3-19:The following lemma shows that jobs are ordered in decreasing γ in an efficient ordering .
+3-20:This is also known as the weighted shortest processing time rule, first introduced by Smith [26] .
+3-21:Lemma 1 .
+3-22:For any S ⊆ N, let σ∗ be an efficient ordering of jobs in S .
+3-23:For every i = j, i, j ∈ S, if σ∗ i > σ∗ j , then γi ≤ γj .
+3-24:Proof .
+3-25:Assume for contradiction that the statment of the lemma is not true .
+3-26:This means, we can find two consecutive jobs i, j ∈ S (σ∗ i = σ∗ j + 1) such that γi > γj .
+3-27:Define a new ordering σ by interchanging i and j in σ∗ .
+3-28:The costs to jobs in S \ {i, j} is not changed from σ∗ to σ .
+3-29:The difference between total costs in σ∗ and σ is given by, C(S, σ) − C(S, σ∗ ) = θjpi − θipj .
+3-30:From efficiency we get θjpi − θipj ≥ 0 .
+3-31:This gives us γj ≥ γi, which is a contradiction .
+3-32:An allocation for q = (N, p, θ) ∈ Q has two components: an ordering σ and a transfer ti for every job i ∈ N .
+3-33:ti denotes the payment received by job i .
+3-34:Given a transfer ti and an ordering σ, the cost share of job i is defined as, πi = ci(σ) − ti = θi   j∈N:σj ≤σi pj − ti .
+3-35:233 An allocation (σ, t) is efficient for q = (N, p, θ) whenever σ is an efficient ordering and £i∈N ti = 0 .
+3-36:The set of efficient orderings of q is denoted as Σ∗ (q) and σ∗ (q) will be used to refer to a typical element of the set .
+3-37:The following straightforward lemma says that for two different efficient orderings, the cost share in one efficient allocation is possible to achieve in the other by appropriately modifying the transfers .
+3-38:Lemma 2 .
+3-39:Let (σ, t) be an efficient allocation and π be the vector of cost shares of jobs from this allocation .
+3-40:If σ∗ = σ be an efficient ordering and t∗ i = ci(σ∗ ) − πi ∀ i ∈ N, then (σ∗ , t∗ ) is also an efficient allocation .
+3-41:Proof .
+3-42:Since (σ, t) is efficient, £i∈N ti = 0 .
+3-43:This gives £i∈N πi = C(N) .
+3-44:Since σ∗ is an efficient ordering, £i∈N ci(σ∗ ) = C(N) .
+3-45:This means, £i∈N t∗ i = £i∈N [ci(σ∗ ) − πi] = 0 .
+3-46:So, (σ∗ , t∗ ) is an efficient allocation .
+3-47:Depending on the transfers, the cost shares in different efficient allocations may differ .
+3-48:An allocation rule ψ associates with every q ∈ Q a non empty subset ψ(q) of allocations. .
+4 COST SHARING USING THE SHAPLEY VALUE :
+4-1:VALUE In this section, we define the coalitional cost of this game and analyze the solution proposed by the Shapley value .
+4-2:Given a queue q ∈ Q, the cost of a coalition of S ⊆ N jobs in the queue is defined as the cost incurred by jobs in S if these are the only jobs served in the queue using an efficient ordering .
+4-3:Formally, the cost of a coalition S ⊆ N is, C(S) =   i∈S   j∈S:σ∗ j ≤σ∗ i θjpj, where σ∗ = σ∗ is an efficient ordering considering jobs from S only .
+4-4:The worth of a coalition of S jobs is just −C(S) .
+4-5:Maniquet [15] observes another equivalent way to define the worth of a coalition is using the dual function of the cost function C(·) .
+4-6:Other interesting ways to define the worth of a coalition in such games is discussed by Chun [1], who assume that a coalition of jobs are served after the jobs not in the coalition are served .
+4-7:The Shapley value (or cost share) of a job i is defined as, SVi =   S⊆N\{i} |S|!(|N| − |S| − 1)! |N|! ¡C(S∪{i})−C(S)¢ .
+4-8:(1) The Shapley value allocation rule says that jobs are ordered using an efficient ordering and transfers are assigned to jobs such that the cost share of job i is given by Equation 1 .
+4-9:Lemma 3 .
+4-10:Let σ∗ be an efficient ordering of jobs in set SVi = piθi + 1 2 ¡Li + Ri¢, where Li = θi £j∈Pi(σ∗) pj and Ri = pi £j∈Fi(σ∗) θj .
+4-11:Proof .
+4-12:Another way to write the Shapley value formula is the following [10], SVi =   S⊆N:i∈S ∆(S) |S| , where ∆(S) = C(S) if |S| = 1 and ∆(S) = C(S)−£T S ∆(T) .
+4-13:This gives ∆({i}) = C({i}) = piθi ∀i ∈ N .
+4-14:For any i, j ∈ N with i = j, we have ∆({i, j}) = C({i, j}) − C({i}) − C({j}) = min(piθi + pjθj + pjθi, piθi + pjθj + piθj) − piθi − pjθj = min(pjθi, piθj) .
+4-15:We will show by induction that ∆(S) = 0 if |S| > 2 .
+4-16:For |S| = 3, let S = {i, j, k} .
+4-17:Without loss of generality, assume θi pi ≥ θj pj ≥ θk pk .
+4-18:So, ∆(S) = C(S) − ∆({i, j}) − ∆({j, k}) − ∆({i, k})−∆({i})−∆({j})−∆({k}) = C(S)−piθj −pjθk − piθk − piθi − pjθj − pkθk = C(S) − C(S) = 0 .
+4-19:Now, assume for T S, ∆(T) = 0 if |T| > 2 .
+4-20:Without loss of generality assume that σ to be the identity mapping .
+4-21:Now, ∆(S) = C(S) −   T S ∆(T) = C(S) −   i∈S   j∈S:j<i ∆({i, j}) −   i∈S ∆({i}) = C(S) −   i∈S   j∈S:j<i pjθi −   i∈S piθi = C(S) − C(S) = 0 .
+4-22:This proves that ∆(S) = 0 if |S| > 2 .
+4-23:Using the Shapley value formula now, SVi =   S⊆N:i∈S ∆(S) |S| = ∆({i}) + 1 2   j∈N:j=i ∆({i, j}) = piθi + 1 2 ¡  j<i ∆({i, j}) +   j>i ∆({i, j})¢ = piθi + 1 2 ¡  j<i pjθi +   j>i piθj¢= piθi + 1 2 ¡Li + Ri¢. .
+5 AXIOMATICCHARACTERIZATIONOF THE SHAPLEY VALUE :
+5-1:THE SHAPLEY VALUE In this section, we will define serveral axioms on fairness and characterize the Shapley value using them .
+5-2:For a given q ∈ Q, we will denote ψ(q) as the set of allocations from allocation rule ψ .
+5-3:Also, we will denote the cost share vector associated with an allocation rule (σ, t) as π and that with allocation rule (σ , t ) as π etc .
+5-4:4.1 The Fairness Axioms We will define three types of fairness axioms: (i) related to efficiency, (ii) related to equity, and (iii) related to independence .
+5-5:Efficiency Axioms We define two types of efficiency axioms .
+5-6:One related to efficiency which states that an efficient ordering should be selected and the transfers of jobs should add up to zero (budget balance) .
+5-7:Definition 1 .
+5-8:An allocation rule ψ satisfies efficiency if for every q ∈ Q and (σ, t) ∈ ψ(q), (σ, t) is an efficient allocation .
+5-9:234 The second axiom related to efficiency says that the allocation rule should not discriminate between two allocations which are equivalent to each other in terms of cost shares of jobs .
+5-10:Definition 2 .
+5-11:An allocation rule ψ satisfies Pareto indifference if for every q ∈ Q, (σ, t) ∈ ψ(q), and (σ , t ) ∈ Σ(q), we have ¡πi = πi ∀ i ∈ N¢⇒ ¡(σ , t ) ∈ ψ(q)¢ .
+5-12:An implication of Pareto indifference axiom and Lemma 2 is that for every efficient ordering there is some set of transfers of jobs such that it is part of an efficient rule and the cost share of a job in all these allocations are same .
+5-13:Equity Axioms How should the cost be shared between two jobs if the jobs have some kind of similarity between them? Equity axioms provide us with fairness properties which help us answer this question .
+5-14:We provide five such axioms .
+5-15:Some of these axioms (for example anonymity, equal treatment of equals) are standard in the literature, while some are new .
+5-16:We start with a well known equity axiom called anonymity .
+5-17:Denote ρ : N → N as a permutation of elements in N .
+5-18:Let ρ(σ, t) denote the allocation obtained by permuting elements in σ and t according to ρ .
+5-19:Similarly, let ρ(p, θ) denote the new list of (p, θ) obtained by permuting elements of p and θ according to ρ .
+5-20:Our first equity axiom states that allocation rules should be immune to such permutation of data .
+5-21:Definition 3 .
+5-22:An allocation rule ψ satisfies anonymity if for all q ∈ Q, (σ, t) ∈ ψ(q) and every permutation ρ, we then ρ(σ, t) ∈ ψ(N, ρ(q)) .
+5-23:The next equity axiom is classical in literature and says that two similar jobs should be compensated such that their cost shares are equal .
+5-24:This implies that if all the jobs are of same type, then jobs should equally share the total system cost .
+5-25:Definition 4 .
+5-26:An allocation rule ψ satisfies equal treatment of equals if for all q ∈ Q, (σ, t) ∈ ψ(q), i, j ∈ N, then ¡pi = pj; θi = θj¢⇒ ¡πi = πj¢ .
+5-27:ETE directs us to share costs equally between jobs if they are of the same per unit waiting cost and processing time .
+5-28:But it is silent about the cost shares of two jobs i and j which satisfy θi pi = θj pj .
+5-29:We introduce a new axiom for this .
+5-30:If an efficient rule chooses σ such that σi < σj for some i, j ∈ N, then job i is inflicting a cost of piθj on job j and job j is inflicting zero cost on job i .
+5-31:Define for some γ ≥ 0, S(γ) = {i ∈ N : γi = γ} .
+5-32:In an efficient rule, the elements in S(γ) can be ordered in any manner (in |S(γ)|! ways) .
+5-33:If i, j ∈ S(γ) then we have pjθi = piθj .
+5-34:Probability of σi < σj is 1 2 and so is the probability of σi > σj .
+5-35:The expected cost i inflicts on j is 1 2 piθj and j inflicts on i is 1 2 pjθi .
+5-36:Our next fairness axiom says that i and j should each be responsible for their own processing cost and this expected cost they inflict on each other .
+5-37:Arguing for every pair of jobs i, j ∈ S(γ), we establish a bound on the cost share of jobs in S(γ) .
+5-38:We impose this as an equity axiom below .
+5-39:Definition 5 .
+5-40:An allocation rule satisfies expected cost bound if for all q ∈ Q, (σ, t) ∈ ψ(q) with π being the resulting cost share, for any γ ≥ 0, and for every i ∈ S(γ), we have πi ≥ piθi + 1 2 ¡   j∈S(γ):σj <σi pjθi +   j∈S(γ):σj >σi piθj¢ .
+5-41:The central idea behind this axiom is that of expected cost inflicted .
+5-42:If an allocation rule chooses multiple allocations, we can assign equal probabilities of selecting one of the allocations .
+5-43:In that case, the expected cost inflicted by a job i on another job j in the allocation rule can be calculated .
+5-44:Our axiom says that the cost share of a job should be at least its own processing cost and the total expected cost it inflicts on others .
+5-45:Note that the above bound poses no constraints on how the costs are shared among different groups .
+5-46:Also observe that if S(γ) contains just one job, ECB says that job should at least bear its own processing cost .
+5-47:A direct consequence of ECB is the following lemma .
+5-48:Lemma 4 .
+5-49:Let ψ be an efficient rule which satisfies ECB .
+5-50:For a q ∈ Q if S(γ) = N, then for any (σ, t) ∈ ψ(q) which gives a cost share of π, πi = piθi + 1 2 ¡Li + Ri¢∀ i ∈ N .
+5-51:Proof .
+5-52:From ECB, we get πi ≥ piθi+1 2 ¡Li+Ri¢∀ i ∈ N .
+5-53:Assume for contradiction that there exists j ∈ N such that πj > pjθj + 1 2 ¡Li + Ri¢ .
+5-54:Using efficiency and the fact that £i∈N Li = £i∈N Ri, we get £i∈N πi = C(N) > £i∈N piθi + 1 2 £i∈N ¡Li + Ri¢ = C(N) .
+5-55:This gives us a contradiction .
+5-56:Next, we introduce an axiom about sharing the transfer of a job between a set of jobs .
+5-57:In particular, if the last job quits the system, then the ordering need not change .
+5-58:But the transfer to the last job needs to be shared between the other jobs .
+5-59:This should be done in proportion to their processing times because every job influenced the last job based on its processing time .
+5-60:Definition 6 .
+5-61:An allocation rule ψ satisfies proportionate responsibility of p (PRp) if for all q ∈ Q, for all (σ, t) ∈ ψ(q), k ∈ N such that σk = |N|, q = (N \ {k}, p , θ ) ∈ Q, such that for all i ∈ N\{k}: θi = θi, pi = pi, there exists (σ , t ) ∈ ψ(q ) such that for all i ∈ N \ {k}: σi = σi and ti = ti + tk pi £j=k pj .
+5-62:An analogous fairness axiom results if we remove the job from the beginning of the queue .
+5-63:Since the presence of the first job influenced each job depending on their θ values, its transfer needs to be shared in proportion to θ values .
+5-64:Definition 7 .
+5-65:An allocation rule ψ satisfies proportionate responsibility of θ (PRθ) if for all q ∈ Q, for all (σ, t) ∈ ψ(q), k ∈ N such that σk = 1, q = (N \{k}, p , θ ) ∈ Q, such that for all i ∈ N \{k}: θi = θi, pi = pi, there exists (σ , t ) ∈ ψ(q ) such that for all i ∈ N \ {k}: σi = σi and ti = ti + tk θi £j=k θj .
+5-66:The proportionate responsibility axioms are generalizations of equal responsibility axioms introduced by Maniquet [15] .
+5-67:235 Independence Axioms The waiting cost of a job does not depend on the per unit waiting cost of its preceding jobs .
+5-68:Similarly, the waiting cost inflicted by a job to its following jobs is independent of the processing times of the following jobs .
+5-69:These independence properties should be carried over to the cost sharing rules .
+5-70:This gives us two independence axioms .
+5-71:Definition 8 .
+5-72:An allocation rule ψ satisfies independence of preceding jobs" θ (IPJθ) if for all q = (N, p, θ), q = (N, p , θ ) ∈ Q, (σ, t) ∈ ψ(q), (σ , t ) ∈ ψ(q ), if for all i ∈ N \ {k}: θi = θi, pi = pi and γk < γk, pk = pk, then for all j ∈ N such that σj > σk: πj = πj, where π is the cost share in (σ, t) and π is the cost share in (σ , t ) .
+5-73:Definition 9 .
+5-74:An allocation rule ψ satisfies independence of following jobs" p (IFJp) if for all q = (N, p, θ), q = (N, p , θ ) ∈ Q, (σ, t) ∈ ψ(q), (σ , t ) ∈ ψ(q ), if for all i ∈ N \ {k}: θi = θi, pi = pi and γk > γk, θk = θk, then for all j ∈ N such that σj < σk: πj = πj, where π is the cost share in (σ, t) and π is the cost share in (σ , t ) .
+5-75:4.2 The Characterization Results Having stated the fairness axioms, we propose three different ways to characterize the Shapley value rule using these axioms .
+5-76:All our characterizations involve efficiency and ECB .
+5-77:But if we have IPJθ, we either need IFJp or PRp .
+5-78:Similarly if we have IFJp, we either need IPJθ or PRθ .
+5-79:Proposition 1 .
+5-80:Any efficient rule ψ that satisfies ECB, IPJθ, and IFJp is a rule implied by the Shapley value rule .
+5-81:Proof .
+5-82:Define for any i, j ∈ N, θi j = γipj and pi j = θj γi .
+5-83:Assume without loss of generality that σ is an efficient ordering with σi = i ∀ i ∈ N .
+5-84:Consider the following q = (N, p , θ ) corresponding to job i with pj = pj if j ≤ i and pj = pi j if j > i, θj = θi j if j < i and θj = θj if j ≥ i .
+5-85:Observe that all jobs have the same γ: γi .
+5-86:By Lemma 2 and efficiency, (σ, t ) ∈ ψ(q ) for some set of transfers t .
+5-87:Using Lemma 4, we get cost share of i from (σ, t ) as πi = piθi + 1 2 ¡Li + Ri¢ .
+5-88:Now, for any j < i, if we change θj to θj without changing processing time, the new γ of j is γj ≥ γi .
+5-89:Applying IPJθ, the cost share of job i should not change .
+5-90:Similarly, for any job j > i, if we change pj to pj without changing θj, the new γ of j is γj ≤ γi .
+5-91:Applying IFJp, the cost share of job i should not change .
+5-92:Applying this procedure for every j < i with IPJθ and for every j > i with IFJp, we reach q = (N, p, θ) and the payoff of i does not change from πi .
+5-93:Using this argument for every i ∈ N and using the expression for the Shapley value in Lemma 3, we get the Shapley value rule .
+5-94:It is possible to replace one of the independence axioms with an equity axiom on sharing the transfer of a job .
+5-95:This is shown in Propositions 2 and 3 .
+5-96:Proposition 2 .
+5-97:Any efficient rule ψ that satisfies ECB, IPJθ, and PRp is a rule implied by the Shapley value rule .
+5-98:Proof .
+5-99:As in the proof of Proposition 1, define θi j = γipj ∀ i, j ∈ N .
+5-100:Assume without loss of generality that σ is an efficient ordering with σi = i ∀ i ∈ N .
+5-101:Consider a queue with jobs in set K = {1, .
+5-102:.
+5-103:.
+5-104:, i, i + 1}, where i < n .
+5-105:Define q = (K, p, θ ), where θj = θi+1 j ∀ j ∈ for q .
+5-106:By ECB and Lemma 4 the cost share of job i + 1 in any allocation rule in ψ must be πi+1 = pi+1θi+1 + 1 2 ¡£j<i+1 pjθi+1¢ .
+5-107:Now, consider q = (K, p, θ ) such that θj = θi j ∀ j ≤ i and θi+1 = θi+1 .
+5-108:σ remains an efficient ordering in q and by IPJθ the cost share of i + 1 remains πi+1 .
+5-109:In q = (K \ {i + 1}, p, θ ), we can calculate the cost share of job i using ECB and Lemma 4 as πi = piθi + 1 2 £j<i pjθi .
+5-110:So, using PRp we get the new cost share of job i in q as πi = πi + ti+1 pi j<i+1 pj = piθi + 1 2 ¡£j<i pjθi + piθi+1¢ .
+5-111:Now, we can set K = K ∪ {i + 2} .
+5-112:As before, we can find cost share of i + 2 in this queue as πi+2 = pi+2θi+2 + 1 2 ¡£j<i+2 pjθi+2¢ .
+5-113:Using PRp we get the new cost share of job i in the new queue as πi = piθi + 1 2 ¡£j<i pjθi + piθi+1 + piθi+2¢ .
+5-114:This process can be repeated till we add job n at which point cost share of i is piθi + 1 2 ¡£j<i pjθi + £j>i piθj¢ .
+5-115:Then, we can adjust the θ of preceding jobs of i to their original value and applying IPJθ, the payoffs of jobs i through n will not change .
+5-116:This gives us the Shapley values of jobs i through n .
+5-117:Setting i = 1, we get cost shares of all the jobs from ψ as the Shapley value .
+5-118:Proposition 3 .
+5-119:Any efficient rule ψ that satisfies ECB, IFJp, and PRθ is a rule implied by the Shapley value rule .
+5-120:Proof .
+5-121:The proof mirrors the proof of Proposition 2 .
+5-122:We provide a short sketch .
+5-123:Analogous to the proof of Proposition 2, θs are kept equal to original data and processing times are initialized to pi+1 j .
+5-124:This allows us to use IFJp .
+5-125:Also, contrast to Proposition 2, we consider K = {i, i + 1, .
+5-126:.
+5-127:.
+5-128:, n} and repeatedly add jobs to the beginning of the queue maintaining the same efficient ordering .
+5-129:So, we add the cost components of preceding jobs to the cost share of jobs in each iteration and converge to the Shapley value rule .
+5-130:The next proposition shows that the Shapley value rule satisfies all the fairness axioms discussed .
+5-131:Proposition 4 .
+5-132:The Shapley value rule satisfies efficiency, pareto indifference, anonymity, ETE, ECB, IPJθ, IFJp, PRp, and PRθ .
+5-133:Proof .
+5-134:The Shapley value rule chooses an efficient ordering and by definition the payments add upto zero .
+5-135:So, it satisfies efficiency .
+5-136:The Shapley value assigns same cost share to a job irrespective of the efficient ordering chosen .
+5-137:So, it is pareto indifferent .
+5-138:The Shapley value is anonymous because the particular index of a job does not effect his ordering or cost share .
+5-139:For ETE, consider two jobs i, j ∈ N such that pi = pj and θi = θj .
+5-140:Without loss of generality assume the efficient ordering to be 1, .
+5-141:.
+5-142:.
+5-143:, i, .
+5-144:.
+5-145:.
+5-146:, j, .
+5-147:.
+5-148:.
+5-149:, n .
+5-150:Now, the Shapley value of job i is 236 SVi = piθi + 1 2 ¡Li + Ri¢(From Lemma 3) = pjθj + 1 2 ¡Lj + Rj¢− 1 2 ¡Li − Lj + Ri − Rj¢ = SVj − 1 2 ¡   i<k≤j piθk −   i≤k<j pkθi¢ = SVj − 1 2   i<k≤j (piθk − pkθi) (Using pi = pj and θi = θj) = SVj (Using θk pk = θi pi for all i ≤ k ≤ j) .
+5-151:The Shapley value satisfies ECB by its expression in Lemma 3 .
+5-152:Consider any job i, in an efficient ordering σ, if we increase the value of γj for some j = i such that σj > σi, then the set Pi ( preceding jobs) does not change in the new efficient ordering .
+5-153:If γj is changed such that pj remains the same, then the expression £j∈Pi θipj is unchanged .
+5-154:If (p, θ) values of no other jobs are changed, then the Shapley value is unchanged by increasing γj for some j ∈ Pi while keeping pj unchanged .
+5-155:Thus, the Shapley value rule satisfies IPJθ .
+5-156:An analogous argument shows that the Shapley value rule satisfies IFJp .
+5-157:For PRp, assume without loss of generality that jobs are ordered 1, .
+5-158:.
+5-159:.
+5-160:, n in an efficient ordering .
+5-161:Denote the transfer of job i = n due to the Shapley value with set of jobs N and set of jobs N \ {n} as ti and ti respectively .
+5-162:Transfer of last job is tn = 1 2 θn £j<n pj .
+5-163:Now, ti = 1 2 ¡θi   j<i pj − pi   j>i θj¢ = 1 2 ¡θi   j<i pj − pi   j>i:j=n θj¢− 1 2 piθn = ti − 1 2 θn   j<n pj pi £j<n pj = ti − tn pi £j<n pj .
+5-164:A similar argument shows that the Shapley value rule satisfies PRθ .
+5-165:These series of propositions lead us to our main result .
+5-166:Theorem 1 .
+5-167:Let ψ be an allocation rule .
+5-168:The following statements are equivalent: 1) For each q ∈ Q, ψ(q) selects all the allocation assigning jobs cost shares implied by the Shapley value .
+5-169:2) ψ satisfies efficiency, ECB, IFJp, and IPJθ .
+5-170:3) ψ satisfies efficiency, ECB, IFJp, and PRθ .
+5-171:4) ψ satisfies efficiency, ECB, PRp, and IPJθ .
+5-172:Proof .
+5-173:The proof follows from Propositions 1, 2, 3, and 4. .
+6 DISCUSSIONS :
+6-1:5.1 A Reasonable Class of Cost Sharing Mechanisms In this section, we will define a reasonable class of cost sharing mechanisms .
+6-2:We will show how these reasonable mechanisms lead to the Shapley value mechanism .
+6-3:Definition 10 .
+6-4:An allocation rule ψ is reasonable if for all q ∈ Q and (σ, t) ∈ ψ(q) we have for all i ∈ N, ti = α ¡θi   j∈Pi(σ) pj − pi   j∈Fi(σ) θj¢∀ i ∈ N, where 0 ≤ α ≤ 1 .
+6-5:The reasonable cost sharing mechanism says that every job should be paid a constant fraction of the difference between the waiting cost he incurs and the waiting cost he inflicts on other jobs .
+6-6:If α = 0, then every job bears its own cost .
+6-7:If α = 1, then every job gets compensated for its waiting cost but compensates others for the cost he inflicts on others .
+6-8:The Shapley value rule comes as a result of ETE as shown in the following proposition .
+6-9:Proposition 5 .
+6-10:Any efficient and reasonable allocation rule ψ that satisfies ETE is a rule implied by the Shapley value rule .
+6-11:Proof .
+6-12:Consider a q ∈ Q in which pi = pj and θi = θj .
+6-13:Let (σ, t) ∈ ψ(q) and π be the resulting cost shares .
+6-14:From ETE, we get, πi = πj ⇒ ci(σ) − ti = cj(σ) − tj ⇒ piθi + (1 − α)Li + αRi = pjθj + (1 − α)Lj + αRj (Since ψ is efficient and reasonable) ⇒ (1 − α)(Li − Lj) = α(Rj − Ri) (Using pi = pj, θi = θj) ⇒ 1 − α = α (Using Li − Lj = Rj − Ri = 0) ⇒ α = 1 2 .
+6-15:This gives us the Shapley value rule by Lemma 3 .
+6-16:5.2 Results on Envy Chun [2] discusses a fariness condition called no envy for the case when processing times of all jobs are unity .
+6-17:Definition 11 .
+6-18:An allocation rule satisfies no envy if for all q ∈ Q, (σ, t) ∈ ψ(q), and i, j ∈ N, we have πi ≤ ci(σij ) − tj, where π is the cost share from allocation rule (σ, t) and σij is the ordering obtaining by swapping i and j .
+6-19:From the result in [2], the Shapley value rule does not satisfy no envy in our model also .
+6-20:To overcome this, Chun [2] introduces the notion of adjusted no envy, which he shows is satisfied in the Shapley value rule when processing times of all jobs are unity .
+6-21:Here, we show that adjusted envy continues to hold in the Shapley value rule in our model (when processing times need not be unity) .
+6-22:As before denote σij be an ordering where the position of i and j is swapped from an ordering σ .
+6-23:For adjusted noenvy, if (σ, t) is an allocation for some q ∈ Q, let tij be the 237 transfer of job i when the transfer of i is calculated with respect to ordering σij .
+6-24:Observe that an allocation may not allow for calculation of tij .
+6-25:For example, if ψ is efficient, then tij cannot be calculated if σij is also not efficient .
+6-26:For simplicity, we state the definition of adjusted no envy to apply to all such rules .
+6-27:Definition 12 .
+6-28:An allocation rule satisfies adjusted noenvy if for all q ∈ Q, (σ, t) ∈ ψ(q), and i, j ∈ N, we have πi ≤ ci(σij ) − tij i .
+6-29:Proposition 6 .
+6-30:The Shapley value rule satisfies adjusted no envy .
+6-31:Proof .
+6-32:Without loss of generality, assume efficient ordering of jobs is: 1, .
+6-33:.
+6-34:.
+6-35:, n .
+6-36:Consider two jobs i and i + k .
+6-37:From Lemma 3, SVi = piθi + 1 2 ¡  j<i θipj +   j>i θjpi¢ .
+6-38:Let ˆπi be the cost share of i due to adjusted transfer tii+k i in the ordering σii+k .
+6-39:ˆπi = ci(σii+k ) − tii+k i = piθi + 1 2 ¡  j<i θipj + θipi+k +   i<j<i+k θipj +   j>i θjpi − θi+kpi −   i<j<i+k θjpi¢ = SVi + 1 2   i<j≤i+k ¡θipj − θjpi¢ ≥ SVi (Using the fact that θi pi ≥ θj pj for i < j). .
+7-1:We studied the problem of sharing costs for a job scheduling problem on a single server, when jobs have processing times and unit time waiting costs
+7-2:We took a cooperative game theory approach and show that the famous the Shapley value rule satisfies many nice fairness properties
+7-3:We characterized the Shapley value rule using different intuitive fairness axioms
+7-4:In future, we plan to further simplify some of the fairness axioms
+7-5:Some initial simplifications already appear in [16], where we provide an alternative axiom to ECB and also discuss the implication of transfers between jobs (in stead of transfers from jobs to a central server)
+7-6:We also plan to look at cost sharing mechanisms other than the Shapley value
+7-7:Investigating the strategic power of jobs in such mechanisms is another line of future research.
+8-1:Youngsub Chun
+8-2:A Note on Maniquet"s Characterization of the Shapley Value in Queueing Problems
+8-3:Working Paper, Rochester University, 2004
+8-4:Youngsub Chun
+8-5:No envy in Queuing Problems
+8-6:Working Paper, Rochester University, 2004
+8-7:Imma Curiel, Herbert Hamers, and Flip Klijn
+8-8:Sequencing Games: A Survey
+8-9:In Peter Borm and Hans Peters, editors, Chapter in Game Theory
+8-10:Theory and Decision Library, Kulwer Academic Publishers, 2002
+8-11:Imma Curiel, Giorgio Pederzoli, and Stef Tijs
+8-12:Sequencing Games
+8-13:European Journal of Operational Research, 40:344 351, 1989
+8-14:Imma Curiel, Jos Potters, Rajendra Prasad, Stef Tijs, and Bart Veltman
+8-15:Sequencing and Cooperation
+8-16:Operations Research, 42(3):566 568, May June 1994
+8-17:Nikhil R
+8-18:Devanur, Milena Mihail, and Vijay V
+8-19:Vazirani
+8-20:Strategyproof Cost sharing Mechanisms for Set Cover and Facility Location Games
+8-21:In Proceedings of Fourth Annual ACM Conferece on Electronic Commerce, 2003
+8-22:Robert J
+8-23:Dolan
+8-24:Incentive Mechanisms for Priority Queueing Problems
+8-25:Bell Journal of Economics, 9:421 436, 1978
+8-26:Joan Feigenbaum, Christos Papadimitriou, and Scott Shenker
+8-27:Sharing the Cost of Multicast Transmissions
+8-28:In Proceedings of Thirty Second Annual ACM Symposium on Theory of Computing, 2000
+8-29:Herbert Hamers, Jeroen Suijs, Stef Tijs, and Peter Borm
+8-30:The Split Core for Sequencing Games
+8-31:Games and Economic Behavior, 15:165 176, 1996
+8-32:John C
+8-33:Harsanyi
+8-34:Contributions to Theory of Games IV, chapter A Bargaining Model for Cooperative n person Games
+8-35:Princeton University Press, 1959
+8-36:Editors: A
+8-37:W
+8-38:Tucker, R
+8-39:D
+8-40:Luce
+8-41:Kamal Jain and Vijay Vazirani
+8-42:Applications of Approximate Algorithms to Cooperative Games
+8-43:In Proceedings of 33rd Symposium on Theory of Computing (STOC "01), 2001
+8-44:Kamal Jain and Vijay Vazirani
+8-45:Equitable Cost Allocations via Primal Dual Type Algorithms
+8-46:In Proceedings of 34th Symposium on Theory of Computing (STOC "02), 2002
+8-47:Flip Klijn and Estela S´anchez
+8-48:Sequencing Games without a Completely Specified Initial Order
+8-49:Report in Statistics and Operations Research, pages 1 17, 2002
+8-50:Report 02 04
+8-51:Flip Klijn and Estela S´anchez
+8-52:Sequencing Games without Initial Order
+8-53:Working Paper, Universitat Aut´onoma de Barcelona, July 2004
+8-54:Franois Maniquet
+8-55:A Characterization of the Shapley Value in Queueing Problems
+8-56:Journal of Economic Theory, 109:90 103, 2003
+8-57:Debasis Mishra and Bharath Rangarajan
+8-58:Cost sharing in a job scheduling problem
+8-59:Working Paper, CORE, 2005
+8-60:Manipushpak Mitra
+8-61:Essays on First Best Implementable Incentive Problems
+8-62:Ph.D
+8-63:Thesis, Indian Statistical Institute, New Delhi, 2000
+8-64:Manipushpak Mitra
+8-65:Mechanism design in queueing problems
+8-66:Economic Theory, 17(2):277 305, 2001
+8-67:Manipushpak Mitra
+8-68:Achieving the first best in sequencing problems
+8-69:Review of Economic Design, 7:75 91, 2002
+8-70:Herv´e Moulin
+8-71:Handbook of Social Choice and Welfare, chapter Axiomatic Cost and Surplus Sharing
+8-72:North Holland, 2002
+8-73:Publishers: Arrow, Sen, Suzumura
+8-74:Herv´e Moulin
+8-75:On Scheduling Fees to Prevent 238 Merging, Splitting and Transferring of Jobs
+8-76:Working Paper, Rice University, 2004
+8-77:Herv´e Moulin
+8-78:Split proof Probabilistic Scheduling
+8-79:Working Paper, Rice University, 2004
+8-80:Herv´e Moulin and Rakesh Vohra
+8-81:Characterization of Additive Cost Sharing Methods
+8-82:Economic Letters, 80:399 407, 2003
+8-83:Martin P´al and ´Eva Tardos
+8-84:Group Strategyproof Mechanisms via Primal Dual Algorithms
+8-85:In Proceedings of the 44th Annual IEEE Symposium on the Foundations of Computer Science (FOCS "03), 2003
+8-86:Lloyd S
+8-87:Shapley
+8-88:Contributions to the Theory of Games II, chapter A Value for n person Games, pages 307 317
+8-89:Annals of Mathematics Studies, 1953
+8-90:Ediors: H
+8-91:W
+8-92:Kuhn, A
+8-93:W
+8-94:Tucker
+8-95:Wayne E
+8-96:Smith
+8-97:Various Optimizers for Single Stage Production
+8-98:Naval Research Logistics Quarterly, 3:59 66, 1956
+8-99:Jeroen Suijs
+8-100:On incentive compatibility and budget balancedness in public decision making
+8-101:Economic Design, 2, 2002
+8-102:239
+picture:

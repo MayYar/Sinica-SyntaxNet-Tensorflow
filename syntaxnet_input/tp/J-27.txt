@@ -1,0 +1,377 @@
+﻿Learning From Revealed 
+content:
+1 ABSTRACT :
+1-1:Eyal Beigman CMS EMS Kellogg School of Management Northwestern University Evanston IL 60208 e beigman@northwestern.edu Rakesh Vohra MEDS Kellogg School of Management Northwestern University Evanston IL 60208 r vohra@northwestern.edu ABSTRACT A sequence of prices and demands are rationalizable if there exists a concave, continuous and monotone utility function such that the demands are the maximizers of the utility function over the budget set corresponding to the price .
+1-2:Afriat [1] presented necessary and sufficient conditions for a finite sequence to be rationalizable .
+1-3:Varian [20] and later Blundell et al .
+1-4:[3, 4] continued this line of work studying nonparametric methods to forecasts demand .
+1-5:Their results essentially characterize learnability of degenerate classes of demand functions and therefore fall short of giving a general degree of confidence in the forecast .
+1-6:The present paper complements this line of research by introducing a statistical model and a measure of complexity through which we are able to study the learnability of classes of demand functions and derive a degree of confidence in the forecasts .
+1-7:Our results show that the class of all demand functions has unbounded complexity and therefore is not learnable, but that there exist interesting and potentially useful classes that are learnable from finite samples .
+1-8:We also present a learning algorithm that is an adaptation of a new proof of Afriat"s theorem due to Teo and Vohra [17] .
+1-9:F.2 [Theory of Computation]: Analysis of Algorithms .
+2 INTRODUCTION :
+2-1:A market is an institution by which economic agents meet and make transactions .
+2-2:Classical economic theory explains the incentives of the agents to engage in this behavior through the agents" preference over the set of available bundles indicating that agents attempt to replace their current bundle with bundles that are both more preferred and attainable if such bundles exist .
+2-3:The preference relation is therefore the key factor in understanding consumer behavior .
+2-4:One of the common assumptions in this theory is that the preference relation is represented by a utility function and that agents strive to maximize their utility given a budget constraint .
+2-5:This pattern of behavior is the essence of supply and demand, general equilibria and other aspects of consumer theory .
+2-6:Furthermore, as we elaborate in section 2, basic observations on market demand behavior suggest that utility functions are monotone and concave .
+2-7:This brings us to the question, first raised by Samuelson [18], to what degree is this theory refutable? Given observations of price and demand, under what circumstances can we conclude that the data is consistent with the behavior of a utility maximizing agent equipped with a monotone concave utility function and subject to a budget constraint? Samuelson gave a necessary but insufficient condition on the underlying preference known as the weak axiom of revealed preference .
+2-8:Uzawa [16] and Mas Colell [10, 11] introduced a notion of income Lipschitz and showed that demand functions with this property are rationalizable .
+2-9:These properties do not require any parametric assumptions and are technically refutable, but they do assume knowledge of the entire demand function and rely heavily on the differential properties of demand functions .
+2-10:Hence, an infinite amount of information is needed to refute the theory .
+2-11:It is often the case that apart form the demand observations there is additional information on the system and it is sensible to make parametric assumptions, namely, to stipulate some functional form of utility .
+2-12:Consistency with utility maximization would then depend on fixing the parameters of the utility function to be consistent with the observations and with a set of equations called the Slutski equations .
+2-13:If such parameters exist, we conclude that the stipulated utility form is consistent with the observations .
+2-14:This approach is useful when there is reason to make these stipulations, it gives an explicit utility function which can be used to make precise forecasts on demand for unob36 served prices .
+2-15:The downside of this approach is that real life data is often inconsistent with convenient functional forms .
+2-16:Moreover, if the observations are inconsistent it is unclear whether this is a refutation of the stipulated functional form or of utility maximization .
+2-17:Addressing these issues Houthakker [7] noted that an observer can see only finite quantities of data .
+2-18:He askes when can it be determined that a finite set of observations is consistent with utility maximization without making parametric assumptions? He showes that rationalizability of a finite set of observations is equivalent to the strong axiom of revealed preference .
+2-19:Richter [15] showes that strong axiom of revealed preference is equivalent to rationalizability by a strictly concave monotone utility function .
+2-20:Afriat [1] gives another set of rationalizability conditions the observations must satisfy .
+2-21:Varian [20] introduces the generalized axiom of revealed preference (GARP), an equivalent form of Afriat"s consistency condition that is easier to verify computationally .
+2-22:It is interesting to note that these necessary and sufficient conditions for rationalizability are essentially versions of the well known Farkas lemma [6] (see also [22]) .
+2-23:Afriat [1] proved his theorem by an explicit construction of a utility function witnessing consistency .
+2-24:Varian [20] took this one step further progressing from consistency to forecasting .
+2-25:Varian"s forecasting algorithm basically rules out bundles that are revealed inferior to observed bundles and finds a bundle from the remaining set that together with the observations is consistent with GARP .
+2-26:Furthermore, he introduces Samuelson"s money metric as a canonical utility function and gives upper and lower envelope utility functions for the money metric .
+2-27:Knoblauch [9] shows these envelopes can be computed efficiently .
+2-28:Varian [21] provides an up to date survey on this line of research .
+2-29:A different approach is presented by Blundell et al .
+2-30:[3, 4] .
+2-31:These papers introduce a model where an agent observes prices and Engel curves for these prices .
+2-32:This gives an improvement on Varian"s original bounds, though the basic idea is still to rule out demands that are revealed inferior .
+2-33:This model is in a sense a hybrid between Mas Colell and Afriat"s aproaches .
+2-34:The former requires full information for all prices, the latter for a finite number of prices .
+2-35:On the other hand the approach taken by Blundell et al .
+2-36:requires full information only on a finite number of price trajectories .
+2-37:The motivation for this crossover is to utilize income segmentation in the population to restructure econometric information .
+2-38:Different segments of the population face the same prices with different budgets, and as much as aggregate data can testify on individual preferences, show how demand varies with the budget .
+2-39:Applying non parametric statistical methods, they reconstruct a trajectory from the observed demands of different segments and use it to obtain tighter bounds .
+2-40:Both these methods would most likely give a good forecast for a fixed demand function after sufficiently many observations assuming they were spread out in a reasonable manner .
+2-41:However, these methods do not consider the complexity of the demand functions and do not use any probabilistic model of the observations .
+2-42:Therefore, they are unable to provide any estimate of the number of observations that would be sufficient for a good forecast or the degree of confidence in such a forecast .
+2-43:In this paper we examine the feasibility of demand forecasting with a high degree of confidence using Afriat"s conditions .
+2-44:We formulate the question in terms of whether the class of demand functions derived from monotone concave utilities is efficiently PAC learnable .
+2-45:Our first result is negative .
+2-46:We show, by computing the fat shattering dimension, that without any prior assumptions, the set of all demand functions induced by monotone concave utility functions is too rich to be efficiently PAC learnable .
+2-47:However, under some prior assumptions on the set of demand functions we show that the fat shattering dimension is finite and therefore the corresponding sets are PAC learnable .
+2-48:In these cases, assuming the probability distribution by which the observed price demand pairs are generated is fixed, we are in a position to offer a forecast and a probabilistic estimate on its accuracy .
+2-49:In section 2 we briefly discuss the basic assumptions of demand theory and their implications .
+2-50:In section 3 we present a new proof to Afriat"s theorem incorporating an algorithm for efficiently generating a forecasting function due to Teo and Vohra [17] .
+2-51:We show that this algorithm is computationally efficient and can be used as a learning algorithm .
+2-52:In section 4 we give a brief introduction to PAC learning including several modifications to learning real vector valued functions .
+2-53:We introduce the notion of fat shattering dimension and use it to devise a lower bound on the sample complexity .
+2-54:We also sketch results on upper bounds .
+2-55:In section 5 we study the learnability of demand functions and directly compute the fat shattering dimension of the class of all demand functions and a class of income Lipschitzian demand functions with a bounded global income Lipschitz constant. .
+3 UTILITY AND DEMAND :
+3-1:A utility function u : Rn + → R is a function relating bundles of goods to a cardinal in a manner reflecting the preferences over the bundles .
+3-2:A rational agent with a budget that w.l.g equals 1 facing a price vector p ∈ Rn + will choose from her budget set B(p) = {x ∈ Rn + : p · x ≤ 1} a bundle x ∈ Rn + that maximizes her private utility .
+3-3:The first assumption we make is that the function is monotone increasing, namely, if x ≥ y, in the sense that the inequality holds coordinatewise, then u(x) ≥ u(y) .
+3-4:This reflects the assumption that agents will always prefer more of any one good .
+3-5:This, of course, does not necessarily hold in practice, as in many cases excess supply may lead to storage expenses or other externalities .
+3-6:However, in such cases the demand will be an interior point of the budget set and the less preferred bundles won"t be observed .
+3-7:The second assumption we make on the utility is that all the marginals (partial derivatives) are monotone decreasing .
+3-8:This is the law of diminishing marginal utility which assumes that the larger the excess of one good over the other the less we value each additional good of one kind over the other .
+3-9:These assumptions imply that the utility function is concave and monotone on the observations .
+3-10:The demand function of the agent is the correspondence fu : Rn + → Rn + satisfying f(p) = argmax{u(x) : p · x ≤ I} In general this correspondence is not necessarily single valued, but it is implicit in the proof of Afriat"s theorem that any set of observations can be rationalized by a demand function that is single valued for unobserved prices .
+3-11:37 Since large quantities of any good are likely to create utility decreasing externalities, we assume the prices are limited to a compact set .
+3-12:W.l.g .
+3-13:we assume u has marginal utility zero outside [0, 1]d .
+3-14:Any budget set that is not a subset of the support is maximized on any point outside the support and it is therefore difficult to forecast for these prices .
+3-15:We are thus interested in forecasts for prices below the simplex ∆d = conv{(0, .
+3-16:.
+3-17:.
+3-18:, 1, .
+3-19:.
+3-20:.
+3-21:, 0)} .
+3-22:For these prices we take the metric dP (p, p ) = max{| 1 pi − 1 pi | : i = 1, .
+3-23:.
+3-24:.
+3-25:, d} for p, p ∈ ∆d .
+3-26:Note that with this metric ∆d is compact .
+3-27:A demand function is L income Lipschitz, for L ∈ R+, if ||f(p) − f(p )||∞ dP (p, p ) ≤ L for any p, p ∈ ∆d .
+3-28:This property reflects an assumption that preferences and demands have some sort of stability .
+3-29:It rules out different demands for the similar prices .
+3-30:We may therefore assume from here on that demand functions are single valued. .
+4 REVEALED PREFERENCE :
+4-1:A sequence of prices and demands (p1, x1), .
+4-2:.
+4-3:.
+4-4:, (pn, xn) is rationalizable if there exists a utility function u such that xi = fu(pi) for i = 1, .
+4-5:.
+4-6:.
+4-7:, n .
+4-8:We begin with a trivial observation, if pi · xj ≤ pi · xi and xi = f(pi) then xi is preferred over xj since the latter is in the budget set when the former was chosen .
+4-9:It is therefore revealed that u(xj) ≤ u(xi) implying pj · xj ≤ pj · xi .
+4-10:Suppose there is a sequence (pi1 , xi1 ), .
+4-11:.
+4-12:.
+4-13:, (pik , xik ) such that pij · (xij − xij+1 ) ≤ 0 for j = 1 .
+4-14:.
+4-15:.
+4-16:k − 1 and pik · (xik − xi1 ) ≤ 0 .
+4-17:Then the same reasoning shows that u(xi1 ) = u(xi2 ) = .
+4-18:.
+4-19:.
+4-20:= u(xik ) implying pi1 · (xi1 − xi2 ) = pi2 · (xi2 − xi3 ) = .
+4-21:.
+4-22:.
+4-23:= pik−1 ·(xik−1 −xik ) = 0 .
+4-24:We call the latter condition the Afriat condition .
+4-25:This argument shows that AC is necessary for rationalizability; the surprising result in Afriat"s theorem is that this condition is also sufficient .
+4-26:Let A be an n × n matrix with entries aij = pi · (xj − xi) (aij and aji are independent), aii = 0 and let D(A) be the weighted digraph associated with A .
+4-27:The matrix satisfies AC if every cycle with negative total weight includes at least one edge with positive weight .
+4-28:Theorem 1 .
+4-29:There exists y = (y1, .
+4-30:.
+4-31:.
+4-32:, yn) ∈ Rn and s = (s1, .
+4-33:.
+4-34:.
+4-35:, sn) ∈ Rn + satisfying the set of inequalities L(A), yj ≤ yi + siaij i = j 1 ≤ i, j ≤ n iff D(A) satisfies AC .
+4-36:Proof : If L(A) is feasible then it is easy to see that u(x) = min i {yi + sipi(x − xi)} is a concave utility function that is consistent with the observations, and from our previous remark it follows that D(A) satisfies AC .
+4-37:In the other direction it is shown by explicit construction that Afriat"s condition for D(A) implies L(A) is feasible .
+4-38:The construction provides a utility function that is consistent with the observations .
+4-39:Teo and Vohra [17] give a strongly polynomial time algorithm for this construction which will be the heart of our learning algorithm .
+4-40:The construction is executed in two steps .
+4-41:First, the algorithm finds s ∈ Rn + such that the weighted digraph D(A, s) defined by the matrix ˜aij = siaij has no cycle with negative total weight if D(A) satisfies AC and returns a negative cycle otherwise .
+4-42:The dual of a shortest path problem is given by the constraints: yj − yi ≤ siaij i = j It is a standard result (see [14] p 109) that the system is feasible iff D(A, s) has no negative cycles .
+4-43:Thus, in the second step, if D(A) satisfies AC, the algorithm calls a SHORTEST PATH algorithm to find y ∈ Rn satisfying the constraints .
+4-44:Now we describe how to choose the si"s .
+4-45:Define S = {(i, j) : aij < 0}, E = {(i, j) : aij = 0} and T = {(i, j) : aij > 0} and let G = ([n], S ∪ E) be a digraph with weights wij = −1 if (i, j) ∈ S and wij = 0 otherwise .
+4-46:D(A) has no negative cycles, hence G is acyclic and breadth first search can assign potentials φi such that φj ≤ φi + wij for (i, j) ∈ S ∪ E .
+4-47:We relabel the vertices so that φ1 ≥ φ2 ≥ .
+4-48:.
+4-49:.
+4-50:≥ φn .
+4-51:Let δi = (n − 1) max(i,j)∈S(−aij) min(i,j)∈T aij if φi < φi−1 and δi = 1 otherwise, and define si = iY j=2 δj = δi · si−1 .
+4-52:We show that for this choice of s, D(A, s) contains no negative weight cycle .
+4-53:Suppose C = (i1, .
+4-54:.
+4-55:.
+4-56:, ik) is a cycle in D(A, s) .
+4-57:If φ is constant on C then aij ij+1 = 0 for j = 1, .
+4-58:.
+4-59:.
+4-60:, k and we are done .
+4-61:Otherwise let iv ∈ C be the vertex with smallest potential satisfying w.l.o.g .
+4-62:φ(iv) < φ(iv+1) .
+4-63:For any cycle C in the digraph D(A, s), let (v, u) be an edge in C such that (i) v has the smallest potential among all vertices in C, and (ii) φu > φv .
+4-64:Such an edge exists, otherwise φi is identical for all vertices i in C .
+4-65:In this case, all edges in C have non negative edge weight in D(A, s) .
+4-66:If (iv, iv+1) ∈ S ∪ E, then we have φ(iv+1) ≤ φ(iv) + wiv,iv+1 ≤ φ(iv) a contradiction .
+4-67:Hence (iv, iv+1) ∈ T .
+4-68:Now, note that all vertices q in C with the same potential as iv must be incident to an edge (q, t) in C such that φ(t) ≥ φ(q) .
+4-69:Hence the edge (q, t) must have non negative weight .
+4-70:i.e., aq,t ≥ 0 .
+4-71:Let p denote a vertex in C with the second smallest potential .
+4-72:Now, C has weight svavu+ X (k,l)∈C\(v,u) skak,l ≥ svav,u+sp(n−1) max (i,j)∈S {aij } ≥ 0, i.e., C has non negative weight ✷ Algorithm 1 returns in polynomial time a hypothesis that is a piecewise linear function and agrees with the labeling of the observation namely sample error zero .
+4-73:To use this function to forecast demand for unobserved prices we need algorithm 2 which maximizes the function on a given budget set .
+4-74:Since u(x) = mini{yi + sipi(x − xi)} this is a linear program and can be solved in time polynomial in d, n as well as the size of the largest number in the input .
+4-75:38 Algorithm 1 Utility Algorithm Input (x1, p1), .
+4-76:.
+4-77:.
+4-78:, (xn, pn) S ← {(i, j) : aij < 0} E ← {(i, j) : aij = 0} for all (i, j) ∈ S do wij ← −1 end for for all (i, j) ∈ E do wij ← 0 end for while there exist unvisited vertices do visit new vertex j assign potential to φj end while reorder indices so φ1 ≤ φ2 .
+4-79:.
+4-80:.
+4-81:≤ φn for all 1 ≤ i ≤ n do δi ← (n − 1) max(i,j)∈S (−aij ) min(i,j)∈T aij si ← Qi j=2 δj end for SHORTEST PATH(yj − yi ≤ siaij) Return y1, .
+4-82:.
+4-83:.
+4-84:, yn ∈ Rd and s1, .
+4-85:.
+4-86:.
+4-87:, sn ∈ R+ Algorithm 2 Evaluation Input y1, .
+4-88:.
+4-89:.
+4-90:, yn ∈ Rd and s1, .
+4-91:.
+4-92:.
+4-93:, sn ∈ R+ max z z ≤ yi + sipi(x − xi) for i = 1, .
+4-94:.
+4-95:.
+4-96:, n px ≤ 1 Return x for which z is maximized .
+5 SUPERVISED LEARNING :
+5-1:In a supervised learning problem, a learning algorithm is given a finite sample of labeled observations as input and is required to return a model of the functional relationship underlying the labeling .
+5-2:This model, referred to as a hypothesis, is usually a computable function that is used to forecast the labels of future observations .
+5-3:The labels are usually binary values indicating the membership of the observed points in the set that is being learned .
+5-4:However, we are not limited to binary values and, indeed, in the demand functions we are studying the labels are real vectors .
+5-5:The learning problem has three major components: estimation, approximation and complexity .
+5-6:The estimation problem is concerned with the tradeoff between the size of the sample given to the algorithm and the degree of confidence we have in the forecast it produces .
+5-7:The approximation problem is concerned with the ability of hypotheses from a certain class to approximate target functions from a possibly different class .
+5-8:The complexity problem is concerned with the computational complexity of finding a hypothesis that approximates the target function .
+5-9:A parametric paradigm assumes that the underlying functional relationship comes from a well defined family, such as the Cobb Douglas production functions; the system must learn the parameters characterizing this family .
+5-10:Suppose that a learning algorithm observes a finite set of production data which it assumes comes from a Cobb Douglas production function and returns a hypothesis that is a polynomial of bounded degree .
+5-11:The estimation problem in this case would be to assess the sample size needed to obtain a good estimate of the coefficients .
+5-12:The approximation problem would be to assess the error sustained from approximating a rational function by a polynomial .
+5-13:The complexity problem would be the assessment of the time required to compute the polynomial coefficients .
+5-14:In the probably approximately correct paradigm, the learning of a target function is done by a class of hypothesis functions, that does or does not include the target function itself; it does not necessitate any parametric assumptions on this class .
+5-15:It is also assumed that the observations are generated independently by some distribution on the domain of the relation and that this distribution is fixed .
+5-16:If the class of target functions has finite "dimensionality" then a function in the class is characterized by its values on a finite number of points .
+5-17:The basic idea is to observe the labeling of a finite number of points and find a function from a class of hypotheses which tends to agree with this labeling .
+5-18:The theory tells us that if the sample is large enough then any function that tends to agree with the labeling will, with high probability, be a good approximation of the target function for future observations .
+5-19:The prime objective of PAC theory is to develop the relevant notion of dimensionality and to formalize the tradeoff between dimensionality, sample size and the level of confidence in the forecast .
+5-20:In the revealed preference setting, our objective is to use a set of observations of prices and demand to forecast demand for unobserved prices .
+5-21:Thus the target function is a mapping from prices to bundles, namely f : Rd + → Rd PREFERENCE Algorithm 1 is an efficient learning algorithm in the sense that it finds a hypothesis with sample error zero in time polynomial in the number of observations .
+5-22:As we have seen in section 4 the number of observations required to PAC learn the demand depends on the fat shattering dimension of the class of demand functions which in turn depends on the class of utility functions they are derived from .
+5-23:We compute the fat shattering dimension for two classes of demands .
+5-24:The first is the class of all demand functions, we show that this class has infinite shattering dimension (we give two proofs) and is therefore not PAC learnable .
+5-25:The second class we consider is the class of demand functions derived from utilities with bounded support and income Lipschitz .
+5-26:We show that the class has a finite fat shattering dimension that depends on the support and the income Lipschitz constant .
+5-27:Theorem 5 .
+5-28:Let C be a set of demand functions from Rd + to Rd + then fatC(γ) = ∞ Proof 1: For ε > 0 let pi = 2−i p for i = 1, .
+5-29:.
+5-30:.
+5-31:, n be a set of price vectors inducing parallel budget sets Bi and let x1, .
+5-32:.
+5-33:.
+5-34:, xn be the intersection of these hyperplanes with an orthogonal line passing through the center .
+5-35:Let H0 and H1 be hyperplanes that are not parallel to p and let xi ∈ Bi ∩ (xi + H+ 0 ) and xi ∈ Bi ∩ (xi + H− 1 ) for i = 1 .
+5-36:.
+5-37:.
+5-38:n (see figure 1) .
+5-39:For any labeling b = (b1, .
+5-40:.
+5-41:.
+5-42:, bn) ∈ {0, 1}n let y = y(b) = (y1, .
+5-43:.
+5-44:.
+5-45:, yn) be a set of demands such that yi = xi if bi = 0 and yi = xi if bi = 1 (we omit an additional index b in y for notational convenience) .
+5-46:To show that p1, .
+5-47:.
+5-48:.
+5-49:, pn is shattered it suffices to find for every b a demand function fb supported by concave utility such that fb(pi) = yb i .
+5-50:To show that such a function exists it suffices to show that Afriat"s conditions are satisfied .
+5-51:Since yi are in the budget 40 set yi · 2−i p = 1, therefore pi · (yj − yi) = 2j−i − 1 .
+5-52:This shows that pi · (yj − yi) ≤ 0 iff j < i hence there can be no negative cycles and the condition is met .
+5-53:✷ Proof 2: The utility functions satisfying Afriat"s condition in the first proof could be trivial assigning the same utility to xi as to xi .
+5-54:In fact, pick a utility function whose level sets are parallel to the budget constraint .
+5-55:Therefore the shattering of the prices p1, .
+5-56:.
+5-57:.
+5-58:, pn is the result of indifference rather than genuine preference .
+5-59:To avoid this problem we reprove the theorem by constructing utility functions u such that u(xi) = u(xi ) for all i and therefore a distinct utility function is associated with each labeling .
+5-60:For i = 1, .
+5-61:.
+5-62:.
+5-63:n let pi1, .
+5-64:.
+5-65:.
+5-66:, pid be price vectors satisfying the following conditions: .
+6 the budget sets Bs :
+6-1:i are supporting hyperplanes of a convex polytope Λi .
+7 ABSTRACT :
+7-1:1,
+7-2:
+7-3:
+7-4:, n Finally let yi1,
+7-5:
+7-6:
+7-7:, yid be points on the facets of Λi that intersect yi, such that ||pjr||1 · ||yi − yis||∞ = o(1) for all j, s and r
+7-8:We call the set of points yi, yi1,
+7-9:
+7-10:
+7-11:, yid the level i demand and pi, pi1,
+7-12:
+7-13:
+7-14:, pid level i prices
+7-15:Applying H¨olders inequality we get |pir · yjs − pi · yj | ≤ |(pir − pi) · yj| + |pir · (yjs − yj)| ||pir − pi||∞ · ||yj ||1 + ||yjs − yj||∞ · ||pir||1
+7-16:= o(1) This shows that pir · (yjs − yir) = pi · (ys − yi) + o(1) = 2j−i − 1 + o(1) therefore pir · (yjs − yir) ≤ 0 iff j < i or i = j
+7-17:This implies that if there is a negative cycle then all the points in the cycle must belong to the same level
+7-18:The points of any one level lie on the facets of a polytope Λi and the prices pis are supporting hyperplanes of the polytope
+7-19:Thus, the polytope defines a utility function for which these demands are utility maximizing
+7-20:The other direction of Afriat"s theorem therefore implies there can be no negative cycles within points on the same level
+7-21:It follows that there are no negative cycles for the union of observations from all levels hence the sequence of observations (y1, p1), (y11, p11), (y12, p12),
+7-22:
+7-23:
+7-24:, (ynd, pnd) is consistent with monotone concave utility function maximization and again by Afriat"s theorem there exists u supporting a demand function fb ✷ The proof above relies on the fact that an agent have high utility and marginal utility for very large bundles
+7-25:In many cases it is reasonable to assume that the marginal for very large bundles is very small, or even that the utility or the marginal utility have compact support
+7-26:Unfortunately, rescaling the previous example shows that even a compact set may contain a large shattered set
+7-27:We notice however, that in this case we obtain a utility function that yield demand functions that are very sensitive to small price changes
+7-28:We show that the class of utility functions that have marginal utilities with compact support and for which the relevant demand functions are income Lipschitzian has finite fat shattering dimension
+7-29:✲ ✻ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ ❅ (0,0)               H0               H1r x1 r x1 ❈ ❈ ❜ ❜❜ r x2 r x2 ❚ ❚ ❚ ❚ ❚ ❚ ❚ ❚ ❚ ❚ ❚ ❜ ❜❜ Figure 1: Utility function shattering x1 and x2 Theorem 6
+7-30:Let C be a set of L income Lipschitz demand functions from ∆d to Rd + for some global constant L ∈ R
+7-31:Then fatC(γ) ≤ ( L γ )d Proof : Let p1,
+7-32:
+7-33:
+7-34:, pn ∈ ∆d be a shattered set with witnesses x1,
+7-35:
+7-36:
+7-37:, xn ∈ Rd The authors would like to thank Eli Shamir, Ehud Kalai, Julio Gonz´alez D´ıaz, Rosa Matzkin, Gad Allon and Adam Galambos for helpful discussions and suggestions.
+8 ABSTRACT :
+8-1:Afriat S
+8-2:N
+8-3:(1967) The Construction of a Utility Function from Expenditure Data International Economic Review 8, 67 77
+8-4:Anthony M
+8-5:and Bartlett P
+8-6:L
+8-7:(1999) Neural Network Learning: Theoretical Foundations Cambridge University Press
+8-8:Blundell R., Browning M
+8-9:and Crawford I
+8-10:(2003) Nonparametric Engel curves and revealed preference
+8-11:Econometrica, 71(1):205 240
+8-12:Blundell R
+8-13:(2005 ) How revealing is revealed preference? European Economic Journal 3, 211  235
+8-14:Diewert E
+8-15:(1973) Afriat and Revealed Preference Theory Review of Economic Studies 40, 419  426
+8-16:Farkas J
+8-17:(1902) ¨Uber die Theorie der Einfachen Ungleichungen Journal f¨ur die Reine und Angewandte Mathematik 124 1 27 Houthakker H
+8-18:(1950) Revealed Preference and the Utility Function Economica 17, 159  174
+8-19:Kearns M
+8-20:and Vazirani U
+8-21:(1994) An Introduction to Computational Learning Theory The MIT Press Cambridge MA
+8-22:41 Knoblauch V
+8-23:(1992) A Tight Upper Bound on the Money Metric Utility Function
+8-24:The American Economic Review, 82(3):660 663
+8-25:Mas Colell A
+8-26:(1977) The Recoverability of Consumers" Preferences from Market Demand
+8-27:Econometrica, 45(6):1409 1430
+8-28:Mas Colell A
+8-29:(1978) On Revealed Preference Analysis
+8-30:The Review of Economic Studies, 45(1):121 131
+8-31:Mas Colell A., Whinston M
+8-32:and Green J
+8-33:R
+8-34:(1995) Microeconomic Theory Oxford University Press
+8-35:Matzkin R
+8-36:and Richter M
+8-37:(1991) Testing Strictly Concave Rationality
+8-38:Journal of Economic Theory, 53:287 303
+8-39:Papadimitriou C
+8-40:H
+8-41:and Steiglitz K
+8-42:(1982) Combinatorial Optimization Dover Publications inc
+8-43:Richter M
+8-44:(1966) Revealed Preference Theory
+8-45:Econometrica, 34(3):635 645
+8-46:Uzawa H
+8-47:(1960 ) Preference and rational choice in the theory of consumption
+8-48:In K
+8-49:J
+8-50:Arrow, S
+8-51:Karlin, and P
+8-52:Suppes, editors, Mathematical Models in Social Science Stanford University Press, Stanford, CA
+8-53:Teo C
+8-54:P
+8-55:and Vohra R
+8-56:V
+8-57:(2003) Afriat"s Theorem and Negative Cycles Working Paper Samuelson P
+8-58:A
+8-59:(1948) Consumption Theory in Terms of Revealed Preference Economica 15, 243  253
+8-60:Vapnik V
+8-61:N
+8-62:(1998) Statistical Learning Theory John Wiley & Sons Inc
+8-63:Varian H
+8-64:R
+8-65:(1982) The Non Parametric Approach to Demand Analysis Econometrica 50, 945  974
+8-66:Varian H
+8-67:R
+8-68:(2005) Revealed Preference, In Michael Szenberg editor, Samuelson Economics and the 21st Century
+8-69:Ziegler G
+8-70:M
+8-71:(1994) Lectures on Polytopes Springer
+8-72:42
+picture:

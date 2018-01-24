@@ -1,0 +1,51 @@
+We start by reproducing the definition of the quantity £h from [16, Definition 4] .
+Let (E, F) be a set system and let S be a cheapest feasible set with respect to the true costs ce .
+Then £h(c, S) is the solution to the following optimisation problem .
+Minimise B = P e?S be subject to (1) be ? ce for all e ? E (2) P e?S\T be ? P e?T \S ce for all T ? F (3) for every e ? S, there is a Te ? F such that e ? Te andP e ?S\Te be = P e ?Te\S ce The bound £h(c, S) can be seen as an outcome of a two stage process, where first each agent e ? S makes a bid be stating how much it wants to be paid, and then the centre decides whether to accept these bids .
+The behaviour of both parties is affected by the following considerations .
+From the centre"s point of view, the set S must remain the most attractive choice, i.e., it must be among the cheapest feasible sets under the new costs ce = ce for e ? S, ce = be for e ? S (condition (2)) .
+The reason for that is that if (2) is violated for some set T, the centre would prefer T to S .
+On the other hand, no agent would agree to a payment that does not cover his costs (condition (1)), and moreover, each agent tries to maximise his profit by bidding as high as possible, i.e., none of the agents can increase his bid without violating condition (2) (condition (3)) .
+The centre wants to minimise the total payout, so £h(c, S) corresponds to the best possible outcome from the centre"s point of view .
+This definition captures many important aspects of our intuition about ¡¥fair" payments .
+However, it can be modified in two ways, both of which are still quite natural, but result in different payment bounds .
+First, we can consider the worst rather than the best possible outcome for the centre .
+That is, we can consider the maximum total payment that the agents can extract by jointly selecting their bids subject to (1), (2), and (3) .
+Such a bound corresponds to maximising B subject to (1), (2), and (3) rather than minimising it .
+If it is the agents who make the original bids (rather than the centre), this kind of bidding behaviour is plausible .
+On the other hand, in a game in which the centre proposes payments to the agents in S and the agents accept them as long as (1), (2) and (3) are satisfied, we would be likely to observe a total payment of £h(c, S) .
+Hence, the difference between these two definitions can be seen as the price of initiative .
+Second, the agents may be able to make payments to each other .
+In this case, if they can extract more money from the centre by agreeing on a vector of bids that violates individual rationality (i.e., condition (1)) for some bidders, they might be willing to do so, as the agents who are paid below their costs will be compensated by other members of the group .
+The bids must still be realistic, i.e., they have to satisfy be ? 0 .
+The resulting change in payments can be seen as the price of co operation and corresponds to replacing condition (1) with the following weaker condition (1? )
+(1? ) By considering all possible combinations of these modifications, we obtain four different payment bounds, namely ? TUmin(c, S), which is the solution to the optimisation problem Minimise B subject to (1? ), (2), and (3) .
+? TUmax(c, S), which is the solution to the optimisation problem Maximise B subject to (1? ), (2), and (3) .
+? NTUmin(c, S), which is the solution to the optimisation problem Minimise B subject to (1), (2), and (3) .
+? NTUmax(c, S), which is the solution to the optimisation problem Maximise B subject to (1), (2), (3) .
+The abbreviations TU and NTU correspond, respectively, to transferable utility and non transferable utility, i.e., the agents" ability inability to make payments to each other .
+For concreteness, we will take TUmin(c) to be TUmin(c, S) where S is the lexicographically least amongst the cheapest feasible sets .
+We define TUmax(c), NTUmin(c), NTUmax(c) and £h(c) similarly, though we will see in Section 6.3 that, in fact, NTUmin(c, S) and NTUmax(c, S) are independent of the choice of S .
+Note that the quantity £h(c) from [16] is NTUmin(c) .
+The second modification (transferable utility) is more intuitively appealing in the context of the maximisation problem, as both assume some degree of co operation between the agents .
+While the second modification can be made without the first, the resulting payment bound TUmin(c, S) is too strong to be a realistic benchmark, at least for general set systems .
+In particular, it can be smaller than the total cost of the cheapest feasible set S (see Section 6) .
+Nevertheless, we provide the definition as well as some results about TUmin(c, S) in the paper, both for completeness and because we believe that it may help to understand which properties of the payment bounds are important for our proofs .
+Another possibility would be to introduce an additional constraint P e?S be ?P e?S ce in the definition of TUmin(c, S) (note that this condition holds automatically for TUmax(c, S), as TUmax(c, S) ? NTUmax(c, S)); however, such a definition would have no direct game theoretic interpretation, and some of our results (in particular, the ones in Section 4) would no longer be true .
+REMARK 1 .
+For the payment bounds that are derived from maximisation problems, (i.e., TUmax(c, S) and NTUmax(c, S)), constraints of type (3) are redundant and can be dropped .
+Hence, TUmax(c, S) and NTUmax(c, S) are solutions to linear programs, and therefore can be computed in polynomial time as long as we have a separation oracle for constraints in (2) .
+In contrast, 338 NTUmin(c, S) can be NP hard to compute even if the size of F is polynomial (see Section 6) .
+The first and third inequalities in the following observation follow from the fact that condition (1? ) is strictly weaker than condition (1) .
+PROPOSITION 1 .
+TUmin(c, S) ? NTUmin(c, S) ? NTUmax(c, S) ? TUmax(c, S) .
+Let M be a truthful mechanism for (E, F) .
+Let pM(c) denote the total payments of M when the actual costs are c .
+A frugality ratio of M with respect to a payment bound is the ratio between the payment of M and this payment bound .
+In particular, £pTUmin(M) = sup c pM(c) TUmin(c), £pTUmax(M) = sup c pM(c) TUmax(c), £pNTUmin(M) = sup c pM(c) NTUmin(c), £pNTUmax(M) = sup c pM(c) NTUmax(c) .
+We conclude this section by showing that there exist set systems and respective cost vectors for which all four payment bounds are different .
+In the next section, we quantify this difference, both for general set systems, and for specific types of set systems, such as path auctions or vertex cover auctions .
+EXAMPLE 1 .
+Consider the shortest path auction on the graph of Figure 1 .
+The cheapest feasible sets are all paths from A to D .
+It can be verified, using the reasoning of Propositions 2 and 3 below, that for the cost vector cAB = cCD = 2, cBC = 1, cAC = cBD = 5, we have ? TUmax(c) = 10 (with bAB = bCD = 5, bBC = 0), ? NTUmax(c) = 9 (with bAB = bCD = 4, bBC = 1), ? NTUmin(c) = 7 (with bAB = bCD = 2, bBC = 3), ? TUmin(c) = 5 (with bAB = bCD = 0, bBC = 5). .

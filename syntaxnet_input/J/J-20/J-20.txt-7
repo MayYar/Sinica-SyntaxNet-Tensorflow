@@ -1,0 +1,23 @@
+All our experiments were performed in Linux (Red Hat 9.0), using a Dell PC with a 3GHz Intel Pentium 4 processor, and 1GB of RAM .
+Wherever we used CPLEX (e.g., in solving the LP and as a primal heuristic, as discussed in the previous sections), we used CPLEX 10.010 .
+Figure 6 shows the runtime performance of four clearing algorithms .
+For each market size listed, we randomly generated 10 markets, and attempted to clear them using each of the algorithms .
+The first algorithm is CPLEX on the full cycle formulation .
+This algorithm fails to clear any markets with 1000 patients or more .
+Also, its running time on markets smaller than this is significantly worse than the other algorithms .
+The other algorithms are variations of the incremental column generation approach described in Section 5 .
+We begin with the following settings (all optimizations are switched on)
+Column Generation One column at a time .
+Column Management On, with 400,000 column limit .
+Optimality Prover On .
+Primal Heuristic Rounding & CPLEX tree search .
+Branching Rule Uncertainty .
+302 The combination of these optimizations allows us to easily clear markets with over 10,000 patients .
+In each of the next two algorithms, we turn one of these optimizations off to highlight its effectiveness .
+First, we restrict the seeder so that it only begins with 10,000 cycles .
+This setting is faster for smaller instances, since the LP relaxations are smaller, and faster to solve .
+However, at 5000 vertices, this effect starts to be offset by the additional column generation that must be performed .
+For larger instance, this restricted seeder is clearly worse .
+Finally, we restore the seeder to its optimized setting, but this time, remove the optimality prover described in Section 5.2.3 .
+As in many column generation problems, the tailing off effect is substantial .
+By taking advantage of the properties of our problem, we manage to clear a market with 10,000 patients in about the same time it would otherwise have taken to clear a 6000 patient market. .

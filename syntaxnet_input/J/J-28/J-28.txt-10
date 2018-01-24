@@ -1,0 +1,203 @@
+?i ?j pj i xj i is minimized
+This generalized knapsack formulation is a clear generalization of the classic 0 1 knapsack
+In the latter, each list consists of a single point (si, vi).8 The connection between the generalized knapsack and our auction problem is transparent
+Each list encodes a bid, representing multiple mutually exclusive quantity intervals, and one can choose any quantity in an interval, but at most one interval can be selected
+Choosing interval [uj i , uj+1 i ) has cost pj i per unit
+The goal is to procure at least M units of the good at minimum possible cost
+The problem has some flavor of the continuous knapsack problem
+However, there are two major differences that make our problem significantly more difficult
+3.2 A 2 Approximation Scheme We begin with a definition
+Given an instance of the generalized knapsack, we call each tuple tj i = (uj i , pj i ) an anchor
+Recall that these tuples represent the breakpoints in the piecewise constant curve bids
+We say that the size of an anchor tj i is uj i , 8 In fact, because of the one per list constraint, the generalized problem is closer in spirit to the multiple choice knapsack problem [9], where the underling set of items is partitioned into disjoint subsets U1, U2,
+, Uk, and one can choose at most one item from each subset
+PTAS do exist for this problem [10], and indeed, one can convert our problem into a huge instance of the multiple choice knapsack problem, by creating one group for each list; put a (quantity, price) point tuple (x, p) for each possible quantity for a bidder into his group (subset)
+However, this conversion explodes the problem size, making it infeasible for all but the most trivial instances
+the minimum number of units available at this anchor"s price pj i
+The cost of the anchor tj i is defined to be the minimum total price associated with this tuple, namely, cost(tj i ) = pj i uj i if j < mi, and cost(tmi i ) = pmi?1 i umi i
+In a feasible solution {x1, x2,
+, xn} of the generalized knapsack, we say that an element xi = 0 is an anchor if xi = uj i , for some anchor uj i
+Otherwise, we say that xi is midrange
+We observe that an optimal knapsack solution can always be constructed so that at most one solution element is midrange
+If there are two midrange elements x and x , for bids from two different agents, with x ? x , then we can increment x and decrement x, until one of them becomes an anchor
+See Figure 2 for an example
+LEMMA 1
+[Anchor Property] There exists an optimal solution of the generalized knapsack problem with at most one midrange element
+All other elements are anchors
+1 midrange bid 5 20 15 10 25 5 25 30201510 35 3 2 1 Price Quantity 5 20 15 10 25 5 25 30201510 35 3 2 1 Price Quantity (i) Optimal solution with 2 midrange bids (ii) Optimal soltution with Figure 2
+We use the anchor property to first obtain a polynomial time 2 approximation scheme
+We do this by solving several instances of a restricted generalized knapsack problem, which we call iKnapsack, where one element is forced to be midrange for a particular interval
+Specifically, suppose element x for agent l is forced to lie in its jth range, [uj , uj+1 ), while all other elements, x1,
+, xl?1, xl+1, xn, are required to be anchors, or zero
+This corresponds to the restricted problem iKnapsack( , j), in which the goal is to obtain at least M ? uj units with minimum cost
+Element x is assumed to have already contributed uj units
+The value of a solution to iKnapsack( , j) represents the minimal additional cost to purchase the rest of the units
+We create n ? 1 groups of potential anchors, where ith group contains all the anchors of the list i in the generalized knapsack
+The group for agent l contains a single element that represents the interval [0, uj+1 ?uj ), and the associated unit price pj
+This interval represents the excess number of units that can be taken from agent l in iKnapsack( , j), in addition to uj , which has already been committed
+In any other group, we can choose at most one anchor
+The following pseudo code describes our algorithm for this restriction of the generalized knapsack problem
+U is the union of all the tuples in n groups, including a tuple t for agent l
+The size of this special tuple is defined as uj+1 ? uj , and the cost is defined as pj l (uj+1 ?uj be acquired
+S is the set of tuples accepted in the current tentative 170 solution
+Best is the best solution found so far
+Variable Skip is only used in the proof of correctness
+Algorithm Greedy( , j) case of ties, sort in ascending order of unit quantities
+Initialize R = M ? uj , S = Best = Skip = ?
+tuple is tk i , i.e
+the kth anchor from agent i
+If mark(i) = 1, ignore this tuple; otherwise do the following steps
+The approximation algorithm is very similar to the approximation algorithm for knapsack
+Since we wish to minimize the total cost, we consider the tuples in order of increasing per unit cost
+If the size of tuple tk i is smaller than R, then we add it to S, update R, and delete from U all the tuples that belong to the same group as tk i
+If size(tk i ) is greater than R, then S along with tk i forms a feasible solution
+However, this solution can be far from optimal if the size of tk i is much larger than R
+If total cost of S and tk i is smaller than the current best solution, we update Best
+One exception to this rule is the tuple t
+Since this tuple can be taken fractionally, we update Best if the sum of S"s cost and fractional cost of t is an improvement
+The algorithm terminates in either of the first two cases, or when all tuples are scanned
+In particular, it terminates whenever we find a tk i such that size(tk i ) is greater than R but cost(tk i ) is less than cost(S), or when we reach the tuple representing agent l and it gives a feasible solution
+LEMMA 2
+Suppose A? is an optimal solution of the generalized knapsack, and suppose that element (l, j) is midrange in the optimal solution
+Then, the cost V (l, j), returned by Greedy( , j), satisfies
+Let V ( , j) be the value returned by Greedy( , j) and let V ? ( , j) be an optimal solution for iKnapsack( , j)
+Consider the set Skip at the termination of Greedy( , j)
+There are two cases to consider
+In the first case, let St be the tentative solution S at the time t was added to Skip
+Because t ? Skip then size(t) > R, and St together with t forms a feasible solution, and we have
+Again, because t ? Skip then cost(t) > cost(St), and we have V ( , j) < 2cost(t)
+On the other hand, since t is included in V ? ( , j), we have V ? ( , j) ? cost(t)
+These two inequalities imply the desired bound
+In the second case, imagine a modified instance of iKnapsack( , j), which excludes all the tuples of the set Skip
+Since none of these tuples were included in V ? ( , j), the optimal solution for the modified problem should be the same as the one for the original
+Suppose our approximation algorithm returns the value V ( , j) for this modified instance
+Let t be the last tuple considered by the approximation algorithm before termination on the modified instance, and let St be the corresponding tentative solution set in that step
+Since we consider tuples in order of increasing per unit price, and none of the tuples are going to be placed in the set Skip, we must have cost(St ) < V ? ( , j) because St is the optimal way to obtain size(St )
+We also have cost(t ) ? cost(St ), and the following inequalities
+Therefore, dropping the tuples in the set Skip can only make the solution worse
+The above argument has shown that the value returned by Greedy( , j) is within a factor 2 of the optimal solution for iKnapsack( , j)
+We now show that the value V ( , j) plus cost(tj ) is a 2 approximation of the original generalized knapsack problem
+Let A? be an optimal solution of the generalized knapsack, and suppose that element xj is midrange
+Let x? to be set of the remaining elements, either zero or anchors, in this solution
+Furthermore, define x = xj ? uj
+Thus, cost(A? ) = cost(xl) + cost(tj l ) + cost(x?l) It is easy to see that (x? , x ) is an optimal solution for iKnapsack( , j)
+Since V ( , j) is a 2 approximation for this optimal solution, we have the following inequalities
+It is easy to see that, after an initial sorting of the tuples in U, the algorithm Greedy( , j) takes O(n) time
+We have our first polynomial approximation algorithm
+THEOREM 2
+A 2 approximation of the generalized knapsack problem can be found in time O(n2 ), where n is number of item lists (each of constant length)
+PROOF
+We run the algorithm Greedy( , j) once for each tuple (l, j) as a candidate for midrange
+There are O(n) tuples, and it suffices to sort them once, the total cost of the algorithm is O(n2 one midrange element, so our algorithm will find a 2 approximation, as claimed
+The dependence on the number of pieces is also polynomial
+171 3.3 An Approximation Scheme We now use the 2 approximation algorithm presented in the preceding section to develop a fully polynomial approximation (FPTAS) for the generalized knapsack problem
+The high level idea is fairly standard, but the details require technical care
+We use a dynamic programming algorithm to solve iKnapsack( , j) for each possible midrange element, with the 2 approximation algorithm providing an upper bound on the value of the solution and enabling the use of scaling on the cost dimension of the dynamic programming (DP) table
+Consider, for example, the case that the midrange element is x , which falls in the range [uj , uj+1 We now consider the related problem of computing the VCG payments for all the agents
+A naive approach requires solving the allocation problem n times, removing each agent in turn
+In this section, we show that our approximation scheme for the generalized knapsack can be extended to determine all n payments in total time O(£\T log(£\n £`)), where 1 ? C(I\i) C(I) ? £\, for a constant upper bound, £\, and T is the complexity of solving the allocation problem once
+This £\ bound can be justified as a no monopoly condition, because it bounds the marginal value that a single buyer brings to the auction
+Similarly, in the reverse variation we can compute the VCG payments to each seller in time O(£\T log(£\n £`)), where £\ bounds the ratio C(I\ i) C(I) for all i
+Our overall strategy will be to build two dynamic programming tables, forward and backward, for each midrange element (l, j) once
+The forward table is built by considering the agents in the order of their indices, where as the backward table is built by considering them in the reverse order
+The optimal solution corresponding to C(I \ i) can be broken into two parts
+As the (i ? 1)th row of the forward table corresponds to the sellers with first (i?1) indices, an approximation to the first part will be contained in (i ? 1)th row of the forward table
+Similarly, (n? i)th row of the backward table will contain an approximation for the second part
+We first present a simple but an inefficient way of computing the approximate value of C(I \ i), which illustrates the main idea of our algorithm
+Then we present an improved scheme, which uses the fact that the elements in the rows are sorted, to compute the approximate value more efficiently
+In the following, we concentrate on computing an allocation with xj being midrange, and some agent i = l removed
+This will be a component in computing an approximation to C(I \ i), the value of the solution to the generalized knapsack without bids from agent i
+We begin with the simple scheme
+4.1 A Simple Approximation Scheme We implement the scaled dynamic programming algorithm for iKnapsack( , j) with two alternate orderings over the other sellers, k = l, one with sellers ordered 1, 2,
+, n, and one with sellers ordered n, n ? 1,
+, 1
+We call the first table the forward table, and denote it F , and the second table the backward table, and denote it Bl
+The subscript reminds us that the agent is midrange.9 In building these tables, we use the same scaling factor as before; namely, the cost of a tuple tj i is scaled as follows
+In this case, because C(I \ i) can be £\ times C(I), the scaled value of C(I \ i) can be at most n£\ £`
+Therefore, the cost dimension of our dynamic program"s table will be n£\ £`
+FlTable F (i?1)l 2 3 1 2 i?1 1 m?1 m n?1 g 2 31 m?1 m B (n?i) n?1 n?2 n?i 1 lh Table Bl Figure 3
+m = n£\ £` Now, suppose we want to compute a (1 + ) approximation to the generalized knapsack problem restricted to element (l, j) midrange, and further restricted to remove bids from some seller i = l
+Call this problem iKnapsack?i ( , j)
+Recall that the ith row of our DP table stores the best solution possible using only the first i agents excluding agent l, all of them either cleared at zero, or on anchors
+These first i agents are a different subset of agents in the forward and the backward tables
+By carefully combining one row of Fl with one row of Bl we can compute an approximation to iKnapsack?i ( , j)
+We consider the row of Fl that corresponds to solutions constructed from agents {1, 2,
+, i ? 1}, skipping agent l
+We consider the row of Bl that corresponds to solutions constructed from agents {i+1, i+2,
+, n}, again skipping agent l
+The rows are labeled Fl(i ? 1) and Bl(n ? i) respectively.10 The scaled costs for acquiring these units are the column indices for these entries
+To solve iKnapsack?i ( , j) we choose one entry from row F (i?1) and one from row B (n?i) such that their total quantity exceeds M ? uj+1 and their combined cost is minimum over all such combinations
+Formally, let g ? Fl(i ? 1), and h ? Bl(n ? 1) denote entries in each row, with size(g), size(h), denoting the number of units and cost(g) and cost(h) denoting the unscaled cost associated with the entry
+We compute the following, subject 9 We could label the tables with both and j, to indicate the jth tuple is forced to be midrange, but omit j to avoid clutter
+10 To be precise, the index of the rows are (i ? 2) and (n ? i) for Fl and Bl when l < i, and (i ? 1) and (n ? i ? 1), respectively, when l > i
+173 to the condition that g and h satisfy size(g) + size(h) > M ? uj+1 
+Suppose A?i is an optimal solution of the generalized knapsack problem without bids from agent i, and suppose that element (l, j) is the midrange element in the optimal solution
+Then, the expression in Eq
+5, for the restricted problem iKnapsack?i ( , j), computes a (1 + £`) approximation to A?i
+PROOF
+From earlier, we define cost(A?i ) = C(I \ i)
+We can split the optimal solution, A?i , into three disjoint parts
+We have
+Let yi and y?i be the solution vectors corresponding to scaled cost ri and r?i in F (i ? 1) and B (n ? i), respectively
+From Lemma 3 we conclude that, cost(yi) + cost(y?i) ? cost(xi) ? cost(x?i) ? £`cost(A) where cost(A) is the upper bound on C(I) computed with the 2 approximation
+Among all equal scaled cost solutions, our dynamic program chooses the one with maximum units
+Therefore we also have, (size(yi) ? size(xi)) and (size(y?i) ? size(x?i)) where we use shorthand size(x) to denote total number of units in all tuples in x
+Now, define yj l = max(uj l , M ?size(yi)?size(y?i))
+From the preceding inequalities, we have yj l ? xj l
+Since (yj l , yi, y?i) is also a feasible solution to the generalized knapsack problem without agent i, the value returned by Eq
+5 is at most cost(yi) + cost(y?i) + pj l yj l ? C(I \ i) + £`cost(A) ? C(I \ i) + 2cost(A? )£` ? C(I \ i) + 2C(I \ i)£` This completes the proof
+A naive implementation of this scheme will be inefficient because it might check (n£\ £`)2 pairs of elements, for any particular choice of (l, j) and choice of dropped agent i
+In the next section, we present an efficient way to compute Eq
+5, and eventually to compute the VCG payments
+4.2 Improved Approximation Scheme Our improved approximation scheme for the winner determination problem without agent i uses the fact that elements in F (i ? 1) and B (n ? i) are sorted; specifically, both, unscaled cost and quantity (i.e
+size), increases from left to right
+As before, let g and h denote generic entries in F (i ? 1) and B (n ? i) respectively
+To compute Eq
+5, we consider all the tuple pairs, and first divide the tuples that satisfy condition size(g) + size(h) > M ? uj+1 l into two disjoint sets
+For each set we compute the best solution, and then take the best between the two sets
+[case I
+Now to compute Eq
+6, we do a forward and backward walk on F (i ? 1) and B (n ? i) respectively
+We start from the smallest index of F (i ? 1) and move right, and from the highest index of B (n ? i) and move left
+Let (g, h) be the current pair
+If (g, h) is feasible, we decrement B"s pointer (that is, move backward) otherwise we increment F"s pointer
+The feasible pairs found during the walk are used to compute Eq
+6
+The complexity of this step is linear in size of F (i ? 1), which is O(n£\ £`)
+[case II
+However, the elements are still sorted in quantity and we use this property to compute Eq
+7
+Call a pair (g, h) feasible if M ? uj+1 l ? size(g) + size(h) ? M ? uj l
+Define the feasible set of g as the elements h ? B (n ? i) that are feasible given g
+As the elements are sorted by quantity, the feasible set of g is a contiguous subset of B (n ? i) and shifts left as g increases
+2 3 4 5 10 20 30 40 50 60 Begin End B (n?i)15 20 25 30 35 40 65421 3 1 6 F (i?1)l l Figure 4
+Begin and End represent the start and end pointers to the feasible set
+Therefore, we can compute Eq
+7 by doing a forward and backward walk on F (i ? 1) and B (n ? i) respectively
+We walk on B (n ? i), starting from the highest index, using two pointers, Begin and End, to indicate the start and end of the current feasible set
+We maintain the feasible set as a min heap, where the key is modified cost
+To update the feasible set, when we increment F"s pointer(move forward), we walk left on B, first using End to remove elements from feasible set which are no longer 174 feasible and then using Begin to add new feasible elements
+For a given g, the only element which we need to consider in g"s feasible set is the one with minimum modified cost which can be computed in constant time with the min heap
+So, the main complexity of the computation lies in heap updates
+Since, any element is added or deleted at most once, there are O(n£\ £` ) heap updates and the time complexity of this step is O(n£\ £` log n£\ £` )
+4.3 Collecting the Pieces The algorithm works as follows
+First, using the 2 approximation algorithm, we compute an upper bound on C(I)
+We use this bound to scale down the tuple costs
+Using the scaled costs, we build the forward and backward tables corresponding to each tuple (l, j)
+The forward tables are used to compute C(I)
+To compute C(I \ i), we iterate over all the possible midrange tuples and use the corresponding forward and backward tables to compute the locally optimal solution using the above scheme
+Among all the locally optimal solutions we choose one with the minimum total cost
+The most expensive step in the algorithm is computation of C(I \ i)
+The time complexity of this step is O(n2 £\ £` log n£\ £` ) as we have to iterate over all O(n) choices of tj l , for all l = i, and each time use the above scheme to compute Eq
+5
+In the worst case, we might need to compute C(I \ i) for all n sellers, in which case the final complexity of the algorithm will be O(n3 £\ £` log n£\ £` )
+THEOREM 4
+We can compute an  (1+ ) strategyproof approximation to the VCG mechanism in the forward and reverse multi unit auctions in worst case time O(n3 £\ £` log n£\ £` )
+It is interesting to recall that T = O(n3 £` ) is the time complexity of the FPTAS to the generalized knapsack problem with all agents
+Our combined scheme computes an approximation to the complete VCG mechanism, including payments to O(n) agents, in time complexity O(T log(n £`)), taking the no monopoly parameter, £\, as a constant
+Thus, our algorithm performs much better than the naive scheme, which computes the VCG payment for each agent by solving a new instance of generalized knapsack problem
+The speed up comes from the way we solve iKnapsack?i ( , j)
+Time complexity of computing iKnapsack?i ( , j) by creating a new dynamic programming table will be O(n2 £` ) but by using the forward and backward tables, the complexity is reduced to O(n £` log n £` We presented a fully polynomial time approximation scheme for the single good multi unit auction problem, using marginal decreasing piecewise constant bidding language
+Our scheme is both approximately efficient and approximately strategyproof within any specified factor £` > 0
+As such it is an example of computationally tractable £` dominance result, as well as an example of a non trivial but approximable allocation problem
+It is particularly interesting that we are able to compute the payments to n agents in a VCG based mechanism in worst case time O(T log n), where T is the time complexity to compute the solution to a single allocation problem.

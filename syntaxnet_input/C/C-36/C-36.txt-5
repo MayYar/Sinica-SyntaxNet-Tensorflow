@@ -1,0 +1,55 @@
+In both encryption approaches the encrypted event content has a globally unique identifier (i.e .
+the event type or the attribute identifier) .
+That identifier is used to determine the encryption key to use when encrypting or decrypting the content .
+Each event type, in event encryption, and attribute, in attribute encryption, has its own individual encryption key .
+By controlling access to the encryption key we effectively control access to the encrypted event content .
+In order to control access to the encryption keys we form a key group of brokers for each individual encryption key .
+The key group is used to refresh the key when necessary and to deliver the new key to all current members of the key group .
+The key group manager is responsible for verifying that a new member requesting to join the key group is authorised to do so .
+Therefore the key group manager must be trusted by the type owner to enforce the access control policy .
+We assume that the key group manager is either a trusted third party or alternatively a member of the type owner"s domain .
+In [12] Pesonen et al .
+proposed a capability based access control architecture for multi domain publish subscribe systems .
+The approach uses capabilities to decentralise the access control policy amongst the publish subscribe nodes (i.e .
+clients and brokers)
+Authority to access a given event type is granted by the owner of that type issuing a capability to a node .
+The capability defines the event type, the action, and the attributes that Type Owner ACS Broker Key Manager 1.Grant authorisation for Number Platekey 2.Broker requests to join Number Plate key group 5.If the broker satisfies all checks,they will begin receiving appropriate keys .
+3.Key manager may check broker"s credentials at the Access Control Service 4.Key manager may check that the Type Owner permits access Figure 4
+For example, a tuple <NP, subscribe, *> would authorise the owner to subscribe to Numberplate events with access to all attributes in the published events .
+The sequence of events required for a broker to successfully join a key group is shown in Fig .
+4 .
+Both the client hosting broker and the client must be authorised to make the client"s request .
+That is, if the client makes a subscription request for Numberplate events, both the client and the local broker must be authorised to subscribe to Numberplate events .
+This is because from the perspective of the broker network, the local broker acts as a proxy for the client .
+We use the same capabilities to authorise membership in a key group that are used to authorise publish subscribe requests .
+Not doing so could lead to the inconsistent situation where a SHB is authorised to make a subscription on behalf of its clients, but is not able to decrypt incoming event content for them .
+In the Numberplate example above, the local broker holding the above capability is authorised to join the Numberplate key group as well as the key groups for all the attributes in the Numberplate event type .
+4.1 Secure Group Communication Event content encryption in a decentralised multi domain publish subscribe system can be seen as a sub category of secure group communication .
+In both cases the key management system must scale well with the number of clients, clients might be spread over large geographic areas, there might be high rates of churn in group membership, and all members must be synchronised with each other in time in order to use the same encryption key at the same time .
+There are a number of scalable key management protocols for secure group communication [15] .
+We have implemented the One Way Function Tree [8] protocol as a proof of concept .
+We chose to implement OFT, because of its relatively simplicity and good performance .
+Our implementation uses the same structured overlay network used by the broker network as a transport .
+The OFT protocol is based on a binary tree where the participants are at the leaves of the tree .
+It scales in log2n in processing and communication costs, as well as in the size of the state stored at each participant, which we have verified in our simulations .
+4.2 Key Refreshing Traditionally in group key management schemes the encryption key is refreshed when a new member joins the group, an 110 existing member leaves the group, or a timer expires .
+Refreshing the key when a new member joins provides backward secrecy, i.e .
+the new member is prevented from accessing old messages .
+Similarly refreshing the key when an existing member leaves provides forward secrecy, i.e .
+the old member is prevented from accessing future messages .
+Timer triggered refreshes are issued periodically in order to limit the damage caused by the current key being compromised .
+Even though the state of the art key management protocols are efficient, refreshing the key unnecessarily introduces extra traffic and processing amongst the key group members .
+In our case key group membership is based on the broker holding a capability that authorises it to join the key group .
+The capability has a set of validity conditions that in their simplest form define a time period when the certificate is valid, and in more complex cases involve on line checks back towards the issuer .
+In order to avoid unnecessary key refreshes the key manager looks at the certificate validity conditions of the joining or leaving member .
+In case of a joining member, if the manager can ascertain that the certificate was valid at the time of the previous key refresh, a new key refresh can be avoided .
+Similarly, instead of refreshing the key immediately when a member leaves the key group, the key manager can cache their credentials and refresh the key only when the credentials expire .
+These situations are both illustrated in Fig.5 .
+It can be assumed that the credentials granted to brokers are relatively static, i.e .
+once a domain is authorised to access an event type, the authority will be delegated to all brokers of that domain, and they will have the authority for the foreseeable future .
+More fine grained and dynamic access control would be implemented at the edge of the broker network between the clients and the client hosting brokers .
+When an encryption key is refreshed the new key is tagged with a timestamp .
+The encryption key to use for a given event is selected based on the event"s publication timestamp .
+The old keys will be kept for a reasonable amount of time in order to allow for some clock drift .
+Setting this value is part of the key management protocol, although exactly how long this time should be will depend on the nature of the application and possibly the size of the network .
+It can be configured independently per key group if necessary. .

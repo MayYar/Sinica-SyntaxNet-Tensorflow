@@ -1,0 +1,50 @@
+Graphical games were introduced in the papers of Kearns et al .
+[8] and Littman et al .
+[9] as a succinct representation of games with a large number of players .
+The classical normal form (or matrix form) representation has a size that is exponential in the number of players, making it unsuitable for large scale distributed games .
+A graphical game associates each player with a vertex of an underlying graph G, and the payoff to that player is a function of the actions chosen by himself and his neighbours in G; if G has low degree, this is a concise way to represent a game with many players .
+The papers [8, 9] give a dynamic programming algorithm for finding Nash equilibria in graphical games where there are two actions per player and G is a tree .
+The first of these papers describes a generic algorithm for this problem that can be specialized in two ways
+In [9], the authors propose a modification to the latter algorithm that aims to find a single Nash equilibrium in polynomial time .
+This does not quite work, as we show in Section 3, though it introduces a useful idea .
+1.1 Background The generic algorithm of [8] consists of two phases which we will refer to as the upstream pass and the downstream pass; 1 the former starts at the leaves of the tree and ends at the root, while the latter starts at the root and ends at the leaves .
+It is assumed that each player has two pure strategies (actions), which are denoted by 0 and 1; it follows that any mixed strategy can be represented as a single number x ? [0, 1], where x is the probability that the player selects 1 .
+During the upstream pass, each vertex V computes the set of its potential best responses to every mixed strategy w of its parent W ; a strategy v is a potential best response to w if 1 Note that the terminology upstream and downstream are reversed in [8, 9] our trees are rooted at the top .
+100 there is a Nash equilibrium in the graphical game downstream of V (inclusive) given that W plays w (for a more technical definition, the reader is referred to Section 2) .
+The output of this stage can be viewed as a (continuous) table T(w, v), where T(w, v) = 1 if and only if v is a potential best response to w; we refer to this table as the best response policy for V .
+The generic algorithm does not address the problem of representing the best response policy; in fact, the most important difference between the two instantiations of the generic algorithm described in [8] is in their approach to this issue .
+The computation is performed inductively
+.
+.
+, Uk .
+By the end of the upstream pass, all children of the root have computed their best response policies .
+In the beginning of the downstream pass, the root selects its strategy and informs its children about its choice .
+It also selects a strategy for each child .
+A necessary and sufficient condition for the algorithm to proceed is that the strategy of the root is a best response to the strategies of its children and, for each child, the chosen strategy is one of the pre computed potential best responses to the chosen strategy of the root .
+The equilibrium then propagates downstream, with each vertex selecting its children"s actions .
+The action of the child is chosen to be any strategy from the pre computed potential best responses to the chosen strategy of the parent .
+To bound the running time of this algorithm, the paper [8] shows that any best response policy can be represented as a union of an exponential number of rectangles; the polynomial time approximation algorithm is obtained by combining this representation with a polynomial sized grid .
+The main idea of [9] is that it is not necessary to keep track of all rectangles in the best response policies; rather, at each step of the upstream pass, it is possible to select a polynomial size subset of the corresponding policy (in [9], this subset is called a breakpoint policy), and still ensure that the downstream pass can proceed successfully (a sufficient condition for this is that the subset of the best response policy for V stored by the algorithm contains a continuous path from w = 0 to w = 1) .
+1.2 Our Results One of the main contributions of our paper is to show that the algorithm proposed by [9] is incorrect .
+In Section 3 we describe a simple example for which the algorithm of [9] outputs a vector of strategies that does not constitute a Nash equilibrium of the underlying game .
+In Sections 4, 5 and 6 we show how to fix the algorithm of [9] so that it always produces correct output .
+Section 4 considers the case in which the underlying graph is a path of length n .
+For this case, we show that the number of rectangles in each of the best response policies is O(n2 We consider graphical games in which the underlying graph G is an n vertex tree .
+Each vertex has two actions, which are denoted by 0 and 1 .
+A mixed strategy is given by a single number x ? [0, 1], which denotes the probability that the player selects action 1 .
+Fur the purposes of the algorithm, the tree is rooted arbitrarily .
+For convenience, we assume without loss of generality that the root has a single child, and that its payoff is independent of the action chosen by the child .
+This can be achieved by first choosing an arbitrary root of the tree, and then adding a dummy parent of this root, giving the new parent a constant payoff function .
+Given an edge (V, W ) of the tree G, and a mixed strategy w for W , let G(V,W ),W =w be the instance obtained from G by (1) deleting all nodes Z which are separated from V by W (i.e., all nodes Z such that the path from Z to V passes through W ), and (2) restricting the instance so that W is required to play mixed strategy w .
+Definition 1 .
+Suppose that (V, W ) is an edge of the tree, that v is a mixed strategy for V and that w is a mixed strategy for W .
+101 We say that v is a potential best response to w (denoted by v ? pbrV (w)) if there is an equilibrium in the instance G(V,W ),W =w in which V has mixed strategy v .
+We define the best response policy for V , given W , as B(W, V ) = {(w, v) | v ? pbrV (w), w ? [0, 1]} .
+Typically, W is the parent of V , and this is just referred to as the best response policy for V .
+The expression B(W, V )|V =v is used to denote the set B(W, V ) ¡ä [0, 1]¡Ñ{v} .
+The upstream pass of the generic algorithm of [8] computes the best response policy for V for every node V other than the root .
+With the above assumptions about the root, the downstream pass is straightforward
+The root selects any pair (w, v) from B(W, V ) .
+It decides to play mixed strategy w and it instructs V to play mixed strategy v .
+The remainder of the downward pass is recursive .
+When a node V is instructed by its parent to adopt mixed strategy v, it does the following for each child U It finds a pair (v, u) ? B(V, U) (with the same v value that it was given by its parent) and instructs U to play u. .

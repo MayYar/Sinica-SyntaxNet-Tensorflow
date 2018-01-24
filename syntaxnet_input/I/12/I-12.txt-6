@@ -1,0 +1,58 @@
+We present the results in two parts
+206 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 5.1 Sample Environment To illustrate the gain obtained by using the selective sharing mechanism, we used an environment of 10 agents, associated with 5 different interruptibility cost distribution function types .
+The table in Figure 4 details the division of the 10 agents into types, the dimensions of the rectangles that form the distribution functions, and the theoretical mean and reservation value (following Equation 3) with a cost c = 2 for sensing the interruption cost .
+Even though the means of the five types are relatively similar, the use of a reservation value based interruption strategy yields relatively different expected interruption costs (RV , following Equation 2) .
+The histogram in this figure depicts the number of observations obtained for each bin of size 1 out of a sample of 100000 observations taken from each type"s distribution function .
+Type Agents Rect .
+Range prob mean RV I 1,2 1 0 20 0.40 50 14.1 2 20 80 0.20 3 80 100 0.40 II 3,4,5,6 1 0 40 0.25 50 25.3 2 40 60 0.50 3 60 100 0.25 III 7 1 0 80 0.10 85 56.6 2 80 100 0.90 IV 8,9 1 0 60 0.60 48 20.0 2 60 90 0.40 V 10 1 0 100 1.00 50 20.0 0 500 1000 1500 2000 2500 1 8 15 22 29 36 43 50 57 64 71 78 85 92 99 type I type II type III type IV type V #ofobservations range Figure 4
+Each graph presents the average prediction accuracy (in terms of the absolute deviation from the theoretical value, so the lower the curve the better the performance) of a different type, based on 10000 simulation runs .
+The three curves in each graph represent the methods being compared (self learning, average all, and selective sharing) .
+The data is given as a function of the accumulated number of observations collected .
+The sixth graph in the figure is the average for all types, weighted according to the number of agents of each type .
+Similarly, the following table summarizes the overall average performance in terms of the absolute deviation from the theoretical value of each of the different methods
+First, although the average all method may produce relatively good results, it quickly reaches stagnation, while the other two methods exhibit continuous improvement as a function of the amount of accumulated data .
+For the Figure 4 environment, average all is a good strategy for agents of type II, IV and V, because the theoretical reservation value of each of these types is close to the one obtained based on the aggregated distribution function (i.e., 21.27).4 However, for types I and III for which the optimal RV differs from that value, the average all method performs significantly worse .
+Overall, the sixth graph and the table above show that while in this specific environment the average all method works well in the first interactions, it 3 The improvement is measured in percentages relative to the self learning method .
+4 The value is obtained by constructing the weighted aggregated distributed function according to the different agents" types and extracting the optimal RV using Equation 3 .
+0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type I 0 4 8 12 16 20 1 6 11 16 21 26 31 36 selective sharing self learning average all 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type II 0 8 16 24 32 40 1 6 11 16 21 26 31 36 Type III 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type IV 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Type V 0 4 8 12 16 20 1 6 11 16 21 26 31 36 Weighted Average Figure 5
+Furthermore, the more user observations the agents accumulate (i.e., as we extend the horizontal axis), the better the other two methods are in comparison to average all .
+In the long run (and as shown in the following subsection for the general case), the average all method exhibits the worst performance .
+Second, the selective sharing mechanism starts with a significant improvement in comparison to relying on the agent"s own observations, and then this improvement gradually decreases until finally its performance curve coincides with the self learning method"s curve .
+The selective sharing mechanism performs better or worse, depending on the type, because the Wilcoxon test cannot guarantee an exact identification of similarity; different combinations of distribution function can result in an inability to exactly identify the similar users for some of the specific types .
+For example, for type I agents, the selective sharing mechanism actually performs worse than self learning in the short term (in the long run the two methods" performance converge) .
+Nevertheless, for the other types in our example, the selective sharing mechanism is the most efficient one, and outperforms the other two methods overall .
+Third, it is notable that for agents that have a unique type (e.g., agent III), the selective sharing mechanism quickly converges towards relying on self collected data .
+This behavior guarantees that even in scenarios in which users are completely different, the method exhibits a graceful initial degradation but manages, within a few time steps, to adopt the proper behavior of counting exclusively on self generated data .
+Last, despite the difference in their overall distribution function, agents of type IV and V exhibit similar performance because the relevant portion of their distribution functions (i.e., the effective parts that affect the RV calculation as explained in Figure 1) is identical .
+Thus, the selective sharing mechanism enables the agent of type V, despite its unique distribution function, to adopt relevant information collected by agents of types IV which improves its estimation of the expected interruption cost .
+5.2 General Evaluation To evaluate selective sharing, we ran a series of simulations in which the environment was randomly generated .
+These experiments focused on the CAs" estimations of the probability that the user would have the required information if interrupted .
+They used a multi rectangular probability distribution function to represent The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 207 the amount of communication the user is engaged in with its environment .
+We models the growth of the probability the user has the required information as a function of the amount of communication using the logistic function,5 G(x) = 1 + e ?x 12 1 + 60e ?x 12 .
+(7) The expected (mean) value of the parameter representing the probability the user has the required information is thus £g = Z ¡Û y=0 G(y)f(y)dy = kX i=1 hx + 708ln(60 + e x 12 )pi 60(xi ? xi?1) ixi xi?1 (8) where k is the number of rectangles used .
+We ran 10000 simulation runs .
+For each simulation, a new 20 agent environment was automatically generated by the system, and the agents were randomly divided into a random number of different types.6 For each type, a random 3 rectangle distribution function was generated .
+Each simulation ran 40 time steps .
+At each time step each one of the agents accumulated one additional observation .
+Each CA calculated an estimate of the probability its user had the necessary information according to the three methods, and the absolute error (difference from the theoretical value calculated according to Equation 8) was recorded .
+The following table summarizes the average performance of the three mechanisms along different time horizons (measured at 5, 15 and 40 time steps)
+As in the sample environment, the average all method performs well in the initial few time steps, but does not exhibit further improvement .
+Thus, the more data collected, the greater the difference between this latter method and the two other methods .
+The average difference between selective sharing and self learning decreases as more data is collected .
+Finally, we measured the effect of the number of types in the environment .
+For this purpose, we used the same self generation method, but controlled the number of types generated for each run .
+The number of types is a good indication for the level of heterogeneity in the environment .
+For each number of types, we ran 10000 simulations .
+Figure 6 depicts the performance of the different methods (for a 40 observation collection period for each agent) .
+Since all simulation runs used for generating Figure 6 are based on the same seed, the performance of the self learning mechanism is constant regardless of the number of types in the environment .
+As expected, the average all mechanism performs best when all agents are of the same type; however its performance deteriorates as the number of types increases .
+Similarly, the selective sharing mechanism exhibits good results when all agents are of the same type, and as the number of types increases, its performance deteriorates .
+However, the performance decrease is significantly more modest in comparison to the one experienced in the average all mechanism .
+5 The specific coefficients used guarantee an S like curve of growth, along the interval (0, 100), where the initial stage of growth is approximately exponential, followed by asymptotically slowing growth .
+6 In this suggested environment generation scheme there is no guarantee that every agent will have a potential similar agent to share information with .
+In those non rare scenarios where the CA is the only one of its type, it will rapidly need to stop relying on others .
+0 0.02 0.04 0.06 0.08 0.1 0.12 0.14 1 2 3 4 5 Self Learning Average All Selective Sharing number of types averageabsoluteerror Figure 6

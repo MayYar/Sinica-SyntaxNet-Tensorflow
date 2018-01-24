@@ -1,0 +1,41 @@
+We now analyze the performance of the algorithm presented in subsection 6.3, i.e., the one taking care of the exchange of audio packets between the different domains
+Note that the packets that are transiting within the LAN take advantage of the higher capacity (generally coupled with multicast capabilities) and therefore do not require a performance analysis
+Thus we have to look only at the RTP packets over the WAN, i.e., between participating M CSs
+As each M CS from a domain will be sending only NMax out of d M packets to the other CSs ( MaxN d M >> ), the bandwidth used by the application over a WAN is upper bounded by the following expression
+The total number of audio packets transiting over the WAN for each time slot is ? ?= ¡Ú= ? ? ? ? ? ? ? ?d i d ijj MaxN 1 ,1 which is quadratic in the number of domains (i.e., O(d2 ))
+However, it is independent of the total number of active clients
+This would not have been the case had all packets been sent over the network in each time slot
+The saving is tremendous
+Yet, one may contend that sending three packets to and from all domains is a waste of resources, as most of these streams will not be selected
+If just one client is active, selecting a subset of clients in that domain is unnecessary
+Pessimistic and optimistic algorithms as presented in the sequel aim at reducing the traffic further by harnessing the slow varying nature of the LN
+8.1 Pessimistic algorithm Consider a scenario wherein the lowest LN (called LNt) of the three globally selected streams (set F of Section 6.1) exceeds the LN of the most dominant stream of a domain
+Evidently, the chances that the next two dominant streams of that domain being selected to F in the next packet period are less
+Here, we send this most dominant stream and withhold the other two
+There may be an error in unique selection across all domains for one packet period only
+As LN varies slowly, the error would get automatically rectified in a subsequent packet period (slot)
+In this algorithm, there is at least one stream in each period
+The net network traffic in a packet period in the best case is )1( ?? dd , i.e., )( 2 dO using unicast, instead of MaxNdd ??? )1(
+Considerable valuable bandwidth can be saved using this heuristic
+The resulting traffic complexity reduces from O(d2 ) to O(d) in multicast enabled networks
+Initialize LNt = 0 at an M CS S CS sends the top NMax streams (based on their LN) to all other CSs
+At each M CS S CS and for each packet time
+Set LNt with this value
+streams that have maximum value of LN (ToOtherCSs set)
+In this paper, we have presented a discussion on a voice only virtual conferencing environment
+We have argued that the distributed nature of deployment here makes it scalable
+Interactivity is achieved by adapting a recent stream selection scheme based on Loudness Number
+Additionally, we incorporate a result from a more recent work [15] where the sufficiency of three simultaneous speakers has been demonstrated
+Thus, there is significantly effective utilization of bandwidth
+A mixed stream is played out at each client; each client may choose to have a customized mix since mixing is done at the local terminal of each client
+These render impromptu speech in a virtual teleconference over VoIP a reality, as in a real face to face conference
+Compatibility is assured thanks to the use of SIP, the most soughtafter signaling protocol
+To ensure a satisfying performance, we do not demand the availability of multicast, but use it if and when available
+The traffic in the WAN (Internet) is upper bounded by the square of the number of domains,  further reduced by using heuristic algorithms  which is far below the total number of clients in the conference
+This is due to the use of a Conference Server local to each domain
+VAD techniques help further traffic reduction
+Using SIP standard for signaling makes this solution highly interoperable
+We have implemented a CS application on a campus wide network
+We believe this new generation of virtual conferencing environments will gain more popularity in the future as their ease of deployment is assured thanks to readily available technologies and scalable frameworks
+10
+REFERENCES

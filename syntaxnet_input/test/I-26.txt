@@ -1,0 +1,436 @@
+Sequential Decision Making in Parallel Two-Sided 
+content:
+1 ABSTRACT :
+1-1:This paper presents a two sided economic search model in which agents are searching for beneficial pairwise partnerships .
+1-2:In each search stage, each of the agents is randomly matched with several other agents in parallel, and makes a decision whether to accept a potential partnership with one of them .
+1-3:The distinguishing feature of the proposed model is that the agents are not restricted to maintaining a synchronized (instantaneous) decision protocol and can sequentially accept and reject partnerships within the same search stage .
+1-4:We analyze the dynamics which drive the agents" strategies towards a stable equilibrium in the new model and show that the proposed search strategy weakly dominates the one currently in use for the two sided parallel economic search model .
+1-5:By identifying several unique characteristics of the equilibrium we manage to efficiently bound the strategy space that needs to be explored by the agents and propose an efficient means for extracting the distributed equilibrium strategies in common environments .
+1-6:I.2.11 [Artificial Intelligence]: Distributed Artificial .
+2 INTRODUCTION :
+2-1:A two sided economic search is a distributed mechanism for forming agents" pairwise partnerships [5].1 On every stage of the process, each of the agents is randomly matched with another agent 1 Notice that the concept of search here is very different from the classical definition of search in AI .
+2-2:While AI search is an active process in which an agent finds a sequence of actions that will bring it from the initial state to a goal state, economic search refers to the identification of the best agent to commit to a partnership with .
+2-3:and the two interact bilaterally in order to learn the benefit encapsulated in a partnership between them .
+2-4:The interaction does not involve bargaining thus each agent merely needs to choose between accepting or rejecting the partnership with the other agent .
+2-5:A typical market where this kind of two sided search takes place is the marriage market [22] .
+2-6:Recent literature suggests various software agent based applications where a two sided distributed (i.e., with no centralized matching mechanisms) search takes place .
+2-7:An important class of such applications includes secondary markets for exchanging unexploited resources .
+2-8:An exchange mechanism is used in those cases where selling these resources is not the core business of the organization or when the overhead for selling them makes it non beneficial .
+2-9:For example, through a twosided search, agents, representing different service providers, can exchange unused bandwidth [21] and communication satellites can transfer communication with a greater geographical coverage .
+2-10:Twosided agents based search can also be found in applications of buyers and sellers in eMarkets and peer to peer applications .
+2-11:The twosided nature of the search suggests that a partnership between a pair of agents is formed only if it is mutually accepted .
+2-12:By forming a partnership the agents gain an immediate utility and terminate their search .
+2-13:When resuming the search, on the other hand, a more suitable partner might be found however some resources will need to be consumed for maintaining the search process .
+2-14:In this paper we focus on a specific class of two sided search matching problems, in which the performance of the partnership applies to both parties, i.e., both gain an equal utility [13] .
+2-15:The equal utility scenario is usually applicable in domains where the partners gain from the synergy between them .
+2-16:For example, consider tennis players that seek partners when playing doubles (or a canoe"s paddler looking for a partner to practice with) .
+2-17:Here the players are being rewarded completely based on the team"s (rather than the individual) performance .
+2-18:Other examples are the scenario where students need to form pairs for working together on an assignment, for which both partners share the same grade, and the scenario where two buyer agents interested in similar or interchangeable products join forces to buy a product together, taking advantage of discount for quantity (i.e .
+2-19:each of them enjoys the same reduced price) .
+2-20:In all these applications, any two agents can form a partnership and the performance of any given partnership depends on the skills or the characteristics of its members .
+2-21:Furthermore, the equal utility scenario can also hold whenever there is an option for side payments and the partnership"s overall utility is equally split among the two agents forming it [22] .
+2-22:While the two sided search literature offers comprehensive equilibrium analysis for various models, it assumes that the agents" search is conducted in a purely sequential manner: each agent locates and interacts with one other agent in its environment at a time 450 978 81 904262 7 5 c 2007 IFAAMAS [5, 22] .
+2-23:Nevertheless, when the search is assigned to autonomous software agents a better search strategy can be used .
+2-24:Here an agent can take advantage of its unique inherent filtering and information processing capabilities and its ability to efficiently (in comparison to people) maintain concurrent interactions with several other agents at each stage of its search .
+2-25:Such use of parallel interactions in search is favorable whenever the average cost2 per interaction with another agent, when interacting in parallel with a batch of other agents, is smaller than the cost of maintaining one interaction at a time (i.e., advantage to size) .
+2-26:For example, the analysis of the costs associated with evaluating potential partnerships between service providers reveals both fixed and variable components when using the parallel search, thus the average cost per interaction decreases as the number of parallel interactions increases [21] .
+2-27:Despite the advantages identified for parallel interactions in adjacent domains (e.g., in one sided economic search [7, 16]), a first attempt for modeling a repeated pairwise matching process in which agents are capable of maintaining interaction with several other agents at a time was introduced only recently [21] .
+2-28:However, the agents in that seminal model are required to synchronize their decision making process .
+2-29:Thus each agent, upon reviewing the opportunities available in a specific search stage, has to notify all other agents of its decision whether to commit to a partnership (at most with one of them) or reject the partnership (with the rest of them) .
+2-30:This inherent restriction imposes a significant limitation on the agents" strategic behavior .
+2-31:In our model, the agents are free to notify the other agents of their decisions in an asynchronous manner .
+2-32:The asynchronous approach allows the agents to re evaluate their strategy, based on each new response they receive from the agents they interact with .
+2-33:This leads to a sequential decision making process by which each agent, upon sending a commit message to one of the other agents, delays its decision concerning a commitment or rejection of all other potential partnerships until receiving a response from that agent (i.e., the agent still maintains parallel interactions in each search stage, except that its decision making process at the end of the stage is sequential rather than instantaneous) .
+2-34:The new model is a much more realistic pairwise model and, as we show in the analysis section, is always preferred by any single agents participating in the process .
+2-35:In the absence of other economic two sided parallel search models, we use the model that relies on an instantaneous (synchronous) decision making process [21] (denoted I DM throughout the rest of the paper) as a benchmark for evaluating the usefulness of our proposed sequential (asynchronous) decision making strategy (denoted S DM) .
+2-36:The main contributions of this paper are threefold: First, we formally model and analyze a two sided search process in which the agents have no temporal decision making constraints concerning the rejection of or commitment to potential partnerships they encounter in parallel (the S DM model) .
+2-37:This model is a general search model which can be applied in various (not necessarily software agents based) domains .
+2-38:Second, we prove that the agents" SDM strategy weakly dominates the I DM strategy, thus every agent has an incentive to deviate to the S DM strategy when all other agents are using the I DM strategy .
+2-39:Finally, by using an innovative recursive presentation of the acceptance probabilities of different potential partnerships, we identify unique characteristics of the equilibrium strategies in the new model .
+2-40:These are used for supplying an appropriate computational means that facilitates the calculation of the agents" equilibrium strategy .
+2-41:This latter contribution is 2 The term costs refers to resources the agent needs to consume for maintaining its search, such as: self advertisement, locating other agents, communicating with them and processing their offers .
+2-42:of special importance since the transition to the asynchronous mode adds inherent complexity to the model (mainly because now each agent needs to evaluate the probabilities of having each other agent being rejected or accepted by each of the other agents it interacts with, in a multi stage sequential process) .
+2-43:We manage to extract the agents" new equilibrium strategies without increasing the computational complexity in comparison to the I DM model .
+2-44:Throughout the paper we demonstrate the different properties of the new model and compare it with the I DM model using an artificial synthetic environment .
+2-45:In the following section we formally present the S DM model .
+2-46:An equilibrium analysis and computational means for finding the equilibrium strategy are provided in Section 3 .
+2-47:In Section 4 we review related MAS and economic search theory literature .
+2-48:We conclude with a discussion and suggest directions for future research in Section 5. .
+3 MODEL AND ANALYSIS :
+3-1:We consider an environment populated with an infinite number of self interested fully rational agents of different types3 .
+3-2:Any agent Ai can form a partnership with any other agent Aj in the environment, associated with an immediate perceived utility U(Ai, Aj) for both agents .
+3-3:As in many other partnership formation models (see [5, 21]) we assume that the value of U(x, y) (where x and y are any two agents in the environment) is randomly drawn from a continuous population characterized with a probability distribution function (p.d.f.) f(U) and a cumulative distribution function (c.d.f.) F(U), (0 ≤ U < ∞) .
+3-4:The agents are assumed to be acquainted with the utility distribution function f(x), however they cannot tell a priori what utility can be gained by a partnership with any specific agent in their environment .
+3-5:Therefore, the only way by which an agent Ai can learn the value of a partnership with another agent Aj, U(Ai, Aj), is by interacting with agent Aj .
+3-6:Since each agent in two sided search models has no prior information concerning any of the other agents in its environment, it initiates interactions (i.e., search) with other agents randomly .
+3-7:The nature of the two sided search application suggests that the agents are satisfied with having a single partner, thus once a partnership is formed the two agents forming it terminate their search process and leave the environment .
+3-8:The agents are not limited to interacting with a single potential partner agent at a time, but rather can select to interact with several other agents in parallel .
+3-9:We define a search round stage as the interval in which the agent interacts with several agents in parallel and learns the utility of forming a partnership with each of them .
+3-10:Based on the learned values, the agent needs to decide whether to commit or reject each of the potential partnerships available to it .
+3-11:Commitment is achieved by sending a commit message to the appropriate agent and an agent cannot commit to more than one potential partnership simultaneously .
+3-12:Declining a partnership is achieved by sending a reject message .
+3-13:The communication between the agents is assumed to be asynchronous and each agent can delay its decision, concerning any given potential partnership, as necessary.4 If two agents Ai and Aj mutually commit to a partnership between 3 The infinite number of agents assumption is common in two sided search models (see [5, 22, 21]) .
+3-14:In many domains (e.g., eCommerce) this derives from the high entrance and leave rates, thus the probability of running into the same agent in a random match is negligible .
+3-15:4 Notice that the asynchronous procedure does not eliminate the inherent structure of the search .
+3-16:The search is still based on stages rounds where on each search round the agent interacts with several other agents, except that now the agent can delay its decision making process (within each search round) as necessary .
+3-17:The Sixth Intl .
+3-18:Joint Conf .
+3-19:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 451 them, then the partnership is formed and both agents gain the immediate utility U(Ai, Aj) associated with it .
+3-20:If an agent does not form a partnership in a given search stage, it continues to its next search stage and interacts with more agents in a similar manner .
+3-21:Given the option for asynchronous decision making, each individual agent, Ai, follows the following procedure: 1: loop 2: Set N (number of parallel interactions for next search round) 3: Locate randomly a set A = {A1, .
+3-22:.
+3-23:.
+3-24:, AN } of agents to interact with 4: Evaluate the set of utilities {U(Ai, A1), .
+3-25:.
+3-26:.
+3-27:, U(Ai, AN )} 5: Set A∗ ={Aj|Aj ∈A and U(Ai, Aj)>U(resume)} 6: Send a reject message to each agent in the set {A \ A∗ } 7: while (A∗ = ∅) do 8: Send a commit message to Aj = argmaxAl∈A∗ U(Ai, Al) 9: Remove Aj from A∗ 10: Wait for Aj"s decision 11: if (Aj responded commit) then 12: Send reject messages to the remaining agents in A∗ 13: Terminate search 14: end if 15: end while 16: end loop where U(resume) denotes the expected utility of continuing the search (in the following paragraphs we show that U(resume) is fixed throughout the search and derives from the agent"s strategy) .
+3-28:In the above algorithm, any agent Ai first identifies the set A∗ of other agents it is willing to accept out of those reviewed in the current search stage and sends a reject message to the rest .
+3-29:Then it sends a commit message to the agent Aj ∈ A∗ that is associated with the partnership yielding the highest utility .
+3-30:If a reject message was received from agent Aj then this agent is removed from A∗ and a new commit message is sent according to the same criteria .
+3-31:The process continues until either: (a) the set A∗ becomes empty, in which case the agent initiates another search stage; or (b) a dual commitment is obtained, in which case the agent sends reject messages to the remaining agents in A∗ .
+3-32:The method differs from the one used in the I DM model in the way it handles the commitment messages: in the I DM model, after evaluating the set of utilities (step 4), the agent merely sends instantaneously a commit message to the agent associated with the greatest utility and a reject message to all the other agents it interacted with (as a replacement to steps 5 15 in the above procedure) .
+3-33:Our proposed S DM model is much more intuitive as it allows an agent to hold and possibly exploit relatively beneficial opportunities even if its first priority partnership is rejected by the other agent .
+3-34:In the I DM model, on the other hand, since reject messages are sent alongside the commit message, simultaneously, a reject message from the agent associated with the best partnership enforces a new search round .
+3-35:Notice that the two sided search mechanism above aligns with most other two sided search mechanisms in a sense that it is based on random matching (i.e., in each search round the agent encounters a random sample of agents) .
+3-36:While the maintenance of the random matching infrastructure is an interesting research question, it is beyond the scope of this paper .
+3-37:Notwithstanding, we do wish to emphasize that given the large number of agents in the environment and the fact that in MAS the turnover rate is quite substantial due to the open nature of the environment (and the interoperability between environments) .
+3-38:Therefore, the probability of ending up interacting with the same agent more than once, when initiating a random interaction, is practically negligible .
+3-39:THEOREM 1 .
+3-40:The S DM agent"s decision making process: (a) is the optimal one (maximizes the utility) for any individual agent in the environment; and (b) guarantees a zero deadlock probability for any given agent in the environment .
+3-41:Proof: (a) The method is optimal since it cannot be changed in a way that produces a better utility for the agent .
+3-42:Since bargaining is not applicable here (benefits are non divisible) then the agent"s strategy is limited to accepting or rejecting offers .
+3-43:The decision of rejecting a partnership in step 6 is based only on the immediate utility that can be gained from this partnership in comparison to the expected utility of resuming the search (i.e., moving on to the next search stage) and is not affected by the willingness of the other agents to commit or reject a partnership with Ai .
+3-44:As for partnerships that yield a utility greater than the expected utility of resuming the search (i.e., the partnerships with agents from the set A∗ ), the agent always prefers to delay its decision concerning partnerships of this type until receiving all notifications concerning potential partnerships that are associated with a greater immediate utility .
+3-45:The delay never results with a loss of opportunity since the other agent"s decision concerning this opportunity is not affected by agent Ai"s willingness to commit or reject this opportunity (but rather by the other agent"s estimation of its expected utility if resuming the search and the rejection messages it receives for more beneficial potential partnerships) .
+3-46:Finally, the agent cannot benefit from delaying a commit message to the agent associated with the highest utility in A∗ , thus will always send it a commit message .
+3-47:(b) We first prove the following lemma that states that the probability of having two partnering opportunities associated with an identical utility is zero .
+3-48:LEMMA 2.1 .
+3-49:When f is a continuous distribution function, then lim y→x »Z y z=x f(z)dz 2 ! = 0 .
+3-50:Proof: since f is continuous and the interval between x and y is finite, by the intermediate value theorem (found in most calculus texts) there exists a c between x and y thatZ y z=x f(z)dz = f(c)(y − x) (intuitively, a rectangle with the base from z = x to z = y and height = f(c) has the same area as the integral on the left hand side.) .
+3-51:Therefore »Z y z=x f(z)dz 2 = |f(c)|2 |y − x|2 When y → x, f(c) stays bounded due to continuity of f, moreover limy→x f(c) = f(x), hence lim y→x »Z y z=x f(z)dz 2 ! = f(x)2 lim y→x |y − x|2 = 0 .
+3-52:.
+3-53:An immediate derivative from the above lemma is that no tiebreaking procedures are required and an agent in a waiting state is always waiting for a reply from the single agent that is associated with the highest utility among the agents in the set A∗ (i.e., no other agent in the set A∗ is associated with an equal utility) .
+3-54:A deadlock can be formed only if we can create a cyclic sequence of agents in which any agent is waiting for a reply from the subsequent agent in the sequence .
+3-55:However, in our method any agent Ai will be waiting for a reply from another agent Aj, to which it sent a commit message, only if: (1) any agent Ak ∈ A, associated with a utility U(Ai, Ak) > U(Ai, Aj), has already rejected the partnership with agent Ai; and (2) agent Aj itself is waiting for a reply from agent Al where U(Al, Aj) > U(Aj, Ai) .
+3-56:Therefore, if we have a sequence of waiting agents then the utility associated with partnerships between any two subsequent agents in the sequence must increase along the sequence .
+3-57:If the sequence is cyclic, then we have a 452 The Sixth Intl .
+3-58:Joint Conf .
+3-59:on Autonomous Agents and Multi Agent Systems (AAMAS 07) pattern of the form: U(Ai, Al) > U(Al, Aj) > U(Aj, Ai) .
+3-60:Since U(Ai, Al) > U(Aj, Ai), agent Ai can be waiting for agent Aj only if it has already been rejected by Al (see (1) above) .
+3-61:However, if agent Al has rejected agent Ai then it has also rejected agent Aj .
+3-62:Therefore, agent Aj cannot be waiting for agent Al to make a decision .
+3-63:The same logic can be applied to any longer sequence .
+3-64:2 The search activity is assumed to be costly [11, 1, 16] in a way that any agent needs to consume some of its resources in order to locate other agents to interact with, and for maintaining the interactions themselves .
+3-65:We assume utilities and costs are additive and that the agents are trying to maximize their overall utility, defined as the utility from the partnership formed minus the aggregated search costs along the search process .
+3-66:The agent"s cost of interacting with N other agents (in parallel) is given by the function c(N) .
+3-67:The search cost structure is principally a parameter of the environment and thus shared by all agents .
+3-68:An agent"s strategy S(A ) → {commit Aj ∈ A , reject A ⊂ A , N} defines for any given set of partnership opportunities, A , what is the subset of opportunities that should be immediately declined, to which agent to send a commit message (if no pending notification from another agent is expected) or the number of new interactions to initiate .
+3-69:Since the search process is two sided, our goal is to find an equilibrium set of strategies for the agents .
+3-70:2.1 Strategy Structure Recall that each agent declines partnerships based on (a) the partnerships" immediate utility in comparison to the agent"s expected utility from resuming search; and (b) achieving a mutual commitment (thus declining pending partnerships that were not rejected in (a)) .
+3-71:Therefore an agent"s strategy can be represented by a pair (Nt , xt ) where Nt is the number of agents with whom it chooses to interact in search stage t and xt is its reservation value5 (a threshold) for accepting rejecting the resulting N potential partnerships .
+3-72:The subset A∗ , thus, will include all partnership opportunities of search stage t that are associated with a utility equal to or greater than xt .
+3-73:The reservation value xt is actually the expected utility for resuming the search at time t (i.e., U(resume)) .
+3-74:The agent will always prefer committing to an opportunity greater than the expected utility of resuming the search and will always prefer to resume the search otherwise .
+3-75:Since the agents are not limited by a decision horizon, and their search process does not imply any new information about the market structure (e.g., about the utility distribution of future partnership opportunities), their strategy is stationary an agent will not accept an opportunity it has rejected beforehand (i.e., x1 = x2 = .. .
+3-76:= x) and will use the same sample size, N1 = N2 = .. .
+3-77:= N, along its search .
+3-78:2.2 Calculating Acceptance Probabilities The transition from instantaneous decision making process to a sequential one introduces several new difficulties in extracting the agents" strategies .
+3-79:Now, in order to estimate the probability of being accepted by any of the other agents, the agent needs to recursively model, while setting its strategy, the probabilities of rejections other agents might face from other agents they interact with .
+3-80:In the following paragraphs we introduce several complementary definitions and notations, facilitating the formal introduction of the acceptance probabilities .
+3-81:Consider an agent Ai, using a strategy (N, xN ) while operating in an environment where all other agents 5 Notice the reservation value used here is different from a reservation price concept (that is usually used as buyers" private evaluation) .
+3-82:The use of reservation value based strategies is common in economic search models [21, 17] .
+3-83:are using a strategy (k, xk) .
+3-84:The probability that agent Ai will receive a commitment message from agent Aj it interacted with depends on the utility associated with the potential partnership between them, x .
+3-85:This probability, denoted by Gk(x) can be calculated as:6 Gk(x) = 8 >< >: „ 1 − Z ∞ y=x f(y)Gk(y)dy «k−1 if x ≥ xk 0 otherwise .
+3-86:(1) The case where x < xk above is trivial: none of the other agents will accept agent Ai if the utility in such a partnership is smaller than their reservation value xk .
+3-87:However even when the partnership"s utility is greater or equal to xk, commitment is not guaranteed .
+3-88:In the latter scenario, a commitment message from agent Aj will be received only if agent Aj has been rejected by all other agents in its set A∗ that were associated with a utility greater than the utility of a partnership with agent Ai .
+3-89:The unique solution to the recursive Equation 1 is: Gk(x) = 8 >>>>>< >>>>>: 1+(k−2) R ∞ y=xf(y)dy 1−k k−2 , k>2, x≥xk, exp(− R ∞ y=x f(y)dy), k=2, x≥xk, 1, k=1, x≥xk 0, x < xk .
+3-90:(2) Notice that as expected, a partnership opportunity that yields the maximum mutual utility is necessarily accepted by both agents, i.e., limx→∞ Gk(x) = 1 .
+3-91:On the other hand, when the utility associated with a potential partnership opportunity is zero (x = 0) the acceptance probability is non negligible: lim x→0 Gk(x) = (k − 1) 1−k k−2 (3) This non intuitive result derives from the fact that there is still a non negligible probability that the other agent is rejected by all other agents it interacts with .
+3-92:2.3 Setting the Agents" Strategies Using the function Gk(x), we can now formulate and explore the agents" expected utility when using their search strategies .
+3-93:Consider again an agent Ai that is using a sample of size N while all other agents are using a strategy (k, xk) .
+3-94:We denote by RN (x) the probability that the maximum utility that agent Ai can be guaranteed when interacting with N agents (i.e., the highest utility to which a commit message will be received) is at most x .
+3-95:This can be calculated as the probability that none of N agents send agent Ai a commit message for a partnership associated with a utility greater than x: RN (x) = 1 − Z ∞ max(x,xk) f(y)Gk(y)dy N (4) Notice that RN (x) is in fact a cumulative distribution function, satisfying: limx→∞ RN (x) = 1 and dRN (x) dx > 0 (the function never gets a zero value simply because there is always a positive probability that none of the agents commit at all to a partnership with agent Ai) .
+3-96:Therefore, the derivative of the function RN (x), denoted rN (x), is in fact the probability distribution function of the maximum utility that can be guaranteed for agent Ai when sampling N other agents: rN (x) = dRN (x) dx = 8 < : Nf(x)Gk(x) N+k−2 k−1 , x ≥ xk 0, x < xk (5) 6 The use of the recursive Equation 1 is enabled since we assume that the number of agents is infinite (thus the probability of having an overlap between the interacting agents and the affect of such overlap on the probabilities we calculate become insignificant) .
+3-97:The Sixth Intl .
+3-98:Joint Conf .
+3-99:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 453 This function rN (x) is essential for calculating VN (xN ), the expected utility of agent Ai when using a strategy (N, xN ), given the strategy (k, xk) used by the other agents: VN (xN )= Z ∞ y=max(xN ,xk) yrN (y)dy+ 1− Z ∞ y=max(xN ,xk) rN (y)dy VN (xN ) − c(N) (6) The right hand side of the above equation represents the expected utility of agent Ai from taking an additional search stage .
+3-100:The first term represents the expected utility from mutual commitment scenarios, whereas the second term is the expected utility associated with resuming the search (which equals VN (xN ) since nothing has changed for the agent) .
+3-101:Using simple mathematical manipulations and substituting rN (x), Equation 6 transforms into: VN (x) = R ∞ y=max(x,xk) yNf(y)Gk(y) N+k−2 k−1 dy − c(N) R ∞ y=max(x,xk) Nf(y)Gk(y) N+k−2 k−1 dy (7) and further simplified into: VN (x) = max(x, xk) + Z ∞ max(x,xk) (1 − Gk(y) N k−1 )dy − c(N) 1 − Gk(max(x, xk)) N k−1 (8) Equation 8, allows us to prove some important characteristics of the model as summarized in the following Theorem 2 .
+3-102:THEOREM 2 .
+3-103:When other agents use strategy (k, xk): (a) An agent"s expected utility function, VN (xN ), when using a strategy (N, x), is quasi concave in x with a unique maximum, obtained for the value xN satisfying: VN (xN ) = xN (9) (b) The value xN satisfies: c(N) = ` max(xN , xk) − xN ´` 1 − Gk(xk) N k−1 ´ + + Z ∞ max(xN ,xk) (1 − Gk(y) N k−1 )dy (10) The proof is obtained by deriving VN (xN ) in Equation 8 and setting it to zero .
+3-104:After applying further mathematical manipulations we obtain (9) and (10) .
+3-105:Both parts of Theorem 2 can be used as an efficient means for extracting the optimal reservation value xN of an agent, given the strategies of the other agents in the environment and the number of parallel interactions it uses .
+3-106:Furthermore, in the case of complex distribution functions where extracting xN from Equation 10 is not immediate, a simple algorithm (principally based on binary search) can be constructed for calculating the agent"s optimal reservation value (which equals its expected utility, according to 9), with a complexity O(log( ˆx ρ )), where ρ is the required precision level for xN and ˆx is the solution to: R ∞ y=ˆx yNf(y)F(y)N−1 dy = c(N) .
+3-107:Having the ability to calculate xN , we can now prove the following Proposition 2.1 .
+3-108:PROPOSITION 2.1 .
+3-109:An agent operating in an environment where all agents are using a strategy according to the instantaneous parallel search equilibrium (i.e., according to the I DM model [21]) can only benefit from deviating to the proposed S DM strategy .
+3-110:Sketch of proof: For the I DM model the following holds [21]: c(N) = N 2N − 1 Z ∞ y=xI−DM N (1 − F(y)2N−1 )dy (11) We apply the methodology used above in this subsection for constructing the expected utility of the agent using the S DM strategy as a function of its reservation value, assuming all other agents are using the I DM search strategy .
+3-111:This results with an optimal reservation value for the agent using S DM, satisfying: c(N) = Z ∞ y=xS−DM N (1 − (1 − 1 N + F(y)N N )N )dy (12) Finally, we prove that the integrand in Equation 11 is smaller than the integrand in Equation 12 .
+3-112:Given the fact that both terms equal c(N), we obtain xS−DM N > xI−DM N and consequently (according to Theorem 2) a similar relationship in terms of expected utilities .
+3-113:Figure 1 illustrates the superiority of the proposed search strategy S DM, as well as the expected utility function"s characteristics (as reflected in Theorem 2) .
+3-114:For comparative reasons we use the same synthetic environment that was used for the I DM model [21] .
+3-115:Here the utilities are assumed to be drawn from a uniform distribution function and the cost function was taken to be c(N) = 0.05 + 0.005N .
+3-116:The agent is using N = 3 while other agents are using k = 25 and xk = 0.2 .
+3-117:The different curves depict the expected utility of the agent as a function of the reservation value, x, that it uses, when: (a) all agents are using the I DM strategy (marked as I DM); (b) the agent is using the S DM strategy while the other agents are using the I DM strategy (marked as I DM SDM); and (c) all agents are using the S DM strategy (marked as S DM) .
+3-118:As expected, according to Equation 8 and Theorem 2, the agent"s expected utility remains constant until its reservation value exceeds xk .
+3-119:Then, it reaches a global maximum when the reservation value satisfies VN (x) = x .
+3-120:From the graph we can see that the agent always has an incentive to deviate from the I DM strategy to S DM strategy (as was proven in Proposition 2.1) .
+3-121:0.2 0.3 0.4 0.5 0.6 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 reservation value (x) expected utility VN(x) S D M I D M I D M S D M Figure 1: The expected utility as a function of the reservation value used by the agent .
+4 EQUILIBRIUM DYNAMICS :
+4-1:Since all agents are subject to similar search costs, and their perceived utilities are drawn from the same distribution function, they all share the same strategy in equilibrium .
+4-2:A multi equilibria scenario may occur, however as we discuss in the following paragraphs since all agents share the same preferences priorities (unlike, for example, in the famous battle of the sexes scenario) we can always identify which equilibrium strategy will be used .
+4-3:Notice that if all agents are using the same sample size, N, then the value xN resulting from solving Equation 10 by substituting k = N and xk = xN is a stable reservation value (i.e., none of the agents can benefit from changing just the value of xN ) .
+4-4:An equilibrium strategy (N, xN ) can be found by identifying an N value for which no single agent has an incentive to use a different number of parallel interactions, k (and the new optimal reservation 454 The Sixth Intl .
+4-5:Joint Conf .
+4-6:on Autonomous Agents and Multi Agent Systems (AAMAS 07) value that is associated with k according to Equation 10) .
+4-7:While this implies an infinite solution space, we can always bound it using Equations 8 and 10 .
+4-8:Within the framework of this paper, we demonstrate such a bounding methodology for the common case were c(N) is linear7 or convex, by using the following Theorem 3 .
+4-9:THEOREM 3 .
+4-10:When c(N) is linear (or convex), then: (a) When all other agents sample k potential partners over a search round, if an agent"s expected utility of sampling k + 1 potential partners, Vk+1(xk+1), is smaller than Vk(xk), then the expected utility when sampling N potential partners, VN (xN ), where N > k+1, is also smaller than Vk(xk) .
+4-11:(b) Similarly, when all other agents sample k potential partners over a search round, if an agent"s expected utility of using k − 1 potential partners, Vk−1(xk−1), is smaller than the expected utility when using k potential partners, Vk(xk), then the expected utility when using N potential partners, where N < k − 1, is also smaller than Vk(xk) .
+4-12:Proof: Let us use the notation ci for c(i) .
+4-13:Since Vk(xk) = xk ∀k (according to Equation 9), the claims are: (a) if xk+1 < xk then xN < xk for all N ≥ k + 1, and (b) if xk−1 < xk then xN < xk for all N ≤ k − 1 .
+4-14:(a) We start by proving that if xk+1 < xk then xk+2 < xk .
+4-15:Assume otherwise, i.e., xk+1 < xk and xk+2 > xk .
+4-16:Therefore, according to Equation 10, the following holds: 0 < ck+2 − 2ck+1 + ck < Z ∞ xk+2 (1 − Gk(y) k+2 k−1 )dy − 2 Z ∞ xk (1 − Gk(y) k+1 k−1 )dy + Z ∞ xk (1 − Gk(y) k k−1 )dy where the transition to inequality is valid since c(i) is convex .
+4-17:Since the assumption in this proof is that xk+2 > xk then the above can be transformed into: Z ∞ xk 2Gk(y) k+1 k−1 − Gk(y) k+2 k−1 − Gk(y) k k−1 dy > 0 (13) Now notice that the integrated term is actually −Gk(y) k k−1 ` 1− Gk(y) 1 k−1 ´2 which is obviously negative, contradicting the initial assumption, thus if xk+1 < xk then necessarily xk+2 < xk .
+4-18:Now we need to prove the same for any xk+j .
+4-19:We will prove this in two steps: first, if xk+i < xk then xk+2i < xk .
+4-20:Second, if xk+i < xk and xk+i+1 < xk, then xk+2i+1 < xk .
+4-21:Together these constitute the necessary induction arguments to prove the case (a) .
+4-22:We start with the even case, using a similar methodology: Assume otherwise, i.e., xk+l < xk ∀l = 1, ..., j − 1 and xk+2i > xk .
+4-23:According to Equation 10, and the fact that c(i) is convex, the following holds: Z ∞ xk 2Gk(y) k+i k−1 − Gk(y) k+2i k−1 − Gk(y) k k−1 dy > 0 (14) And again the integrand is actually −Gk(y) k k−1 ` 1−Gk(y) i k−1 ´2 which is obviously negative, contradicting the initial assumption, thus xk+2i < xk .
+4-24:As for the odd case, we use Equation 10 once for k + i + 1 parallel interactions and once for k + 2i + 1 .
+4-25:From the convexity of ci, we obtain: ck+2i+1 − ck+i − ck+i+1 + ck > 0, thus: Z ∞ xk ` Gk(y) k+i k−1 +Gk(y) k+i+1 k−1 −Gk(y) k+2i+1 k−1 −Gk(y) k k−1 ´ dy>0 (15) 7 A linear cost function is mostly common in agent based two sided search applications, since often the cost function can be divided into fixed costs (e.g .
+4-26:operating the agent per time unit) and variable costs (i.e., cost of processing a single interaction"s data) .
+4-27:This time the integrated term in Equation 15 can be re written as Gk(y) k k−1 (1 − Gk(y) i k−1 )(Gk(y) i+1 k−1 − 1) which is obviously negative, contradicting the initial assumption, thus xk+i+1 < xk .
+4-28:Now using induction one can prove that if xk+1 < xk then xk+i < xk .
+4-29:This concludes part (a) of the proof .
+4-30:The proof for part (b) of the theorem is obtained in a similar manner .
+4-31:In this case: ck − 2ck−i + ck−2i > 0 and ck − ck−i−1 − ck−i + ck−2i−1 > 0 .
+4-32:The above theorem supplies us with a powerful tool for eliminating non equilibrium N values .
+4-33:It suggests that we can check the stability of a sample size N and the appropriate reservation value xN simply by calculating the optimal reservation values of a single agent when deviating towards using samples of sizes N − 1 and N + 1 (keeping the other agents with strategy (N, xN )) .
+4-34:If both the appropriate reservation values associated with the two latter sample sizes are smaller than xN then according to Theorems 3 the same holds when deviating to any other sample size k .
+4-35:The above process can be further simplified by using VN+1(xN ) > xN and VN−1(xN ) > xN as the two elimination rules .
+4-36:This derives from Theorem 3 and the properties of the function VN (x) found in Theorem 2 .
+4-37:Notice that a multi equilibria scenario may occur, however can easily be resolved .
+4-38:If several strategies satisfy the stability condition defined above, then the agents will always prefer the one associated with the highest expected utility .
+4-39:Therefore an algorithm that goes over the different N values and checks them according to the rules above can be applied, assuming that we can bound the interval for searching the equilibrium N .
+4-40:The following Theorem 4 suggests such an upper bound .
+4-41:THEOREM 4 .
+4-42:An upper bound for the equilibrium number of partners to be considered over a search round is the solution of the equation: A(N) = c(N) (16) provided A(N − 1) > c(N − 1), where we denote, A(N) := Z ∞ y=0 yNf(y)Gk(y) N+k−2 k−1 dy .
+4-43:Proof: We denote: A(N, x) = Z ∞ y=x yNf(y)Gk(y) N+k−2 k−1 dy so that A(N) = A(N, 0) .
+4-44:From Equation 7: VN (x) = A(N, x) − c(N) N R ∞ x f(y)Gk(y)bdy = A(N, x) − c(N) positive , Clearly A(N) ≥ A(N, x)∀x since the integrand is positive .
+4-45:Hence if A(N) − c(N) < 0, then A(N, x) − c(N) < 0∀x and VN (x) < 0 ∀x .
+4-46:Next we prove that if A(N)−c(N) gets negative, it stays negative .
+4-47:Recalling that for any g(y): d dN (g(y)b(N) ) = g(y)b(N) log(g(y)) db dN we get: A = −1 (k − 1)2 Z ∞ 0 Gk(y) N k−1 (log Gk(y))2 dy which is always negative, since the integrand is nonnegative .
+4-48:Therefore A(N) is concave .
+4-49:Since c(N) is convex, −c(N) is concave, and a sum of concave functions is concave, we obtain that The Sixth Intl .
+4-50:Joint Conf .
+4-51:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 455 A(N) − c(N) is concave .
+4-52:This guarantees that once the concave expression A(N) − c(N) shifts from a positive value to a negative one (with the increase in N), it cannot become positive again .
+4-53:Therefore, having N∗ such that A(N∗ ) = c(N∗ ), and A(N∗∗ ) > c(N∗∗ ) for some N∗∗ < N∗ , is an upper bound for N, i.e., VN (x) < 0 ∀N ≥ N∗ .
+4-54:The condition we specify for N∗∗ is merely for ensuring that VN is switching from a positive value to a negative one (and not vice versa) and is trivial to implement .
+4-55:Given the existence of the upper bound, we can design an algorithm for finding the equilibrium strategy (if one exists) .
+4-56:The algorithm extracts the upper bound, ˆN, for the equilibrium number of parallel interactions according to Theorem 4 .
+4-57:Out of the set of values satisfying the stability condition defined above, the algorithm chooses the one associated with the highest reservation value according to Equation 10 .
+4-58:This is the equilibrium associated with the highest expected utility to all agents according to Theorem 2 .
+4-59:0.1875 0.39 0.41 0.43 0.45 0.47 0.49 2 3 4 5 6 7 8 9 10 11 12 13 expected utility VN(x) num ber ofparallelinteractions VN+ 1 ( XN) VN( XN) VN 1 ( XN) enlarged Figure 2: The incentive to deviate from strategy (N, xN ) The process is illustrated in Figure 2 for an artificial environment where partnerships" utilities are associated with a uniform distribution .
+4-60:The cost function used is c(N) = 0.2 + 0.02N .
+4-61:The graph depicts a single agent"s expected utility when all other agents are using N parallel interactions (on the horizontal axis) and the appropriate reservation value xN (calculated according to Equation 10) .
+4-62:The different curves depict the expected utility of the agent when it uses a strategy: (a) (N, xN ) similar to the other agents (marked as VN (xN )); (b) (N + 1, xN ) (marked as VN+1(xN )); and (c) (N − 1, xN ) (marked as VN−1(xN )) .
+4-63:According to the discussion following Theorem 3, a stable equilibrium satisfies: VN (xN ) > max{VN+1(xN ), VN−1(xN )} .
+4-64:The strategy satisfying the latter condition in our example is (9, 0.437). .
+5 RELATED WORK :
+5-1:The two sided economic search for partnerships in AI literature is a sub domain of coalition formation8 .
+5-2:While coalition formation models usually consider general coalition sizes [24], the partnership formation model (often referred as matchmaking) considers environments where agents have a benefit only when forming a partnership and this benefit can not be improved by extending the partnership to more than two agents [12, 23] (e.g., in the case of buyers and sellers or peer to peer applications) .
+5-3:As in the general 8 The use of the term partnership in this context refers to the agreement between two individual agents to cooperate in a pre defined manner .
+5-4:For example, in the buyer seller application a partnership is defined as an agreed transaction between the two parties [9] .
+5-5:coalition formation case, agents have the incentive to form partnerships when they are incapable of executing a task by their own or when the partnership can improve their individual utilities [14] .
+5-6:Various centralized matching mechanisms can be found in the literature [6, 2, 8] .
+5-7:However, in many MAS environments, in the absence of any reliable central matching mechanism, the matching process is completely distributed .
+5-8:While the search in agent based environments is well recognized to be costly [11, 21, 1], most of the proposed coalition formation mechanisms assume that an agent can scan as many partnership opportunities in its environment as needed or have access to central matchers or middle agents [6] .
+5-9:The incorporation of costly search in this context is quite rare [21] and to the best of our knowledge, a distributed two sided search for partners model similar to the S DM model has not been studied to date .
+5-10:Classical economic search theory ([15, 17], and references therein) widely addresses the problem of a searcher operating in a costly environment, seeking to maximize his long term utility .
+5-11:In these models, classified as one sided search, the focus is on establishing the optimal strategies for the searcher, assuming no mutual search activities (i.e., no influence on the environment) .
+5-12:Here the sequential search procedure is often applied, allowing the searcher to investigate a single [15] or multiple [7, 19] opportunities at a time .
+5-13:While the latter method is proven to be beneficial for the searcher, it was never used in the two sided search models that followed (where dual search activities are modeled) [22, 5, 18] .
+5-14:Therefore, in these models, the equilibrium strategies are always developed based on the assumption that the agents interact with others sequentially (i.e., with one agent at a time) .
+5-15:A first attempt to integrate the parallel search into a two sided search model is given in [21], as detailed in the introduction section .
+5-16:Several of the two sided search essences can be found in the strategic theory of bargaining [3] both coalition formation and matching can be represented as a sequential bargaining game [4] in which payoffs are defined as a function of the coalition structure and can be divided according to a fixed or negotiated division rule .
+5-17:Nevertheless, in the sequential bargaining literature, most emphasis is put on specifying the details of the sequential negotiating process over the division of the utility (or cost) jointly owned by parties or the strategy the coalition needs to adopt [20, 4] .
+5-18:The models presented in this area do not associate the coalition formation process with search costs, which is the essence of the analysis that economic search theory aims to supply .
+5-19:Furthermore, even in repeated pairwise bargaining [10] models the agents are always limited to initiating a single bargaining interaction at a time. .
+6-1:The phenomenal growth evidenced in recent years in the number of software agent based applications, alongside the continuous improvement in agents" processing and communication capabilities, suggest various incentives for agents to improve their search performance by applying advanced search strategies such as parallel search
+6-2:The multiple interactions technique is known to be beneficial for agents both in one sided and two sided economic search [7, 16, 21], since it allows the agents to decrease their average cost of learning about potential partnerships and their values
+6-3:In this paper we propose a new parallel two sided search mechanism that differs from the existing one in a sense that it allows the agents to delay their decision making process concerning the acceptance and rejection of potential partnerships as necessary
+6-4:This, in comparison to the existing instantaneous model [21] which force each agent to make a simultaneous decision concerning each of the potential partnerships revealed to it during the current search stage
+6-5:456 The Sixth Intl
+6-6:Joint Conf
+6-7:on Autonomous Agents and Multi Agent Systems (AAMAS 07) As discussed throughout the paper, the new method is much more intuitive to the agent than the existing model  an agent will always prefer to keep all options available
+6-8:Furthermore, as we prove in the former sections, an agent"s transition to the new search method always results with a better utility
+6-9:As we prove in Section 2, in spite of the transition to a sequential decision making, deadlocks never occur in the proposed method as long as all agents use the proposed strategies
+6-10:Since our analysis is equilibrium based, a deviation from the proposed strategies is not beneficial
+6-11:Similarly, we show that a deviation of a single agent (back) to the instantaneous decision making strategy is not beneficial
+6-12:The only problem that may arise in the transition from an instantaneous to sequential decision making is when an agent fails (technically) to function (endlessly delaying the notification to the agents it interacted with)
+6-13:While equilibrium analysis normally do not consider malfunction as a legitimate strategy, we do wish to emphasize that the malfunctioning agent problem can be resolved by using a simple timeout for receiving responses and skipping this agent in the sequential decision process if the timeout is exceeded
+6-14:Our analysis covers all aspects of the new two sided search technique, from individual strategy construction throughout the dynamics that lead to stability (equilibrium)
+6-15:The difficulty in the extraction of the agents" equilibrium strategies in the new model derives from the need to recursively model, while setting an agent"s strategy, the rejection other agents might face from other agents they interact with
+6-16:This complexity (that does not exist in former models) is resolved by the introduction of the recursive function Gk(x) in Section 2
+6-17:Using the different theorems and propositions we prove, we proffer efficient tools for calculating the agents" equilibrium strategies
+6-18:Our capabilities to produce an upper bound for the number of parallel interactions used in equilibrium (Theorem 4) and to quickly identify (and eliminate) non equilibrium strategies (Theorem 3) resolves the problem of the computational complexity associated with having to deal with a theoretically infinite strategy space
+6-19:While the analysis we present is given in the context of software agents, the model we suggest is general, and can be applied to any two sided economic search environment where the searchers can search in parallel
+6-20:In particular, in addition to weakly dominating the instantaneous decision making model (as we prove in the analysis section) the proposed method weakly dominates the purely sequential two sided search model (where each agent interacts with only one other agent at a time) [5]
+6-21:This derives from the fact that the proposed method is a generalization of the latter (i.e., in the worst case scenario, the agent can interact with one other agent at a time in parallel)
+6-22:Naturally the attempt to integrate search theory techniques into day to day applications brings up the applicability question
+6-23:Justification and legitimacy considerations for this integration were discussed in the wide literature we refer to throughout the paper
+6-24:The current paper is not focused on re arguing applicability, but rather on the improvement of the the core two sided search model
+6-25:We see great importance in future research that will combine bargaining as part of the interaction process
+6-26:We believe such research can result in many rich variants of our two sided search model.
+7-1:Y
+7-2:Bakos
+7-3:Reducing buyer search costs: Implications for electronic marketplaces
+7-4:Management Science, 42(12):1676 1692, June 1997
+7-5:G
+7-6:Becker
+7-7:A theory of marriage
+7-8:Journal of Political Economy, 81:813 846, 1973
+7-9:K
+7-10:Binmore, M
+7-11:Osborne, and A
+7-12:Rubinstein
+7-13:Non cooperative models of bargaining
+7-14:In Handbook of Game Theory with Economic Applications, pages 180 220
+7-15:Elsevier, New York, 1992
+7-16:F
+7-17:Bloch
+7-18:Sequential formation of coalitions in games with externalities and fixed payoff division
+7-19:Games and Economic Behavior, 14(1):90 123, 1996
+7-20:K
+7-21:Burdett and R
+7-22:Wright
+7-23:Two sided search with nontransferable utility
+7-24:Review of Economic Dynamics, 1:220 245, 1998
+7-25:K
+7-26:Decker, K
+7-27:Sycara, and M
+7-28:Williamson
+7-29:Middle agents for the internet
+7-30:In Proc
+7-31:of IJCAI, pages 578 583, 1997
+7-32:S
+7-33:Gal, M
+7-34:Landsberger, and B
+7-35:Levykson
+7-36:A compound strategy for search in the labor market
+7-37:Int
+7-38:Economic Review, 22(3):597 608, 1981
+7-39:D
+7-40:Gale and L
+7-41:Shapley
+7-42:College admissions and the stability of marriage
+7-43:American Math
+7-44:Monthly, 69:9 15, 1962
+7-45:M
+7-46:Hadad and S
+7-47:Kraus
+7-48:Sharedplans in electronic commerce
+7-49:In M
+7-50:Klusch, editor, Intelligent Information Agents, pages 204 231
+7-51:Springer Publisher, 1999
+7-52:M
+7-53:Jackson and T
+7-54:Palfrey
+7-55:Efficiency and voluntary implementation in markets with repeated pairwise bargaining
+7-56:Econometrica, 66(6):1353 1388, 1998
+7-57:J
+7-58:Kephart and A
+7-59:Greenwald
+7-60:Shopbot economics
+7-61:JAAMAS, 5(3):255 287, 2002
+7-62:M
+7-63:Klusch
+7-64:Agent mediated trading: Intelligent agents and e business
+7-65:J
+7-66:on Data and Knowledge Engineering, 36(3), 2001
+7-67:S
+7-68:Kraus, O
+7-69:Shehory, and G
+7-70:Taase
+7-71:Coalition formation with uncertain heterogeneous information
+7-72:In Proc
+7-73:of AAMAS "03, pages 1 8, 2003
+7-74:K
+7-75:Lermann and O
+7-76:Shehory
+7-77:Coalition formation for large scale electronic markets
+7-78:In Proc
+7-79:of ICMAS"2000, pages 216 222, Boston, 2000
+7-80:S
+7-81:A
+7-82:Lippman and J
+7-83:J
+7-84:McCall
+7-85:The economics of job search: A survey
+7-86:Economic Inquiry, 14:155 189, 1976
+7-87:E
+7-88:Manisterski, D
+7-89:Sarne, and S
+7-90:Kraus
+7-91:Integrating parallel interactions into cooperative search
+7-92:In AAMAS, pages 257 264, 2006
+7-93:J
+7-94:McMillan and M
+7-95:Rothschild
+7-96:Search
+7-97:In R
+7-98:Aumann and S
+7-99:Hart, editors, Handbook of Game Theory with Economic Applications, pages 905 927
+7-100:1994
+7-101:J
+7-102:M
+7-103:McNamara and E
+7-104:J
+7-105:Collins
+7-106:The job search problem as an employer candidate game
+7-107:Journal of Applied Probability, 27(4):815 827, 1990
+7-108:P
+7-109:Morgan
+7-110:Search and optimal sample size
+7-111:Review of Economic Studies, 50(4):659 675, 1983
+7-112:A
+7-113:Rubinstein
+7-114:Perfect equilibrium in a bargaining model
+7-115:Econometrica, 50(1):97 109, 1982
+7-116:D
+7-117:Sarne and S
+7-118:Kraus
+7-119:Agents strategies for the dual parallel search in partnership formation applications
+7-120:In Proc
+7-121:of AMEC2004, LNCS 3435, pages 158  172, 2004
+7-122:R
+7-123:Shimer and L
+7-124:Smith
+7-125:Assortative matching and search
+7-126:Econometrica, 68(2):343 370, 2000
+7-127:K
+7-128:Sycara, S
+7-129:Widoff, M
+7-130:Klusch, and J
+7-131:Lu
+7-132:Larks: Dynamic matchmaking among heterogeneous software agents in cyberspace
+7-133:JAAMAS, 5:173 203, 2002
+7-134:N
+7-135:Tsvetovat, K
+7-136:Sycara, Y
+7-137:Chen, and J
+7-138:Ying
+7-139:Customer coalitions in electronic markets
+7-140:In Proc
+7-141:of AMEC2000, pages 121 138, 2000
+7-142:The Sixth Intl
+7-143:Joint Conf
+7-144:on Autonomous Agents and Multi Agent Systems (AAMAS 07) 457
+picture:

@@ -1,0 +1,368 @@
+StarDust: A Flexible Architecture for Passive Localization in 
+content:
+1-1:The problem of localization in wireless sensor networks where nodes do not use ranging hardware, remains a challenging problem, when considering the required location accuracy, energy expenditure and the duration of the localization phase
+1-2:In this paper we propose a framework, called StarDust, for wireless sensor network localization based on passive optical components
+1-3:In the StarDust framework, sensor nodes are equipped with optical retro reflectors
+1-4:An aerial device projects light towards the deployed sensor network, and records an image of the reflected light
+1-5:An image processing algorithm is developed for obtaining the locations of sensor nodes
+1-6:For matching a node ID to a location we propose a constraint based label relaxation algorithm
+1-7:We propose and develop localization techniques based on four types of constraints: node color, neighbor information, deployment time for a node and deployment location for a node
+1-8:We evaluate the performance of a localization system based on our framework by localizing a network of 26 sensor nodes deployed in a 120 × 60 ft2 area
+1-9:The localization accuracy ranges from 2 ft to 5 ft while the localization time ranges from 10 milliseconds to 2 minutes
+1-10:Categories and Subject Descriptors: C.2.4 [Computer Communications Networks]: Distributed Systems; C.3 1 Introduction Wireless Sensor Networks (WSN) have been envisioned to revolutionize the way humans perceive and interact with the surrounding environment
+1-11:One vision is to embed tiny sensor devices in outdoor environments, by aerial deployments from unmanned air vehicles
+1-12:The sensor nodes form a network and collaborate (to compensate for the extremely scarce resources available to each of them: computational power, memory size, communication capabilities) to accomplish the mission
+1-13:Through collaboration, redundancy and fault tolerance, the WSN is then able to achieve unprecedented sensing capabilities
+1-14:A major step forward has been accomplished by developing systems for several domains: military surveillance [1] [2] [3], habitat monitoring [4] and structural monitoring [5]
+1-15:Even after these successes, several research problems remain open
+1-16:Among these open problems is sensor node localization, i.e., how to find the physical position of each sensor node
+1-17:Despite the attention the localization problem in WSN has received, no universally acceptable solution has been developed
+1-18:There are several reasons for this
+1-19:On one hand, localization schemes that use ranging are typically high end solutions
+1-20:GPS ranging hardware consumes energy, it is relatively expensive (if high accuracy is required) and poses form factor challenges that move us away from the vision of dust size sensor nodes
+1-21:Ultrasound has a short range and is highly directional
+1-22:Solutions that use the radio transceiver for ranging either have not produced encouraging results (if the received signal strength indicator is used) or are sensitive to environment (e.g., multipath)
+1-23:On the other hand, localization schemes that only use the connectivity information for inferring location information are characterized by low accuracies: ≈ 10 ft in controlled environments, 40−50 ft in realistic ones
+1-24:To address these challenges, we propose a framework for WSN localization, called StarDust, in which the complexity associated with the node localization is completely removed from the sensor node
+1-25:The basic principle of the framework is localization through passivity: each sensor node is equipped with a corner cube retro reflector and possibly an optical filter (a coloring device)
+1-26:An aerial vehicle projects light onto the deployment area and records images containing retro reflected light beams (they appear as luminous spots)
+1-27:Through image processing techniques, the locations of the retro reflectors (i.e., sensor nodes) is deter57 mined
+1-28:For inferring the identity of the sensor node present at a particular location, the StarDust framework develops a constraint based node ID relaxation algorithm
+1-29:The main contributions of our work are the following
+1-30:We propose a novel framework for node localization in WSNs that is very promising and allows for many future extensions and more accurate results
+1-31:We propose a constraint based label relaxation algorithm for mapping node IDs to the locations, and four constraints (node, connectivity, time and space), which are building blocks for very accurate and very fast localization systems
+1-32:We develop a sensor node hardware prototype, called a SensorBall
+1-33:We evaluate the performance of a localization system for which we obtain location accuracies of 2 − 5 ft with a localization duration ranging from 10 milliseconds to 2 minutes
+1-34:We investigate the range of a system built on our framework by considering realities of physical phenomena that occurs during light propagation through the atmosphere
+1-35:The rest of the paper is structured as follows
+1-36:Section 2 is an overview of the state of art
+1-37:The design of the StarDust framework is presented in Section 3
+1-38:One implementation and its performance evaluation are in Sections 4 and 5, followed by a suite of system optimization techniques, in Section 6
+1-39:In Section 7 we present our conclusions
+1-40:2 Related Work We present the prior work in localization in two major categories: the range based, and the range free schemes
+1-41:The range based localization techniques have been designed to use either more expensive hardware (and hence higher accuracy) or just the radio transceiver
+1-42:Ranging techniques dependent on hardware are the time of flight (ToF) and the time difference of arrival(TDoA)
+1-43:Solutions that use the radio are based on the received signal strength indicator (RSSI) and more recently on radio interferometry
+1-44:The ToF localization technique that is most widely used is the GPS
+1-45:GPS is a costly solution for a high accuracy localization of a large scale sensor network
+1-46:AHLoS [6] employs a TDoA ranging technique that requires extensive hardware and solves relatively large nonlinear systems of equations
+1-47:The Cricket location support system (TDoA) [7] can achieve a location granularity of tens of inches with highly directional and short range ultrasound transceivers
+1-48:In [2] the location of a sniper is determined in an urban terrain, by using the TDoA between an acoustic wave and a radio beacon
+1-49:The PushPin project [8] uses the TDoA between ultrasound pulses and light flashes for node localization
+1-50:The RADAR system [9] uses the RSSI to build a map of signal strengths as emitted by a set of beacon nodes
+1-51:A mobile node is located by the best match, in the signal strength space, with a previously acquired signature
+1-52:In MAL [10], a mobile node assists in measuring the distances (acting as constraints) between nodes until a rigid graph is generated
+1-53:The localization problem is formulated as an on line state estimation in a nonlinear dynamic system [11]
+1-54:A cooperative ranging that attempts to achieve a global positioning from distributed local optimizations is proposed in [12]
+1-55:A very recent, remarkable, localization technique is based on radio interferometry, RIPS [13], which utilizes two transmitters to create an interfering signal
+1-56:The frequencies of the emitters are very close to each other, thus the interfering signal will have a low frequency envelope that can be easily measured
+1-57:The ranging technique performs very well
+1-58:The long time required for localization and multi path environments pose significant challenges
+1-59:Real environments create additional challenges for the range based localization schemes
+1-60:These have been emphasized by several studies [14] [15] [16]
+1-61:To address these challenges, and others (hardware cost, the energy expenditure, the form factor, the small range, localization time), several range free localization schemes have been proposed
+1-62:Sensor nodes use primarily connectivity information for inferring proximity to a set of anchors
+1-63:In the Centroid localization scheme [17], a sensor node localizes to the centroid of its proximate beacon nodes
+1-64:In APIT [18] each node decides its position based on the possibility of being inside or outside of a triangle formed by any three beacons within node"s communication range
+1-65:The Gradient algorithm [19], leverages the knowledge about the network density to infer the average one hop length
+1-66:This, in turn, can be transformed into distances to nodes with known locations
+1-67:DV Hop [20] uses the hop by hop propagation capability of the network to forward distances to landmarks
+1-68:More recently, several localization schemes that exploit the sensing capabilities of sensor nodes, have been proposed
+1-69:Spotlight [21] creates well controlled (in time and space) events in the network while the sensor nodes detect and timestamp this events
+1-70:From the spatiotemporal knowledge for the created events and the temporal information provided by sensor nodes, nodes" spatial information can be obtained
+1-71:In a similar manner, the Lighthouse system [22] uses a parallel light beam, that is emitted by an anchor which rotates with a certain period
+1-72:A sensor node detects the light beam for a period of time, which is dependent on the distance between it and the light emitting device
+1-73:Many of the above localization solutions target specific sets of requirements and are useful for specific applications
+1-74:StarDust differs in that it addresses a particular demanding set of requirements that are not yet solved well
+1-75:StarDust is meant for localizing air dropped nodes where node passiveness, high accuracy, low cost, small form factor and rapid localization are all required
+1-76:Many military applications have such requirements
+1-77:3 StarDust System Design The design of the StarDust system (and its name) was inspired by the similarity between a deployed sensor network, in which sensor nodes indicate their presence by emitting light, and the Universe consisting of luminous and illuminated objects: stars, galaxies, planets, etc
+1-78:The main difficulty when applying the above ideas to the real world is the complexity of the hardware that needs to be put on a sensor node so that the emitted light can be detected from thousands of feet
+1-79:The energy expenditure for producing an intense enough light beam is also prohibitive
+1-80:Instead, what we propose to use for sensor node localization is a passive optical element called a retro reflector
+1-81:The most common retro reflective optical component is a Corner Cube Retroreflector (CCR), shown in Figure 1(a)
+1-82:It consists of three mutually perpendicular mirrors
+1-83:The inter58 (a) (b) Figure 1
+1-84:Corner Cube Retroreflector (a) and an array of CCRs molded in plastic (b) esting property of this optical component is that an incoming beam of light is reflected back, towards the source of the light, irrespective of the angle of incidence
+1-85:This is in contrast with a mirror, which needs to be precisely positioned to be perpendicular to the incident light
+1-86:A very common and inexpensive implementation of an array of CCRs is the retroreflective plastic material used on cars and bicycles for night time detection, shown in Figure 1(b)
+1-87:In the StarDust system, each node is equipped with a small (e.g
+1-88:0.5in2) array of CCRs and the enclosure has self righting capabilities that orient the array of CCRs predominantly upwards
+1-89:It is critical to understand that the upward orientation does not need to be exact
+1-90:Even when large angular variations from a perfectly upward orientation are present, a CCR will return the light in the exact same direction from which it came
+1-91:In the remaining part of the section, we present the architecture of the StarDust system and the design of its main components
+1-92:3.1 System Architecture The envisioned sensor network localization scenario is as follows: • The sensor nodes are released, possibly in a controlled manner, from an aerial vehicle during the night
+1-93:• The aerial vehicle hovers over the deployment area and uses a strobe light to illuminate it
+1-94:The sensor nodes, equipped with CCRs and optical filters (acting as coloring devices) have self righting capabilities and retroreflect the incoming strobe light
+1-95:The retro reflected light is either white, as the originating source light, or colored, due to optical filters
+1-96:• The aerial vehicle records a sequence of two images very close in time (msec level)
+1-97:One image is taken when the strobe light is on, the other when the strobe light is off
+1-98:The acquired images are used for obtaining the locations of sensor nodes (which appear as luminous spots in the image)
+1-99:• The aerial vehicle executes the mapping of node IDs to the identified locations in one of the following ways: a) by using the color of a retro reflected light, if a sensor node has a unique color; b) by requiring sensor nodes to establish neighborhood information and report it to a base station; c) by controlling the time sequence of sensor nodes deployment and recording additional imLight Emitter Sensor Node i Transfer Function Φi(λ) Ψ(λ) Φ(Ψ(λ)) Image Processing Node ID Matching Radio Model R G(Λ,E) Central Device V" V" Figure 2
+1-100:The StarDust system architecture ages; d) by controlling the location where a sensor node is deployed
+1-101:• The computed locations are disseminated to the sensor network
+1-102:The architecture of the StarDust system is shown in Figure 2
+1-103:The architecture consists of two main components: the first is centralized and it is located on a more powerful device
+1-104:The second is distributed and it resides on all sensor nodes
+1-105:The Central Device consists of the following: the Light Emitter, the Image Processing module, the Node ID Mapping module and the Radio Model
+1-106:The distributed component of the architecture is the Transfer Function, which acts as a filter for the incoming light
+1-107:The aforementioned modules are briefly described below: • Light Emitter  It is a strobe light, capable of producing very intense, collimated light pulses
+1-108:The emitted light is non monochromatic (unlike a laser) and it is characterized by a spectral density Ψ(λ), a function of the wavelength
+1-109:The emitted light is incident on the CCRs present on sensor nodes
+1-110:• Transfer Function Φ(Ψ(λ))  This is a bandpass filter for the incident light on the CCR
+1-111:The filter allows a portion of the original spectrum, to be retro reflected
+1-112:From here on, we will refer to the transfer function as the color of a sensor node
+1-113:• Image Processing  The Image Processing module acquires high resolution images
+1-114:From these images the locations and the colors of sensor nodes are obtained
+1-115:If only one set of pictures can be taken (i.e., one location of the light emitter image analysis device), then the map of the field is assumed to be known as well as the distance between the imaging device and the field
+1-116:The aforementioned assumptions (field map and distance to it) are not necessary if the images can be simultaneously taken from different locations
+1-117:It is important to remark here that the identity of a node can not be directly obtained through Image Processing alone, unless a specific characteristic of a sensor node can be identified in the image
+1-118:• Node ID Matching  This module uses the detected locations and through additional techniques (e.g., sensor node coloring and connectivity information (G(Λ,E)) from the deployed network) to uniquely identify the sensor nodes observed in the image
+1-119:The connectivity information is represented by neighbor tables sent from 59 Algorithm 1 Image Processing 1: Background filtering 2: Retro reflected light recognition through intensity filtering 3: Edge detection to obtain the location of sensor nodes 4: Color identification for each detected sensor node each sensor node to the Central Device
+1-120:• Radio Model  This component provides an estimate of the radio range to the Node ID Matching module
+1-121:It is only used by node ID matching techniques that are based on the radio connectivity in the network
+1-122:The estimate of the radio range R is based on the sensor node density (obtained through the Image Processing module) and the connectivity information (i.e., G(Λ,E))
+1-123:The two main components of the StarDust architecture are the Image Processing and the Node ID Mapping
+1-124:Their design and analysis is presented in the sections that follow
+1-125:3.2 Image Processing The goal of the Image Processing Algorithm (IPA) is to identify the location of the nodes and their color
+1-126:Note that IPA does not identify which node fell where, but only what is the set of locations where the nodes fell
+1-127:IPA is executed after an aerial vehicle records two pictures: one in which the field of deployment is illuminated and one when no illuminations is present
+1-128:Let Pdark be the picture of the deployment area, taken when no light was emitted and Plight be the picture of the same deployment area when a strong light beam was directed towards the sensor nodes
+1-129:The proposed IPA has several steps, as shown in Algorithm 1
+1-130:The first step is to obtain a third picture Pfilter where only the differences between Pdark and Plight remain
+1-131:Let us assume that Pdark has a resolution of n × m, where n is the number of pixels in a row of the picture, while m is the number of pixels in a column of the picture
+1-132:Then Pdark is composed of n × m pixels noted Pdark(i, j), i ∈ 1 ≤ i ≤ n,1 ≤ j ≤ m
+1-133:Similarly Plight is composed of n × m pixels noted Plight(i, j), 1 ≤ i ≤ n,1 ≤ j ≤ m
+1-134:Each pixel P is described by an RGB value where the R value is denoted by PR, the G value is denoted by PG, and the B value is denoted by PB
+1-135:IPA then generates the third picture, Pfilter, through the following transformations: PR filter(i, j) = PR light(i, j)−PR dark(i, j) PG filter(i, j) = PG light(i, j)−PG dark(i, j) PB filter(i, j) = PB light(i, j)−PB dark(i, j) (1) After this transformation, all the features that appeared in both Pdark and Plight are removed from Pfilter
+1-136:This simplifies the recognition of light retro reflected by sensor nodes
+1-137:The second step consists of identifying the elements contained in Pfilter that retro reflect light
+1-138:For this, an intensity filter is applied to Pfilter
+1-139:First IPA converts Pfilter into a grayscale picture
+1-140:Then the brightest pixels are identified and used to create Preflect
+1-141:This step is eased by the fact that the reflecting nodes should appear much brighter than any other illuminated object in the picture
+1-142:Support: Q(λk) ni P1 ..
+1-143:P2 ..
+1-144:PN λ1 ..
+1-145:λk ..
+1-146:λN Figure 3
+1-147:Probabilistic label relaxation The third step runs an edge detection algorithm on Preflect to identify the boundary of the nodes present
+1-148:A tool such as Matlab provides a number of edge detection techniques
+1-149:We used the bwboundaries function
+1-150:For the obtained edges, the location (x,y) (in the image) of each node is determined by computing the centroid of the points constituting its edges
+1-151:Standard computer graphics techniques [23] are then used to transform the 2D locations of sensor nodes detected in multiple images into 3D sensor node locations
+1-152:The color of the node is obtained as the color of the pixel located at (x,y) in Plight
+1-153:3.3 Node ID Matching The goal of the Node ID Matching module is to obtain the identity (node ID) of a luminous spot in the image, detected to be a sensor node
+1-154:For this, we define V = {(x1,y1),(x2,y2),...,(xm,ym)} to be the set of locations of the sensor nodes, as detected by the Image Processing module and Λ = {λ1,λ2,...,λm} to be the set of unique node IDs assigned to the m sensor nodes, before deployment
+1-155:From here on, we refer to node IDs as labels
+1-156:We model the problem of finding the label λj of a node ni as a probabilistic label relaxation problem, frequently used in image processing understanding
+1-157:In the image processing domain, scene labeling (i.e., identifying objects in an image) plays a major role
+1-158:The goal of scene labeling is to assign a label to each object detected in an image, such that an appropriate image interpretation is achieved
+1-159:It is prohibitively expensive to consider the interactions among all the objects in an image
+1-160:Instead, constraints placed among nearby objects generate local consistencies and through iteration, global consistencies can be obtained
+1-161:The main idea of the sensor node localization through probabilistic label relaxation is to iteratively compute the probability of each label being the correct label for a sensor node, by taking into account, at each iteration, the support for a label
+1-162:The support for a label can be understood as a hint or proof, that a particular label is more likely to be the correct one, when compared with the other potential labels for a sensor node
+1-163:We pictorially depict this main idea in Figure 3
+1-164:As shown, node ni has a set of candidate labels {λ1,...,λk}
+1-165:Each of the labels has a different value for the Support function Q(λk)
+1-166:We defer the explanation of how the Support function is implemented until the subsections that follow, where we provide four concrete techniques
+1-167:Formally, the algorithm is outlined in Algorithm 2, where the equations necessary for computing the new probability Pni(λk) for a label λk of a node ni, are expressed by the 60 Algorithm 2 Label Relaxation 1: for each sensor node ni do 2: assign equal prob
+1-168:to all possible labels 3: end for 4: repeat 5: converged ← true 6: for each sensor node ni do 7: for each each label λj of ni do 8: compute the Support label λj: Equation 4 9: end for 10: compute K for the node ni: Equation 3 11: for each each label λj do 12: update probability of label λj: Equation 2 13: if |new prob.−old prob.| ≥ ε then 14: converged ← false 15: end if 16: end for 17: end for 18: until converged = true following equations: Ps+1 ni (λk) = 1 Kni Ps ni (λk)Qs ni (λk) (2) where Kni is a normalizing constant, given by: Kni = N ∑ k=1 Ps ni (λk)Qs ni (λk) (3) and Qs ni (λk) is: Qs ni (λk) = support for label λk of node ni (4) The label relaxation algorithm is iterative and it is polynomial in the size of the network(number of nodes)
+1-169:The pseudo code is shown in Algorithm 2
+1-170:It initializes the probabilities associated with each possible label, for a node ni, through a uniform distribution
+1-171:At each iteration s, the algorithm updates the probability associated with each label, by considering the Support Qs ni (λk) for each candidate label of a sensor node
+1-172:In the sections that follow, we describe four different techniques for implementing the Support function: based on node coloring, radio connectivity, the time of deployment (time) and the location of deployment (space)
+1-173:While some of these techniques are simplistic, they are primitives which, when combined, can create powerful localization systems
+1-174:These design techniques have different trade offs, which we will present in Section 3.3.6
+1-175:3.3.1 Relaxation with Color Constraints The unique mapping between a sensor node"s position (identified by the image processing) and a label can be obtained by assigning a unique color to each sensor node
+1-176:For this we define C = {c1,c2,...,cn} to be the set of unique colors available and M : Λ → C to be a one to one mapping of labels to colors
+1-177:This mapping is known prior to the sensor node deployment (from node manufacturing)
+1-178:In the case of color constrained label relaxation, the support for label λk is expressed as follows: Qs ni (λk) = 1 (5) As a result, the label relaxation algorithm (Algorithm 2) consists of the following steps: one label is assigned to each sensor node (lines 1 3 of the algorithm), implicitly having a probability Pni(λk) = 1 ; the algorithm executes a single iteration, when the support function, simply, reiterates the confidence in the unique labeling
+1-179:However, it is often the case that unique colors for each node will not be available
+1-180:It is interesting to discuss here the influence that the size of the coloring space (i.e., |C|) has on the accuracy of the localization algorithm
+1-181:Several cases are discussed below: • If |C| = 0, no colors are used and the sensor nodes are equipped with simple CCRs that reflect back all the incoming light (i.e., no filtering, and no coloring of the incoming light)
+1-182:From the image processing system, the position of sensor nodes can still be obtained
+1-183:Since all nodes appear white, no single sensor node can be uniquely identified
+1-184:• If |C| = m − 1 then there are enough unique colors for all nodes (one node remains white, i.e
+1-185:no coloring), the problem is trivially solved
+1-186:Each node can be identified, based on its unique color
+1-187:This is the scenario for the relaxation with color constraints
+1-188:• If |C| ≥ 1, there are several options for how to partition the coloring space
+1-189:If C = {c1} one possibility is to assign the color c1 to a single node, and leave the remaining m−1 sensor nodes white, or to assign the color c1 to more than one sensor node
+1-190:One can observe that once a color is assigned uniquely to a sensor node, in effect, that sensor node is given the status of anchor, or node with known location
+1-191:It is interesting to observe that there is an entire spectrum of possibilities for how to partition the set of sensor nodes in equivalence classes (where an equivalence class is represented by one color), in order to maximize the success of the localization algorithm
+1-192:One of the goals of this paper is to understand how the size of the coloring space and its partitioning affect localization accuracy
+1-193:Despite the simplicity of this method of constraining the set of labels that can be assigned to a node, we will show that this technique is very powerful, when combined with other relaxation techniques
+1-194:3.3.2 Relaxation with Connectivity Constraints Connectivity information, obtained from the sensor network through beaconing, can provide additional information for locating sensor nodes
+1-195:In order to gather connectivity information, the following need to occur: 1) after deployment, through beaconing of HELLO messages, sensor nodes build their neighborhood tables; 2) each node sends its neighbor table information to the Central device via a base station
+1-196:First, let us define G = (Λ,E) to be the weighted connectivity graph built by the Central device from the received neighbor table information
+1-197:In G the edge (λi,λj) has a 61 λ1 λ2 ..
+1-198:λN ni nj gi2,j2 λ1 λ2 ..
+1-199:λN Pj,λ1 Pj,λ2 ..
+1-200:Pj,λN Pi,λ1 Pi,λ1 ..
+1-201:Pi,λN gi2,jm Figure 4
+1-202:Label relaxation with connectivity constraints weight gij represented by the number of beacons sent by λj and received by λi
+1-203:In addition, let R be the radio range of the sensor nodes
+1-204:The main idea of the connectivity constrained label relaxation is depicted in Figure 4 in which two nodes ni and nj have been assigned all possible labels
+1-205:The confidence in each of the candidate labels for a sensor node, is represented by a probability, shown in a dotted rectangle
+1-206:It is important to remark that through beaconing and the reporting of neighbor tables to the Central Device, a global view of all constraints in the network can be obtained
+1-207:It is critical to observe that these constraints are among labels
+1-208:As shown in Figure 4 two constraints exist between nodes ni and nj
+1-209:The constraints are depicted by gi2,j2 and gi2,jM, the number of beacons sent the labels λj2 and λjM and received by the label λi2
+1-210:The support for the label λk of sensor node ni, resulting from the interaction (i.e., within radio range) with sensor node nj is given by: Qs ni (λk) = M ∑ m=1 gλkλm Ps nj (λm) (6) As a result, the localization algorithm (Algorithm 3 consists of the following steps: all labels are assigned to each sensor node (lines 1 3 of the algorithm), and implicitly each label has a probability initialized to Pni(λk) = 1 |Λ|; in each iteration, the probabilities for the labels of a sensor node are updated, when considering the interaction with the labels of sensor nodes within R
+1-211:It is important to remark that the identity of the nodes within R is not known, only the candidate labels and their probabilities
+1-212:The relaxation algorithm converges when, during an iteration, the probability of no label is updated by more than ε
+1-213:The label relaxation algorithm based on connectivity constraints, enforces such constraints between pairs of sensor nodes
+1-214:For a large scale sensor network deployment, it is not feasible to consider all pairs of sensor nodes in the network
+1-215:Hence, the algorithm should only consider pairs of sensor nodes that are within a reasonable communication range (R)
+1-216:We assume a circular radio range and a symmetric connectivity
+1-217:In the remaining part of the section we propose a simple analytical model that estimates the radio range R for medium connected networks (less than 20 neighbors per R)
+1-218:We consider the following to be known: the size of the deployment field (L), the number of sensor nodes deployed (N) Algorithm 3 Localization 1: Estimate the radio range R 2: Execute the Label Relaxation Algorithm with Support Function given by Equation 6 for neighbors less than R apart 3: for each sensor node ni do 4: node identity is λk with max
+1-219:prob
+1-220:5: end for and the total number of unidirectional (i.e., not symmetric) one hop radio connections in the network (k)
+1-221:For our analysis, we uniformly distribute the sensor nodes in a square area of length L, by using a grid of unit length L  √
+2-1:T
+2-2:He, S
+2-3:Krishnamurthy, J
+2-4:A
+2-5:Stankovic, T
+2-6:Abdelzaher, L
+2-7:Luo, R
+2-8:Stoleru, T
+2-9:Yan, L
+2-10:Gu, J
+2-11:Hui, and B
+2-12:Krogh, An energy efficient surveillance system using wireless sensor networks, in MobiSys, 2004
+2-13:G
+2-14:Simon, M
+2-15:Maroti, A
+2-16:Ledeczi, G
+2-17:Balogh, B
+2-18:Kusy, A
+2-19:Nadas, G
+2-20:Pap, J
+2-21:Sallai, and K
+2-22:Frampton, Sensor network based countersniper system, in SenSys, 2004
+2-23:A
+2-24:Arora, P
+2-25:Dutta, and B
+2-26:Bapat, A line in the sand: A wireless sensor network for trage detection, classification and tracking, in Computer Networks, 2004
+2-27:R
+2-28:Szewczyk, A
+2-29:Mainwaring, J
+2-30:Polastre, J
+2-31:Anderson, and D
+2-32:Culler, An analysis of a large scale habitat monitoring application, in ACM SenSys, 2004
+2-33:N
+2-34:Xu, S
+2-35:Rangwala, K
+2-36:K
+2-37:Chintalapudi, D
+2-38:Ganesan, A
+2-39:Broad, R
+2-40:Govindan, and D
+2-41:Estrin, A wireless sensor network for structural monitoring, in ACM SenSys, 2004
+2-42:A
+2-43:Savvides, C
+2-44:Han, and M
+2-45:Srivastava, Dynamic fine grained localization in ad hoc networks of sensors, in Mobicom, 2001
+2-46:N
+2-47:Priyantha, A
+2-48:Chakraborty, and H
+2-49:Balakrishnan, The cricket location support system, in Mobicom, 2000
+2-50:M
+2-51:Broxton, J
+2-52:Lifton, and J
+2-53:Paradiso, Localizing a sensor network via collaborative processing of global stimuli, in EWSN, 2005
+2-54:P
+2-55:Bahl and V
+2-56:N
+2-57:Padmanabhan, Radar: An in building rf based user location and tracking system, in IEEE Infocom, 2000
+2-58:N
+2-59:Priyantha, H
+2-60:Balakrishnan, E
+2-61:Demaine, and S
+2-62:Teller, Mobileassisted topology generation for auto localization in sensor networks, in IEEE Infocom, 2005
+2-63:P
+2-64:N
+2-65:Pathirana, A
+2-66:Savkin, S
+2-67:Jha, and N
+2-68:Bulusu, Node localization using mobile robots in delay tolerant sensor networks, IEEE Transactions on Mobile Computing, 2004
+2-69:C
+2-70:Savarese, J
+2-71:M
+2-72:Rabaey, and J
+2-73:Beutel, Locationing in distribued ad hoc wireless sensor networks, in ICAASSP, 2001
+2-74:M
+2-75:Maroti, B
+2-76:Kusy, G
+2-77:Balogh, P
+2-78:Volgyesi, A
+2-79:Nadas, K
+2-80:Molnar, S
+2-81:Dora, and A
+2-82:Ledeczi, Radio interferometric geolocation, in ACM SenSys, 2005
+2-83:K
+2-84:Whitehouse, A
+2-85:Woo, C
+2-86:Karlof, F
+2-87:Jiang, and D
+2-88:Culler, The effects of ranging noise on multi hop localization: An empirical study, in IPSN, 2005
+2-89:Y
+2-90:Kwon, K
+2-91:Mechitov, S
+2-92:Sundresh, W
+2-93:Kim, and G
+2-94:Agha, Resilient localization for sensor networks in outdoor environment, UIUC, Tech
+2-95:Rep., 2004
+2-96:R
+2-97:Stoleru and J
+2-98:A
+2-99:Stankovic, Probability grid: A location estimation scheme for wireless sensor networks, in SECON, 2004
+2-100:N
+2-101:Bulusu, J
+2-102:Heidemann, and D
+2-103:Estrin, GPS less low cost outdoor localization for very small devices, IEEE Personal Communications Magazine, 2000
+2-104:T
+2-105:He, C
+2-106:Huang, B
+2-107:Blum, J
+2-108:A
+2-109:Stankovic, and T
+2-110:Abdelzaher, Range Free localization schemes in large scale sensor networks, in ACM Mobicom, 2003
+2-111:R
+2-112:Nagpal, H
+2-113:Shrobe, and J
+2-114:Bachrach, Organizing a global coordinate system from local information on an ad hoc sensor network, in IPSN, 2003
+2-115:D
+2-116:Niculescu and B
+2-117:Nath, ad hoc positioning system, in IEEE GLOBECOM, 2001
+2-118:R
+2-119:Stoleru, T
+2-120:He, J
+2-121:A
+2-122:Stankovic, and D
+2-123:Luebke, A high accuracy low cost localization system for wireless sensor networks, in ACM SenSys, 2005
+2-124:K
+2-125:R¨omer, The lighthouse location system for smart dust, in ACM USENIX MobiSys, 2003
+2-126:R
+2-127:Y
+2-128:Tsai, A versatile camera calibration technique for highaccuracy 3d machine vision metrology using off the shelf tv cameras and lenses, IEEE JRA, 1987
+2-129:C
+2-130:L
+2-131:Archer and M
+2-132:Z
+2-133:Jacobson, Spatial and temporal distributions of U.S
+2-134:winds and wind power at 80m derived from measurements, Geophysical Research Jrnl., 2003
+2-135:Team for advanced flow simulation and modeling
+2-136:[Online]
+2-137:Available: http:  www.mems.rice.edu TAFSM RES  K
+2-138:Stein, R
+2-139:Benney, T
+2-140:Tezduyar, V
+2-141:Kalro, and J
+2-142:Leonard, 3 D computation of parachute fluid structure interactions  performance and control, in Aerodynamic Decelerator Systems Conference, 1999
+2-143:Headquarters Department of the Army, Technical manual for searchlight infrared AN GSS 14(V)1, 1982
+2-144:70
+picture:

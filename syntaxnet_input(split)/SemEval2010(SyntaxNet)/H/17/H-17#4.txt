@@ -1,0 +1,329 @@
+
+1
+Input: Intuitively , there exists a clear tradeoff between the size of IP and the fraction of queries that IP can handle
+Parse:
+exists VBZ ROOT
+ +-- Intuitively RB advmod
+ +-- , , punct
+ +-- there EX expl
+ +-- tradeoff NN dobj
+     +-- a DT det
+     +-- clear JJ amod
+     +-- between IN prep
+         +-- size NN pobj
+             +-- the DT det
+             +-- of IN prep
+             |   +-- IP NN pobj
+             +-- and CC cc
+             +-- fraction NN conj
+                 +-- the DT det
+                 +-- of IN prep
+                     +-- queries NNS pobj
+                         +-- handle VB rcmod
+                             +-- that WDT dobj
+                             +-- IP NN nsubj
+                             +-- can MD aux
+
+2
+Input: When IP is small , on the other hand , the cost for IP will be smaller , but more queries will be forwarded to IF , requiring us to maintain more copies of IF .
+Parse:
+smaller JJR ROOT
+ +-- small JJ advcl
+ |   +-- When WRB advmod
+ |   +-- IP NN nsubj
+ |   +-- is VBZ cop
+ +-- , , punct
+ +-- on IN prep
+ |   +-- hand NN pobj
+ |       +-- the DT det
+ |       +-- other JJ amod
+ +-- cost NN nsubj
+ |   +-- the DT det
+ |   +-- for IN prep
+ |       +-- IP NN pobj
+ +-- will MD aux
+ +-- be VB cop
+ +-- but CC cc
+ +-- forwarded VBN conj
+ |   +-- queries NNS nsubjpass
+ |   |   +-- more JJR amod
+ |   +-- will MD aux
+ |   +-- be VB auxpass
+ |   +-- to IN prep
+ |   +-- IF RB advmod
+ |   +-- , , punct
+ |   +-- requiring VBG xcomp
+ |       +-- us PRP dobj
+ |       +-- maintain VB xcomp
+ |           +-- to TO aux
+ |           +-- copies NNS dobj
+ |               +-- more JJR amod
+ |               +-- of IN prep
+ |                   +-- IF IN pobj
+ +-- . . punct
+
+3
+Input: Given this tradeoff , how should we determine the optimal size of IP in order to maximize the cost saving ? To find the answer , we start with a simple example .
+Parse:
+determine VB ROOT
+ +-- Given VBN prep
+ |   +-- tradeoff NN dep
+ |       +-- this DT det
+ +-- , , punct
+ +-- how WRB advmod
+ +-- should MD aux
+ +-- we PRP nsubj
+ +-- size NN dobj
+ |   +-- the DT det
+ |   +-- optimal JJ amod
+ |   +-- of IN prep
+ |       +-- IP NN pobj
+ +-- in IN prep
+ |   +-- order NN pobj
+ |       +-- maximize VB infmod
+ |           +-- to TO aux
+ |           +-- saving VBG dep
+ |           |   +-- cost NN nsubj
+ |           |       +-- the DT det
+ |           +-- ? . punct
+ |           +-- find VB dep
+ |               +-- To TO aux
+ |               +-- answer NN dobj
+ |                   +-- the DT det
+ +-- start VBP ccomp
+ |   +-- we PRP nsubj
+ |   +-- with IN prep
+ |       +-- example NN pobj
+ |           +-- a DT det
+ |           +-- simple JJ amod
+ +-- . . punct
+
+4
+Input: Example 3 Again , consider a scenario similar to Example 1 , where the query load is 5000 queries sec , each copy of an index can handle 1000 queries sec , and the full index spans across 4 machines .
+Parse:
+consider VB ROOT
+ +-- Example NN nsubj
+ |   +-- 3 CD num
+ |   +-- Again RB advmod
+ +-- , , punct
+ +-- scenario NN dobj
+ |   +-- a DT det
+ |   +-- similar JJ amod
+ |       +-- to IN prep
+ |           +-- Example NNP pobj
+ |               +-- 1 CD num
+ |               +-- , , punct
+ |               +-- queries NNS rcmod
+ |                   +-- where WRB advmod
+ |                   +-- load NN nsubj
+ |                   |   +-- the DT det
+ |                   |   +-- query NN nn
+ |                   +-- is VBZ cop
+ |                   +-- 5000 CD num
+ |                   +-- sec VBN dobj
+ +-- handle VB ccomp
+ |   +-- copy NN nsubj
+ |   |   +-- each DT det
+ |   |   +-- of IN prep
+ |   |       +-- index NN pobj
+ |   |           +-- an DT det
+ |   +-- can MD aux
+ |   +-- queries NNS dobj
+ |       +-- 1000 CD num
+ |       +-- sec NN dep
+ +-- and CC cc
+ +-- spans VBZ conj
+ |   +-- index NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- full JJ amod
+ |   +-- across IN prep
+ |       +-- machines NNS pobj
+ |           +-- 4 CD num
+ +-- . . punct
+
+5
+Input: But now , suppose that if we prune IF by 75 % to IP 1 -LRB- i.e. , the size of IP 1 is 25 % of IF -RRB- , IP 1 can handle 40 % of the queries -LRB- i.e. , C = 1 for 40 % of the queries -RRB- .
+Parse:
+suppose VB ROOT
+ +-- But CC cc
+ +-- now RB advmod
+ +-- , , punct
+ +-- handle VB ccomp
+ |   +-- that IN mark
+ |   +-- prune VBP advcl
+ |   |   +-- if IN mark
+ |   |   +-- we PRP nsubj
+ |   |   +-- IF IN advmod
+ |   |   +-- by IN prep
+ |   |   |   +-- % NN pobj
+ |   |   |       +-- 75 CD num
+ |   |   +-- to IN prep
+ |   |       +-- IP NNP pobj
+ |   |           +-- 1 CD num
+ |   |           +-- % NN appos
+ |   |               +-- -LRB- -LRB- punct
+ |   |               +-- i.e. FW advmod
+ |   |               +-- , , punct
+ |   |               +-- size NN nsubj
+ |   |               |   +-- the DT det
+ |   |               |   +-- of IN prep
+ |   |               |       +-- IP NN pobj
+ |   |               |           +-- 1 CD num
+ |   |               +-- is VBZ cop
+ |   |               +-- 25 CD num
+ |   |               +-- of IN prep
+ |   |               |   +-- IF RB pobj
+ |   |               +-- -RRB- -RRB- punct
+ |   +-- , , punct
+ |   +-- IP NNP nsubj
+ |   |   +-- 1 CD num
+ |   +-- can MD aux
+ |   +-- % NN dobj
+ |       +-- 40 CD num
+ |       +-- of IN prep
+ |       |   +-- queries NNS pobj
+ |       |       +-- the DT det
+ |       +-- C NN appos
+ |           +-- -LRB- -LRB- punct
+ |           +-- i.e. FW advmod
+ |           +-- , , punct
+ |           +-- = SYM dep
+ |           |   +-- 1 CD num
+ |           +-- for IN prep
+ |           |   +-- % NN pobj
+ |           |       +-- 40 CD num
+ |           |       +-- of IN prep
+ |           |           +-- queries NNS pobj
+ |           |               +-- the DT det
+ |           +-- -RRB- -RRB- punct
+ +-- . . punct
+
+6
+Input: Also suppose that if IF is pruned by 50 % to IP 2 , IP 2 can handle 80 % of the queries .
+Parse:
+suppose VB ROOT
+ +-- Also RB advmod
+ +-- handle VB ccomp
+ |   +-- that IN mark
+ |   +-- pruned VBN advcl
+ |   |   +-- if IN mark
+ |   |   +-- IF IN mark
+ |   |   +-- is VBZ auxpass
+ |   |   +-- by IN prep
+ |   |   |   +-- % NN pobj
+ |   |   |       +-- 50 CD num
+ |   |   +-- to IN prep
+ |   |       +-- IP NNP pobj
+ |   |           +-- 2 CD num
+ |   +-- , , punct
+ |   +-- IP NNP nsubj
+ |   |   +-- 2 CD num
+ |   +-- can MD aux
+ |   +-- % NN dobj
+ |       +-- 80 CD num
+ |       +-- of IN prep
+ |           +-- queries NNS pobj
+ |               +-- the DT det
+ +-- . . punct
+
+7
+Input: Which one of the IP 1 , IP 2 is preferable for the 1st tier index ? To find out the answer , we first compute the number of machines needed when we use IP 1 for the 1st tier .
+Parse:
+Which WDT ROOT
+ +-- one CD dep
+ |   +-- of IN prep
+ |   |   +-- IP NN pobj
+ |   |       +-- the DT det
+ |   |       +-- 1 CD num
+ |   +-- , , punct
+ |   +-- preferable JJ dep
+ |       +-- 2 CD nsubj
+ |       |   +-- IP NNP nn
+ |       +-- is VBZ cop
+ |       +-- for IN prep
+ |       |   +-- index NN pobj
+ |       |       +-- the DT det
+ |       |       +-- tier NN nn
+ |       |           +-- 1st JJ amod
+ |       +-- ? . punct
+ |       +-- compute VBP ccomp
+ |           +-- find VB advcl
+ |           |   +-- To TO aux
+ |           |   +-- out RP prt
+ |           |   +-- answer NN dobj
+ |           |       +-- the DT det
+ |           +-- , , punct
+ |           +-- we PRP nsubj
+ |           +-- first RB advmod
+ |           +-- number NN dobj
+ |               +-- the DT det
+ |               +-- of IN prep
+ |                   +-- machines NNS pobj
+ |                       +-- needed VBN partmod
+ |                           +-- use VBP advcl
+ |                               +-- when WRB advmod
+ |                               +-- we PRP nsubj
+ |                               +-- IP NNP dobj
+ |                               |   +-- 1 CD num
+ |                               +-- for IN prep
+ |                                   +-- tier NN pobj
+ |                                       +-- the DT det
+ |                                       +-- 1st JJ amod
+ +-- . . punct
+
+8
+Input: At the 1st tier , we need 5 copies of IP 1 to handle the query load of 5000 queries sec .
+Parse:
+need VBP ROOT
+ +-- At IN prep
+ |   +-- tier NN pobj
+ |       +-- the DT det
+ |       +-- 1st JJ nn
+ +-- , , punct
+ +-- we PRP nsubj
+ +-- copies NNS dobj
+ |   +-- 5 CD num
+ |   +-- of IN prep
+ |       +-- IP NNP pobj
+ |           +-- 1 CD num
+ +-- handle VB xcomp
+ |   +-- to TO aux
+ |   +-- load NN dobj
+ |       +-- the DT det
+ |       +-- query NN nn
+ |       +-- of IN prep
+ |           +-- queries NNS pobj
+ |               +-- 5000 CD num
+ |               +-- sec NNP appos
+ +-- . . punct
+
+9
+Input: Since the size of IP 1 is 25 % of IF -LRB- that requires 4 machines -RRB- , one copy of IP 1 requires one machine .
+Parse:
+requires VBZ ROOT
+ +-- % NN advcl
+ |   +-- Since IN mark
+ |   +-- size NN nsubj
+ |   |   +-- the DT det
+ |   |   +-- of IN prep
+ |   |       +-- IP NN pobj
+ |   |           +-- 1 CD num
+ |   +-- is VBZ cop
+ |   +-- 25 CD num
+ |   +-- of IN prep
+ |   |   +-- IF RB pcomp
+ |   +-- requires VBZ dep
+ |       +-- -LRB- -LRB- punct
+ |       +-- that WDT nsubj
+ |       +-- machines NNS dobj
+ |       |   +-- 4 CD num
+ |       +-- -RRB- -RRB- punct
+ +-- , , punct
+ +-- copy NN nsubj
+ |   +-- one CD num
+ |   +-- of IN prep
+ |       +-- IP NNP pobj
+ |           +-- 1 CD num
+ +-- machine NN dobj
+ |   +-- one CD num
+ +-- . . punct

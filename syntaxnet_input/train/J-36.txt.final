@@ -1,0 +1,545 @@
+Playing Games in Many Possible Worlds 
+content:
+1 ABSTRACT :
+1-1:In traditional game theory, players are typically endowed with exogenously given knowledge of the structure of the game either full omniscient knowledge or partial but fixed information .
+1-2:In real life, however, people are often unaware of the utility of taking a particular action until they perform research into its consequences .
+1-3:In this paper, we model this phenomenon .
+1-4:We imagine a player engaged in a questionand answer session, asking questions both about his or her own preferences and about the state of reality; thus we call this setting Socratic game theory .
+1-5:In a Socratic game, players begin with an a priori probability distribution over many possible worlds, with a different utility function for each world .
+1-6:Players can make queries, at some cost, to learn partial information about which of the possible worlds is the actual world, before choosing an action .
+1-7:We consider two query models: (1) an unobservable query model, in which players learn only the response to their own queries, and (2) an observable query model, in which players also learn which queries their opponents made .
+1-8:The results in this paper consider cases in which the underlying worlds of a two player Socratic game are either constant sum games or strategically zero sum games, a class that generalizes constant sum games to include all games in which the sum of payoffs depends linearly on the interaction between the players .
+1-9:When the underlying worlds are constant sum, we give polynomial time algorithms to find Nash equilibria in both the observable and unobservable query models .
+1-10:When the worlds are strategically zero sum, we give efficient algorithms to find Nash equilibria in unobservablequery Socratic games and correlated equilibria in observablequery Socratic games .
+1-11:F.2 [Theory of Computation]: Analysis of algorithms .
+2 INTRODUCTION :
+2-1:Late October 1960 .
+2-2:A smoky room .
+2-3:Democratic Party strategists huddle around a map .
+2-4:How should the Kennedy campaign allocate its remaining advertising budget? Should it focus on, say, California or New York? The Nixon campaign faces the same dilemma .
+2-5:Of course, neither campaign knows the effectiveness of its advertising in each state .
+2-6:Perhaps Californians are susceptible to Nixon"s advertising, but are unresponsive to Kennedy"s .
+2-7:In light of this uncertainty, the Kennedy campaign may conduct a survey, at some cost, to estimate the effectiveness of its advertising .
+2-8:Moreover, the larger and more expensive the survey, the more accurate it will be .
+2-9:Is the cost of a survey worth the information that it provides? How should one balance the cost of acquiring more information against the risk of playing a game with higher uncertainty? In this paper, we model situations of this type as Socratic games .
+2-10:As in traditional game theory, the players in a Socratic game choose actions to maximize their payoffs, but we model players with incomplete information who can make costly queries to reduce their uncertainty about the state of the world before they choose their actions .
+2-11:This approach contrasts with traditional game theory, in which players are usually modeled as having fixed, exogenously given information about the structure of the game and its payoffs .
+2-12:(In traditional games of incomplete and imperfect information, there is information that the players do not have; in Socratic games, unlike in these games, the players have a chance to acquire the missing information, at some cost.) A number of related models have been explored by economists and computer scientists motivated by similar situations, often with a focus on mechanism design and auctions; a sampling of this research includes the work of Larson and Sandholm [41, 42, 43, 44], Parkes [59], Fong [22], Compte and Jehiel [12], Rezende [63], Persico and Matthews [48, 60], Cr´emer and Khalil [15], Rasmusen [62], and Bergemann and V¨alim¨aki [4, 5] .
+2-13:The model of Bergemann and V¨alim¨aki is similar in many regards to the one that we explore here; see Section 7 for some discussion .
+2-14:A Socratic game proceeds as follows .
+2-15:A real world is cho150 sen randomly from a set of possible worlds according to a common prior distribution .
+2-16:Each player then selects an arbitrary query from a set of available costly queries and receives a corresponding piece of information about the real world .
+2-17:Finally each player selects an action and receives a payoff a function of the players" selected actions and the identity of the real world less the cost of the query that he or she made .
+2-18:Compared to traditional game theory, the distinguishing feature of our model is the introduction of explicit costs to the players for learning arbitrary partial information about which of the many possible worlds is the real world .
+2-19:Our research was initially inspired by recent results in psychology on decision making, but it soon became clear that Socratic game theory is also a general tool for understanding the exploitation versus exploration tradeoff, well studied in machine learning, in a strategic multiplayer environment .
+2-20:This tension between the risk arising from uncertainty and the cost of acquiring information is ubiquitous in economics, political science, and beyond .
+2-21:Our results .
+2-22:We consider Socratic games under two models: an unobservable query model where players learn only the response to their own queries and an observable query model where players also learn which queries their opponents made .
+2-23:We give efficient algorithms to find Nash equilibriai.e., tuples of strategies from which no player has unilateral incentive to deviate in broad classes of two player Socratic games in both models .
+2-24:Our first result is an efficient algorithm to find Nash equilibria in unobservable query Socratic games with constant sum worlds, in which the sum of the players" payoffs is independent of their actions .
+2-25:Our techniques also yield Nash equilibria in unobservable query Socratic games with strategically zero sum worlds .
+2-26:Strategically zero sum games generalize constant sum games by allowing the sum of the players" payoffs to depend on individual players" choices of strategy, but not on any interaction of their choices .
+2-27:Our second result is an efficient algorithm to find Nash equilibria in observable query Socratic games with constant sum worlds .
+2-28:Finally, we give an efficient algorithm to find correlated equilibria a weaker but increasingly well studied solution concept for games [2, 3, 32, 56, 57] in observable query Socratic games with strategically zero sum worlds .
+2-29:Like all games, Socratic games can be viewed as a special case of extensive form games, which represent games by trees in which internal nodes represent choices made by chance or by the players, and the leaves represent outcomes that correspond to a vector of payoffs to the players .
+2-30:Algorithmically, the generality of extensive form games makes them difficult to solve efficiently, and the special cases that are known to be efficiently solvable do not include even simple Socratic games .
+2-31:Every (complete information) classical game is a trivial Socratic game (with a single possible world and a single trivial query), and efficiently finding Nash equilibria in classical games has been shown to be hard [10, 11, 13, 16, 17, 27, 54, 55] .
+2-32:Therefore we would not expect to find a straightforward polynomial time algorithm to compute Nash equilibria in general Socratic games .
+2-33:However, it is well known that Nash equilibria can be found efficiently via an LP for two player constant sum games [49, 71] (and strategically zero sum games [51]) .
+2-34:A Socratic game is itself a classical game, so one might hope that these results can be applied to Socratic games with constant sum (or strategically zero sum) worlds .
+2-35:We face two major obstacles in extending these classical results to Socratic games .
+2-36:First, a Socratic game with constant sum worlds is not itself a constant sum classical game rather, the resulting classical game is only strategically zero sum .
+2-37:Worse yet, a Socratic game with strategically zero sum worlds is not itself classically strategically zero sum indeed, there are no known efficient algorithmic techniques to compute Nash equilibria in the resulting class of classical games .
+2-38:(Exponential time algorithms like Lemke Howson, of course, can be used [45].) Thus even when it is easy to find Nash equilibria in each of the worlds of a Socratic game, we require new techniques to solve the Socratic game itself .
+2-39:Second, even when the Socratic game itself is strategically zero sum, the number of possible strategies available to each player is exponential in the natural representation of the game .
+2-40:As a result, the standard linear programs for computing equilibria have an exponential number of variables and an exponential number of constraints .
+2-41:For unobservable query Socratic games with strategically zero sum worlds, we address these obstacles by formulating a new LP that uses only polynomially many variables (though still an exponential number of constraints) and then use ellipsoid based techniques to solve it .
+2-42:For observablequery Socratic games, we handle the exponentiality by decomposing the game into stages, solving the stages separately, and showing how to reassemble the solutions efficiently .
+2-43:To solve the stages, it is necessary to find Nash equilibria in Bayesian strategically zero sum games, and we give an explicit polynomial time algorithm to do so. .
+3 GAMES AND SOCRATIC GAMES :
+3-1:In this section, we review background on game theory and formally introduce Socratic games .
+3-2:We present these models in the context of two player games, but the multiplayer case is a natural extension .
+3-3:Throughout the paper, boldface variables will be used to denote a pair of variables (e.g., a = ai, aii ) .
+3-4:Let Pr[x ← π] denote the probability that a particular value x is drawn from the distribution π, and let Ex∼π[g(x)] denote the expectation of g(x) when x is drawn from π .
+3-5:2.1 Background on Game Theory Consider two players, Player I and Player II, each of whom is attempting to maximize his or her utility (or payoff) .
+3-6:A (two player) game is a pair A, u , where, for i ∈ {i,ii}, • Ai is the set of pure strategies for Player i, and A = Ai, Aii ; and • ui : A → R is the utility function for Player i, and u = ui, uii .
+3-7:We require that A and u be common knowledge .
+3-8:If each Player i chooses strategy ai ∈ Ai, then the payoffs to Players I and II are ui(a) and uii(a), respectively .
+3-9:A game is constant sum if, for all a ∈ A, we have that ui(a) + uii(a) = c for some fixed c independent of a .
+3-10:Player i can also play a mixed strategy αi ∈ Ai, where Ai denotes the space of probability measures over the set Ai .
+3-11:Payoff functions are generalized as ui (α) = ui (αi, αii) := Ea∼α[ui (a)] = P a∈A α(a)ui (a), where the quantity α(a) = 151 αi(ai) · αii(aii) denotes the joint probability of the independent events that each Player i chooses action ai from the distribution αi .
+3-12:This generalization to mixed strategies is known as von Neumann Morgenstern utility [70], in which players are indifferent between a guaranteed payoff x and an expected payoff of x .
+3-13:A Nash equilibrium is a pair α of mixed strategies so that neither player has an incentive to change his or her strategy unilaterally .
+3-14:Formally, the strategy pair α is a Nash equilibrium if and only if both ui(αi, αii) = maxαi∈Ai ui(αi, αii) and uii(αi, αii) = maxαii∈Aii uii(αi, αii); that is, the strategies αi and αii are mutual best responses .
+3-15:A correlated equilibrium is a distribution ψ over A that obeys the following: if a ∈ A is drawn randomly according to ψ and Player i learns ai, then no Player i has incentive to deviate unilaterally from playing ai .
+3-16:(A Nash equilibrium is a correlated equilibrium in which ψ(a) = αi(ai) · αii(aii) is a product distribution.) Formally, in a correlated equilibrium, for every a ∈ A we must have that ai is a best response to a randomly chosen ˆaii ∈ Aii drawn according to ψ(ai, ˆaii), and the analogous condition must hold for Player II .
+3-17:2.2 Socratic Games In this section, we formally define Socratic games .
+3-18:A Socratic game is a 7 tuple A, W, u, S, Q, p, δ , where, for i ∈ {i,ii}: • Ai is, as before, the set of pure strategies for Player i .
+3-19:• W is a set of possible worlds, one of which is the real world wreal .
+3-20:• ui = {uw i : A → R | w ∈ W} is a set of payoff functions for Player i, one for each possible world .
+3-21:• S is a set of signals .
+3-22:• Qi is a set of available queries for Player i .
+3-23:When Player i makes query qi : W → S, he or she receives the signal qi(wreal) .
+3-24:When Player i receives signal qi(wreal) in response to query qi, he or she can infer that wreal ∈ {w : qi(w) = qi(wreal)}, i.e., the set of possible worlds from which query qi cannot distinguish wreal .
+3-25:• p : W → [0, 1] is a probability distribution over the possible worlds .
+3-26:• δi : Qi → R≥0 gives the query cost for each available query for Player i .
+3-27:Initially, the world wreal is chosen according to the probability distribution p, but the identity of wreal remains unknown to the players .
+3-28:That is, it is as if the players are playing the game A, uwreal but do not know wreal .
+3-29:The players make queries q ∈ Q, and Player i receives the signal qi(wreal) .
+3-30:We consider both observable queries and unobservable queries .
+3-31:When queries are observable, each player learns which query was made by the other player, and the results of his or her own query that is, each Player i learns qi, qii, and qi(wreal) .
+3-32:For unobservable queries, Player i learns only qi and qi(wreal) .
+3-33:After learning the results of the queries, the players select strategies a ∈ A and receive as payoffs u wreal i (a) − δi(qi) .
+3-34:In the Socratic game, a pure strategy for Player i consists of a query qi ∈ Qi and a response function mapping any result of the query qi to a strategy ai ∈ Ai to play .
+3-35:A player"s state of knowledge after a query is a point in R := Q × S or Ri := Qi × S for observable or unobservable queries, respectively .
+3-36:Thus Player i"s response function maps R or Ri to Ai .
+3-37:Note that the number of pure strategies is exponential, as there are exponentially many response functions .
+3-38:A mixed strategy involves both randomly choosing a query qi ∈ Qi and randomly choosing an action ai ∈ Ai in response to the results of the query .
+3-39:Formally, we will consider a mixed strategy function profile f = fquery , fresp to have two parts: • a function fquery i : Qi → [0, 1], where fquery i (qi) is the probability that Player i makes query qi .
+3-40:• a function fresp i that maps R or Ri to a probability distribution over actions .
+3-41:Player i chooses an action ai ∈ Ai according to the probability distribution fresp i (q, qi(w)) for observable queries, and according to fresp i (qi, qi(w)) for unobservable queries .
+3-42:(With unobservable queries, for example, the probability that Player I plays action ai conditioned on making query qi in world w is given by Pr[ai ← fresp i (qi, qi(w))].) Mixed strategies are typically defined as probability distributions over the pure strategies, but here we represent a mixed strategy by a pair fquery , fresp , which is commonly referred to as a behavioral strategy in the game theory literature .
+3-43:As in any game with perfect recall, one can easily map a mixture of pure strategies to a behavioral strategy f = fquery , fresp that induces the same probability of making a particular query qi or playing a particular action after making a query qi in a particular world .
+3-44:Thus it suffices to consider only this representation of mixed strategies .
+3-45:For a strategy function profile f for observable queries, the (expected) payoff to Player i is given by X q∈Q,w∈W,a∈A 2 6 6 4 fquery i (qi) · fquery ii (qii) · p(w) · Pr[ai ← fresp i (q, qi(w))] · Pr[aii ← fresp ii (q, qii(w))] · (uw i (a) − δi(qi)) 3 7 7 5 .
+3-46:The payoffs for unobservable queries are analogous, with fresp j (qj, qj(w)) in place of fresp j (q, qj(w)). .
+4 STRATEGICALLY ZERO SUM GAMES :
+4-1:We can view a Socratic game G with constant sum worlds as an exponentially large classical game, with pure strategies make query qi and respond according to fi .
+4-2:However, this classical game is not constant sum .
+4-3:The sum of the players" payoffs varies depending upon their strategies, because different queries incur different costs .
+4-4:However, this game still has significant structure: the sum of payoffs varies only because of varying query costs .
+4-5:Thus the sum of payoffs does depend on players" choice of strategies, but not on the interaction of their choices i.e., for fixed functions gi and gii, we have ui(q, f) + uii(q, f) = gi(qi, fi) + gii(qii, fii) for all strategies q, f .
+4-6:Such games are called strategically zero sum and were introduced by Moulin and Vial [51], who describe a notion of strategic equivalence and define strategically zero sum games as those strategically equivalent to zero sum games .
+4-7:It is interesting to note that two Socratic games with the same queries and strategically equivalent worlds are not necessarily strategically equivalent .
+4-8:A game A, u is strategically zero sum if there exist labels (i, ai) for every Player i and every pure strategy ai ∈ Ai 152 such that, for all mixed strategy profiles α, we have that the sum of the utilities satisfies ui(α)+uii(α) = X ai∈Ai αi(ai)· (i, ai)+ X aii∈Aii αii(aii)· (ii, aii) .
+4-9:Note that any constant sum game is strategically zero sum as well .
+4-10:It is not immediately obvious that one can efficiently decide if a given game is strategically zero sum .
+4-11:For completeness, we give a characterization of classical strategically zero sum games in terms of the rank of a simple matrix derived from the game"s payoffs, allowing us to efficiently decide if a given game is strategically zero sum and, if it is, to compute the labels (i, ai) .
+4-12:Theorem 3.1 .
+4-13:Consider a game G = A, u with Ai = {a1 i , .
+4-14:.
+4-15:.
+4-16:, ani i } .
+4-17:Let MG be the ni by nii matrix whose i, j th entry MG (i,j) satisfies log2 MG (i,j) = ui(ai i , aj ii) + uii(ai i , aj ii) .
+4-18:Then the following are equivalent: (i) G is strategically zero sum; (ii) there exist labels (i, ai) for every player i ∈ {i,ii} and every pure strategy ai ∈ Ai such that, for all pure strategies a ∈ A, we have ui(a) + uii(a) = (i, ai) + (ii, aii); and (iii) rank(MG ) = 1 .
+4-19:Proof Sketch .
+4-20:(i ⇒ ii) is immediate; every pure strategy is a trivially mixed strategy .
+4-21:For (ii ⇒ iii), let ci be the n element column vector with jth component 2 (i,a j i ) ; then ci · cii T = MG .
+4-22:For (iii ⇒ i), if rank(MG ) = 1, then MG = u · vT .
+4-23:We can prove that G is strategically zero sum by choosing labels (i, aj i ) := log2 uj and (ii, aj ii) := log2 vj. .
+5 SOCRATIC GAMES WITH UNOBSERVABLE QUERIES :
+5-1:UNOBSERVABLE QUERIES We begin with Socratic games with unobservable queries, where a player"s choice of query is not revealed to her opponent .
+5-2:We give an efficient algorithm to solve unobservablequery Socratic games with strategically zero sum worlds .
+5-3:Our algorithm is based upon the LP shown in Figure 1, whose feasible points are Nash equilibria for the game .
+5-4:The LP has polynomially many variables but exponentially many constraints .
+5-5:We give an efficient separation oracle for the LP, implying that the ellipsoid method [28, 38] yields an efficient algorithm .
+5-6:This approach extends the techniques of Koller and Megiddo [39] (see also [40]) to solve constant sum games represented in extensive form .
+5-7:(Recall that their result does not directly apply in our case; even a Socratic game with constant sum worlds is not a constant sum classical game.) Lemma 4.1 .
+5-8:Let G = A, W, u, S, Q, p, δ be an arbitrary unobservable query Socratic game with strategically zero sum worlds .
+5-9:Any feasible point for the LP in Figure 1 can be efficiently mapped to a Nash equilibrium for G, and any Nash equilibrium for G can be mapped to a feasible point for the program .
+5-10:Proof Sketch .
+5-11:We begin with a description of the correspondence between feasible points for the LP and Nash equilibria for G .
+5-12:First, suppose that strategy profile f = fquery , fresp forms a Nash equilibrium for G .
+5-13:Then the following setting for the LP variables is feasible: yi qi = fquery i (qi) xi ai,qi,w = Pr[ai ← fresp i (qi, qi(w))] · yi qi ρi = P w,q∈Q,a∈A p(w) · xi ai,qi,w · xii aii,qii,w · [uw i (a) − δi(qi)] .
+5-14:(We omit the straightforward calculations that verify feasibility.) Next, suppose xi ai,qi,w, yi qi , ρi is feasible for the LP .
+5-15:Let f be the strategy function profile defined as fquery i : qi → yi qi fresp i (qi, qi(w)) : ai → xi ai,qi,w yi qi .
+5-16:Verifying that this strategy profile is a Nash equilibrium requires checking that fresp i (qi, qi(w)) is a well defined function (from constraint VI), that fquery i and fresp i (qi, qi(w)) are probability distributions (from constraints III and IV), and that each player is playing a best response to his or her opponent"s strategy (from constraints I and II) .
+5-17:Finally, from constraints I and II, the expected payoff to Player i is at most ρi .
+5-18:Because the right hand side of constraint VII is equal to the expected sum of the payoffs from f and is at most ρi + ρii, the payoffs are correct and imply the lemma .
+5-19:We now give an efficient separation oracle for the LP in Figure 1, thus allowing the ellipsoid method to solve the LP in polynomial time .
+5-20:Recall that a separation oracle is a function that, given a setting for the variables in the LP, either returns feasible or returns a particular constraint of the LP that is violated by that setting of the variables .
+5-21:An efficient, correct separation oracle allows us to solve the LP efficiently via the ellipsoid method .
+5-22:Lemma 4.2 .
+5-23:There exists a separation oracle for the LP in Figure 1 that is correct and runs in polynomial time .
+5-24:Proof .
+5-25:Here is a description of the separation oracle SP .
+5-26:On input xi ai,qi,w, yi qi , ρi : and .
+5-27:If any one of these constraints is violated, then return it .
+5-28:fquery i : qi → yi qi fresp i (qi, qi(w)) : ai → xi ai,qi,w yi qi For each query qi, we will compute a pure best response function ˆf qi i for Player I to strategy fii after making query qi .
+5-29:More specifically, given fii and the result qi(wreal) of the query qi, it is straightforward to compute the probability that, conditioned on the fact that the result of query qi is qi(w), the world is w and Player II will play action aii ∈ Aii .
+5-30:Therefore, for each query qi and response qi(w), Player I can compute the expected utility of each pure response ai to the induced mixed strategy over Aii for Player II .
+5-31:Player I can then select the ai maximizing this expected payoff .
+5-32:Let ˆfi be the response function such that ˆfi(qi, qi(w)) = ˆf qi i (qi(w)) for every qi ∈ Qi .
+5-33:Similarly, compute ˆfii .
+5-34:153 Player i does not prefer ‘make query qi, then play according to the function fi" : ∀qi ∈ Qi, fi : Ri → Ai : ρi ≥ P w∈W,aii∈Aii,qii∈Qii,ai=fi(qi,qi(w)) ` p(w) · xii aii,qii,w · [uw i (a) − δi(qi)] ´ ∀qii ∈ Qii, fii : Rii → Aii : ρii ≥ P w∈W,ai∈Ai,qi∈Qi,aii=fii(qii,qii(w)) ` p(w) · xi ai,qi,w · [uw ii (a) − δii(qii)] ´ Every player"s choices form a probability distribution in every world: ∀i ∈ {i,ii}, w ∈ W : 1 = P ai∈Ai,qi∈Qi xi ai,qi,w ∀i ∈ {i,ii}, w ∈ W : 0 ≤ xi ai,qi,w Queries are independent of the world, and actions depend only on query output: ∀i ∈ {i,ii}, qi ∈ Qi, w ∈ W, w ∈ W such that qi(w) = qi(w ) : yi qi = P ai∈Ai xi ai,qi,w xi ai,qi,w = xi ai,qi,w The payoffs are consistent with the labels (i, ai, w): ρi + ρii = P i∈{i,ii} P w∈W,qi∈Qi,ai∈Ai ` p(w) · xi ai,qi,w · [ (i, ai, w) − δi(qi)] ´ Figure 1: An LP to find Nash equilibria in unobservable query Socratic games with strategically zero sum worlds .
+5-35:The input is a Socratic game A, W, u, S, Q, p, δ so that world w is strategically zero sum with labels (i, ai, w) .
+5-36:Player i makes query qi ∈ Qi with probability yi qi and, when the actual world is w ∈ W, makes query qi and plays action ai with probability xi ai,qi,w .
+5-37:The expected payoff to Player i is given by ρi. .
+6 Let ˆρ :
+6-1:qi i be the expected payoff to Player I using the strategy make query qi and play response function ˆfi if Player II plays according to fii .
+6-2:Let ˆρi = maxqi∈Qq ˆρ qi i and let ˆqi = arg maxqi∈Qq ˆρ qi i .
+6-3:Similarly, define ˆρ qii ii , ˆρii, and ˆqii .
+6-4:(I ˆqi ˆfi) or (II ˆqii ˆfii) if either is violated .
+6-5:If both are satisfied, then return feasible .
+6-6:We first note that the separation oracle runs in polynomial time and then prove its correctness .
+6-7:Steps 1 and 4 are clearly polynomial .
+6-8:For Step 2, we have described how to compute the relevant response functions by examining every action of Player I, every world, every query, and every action of Player II .
+6-9:There are only polynomially many queries, worlds, query results, and pure actions, so the running time of Steps 2 and 3 is thus polynomial .
+6-10:We now sketch the proof that the separation oracle works correctly .
+6-11:The main challenge is to show that if any constraint (I qi fi ) is violated then (I ˆqi ˆfi) is violated in Step 4 .
+6-12:First, we observe that, by construction, the function ˆfi computed in Step 3 must be a best response to Player II playing fii, no matter what query Player I makes .
+6-13:Therefore the strategy make query ˆqi, then play response function ˆfi must be a best response to Player II playing fii, by definition of ˆqi .
+6-14:The right hand side of each constraint (I qi fi ) is equal to the expected payoff that Player I receives when playing the pure strategy make query qi and then play response function fi against Player II"s strategy of fii .
+6-15:Therefore, because the pure strategy make query ˆqi and then play response function ˆfi is a best response to Player II playing fii, the right hand side of constraint (I ˆqi ˆfi) is at least as large as the right hand side of any constraint (I ˆqi fi ) .
+6-16:Therefore, if any constraint (I qi fi ) is violated, constraint (I ˆqi ˆfi) is also violated .
+6-17:An analogous argument holds for Player II .
+6-18:These lemmas and the well known fact that Nash equilibria always exist [52] imply the following theorem: Theorem 4.3 .
+6-19:Nash equilibria can be found in polynomial time for any two player unobservable query Socratic game with strategically zero sum worlds. .
+7 SOCRATIC GAMES WITH OBSERVABLE QUERIES :
+7-1:OBSERVABLE QUERIES In this section, we give efficient algorithms to find (1) a Nash equilibrium for observable query Socratic games with constant sum worlds and (2) a correlated equilibrium in the broader class of Socratic games with strategically zero sum worlds .
+7-2:Recall that a Socratic game G = A, W, u, S, Q, p, δ with observable queries proceeds in two stages: Stage 1: The players simultaneously choose queries q ∈ Q .
+7-3:Player i receives as output qi, qii, and qi(wreal) .
+7-4:Stage 2: The players simultaneously choose strategies a ∈ Our work was initially motivated by research in the social sciences indicating that real people seem (irrationally) paralyzed when they are presented with additional options .
+7-5:In this section, we briefly review some of these social science experiments and then discuss technical approaches related to Socratic game theory .
+7-6:Prima facie, a rational agent"s happiness given an added option can only increase .
+7-7:However, recent research has found that more choices tend to decrease happiness: for example, students choosing among extra credit options are more likely to do extra credit if given a small subset of the choices and, moreover, produce higher quality work [35] .
+7-8:(See also [19].) The psychology literature explores a number of explanations: people may miscalculate their opportunity cost by comparing their choice to a component wise maximum of all other options instead of the single best alternative [65], a new option may draw undue attention to aspects of the other options [67], and so on .
+7-9:The present work explores an economic explanation of this phenomenon: information is not free .
+7-10:When there are more options, a decision maker must spend more time to achieve a satisfactory outcome .
+7-11:See, e.g., the work of Skyrms [68] for a philosophical perspective on the role of deliberation in strategic situations .
+7-12:Finally, we note the connection between Socratic games and modal logic [34], a formalism for the logic of possibility and necessity .
+7-13:The observation that human players typically do not play rational strategies has inspired some attempts to model partially rational players .
+7-14:The typical model of this socalled bounded rationality [36, 64, 66] is to postulate bounds on computational power in computing the consequences of a strategy .
+7-15:The work on bounded rationality [23, 24, 53, 58] differs from the models that we consider here in that instead of putting hard limitations on the computational power of the agents, we instead restrict their a priori knowledge of the state of the world, requiring them to spend time (and therefore money utility) to learn about it .
+7-16:Partially observable stochastic games (POSGs) are a general framework used in AI to model situations of multi agent planning in an evolving, unknown environment, but the generality of POSGs seems to make them very difficult [6] .
+7-17:Recent work has been done in developing algorithms for restricted classes of POSGs, most notably classes of cooperative POSGs e.g., [20, 30] which are very different from the competitive strategically zero sum games we address in this paper .
+7-18:The fundamental question in Socratic games is deciding on the comparative value of making a more costly but more informative query, or concluding the data gathering phase and picking the best option, given current information .
+7-19:This tradeoff has been explored in a variety of other contexts; a sampling of these contexts includes aggregating results 156 from delay prone information sources [8], doing approximate reasoning in intelligent systems [72], deciding when to take the current best guess of disease diagnosis from a beliefpropagation network and when to let it continue inference [33], among many others .
+7-20:This issue can also be viewed as another perspective on the general question of exploration versus exploitation that arises often in AI: when is it better to actively seek additional information instead of exploiting the knowledge one already has? (See, e.g., [69].) Most of this work differs significantly from our own in that it considers single agent planning as opposed to the game theoretic setting .
+7-21:A notable exception is the work of Larson and Sandholm [41, 42, 43, 44] on mechanism design for interacting agents whose computation is costly and limited .
+7-22:They present a model in which players must solve a computationally intractable valuation problem, using costly computation to learn some hidden parameters, and results for auctions and bargaining games in this model. .
+8 FUTURE DIRECTIONS :
+8-1:Efficiently finding Nash equilibria in Socratic games with non strategically zero sum worlds is probably difficult because the existence of such an algorithm for classical games has been shown to be unlikely [10, 11, 13, 16, 17, 27, 54, 55] .
+8-2:There has, however, been some algorithmic success in finding Nash equilibria in restricted classical settings (e.g., [21, 46, 47, 57]); we might hope to extend our results to analogous Socratic games .
+8-3:An efficient algorithm to find correlated equilibria in general Socratic games seems more attainable .
+8-4:Suppose the players receive recommended queries and responses .
+8-5:The difficulty is that when a player considers a deviation from his recommended query, he already knows his recommended response in each of the Stage 2 games .
+8-6:In a correlated equilibrium, a player"s expected payoff generally depends on his recommended strategy, and thus a player may deviate in Stage 1 so as to land in a Stage 2 game where he has been given a better than average recommended response .
+8-7:(Socratic games are succinct games of superpolynomial type, so Papadimitriou"s results [56] do not imply correlated equilibria for them.) Socratic games can be extended to allow players to make adaptive queries, choosing subsequent queries based on previous results .
+8-8:Our techniques carry over to O(1) rounds of unobservable queries, but it would be interesting to compute equilibria in Socratic games with adaptive observable queries or with ω(1) rounds of unobservable queries .
+8-9:Special cases of adaptive Socratic games are closely related to single agent problems like minimum latency [1, 7, 26], determining strategies for using priced information [9, 29, 37], and an online version of minimum test cover [18, 50] .
+8-10:Although there are important technical distinctions between adaptive Socratic games and these problems, approximation techniques from this literature may apply to Socratic games .
+8-11:The question of approximation raises interesting questions even in non adaptive Socratic games .
+8-12:An approximate Nash equilibrium is a strategy profile α so that no player can increase her payoff by an additive by deviating from α .
+8-13:Finding approximate Nash equilibria in both adaptive and non adaptive Socratic games is an interesting direction to pursue .
+8-14:Another natural extension is the model where query results are stochastic .
+8-15:In this paper, we model a query as deterministically partitioning the possible worlds into subsets that the query cannot distinguish .
+8-16:However, one could instead model a query as probabilistically mapping the set of possible worlds into the set of signals .
+8-17:With this modification, our unobservable query model becomes equivalent to the model of Bergemann and V¨alim¨aki [4, 5], in which the result of a query is a posterior distribution over the worlds .
+8-18:Our techniques allow us to compute equilibria in such a stochastic query model provided that each query is represented as a table that, for each world signal pair, lists the probability that the query outputs that signal in that world .
+8-19:It is also interesting to consider settings in which the game"s queries are specified by a compact representation of the relevant probability distributions .
+8-20:(For example, one might consider a setting in which the algorithm has only a sampling oracle for the posterior distributions envisioned by Bergemann and V¨alim¨aki.) Efficiently finding equilibria in such settings remains an open problem .
+8-21:Another interesting setting for Socratic games is when the set Q of available queries is given by Q = P(Γ) i.e., each player chooses to make a set q ∈ P(Γ) of queries from a specified groundset Γ of queries .
+8-22:Here we take the query cost to be a linear function, so that δ(q) = P γ∈q δ({γ}) .
+8-23:Natural groundsets include comparison queries (if my opponent is playing strategy aii, would I prefer to play ai or ˆai?), strategy queries (what is my vector of payoffs if I play strategy ai?), and world identity queries (is the world w ∈ W the real world?) .
+8-24:When one can infer a polynomial bound on the number of queries made by a rational player, then our results yield efficient solutions .
+8-25:(For example, we can efficiently solve games in which every groundset element γ ∈ Γ has δ({γ}) = Ω(M − M), where M and M denote the maximum and minimum payoffs to any player in any world.) Conversely, it is NP hard to compute a Nash equilibrium for such a game when every δ({γ}) ≤ 1 |W|2 , even when the worlds are constant sum and Player II has only a single available strategy .
+8-26:Thus even computing a best response for Player I is hard .
+8-27:(This proof proceeds by reduction from set cover; intuitively, for sufficiently low query costs, Player I must fully identify the actual world through his queries .
+8-28:Selecting a minimum sized set of these queries is hard.) Computing Player I"s best response can be viewed as maximizing a submodular function, and thus a best response can be (1 − 1 e) ≈ 0.63 approximated greedily [14] .
+8-29:An interesting open question is whether this approximate best response calculation can be leveraged to find an approximate Nash equilibrium. .
+9-1:Part of this work was done while all authors were at MIT CSAIL
+9-2:We thank Erik Demaine, Natalia Hernandez Gardiol, Claire Monteleoni, Jason Rennie, Madhu Sudan, and Katherine White for helpful comments and discussions.
+10-1:Aaron Archer and David P
+10-2:Williamson
+10-3:Faster approximation algorithms for the minimum latency problem
+10-4:In Proceedings of the Symposium on Discrete Algorithms, pages 88 96, 2003
+10-5:R
+10-6:J
+10-7:Aumann
+10-8:Subjectivity and correlation in randomized strategies
+10-9:J
+10-10:Mathematical Economics, 1:67 96, 1974
+10-11:157 Robert J
+10-12:Aumann
+10-13:Correlated equilibrium as an expression of Bayesian rationality
+10-14:Econometrica, 55(1):1 18, January 1987
+10-15:Dick Bergemann and Juuso V¨alim¨aki
+10-16:Information acquisition and efficient mechanism design
+10-17:Econometrica, 70(3):1007 1033, May 2002
+10-18:Dick Bergemann and Juuso V¨alim¨aki
+10-19:Information in mechanism design
+10-20:Technical Report 1532, Cowles Foundation for Research in Economics, 2005
+10-21:Daniel S
+10-22:Bernstein, Shlomo Zilberstein, and Neil Immerman
+10-23:The complexity of decentralized control of Markov Decision Processes
+10-24:Mathematics of Operations Research, pages 819 840, 2002
+10-25:Avrim Blum, Prasad Chalasani, Don Coppersmith, Bill Pulleyblank, Prabhakar Raghavan, and Madhu Sudan
+10-26:The minimum latency problem
+10-27:In Proceedings of the Symposium on the Theory of Computing, pages 163 171, 1994
+10-28:Andrei Z
+10-29:Broder and Michael Mitzenmacher
+10-30:Optimal plans for aggregation
+10-31:In Proceedings of the Principles of Distributed Computing, pages 144 152, 2002
+10-32:Moses Charikar, Ronald Fagin, Venkatesan Guruswami, Jon Kleinberg, Prabhakar Raghavan, and Amit Sahai
+10-33:Query strategies for priced information
+10-34:J
+10-35:Computer and System Sciences, 64(4):785 819, June 2002
+10-36:Xi Chen and Xiaotie Deng
+10-37:3 NASH is PPAD complete
+10-38:In Electronic Colloquium on Computational Complexity, 2005
+10-39:Xi Chen and Xiaotie Deng
+10-40:Settling the complexity of 2 player Nash equilibrium
+10-41:In Electronic Colloquium on Computational Complexity, 2005
+10-42:Olivier Compte and Philippe Jehiel
+10-43:Auctions and information acquisition: Sealed bid or dynamic formats? Technical report, Centre d"Enseignement et de Recherche en Analyse Socio ´economique, 2002
+10-44:Vincent Conitzer and Tuomas Sandholm
+10-45:Complexity results about Nash equilibria
+10-46:In Proceedings of the International Joint Conference on Artificial Intelligence, pages 765 771, 2003
+10-47:Gerard Cornuejols, Marshall L
+10-48:Fisher, and George L
+10-49:Nemhauser
+10-50:Location of bank accounts to optimize float: An analytic study of exact and approximate algorithms
+10-51:Management Science, 23(8), April 1977
+10-52:Jacques Cr´emer and Fahad Khalil
+10-53:Gathering information before signing a contract
+10-54:American Economic Review, 82:566 578, 1992
+10-55:Constantinos Daskalakis, Paul W
+10-56:Goldberg, and Christos H
+10-57:Papadimitriou
+10-58:The complexity of computing a Nash equilbrium
+10-59:In Electronic Colloquium on Computational Complexity, 2005
+10-60:Konstantinos Daskalakis and Christos H
+10-61:Papadimitriou
+10-62:Three player games are hard
+10-63:In Electronic Colloquium on Computational Complexity, 2005
+10-64:K
+10-65:M
+10-66:J
+10-67:De Bontridder, B
+10-68:V
+10-69:Halld´orsson, M
+10-70:M
+10-71:Halld´orsson, C
+10-72:A
+10-73:J
+10-74:Hurkens, J
+10-75:K
+10-76:Lenstra, R
+10-77:Ravi, and L
+10-78:Stougie
+10-79:Approximation algorithms for the test cover problem
+10-80:Mathematical Programming, 98(1 3):477 491, September 2003
+10-81:Ap Dijksterhuis, Maarten W
+10-82:Bos, Loran F
+10-83:Nordgren, and Rick B
+10-84:van Baaren
+10-85:On making the right choice: The deliberation without attention effect
+10-86:Science, 311:1005 1007, 17 February 2006
+10-87:Rosemary Emery Montemerlo, Geoff Gordon, Jeff Schneider, and Sebastian Thrun
+10-88:Approximate solutions for partially observable stochastic games with common payoffs
+10-89:In Autonomous Agents and Multi Agent Systems, 2004
+10-90:Alex Fabrikant, Christos Papadimitriou, and Kunal Talwar
+10-91:The complexity of pure Nash equilibria
+10-92:In Proceedings of the Symposium on the Theory of Computing, 2004
+10-93:Kyna Fong
+10-94:Multi stage Information Acquisition in Auction Design
+10-95:Senior thesis, Harvard College, 2003
+10-96:Lance Fortnow and Duke Whang
+10-97:Optimality and domination in repeated games with bounded players
+10-98:In Proceedings of the Symposium on the Theory of Computing, pages 741 749, 1994
+10-99:Yoav Freund, Michael Kearns, Yishay Mansour, Dana Ron, Ronitt Rubinfeld, and Robert E
+10-100:Schapire
+10-101:Efficient algorithms for learning to play repeated games against computationally bounded adversaries
+10-102:In Proceedings of the Foundations of Computer Science, pages 332 341, 1995
+10-103:Drew Fudenberg and Jean Tirole
+10-104:Game Theory
+10-105:MIT, 1991
+10-106:Michel X
+10-107:Goemans and Jon Kleinberg
+10-108:An improved approximation ratio for the minimum latency problem
+10-109:Mathematical Programming, 82:111 124, 1998
+10-110:Paul W
+10-111:Goldberg and Christos H
+10-112:Papadimitriou
+10-113:Reducibility among equilibrium problems
+10-114:In Electronic Colloquium on Computational Complexity, 2005
+10-115:M
+10-116:Grotschel, L
+10-117:Lovasz, and A
+10-118:Schrijver
+10-119:The ellipsoid method and its consequences in combinatorial optimization
+10-120:Combinatorica, 1:70 89, 1981
+10-121:Anupam Gupta and Amit Kumar
+10-122:Sorting and selection with structured costs
+10-123:In Proceedings of the Foundations of Computer Science, pages 416 425, 2001
+10-124:Eric A
+10-125:Hansen, Daniel S
+10-126:Bernstein, and Shlomo Zilberstein
+10-127:Dynamic programming for partially observable stochastic games
+10-128:In National Conference on Artificial Intelligence (AAAI), 2004
+10-129:John C
+10-130:Harsanyi
+10-131:Games with incomplete information played by Bayesian players
+10-132:Management Science, 14(3,5,7), 1967 1968
+10-133:Sergiu Hart and David Schmeidler
+10-134:Existence of correlated equilibria
+10-135:Mathematics of Operations Research, 14(1):18 25, 1989
+10-136:Eric Horvitz and Geoffrey Rutledge
+10-137:Time dependent utility and action under uncertainty
+10-138:In Uncertainty in Artificial Intelligence, pages 151 158, 1991
+10-139:G
+10-140:E
+10-141:Hughes and M
+10-142:J
+10-143:Cresswell
+10-144:A New Introduction to Modal Logic
+10-145:Routledge, 1996
+10-146:Sheena S
+10-147:Iyengar and Mark R
+10-148:Lepper
+10-149:When choice is demotivating: Can one desire too much of a good thing? J
+10-150:Personality and Social Psychology, 79(6):995 1006, 2000
+10-151:Ehud Kalai
+10-152:Bounded rationality and strategic complexity in repeated games
+10-153:Game Theory and Applications, pages 131 157, 1990
+10-154:158 Sampath Kannan and Sanjeev Khanna
+10-155:Selection with monotone comparison costs
+10-156:In Proceedings of the Symposium on Discrete Algorithms, pages 10 17, 2003
+10-157:L.G
+10-158:Khachiyan
+10-159:A polynomial algorithm in linear programming
+10-160:Dokklady Akademiia Nauk SSSR, 244, 1979
+10-161:Daphne Koller and Nimrod Megiddo
+10-162:The complexity of two person zero sum games in extensive form
+10-163:Games and Economic Behavior, 4:528 552, 1992
+10-164:Daphne Koller, Nimrod Megiddo, and Bernhard von Stengel
+10-165:Efficient computation of equilibria for extensive two person games
+10-166:Games and Economic Behavior, 14:247 259, 1996
+10-167:Kate Larson
+10-168:Mechanism Design for Computationally Limited Agents
+10-169:PhD thesis, CMU, 2004
+10-170:Kate Larson and Tuomas Sandholm
+10-171:Bargaining with limited computation: Deliberation equilibrium
+10-172:Artificial Intelligence, 132(2):183 217, 2001
+10-173:Kate Larson and Tuomas Sandholm
+10-174:Costly valuation computation in auctions
+10-175:In Proceedings of the Theoretical Aspects of Rationality and Knowledge, July 2001
+10-176:Kate Larson and Tuomas Sandholm
+10-177:Strategic deliberation and truthful revelation: An impossibility result
+10-178:In Proceedings of the ACM Conference on Electronic Commerce, May 2004
+10-179:C
+10-180:E
+10-181:Lemke and J
+10-182:T
+10-183:Howson, Jr
+10-184:Equilibrium points of bimatrix games
+10-185:J
+10-186:Society for Industrial and Applied Mathematics, 12, 1964
+10-187:Richard J
+10-188:Lipton, Evangelos Markakis, and Aranyak Mehta
+10-189:Playing large games using simple strategies
+10-190:In Proceedings of the ACM Conference on Electronic Commerce, pages 36 41, 2003
+10-191:Michael L
+10-192:Littman, Michael Kearns, and Satinder Singh
+10-193:An efficient exact algorithm for singly connected graphical games
+10-194:In Proceedings of Neural Information Processing Systems, 2001
+10-195:Steven A
+10-196:Matthews and Nicola Persico
+10-197:Information acquisition and the excess refund puzzle
+10-198:Technical Report 05 015, Department of Economics, University of Pennsylvania, March 2005
+10-199:Richard D
+10-200:McKelvey and Andrew McLennan
+10-201:Computation of equilibria in finite games
+10-202:In H
+10-203:Amman, D
+10-204:A
+10-205:Kendrick, and J
+10-206:Rust, editors, Handbook of Compututational Economics, volume 1, pages 87 142
+10-207:Elsevier, 1996
+10-208:B.M.E
+10-209:Moret and H
+10-210:D
+10-211:Shapiro
+10-212:On minimizing a set of tests
+10-213:SIAM J
+10-214:Scientific Statistical Computing, 6:983 1003, 1985
+10-215:H
+10-216:Moulin and J. P
+10-217:Vial
+10-218:Strategically zero sum games: The class of games whose completely mixed equilibria cannot be improved upon
+10-219:International J
+10-220:Game Theory, 7(3 4), 1978
+10-221:John F
+10-222:Nash, Jr
+10-223:Equilibrium points in n person games
+10-224:Proceedings of the National Academy of Sciences, 36:48 49, 1950
+10-225:Abraham Neyman
+10-226:Finitely repeated games with finite automata
+10-227:Mathematics of Operations Research, 23(3):513 552, August 1998
+10-228:Christos Papadimitriou
+10-229:On the complexity of the parity argument and other inefficient proofs of existence
+10-230:J
+10-231:Computer and System Sciences, 48:498 532, 1994
+10-232:Christos Papadimitriou
+10-233:Algorithms, games, and the internet
+10-234:In Proceedings of the Symposium on the Theory of Computing, pages 749 753, 2001
+10-235:Christos H
+10-236:Papadimitriou
+10-237:Computing correlated equilibria in multi player games
+10-238:In Proceedings of the Symposium on the Theory of Computing, 2005
+10-239:Christos H
+10-240:Papadimitriou and Tim Roughgarden
+10-241:Computing equilibria in multiplayer games
+10-242:In Proceedings of the Symposium on Discrete Algorithms, 2005
+10-243:Christos H
+10-244:Papadimitriou and Mihalis Yannakakis
+10-245:On bounded rationality and computational complexity
+10-246:In Proceedings of the Symposium on the Theory of Computing, pages 726 733, 1994
+10-247:David C
+10-248:Parkes
+10-249:Auction design with costly preference elicitation
+10-250:Annals of Mathematics and Artificial Intelligence, 44:269 302, 2005
+10-251:Nicola Persico
+10-252:Information acquisition in auctions
+10-253:Econometrica, 68(1):135 148, 2000
+10-254:Jean Pierre Ponssard and Sylvain Sorin
+10-255:The LP formulation of finite zero sum games with incomplete information
+10-256:International J
+10-257:Game Theory, 9(2):99 105, 1980
+10-258:Eric Rasmussen
+10-259:Strategic implications of uncertainty over one"s own private value in auctions
+10-260:Technical report, Indiana University, 2005
+10-261:Leonardo Rezende
+10-262:Mid auction information acquisition
+10-263:Technical report, University of Illinois, 2005
+10-264:Ariel Rubinstein
+10-265:Modeling Bounded Rationality
+10-266:MIT, 1988
+10-267:Barry Schwartz
+10-268:The Paradox of Choice: Why More is Less
+10-269:Ecco, 2004
+10-270:Herbert Simon
+10-271:Models of Bounded Rationality
+10-272:MIT, 1982
+10-273:I
+10-274:Simonson and A
+10-275:Tversky
+10-276:Choice in context: Tradeoff contrast and extremeness aversion
+10-277:J
+10-278:Marketing Research, 29:281 295, 1992
+10-279:Brian Skyrms
+10-280:Dynamic models of deliberation and the theory of games
+10-281:In Proceedings of the Theoretical Aspects of Rationality and Knowledge, pages 185 200, 1990
+10-282:Richard Sutton and Andrew Barto
+10-283:Reinforcement Learning: An Introduction
+10-284:MIT, 1998
+10-285:John von Neumann and Oskar Morgenstern
+10-286:Theory of Games and Economic Behavior
+10-287:Princeton, 1957
+10-288:Bernhard von Stengel
+10-289:Computing equilibria for two person games
+10-290:In R
+10-291:J
+10-292:Aumann and S
+10-293:Hart, editors, Handbook of Game Theory with Econonic Applications, volume 3, pages 1723 1759
+10-294:Elsevier, 2002
+10-295:S
+10-296:Zilberstein and S
+10-297:Russell
+10-298:Approximate reasoning using anytime algorithms
+10-299:In S
+10-300:Natarajan, editor, Imprecise and Approximate Computation
+10-301:Kluwer, 1995
+10-302:159
+picture:

@@ -1,0 +1,39 @@
+probabilities of relevance for all documents retrieved by all k runs .
+for all pairs of runs .
+We do the same for MTC, but omit step 4 .
+Note that after evaluating the first c systems, we make no additional relevance judgments .
+To put our method to the test, we selected c = 2
+We will then generalize to a set of k = 10 (of which those two are a subset) .
+As we run more trials, we obtain the data we need to test all three of our hypotheses .
+4.4 Experimental Evaluation Recall that a set of judgments is robust if the accuracy of the predictions it makes is at least its estimated confidence .
+One way to evaluate robustness is to bin pairs by their confidence, then calculate the accuracy over all the pairs in each bin .
+We would like the accuracy to be no less than the lowest confidence score in the bin, but preferably higher .
+Since summary statistics are useful, we devised the following metric .
+Suppose we are a bookmaker taking bets on whether £GMAP < 0 .
+We use RTC or MTC to set the odds O = P (£GMAP <0) 1?P (£GMAP <0) .
+Suppose a bettor wagers $1 on £GMAP ? 0 .
+If it turns out that £GMAP < 0, we win the dollar .
+Otherwise, we pay out O .
+If our confidence estimates are perfectly accurate, we break even .
+If confidence is greater than accuracy, we lose money; we win if accuracy is greater than confidence .
+Counterintuitively, the most desirable outcome is breaking even
+However, the cost of not being able to trust the confidence estimates is higher than the cost of extra relevance judgments, so we will treat positive outcomes as good .
+The amount we win on each pairwise comparison i is
+The summary statistic is W, the mean of Wi .
+Note that as Pi increases, we lose more for being wrong .
+This is as it should be
+However, since our losses grow without bound as predictions approach certainty, we cap ?Wi at 100 .
+For our hypothesis that RTC requires fewer judgments than MTC, we are interested in the number of judgments needed to reach 95% confidence on the first pair of systems .
+The median is more interesting than the mean
+The distribution is therefore highly skewed, and the mean strongly affected by those outliers .
+Finally, for our hypothesis that RTC is more accurate than MTC, we will look at Kendall"s £n correlation between a ranking of k systems by a small set of judgments and the true ranking using the full set of judgments .
+Kendall"s £n, a nonparametric statistic based on pairwise swaps between two lists, is a standard evaluation for this type of study .
+It ranges from ?1 (perfectly anti correlated) to 1 (rankings identical), with 0 meaning that half of the pairs are swapped .
+As we touched on in the introduction, though, an accuracy measure like rank correlation is not a good evaluation of reusability .
+We include it for completeness .
+4.4.1 Hypothesis Testing Running multiple trials allows the use of statistical hypothesis testing to compare algorithms .
+Using the same sets of systems allows the use of paired tests .
+As we stated above, we are more interested in the median number of judgments than the mean .
+A test for difference in median is the Wilcoxon sign rank test .
+We can also use a paired t test to test for a difference in mean .
+For rank correlation, we can use a paired t test to test for a difference in £n. .

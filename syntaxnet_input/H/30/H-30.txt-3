@@ -1,0 +1,31 @@
+One of the classic and most widely used approaches to query expansion is the Rocchio algorithm [21] .
+Rocchio"s approach, which was developed within the vector space model, reweights the original query vector by moving the weights towards the set of relevant or pseudo relevant documents and away from the non relevant documents .
+Unfortunately, it is not possible to formally apply Rocchio"s approach to a statistical retrieval model, such as language modeling for information retrieval .
+A number of formalized query expansion techniques have been developed for the language modeling framework, including Zhai and Lafferty"s model based feedback and Lavrenko and Croft"s relevance models [12, 29] .
+Both approaches attempt to use pseudo relevant or relevant documents to estimate a better query model .
+Model based feedback finds the model that best describes the relevant documents while taking a background (noise) model into consideration .
+This separates the content model from the background model .
+The content model is then interpolated with the original query model to form the expanded query .
+The other technique, relevance models, is more closely related to our work .
+Therefore, we go into the details of the model .
+Much like model based feedback, relevance models estimate an improved query model .
+The only difference between the two approaches is that relevance models do not explicitly model the relevant or pseudo relevant documents .
+Instead, they model a more generalized notion of relevance, as we now show .
+Given a query Q, a relevance model is a multinomial distribution, P(¡P|Q), that encodes the likelihood of each term given the query as evidence .
+It is computed as
+In the pseudo relevant case, these are the top ranked documents for query Q .
+Furthermore, it is assumed that P(D) is uniform over this set .
+These mild assumptions make computing the Bayesian posterior more practical .
+After the model is estimated, documents are ranked by clipping the relevance model by choosing the k most likely terms from P(¡P|Q) .
+This clipped distribution is then interpolated with with the original, maximum likelihood query model [1] .
+This can be thought of as expanding the original query by k weighted terms .
+Throughout the remainder of this work, we refer to this instantiation of relevance models as RM3 .
+There has been relatively little work done in the area of query expansion in the context of dependence models [9] .
+However, there have been several attempts to expand using multi term concepts .
+Xu and Croft"s local context analysis method combined passage level retrieval with concept expansion, where concepts were single terms and phrases [28] .
+Expansion concepts were chosen and weighted using a metric based on co occurrence statistics .
+However, it is not clear based on the analysis done how much the phrases helped over the single terms alone .
+Papka and Allan investigate using relevance feedback to perform multi term concept expansion for document routing [19] .
+The concepts used in their work are more general than those used in LCA, and include InQuery query language structures, such as #UW50(white house), which corresponds to the concept the terms white and house occur, in any order, within 50 terms of each other .
+Results showed that combining single term and large window multi term concepts significantly improved effectiveness .
+However, it is unclear whether the same approach is also effective for ad hoc retrieval, due to the differences in the tasks. .

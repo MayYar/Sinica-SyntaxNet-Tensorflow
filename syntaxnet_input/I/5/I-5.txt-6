@@ -1,0 +1,69 @@
+The first part of this section gives a short overview of the setup of our simulation environment .
+In the rest of the section, results of the experiments are presented and discussed .
+All experiments are conducted in a special testbed that simulates and models a multi agent system .
+We have implemented this test bed in the Java programming language, independent from any specific agent toolkit .
+It allows a variety of experiments in in stable as well as dynamic environments with a configurable number of agents, tasks and servers .
+An event driven model is used to trigger all activities in the system .
+For all simulations, we limited the number of history data for each server to 10, the number of performance ratings per predictor to 10 and assigned 10 predictors to every predictor set for each agent .
+All predictors are chosen randomly from a arbitrary predefined set of 32 predictors of the following type .
+Predictors differ in different cycles or window sizes .
+n cycle predictor
+n distribution predictor
+Resource loads for each server are calculated using equation 1 as the sum of the resource consumption of all currently executed agents at this server .
+The total resource load of the system is calculated as the sum of the resources load of all resources .
+The self organising resource allocation algorithm has random elements .
+Therefore, the presented results show mean values and standard derivation calculated over 100 repeated experiments .
+5.1 Experimental Setup The following parameters have an impact on the resource allocation process .
+We give an overview of the parameters and a short description .
+Agents
+This number varies in the experiments between 650 and 750 dependent on the total amount of available system resources .
+Resource consumption
+The resource consumption is assigned randomly to each task prior to its allocation from an interval .
+Resource consumption is specified in resource units which corresponds to real world metrics like memory or processor cycles .
+Agent home server
+The resources of those servers not considered in our simulation and does not affect the resource allocation performance .
+Server resources
+The first experiment is conducted in a static server environment that provides the same amount of shared resources, while the other experiment varies the available server resource during the simulation .
+The total amount of resources remains constant in both experiments .
+Execution time
+For this time the task consumes the assigned amount of server resources .
+This parameter is randomly assigned before the execution .
+Task creation time
+This parameter influences the age of the historical information about resources and has a major influence on the length of the initial adaptation phase .
+This parameter is randomly assigned after the task was completed .
+5.2 Experimental Results This section shows results from selected experiments that demonstrate the performance of our proposed resource allocation mechanism .
+The first experiment show the performance in a stable environment where a number of agents allocate tasks to servers that provide a constant amount of resources .
+The second experiment was conducted in a dynamic server environment with a constant number of agents .
+The first experiment shows our model in a stable 3 server environment that provide a total amount of 7000 resource units .
+The resource capacity of each server remains constant over the experiment .
+We used 650 agents with the parameters of the execution time between 1 and 15 time units and a task creation time in the interval [0 ? 30] time units .
+The task"s resource consumption is randomly assigned from the interval [1 ? 45] resource units .
+Figure 4 shows the results from 100 repetitions of this experiment .
+Figure 4(a) shows that the total amount of provided resources is larger than the demand of resource in average .
+At the beginning of the experiment, all agents allocate their tasks randomly at one of the available servers and explore the available capacities and resource utilisations for about 150 time units .
+This initial exploration phase shows that the average resource load of each server has a similar level .
+This causes an overload situation at server 1 because of its low capacity of shared resources, and a large amount of free resources on server overload situation and explore randomly other available servers .
+They find free resources at server 2 .
+After learning period, the agents have self organised themselves in this stable environment and find a stable solution for the allocation of The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 79 0 250 500 750 1,000 1,250 1,500 Time 0 1,000 2,000 3,000 4,000 5,000 6,000 7,000 ResourceLoad (a) Total resource load versus total shared resource capacity 0 250 500 750 1,000 1,250 1,500 Time 0 500 1,000 1,500 2,000 2,500 ResourceLoad (b) Resource load server 0 0 250 500 750 1,000 1,250 1,500 Time 0 500 1,000 1,500 2,000 2,500 ResourceLoad (c) Resource load server 1 0 250 500 750 1,000 1,250 1,500 Time 0 500 1,000 1,500 2,000 2,500 3,000 3,500 4,000 ResourceLoad (d) Resource load server 2 Figure 4
+all tasks .
+The standard deviation of the resource loads are small for each server, which indicates that our distributed approach find stable solutions in almost every run .
+This experiment used algorithm 2 for the selection of the active server .
+We also ran the same experiment with the most free resources selection mechanism to select the active server .
+The resource allocation for each server is similar .
+The absolute amount of free resources per server is almost the same .
+Experiment 2 was conducted in a dynamic 3 server environment with a number of 750 agents .
+The amount of resources of server 0 and server 1 changes periodically, while the total amount of available resources remains constant .
+Server 0 has an initial capacity of 1000 units, server 1 start with a capacity of 4000 units .
+The change in capacity starts after 150 time units, which is approximately the end of the learning phase .
+Figure 5 (b, c, d) shows the behaviour of our self organising resource allocation in this environment .
+All agents use the deterministic most free resources selection mechanism to select the active server .
+It can bee seen in Fig .
+5(b) and 5(c) that the number of allocated resources to server 0 and server 1 changes periodically with the amount of provided resources .
+This shows that agents can sense available resources in this dynamic environment and are able to adapt to those changes .
+The resource load development of server 2 (see Fig .
+5(d)) shows a periodic change because some agent try to be allocated tasks to this server in case their previously favoured server reduce the amount of shared resources .
+The total resource load of all shared resources is constant over the experiments, which indicates the all agents allocate their tasks to one of the shared resource (comp .
+Fig .
+4(a)). .

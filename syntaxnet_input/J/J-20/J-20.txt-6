@@ -1,0 +1,172 @@
+CYCLE FORMULATION In this section, we consider a formulation of the clearing problem as an ILP with one variable for each cycle .
+This encoding is based on the following classical algorithm for solving the directed cycle cover problem when cycles have length 2 .
+Given a market G = (V, E), construct a new graph on V with a weight wc edge for each cycle c of length 2 .
+It is easy to see that matchings in this new graph correspond to cycle covers by length 2 cycles in the original market graph .
+Hence, the market clearing problem with L = 2 can be solved in polynomial time by finding a maximum weight matching .
+c_1 v 1 v 2 v 3 v 4 c_3c_2 Figure 4
+We can generalize this encoding for arbitrary L .
+Let C(L) be the set of all cycles of G with length at most L .
+Then the following ILP finds the maximum weight cycle cover by C(L) cycles
+The edge formulation can be solved in polynomial time when there are no constraints on the cycle size .
+The cycle formulation can be solved in polynomial time when the cycle size is at most 2 .
+We now consider the case of short cycles of length at most L, where L ? 3 .
+Our tree search algorithms use the LP relaxation of these formulations to provide upper bounds on the optimal solution .
+These bounds help prune subtrees and guide the search in the usual ways .
+Theorem 2 .
+The LP relaxation of the cycle formulation weakly dominates the LP relaxation of the edge formulation .
+Proof .
+Consider an optimal solution to the LP relaxation of the cycle formulation .
+We show how to construct an equivalent solution in the edge formulation .
+For each edge in the graph, set its value as the sum of values of all the cycles of which it is a member .
+Also, define the value of a vertex in the same manner .
+Because of the cycle constraints, the conservation and capacity constraints of the edge encoding are clearly satisfied .
+It remains to show that none of the path constraints are violated .
+Let p be any length L path in the graph .
+Since p has L?1 interior vertices (not counting the endpoints), the value sum of these interior vertices is at most L?1 .
+Now, for any cycle c of length at most L, the number of edges it has in p, which we denote by ec(p), is at most the number of interior vertices it has in p, which we denote by vc(p) .
+Hence, ? e?p e = ? c?C(L) c?ec(p) ? ? c?C(L) c?vc(p) = ? v?p v = L?1 .
+299 The converse of this theorem is not true .
+Consider a graph which is simply a cycle with n edges .
+Clearly, the LP relaxation of the cycle formulation has optimal value 0, since there are no cycles of size at most L .
+However, the edge formulation has a solution of size n 2, with each edge having value 1 2 .
+Hence, the cycle formulation is tighter than the edge formulation .
+Additionally, for a graph with m edges, the edge formulation requires O(m3 ) constraints, while the cycle formulation requires only O(m2 ) .
+5.2 Column Generation for the LP Table 2 shows how the number of cycles of length at most 3 grows with the size of the market .
+With one variable per cycle in the cycle formulation, CPLEX cannot even clear markets with 1,000 patients without running out of memory (see Figure 6) .
+To address this problem, we used an incremental formulation approach .
+The first step in LP guided tree search is to solve the LP relaxation .
+Since the cycle formulation does not fit in memory, this LP stage would fail immediately without an incremental formulation approach .
+However, motivated by the observation that an exchange solution can include only a tiny fraction of the cycles, we explored the approach of using column (i.e., cycle) generation .
+The idea of column generation is to start with a restricted LP containing only a small number of columns (variables, i.e., cycles), and then to repeatedly add columns until an optimal solution to this partially formulated LP is an optimal solution to the original (aka master) LP .
+We explain this further by way of an example .
+Consider the market in Figure 1 with L = 2 .
+Figure 5 gives the corresponding master LP, P, and its dual, D .
+Primal P max 2c1 +2c2 +2c3 s.t .
+c1 ? 1 (v1) c1 +c2 ? 1 (v2) +c2 +c3 ? 1 (v3) +c3 ? 1 (v4) with c1, c2, c3 ? 0 Dual D min v1 +v2 +v3 +v4 s.t v1 +v2 ? 2 (c1) +v2 +v3 ? 2 (c2) +v3 +v4 ? 2 (c3) with v1, v2, v3, v4 ? 0 Figure 5
+Let P be the restriction of P containing columns c1 and c3 only .
+Let D be the dual of P , that is, D is just D without the constraint c2 .
+Because P and D are small, we can solve them to obtain OPT(P ) = OPT(D ) = 4, with cOP T (P ) = c1 = c3 = 1 and vOP T (D ) = v1 = v2 = v3 = v4 = 1 .
+While cOP T (P ) must be a feasible solution of P, it turns out (fortunately) that vOP T (D ) is feasible for D, so that OPT(D ) ? OPT(D) .
+We can verify this by checking that vOP T (D ) satisfies the constraints of D not already in Di.e .
+constraint c2 .
+It follows that OPT(P ) = OPT(D ) ? OPT(D) = OPT(P), and so vOP T (P ) is provably an optimal solution for P, even though P is contains a only strict subset of the columns of P .
+Of course, it may turn out (unfortunately) that vOP T (D ) is not feasible for D .
+This can happen above if vOP T (D ) = v1 = 2, v2 = 0, v3 = 0, v4 = 2 .
+Although we can still see that OPT(D ) = OPT(D), in general we cannot prove this because D and P are too large to solve .
+Instead, because constraint c2 is violated, we add column c2 to P , update D , and repeat .
+The problem of finding a violated constraint is called the pricing problem .
+Here, the price of a column (cycle in our setting) is the difference between its weight, and the dual value sum of the cycle"s vertices .
+If any column of P has a positive price, its corresponding constraint is violated and we have not yet proven optimality .
+In this case, we must continue generating columns to add to P .
+5.2.1 Pricing Problem For smaller instances, we can maintain an explicit collection of all feasible cycles .
+This makes the pricing problem easy and efficient to solve
+We can even find cycles with the most positive price, which are the ones most likely to improve the objective value of restricted LP [1] .
+This approach does not scale however .
+A market with 5000 patients can have as many as 400 million cycles of length at most 3 (see Table 2) .
+This is too many cycles to keep in memory .
+Hence, for larger instances, we have to generate feasible cycles while looking for one with a positive price .
+We do this using a depth first search algorithm on the market graph (see Figure 1) .
+In order to make this search faster, we explore vertices in non decreasing value order, as these vertices are more likely to belong to cycles with positive weight .
+We also use several pruning rules to determine if the current search path can lead to a positive weight cycle .
+For example, at a given vertex in the search, we can prune based on the fact that every vertex we visit from this point onwards will have value at least as great the current vertex .
+Even with these pruning rules, column generation is a bottleneck .
+Hence, we also implemented the following optimizations .
+Whenever the search exhaustively proves that a vertex belongs to no positive price cycle, we mark the vertex and do not use it as the root of a depth first search until its dual value decreases .
+In this way, we avoid unnecessarily repeating our computational efforts from a previous column generation iteration .
+Finally, it can sometimes be beneficial for column generation to include several positive price columns in one iteration, since it may be faster to generate a second column, once the first one is found .
+However, we avoid this for the following reason .
+If we attempt to find more positive price columns than there are to be found, or if the columns are far apart in the search space, we end up having to generate and check a large part of the collection of feasible cycles .
+In our experiments, we have seen this occur in markets with hundreds of millions of cycles, resulting in prohibitively expensive computation costs .
+5.2.2 Column Seeding Even if there is only a small gap to the master LP relaxation, column generation requires many iterations to improve the objective value of the restricted LP .
+Each of these 300 iterations is expensive, as we must solve the pricing problem, and re solve the restricted LP .
+Hence, although we could begin with no columns in the restricted LP, it is much faster to seed the LP with enough columns that the optimal objective value is not too far from the master LP .
+Of course, we cannot include so many columns that we run out of memory .
+We experimented with several column seeders .
+In one class of seeder, we use a heuristic to find an exchange, and then add the cycles of that exchange to the initial restricted LP .
+We implemented two heuristics .
+The first is a greedy algorithm
+The other heuristic uses specialized maximum weight matching code [16] to find an optimal cover by length 2 cycles .
+These heuristics perform extremely well, especially taking into account the fact that they only add a small number of columns .
+For example, Table 1 shows that an optimal cover by length 2 cycles has almost as much weight as the exchange with unrestricted cycle size .
+However, we have enough memory to include hundreds of thousands of additional columns and thereby get closer still to the upper bound .
+Our best column seeder constructs a random collection of feasible cycles .
+Since a market with 5000 patients can have as many as 400 million feasible cycles, it takes too long to generate and traverse all feasible cycles, and so we do not include a uniformly random collection .
+Instead, we perform a random walk on the market graph (see, for example, Figure 1), in which, after each step of the walk, we test whether there is an edge back onto our path that forms a feasible cycle .
+If we find a cycle, it is included in the restricted LP, and we start a new walk from a random vertex .
+In our experiments (see Section 6), we use this algorithm to seed the LP with 400,000 cycles .
+This last approach outperforms the heuristic seeders described above .
+However, in our algorithm, we use a combination that takes the union of all columns from all three seeders .
+In Figure 6, we compare the performance of the combination seeder against the combination without the random collection seeder .
+We do not plot the performance of the algorithm without any seeder at all, because it can take hours to clear markets we can otherwise clear in a few minutes .
+5.2.3 Proving Optimality Recall that our aim is to find an optimal solution to the master LP relaxation .
+Using column generation, we can prove that a restricted primal solution is optimal once all columns have non positive prices .
+Unfortunately though, our clearing problem has the so called tailing off effect [1, Section 6.3], in which, even though the restricted primal is optimal in hindsight, a large number of additional iterations are required in order to prove optimality (i.e., eliminate all positive price columns) .
+There is no good general solution to the tailing off effect .
+However, to mitigate this effect, we take advantage of the following problem specific observation .
+Recall from Section 1.1 that, almost always, a maximum weight exchange with cycles of length at most 3 has the same weight as an unrestricted maximum weight exchange .
+(This does not mean that the solver for the unrestricted case will find a solution with short cycles, however.) Furthermore, the unrestricted clearing problem can be solved in polynomial time (recall Section 4) .
+Hence, we can efficiently compute an upper bound on the master LP relaxation, and, whenever the restricted primal achieves this upper bound, we have proven optimality without necessarily having to eliminate all positive price columns! In order for this to improve the running time of the overall algorithm, we need to be able to clear the unrestricted market in less time than it takes column generation to eliminate all the positive price cycles .
+Even though the first problem is polynomial time solvable, this is not trivial for large instances .
+For example, for a market with 10,000 patients and 25 million edges, specialized maximum weight matching code [16] was too slow, and CPLEX ran out of memory on the edge formulation encoding from Section 4 .
+To make this idea work then, we used column generation to solve the edge formulation .
+This involves starting with a small random subset of the edges, and then adding positive price edges one by one until none remain .
+We conduct this secondary column generation not in the original market graph G, but in the perfect matching bipartite graph of Figure 3 .
+We do this so that we only need to solve the LP, not the ILP, since the integrality gap in the perfect matching bipartite graph is 1 i.e .
+there always exists an integral solution that achieves the fractional upper bound .
+The resulting speedup to the overall algorithm is dramatic, as can be seen in Figure 6 .
+5.2.4 Column Management If the optimal value of the initial restricted LP P is far from the the master LP P, then a large number of columns are generated before the gap is closed .
+This leads to memory problems on markets with as few as 4,000 patients .
+Also, even before memory becomes an issue, the column generation iterations become slow because of the additional overhead of solving a larger LP .
+To address these issues, we implemented a column management scheme to limit the size of the restricted LP .
+Whenever we add columns to the LP, we check to see if it contains more than a threshold number of columns .
+If this is the case, we selectively remove columns until it is again below the threshold2 .
+As we discussed earlier, only a tiny fraction of all the cycles will end up in the final solution .
+It is unlikely that we delete such a cycle, and even if we do, it can always be generated again .
+Of course, we must not be too aggressive with the threshold, because doing so may offset the per iteration performance gains by significantly increasing the number of iterations required to get a suitable column set in the LP at the same time .
+There are some columns we never delete, for example those we have branched on (see Section 5.3.2), or those with a non zero LP value .
+Amongst the rest, we delete those with the lowest price, since those correspond to the dual constraints that are most satisfied .
+This column management scheme works well and has enabled us to clear markets with 10,000 patients, as seen in Figure 6 .
+5.3 Branch and Price Search for the ILP Given a large market clearing problem, we can successfully solve its LP relaxation to optimality by using the column generation enhancements described above .
+However, the solutions we find are usually fractional .
+Thus the next 2 Based on memory size, we set the threshold at 400,000 .
+301 step involves performing a branch and price tree search [1] to find an optimal integral solution .
+Briefly, this is the idea of branch and price .
+Whenever we set a fractional variable to 0 or 1 (branch), both the master LP, and the restriction we are working with, are changed (constrained) .
+By default then, we need to perform column generation (go through the effort of pricing) at each node of the search tree to prove that the constrained restriction is optimal for constrained master LP .
+(However, as discussed in Section 5.2.3, we compute the integral upper bound for the root node based on relaxing the cycle length constraint completely, and whenever any node"s LP in the tree achieves that value, we do not need to continue pricing columns at that node.) For the clearing problem with cycles of length at most 3, we have found that there is rarely a gap between the optimal integral and fractional solutions .
+This means we can largely avoid the expensive per node pricing step
+Although CPLEX can solve ILPs, it does not support branch and price (for example, because there can be problemspecific complications involving the interaction between the branching rule and the pricing problem) .
+Hence, we implemented our own branch and price algorithm, which explores the search tree in depth first order .
+We also experimented with the A* node selection order [7, 2] .
+However, this search strategy requires significantly more memory, which we found was better employed in making the column generation phase faster (see Section 5.2.2) .
+The remaining major components of the algorithm are described in the next two subsections .
+5.3.1 Primal Heuristics Before branching on a fractional variable, we use primal heuristics to construct a feasible integral solution .
+These solutions are lower bounds on the final optimal integral solutions .
+Hence, whenever a restricted fractional solution is no better than the best integral solution found so far, we prune the current subtree .
+A primal heuristic is effective if it is efficient and constructs tight lower bounds .
+We experimented with two primal heuristics .
+The first is a simple rounding algorithm [8]
+Whilst this heuristic is efficient, we found that the lower bounds it constructs rarely enable much pruning .
+We also tried using CPLEX as a primal heuristic .
+At any given node of the search tree, we can convert the restricted LP relaxation back to an ILP by reintroducing the integrality constraints .
+CPLEX has several built in primal heuristics, which we can apply to this ILP .
+Moreover, we can use CPLEX"s own tree search to find an optimal integral solution .
+In general, this tree search is much faster than our own .
+If CPLEX finds an integral solution that matches the fractional upper bound at the root node, we are done .
+Otherwise, no such integral solution exists, or we don"t yet have the right combination of cycles in the restricted LP .
+For kidney exchange markets, it is usually the second reason that applies (see Sections 5.2.2 and 5.2.4) .
+Hence, at some point in the tree search, once more columns have been generated as a result of branching, the CPLEX heuristic will find an optimal integral solution .
+Although CPLEX tree search is faster than our own, it is not so fast that we can apply it to every node in our search tree .
+Hence, we make the following optimizations .
+Firstly, we add a constraint that requires the objective value of the ILP to be as large as the fractional target .
+If this is not the case, we want to abort and proceed to generate more columns with our branch and price search .
+Secondly, we limit the number of nodes in CPLEX"s search tree .
+This is because we have observed that no integral solution exists, CPLEX can take a very long time to prove that .
+Finally, we only apply the CPLEX heuristic at a node if it has a sufficiently different set of cycles from its parent .
+Using CPLEX as a primal heuristic has a large impact because it makes the search tree smaller, so all the computationally expensive pricing work is avoided at nodes that are not generated in this smaller tree .
+5.3.2 Cycle Brancher We experimented with two branching strategies, both of which select one variable per node .
+The first strategy, branching by certainty, randomly selects a variable from those whose LP value is closest to 1 .
+The second strategy, branching by uncertainty, randomly selects a variable whose LP value is closest to 0.5 .
+In either case, two children of the node are generated corresponding to two subtrees, one in which the variable is set to 0, the other in which it is set to 1 .
+Our depth first search always chooses to explore first the subtree in which the value of the variable is closest to its fractional value .
+For our clearing problem with cycles of length at most 3, we found branching by uncertainty to be superior, rarely requiring any backtracking. .

@@ -1,0 +1,57 @@
+BEE bears comparison with previous research in AI (plan recognition), Hidden Markov Models, and nonlinear dynamics systems (trajectory prediction) .
+2.1 Plan Recognition in AI Agent theory commonly describes an agent"s cognitive state in terms of its beliefs, desires, and intentions (the so called BDI model [5, 20]) .
+An agent"s beliefs are propositions about the state of the world that it considers true, based on its perceptions .
+Its desires are propositions about the world that it would like to be true .
+Desires are not necessarily consistent with one another
+An agent"s intentions, or goals, are a subset of its desires that it has selected, based on its beliefs, to guide its future actions .
+Unlike desires, goals must be consistent with one another (or at least believed to be consistent by the agent) .
+An agent"s goals guide its actions .
+Thus one ought to be able to learn something about an agent"s goals by observing its past actions, and knowledge of the agent"s goals in turn enables conclusions about what the agent may do in the future .
+This process of reasoning from an agent"s actions to its goals is known as plan recognition or plan inference .
+This body of work (surveyed recently at [3]) is rich and varied .
+It covers both single agent and multi agent (e.g., robot soccer team) plans, intentional vs .
+non intentional actions, speech vs .
+non speech behavior, adversarial vs .
+cooperative intent, complete vs .
+incomplete world knowledge, and correct vs .
+faulty plans, among other dimensions .
+Plan recognition is seldom pursued for its own sake .
+It usually supports a higher level function .
+For example, in humancomputer interfaces, recognizing a user"s plan can enable the system to provide more appropriate information and options for user action .
+In a tutoring system, inferring the student"s plan is a first step to identifying buggy plans and providing appropriate remediation .
+In many cases, the higher level function is predicting likely future actions by the entity whose plan is being inferred .
+We focus on plan recognition in support of prediction .
+An agent"s plan is a necessary input to a prediction of its future behavior, but hardly a sufficient one .
+At least two other influences, one internal and one external, need to be taken into account .
+The external influence is the dynamics of the environment, which may include other agents .
+The dynamics of the real world impose significant constraints .
+The environment may interfere with the desires of the agent [4, 10] .
+Most interactions among agents, and between agents and the world, are nonlinear .
+When iterated, these can generate chaos (extreme sensitivity to initial conditions) .
+A rational analysis of an agent"s goals may enable us to predict what it will attempt, but any nontrivial plan with several steps will depend sensitively at each step to the reaction of the environment, and our prediction must take this reaction into account as well .
+Actual simulation of futures is one way (the only one we know now) to deal with the impact of environmental dynamics on an agent"s actions .
+Human agents are also subject to an internal influence .
+The agent"s emotional state can modulate its decision process and its focus of attention (and thus its perception of the environment) .
+In extreme cases, emotion can lead an agent to choose actions that from the standpoint of a logical analysis may appear irrational .
+Current work on plan recognition for prediction focuses on the rational plan, and does not take into account either external environmental influences or internal emotional biases .
+BEE integrates all three elements into its predictions .
+2.2 Hidden Markov Models BEE is superficially similar to Hidden Markov Models (HMM"s [19]) .
+In both cases, the agent has hidden internal state (the agent"s personality) and observable state (its outward behavior), and we wish to learn the hidden state from the observable state (by evolution in BEE, by the Baum Welch algorithm [1] in HMM"s) and then predict the agent"s future behavior (by extrapolation via ghosts in BEE, by the forward algorithm in HMM"s) .
+BEE offers two important benefits over HMM"s .
+First, a single agent"s hidden variables do not satisfy the Markov property .
+That is, their values at t + 1 depend not only on their values at t, but also on the hidden variables of other agents .
+One could avoid this limitation by constructing a single HMM over the joint state space of all of the agents, but this approach is combinatorially prohibitive .
+BEE combines the efficiency of independently modeling individual agents with the reality of taking into account interactions among them .
+Second, Markov models assume that transition probabilities are stationary .
+This assumption is unrealistic in dynamic situations .
+BEE"s evolutionary process continually updates the agents" personalities based on actual observations, and thus automatically accounts for changes in the agents" personalities .
+2.3 Real Time Nonlinear Systems Fitting Many systems of interest can be described by a vector of real numbers that changes as a function of time .
+The dimensions of the vector define the system"s state space .
+One typically analyzes such systems as vector differential equations, e.g., )(xf dt xd .
+When f is nonlinear, the system can be formally chaotic, and starting points arbitrarily close to one another can lead to trajectories that diverge exponentially rapidly .
+Long range prediction of such a system is impossible .
+However, it is often useful to anticipate the system"s behavior a short distance into the future .
+A common technique is to fit a convenient functional form for f to the system"s trajectory in the recent past, then extrapolate this fit into the future (Figure 1, [7]) .
+This process is repeated constantly, providing the user with a limited look ahead .
+This approach is robust and widely applied, but requires systems that can efficiently be described with mathematical equations .
+BEE extends this approach to agent behaviors, which it fits to observed behavior using a genetic algorithm. .

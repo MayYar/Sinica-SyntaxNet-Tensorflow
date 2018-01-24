@@ -1,0 +1,19 @@
+TERM RELATIONS FROM DOCUMENTS In this paper, we extract term relations from the document collection automatically .
+In general, a term relation can be represented as A¡÷B .
+Both A and B have been restricted to single terms in previous studies .
+A single term in A means that the relation is applicable to all the queries containing that term .
+As we explained earlier, this is the source of many wrong applications .
+The solution we propose is to add more context terms into A, so that it is applicable only when all the terms in A appear in a query .
+For example, instead of creating a context independent relation Java¡÷program, we will create {Java, computer}¡÷program, which means that program is selected when both Java and computer appear in a query .
+The term added in the condition specifies a stricter context to apply the relation .
+We call this type of relation context dependent relation .
+In principle, the addition is not restricted to one term .
+However, we will make this restriction due to the following reasons
+Adding more terms into the condition will create many rarely applicable relations; ? In most cases, an ambiguous word such as Java can be effectively disambiguated by one useful context word such as computer or hotel; ? The addition of more terms will also lead to a higher space and time complexity for extracting and storing term relations .
+The extraction of relations of type {tj,tk} ¡÷ ti can be performed using mining algorithms for association rules [13] .
+Here, we use a simple co occurrence analysis .
+Windows of fixed size (10 words in our case) are used to obtain co occurrence counts of three terms, and the probability )|( kji tttP is determined as follows
+In order to reduce space requirement, we further apply the following filtering criteria
+We use the following pointwise mutual information as a measure of relatedness (MI > 0) [6]
+This is a direct extension of the translation model proposed in [3] to our context dependent relations .
+The score according to the Knowledge model is then defined as follows

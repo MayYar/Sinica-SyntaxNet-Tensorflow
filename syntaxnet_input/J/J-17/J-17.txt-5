@@ -1,0 +1,27 @@
+RANDOMIZED MECHANISMS In this section, we consider the case of job dependent Lj, Hj values (with Lj ? Hj), which generalizes the classical restricted machines model (where Hj = ¡Û) .
+We show the power of randomization, by providing a general technique that converts any c approximation algorithm into a 3c approximation, truthful in expectation mechanism .
+This is one of the few results that shows how to export approximation algorithms for a multidimensional problem into truthful mechanisms when the algorithm is given as a black box .
+Our construction and proof are simple, and based on two ideas .
+First, as outlined above, we prove truthfulness using cycle monotonicity .
+It seems unlikely that for an arbitrary approximation algorithm given only as a black box, one would be able to come up with payments in order to prove truthfulness; but cycle monotonicity allows us to prove precisely this .
+Second, we obtain our randomized mechanism by (a) first moving to a fractional domain, and constructing a fractional truthful mechanism that is allowed to return fractional assignments; then (b) using a rounding procedure to express the fractional schedule as a convex combination of integer schedules .
+This builds upon a theme introduced by Lavi and Swamy [16], namely that of using fractional mechanisms to obtain truthful in expectation mechanisms .
+1 It is not clear if Theorem 3.2, and hence, this statement, hold if A is not finite .
+We should point out however that one cannot simply plug in the results of [16] .
+Their results hold for social welfaremaximization problems and rely on using VCG to obtain a fractional truthful mechanism .
+VCG however does not apply to makespan minimization, and in our case even the existence of a near optimal fractional truthful mechanism is not known .
+We use the following result adapted from [16] .
+Lemma 4.1 (Lavi and Swamy [16]) Let M = (x, P) be a fractional truthful mechanism .
+Let A be a randomized rounding algorithm that given a fractional assignment x, outputs a random assignment X such that E ? Xij ? = xij for all i, j .
+Then there exist payments P such that the mechanism M = (A, P ) is truthful in expectation .
+Furthermore, if M is individually rational then M is individually rational for every realization of coin tosses .
+Let OPT(p) denote the optimal makespan (over integer schedules) for instance p .
+As our first step, we take a capproximation algorithm and convert it to a 2c approximation fractional truthful mechanism .
+This conversion works even when the approximation algorithm returns only a fractional schedule (satisfying certain properties) of makespan at most c ¡P OPT(p) for every instance p .
+We prove truthfulness by showing that the fractional algorithm satisfies cycle monotonicity (3) .
+Notice that the alternative set of our fractional mechanism is finite (although the set of all fractional assignments is infinite)
+Thus, we can apply Corollary 3.4 here .
+To convert this fractional truthful mechanism into a randomized truthful mechanism we need a randomized rounding procedure satisfying the requirements of Lemma 4.1 .
+Fortunately, such a procedure is already provided by Kumar, Marathe, Parthasarathy, and Srinivasan [14] .
+Lemma 4.2 (Kumar et al .
+[14]) Given a fractional assignment x and a processing time vector p, there exists a randomized rounding procedure that yields a (random) assignment X such that, .

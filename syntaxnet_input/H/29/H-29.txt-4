@@ -1,0 +1,39 @@
+Our approach is related to previous work from several areas of information retrieval and machine learning .
+Our use of query variation was inspired by the work of YomTov et al .
+[20], Carpineto et al .
+[5], and Amati et al .
+[2], among others .
+These studies use the idea of creating multiple subqueries and then examining the nature of the overlap in the documents and or expansion terms that result from each subquery .
+Model combination is performed using heuristics .
+In particular, the studies of Amati et al .
+and Carpineto et al .
+investigated combining terms from individual distributional methods using a term reranking combination heuristic .
+In a set of TREC topics they found wide average variation in the rank distance of terms from different expansion methods .
+Their combination method gave modest positive improvements in average precision .
+The idea of examining the overlap between lists of suggested terms has also been used in early query expansion approaches .
+Xu and Croft"s method of Local Context Analysis [19] includes a factor in the empirically derived weighting formula that causes expansion terms to be preferred that have connections to multiple query terms .
+On the document side, recent work by Zhou & Croft [21] explored the idea of adding noise to documents, re scoring them, and using the stability of the resulting rankings as an estimate of query difficulty .
+This is related to our use of document sampling to estimate the risk of the feedback model built from the different sets of top retrieved documents .
+Sakai et al .
+[17] proposed an approach to improving the robustness of pseudo relevance feedback using a method they call selective sampling .
+The essence of their method is that they allow skipping of some top ranked documents, based on a clustering criterion, in order to select a more varied and novel set of documents later in the ranking for use by a traditional pseudo feedback method .
+Their study did not find significant improvements in either robustness or MAP on their corpora .
+Greiff, Morgan and Ponte [8] explored the role of variance in term weighting .
+In a series of simulations that simplified the problem to 2 feature documents, they found that average precision degrades as term frequency variance high noiseincreases .
+Downweighting terms with high variance resulted in improved average precision .
+This seems in accord with our own findings for individual feedback models .
+Estimates of output variance have recently been used for improved text classification .
+Lee et al .
+[11] used queryspecific variance estimates of classifier outputs to perform improved model combination .
+Instead of using sampling, they were able to derive closed form expressions for classifier variance by assuming base classifiers using simple types of inference networks .
+Ando and Zhang proposed a method that they call structural feedback [3] and showed how to apply it to query expansion for the TREC Genomics Track .
+They used r query variations to obtain R different sets Sr of top ranked documents that have been intersected with the top ranked documents obtained from the original query qorig .
+For each Si, the normalized centroid vector ?wi of the documents is calculated .
+Principal component analysis is then applied to the ?wi to obtain the matrix £X of H left singular vectors £ph that are used to obtain the new, expanded query qexp = qorig + £XT £Xqorig .
+(7) In the case H = 1, we have a single left singular vector £p
+The use of variance as a feedback model quality measure occurs indirectly through the application of PCA .
+It would be interesting to study the connections between this approach and our own modelfitting method .
+Finally, in language modeling approaches to feedback, Tao and Zhai [18] describe a method for more robust feedback that allows each document to have a different feedback £\ .
+The feedback weights are derived automatically using regularized EM .
+A roughly equal balance of query and expansion model is implied by their EM stopping condition .
+They propose tailoring the stopping parameter £b based on a function of some quality measure of feedback documents. .

@@ -1,0 +1,92 @@
+Multiattribute auction mechanisms generally either remain agnostic about traders" preferences, or presume highly restrictive forms, such as full additivity .
+Real preferences often exhibit dependencies among attributes, yet may possess some structure that can be usefully exploited to streamline communication and simplify operation of a multiattribute auction .
+We develop such a structure using the theory of measurable value functions, a cardinal utility representation based on an underlying order over preference differences .
+A set of local conditional independence relations over such differences supports a generalized additive preference representation, which decomposes utility across overlapping clusters of related attributes .
+We introduce an iterative auction mechanism that maintains prices on local clusters of attributes rather than the full space of joint configurations .
+When traders" preferences are consistent with the auction"s generalized additive structure, the mechanism produces approximately optimal allocations, at approximate VCG prices .
+Categories and Subject Descriptors
+Rather than negotiating over a fully defined good or service, a multiattribute mechanism delays commitment to specific configurations until the most promising candidates are identified .
+For example, a procurement department of a company may use a multiattribute auction to select a supplier of hard drives .
+Supplier offers may be evaluated not only over the price they offer, but also over various qualitative attributes such as volume, RPM, access time, latency, transfer rate, and so on .
+In addition, suppliers may offer different contract conditions such as warranty, delivery time, and service .
+In order to account for traders" preferences, the auction mechanism must extract evaluative information over a complex domain of multidimensional configurations .
+Constructing and communicating a complete preference specification can be a severe burden for even a moderate number of attributes, therefore practical multiattribute auctions must either accommodate partial specifications, or support compact expression of preferences assuming some simplified form .
+By far the most popular multiattribute form to adopt is the simplest
+For example, several recent proposals for iterative multiattribute auctions [2, 3, 8, 19] require additive preference representations .
+Such additivity reduces the complexity of preference specification exponentially (compared to the general discrete case), but precludes expression of any interdependencies among the attributes .
+In practice, however, interdependencies among natural attributes are quite common .
+For example, the buyer may exhibit complementary preferences for size and access time (since the performance effect is more salient if much data is involved), or may view a strong warranty as a good substitute for high reliability ratings .
+Similarly, the seller"s production characteristics (such as increasing access time is harder for larger hard drives) can easily violate additivity .
+In such cases an additive value function may not be able to provide even a reasonable approximation of real preferences .
+On the other hand, fully general models are intractable, and it is reasonable to expect multiattribute preferences to exhibit some structure .
+Our goal, therefore, is to identify the subtler yet more widely applicable structured representations, and exploit these properties of preferences in trading mechanisms .
+We propose an iterative auction mechanism based on just such a flexible preference structure .
+Our approach is inspired by the design of an iterative multiattribute procurement auction for additive preferences, due to Parkes and Kalagnanam [19] .
+PK propose two types of iterative auctions
+Because NLD maintains an exponential price structure, it is suitable only for small domains .
+The other auction assumes additive buyer valuation and seller cost functions .
+It collects sell bids per attribute level and for a single discount term .
+The price of a configuration is defined as the sum of the prices of the chosen attribute levels minus the discount .
+The auction we propose also supports compact price spaces, albeit for levels of clusters of attributes rather than singletons .
+We employ a preference decomposition based on generalized additive independence (GAI), a model flexible enough to accommodate interdependencies to the exact degree of accuracy desired, yet providing a compact functional form to the extent that interdependence can be limited .
+Given its roots in multiattribute utility theory [13], 227 the GAI condition is defined with respect to the expected utility function .
+To apply it for modeling values for certain outcomes, therefore, requires a reinterpretation for preference under certainty .
+To this end, we exploit the fact that auction outcomes are associated with continuous prices, which provide a natural scale for assessing magnitude of preference .
+We first lay out a representation framework for preferences that captures, in addition to simple orderings among attribute configuration values, the difference in the willingness to pay (wtp) for each .
+That is, we should be able not only to compare outcomes but also decide whether the difference in quality is worth a given difference in price .
+Next, we build a direct, formally justified link from preference statements over priced outcomes to a generalized additive decomposition of the wtp function .
+After laying out this infrastructure, we employ this representation tool for the development of a multiattribute iterative auction mechanism that allows traders to express their complex preferences in GAI format .
+We then study the auction"s allocational, computational, and practical properties .
+In Section 2 we present essential background on our representation framework, the measurable value function .
+Section 3 develops new multiattribute structures for MVF, supporting generalized additive decompositions .
+Next, we show the applicability of the theoretical framework to preferences in trading .
+The rest of the paper is devoted to the proposed auction mechanism .
+3.1 Conditional Difference Independence Our first step is to generalize Definition 6 to a conditional version .
+DEFINITION 7 .
+Let X, Y, Z be a partition of the set of attributes denoted as CDI(X, Y | Z), if ? instantiations ?Z, X1 , X2 , Y 1 , Y 2 [X1 Y 1 ?Z, X2 Y 1 ?Z] ? [X1 Y 2 ?Z, X2 Y 2 ?Z] .
+Since the conditional set is always the complement, we sometimes leave it implicit, using the abbreviated notation CDI(X, Y ) .
+CDI leads to a decomposition similar to that obtained from CAI [17] .
+LEMMA 3 .
+Let u(A) be an MVF representing preference differences .
+Then CDI(X, Y | Z) iff u(A) = u(X0 , Y, Z) + u(X, Y 0 , Z) ? u(X0 , Y 0 , Z) .
+To complete the analogy with CAI, we generalize Lemma 3 as follows .
+PROPOSITION 4 .
+CDI(X, Y | Z) iff there exist functions £r1(X, Z) and £r2(Y, Z), such that u(X, Y, Z) = £r1(X, Z) + £r2(Y, Z) .
+(2) An immediate result of Proposition 4 is that CDI is a symmetric relation .
+The conditional independence condition is much more applicable than the unconditional one .
+For example, if attributes a ? X and b ? X are complements or substitutes, X cannot be difference independent of ¡ÂX .
+However, X \ {a} may still be CDI of ¡ÂX given a .
+3.2 GAI Structure for MVF A single CDI condition decomposes the value function into two parts .
+We seek a finer grain global decomposition of the utility function, similar to that obtained from mutual preferential independence .
+For this purpose we are now ready to employ the results of Bacchus and Grove [1], who establish that the CAI condition has a perfect map [20]; that is, there exists a graph whose nodes correspond to the set A, and its node separation reflects exactly the complete set of CAI conditions on A .
+Moreover, they show that the utility function decomposes over the set of maximal cliques of the perfect map .
+Their proofs can be easily adapted to CDI, since they only rely on the decomposition property of CAI that is also implied by CDI according to Proposition 4 .
+THEOREM 5 .
+Let G = (A, E) be a perfect map for the CDI conditions on A .
+Then u(A) = g X r=1 fr(Ir), (3) where I1, .
+.
+.
+, Ig are (overlapping) subsets of A, each corresponding to a maximal clique of G .
+Given Theorem 5, we can now identify an MVF GAI structure from a collection of CDI conditions .
+The CDI conditions, in turn, are particularly intuitive to detect when the preference differences carry a direct interpretation, as in the case with monetary differences discussed below .
+Moreover, the assumption or detection of CDI conditions can be performed incrementally, until the MVF is decomposed to a reasonable dimension .
+This is in contrast with the fully additive decomposition of MVF that requires mutual preferential independence [11] .
+Theorem 5 defines a decomposition structure, but to represent the actual MVF we need to specify the functions over the cliques .
+229 The next theorem establishes that the functional constituents of MVF are the same as those for GAI decompositions as defined by Fishburn [13] for EU .
+We adopt the following conventional notation .
+Let (a0 1, .
+.
+.
+, a0 m) be a predefined vector called the reference outcome .
+For any I ? A, the function u([I]) stands for the projection of u(A) to I where the rest of the attributes are fixed at their reference levels .
+THEOREM 6 .
+Let G = (A, E) be a perfect map for the CDI condition on A, and {I1, .
+.
+.
+, Ig} a set of maximal cliques as defined in Theorem 5 .
+Then the functional decomposition from that theorem can be defined as f1 = u([I1]), and for r = 2, .
+.
+.
+, g (4) fr = u([Ir]) + r?1X k=1 (?1)k X 1?i1<¡P¡P¡P<ik<r u([ k\ s=1 Iis ¡ä Ir]) The proof directly shows that if graph G = (A, E) is a perfect map of CDI, u(A) decomposes to a sum over the functions defined in (4).1 Thus this proof does not rely on the decomposition result of Theorem 5, only on the existence of the perfect map .
+To summarize, the results of this section generalize additive MVF theory .
+In particular it justifies the application of methods recently developed under the EU framework [1, 4, 14, 6] to representation of value under certainty. .

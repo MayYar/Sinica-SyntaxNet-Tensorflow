@@ -1,0 +1,208 @@
+MECHANISMS Among all linear VCG redistribution mechanisms, we would like to be able to identify the one that redistributes the greatest percentage of the total VCG payment.2 This is not a well defined notion
+We emphasize that we do not assume that a prior distribution over bidders" valuations is available, so we cannot compare them based on expected redistribution .
+Below, we study three well defined ways of comparing redistribution mechanisms
+Best case performance .
+One way of evaluating a mechanism is by considering the highest redistribution percentage that it achieves .
+Consider the previous two examples .
+For the first example, the total redistribution payment is (m + 1)m n ?vm+2 + (n ? m ? 1)m n ?vm+1 .
+When ?vm+2 = ?vm+1, this is equal to the total VCG payment m?vm+1 .
+Thus, this mechanism redistributes 100% of the total VCG payment in the best case .
+For the second example, the total redistribution payment is m?vm+1 ? m(m+1)(m+2) (n?m?1)(n?m?2) ?vm+3 .
+When ?vm+3 = 0, this is equal to the total VCG payment m?vm+1 .
+Thus, this mechanism also redistributes 100% of the total VCG payment in the best case .
+Moreover, there are actually infinitely many mechanisms that redistribute 100% of the total VCG payment in the best case for example, any convex combination of the above two will redistribute 100% if both ?vm+2 = ?vm+1 and ?vm+3 = 0 .
+Dominance .
+Inside the family of linear VCG redistribution mechanisms, we say one mechanism dominates another mechanism if the first one redistributes at least as much as the other for any bid vector .
+For the previous two examples, neither dominates the other, because they each redistribute 100% in different cases .
+It turns out that there is no mechanism in the family that dominates all other mechanisms in the family .
+For suppose such a mechanism exists .
+Then, it should dominate both examples above .
+Consider the remaining VCG payment (the VCG payment failed to be redistributed) .
+The remaining VCG payment of the dominant mechanism should be 0 whenever ?vm+2 = ?vm+1 or ?vm+3 = 0 .
+Now, the remaining VCG payment is a linear function of the ?vi (linear redistribution), and therefore also a polynomial function .
+The above implies that this function can be written as (?vm+2 ? ?vm+1)(?vm+3)P(?v1, ?v2, .
+.
+.
+, ?vn), where P is a 2 The percentage redistributed seems the natural criterion to use, among other things because it is scale invariant
+32 polynomial function .
+But since the function must be linear (has degree at most 1), it follows that P = 0 .
+Thus, a dominant mechanism would always redistribute all of the VCG payment, which is not possible .
+(If it were possible, then our worst case optimal redistribution mechanism would also always redistribute all of the VCG payment, and we will see later that it does not.) Worst case performance .
+Finally, we can evaluate a mechanism by considering the lowest redistribution percentage that it guarantees .
+For the first example, the total redistribution payment is (m+1)m n ?vm+2 +(n?m?1)m n ?vm+1, which is greater than or equal to (n?m?1) m n ?vm+1 .
+So in the worst case, which is when ?vm+2 = 0, the percentage redistributed is n?m?1 n .
+For the second example, the total redistribution payment is m?vm+1 ? m(m+1)(m+2) (n?m?1)(n?m?2) ?vm+3, which is greater than or equal to m?vm+1(1? (m+1)(m+2) (n?m?1)(n?m?2) PROGRAMMING The optimization problem given in the previous section can be rewritten as a linear program, based on the following observations .
+Claim 1 .
+If c0, c1, .
+.
+.
+, cn?1 satisfy both the individual rationality and the non deficit constraints, then ci = 0 for i = 0, .
+.
+.
+, m .
+Proof .
+First, let us prove that c0 = 0 .
+Consider the bid vector in which ?vi = 0 for all i .
+To obtain individual rationality, we must have c0 ? 0 .
+To satisfy the non deficit constraint, we must have c0 ? 0 .
+Thus we know c0 = 0 .
+Now, if ci = 0 for all i, there is nothing to prove .
+Otherwise, let j = min{i|ci = 0} .
+Assume that j ? m .
+We recall that we can write the individual rationality constraint as follows
+.
+.+cn?2?vn?2 +cn?1?vn?1 ? 0 for any bid vector .
+Let us consider the bid vector in which ?vi = 1 for i ? j and ?vi = 0 for the rest .
+In this case zn = cj, so we must have cj ? 0 .
+The non deficit constraint can be written as follows
+.
+.
++ zn ? m?vm+1 for any bid vector .
+Consider the same bid vector as above .
+We have zi = 0 for i ? j, because for these bids, the jth highest other bid has value 0, so all the ci that are nonzero are multiplied by 0 .
+For i > j, we have zi = cj, because the jth highest other bid has value 1, and all lower bids have value 0 .
+So the non deficit constraint tells us that cj(n ? j) ? m?vm+1 .
+Because j ? m, ?vm+1 = 0, so the right hand side is 0 .
+We also have n ? j > 0 because j ? m < n .
+So cj ? 0 .
+Because we have already established that cj ? 0, it follows that cj = 0; but this is contrary to assumption .
+So j > m .
+Incidentally, this claim also shows that if m = n ? 1, then ci = 0 for all i .
+Thus, we are stuck with the VCG mechanism .
+From here on, we only consider the case where m < n ? 1 .
+Claim 2 .
+The individual rationality constraint can be written as follows
+.
+.
+, n ? 1 .
+Before proving this claim, we introduce the following lemma .
+Lemma 1 .
+Given a positive integer k and a set of real constants s1, s2, .
+.
+.
+, sk, (s1t1 + s2t2 + .
+.
+.
++ sktk ? 0 for any t1 ? t2 ? .
+.
+.
+? tk ? 0) if and only if ( Pj i=1 si ? 0 for j = 1, 2, .
+.
+.
+, k) .
+Proof .
+Let di = ti ?ti+1 for i = 1, 2, .
+.
+.
+, k?1, and dk = tk .
+Then (s1t1 +s2t2 + .
+.
+.+sktk ? 0 for any t1 ? t2 ? .
+.
+.
+? tk ? 0) is equivalent to (( P1 i=1 si)d1 + ( P2 i=1 si)d2 + .
+.
+.
++ ( Pk i=1 si)dk ? 0 for any set of arbitrary non negative dj) .
+When Pj i=1 si ? 0 for j = 1, 2, .
+.
+.
+, k, the above inequality is obviously true .
+If for some j, Pj i=1 si < 0, if we set dj > 0 and di = 0 for all i = j, then the above inequality becomes false .
+So Pj i=1 si ? 0 for j = 1, 2, .
+.
+.
+, k is both necessary and sufficient .
+We are now ready to present the proof of Claim 2 .
+Proof .
+The individual rationality constraint can be written as zn = c0 + c1?v1 + c2?v2 + c3?v3 + .
+.
+.
++ cn?2?vn?2 + cn?1?vn?1 ? 0 for any bid vector ?v1 ? ?v2 ? .
+.
+.
+? ?vn?1 ? ?vn ? 0 .
+We have already shown that ci = 0 for i ? m .
+Thus, the above can be simplified to zn = cm+1?vm+1 + cm+2?vm+2+ .
+.
+.+cn?2?vn?2+cn?1?vn?1 ? 0 for any bid vector .
+By the above lemma, this is equivalent to Pj i=m+1 ci ? 0 for j = m + 1, .
+.
+.
+, n ? 1 .
+Claim 3 .
+The non deficit constraint and the worst case constraint can also be written as linear inequalities involving only the ci and k .
+Proof .
+The non deficit constraint requires that for any bid vector, z1 +z2 + .
+.
+.+zn ? m?vm+1, where zi = c0 +c1?v1 + 33 c2?v2 + .
+.
+.+ci?1?vi?1 +ci?vi+1 + .
+.
+.+cn?1?vn for i = 1, 2, .
+.
+.
+, n .
+Because ci = 0 for i ? m, we can simplify this inequality to qm+1?vm+1 + qm+2?vm+2 + .
+.
+.
++ qn?vn ? 0 qm+1 = m ? (n ? m ? 1)cm+1 qi = ?(i?1)ci?1 ?(n?i)ci, for i = m+2, .
+.
+.
+, n?1 (when m + 2 > n ? 1, this set of equalities is empty) qn = ?(n ? 1)cn?1 By the above lemma, this is equivalent to Pj i=m+1 qi ? 0 for j = m + 1, .
+.
+.
+, n .
+So, we can simplify further as follows
+.
+.
++ qm+i ? 0 ?? n Pj=m+i?1 j=m+1 cj + (n ? m ? i)cm+i ? m for i = 2, .
+.
+.
+, n ? m ? 1 qm+1 + .
+.
+.
++ qn ? 0 ?? n Pj=n?1 j=m+1 cj ? m So, the non deficit constraint can be written as a set of linear inequalities involving only the ci .
+The worst case constraint can be also written as a set of linear inequalities, by the following reasoning .
+The worstcase constraint requires that for any bid input z1 +z2 + .
+.
+.+ zn ? km?vm+1, where zi = c0 +c1?v1 +c2?v2 + .
+.
+.+ci?1?vi?1 + ci?vi+1 + .
+.
+.
++ cn?1?vn for i = 1, 2, .
+.
+.
+, n .
+Because ci = 0 for i ? m, we can simplify this inequality to Qm+1?vm+1 + Qm+2?vm+2 + .
+.
+.
++ Qn?vn ? 0 Qm+1 = (n ? m ? 1)cm+1 ? km Qi = (i ? 1)ci?1 + (n ? i)ci, for i = m + 2, .
+.
+.
+, n ? 1 Qn = (n ? 1)cn?1 By the above lemma, this is equivalent to Pj i=m+1 Qi ? 0 for j = m + 1, .
+.
+.
+, n .
+So, we can simplify further as follows
+.
+.
++ Qm+i ? 0 ?? n Pj=m+i?1 j=m+1 cj + (n ? m ? i)cm+i ? km for i = 2, .
+.
+.
+, n ? m ? 1 Qm+1 + .
+.
+.
++ Qn ? 0 ?? n Pj=n?1 j=m+1 cj ? km So, the worst case constraint can also be written as a set of linear inequalities involving only the ci and k .
+Combining all the claims, we see that the original optimization problem can be transformed into the following linear program .
+Variables
+.
+.
+, cn?1, k Maximize k (the percentage redistributed in the worst case) Subject to
+.
+.
+, n ? 1 km ? (n ? m ? 1)cm+1 ? m km ? n Pj=m+i?1 j=m+1 cj + (n ? m ? i)cm+i ? m for i = 2, .
+.
+.
+, n ? m ? 1 km ? n Pj=n?1 j=m+1 cj ? m .

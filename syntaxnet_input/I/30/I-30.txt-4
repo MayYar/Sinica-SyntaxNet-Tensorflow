@@ -1,0 +1,42 @@
+The traditional task allocation problem, TAP (without the condition of the social network SN), is NP complete [18], and the complexity comes from the fact that we need to evaluate the exponential number of subsets of the task set .
+Although we may consider the TAP as a special case of the STAP by assuming agents are fully connected, we cannot directly use the complexity results from the TAP, since we study the STAP in an arbitrary social network, which, as we argued in the introduction, should be partially connected .
+We now show that the TAP with an arbitrary social network is also NP complete, even when the utility of each task is 1, and the quantity of all required and available resources is 1 .
+Theorem 1 .
+Given the social task allocation problem with an arbitrary social network, as defined in Definition 4, the problem of deciding whether a task allocation £p with utility more than k exists is NP complete .
+Proof .
+We first show that the problem is in NP .
+Given an instance of the problem and an integer k, we can verify in polynomial time whether an allocation £p is a valid allocation and whether the utility of £p is greater than k .
+We now prove that the STAP is NP hard by showing that MAXIMUM INDEPENDENT SET ?P STAP .
+Given an undirected graph G = (V, E) and an integer k, we construct a network G = (V , E ) which has an efficient task allocation with k tasks of utility 1 allocated if and only if G has an independent set of size k .
+av1 av3 ae3 rsc(ae1 ) = {e1} rsc(ae4 ) = {e4} av4 ae2 av2 ae4 ae1 rsc(ae2 ) = {e2}{e3} rsc(av3 ) = {v3} rsc(av4 ) = {v4} t1 = {v1, e1, e3} t2 = {v2, e1, e2} rsc(ae3 ) = rsc(av1 ) = {v1} rsc(av2 ) = {v2} t3 = {v3, e3, e4} t4 = {v4, e2, e4} e1 e2 e4 e3 v1 v2 v4v3 Figure 1
+The left figure is an undirected graph G, which has the optimal solution {v1, v4} or {v2, v3}; the right figure is the constructed instance of the STAP, where the optimal allocation is {t1, t4} or {t2, t3} .
+An instance of the following construction is shown in Figure 1 .
+For each node v ? V and each edge e ? E in the graph G, we create a vertex agent av and an edge agent ae in G .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 501 When v was incident to e in G we correspondingly add an edge e in G between av and ae .
+We assign each agent in G one resource, which is related to the node or the edge in the graph G, i.e., for each v ? V , rsc(av) = {v} (here we write rsc(a) and rsc(t) to represent the set of resources available to required by a and t), and for each e ? E, rsc(ae) = {e} .
+Each vertex agent avi in G has a task ti that requires a set of neighboring resources ti = {vi} ¡å {e|e = (u, vi) ? E} .
+There is no task on the edge agents in G .
+We define utility 1 for each task, and the quantity of all required and available resources to be 1 .
+Taken an instance of the IS problem, suppose there is a solution of size k, i.e., a subset N ? V such that no two vertices in N are joined by an edge in E and |N| = k .
+N specifies a set of vertex agents AN in the corresponding graph G .
+Given two agents a1, a2 ? AN we now know that there is no edge agent ae connected to both a1 and a2 .
+Thus, for each agent a ? AN , a assigns its task to the edge agents which are connected to a .
+All other vertex agents a ? AN are not able to assign their tasks, since the required resources of the edge agents are already used by the agents a ? AN .
+The set of tasks of the agents AN (|AN | = k) is thus the maximum set of tasks that can be allocated .
+The utility of this allocation is k .
+Similarly, if there is a solution for the STAP with the utility value k, and the allocated task set is N, then for the IS problem, there exists a maximum independent set N of size k in G .
+An example can be found in Figure 1 .
+We just proved that the STAP is NP hard for an arbitrary graph .
+In our proof, the complexity comes from the introduction of a social network .
+One may expect that the complexity of this problem can be reduced for some networks where the number of neighbors of the agents is bounded by a fixed constant .
+We now give a complexity result on this class of networks as follows .
+Theorem 2 .
+Let the number of neighbors of each agent in the social network SN be bounded by £G for £G ? 3 .
+Computing the efficient task allocation given such a network is NP complete .
+In addition, it is not approximable within £G£` for some £` > 0 .
+Proof .
+It has been shown in [2] that the maximum independent set problem in the case of the degree bounded by £G for £G ? 3 is NP complete and is not approximable within £G£` for some £` > 0 .
+Using the similar reduction from the proof of Theorem 1, this result also holds for the STAP .
+Since our problem is as hard as MIS as shown in Theorem 1, it is not possible to give a worst case bound better than £G£` for any polynomial time algorithm, unless P = NP. .

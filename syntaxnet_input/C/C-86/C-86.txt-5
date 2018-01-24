@@ -1,0 +1,49 @@
+Designing an appropriate auction mechanism is key to addressing the above strategies .
+Specifically, our goals for such a mechanism include
+The Generalized Vickrey Auction [8, 18] is the only known combinatorial mechanism that provides both strategyproofness and optimal allocation .
+However, it also is computationally intractable as it is NP hard to calculate the allocations as well as individual payments .
+Other VCG based mechanisms exist that replace the allocation algorithms in GVA with approximate ones to provide tractability .
+In this case, however, strategyproofness is no longer available [16] .
+These goals are in conflict for VCG and in general [10] .
+We thus must make certain trade offs .
+With this in mind, we now present a two phase roadmap for improving Mirage
+4.1 Ongoing improvements Our first improvement is a mixed integer programming 102 formulation as an alternative to the greedy algorithm .
+This is aimed directly at eliminating strategy S4 .
+While the MIP does not provide strategyproofness, it is able to compute approximately optimal allocations .
+Like the GVA, however, the MIP is computationally demanding and thus careful formulation of the MIP and optimizations based on the observed workloads from Mirage will be required to ensure timely clearing of the auction .
+Our first step is to test and optimize our MIP based algorithm on auction data from the past four months .
+We can then run both the MIP alongside the greedy algorithm in parallel and select the higher quality result each time the auction clears .
+Second, we can also augment the auction with additional rules and fees to further mitigate strategic behavior .
+To eliminate S4, two possibilities are to restrict each user to having either one outstanding bid at a time or to mandate that users are not allowed to have multiple overlapping allocations in time .
+To mitigate S1 and S2, we could add transaction fees .
+With such fees in place, a user who understates a bid and intends to iteratively refine it will have a disincentive to do so given that each iteration incurs a fee .
+Finally, another approach to eliminating S4 is to modify the greedy algorithm such that if users do have bids whose allocations could overlap in time, then those potential allocations are considered from lowest to highest value per node hour .
+In effect, this allows bids for overlapping allocations but creates a disincentive for users to place such bids .
+4.2 Towards a strategyproof mechanism Clearly, we need to evaluate our goals and identify where we can make trade offs in designing a new mechanism .
+Computational tractability is a fundamental requirement for operational reasons .
+Strategyproofness or, minimally, making the system hard to manipulate is also key given the behavior we have observed .
+Finally, our mechanism should compute near optimal allocations given our compute time budget .
+Among the potential mechanisms we can extend, the LOS scheme [12] seems to be a good starting point .
+It is a fast algorithm as the allocation rule is a greedy mechanism, ranking bids with some norm such as value per node hour .
+The advantage of LOS is its special payment scheme that is tightly linked to the greedy allocation .
+Essentially, a winner i pays the norm of the first bidder denied access times the amount of units (i.e .
+node hours) that i won .
+This feature makes it strategyproof .
+The main downside, however, is that it assumes users are single minded, meaning that each bidder only cares about a specific set of goods (e.g., a specific list of nodes for specific durations) and they do not value anything else .
+Unfortunately, this is highly restrictive and contradicts what Mirage currently offers its users, namely the ability to select any subset of nodes for any slots and submit multiple bids .
+Thus, LOS is vulnerable to S4 and to avoid it we must find a way to extend LOS and its strategyproof property to satisfy complex bidders .
+Realistically, even with a strategyproof LOS scheme for complex bidders there will likely be further strategies we have yet to encounter and that we should consider in our design .
+For instance, our discussion so far focuses on strategyproofness within a single auction .
+Across auctions, however, there may be temporal strategies that are possible .
+For example, in a particular auction, suppose the highest bidder wants all nodes and pays, using GVA payment scheme for simplicity, the next bidder"s value .
+This same bidder may be better off by waiting until the next auction, if the user can still win and face bidders that have even lower values .
+In this case, the user will gain additional utility due to a lower payment .
+This, however, may create various problems as total revenue, total value, as well as allocative efficiency across the auctions may be adversely affected .
+There are two techniques we can use to address temporal strategies .
+The first is a wrapper scheme such as the one employed by Virtual Worlds [13] that makes sequences of individually strategyproof auctions (e.g., LOS) strategyproof .
+What VW does is, after bidder i wins, it tracks what would have happened if i had submitted in a subsequent auction instead .
+Specifically, it tracks what i would have paid in all following auctions during i"s patience (i.e., the maximum time i is willing to wait for an allocation) and keeps track of the lowest possible payment .
+i will instead be charged the lowest payment and will thus have no incentive to temporally game the system .
+Alternatively, the new class of online mechanisms[7, 11] assumes dynamic arrival and departure of bidders and does not hold auctions at fixed intervals .
+Instead, the mechanism is a continuous scheme that accepts bids as they arrive and makes allocation decisions immediately, thus removing any need to clear auctions .
+The challenge is that the current literature is still restricted to non combinatorial settings. .

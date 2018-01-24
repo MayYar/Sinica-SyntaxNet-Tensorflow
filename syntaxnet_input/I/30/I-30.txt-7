@@ -1,0 +1,91 @@
+We implemented the greedy distributed allocation protocol (GDAP), the optimal allocation algorithm (OPT), and the upper bound algorithm in Java, and tested them on a Linux PC .
+The purpose of these experiments is to study the performance of the distributed algorithm in different problem settings using different social networks .
+The perThe Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 503 0.7 0.8 0.9 1 1.1 1.2 1.3 1.4 0.4 0.6 0.8 1 1.2 1.4 1.6 Rewardrelativetooptimal Resource ratio small world upper bound random upper bound scale free upper bound small world GDAP random GDAP scale free GDAP Figure 2
+0 5 10 15 20 25 30 0 2 4 6 8 10 12 14 16 18 Numberofagents Degree small world random scale free Figure 3
+formance measurements are the solution quality and computation time, where the solution quality is computed as follows .
+When the number of tasks is small, we compare the output of the distributed algorithm with the optimal solution, i.e., SQ = GDAP OP T , but if it is not feasible to compute the optimal solution, we use the value returned by the upper bound algorithm for evaluation, i.e., SQ = GDAP UB .
+To see whether the latter is a good measure, we also compare the quality of the upper bound to the optimal solution for smaller problems .
+In the following, we describe the setup of all experiments, and present the results .
+5.1 Experimental settings We consider several experimental environments .
+In all environments the agents are connected by a social network .
+In the experiments, three different networks are used to simulate the social relationships among agents in potential realworld problems .
+Small world networks are networks where most neighbors of an agent are also connected to each other .
+For the experiments we use a method for generating random small world networks proposed by Watts et al .
+[22], with a fixed rewiring probability p = 0.05 .
+Scale free networks have the property that a couple of nodes have many connections, and many nodes have only a small number of connections .
+To generate these we use the implementation in the JUNG library of the generator proposed by Barab?asi and Albert [3] .
+We also generate random networks as follows .
+First we connect each agent to another agent such that all agents are connected .
+Next, we randomly add connections until the desired average degree has been reached .
+We now describe the different settings used in our experiments with both small and large scale problems .
+Setting 1 .
+The number of agents is 40, and the number of tasks is 20 .
+The number of different resource types is bounded by 5, and the average number of resources required by a task is 30 .
+Consequently, the total number of resources required by the tasks is fixed .
+However, the resources available to the agents are varied .
+We define the resource ratio to refer to the ratio between the total number of available resources and the total number of required resources .
+Resources are allocated uniformly to the agents .
+The average degrees of the networks may also change .
+In this setting the task benefits are distributed normally around the number of resources required .
+Setting 2 .
+This setting is similar to Setting 1, but here we let the benefits of the tasks vary dramatically 40% of the tasks have around 10 times higher benefit than the other 60% of the tasks .
+Setting 3 .
+This setting is for large scale problems .
+The ratio between the number of agents and the number of tasks is set to 5 3, and the number of agents varies from 100 to 2000 .
+We also fix the resource ratio to 1.2 and the average degree to 6 .
+The number of different resource types is 20, and the average resource requirement of a tasks is 100 .
+The task benefits are again normally distributed .
+5.2 Experimental results The experiments are done with the three different settings in the three different networks mentioned before, where each recorded data is the average over 20 random instances .
+5.2.1 Experiment 1 Experimental setting 1 is used for this set of experiments .
+We would like to see how the GDAP behaves in the different networks when the number of resources available to the agents is changing .
+We also study the behavior of our upper bound algorithm .
+For this experiment we fix the average number of neighbors (degree) in each network type to six .
+In Figure 2 we see how the quality of both the upper bound and the GDAP algorithm depends on the resource ratio .
+Remarkably, for lower resource ratios our GDAP is much closer to the optimal allocation than the upper bound .
+When the resource ratio grows above 1.5, the graphs of the upper bound and the GDAP converge, meaning that both are really close to the optimal solution .
+This can be explained by the fact that when plenty of resources are available, all tasks can be allocated without any conflicts .
+However, when resources are very scarce, the upper bound is much too optimistic, because it is based on the allocation of sub tasks per resource type, and does not reason about how many of the tasks can actually be allocated completely .
+We also notice from the graph that the solution quality of the GDAP on all three networks is quite high (over 0.8) when the available resource is very limited (0.3) .
+It drops below 0.8 with the increased ratio and goes up again once there are plenty of resources available (resource ratio 0.9) .
+Clearly, if 504 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 0.7 0.8 0.9 1 1.1 1.2 1.3 1.4 2 4 6 8 10 12 14 16 Rewardrelativetooptimal Degree small world upper bound random upper bound scale free upper bound small world GDAP random GDAP scale free GDAP Figure 4
+resources are really scarce, only a few tasks can be successfully allocated even by the optimal algorithm .
+Therefore, the GDAP is able to give quite a good allocation .
+Although the differences are minor, it can also be seen that the results for the small world network are consistently slightly better than those of random networks, which in turn outperform scale free networks .
+This can be understood by looking at the distribution of the agents" degree, as shown in Figure 3 .
+In this experiment, in the small world network almost every manager has a degree of six .
+In random networks, the degree varies between one and about ten .
+However, in the scale free network, most nodes have only three or four connections, and only a very few have up to twenty connections .
+As we will see in the next experiment, having more connections means getting better results .
+For the next experiment we fix the resource ratio to 1.0 and study the quality of both the upper bound and the GDAP algorithm related to the degree of the social network .
+The result can be found in Figure 4 .
+In this figure we can see that a high average degree also leads to convergence of the upper bound and the GDAP .
+Obviously, when managers have many connections, it becomes easier to allocate tasks .
+An exception is, similar to what we have seen in Figure 2, that the solution of the GDAP is also very good if the connections are extremely limited (degree 2), due to the fact that the number of possibly allocated tasks is very small .
+Again we see that the upper bound is not that good for problems where resources are hard to reach, i.e .
+in social networks with a low average degree.2 Since the solution quality clearly depends on the resource ratio as well as on the degree of the social network, we study the effect of changing both, to see whether they influence each other .
+Figure 5 shows how the solution quality depends on both the resource ratio and the network degree .
+This graph confirms the results that the GDAP performs better for problems with higher degree and higher resource ratio .
+However, it is now also more clear that it performs better for very low degree and resource availability .
+For this experiment with 40 agents and 20 tasks, the worst performance is met for instances with degree six and resource ratio 0.6 to instances with degree twelve and resource ratio 0.3 .
+But even for those instances, the performance lies above 0.7 .
+2 The consistent standard deviation of about 15% over the 20 problem instances is not displayed as error bars in these first graphs, because it would obfuscate the interesting correlations that can now be seen .
+4 6 8 10 12 14 16 0.4 0.6 0.8 1 1.2 1.4 1.6 0.7 0.75 0.8 0.85 0.9 0.95 1 Relative reward small world Average degree Resource ratio Relative reward Figure 5
+5.2.2 Experiment 2 To study the robustness of the GDAP against different problem settings, we generate instances where the task benefit distribution is different
+The effect of this different distribution can be seen in Figure 6 .
+These two graphs show that the results for the skewed task benefit distribution are slightly better on average, both when varying the resource ratio, and when varying the average degree of the network .
+We argue that this can be explained by the greedy nature of GDAP, which causes the tasks with high efficiency to be allocated first, and makes the algorithm perform better in this heterogeneous setting .
+5.2.3 Experiment 3 The purpose of this final experiment is to test whether the algorithm can be scaled to large problems, like applications running on the internet .
+We therefore generate instances where the number of agents varies from 100 to 2000, and simultaneously increase the number of tasks from 166 to 3333 (Setting 3) .
+Figure 7 shows the run time for these instances on a Linux machine with an AMD Opteron 2.4 GHz processor .
+These graphs confirm the theoretical analysis from the previous section, saying that both the upper bound and the GDAP are polynomial .
+In fact, the graphs show that the GDAP almost behaves linearly .
+Here we see that the locality of the GDAP really helps in reducing the computation time .
+Also note that the GDAP requires even less computation time than the upper bound .
+The quality of the GDAP for these large instances cannot be compared to the optimal solution .
+Therefore, in Figure 8 the upper bound is used instead .
+This result shows that the GDAP behaves stably and consistently well with the increasing problem size .
+It also shows once more that the GDAP performs better in a small world network. .

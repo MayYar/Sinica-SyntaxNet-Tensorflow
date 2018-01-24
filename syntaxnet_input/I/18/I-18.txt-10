@@ -1,0 +1,50 @@
+si such as iddata(K) = iddata(K ) then In space contexts, [5, 21, 6] present multi agent architectures for on board planning .
+However, they assume high communication and computation capabilities [10] .
+[13] relax these constraints by cleaving planning modules
+In an uncertain environment such as the one of satellite swarms, it may be advantageous to delay the decision until the last moment (i.e .
+the realization date), especially if there are several possibilities for a given request .
+The main idea in contingency planning [15, 29] is to determine the nodes in the initial plan where the risks of failures are most important and to incrementally build contingency branches for these situations .
+5.1 A deliberative approach Inspired from both approaches, we propose to build allocations made up of a set of unquestionable requests and a set of uncertain disjunctive requests on which a decision will be made at the end of the decision horizon .
+This horizon corresponds to the request realization date .
+Proposing such partial allocations allows conflicts to be solved locally without propagating them through the whole plan .
+In order to build the agents" initial plans, let us assume that each agent is equipped with an on board planner .
+A plan is defined as follows
+Let si be an agent, Rt si a set of requests and Ct si a set of candidacies .
+Let us define three sets
+Building a plan generates candidacies .
+Definition 7 (Generating candidacies) .
+Let si be an agent and At1 si a (possibly empty) plan at time t1 .
+Let At2 si be the plan generated at time t2 with t2 > t1 .
+? R ? At1 si such as R ? At2 si , a candidacy C such as mod(C) = ?3, sC = si and RC = R is generated; ? R ? At2 si such as R ? At1 si , a candidacy C such as mod(C) = 3, sC = si and RC = R is generated; Protocol 2 is used to update Kt1 si in Kt2 si .
+290 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 5.2 Conflicts When two agents compare their respective plans some conflicts may appear .
+It is a matter of redundancies between allocations on a given request, i.e.
+Whereas such redundancies may sometimes be useful to ensure the realization of a request (the realization may fail, e.g .
+because of clouds), it may also lead to a loss of opportunity .
+Consequently, conflict has to be defined
+Let si and sj be two agents with, at time t, candidacies Csi and Csj respectively (sCsi = si and sCsj = sj) .
+si and sj are in conflict if and only if
+Indeed, they exchange information not only concerning their own plan but also concerning what they know about the other agents" plans .
+All the conflicts do not have the same strength, meaning that they can be solved with more or less difficulty according to the agents" communication capacities .
+A conflict is soft when the concerned agents can communicate before one or the other carries out the request in question .
+A conflict is hard when the agents cannot communicate before the realization of the request .
+Definition 9 (Soft Hard conflict) .
+Let si and sj (i < j) two agents in conflict with, at time t, candidacies Csi and Csj respectively (sCsi = si and sCsj = sj) .
+If ? V ? S such as V = {si .
+.
+.
+sj} and if ? T ? T such as T = {ti?1 .
+.
+.
+tj?1} (ti?1 = t) where
+A conflict is soft if it exists a chain of agents between the two agents in conflict such as information can propagate before both agents realize the request .
+If this chain does not exist, it means that the agents in conflict cannot communicate directly or not .
+Consequently, the conflict is hard .
+In satellite swarms, the geographical positions of the requests are known as well as the satellite orbits .
+So each agent is able to determine if a conflict is soft or hard .
+We can define the conflict cardinality
+Let si be an agent and R a request in conflict .
+The conflict cardinality is cardc(R) = |{C ? Ct si |modC ? {2, 3}, CR = R}| .
+The conflict cardinality corresponds to the number of agents that are candidates or committed to the same request .
+Thus, a conflict has at least a cardinality of 2. .

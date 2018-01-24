@@ -1,0 +1,49 @@
+ANALYSIS In this section, we discuss the performance of our RecursiveAdjustment Co Allocation strategy .
+We evaluate four coallocation schemes
+We analyze the performance of each scheme by comparing their transfer finish time, and the total idle time faster servers spent waiting for the slowest server to finish delivering the last block .
+We also analyze the overall performances in the various cases .
+We performed wide area data transfer experiments using our GridFTP GUI client tool .
+We executed our co allocation client tool on our testbed at Tunghai University (THU), Taichung City, Taiwan, and fetched files from four selected replica servers
+All these institutions are in Taiwan, and each is at least 10 Km from THU .
+Figure 4 shows our Data Grid testbed .
+Our servers have Globus 3.0.2 or above installed .
+Internet THU Li Zen High School HITCeleron 900 MHz 256 MB RAM 60 GB HD AMD Athlon(tm) XP 2400+ 1024 MB RAM 120 GB HD Pentium 4 2.8 GHz 512 MB RAM 80 GB HD PU Da Li High School Athlon MP 2000 MHz *2 1 GB RAM 60 GB HD Pentium 4 1.8 GHZ 128 MB RAM 40 GB HD Pentium 4 2.5 GHZ 512 MB RAM 80 GB HD Figure 4 .
+Our Data Grid testbed In the following experiments, we set = 0.5, the LeastSize threshold to 10MB, and experimented with file sizes of 10 MB, 50MB, 100MB, 500MB, 1000MB, 2000MB, and 4000MB .
+For comparison, we measured the performance of Conservative Load Balancing on each size using the same block numbers .
+Figure 5 shows a snapshot of our GridFTP client tool .
+This client tool is developed by using Java CoG .
+It allows easier and more rapid application development by encouraging collaborative code reuse and avoiding duplication of effort among problem solving environments, science portals, Grid middleware, and collaborative pilots .
+Table 1 shows average transmission rates between THU and each replica server .
+These numbers were obtained by transferring files of 500MB, 1000MB, and 2000MB from a single replica server using our GridFTP client tool, and each number is an average over several runs .
+Table 1 .
+GridFTP end to end transmission rate from THU to various servers Server Average transmission rate HIT 61.5 Mbps LZ 59.5 Mbps DL 32.1 Mbps PU 26.7 Mbps 802 Figure 5 .
+Our GridFTP client tool We analyzed the effect of faster servers waiting for the slowest server to deliver the last block for each scheme .
+Figure 6(a) shows total idle time for various file sizes .
+Note that our RecursiveAdjustment Co Allocation scheme achieved significant performance improvements over other schemes for every file size .
+These results demonstrate that our approach efficiently reduces the differences in servers finish times .
+The experimental results shown in Figure 6(b) indicate that our scheme beginning block reassembly as soon as the first blocks have been completely delivered reduces combination time, thus aiding co allocation strategies like Conservative Load Balancing and RecursiveAdjustment Co Allocation that produce more blocks during data transfers .
+Figure 7 shows total completion time experimental results in a detailed cost structure view .
+Servers were at PU, DL, and HIT, with the client at THU .
+The first three bars for each file size denote the time to download the entire file from single server, while the other bars show co allocated downloads using all three servers .
+Our co allocation scheme finished the job faster than the other co allocation strategies .
+Thus, we may infer that the main gains our technology offers are lower transmission and combination times than other co allocation strategies .
+0 20 40 60 80 100 120 140 160 180 200 100 500 1000 1500 2000 File Size WaitTime(Sec) Brute3 History3 Conservative3 Recursive3 0 10 20 30 40 50 60 70 80 90 100 500 1000 1500 2000 File Size CombinationTime(Sec) Brute3 History3 Conservative3 Recursive3 Figure 6 .
+(a) Idle times for various methods; servers are at PU, DL, and HIT .
+(b) Combination times for various methods; servers are at PU, DL, and HIT .
+In the next experiment, we used the Recursive Adjustment CoAllocation strategy with various sets of replica servers and measured overall performances, where overall performance is
+The results in Figure 8(a) show that using coallocation technologies yielded no improvement for smaller file sizes such as 10MB .
+They also show that in most cases, overall performance increased as the number of co allocated flows increased .
+We observed that for our testbed and our co allocation technology, overall performance reached its highest value in the REC3_2 case .
+However, in the REC4 case, when we added one flow to the set of replica servers, the performance did not increase .
+On the contrary, it decreased .
+We can infer that the co allocation efficiency reached saturation in the REC3_2 case, and that additional flows caused additional overhead and reduced overall performance .
+This means that more download flows do not necessarily result in higher performance .
+We must choose appropriate numbers of flows to achieve optimum performance .
+We show the detailed cost structure view for the case of REC3_2 and the case of REC4 in Figure 8(b) .
+The detailed cost consists of authentication time, transfer time and combination time .
+0 100 200 300 400 500 600 PU1 DL1 HIT1 BRU3 HIS3 CON3 REC3 PU1 DL1 HIT1 BRU3 HIS3 CON3 REC3 PU1 DL1 HIT1 BRU3 HIS3 CON3 REC3 PU1 DL1 HIT1 BRU3 HIS3 CON3 REC3 500 1000 1500 2000 File Size CompletionTime(Sec) Authentication Time Transmission Time Combination Time Figure 7 .
+Completion times for various methods; servers are at PU, DL, and HIT .
+Table 2 .
+The sets of replica servers for all cases Case Servers PU1 PU DL1 DL REC2 PU, DL REC3_1 PU, DL, LZ REC3_2 PU, DL, HIT REC4 PU, DL, HIT, LZ 0 10 20 30 40 50 60 70 10 50 100 500 1000 1500 2000 File Size OverallPerformance(Mbits) PU1 DL1 REC2 REC3_1 REC3_2 REC4 0 10 20 30 40 50 60 70 REC3_2 REC4 REC3_2 REC4 REC3_2 REC4 REC3_2 REC4 REC3_2 REC4 REC3_2 REC4 REC3_2 REC4 10 50 100 500 1000 1500 2000 File Size OverallPerformance(Mbits) Authentication Time Transmission Time Combination Time Figure 8 .
+(a) Overall performances for various sets of servers .
+(b) Detailed cost structure view for the case of REC3_2 and the case of REC4. .

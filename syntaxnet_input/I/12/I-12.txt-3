@@ -1,0 +1,67 @@
+FASTPACED DOMAINS The CA module and algorithms we describe in this paper were developed and tested in the Coordinators domain [21] .
+In this domain, autonomous agents, called Coordinators, are intended to help maximize an overall team objective by handling changes in the task schedule as conditions of operation change .
+Each agent operates on behalf of its owner (e.g., the team leader of a firstresponse team or a unit commander) whose schedule it manages .
+Thus, the actual tasks being scheduled are executed either by owners or by units they oversee, and the agent"s responsibility is limited to maintaining the scheduling of these tasks and coordinating with the agents of other human team members (i.e., other owners) .
+In this domain, scheduling information and constraints are distributed .
+Each agent receives a different view of the tasks and structures that constitute the full multi agent problem typically only a partial, local one .
+Schedule revisions that affect more than one agent must be coordinated, so agents thus must share certain kinds of information .
+(In a team context they may be designed to share other types as well.) However, the fast paced nature of the domain constrains the amount of information they can share, precluding a centralized solution; scheduling problems must be solved distributively .
+The agent owner relationship is a collaborative one, with the agent needing to interact with its owner to obtain task and environment information relevant to scheduling .
+The CA module is responsible for deciding intelligently when and how to interact with the owner for improving the agent"s scheduling .
+As a result, the CA must estimate the expected benefit of any such interaction and the cost associated with it [19] .
+In general, the net benefit of a potential interaction is PV ? C, where V is the value of the information the user may have, P is the probability that the user has this information, and C is the cost associated with an interaction .
+The values of P, V , and C are time varying, and the CA estimates their value at the intended time of initiating the interaction with its owner .
+This paper focuses on the twin problems of estimating the parameters P and C, both of which are user centric in the sense of being determined by characteristics of the owner and the environment in which the owner is operating); it presumes a mechanism for determining V [18] .
+2.1 Estimating Interruption Costs The cost of interrupting owners derives from the potential degradation in performance of tasks they are doing caused by the disruption [1; 9, inter alia] .
+Research on interaction management has deployed sensor based statistical models of human interruptibility to infer the degree of distraction likely to be caused by an interruption .
+This work aims to reduce interruption costs by delaying interruptions to times that are convenient .
+It typically uses Bayesian models to learn a user"s current or likely future focus of attention from an ongoing stream of actions .
+By using sensors to provide continuous incoming indications of the user"s attentional state, these models attempt to provide a means for computing probability distributions over a user"s attention and intentions [9] .
+Work which examines such interruptibility cost factors as user frustration and distractability [10] includes work on the cost of repeatedly bothering the user which takes into account the fact that recent interruptions and difficult questions should carry more weight than interruptions in the distant past or straightforward questions [5] .
+Although this prior work uses interruptibility estimates to balance the interaction"s estimated importance against the degree of distraction likely to be caused, it differs from the fast paced environments problem we address in three ways that fundamentally change the nature of the problem and hence alter the possible solutions .
+First, it considers settings in which the computer system has information that may be relevant to its user rather than the user (owner) having information needed by the system, which is the complement of the information exchange situation we consider .
+Second, the interruptibility estimation models are task based .
+Lastly, it relies on continuous monitoring of a user"s activities .
+In fast paced environments, there usually is no single task structure, and some of the activities themselves may have little internal structure .
+As a result, it is difficult to determine the actual attentional state of agent owners [15] .
+In such settings, owners must make complex decisions that typically involve a number of other members of their units, while remaining reactive to events that diverge from expectations [24] .
+For instance, during disaster rescue, a first response unit may begin rescuing survivors trapped in a burning house, when a wall collapses suddenly, forcing the unit to The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 203 retract and re plan their actions .
+Prior work has tracked users" focus of attention using a range of devices, including those able to monitor gestures [8] and track eyegaze to identify focus of visual attention [13, 20], thus enabling estimations of cognitive load and physical indicators of performance degradation .
+The mechanisms described in this paper also presume the existence of such sensors .
+However, in contrast to prior work, which relies on these devices operating continuously, our mechanism presumes that fast paced environments only allow for the activation of sensors for short periods of time on an ad hoc basis, because agents" resources are severely limited .
+Methods that depend on predicting what a person will do next based only on what the user is currently doing (e.g., MDPs) are not appropriate for modeling focus of attention in fast paced domains, because an agent cannot rely on a person"s attentional state being well structured and monitoring can only be done on a sporadic, non continuous basis .
+Thus, at any given time, the cost of interaction with the user is essentially probabilistic, as reflected over a single random monitoring event, and can be assigned a probability distribution function .
+Consequently, in fast paced environments, an agent needs a sampling strategy by which the CA samples its owner"s interruptibility level (with some cost) and decides whether to initiate an interaction at this specific time or to delay until a lower cost is observed in future samplings .
+The method we describe in the remainder of this subsection applies concepts from economic search theory [16] to this problem .
+The CA"s cost estimation uses a mechanism that integrates the distribution of an owner"s interruptibility level (as estimated by the CA) into an economic search strategy, in a way that the overall combined cost of sensor costs and interaction costs is minimized .
+In its most basic form, the economic search problem aims to identify an opportunity that will minimize expected cost or maximize expected utility .
+The search process itself is associated with a cost, and opportunities (in our case, interruption opportunities) are associated with a stationary distribution function .
+We use a sequential search strategy [16] in which one observation is drawn at a time, over multiple search stages .
+The dominating strategy in this model is a reservation value based strategy which determines a lower bound, and keeps drawing samples as long as no opportunity above the bound was drawn .
+In particular, we consider the situation in which an agent"s owner has an interruption cost described by a probability distribution function (pdf) f(x) and a cumulative distribution function (cdf) F(x) .
+The agent can activate sensing devices to get an estimation of the interruption cost, x, at the current time, but there is a cost c of operating the sensing devices for a single time unit .
+The CA module sets a reservation value and as long as the sensor based observation x is greater than this reservation value, the CA will wait and re sample the user for a new estimation .
+The expected cost, V (xrv), using such a strategy with reservation value xrv is described by Equation 1, V (xrv) = c + R xrv y=0 yf(y) F(xrv) , (1) which decomposes into two parts .
+The first part, c divided by F(xrv), represents the expected sampling cost .
+The second, the integral divided by F(xrv), represents the expected cost of interruption, because the expected number of search cycles is (random) geometric and the probability of success is F(xrv) .
+Taking the derivative of the left hand side of Equation 1 and equating it to zero, yields the characteristics of the optimal reservation value, namely x? rv must satisfy, V (x? rv) = x? rv .
+(2) Substituting (2) in Equation 1 yields Equation 3 (after integration by parts) from which the optimal reservation value, x? rv, and consequently (from Equation 2) V (x? rv) can be computed .
+c = Z x? rv y=0 F(y) (3) This method, which depends on extracting the optimal sequence of sensor based user sampling, relies heavily on the structure of the distribution function, f(x) .
+However, we need only a portion of the distribution function, namely from the origin to the reservation value .
+(See Equation 1 and Figure 1.) Thus, when we consider sharing data, it is not necessary to rely on complete similarity in the distribution function of different users .
+For some parameters, including the user"s interruptibility level, it is enough to rely on similarity in the relevant portion of the distribution function .
+The implementation described in Sections 4 5 relies on this fact .
+Figure 1
+Alternatively, the agent can attempt to infer this probability from measurable characteristics of the user"s behavior, which it can assess without requiring an interruption .
+This indirect approach, which does not require interrupting the user, is especially useful in fast paced domains .
+The CA module we designed uses such an indirect method
+For instance, in Coordinatorslike scenarios, owners may obtain a variety of information through occasional coordination meetings of all owners, direct communication with other individual owners participating in the execution of a joint task (through which they may learn informally about the existence or status of other actions they are executing), open communications they overhear (e.g .
+if commanders leave their radios open, they can listen to messages associated with other teams in their area), and other formal or informal communication channels [24] .
+Thus, owners" levels of communication with others, which can be obtained without interrupting them, provide some indication of the frequency with which they obtain new information .
+Given occasional updates about its owner"s level of communication, the CA can estimate the probability that a random interaction with the owner will yield the information it needs .
+Denoting the probability distribution function of the amount of communication the user generally maintains with its environment by g(x), and using the transformation function Z(x), mapping from a level of communication, x, to a probability of having the information, the expected probability of getting the information that is needed from the owner when interrupting at a given time can be calculated from P = Z ¡Û 0 Z(x)g(x)dy .
+(4) 204 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) The more observations an agent can accumulate about the distribution of the frequency of an owner"s interaction with the environment at a given time, the better it can estimate the probability the owner has the information needed by the system. .

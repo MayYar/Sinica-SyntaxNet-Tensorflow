@@ -1,0 +1,52 @@
+Figure 3
+benefits are strongly workload dependent .
+In general, invalidation based coherence protocols are efficient since invalidations are small, batched and piggybacked on other messages .
+Moreover, invalidation protocols match the current hardware trend for increasing client cache sizes .
+Larger caches are likely to contain much more data than is actively used .
+Update based protocols that propagate updates to low interest objects in a wide area network would be wasteful .
+Nevertheless, invalidation based coherence protocols can perform poorly in high latency networks [12] if the object"s new value is likely to be of interest to another group member .
+With an invalidation based protocol, one member"s update will invalidate another member"s cached copy, causing the latter to perform a high latency fetch of the new value from the server .
+BuddyCache circumvents this well known bandwidth vs .
+latency trade off imposed by update and invalidation protocols in wide area network environments .
+It avoids the latency penalty of invalidations by using the redirector to retain and propagate updates committed by one client to other clients within the group .
+This avoids the bandwidth penalty of updates because servers propagate invalidations to the redirectors .
+As far as we know, this use of localized multicast in BuddyCache redirector is new and has not been used in earlier caching systems .
+The peer update works as follows .
+An update commit request from a client arriving at the redirector contains the object updates .
+Redirector retains the updates and propagates the request to the coordinating server .
+After the transaction commits, the coordinator server sends a commit reply to the redirector of the committing client group .
+The redirector forwards the reply to the committing client, and also propagates the retained committed updates to the clients caching the modified pages (see figure 3) .
+Since the groups outside the BuddyCache propagate invalidations, there is no extra overhead outside the committing group .
+3.3 Solo commit In the OCC protocol, clients acknowledge server invalidations (or updates) to indicate removal of stale data .
+The straightforward group acknowledgement protocol where redirector collects and propagates a collective acknowledge29 Redirector commit ok ABORT Client 1 Client 2 Server commit (P(x)) commit (P(x)) ok + inv(P(x)) inv(P(x)) commit(P(x)) commit(P(x)) ack(P(x)) ack(P(x)) Figure 4
+E.g .
+an engineer that commits a repeated revision to the same shared design object (and therefore holds the latest version of the object) may need to abort if the group acknowledgement has not propagated to the server .
+Consider a situation depicted in figure 4 where Client1 commits a transaction T that reads the latest version of an object x on page P recently modified by Client1 .
+If the commit request for T reaches the server before the collective acknowledgement from Client2 for the last modification of x arrives at the server, the OCC validation procedure considers x to be stale and aborts T (because, as explained above, an invalidation unacknowledged by a client, acts as indication to the server that the cached object value is stale at the client) .
+Note that while invalidations are not required for the correctness of the OCC protocol, they are very important for the performance since they reduce the performance penalties of aborts and false sharing .
+The asynchronous invalidations are an important part of the reason OCC has competitive performance with PSAA [33], the best performing avoidance based protocol [3] .
+Nevertheless, since invalidations are sent and processed asynchronously, invalidation processing may be arbitrarily delayed at a client .
+Lease based schemes (time out based) have been proposed to improve the availability of hierarchical callback based coherence protocols [32] but the asynchronous nature of invalidations makes the lease based approaches inappropriate for asynchronous invalidations .
+The Solo commit validation protocol allows a client with up to date objects to commit a transaction even if the group acknowledgement is delayed due to slow or crashed peers .
+The protocol requires clients to include extra information with the transaction read sets in the commit message, to indicate to the server the objects read by the transaction are up to date .
+Object version numbers could provide a simple way to track up to date objects but, as mentioned above, maintaining per object version numbers imposes unacceptably high overheads (in disk storage, I O costs and directory size) on the entire object system when objects are small [23] .
+Instead, solo commit uses coarse grain page version numbers to identify fine grain object versions .
+A page version number is incremented at a server when at transaction that modifies objects on the page commits .
+Updates committed by a single transaction and corresponding invalidations are therefore uniquely identified by the modified page version number .
+Page version numbers are propagated to clients in fetch replies, commit replies and with invalidations, and clients include page version numbers in commit requests sent to the servers .
+If a transaction fails validation due to missing group acknowledgement, the server checks page version numbers of the objects in the transaction read set and allows the transaction to commit if the client has read from the latest page version .
+The page version numbers enable independent commits but page version checks only detect page level conflicts .
+To detect object level conflicts and avoid the problem of false sharing we need the acknowledged invalidations .
+Section 4 describes the details of the implementation of solo commit support for fine grain sharing .
+3.4 Group Configuration The BuddyCache architecture supports multiple concurrent peer groups .
+Potentially, it may be faster to access data cached in another peer group than to access a remote server .
+In such case extending BuddyCache protocols to support multi level peer caching could be worthwhile .
+We have not pursued this possibility for several reasons .
+In web caching workloads, simply increasing the population of clients in a proxy cache often increases the overall cache hit rate [30] .
+In BuddyCache applications, however, we expect sharing to result mainly from explicit client interaction and collaboration, suggesting that inter group fetching is unlikely to occur .
+Moreover, measurements from multi level web caching systems [9] indicate that a multilevel system may not be advantageous unless the network connection between the peer groups is very fast .
+We are primarily interested in environments where closely collaborating peers have fast close range connectivity, but the connection between peer groups may be slow .
+As a result, we decided that support for inter group fetching in BuddyCache is not a high priority right now .
+To support heterogenous resource rich and resource poor peers, the BuddyCache redirector can be configured to run either in one of the peer nodes or, when available, in a separate node within the site infrastructure .
+Moreover, in a resource rich infrastructure node, the redirector can be configured as a stand by peer cache to receive pages fetched by other peers, emulating a central cache somewhat similar to a regional web proxy cache .
+From the BuddyCache cache coherence protocol point of view, however, such a stand by peer cache is equivalent to a regular peer cache and therefore we do not consider this case separately in the discussion in this paper. .

@@ -1,0 +1,64 @@
+Assumptions
+Furthermore, each peer knows the incoming and outgoing bandwidth of its access link .
+Each peer uses the PALS mechanism to stream content from multiple parent peers .
+All connections are congestion controlled by senders (e.g., [17]) .
+To accommodate peer bandwidth heterogeneity, we assume that the content has a layered representation .
+In other words, with proper adjustment, the framework should work with both layered and multipledescription encodings .
+Participating peers have heterogeneous and asymmetric bandwidth connectivity .
+Furthermore, peers may join and leave in an arbitrary fashion .
+Overview
+Such a subset of parents may change over time as some parents join (or leave) the overlay, or available bandwidth from current parents significantly changes .
+Note that each peer can be both receiver and parent at the same time 4 .
+Each receiver periodically exchanges messages (i.e., gossips) with other peers in the overlay to learn about those participating peers that are potentially good parents .
+Potentially good parents for a receiver are identified based on their relative utility for the receiver .
+The utility of a parent peer pi for a receiver pj is a function of their relative network distance (delij) and the outgoing access link bandwidth of the parent (outbwi), (i.e., U(pi, pj) 3 These multi tree approaches often do not use congestion control for each connection .
+4 Throughout this paper we use receiver and parent as short form for receiver peer and parent peer .
+= f(delij, outbwi)) .
+Using parents" access link bandwidth instead of available bandwidth has several advantages
+Therefore, it enables the receiver to roughly classify different parents .
+(ii) estimating available bandwidth requires end to end measurement and such a solution does not scale with the number of peers, and more importantly, (iii) given a utility function, this approach enables any peer in the overlay to estimate relative utility of any other two peers .
+Each receiver only maintains information about a fixed (and relatively small) number of promising parent peers in its local image .
+The local image at each receiver is dynamically updated with new gossip messages as other peers join leave the overlay .
+Each peer selects a new parent in a demand driven fashion in order to minimize the number of end to end bandwidth measurements, and thus improve scalability .
+When a receiver needs a new parent, its PS mechanism randomly selects a peer from its local image where probability of selecting a peer directly depends on its utility .
+Then, the actual properties (i.e., available bandwidth and delay) of the selected parent are verified through passive measurement .
+Toward this end, the selected parent is added to the parent list which triggers PALS to request content from this parent .
+Figure 1 depicts the interactions between PD and PS mechanisms .
+In PRO, each receiver leverages congestion controlled bandwidth from its parents as an implicit signal to detect two events
+Figure 2 shows part of an overlay to illustrate this feature .
+Each receiver continuously monitors available bandwidth from all its parents .
+Receiver p0 initially has only p1 as a parent .
+When p0 adds a new parent (p2), the receiver examines the smoothed available bandwidth from p1 and p2 and any measurable correlation between them .
+If the available bandwidth from p1 decreases after p2 is added, the receiver can conclude that these two parents are behind the same bottleneck (i.e., link L0) .
+We note that paths from two parents might have some overlap that does not include any bottleneck .
+Assume another receiver p3 selects p1 as a parent and thus competes with receiver p0 for available bandwidth on link L1 .
+Suppose that L1 becomes a bottleneck and the connection between p1 to p3 obtains a significantly higher share of L1"s bandwidth than connection between p1 to p0 .
+This change in available bandwidth from p1 serves as a signal for p0 .
+Whenever a receiver detects such a drop in bandwidth, it waits for a random period of time (proportional to the available bandwidth) and then drops Source Peer Disc .
+Peer Selec .
+gossip Exam .
+a New Parent Criteriafor PeerDiscovery Update LocalImage oftheOverlay Unknown peers in the overlay Known peers in the overlay Select Internal Components of Receiver Peer Receiver Peer Figure 1
+Therefore, the receiver with a higher bandwidth connectivity (p3) is more likely to keep p1 as parent whereas p0 may examine other parents with higher bandwidth including p3 .
+The congestion controlled bandwidth signals the receiver to properly reshape the overlay .
+We present a summary of key features and limitations of PRO in the next two sections .
+Table 1 summarizes our notation throughout this paper .
+Main Features
+The PD mechanism actively participates in peer selection by identifying peers for the local image which limits the possible choices of parents for the PS mechanism .
+PRO constructs a multi parent, unstructured overlay .
+But PRO does not have the same limitations that exist in multi tree approaches because it allows each receiver to independently micro manage its parents to maximize its overall bandwidth based on local information .
+PRO conducts passive measurement not only to determine available bandwidth from a parent but also to detect any shared bottleneck between paths from different parents .
+Furthermore, by selecting a new parent from the local image, PRO increases the probability of finding a good parent in each selection, and thus significantly decreases number of required measurements which in turn improves scalability .
+PRO can gracefully accommodate bandwidth heterogeneity and asymmetry among peers since PALS is able to manage delivery of content from a group of parents with different bandwidth .
+Limitations and Challenges
+Whenever this condition is not satisfied, either a receiver may not be able to maximize its overall bandwidth or resulting overlay may not be efficient .
+Table 1
+pi Peer i inbwi Incoming access link BW for pi outbwi Outgoing access link BW for pi min nopi Min .
+No of parents for pi max nopi Max .
+No of parents for pi nopi(t) No of active parents for pi at time t img sz Size of local image at each peer sgm Size of gossip message delij Estimated delay between pi and pj Clearly, properties of the selected utility function as well as accuracy of estimated parameters (in particular using outgoing bandwidth instead of available bandwidth) determine properties of the local image at each peer which in turn affects performance of the framework in some scenarios .
+In these cases, the utility value may not effectively guide the search process in identifying good parents which increases the average convergence time until each peer finds a good subset of parents .
+Similar to many other adaptive mechanisms (e.g., [13]), the parent selection mechanism should address the fundamental tradeoff between responsiveness and stability .
+Finally, the congestion controlled bandwidth from parent peers may not provide a measurable signal to detect a shared bottleneck when level of multiplexing is high at the bottleneck link .
+However, this is not a major limitation since the negative impact of a shared bottleneck in these cases is minimal .
+All the above limitations are in part due to the simplicity of our framework and would adversely affect its performance .
+However, we believe that this is a reasonable design tradeoff since simplicity is one of our key design goals .
+In the following sections, we describe the two key components of our framework in further details. .

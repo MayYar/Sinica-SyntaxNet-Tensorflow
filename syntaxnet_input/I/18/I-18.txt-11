@@ -1,0 +1,53 @@
+In space contexts, communication time and agents" computing capacities are limited .
+When they are in conflict, the agents must find a local agreement (instead of an expensive global agreement) by using the conflict in order to increase the number of realized requests, to decrease the time of mission return, to increase the quality of the pictures taken or to make sure that a request is carried out .
+Example 2 .
+Let us suppose a conflict on request R between agents si and sj .
+We would like that the most expert agent, i.e .
+the agent that can carry out the request under the best conditions, does it .
+Let us suppose si is the expert .
+si must allocate R to itself .
+It remains to determine what sj must do
+Consequently, we can define collaboration strategies dedicated to conflict solving .
+A strategy is a private (namely intrinsic to an agent) decision process that allows an agent to make a decision on a given object .
+In our application, strategies specify what to do with redundancies .
+6.1 Cost and expertise In our application, cost is linked to the realization dates .
+Carrying out a request consumes the agents" resources (e.g.
+Consequently, an observation has a cost for each agent which depends on when it is realized
+Definition 11 (Cost) .
+Let si be an agent .
+The cost costsi (RC ) ? R to carry out a request RC according to a candidacy C is defined as
+From this cost notion, we can formally define an expert notion between two agents .
+The expertise for an agent means it can realize the request at the lower cost .
+Definition 12 (Expertise) .
+Let si and sj ? S be two agents and R a request .
+Agent si is an expert for R if and only if costsi ? costsj .
+6.2 Soft conflict solving strategies Three strategies are proposed to solve a conflict .
+The expert strategy means that the expert agent maintains its candidacy whereas the other one gives up .
+The altruist strategy means that the agent that can download first3 , provided the cost increase is negligible, maintains its candidacy whereas the other one gives up .
+The insurance strategy means that both agents maintain their candidacies in order to ensure redundancy .
+Strategy 1 (Expert) .
+Let si and sj be two agents in conflict on their respective candidacies Csi and Csj such as si is the expert agent .
+The expert strategy is
+Strategy 2 (Altruist) .
+Let si and sj be two agents in conflict on their respective candidacies Csi and Csj such as si is the expert agent .
+Let ? R+ be a threshold on the cost increase .
+The altruist strategy is 
+Strategy 3 (Insurance) .
+Let si and sj be two agents in conflict on their respective candidacies Csi and Csj such as si is the expert agent .
+Let £\ ? R be a priority threshold .
+The insurance strategy is 
+3 i.e .
+the agent using memory resources during a shorter time .
+The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) 291 In the insurance strategy, redundancy triggering is adjusted by the conflict cardinality cardc(R) .
+The reason is the following
+The three strategies are implemented in a negotiation protocol dedicated to soft conflicts .
+The protocol is based on a subsumption architecture [7] on strategies
+Then the altruist strategy comes (2) in order to allocate the resources so as to enhance the mission return .
+Finally, the expert strategy that does not have preconditions (3) enhances the cost of the plan .
+Protocol 4 (Soft conflict solving) .
+Let R be a request in a soft conflict between two agents, si and sj .
+These agents have Csi and Csj for respective candidacies .
+Let si be the expert agent .
+Agents apply strategies as follows

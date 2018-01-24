@@ -1,0 +1,43 @@
+We now describe how our norm regulated VOs give rise to normaware agent societies .
+We address open and heterogeneous MASs
+This is a kind of chaperon that interacts with an external agent, and observes and reports on its behaviour .
+We show our architecture in Figure 4 below
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+I, s, £Q, £[ I, s , £Q , £[ ¡P ¡P ¡P agn ? ? ? ? govn ?? Figure 4
+The governor agents have access to the VO description I, the current state s of the VO enactment, the global execution state £Q and the global normative state £[ .
+Governor agents are able to write to and read from (denoted by the ??) a shared memory space (e.g., a blackboard like solution implemented as a tuple space), updating the global configuration (denoted by the ) to reflect the dynamics of the VO enactment .
+Governor agents are necessary because we cannot anticipate or legislate over the design or behaviour of external agents .
+We depict below how the pairs of governor external agents work together
+The governor agent represents the external agent within the VO .
+As such, it has the unique identifier of the external agent .
+The governor agent keeps an account of all roles the external agent is currently playing
+We define in Figure 5 how governor agents work we use a logic program for this purpose .
+We show 1 main(Id, Roles) ¡ö 2 get tuple( I, s, £Q, £[ )? 3 terminate(Id, Roles, I, £Q, £[) 4 main(Id, Roles) ¡ö 5 get tuple( I, s, £Q, £[ )? 6 filter norms(Id, Roles, £[, £[Id )? 7 discuss norms(Id, Roles, I, s, £Q, £[Id , Actions)? 8 update tuple(Roles, Actions, NewRoles)? 9 main(Id, NewRoles) Figure 5
+The first clause (lines 1 3) depicts the termination condition
+The team of governor agents synchronise their access to the tuple space [12], thus ensuring each has a chance to function .
+The second clause (lines 4 9) depicts a generic loop when the termination condition of the first clause does not hold .
+In this case, the tuple is again retrieved (line 5) and the governor agent proceeds (line 6) to analyse the current global normative state £[ with a view to obtaining the subset £[Id ? £[ of norms referring to agent Id under roles Roles .
+Predicate filter norms 4 collects the norms which apply to agent Id (the governor agent"s external agent) .
+In line 7 the governor agent, in possession of the applicable norms as well as other relevant information, interacts with the external agent to decide on a set of Actions which are norm compliant these actions will be used to update (line 8) the global execution state £Q .
+In the process of updating the state of execution, a new set of roles must be assigned to the external agent, represented as NewRoles .
+The governor agent keeps looping (line 9) using the identifier for the external agent and its new set of roles .
+5.1 Using Annotated Norms We now explain how annotated norms are used by norm aware agents .
+We do so via the definition of predicate check 2, which holds if its first argument, a candidate action (in the format of the elements of £Q of Def .
+2), is within the influence of an annotated prohibition £s, its second parameter .
+The definition, as a logic program, is shown in Figure 6 .
+It checks (line 4) if the agent identifier 1 check(Action, £s) ¡ö 2 Action = a
+It then verifies (lines 5 6) that £m does not unify with any of the conflict sets in £Uc .
+Finally, in line 7 it checks if the time of the action is within the norm temporal influence .
+The verification of non unification of £m with any element of £Uc deserves an explanation .
+The elements of £Uc are unifiers stating what values the variables of the norm cannot have, that is, they represent gaps in the original scope of the norm"s influence .
+The test thus equates to asking if the action is outside such gaps, that is, the action is within the curtailed scope of influence of the norm. .

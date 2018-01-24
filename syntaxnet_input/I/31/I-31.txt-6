@@ -1,0 +1,47 @@
+Given an underlying logic L, a finite agenda A over L, and a set of agents £U, Judgment Aggregation Logic (jal(L), or just jal when L is understood) for the language L(£U, A), is defined in Table 2 .
+?(hp ? hq) if p q Atmost p?A hp Atleast hp p ? A Agenda (hp ? ?) ¡÷ (hp ¡÷ ?) Once (hp ? x) ? (hp ? x) CpJS all instantiations of propositional tautologies taut (£r1 ¡÷ £r2) ¡÷ ( £r1 ¡÷ £r2) K £r ¡÷ £r T £r ¡÷ £r 4 ? £r ¡÷ ? £r 5 ( i ? ?j) ¡÷ o?O o C £r ? £r From p1, .
+.
+.
+pn L q infer (hp1 ? x) ? ¡P ¡P ¡P ? (hpn ? x) ¡÷ (hq ¡÷ x) ? (hq ¡÷ ?x) Closure From ? ¡÷ £r and ? infer £r MP From £r infer £r Nec Table 2
+p, pi, q range over the agenda A; £p,£r,£ri over L(£U, A); x over {£m, i 
+hp means hq when p = ?q for some q, otherwise it means h?p .
+L is the underlying logic .
+The first 5 axioms represent properties of a table and of judgment sets .
+Axiom Atmost says that there is at most one item on the table at a time, and Atleast says that we always have an item on the table .
+Axiom Agenda says that every agenda item will appear on the table, whereas Once says that every item of the agenda only appears on the table once .
+Note that a conjunction hp ? x reads
+Axiom CpJS corresponds to the requirement that judgment sets are complete .
+Note that from Agenda, CsJS and CpJS we derive the scheme x ? ?x, which says that everybody should at least express one opinion in favour of something, and against something .
+The axioms taut ? 5 are well familiar from modal logic
+Axiom C says that for any agenda item for which it is possible to have opposing opinions, every possible outcome for that item should be achievable .
+COMM says that everything that is true for an arbitrary profile and item, is also true for an arbitrary item and profile .
+Closure guarantees that agents behave consistently with respect to consequence in the logic L .
+MP and Nec are standard .
+We use JAL(L) to denote derivability in jal(L) .
+Theorem 3 .
+If the agenda is finite, we have that for any formula £r ? L(£U, A), JAL(L) £r iff |=L £r .
+Proof .
+Soundness is straightforward .
+For completeness (we focus on the main idea here and leave out trivial details), we build a 570 The Sixth Intl .
+Joint Conf .
+on Autonomous Agents and Multi Agent Systems (AAMAS 07) jal table for a consistent formula £r as follows .
+In fact, our axiomatisation completely determines a table, except for the behaviour of the form hp ? o ? (?)£m .
+It is easy to see that table descriptions are mutually exclusive, and, moreover, we can derive £n?T £n, where T is the set of all table descriptions .
+Let D be the set of all maximal consistent sets £G .
+We don"t want all of those
+We define two accessibility relations in the standard way
+Similarly for R with respect to .
+Both relations are equivalences (due to taut 5), and moreover, when R £G1£G2 and R £G2£G3 then for some £G2, also R £G1£G2 and R £G2£G3 (because of axiom COMM) .
+Let £G0 be a MCS containing £r .
+We now define the set Tables = {£G0} ¡å {£G1, £G2 | (R £G0£G1 and R £G1£G2) or (R £G0£G1 and R £G1£G2)} Every £G ? Tables can be conceived as a pair £^, p, since every £G contains a unique (hq ? o ? (?)£m) for every hq and a unique hp .
+It is then easy to verify that, for every £G ? Tables, and every formula ?, £G |= ? iff ? ? £G, where |= here means truth in the ordinary modal logic sense when the set of states is taken to be Tables .
+Now, we extract an aggregation function f and pairs £^, p as follows
+There will be exactly one such p .
+This defines the p we are looking for .
+Furthermore, the £^ is obtained, for every agent i, by finding all q for which (hq ? i) is currently true .
+Finally, the function f is a table of all tuples hp, o(p), £m for which (hp ? o(o) ? £m) is contained in some set in Tables .
+We point out that jal has all the axioms taut, K, T, 4, 5 and the rules MP and Nec of the modal logic S5 .
+However, uniform substitution, a principle of all normal modal logics (cf., e.g., [3]), does not hold .
+A counter example is the fact that the following is valid
+So, for example, we have that the discursive paradox is provable in jal(L)
+An example of a derivation of the less complicated (valid) property (i ? j) is shown in Table 3. .

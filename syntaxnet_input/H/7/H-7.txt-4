@@ -1,0 +1,35 @@
+REGRESSION Assume there are M users in the system .
+The task of the system is to recommend documents that are relevant to each user .
+For each user, the system learns a user model from the user"s history .
+In the rest of this paper, we will use the following notations to represent the variables in the system .
+m = 1, 2, ..., M
+M is the total number of users .
+wm
+wm is a K dimensional vector .
+j = 1, 2, ..., Jm
+Jm is the number of training data for user m .
+Dm = {(xm,j, ym,j)}
+xm,j is a K dimensional vector that represents the mth user"s jth training document.2 ym,j is a scalar that represents the label of document xm,j .
+k = 1, 2, ..., K
+The Bayesian hierarchical modeling approach has been widely used in real world information retrieval applications .
+Generalized Bayesian hierarchical linear models, one of the simplest Bayesian hierarchical models, are commonly used and have achieved good performance on collaborative filtering [25] and content based adaptive filtering [27] tasks .
+Figure 1 shows the graphical representation of a Bayesian hierarchical model .
+In this graph, each user model is represented by a random vector wm .
+We assume a user model is sampled randomly from a prior distribution P(w|£X) .
+The system can predict the user label y of a document x given an estimation of wm (or wm"s distribution) using a function y = f(x, w) .
+The model is called generalized Bayesian hierarchical linear model when y = f(wT x) is any generalized linear model such as logistic regression, SVM, and linear regression .
+To reliably estimate the user model wm, the system can borrow information from other users through the prior £X = (?, £U) .
+Now we look at one commonly used model where y = wT x + , where ? N(0, £m2 ) is a random noise [25][27] .
+Assume that each user model wm is an independent draw from a population distribution P(w|£X), which is governed by some unknown hyperparameter £X .
+Let the prior distribution of user model w be a Gaussian distribution with parameter £X = (?, £U), which is the commonly used prior for linear models .
+? = (?1, ?2, ..., ?K ) is a K dimensional vector that represents the mean of the Gaussian distribution, and £U is the covariance matrix of the Gaussian .
+Usually, a Normal distribution N(0, aI) and an Inverse Wishart distribution P(£U) ? |£U|? 1 2 b exp(?1 2 ctr(£U?1 )) are used as hyperprior to model the prior distribution of ? and £U respectively .
+I is the K dimensional identity matrix, and a, b, and c are real numbers .
+With these settings, we have the following model for the system
+2 The first dimension of x is a dummy variable that always equals to 1 .
+Figure 1
+The rating, y, for a document, x, is conditioned on the document and the user model, wm, associated with the user m .
+Users share information about their models through the prior, £X = (?, £U) .
+Normal distribution
+Let £c = (£X, w1, w2, ..., wM ) represent the parameters of this system that needs to be estimated .
+The joint likelihood for all the variables in the probabilistic model, which includes the data and the parameters, is

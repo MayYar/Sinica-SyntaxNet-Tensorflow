@@ -1,0 +1,409 @@
+Implementation and Performance Evaluation of 
+content:
+1 ABSTRACT :
+1-1:CONFLEX G is the grid enabled version of a molecular conformational space search program called CONFLEX .
+1-2:We have implemented CONFLEX G using a grid RPC system called OmniRPC .
+1-3:In this paper, we report the performance of CONFLEX G in a grid testbed of several geographically distributed PC clusters .
+1-4:In order to explore many conformation of large bio molecules, CONFLEX G generates trial structures of the molecules and allocates jobs to optimize a trial structure with a reliable molecular mechanics method in the grid .
+1-5:OmniRPC provides a restricted persistence model to support the parametric search applications .
+1-6:In this model, when the initialization procedure is defined in the RPC module, the module is automatically initialized at the time of invocation by calling the initialization procedure .
+1-7:This can eliminate unnecessary communication and initialization at each call in CONFLEX G .
+1-8:CONFLEXG can achieve performance comparable to CONFLEX MPI and can exploit more computing resources by allowing the use of a cluster of multiple clusters in the grid .
+1-9:The experimental result shows that CONFLEX G achieved a speedup of 56.5 times in the case of the 1BL1 molecule, where the molecule consists of a large number of atoms, and each trial structure optimization requires significant time .
+1-10:The load imbalance of the optimization time of the trial structure may also cause performance degradation .
+1-11:C.2.4 [Computer Systems Organization]: .
+2 INTRODUCTION :
+2-1:Elucidation of the stable conformations and the folding process of proteins is one of the most fundamental and challenging goals in life science .
+2-2:While some of the most common secondary structures (e.g., certain types of helix, the beta strand, and the coil) are well known, precise analysis of the thousands of chemically important conformers and pico second order analysis of their conformational interconversions via the transition states on the potential energy surface are required for the microsecond order investigation of the folding process toward the tertiary structure formations .
+2-3:Recently, the concept of the computational grid has begun to attract significant interest in the field of high performance network computing .
+2-4:Rapid advances in wide area networking technology and infrastructure have made it possible to construct large scale, high performance distributed computing environments, or computational grids, that provide dependable, consistent and pervasive access to enormous computational resources .
+2-5:CONFLEX is one of the most efficient and reliable conformational space search programs[1] .
+2-6:We have applied this 154 program to parallelization using global computing .
+2-7:The performance of the parallelized CONFLEX enables exploration of the lower energy region of the conformational space of small peptides within an available elapsed time using a local PC cluster .
+2-8:Since trial structure optimization in CONFLEX is calculated via molecular mechanics, conformational space search can be performed quickly compared to that using molecular orbital calculation .
+2-9:Although the parallelized version of CONFLEX was used to calculate in parallel the structure optimization, which takes up over 90% of the processing in the molecular conformation search, sufficient improvement in the speedup could not be achieved by this method alone .
+2-10:Therefore, for high polymers from live organisms, such as HIV protease, the use one PC cluster is insufficient due to the requirement for optimization of a huge number of trial structures .
+2-11:This requires the vast computer resources of a grid computing environment .
+2-12:In this paper, we describe CONFLEX G, a grid enabled molecular conformational search program, using OmniRPC and report its performance in a grid of several PC clusters which are geographically distributed .
+2-13:The prototype CONFLEX G allocates calculation trial structures optimization, which is a very time consuming task, to worker nodes in the grid environment in order to obtain high throughput .
+2-14:In addition, we compare the performance of CONFLEX G in a local PC cluster to that in a grid testbed .
+2-15:OmniRPC[2, 3, 4] is a thread safe implementation of Ninf RPC[5, 6] which is a Grid RPC facility for grid environment computing .
+2-16:Several systems adopt the concept of the RPC as the basic model for grid environment computing, including Ninf G[7], NetSolve[8] and CORBA[9] .
+2-17:The RPCstyle system provides an easy to use, intuitive programming interface, allowing users of the grid system to easily create grid enabled applications .
+2-18:In order to support parallel programming, an RPC client can issue asynchronous call requests to a different remote computer to exploit networkwide parallelism via OmniRPC .
+2-19:In this paper, we propose the OmniRPC persistence model to a Grid RPC system and demonstrate its effectiveness .
+2-20:In order to support a typical application for a grid environment, such as a parametric search application, in which the same function is executed with different input parameters on the same data set .
+2-21:In the current GridRPC system[10], the data set by the previous call cannot be used by subsequent calls .
+2-22:In the OmniRPC system, once a remote executable is invoked, the client attempts to use the invoked remote executable and its initialized state for subsequent RPC calls to the same remote functions in order to eliminate the invocation cost of each call .
+2-23:This paper demonstrates that CONFLEX G is able to exploit the huge computer resources of a grid environment and search large scale molecular conformers .
+2-24:We demonstrate CONFLEX G on our grid testbed using the actual protein as a sample molecule .
+2-25:The OmniRPC facility of the automatic initializable module allows the system to efficiently calculate numerous conformers .
+2-26:Furthermore, by using OmniRPC, the user can grid parallelize the existing application, and move from the cluster to the grid environment without modifying program code and compiling the program .
+2-27:In addition, the user can easily build a private grid environment .
+2-28:The rest of this paper is organized as follows .
+2-29:An overview Selection of Initial Structure Conformations Database Local Perturbation Geometry Optimization Comparison and Registration Figure 1: Algorithm of conformational space search in the original CONFLEX .
+2-30:of the CONFLEX system is presented in Section2, and the implementation and design of CONFLEX G are described in Section 3 .
+2-31:We report experimental results obtained using CONFLEX G and discuss its performance in Section 4 .
+2-32:In Section 6, we present conclusions and discuss subjects for future study. .
+3 CONFLEX :
+3-1:CONFLEX [1] is an efficient conformational space search program, which can predominately and exhaustively search the conformers in the lower energy region .
+3-2:Applications of CONFLEX include the elucidation of the reactivity and selectivity of drugs and possible drug materials with regard to their conformational flexibility .
+3-3:2.1 Algorithm of ConformationalSpaceSearch The basic strategy of CONFLEX is an exhaustive search of only the low energy regions .
+3-4:The original CONFLEX performs the following four major steps: discovered unique conformers sorted in a conformational database .
+3-5:(An input structure is used as the first initial structure at the beginning of a search execution only.) to the selected initial structure .
+3-6:structures .
+3-7:structures with the other conformers stored in a conformation database, and preservation of newly discovered unique conformers in the database .
+3-8:Figure 1 shows the outline of CONFLEX, the original conformational space search algorithm .
+3-9:These procedures incorporate two unique strategies .
+3-10:Figure 2 shows the strategies for generating local perturbations in CONFLEX .
+3-11:The first strategy involves both corner flapping and edge flipping for the ring atoms and stepwise rotation for side chains or backbone chains .
+3-12:These methods provide a highly efficient way to produce several good trial structures .
+3-13:These perturbations can be considered to mimic 155 Stepwise Rotation Corner Flap Edge Flip Figure 2: Strategies used to generate the local perturbations .
+3-14:a barrier crossing step in the elementary process of the thermal conformational inter conversion .
+3-15:Actually, the perturbations of an initial structure correspond to the precise performance around the space of the initial structure because of localization and weakness of the perturbation .
+3-16:The selection rule of the initial structure, the LowestConformer First rule, is the second strategy for directing the conformation search expanded to the low energy regions .
+3-17:The initial structure is selected as the set of lowest energy conformers stored in the conformation database .
+3-18:This rule is effective in moving down the search space toward lower energy regions, like water from a stream running into an empty reservoir, while filling local depressions along the way .
+3-19:Therefore, these tactical procedures of the CONFLEX search are referred to as the Reservoir Filling Algorithm .
+3-20:In order to remain in the low energy region and perform an exhaustive search, the search limit (SEL), which determines the maximum energy of the initial structures, is pre defined .
+3-21:Gradually increasing SEL allows only the lowenergy conformers to be searched and avoids straying into unnecessarily high energy regions .
+3-22:2.2 Parallelization of CONFLEX for Cluster For application to over 100 atoms, CONFLEX was improved using high performance parallel computing techniques .
+3-23:In the CONFLEX search algorithm, the geometry optimization procedures always take 95% of the elapsed time of the search execution .
+3-24:Therefore, we parallelized this optimization using the Master Worker parallelization technique .
+3-25:We modified the search procedures as follows .
+3-26:After trial structures are generated (step 2), they are temporarily stored in a task pool on the master node .
+3-27:Then, each worker node is dynamically supplied with one trial structure from the master node .
+3-28:After an optimization on a worker node is finished, the worker is immediately supplied with another trial structure .
+3-29:When all of the trial structures related to a given initial structure are optimized, only the master procedure is used in comparison .
+3-30:By parallelizing CONFLEX, the speedup of searching molecular conformers obtained is as reported in[11]. .
+4 CONFLEX G :
+4-1:Originally, CONFLEX was intended for use in exploring the conformers of the large bio molecules, such HIV protease .
+4-2:In such molecules, the number of trial structures increases and the time required for optimization of RPC Selection of Initial Structure Conformations Database Local Perturbation Comparison and Registration Client program Task Pool of Geometry Optimization RPC RPC Grid environment Cluster B Cluster A Cluster C Trial structureTrial structure Trial structure Trial structure Figure 3: Procedure of CONFLEX G .
+4-3:agent rexrex rex Client jones.tsukuba.ac.jp hpc serv.hpcc.jp hpc1 hpc2 hpc3 Agent invocation communicationNetwork Figure 4: Overview of the OmniRPC system for the remote cluster having a private IP address .
+4-4:the trial structure becomes immense .
+4-5:We implemented the parallelized version of CONFLEX, which cannot treat such molecules using only a local PC cluster .
+4-6:In order to exploit the vast computing resources of a grid environment, we designed and implemented CONFLEX G, which is a grid enabled version of CONFLEX, with the OmniRPC system .
+4-7:CONFLEX G allocates jobs to optimize a trial structure to the computational nodes of each cluster in the grid environment .
+4-8:Figure 3 shows the process of CONFLEX G .
+4-9:The worker programs are initialized by the initialize method, which is provided by the OmniRPC AIM facility at worker invocation .
+4-10:At each RPC call, the initialized state is reused on the remote host .
+4-11:In other words, the client program can eliminate the initialization for each RPC call, and can therefore optimize trial structures efficiently .
+4-12:3.1 The OmniRPC system OmniRPC is a Grid RPC system which allows seamless parallel programming from a PC cluster to a grid environment .
+4-13:OmniRPC inherits its API and basic architecture from Ninf .
+4-14:A client and the remote computational hosts which execute the remote procedures may be connected via a network .
+4-15:The remote libraries are implemented as an executable program which contains a network stub routine as its main routine .
+4-16:We call this executable program a remote executable program (rex) .
+4-17:When the OmniRPC client program starts, the initialization function of OmniRPC system invokes the OmniRPC agent program omrpc agent in the remote hosts listed in the host file .
+4-18:To invoke the agent, the user can use the remote shell command rsh in a local area network, the GRAM (Globus Resource Allocation Manager) API of the Globus 156 toolkit[12] in a grid environment, or the secure remote shell command ssh .
+4-19:The user can switch the configurations only by changing the host file .
+4-20:OmniRpcCall is a simple client programming interface for calling remote functions .
+4-21:When OmniRpcCall makes a remote procedure call, the call is allocated to an appropriate remote host .
+4-22:When the client issues the RPC request, it requests that the agent in the selected host submit the job of the remote executable with the local job scheduler specified in the host file .
+4-23:If the job scheduler is not specified, the agent executes the remote executable in the same node by the fork system call .
+4-24:The client sends the data of the input arguments to the invoked remote executable, and receives the results upon return of the remote function .
+4-25:Once a remote executable is invoked, the client attempts to use the invoked remote executable for subsequent RPC calls in order to eliminate the cost of invoking the same remote executable again .
+4-26:When the agent and the remote executables are invoked, the remote programs obtain the client address and port from the argument list and connect back to the client by direct TCP IP or Globus IO for data transmission .
+4-27:Because the OmniRPC system does not use any fixed service ports, the client program allocates unused ports dynamically to wait for connection from the remote executables .
+4-28:This avoids possible security problems, and allows the user to install the OmniRPC system without requiring a privileged account .
+4-29:Herein, a typical grid resource is regarded as a cluster of geographically distributed PC clusters .
+4-30:For PC clusters on a private network, an OmniRPC agent process on the server host functions as a proxy to relay communications between the client and the remote executables by multiplexing the communications using a single connection .
+4-31:This feature, called multiplex IO (MXIO), allows a single client to use up to 1,000 remote computing hosts .
+4-32:When the PC cluster is inside a firewall, the port forwarding of SSH enables the node to communicate to the outside with MXIO .
+4-33:Figure 4 shows the overview of the OmniRPC system for a remote cluster with a private IP address .
+4-34:For parallel programming, the programmer can use asynchronous remote procedure calls, allowing the client to issue several requests while continuing with other computations .
+4-35:The requests are dispatched to different remote hosts to be executed in parallel, and the client waits or polls the completed request .
+4-36:In such a programming model with asynchronous remote procedure calls, the programmer should handle outstanding requests explicitly .
+4-37:Because OmniRPC is a thread safe system, a number of remote procedure calls may be outstanding at any time for multi threaded programs written in OpenMP .
+4-38:3.2 OmniRPC persistence model: automatic initializable module OmniRPC efficiently supports typical Master Worker parallel applications such as parametric execution programs .
+4-39:For parametric search applications, which often require large amount of identical data for each call, OmniRPC supports a limited persistence model, which is implemented by the automatic initializable module .
+4-40:The user can define an initialization procedure in the remote executable in order to send and store data automatically in advance of actual remote procedure calls .
+4-41:Since the remote executable may accept requests for subsequent calls, the data set which has been set by the initialization procedure can be re used .
+4-42:As a result, the worker program can execute efficiently and reduce the amount of data transmitted for initialization .
+4-43:Once a remote executable is invoked, the client attempts to use the invoked remote executable for subsequent RPC calls .
+4-44:However, OmniRPC does not guarantee persistence of the remote executable, so that the data set by the previous call cannot be used by subsequent calls .
+4-45:This is because a remote call by OmniRpcCall may be scheduled to any remote host dynamically, and remote executables may be terminated accidentally due to dynamic re scheduling or host faults .
+4-46:However, persistence of the remote executable can be exploited in certain applications .
+4-47:An example is a parametric search application: in such an application, it would be efficient if a large set of data could be pre loaded by the first call, and subsequent calls could be performed on the same data, but with different parameters .
+4-48:This is the case for CONFLEX .
+4-49:OmniRPC provides a restricted persistence model through the automatic initializable module in order to support this type of application .
+4-50:If the initialization procedure is defined in the module, the module is automatically initialized at invocation by calling the initialization procedure .
+4-51:When the remote executable is re scheduled in different hosts, the initialization is called to initialize the newly allocated remote module .
+4-52:This can eliminate unnecessary communications when RPC calls use the same data .
+4-53:To reveal more about the difference in progress between the cases with OmniRPC AIM and without OmniRPC AIM, we present two figures .
+4-54:Figure 5 illustrates the time chart of the progress of a typical OmniRPC application using the OmniRPC AIM facility, and Figure 6 illustrates the time chart of the same application without the OmniRPC AIM facility .
+4-55:In both figures, the lines between diamonds represent the processes of initialization, and the lines between points represent the calculation .
+4-56:The bold line indicates the time when the client program sends the data to a worker program .
+4-57:It is necessary for the application without the OmniRPC AIM facility to initialize at each RPC .
+4-58:The application using the OmniRPC AIM facility can re use the initialized data once the data set is initialized .
+4-59:This can reduce the initialization at each RPC .
+4-60:The workers of the application with the AIM can calculate efficiently compared to the application without the OmniRPC AIM facility .
+4-61:3.3 Implementation of CONFLEX G using OmniRPC Figure 3 shows an overview of the process used in CONFLEXG .
+4-62:Using RPCs, CONFLEX G allocates the processes of trial structure optimization, which are performed by the computation nodes of a PC cluster in the MPI version of CONFLEX, to the computational nodes of each cluster in a grid environment .
+4-63:There are two computations which are performed by the worker programs in CONFLEX G .
+4-64:One is the initialization of a worker program, and another is the calculation of trial structure optimization .
+4-65:First, the OmniRPC facility of the AIM is adapted for initialization of a worker program .
+4-66:This facility automatically calls the initialization function, which is contained in the worker program, once the client program invokes the worker program in a remote node .
+4-67:It is necessary for the common RPC system including GridRPC to initialize a program for every RPC call, since data persistence of worker programs 157 time Client Program Worker Program 1 Worker Program 2 initialization initialization calculation calculation calculation calculation calculation Parallelized using asynchronous RPCs Figure 5: Time chart of applications using the OmniRPC facility of the automatic initializable module .
+4-68:time Client Program Worker Program 1 Worker Program 2 initialization initializationcalculation calculation calculation calculation initialization initialization initialization Parallelized using asynchronous RPCs calculation Figure 6: Time chart of applications without the OmniRPC facility of the automatic initializable module .
+4-69:Table 1: Machine configurations in the grid testbed .
+4-70:Site Cluster Name Machine Network Authentication # of Nodes # of CPUs Univ .
+4-71:of Tsukuba Dennis Dual Xeon 2.4GHz 1Gb Ethernet Globus, SSH 14 28 Alice Dual Athlon 1800+ 100Mb Ethernet Globus, SSH 18 36 TUT Toyo Dual Athlon 2600+ 100Mb Ethernet SSH 8 16 AIST Ume Dual Pentium3 1.4GHz 1Gb Ethernet Globus, SSH 32 64 is not supported .
+4-72:In OmniRPC, however, when the Initialize remote function is defined in the worker program and a new worker program, corresponding to the other RPC, is assigned to execute, an Initialize function is called automatically .
+4-73:Therefore, after the Initialize function call to set up common initialization data, a worker program can re use this data and increase the efficiency of it"s processes .
+4-74:Thus, the higher the set up cost, the greater the potential benefit .
+4-75:We implemented the worker program of CONFLEX G to receive data, such as evaluation parameters of energy, from a client program and to be initialized by the Initialize function .
+4-76:We arranged the client program of CONFLEX G to transfer the parameter file at the time of worker initialization .
+4-77:This enables execution to be performed by modify only the client setting if the user wants to run CONFLEX G with a different data set .
+4-78:Second, in order to calculate trial structure optimization in a worker program, the worker program must receive the data, such as the atom arrangement of the trial structure and the internal energy state .
+4-79:The result is returned to the client program after the worker has Optimized the trial structure .
+4-80:Since the calculation portion of the structure optimization in this worker program can be calculated independently using different parameters, we parallelized this portion using asynchronous RPCs on the client side .
+4-81:To call the structure optimization function in a worker program from the client program, we use the OmniRpcCallAsync API, which is intended for asynchronous RPC .
+4-82:In addition, OmniRpcCallWaitAll API which waits until all asynchronous RPCs are used in order to perform synchronization with all of the asynchronous RPCs completed so as to optimize the trial structure .
+4-83:The client program which assigns trial structure optimization to the calculation node of a PC cluster using RPC is outlined as follows .
+4-84:OmniRpcInit() OmniRpcModuleInit("conflex_search",...); .. .
+4-85:while( <new conformers> ) { foreach( <trial structures> ) OmniRpcCallAsync("conflex_search_worker", ...); OmniRpcWaitAll(); .. .
+4-86:Note that OmniRpcModuleInit API returns only the arguments needed for initialization and will not actually execute the Initialization function .
+4-87:As described above, the actual Initialization is performed at the first remote call .
+4-88:Since the OmniRPC system has an easy round robin scheduler, we do not have to explicitly write the code for load balance .
+4-89:Therefore, RPCs are allocated automatically to idle workers .
+4-90:158 Table 2: Network performance between the master node of the Dennis cluster and the master node of each PC cluster .
+4-91:Round Trip Throughput Cluster Time (ms) (Mbps) Dennis 0.23 879.31 Alice 0.18 94.12 Toyo 11.27 1.53 Ume 1.07 373.33 .
+5 PRELIMINARY RESULTS :
+5-1:4.1 Grid Testbed The grid testbed was constructed by computing resources at the University of Tsukuba, the Toyohashi University of Technology and the National Institute of Advanced Industrial Science and Technology .
+5-2:Table 1 shows the computing resources used for the grid of the present study .
+5-3:The University of Tsukuba and AIST are connected by a 1 Gbps Tsukuba WAN, and the other PC clusters are connected by SINET, which is wide area network dedicated to academic research in Japan .
+5-4:Table 2 shows the performance of the measured network between the master node of the Dennis cluster and the master node of each PC cluster in the grid testbed .
+5-5:The communication throughput was measured using netperf, and the round trip time was measured by ping .
+5-6:4.2 Performance of CONFLEX G In all of the CONFLEX G experiments, the client program was executed on the master node of the Dennis cluster at the University of Tsukuba .
+5-7:The built in Round Robin scheduler of OmniRPC was used as a job scheduler .
+5-8:SSH was used for an authentication system, the OminRPC"s MXIO, which relays the I O communication between client program and worker programs by port forwarding of SSH was, not used .
+5-9:Note that one worker program is assigned and performed on one CPU of the calculation node in a PC cluster .
+5-10:That is, the number of workers is equal to the number of CPUs .
+5-11:These programs were compiled by the Intel Fortran Compiler 7.0 and gcc 2.95 .
+5-12:MPICH, Version 1.2.5, was used to compare the performance between CONFLEX MPI and CONFLEX G .
+5-13:In order to demonstrate the usability of the OmniRPC facility of the AIM, we implemented another version of CONFLEX G which did not utilize the OmniRPC facility .
+5-14:The worker program in this version of CONFLEXG must be initialized at each RPC because the worker does not hold the previous data set .
+5-15:In order to examine the performance of CONFLEX G, we selected two peptides and two small protein as test molecules: • N acetyl tetra alanine methylester (AlaX04) • N acetyl hexdeca alanine methylester (AlaX16) • TRP cage miniprotein construct TC5B (1L2Y) • PTH receptor N terminus fragment (1BL1) Table 3 lists the characteristics of these sample molecules .
+5-16:The column trial structure loops in this table shows the Figure 7: Performances of CONFLEX G, CONFLEX MPI and Original CONFLEX in the Dennis cluster .
+5-17:Figure 8: Speedup ratio, which is based on the elapsed time of CONFLEX G using one worker in the Dennis cluster .
+5-18:Figure 9: Performance of CONFLEX G with and without the OmniRPC facility of automatic initializable module for AlaX16 .
+5-19:159 Table 3: Characteristics of molecules and data transmission for optimizing trial molecular structures in each molecular code .
+5-20:Molecular # of # of total trial trial structure Data transfer to Data transfer code atoms structures loop initialize a worker trial structure AlaX04 181 360 45 2033KB 17.00KB AlaX16 191 480 160 2063KB 18.14KB 1L2Y 315 331 331 2099KB 29.58KB 1BL1 519 519 519 2150KB 48.67KB Table 4: Elapsed search time for the molecular conformation of AlaX04 .
+5-21:Total Total Optimization Cluster # of Structures optimization time Elapsed Speed (# of workers) workers worker time (s) structure (s) time (s) up Dennis (sequential) 1 320.0 1786.21 4.96 1786.21 1.00 Toyo (16) 16 20.0 1497.08 4.16 196.32 9.10 Dennis (28) 28 11.4 1905.51 5.29 97.00 18.41 Alice (36) 36 8.9 2055.25 5.71 87.09 20.51 Ume (56) 56 5.7 2196.77 6.10 120.69 14.80 Dennis (28) + Toyo (16) 44 7.3 1630.09 4.53 162.35 11.00 Alice (36) + Toyo (16) 52 6.2 1774.53 4.93 178.24 10.02 Dennis (28) + Alice (36) 64 5.0 1999.02 5.55 81.52 21.91 Dennis (28) + Ume (56) 84 3.8 2085.84 5.79 92.22 19.37 Alice (36) + Ume (56) 92 3.5 2120.87 5.89 101.25 17.64 Table 5: Elapsed search time for the molecular conformation of AlaX16 Total Total Optimization Cluster # of Structures optimization time Elapsed Speed (# of workers) workers worker time (s) structure (s) time (s) up Dennis (1) 1 480.0 74027.80 154.22 74027.80 1.00 Toyo (16) 16 30.0 70414.21 146.70 4699.15 15.75 Dennis (28) 28 17.1 74027.80 154.22 3375.60 21.93 Alice (36) 36 13.3 90047.27 187.60 3260.41 22.71 Ume (56) 56 8.6 123399.38 257.08 2913.63 25.41 Dennis (28) + Toyo (16) 44 10.9 76747.74 159.89 2762.10 26.80 Alice (36) + Toyo (16) 52 9.2 82700.44 172.29 2246.73 32.95 Dennis (28) + Alice (36) 64 7.5 87571.30 182.44 2051.50 36.08 Toyo (16) + Ume (56) 72 6.7 109671.32 228.48 2617.85 28.28 Dennis (28) + Ume (56) 84 5.7 102817.90 214.20 2478.93 29.86 Dennis(28)+Ume(56)+Toyo(16) 100 4.8 98238.07 204.66 2478.93 29.86 Table 6: Elapsed time of the search for the trial structure of 1L2Y .
+5-22:Cluster Total # of Structures Optimization time Elapsed Elapsed Speed (# of workers) workers worker structure (s) time (s) time up Toyo MPI (1) 1 331.0 867 286,967 79.71 1.00 Toyo MPI (16) 16 20.7 867 18,696 5.19 15.34 Dennis (28) 28 11.8 803 14,101 3.91 20.35 Dennis (28) + Ume(56) 84 3.9 1,064 8,316 2.31 34.50 Table 7: Elapsed time of the search for the trial structure of 1BL1 .
+5-23:Cluster Total # of Structures Optimization time Elapsed Elapsed Speed (# of workers) workers worker structure (s) time (s) time up Toyo MPI (1) 1 519.0 3,646 1892,210 525.61 1.00 Toyo MPI (16) 16 32.4 3,646 120,028 33.34 15.76 Dennis (28) 28 18.5 3,154 61,803 17.16 30.61 Dennis (28) + Ume (56) 84 6.1 4,497 33,502 9.30 56.48 160 number of trial structures generated in each iteration, indicating the degree of parallelism .
+5-24:Figure 3 also summarizes the amount of data transmission required for initialization of a worker program and for optimization of each trial structure .
+5-25:Note that the amount of data transmission, which is required in order to initialize a worker program and optimize a trial structure in the MPI version of CONFLEX, is equal to that of CONFLEX G .
+5-26:We used an improvement version of MM2 force field to assign a potential energy function to various geometric properties of a group of atoms .
+5-27:4.2.1 Performance in a Local Cluster We first compared the performance of CONFLEX G, the MPI version of CONFLEX, and the original sequential version of CONFLEX G using a local cluster .
+5-28:We investigated performance by varying the number of workers using the Dennis cluster .
+5-29:We chose AlaX04 as a test molecule for this experiment .
+5-30:Figure 7 compares the results for the CONFLEX MPI and CONFLEX G in a local PC cluster .
+5-31:The result of this experiment shows that CONFLEX G can reduce the execution time as the number of workers increases, as in the MPI version of CONFLEX .
+5-32:We found that CONFLEX G achieved efficiencies comparable to the MPI version .
+5-33:With 28 workers, CONFLEX G achieved an 18.00 times speedup compared to the CONFLEX sequential version .
+5-34:The performance of CONFLEX G without the OmniRPC AIM facility is worse than that of CONFLEXG using the facility, based on the increase in the number of workers .
+5-35:This indicates that the OmniRPC AIM enables the worker to calculate efficiently without other calculations, such initialization or invocation of worker programs .
+5-36:As the number of workers is increased, the performance of CONFLEX G is a slightly lower than that of the MPI version .
+5-37:This performance degradation is caused by differences in the worker initialization processes of CONFLEX G and CONFLEX MPI .
+5-38:In the case of CONFLEX MPI, all workers are initialized in advance of the optimization phase .
+5-39:In the case of OminRPC, the worker is invoked on demand when the RPC call is actually issued .
+5-40:Therefore, the initialization incurs this overhead .
+5-41:Since the objective of CONFLEX G is to explore the conformations of large bio molecules, the number of trial structures and the time to optimize the trial structure might be large .
+5-42:In such cases, the overhead to invoke and initialize the worker program can be small compared to the entire elapsed time .
+5-43:4.2.2 Performance for Peptides in The Grid Testbed First, the sample molecules (AlaX04 and AlaX16) were used to examine the CONFLEX G performance in a grid environment .
+5-44:Figure 8 shows the speedup achieved by using multiple clusters compared to using one worker in the Dennis cluster .
+5-45:Detailed results are shown in Table 4 and Table 5 .
+5-46:In both cases, the best performance was obtained using 64 workers of the combination of the Dennis and Alice clusters .
+5-47:CONFLEX G achieved a maximum speedup of 36.08 times for AlaX04 and a maximum speedup of 21.91 times for AlaX16 .
+5-48:In the case of AlaX04, the performance is improved only when the network performance between clusters is high .
+5-49:However, even if two or more clusters are used in a wide area network environment, the performance improvement was slight because the optimization time of one trial structure generated from AlaX04, a small molecule, is short .
+5-50:In addition, the overhead required for invocation of a worker program and network data transmission consume a large portion of the remaining processing time .
+5-51:In particular, the data transmission required for the initialization of a worker program is 2 MB .
+5-52:In the case of Toyo cluster, where the network performance between the client program and the worker programs is poor, the time of data transmission to the worker program required approximately 6.7 seconds .
+5-53:Since this transmission time was longer than the processing time of one structure optimization in CONFLEX G, most of the time was spent for this data transmission .
+5-54:Therefore, even if CONFLEX G uses a large number of calculation nodes in a wide area network environment, the benefit of using a grid resource is not obtained .
+5-55:In the case of AlaX16, CONFLEX G achieved a speedup by using two or more PC clusters in our grid testbed .
+5-56:This was because the calculation time on the worker program was long and the overhead, such as network latency and the invoking of worker programs, became relatively small and could be hidden .
+5-57:The best performance was obtained using 64 workers in the Dennis and Alice clusters .
+5-58:In the case of AaX16, the achieved performance was a speedup of 36.08 times .
+5-59:Figure 9 reveals the effect of using the facility of the OmniRPC AIM on CONFLEX G performance .
+5-60:In most cases, CONFLEX G with the OmniRPC AIM facility archived better performance than CONFLEX G without the facility .
+5-61:In particular, the OmniRPC AIM facility was advantageous when using two clusters connected by a low performance network .
+5-62:The results indicate that the OmniRPC AIM facility can improve performance in the grid environment .
+5-63:4.2.3 PerformanceforSmallProteininTheGridTestbed Finally, we explored the molecular conformation using CONFLEX G for large molecules .
+5-64:In a grid environment, this experiment was conducted using the Dennis and Ume clusters .
+5-65:In this experiment, we used two proteins, 1L2Y and 1BL1 .
+5-66:Table 6 and Table 7 show the performance of CONFLEX G in the grid environment and that of CONFLEX MPI in the Toyo cluster, respectively .
+5-67:The speedups in these tables were computed respectively based on the performance of one worker and 16 workers of the Toyo cluster using CONFLEX MPI .
+5-68:CONFLEX G with 84 workers in Dennis and Ume clusters obtained maximum speedups of 56.5 times for 1L2Y and 34.5 times for 1L2Y .
+5-69:Since the calculation time for structure optimization required a great deal of time, the ratio of overhead, including tasks such as the invocation of a worker program and data transmission for initialization, became very small, so that the performance of CONFLEX G was improved .
+5-70:We found that the load imbalance in the processing time of optimization for each trial structure caused performance degradation .
+5-71:When we obtained the best performance for 1L2Y using the Dennis and Ume clusters, the time for each structure optimization varied from 190 to 27,887 seconds, and the ratio between the longest and shortest times was 13.4 .
+5-72:For 1BL1, the ratio of minimum time over maximum time was 190 .
+5-73:In addition, in order that the worker program wait until the completion of optimization of all trial structures, all worker programs were found to wait in an idle state for approximately 6 hours .
+5-74:This has caused the performance degradation of CONFLEX G .
+5-75:161 4.3 Discussion In this subsection, we discuss the improvement of the performance reflected in our experiments .
+5-76:Exploiting parallelism In order to exploit more computational resources, it is necessary to increase the degree of parallelism .
+5-77:In this experiment, the degree of parallelism was not so large in the case of the sample molecules .
+5-78:When using a set of over 500 computing nodes for 1BL1, the number of one trial structures assigned to each worker will be only one or two .
+5-79:If over 100 trial structures are assigned to each worker program, calculation can be performed more efficiently due to the reduction of the overhead for worker invocation and initialization via the facility of the OmniRPC AIM .
+5-80:One idea for increasing parallelism is to overlap the execution of two or more sets of trial structures .
+5-81:In the current algorithm, a set of trial structures is generated from one initial structure and computed until optimizations for all structures in this set are calculated .
+5-82:Furthermore, this will help to improve load imbalance .
+5-83:By having other sets of trial structures overlap, even if some optimizations require a long time, the optimization for the structures in other sets can be executed to compensate for the idle workers for other optimizations .
+5-84:It is however unclear how such modification of the algorithm might affect the quality of the final results in terms of a conformation search .
+5-85:Improvement in load imbalance when optimizing each trial structure Table 8 lists the statistics for optimization times of trial structures generated for each sample molecule measured using 28 workers in the Dennis cluster .
+5-86:When two or more sets of PC clusters are used, the speedup in performance is hampered by the load imbalance of the optimization of the trial structures .
+5-87:The longest time for optimizing a trial structure was nearly 24 times longer than the shortest time .
+5-88:Furthermore, other workers must wait until the longest job has Finished, so that the entire execution time cannot be reduced .
+5-89:When CONFLEX G searched the conformers of 1BL1 by the Dennis cluster, the longest calculation time of the trial structure optimization made up approximately 80% of the elapsed time .
+5-90:Therefore, there are two possible solutions for the load Imbalance .
+5-91:• It is necessary to refine the algorithm used to generate the trial structure, which suppresses the time variation for optimizing a trial structure in CONFLEX .
+5-92:This enables CONFLEX G to achieve high throughput by using many computer resources .
+5-93:• One of the solutions is to overlap the executions for two or more sets of trial structures .
+5-94:In the current algorithms, a set of trial structures is generated from one initial structure and calculation continues until all structures in this set are calculated .
+5-95:By having other sets of trial structures, even if a structure search takes a long time, a job can be executed in order to compensate the load imbalance by other jobs .
+5-96:However, how such modification of the algorithms might affect the efficiency is not clear .
+5-97:• In this experiment, we used a simple build in roundrobbin scheduler of OmniRPC, which is necessary in order to apply the scheduler that allocates structures with long optimization times to a high performance Table 8: Statistics of elapsed time of trial structure optimization using 28 workers in the Dennis cluster .
+5-98:Molecular Min Max Average Variance code (s) (s) (s) AlaX04 2.0 11.3 5.3 3 AlaX16 47.6 920.0 154.2 5404 1L2Y 114.2 13331.4 803.2 636782 1BL1 121.0 29641.8 3153.5 2734811 node and structures with short optimization times to low performance nodes .
+5-99:In general, however, it might be difficult to predict the time required for trial structure optimization .
+5-100:Parallelization of the worker program for speedup to optimize a trial structure In the current implementation, we do not parallelize the worker program .
+5-101:In order to speed up trial structures, hybrid programming using OmniRPC and OpenMP in an SMP (Symmetric Multiple Processor) machine may be one of the alternative methods by which to improve overall performance. .
+6 RELATED WORK :
+6-1:Recently, an algorithm has been developed that solves the problems of parallelization and communication in poorly connected processors to be used for simulation .
+6-2:The Folding@home project[13] simulates timescales thousands to millions of times longer than previously achieved .
+6-3:This has allowed us to simulate folding for the first time and to directly examine folding related diseases .
+6-4:SETI@home[14] is a program to search for alien life by analyzing radio telescope signals using Fourier transform radio telescope data from telescopes from different sites .
+6-5:SETI@home tackles immensely parallel problems, in which calculation can easily be divided among several computers .
+6-6:Radio telescope data chunks can easily be assigned to different computers .
+6-7:Most of these efforts explicitly develop a docking application as a parallel application using a special purpose parallel programming language and middleware, such as MPI, which requires development skills and effort .
+6-8:However, the skills and effort required to develop a grid application may not be required for OmniRPC .
+6-9:Nimrod G[15] is a tool for distributed parametric modeling and implements a parallel task farm for simulations that require several varying input parameters .
+6-10:Nimrod incorporates a distributed scheduling component that can manage the scheduling of individual experiments to idle computers in a local area network .
+6-11:Nimrod has been applied to applications including bio informatics, operations research, and molecular modeling for drug design .
+6-12:NetSolve[8] is an RPC facility similar to OmniRPC and Ninf, providing a similar programming interface and automatic load balancing mechanism .
+6-13:Ninf G[7] is a grid enabled implementation of Ninf and provides a GridRPC[10] system that uses LDAP to manage the database of remote executables, but does not support clusters involving private IP addresses or addresses inside a firewall .
+6-14:Matsuoka et al.[16] has also discussed several design issues related to grid RPC systems .
+6-15:162 .
+7 CONCLUSIONS AND FUTURE WORK :
+7-1:We have designed and implemented CONFLEX G using OmniRPC .
+7-2:We reported its performance in a grid testbed of several geographically distributed PC clusters .
+7-3:In order to explore the conformation of large bio molecules, CONFLEXG was used to generate trial structures of the molecules, and allocate jobs to optimize them by molecular mechanics in the grid .
+7-4:OmniRPC provides a restricted persistence model so that the module is automatically initialized at invocation by calling the initialization procedure .
+7-5:This can eliminate unnecessary communication and the initialization at each call in CONFLEX G .
+7-6:CONFLEX G can achieves performance comparable to CONFLEX MPI and exploits more computing resources by allowing the use of multiple PC clusters in the grid .
+7-7:The experimental result shows that CONFLEX G achieved a speedup of 56.5 times for the 1BL1 molecule, where the molecule consists of a large number of atoms and each trial structure optimization requires a great deal of time .
+7-8:The load imbalance of the trial structure optimizations may cause performance degradation .
+7-9:We need to refine the algorithm used to generate the trial structure in order to improve the load balance optimization for trial structures in CONFLEX .
+7-10:Future studies will include development of deployment tools and an examination of fault tolerance .
+7-11:In the current OmniRPC, the registration of an execution program to remote hosts and deployments of worker programs are manually set .
+7-12:Deployment tools will be required as the number of remote hosts is increased .
+7-13:In grid environments in which the environment changes dynamically, it is also necessary to support fault tolerance .
+7-14:This feature is especially important in large scale applications which require lengthy calculation in a grid environment .
+7-15:We plan to refine the conformational optimization algorithm in CONFLEX to explore the conformation space search of larger bio molecules such HIV protease using up to 1000 workers in a grid environment. .
+8-1:This research was supported in part by a Grant in Aid from the Ministry of Education, Culture, Sports, Science and Technology in Japan, No
+8-2:14019011, 2002, and as part of the Program of Research and Development for Applying Advanced Computational Science and Technology by the Japan Science and Technology Corporation (Research on the grid computing platform for drug design)
+8-3:We would like to thank grid technology research center, AIST, Japan for providing computing resources for our experiment.
+9-1:H
+9-2:Goto and E
+9-3:Osawa
+9-4:An efficient algorithm for searching low energy conformers of cyclic and acyclic molecules
+9-5:J
+9-6:Chem
+9-7:Soc., Perkin Trans, 2:187 198, 1993
+9-8:M
+9-9:Sato, T
+9-10:Boku, and D
+9-11:Takahashi
+9-12:OmniRPC: a Grid RPC System for Parallel Programming in Cluster and Grid Environment
+9-13:In Proc
+9-14:of CCGrid2003, pages 219 229, 2003
+9-15:M
+9-16:Sato, M
+9-17:Hirano, Y
+9-18:Tanaka, and S
+9-19:Sekiguchi
+9-20:OmniRPC: a Grid RPC facility for Cluster and Global Computing in OpenMP
+9-21:In Proc
+9-22:of Workshop on OpenMP Applications and Tools 2001(LNCS 2104 ), pages 130 135, 2001
+9-23:OmniRPC Project
+9-24:http:  www.omni.hpcc.jp omnirpc
+9-25:M
+9-26:Sato, H
+9-27:Nakada, S
+9-28:Sekiguchi, S
+9-29:Matsuoka, U
+9-30:Nagashima, and H
+9-31:Takagi
+9-32:Ninf: A Network Based Information Library for Global World Wide Computing Infrastructure
+9-33:In HPCN Europe, pages 491 502, 1997
+9-34:Ninf Project
+9-35:http:  ninf.apgrid.org
+9-36:Y
+9-37:Tanaka, H
+9-38:Nakada, S
+9-39:Sekiguchi, T
+9-40:Suzumura, and S
+9-41:Matsuoka
+9-42:Ninf G: A Reference Implementation of RPC based Programming Middleware for Grid Computing
+9-43:Journal of Grid Computing, 1(1):41 51, 2003
+9-44:D
+9-45:Arnold, S
+9-46:Agrawal, S
+9-47:Blackford, J
+9-48:Dongarra, M
+9-49:Miller, K
+9-50:Seymour, K
+9-51:Sagi, Z
+9-52:Shi, and S
+9-53:Vadhiyar
+9-54:Users" Guide to NetSolve V1.4.1
+9-55:Innovative Computing Dept
+9-56:Technical Report ICL UT 02 05, University of Tennessee, Knoxville, TN, June 2002
+9-57:Object management group
+9-58:http:  www.omg.org
+9-59:K
+9-60:Seymour, H
+9-61:Nakada, S
+9-62:Matsuoka, J
+9-63:Dongarra, C
+9-64:Lee, and H
+9-65:Casanova
+9-66:GridRPC: A Remote Procedure Call API for Grid Computing
+9-67:H.Goto, T
+9-68:Takahashi, Y
+9-69:Takata, K
+9-70:Ohta, and U Nagashima
+9-71:Conflex: Conformational behaviors of polypeptides as predicted by a conformational space search
+9-72:In Nanotech2003, volume 1, pages 32 35, 2003
+9-73:I
+9-74:Foster and C
+9-75:Kesselman
+9-76:Globus: A metacomputing infrastructure toolkit
+9-77:The International Journal of Supercomputer Applications and High Performanc e Computing, 11(2):115 128, Summer 1997
+9-78:Stefan M
+9-79:Larson, Christopher D
+9-80:Snow, Michael Shirts, and Vijay S
+9-81:Pande
+9-82:Folding@home and genome@home: Using distributed computing to tackle prev iously intractable problems in computational biology
+9-83:Computational Genomics, 2002
+9-84:seti@home project
+9-85:http:  setiathome.ssl.berkeley.edu
+9-86:R
+9-87:Buyya, K
+9-88:Branson, J
+9-89:Giddy, and D
+9-90:Abramson
+9-91:The virtual laboratory: a toolset to enable distributed molecular modelling for drug design on the world wide grid
+9-92:Concurrency and Computation: Practice and Experience, 15(1):1 25, January 2003
+9-93:S
+9-94:Matsuoka, H
+9-95:Nakada, M
+9-96:Sato, and S
+9-97:Sekiguchi
+9-98:Design issues of Network Enabled Server Systems for the Grid
+9-99:In Proc
+9-100:of GRID 2000 (LNCS 1971), pages 4 17, 2000
+9-101:163
+picture:

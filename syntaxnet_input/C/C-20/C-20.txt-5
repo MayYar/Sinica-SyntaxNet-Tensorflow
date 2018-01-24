@@ -1,0 +1,17 @@
+Prior work on this topic falls into several categories
+At the core of our technique is the ability of encapsulate applications within virtual machines that can be migrated without application downtimes [15] .
+Most virtual machine software, such as Xen [8] and VMWare [14] support live migration of VMs that involve extremely short downtimes ranging from tens of milliseconds to a second; details of Xen"s live migration techniques are discussed in [8] .
+As indicated earlier, these techniques assume that migration is being done on a LAN .
+VM migration has also been studied in the Shirako system [10] and for grid environments [17, 19] .
+Current virtual machine software support a suspend and resume feature that can be used to support WAN migration, but with downtimes [18, 12] .
+Recently live WAN migration using IP tunnels was demonstrated in [21], where an IP tunnel is set up from the source to destination server to transparently forward packets to and from the application; we advocate an alternate approach that assumes edge router support .
+In the context of storage, there exist numerous commercial products that perform replication, such as IBM Extended Remote Copy, HP Continuous Access XP, and EMC RepliStor .
+An excellent description of these and others, as well as a detailed taxonomy of the different approaches for replication can be found in [11] .
+The Ursa Minor system argues that no single fault model is optimal for all applications and proposed supporting data type specific selections of fault models and encoding schemes for replication [1] .
+Recently, we proposed the notion of semantic aware replication [13] where the system supports both synchronous and asynchronous replication concurrently and use signals from the file system to determine whether to replicate a particular write synchronously and asynchronously .
+In the context of network support, our work is related to the RouterFarm approach [2], which makes use of orchestrated network changes to realize near hitless maintenance on provider edge routers .
+In addition to being in a different application area, our approach differs from the RouterFarm work in two regards .
+First, we propose to have the required network changes be triggered by functionality outside of the network (as opposed to network management functions inside the network) .
+Second, due to the stringent timing requirements of live migration, we expect that our approach would require new router functionality (as opposed to being realizable via the existing configuration interfaces) .
+Finally, the recovery oriented computing work emphasizes recovery from failures rather than failure avoidance [6] .
+In a similar spirit to ROC, we advocate using mechanisms from live VM migration to storage replication to support planned and unplanned outages in data centers (rather than full replication to mask such failures). .

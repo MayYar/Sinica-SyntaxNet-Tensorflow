@@ -1,0 +1,54 @@
+In a set system auction there is a single buyer and many vendors that can provide various services .
+It is assumed that the buyer"s requirements can be satisfied by various subsets of the vendors; these subsets are called the feasible sets .
+A widely studied class of setsystem auctions is path auctions, where each vendor is able to sell access to a link in a network, and the feasible sets are those sets whose links contain a path from a given source to a given destination; the study of these auctions has been initiated in the seminal paper by Nisan and Ronen [19] (see also [1, 10, 9, 6, 15, 7, 20]) .
+We assume that each vendor has a cost of providing his services, but submits a possibly larger bid to the auctioneer .
+Based on these bids, the auctioneer selects a feasible subset of vendors, and makes payments to the vendors in this subset .
+Each selected vendor enjoys a profit of payment minus cost .
+Vendors want to maximise profit, while the buyer wants to minimise the amount he pays .
+A natural goal in this setting is to design a truthful auction, in which vendors have an incentive to bid their true cost .
+This can be achieved by paying each selected vendor a premium above her bid in such a way that the vendor has no incentive to overbid .
+An interesting question in mechanism design is how much the auctioneer will have to overpay in order to ensure truthful bids .
+In the context of path auctions this topic was first addressed by Archer and Tardos [1] .
+They define the frugality ratio of a mechanism as the ratio between its total payment and the cost of the cheapest path disjoint from the path selected by the mechanism .
+They show that, for a large class of truthful mechanisms for this problem, the frugality ratio is as large as the number of edges in the shortest path .
+Talwar [21] extends this definition of frugality ratio to general set systems, and studies the frugality ratio of the classical VCG mechanism [22, 4, 14] for many specific set systems, such as minimum spanning trees and set covers .
+While the definition of frugality ratio proposed by [1] is wellmotivated and has been instrumental in studying truthful mechanisms for set systems, it is not completely satisfactory .
+Consider, for example, the graph of Figure 1 with the costs cAB = cBC = A B C D Figure 1
+This graph is 2 connected and the VCG payment to the winning path ABCD is bounded .
+However, the graph contains no A D path that is disjoint from ABCD, and hence the frugality ratio of VCG on this graph remains undefined .
+At the same time, there is no monopoly, that is, there is no vendor that appears in all feasible sets .
+In auctions for other types of set systems, the requirement that there exist a feasible solution disjoint from the selected one is even more severe
+To deal with this problem, Karlin et al .
+[16] suggest a better benchmark, which is defined for any monopoly free set system .
+This quantity, which they denote by £h, intuitively corresponds to the value of a cheapest Nash equilibrium .
+Based on this new definition, the authors construct new mechanisms for the shortest path problem and show that the overpayment of these mechanisms is within a constant factor of optimal .
+1.1 Our results Vertex cover auctions We propose a truthful polynomial time auction for vertex cover that outputs a solution whose cost is within a factor of 2 of optimal, and whose frugality ratio is at most 2£G, where £G is the maximum degree of the graph (Theorem 4) .
+We complement this result by proving (Theorem 5) that for any £G and n, there are graphs of maximum degree £G and size £K(n) for which any truthful mechanism has frugality ratio at least £G 2 .
+This means that the solution quality of our auction is with a factor of 2 of optimal and the frugality ratio is within a factor of 4 of the best possible bound for worst case inputs .
+To the best of our knowledge, this is the first auction for this problem that enjoys these properties .
+Moreover, we show how to transform any truthful mechanism for the vertex cover problem into a frugal one while preserving the approximation ratio .
+Frugality ratios Our vertex cover results naturally suggest two modifications of the definition of £h in [16] .
+These modifications can be made independently of each other, resulting in four different payment bounds TUmax, TUmin, NTUmax, and NTUmin, where NTUmin is equal to the original payment bound £h of in [16] .
+All four payment bounds arise as Nash equilibria of certain games (see the full version of this paper [8]); the differences between them can be seen as the price of initiative and the price of cooperation (see Section 3) .
+While our main result about vertex cover auctions (Theorem 4) is with respect to NTUmin = £h, we make use of the new definitions by first comparing the payment of our mechanism to a weaker bound NTUmax, and then bootstrapping from this result to obtain the desired bound .
+Inspired by this application, we embark on a further study of these payment bounds .
+Our results here are as follows
+We provide examples (Proposition 5 and Corollaries 1 and 2) showing that for the vertex cover problem any two consecutive bounds can differ by a factor of n ? 2, where n is the number of agents .
+We then show (Theorem 2) that this separation is almost best possible for general set systems by proving that for any set system TUmax TUmin ? n .
+In contrast, we demonstrate (Theorem 3) that for path auctions TUmax TUmin ? 2 .
+We provide examples (Propositions 2, 3 and 4) showing that this bound is tight .
+We see this as an argument for the study of vertexcover auctions, as they appear to be more representative of the general team selection problem than the widely studied path auctions .
+vector for which TUmin and NTUmin differ by a factor of £\, there is another cost vector that separates NTUmin and NTUmax by the same factor and vice versa; the same is true for the pairs (NTUmin, NTUmax) and (NTUmax, TUmax) .
+This symmetry is quite surprising, since, e.g., TUmin and NTUmax are obtained from NTUmin by two very different transformations .
+This observation suggests that the four payment bounds should be studied in a unified framework; moreover, it leads us to believe that the bootstrapping technique of Theorem 4 may have other applications .
+to a checklist of desirable features .
+In particular, we note that the payment bound £h = NTUmin of [16] exhibits some counterintuitive properties, such as nonmonotonicity with respect to adding a new feasible set (Proposition 7), and is NP hard to compute (Theorem 6), while some of the other payment bounds do not suffer from these problems .
+This can be seen as an argument in favour of using weaker but efficiently computable bounds NTUmax and TUmax .
+Related work Vertex cover auctions have been studied in the past by Talwar [21] and Calinescu [5] .
+Both of these papers are based on the definition of frugality ratio used in [1]; as mentioned before, this means that their results only apply to bipartite graphs .
+Talwar [21] shows that the frugality ratio of VCG is at most £G .
+However, since finding the cheapest vertex cover is an NP hard problem, the VCG mechanism is computationally infeasible .
+The first (and, to the best of our knowledge, only) paper to investigate polynomial time truthful mechanisms for vertex cover is [5] .
+This paper studies an auction that is based on the greedy allocation algorithm, which has an approximation ratio of log n .
+While the main focus of [5] is the more general set cover problem, the results of [5] imply a frugality ratio of 2£G2 for vertex cover .
+Our results improve on those of [21] as our mechanism is polynomial time computable, as well as on those of [5], as our mechanism has a better approximation ratio, and we prove a stronger bound on the frugality ratio; moreover, this bound also applies to the mechanism of [5]. .

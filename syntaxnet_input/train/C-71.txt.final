@@ -1,0 +1,397 @@
+A Point-Distribution Index and Its Application to 
+content:
+1 ABSTRACT :
+1-1:We propose ι, a novel index for evaluation of point distribution .
+1-2:ι is the minimum distance between each pair of points normalized by the average distance between each pair of points .
+1-3:We find that a set of points that achieve a maximum value of ι result in a honeycomb structure .
+1-4:We propose that ι can serve as a good index to evaluate the distribution of the points, which can be employed in coverage related problems in wireless sensor networks (WSNs) .
+1-5:To validate this idea, we formulate a general sensorgrouping problem for WSNs and provide a general sensing model .
+1-6:We show that locally maximizing ι at sensor nodes is a good approach to solve this problem with an algorithm called Maximizingι Node Deduction .
+1-7:Simulation results verify that MIND outperforms a greedy algorithm that exploits sensor redundancy we design .
+1-8:This demonstrates a good application of employing ι in coverage related problems for WSNs .
+1-9:C.2.4 [Computer Communication Networks]: Network .
+2 INTRODUCTION :
+2-1:A wireless sensor network consists of a large number of in situ battery powered sensor nodes .
+2-2:A WSN can collect the data about physical phenomena of interest [1] .
+2-3:There are many potential applications of WSNs, including environmental monitoring and surveillance, etc .
+2-4:[1][11] .
+2-5:In many application scenarios, WSNs are employed to conduct surveillance tasks in adverse, or even worse, in hostile working environments .
+2-6:One major problem caused is that sensor nodes are subjected to failures .
+2-7:Therefore, fault tolerance of a WSN is critical .
+2-8:One way to achieve fault tolerance is that a WSN should contain a large number of redundant nodes in order to tolerate node failures .
+2-9:It is vital to provide a mechanism that redundant nodes can be working in sleeping mode (i.e., major power consuming units such as the transceiver of a redundant sensor node can be shut off) to save energy, and thus to prolong the network lifetime .
+2-10:Redundancy should be exploited as much as possible for the set of sensors that are currently taking charge in the surveillance work of the network area [6] .
+2-11:We find that the minimum distance between each pair of points normalized by the average distance between each pair of points serves as a good index to evaluate the distribution of the points .
+2-12:We call this index, denoted by ι, the normalized minimum distance .
+2-13:If points are moveable, we find that maximizing ι results in a honeycomb structure .
+2-14:The honeycomb structure poses that the coverage efficiency is the best if each point represents a sensor node that is providing surveillance work .
+2-15:Employing ι in coverage related problems is thus deemed promising .
+2-16:This enlightens us that maximizing ι is a good approach to select a set of sensors that are currently taking charge in the surveillance work of the network area .
+2-17:To explore the effectiveness of employing ι in coverage related problems, we formulate a sensorgrouping problem for high redundancy WSNs .
+2-18:An algorithm called Maximizing ι Node Deduction is proposed in which redundant sensor nodes are removed to obtain a large ι for each set of sensors that are currently taking charge in the surveillance work of the network area .
+2-19:We also introduce another greedy solution called Incremental Coverage Quality Algorithm for this problem, which serves as a benchmark to evaluate MIND .
+2-20:The main contribution of this paper is twofold .
+2-21:First, we introduce a novel index ι for evaluation of point distribution .
+2-22:We show that maximizing ι of a WSN results in low redundancy of the network .
+2-23:Second, we formulate a general sensor grouping problem for WSNs and provide a general sensing model .
+2-24:With the MIND algorithm we show that locally maximizing ι among each sensor node and its neighbors is a good approach to solve this problem .
+2-25:This demonstrates a good application of employing ι in coveragerelated problems .
+2-26:The rest of the paper is organized as follows .
+2-27:In Section 2, we introduce our point distribution index ι .
+2-28:We survey related work and formulate a sensor grouping problem together with a general sensing model in Section 3 .
+2-29:Section 4 investigates the application of ι in this grouping problem .
+2-30:We propose MIND for this problem 1171 and introduce ICQA as a benchmark .
+2-31:In Section 5, we present our simulation results in which MIND and ICQA are compared .
+2-32:Section 6 provides conclusion remarks. .
+3 THE NORMALIZED MINIMUM DISTANCE :
+3-1:ι: A POINT DISTRIBUTION INDEX Suppose there are n points in a Euclidean space Ω .
+3-2:The coordinates of these points are denoted by xi (i = 1, ..., n) .
+3-3:It may be necessary to evaluate how the distribution of these points is .
+3-4:There are many metrics to achieve this goal .
+3-5:For example, the Mean Square Error from these points to their mean value can be employed to calculate how these points deviate from their mean (i.e., their central) .
+3-6:In resource sharing evaluation, the Global Fairness Index is often employed to measure how even the resource distributes among these points [8], when xi represents the amount of resource that belong to point i .
+3-7:In WSNs, GFI is usually used to calculate how even the remaining energy of sensor nodes is .
+3-8:When n is larger than 2 and the points do not all overlap (That points all overlap means xi = xj, ∀ i, j = 1, 2, ..., n) .
+3-9:We propose a novel index called the normalized minimum distance, namely ι, to evaluate the distribution of the points .
+3-10:ι is the minimum distance between each pair of points normalized by the average distance between each pair of points .
+3-11:It is calculated by: ι = min(||xi − xj||) µ (∀ i, j = 1, 2, ..., n; and i = j) (1) where ||xi − xj|| denotes the Euclidean distance between point i and point j in Ω, the min(·) function calculates the minimum distance between each pair of points, and µ is the average distance between each pair of points, which is: µ = ( Pn i=1 Pn j=1,j=i ||xi − xj||) n(n − 1) (2) ι measures how well the points separate from one another .
+3-12:Obviously, ι is in interval [0, 1] .
+3-13:ι is equal to 1 if and only if n is equal to 3 and these three points forms an equilateral triangle .
+3-14:ι is equal to zero if any two points overlap .
+3-15:ι is a very interesting value of a set of points .
+3-16:If we consider each xi (∀i = 1, ..., n) is a variable in Ω, how these n points would look like if ι is maximized? An algorithm is implemented to generate the topology in which ι is locally maximized (The algorithm can be found in [19]) .
+3-17:We consider a 2 dimensional space .
+3-18:We select n = 10, 20, 30, ..., 100 and perform this algorithm .
+3-19:In order to avoid that the algorithm converge to local optimum, we select different random seeds to generate the initial points for 1000 time and obtain the best one that results in the largest ι when the algorithm converges .
+3-20:Figure 1 demonstrates what the resulting topology looks like when n = 20 as an example .
+3-21:Suppose each point represents a sensor node .
+3-22:If the sensor coverage model is the Boolean coverage model [15][17][18][14] and the coverage radius of each node is the same .
+3-23:It is exciting to see that this topology results in lowest redundancy because the Vonoroi diagram [2] formed by these nodes (A Vonoroi diagram formed by a set of nodes partitions a space into a set of convex polygons such that points inside a polygon are closest to only one particular node) is a honeycomb like structure1 .
+3-24:This enlightens us that ι may be employed to solve problems related to sensor coverage of an area .
+3-25:In WSNs, it is desirable 1 This is how base stations of a wireless cellular network are deployed and why such a network is called a cellular one .
+3-26:0 20 40 60 80 100 120 140 160 0 20 40 60 80 100 120 140 160 X Y Figure 1: Node Number = 20, ι = 0.435376 that the active sensor nodes that are performing surveillance task should separate from one another .
+3-27:Under the constraint that the sensing area should be covered, the more each node separates from the others, the less the redundancy of the coverage is .
+3-28:ι indicates the quality of such separation .
+3-29:It should be useful for approaches on sensor coverage related problems .
+3-30:In our following discussions, we will show the effectiveness of employing ι in sensor grouping problem. .
+4 THE SENSOR GROUPING PROBLEM :
+4-1:In many application scenarios, to achieve fault tolerance, a WSN contains a large number of redundant nodes in order to tolerate node failures .
+4-2:A node sleeping working schedule scheme is therefore highly desired to exploit the redundancy of working sensors and let as many nodes as possible sleep .
+4-3:Much work in the literature is on this issue [6] .
+4-4:Yan et al introduced a differentiated service in which a sensor node finds out its responsible working duration with cooperation of its neighbors to ensure the coverage of sampled points [17] .
+4-5:Ye et al developed PEAS in which sensor nodes wake up randomly over time, probe their neighboring nodes, and decide whether they should begin to take charge of surveillance work [18] .
+4-6:Xing et al exploited a probabilistic distributed detection model with a protocol called Coordinating Grid (Co Grid) [16] .
+4-7:Wang et al designed an approach called Coverage Configuration Protocol which introduced the notion that the coverage degree of intersection points of the neighboring nodes" sensing perimeters indicates the coverage of a convex region [15] .
+4-8:In our recent work [7], we also provided a sleeping configuration protocol, namely SSCP, in which sleeping eligibility of a sensor node is determined by a local Voronoi diagram .
+4-9:SSCP can provide different levels of redundancy to maintain different requirements of fault tolerance .
+4-10:The major feature of the aforementioned protocols is that they employ online distributed and localized algorithms in which a sensor node determines its sleeping eligibility and or sleeping time based on the coverage requirement of its sensing area with some information provided by its neighbors .
+4-11:Another major approach for sensor node sleeping working scheduling issue is to group sensor nodes .
+4-12:Sensor nodes in a network are divided into several disjoint sets .
+4-13:Each set of sensor nodes are able to maintain the required area surveillance work .
+4-14:The sensor nodes are scheduled according to which set they belong to .
+4-15:These sets work successively .
+4-16:Only one set of sensor nodes work at any time .
+4-17:We call the issue sensor grouping problem .
+4-18:The major advantage of this approach is that it avoids the overhead caused by the processes of coordination of sensor nodes to make decision on whether a sensor node is a candidate to sleep or 1172 work and how long it should sleep or work .
+4-19:Such processes should be performed from time to time during the lifetime of a network in many online distributed and localized algorithms .
+4-20:The large overhead caused by such processes is the main drawback of the online distributed and localized algorithms .
+4-21:On the contrary, roughly speaking, this approach groups sensor nodes in one time and schedules when each set of sensor nodes should be on duty .
+4-22:It does not require frequent decision making on working sleeping eligibility2 .
+4-23:In [13] by Slijepcevic et al, the sensing area is divided into regions .
+4-24:Sensor nodes are grouped with the most constrained leastconstraining algorithm .
+4-25:It is a greedy algorithm in which the priority of selecting a given sensor is determined by how many uncovered regions this sensor covers and the redundancy caused by this sensor .
+4-26:In [5] by Cardei et al, disjoint sensor sets are modeled as disjoint dominating sets .
+4-27:Although maximum dominating sets computation is NP complete, the authors proposed a graphcoloring based algorithm .
+4-28:Cardei et al also studied similar problem in the domain of covering target points in [4] .
+4-29:The NP completeness of the problem is proved and a heuristic that computes the sets are proposed .
+4-30:These algorithms are centralized solutions of sensorgrouping problem .
+4-31:However, global information (e.g., the location of each in network sensor node) of a large scale WSN is also very expensive to obtained online .
+4-32:Also it is usually infeasible to obtain such information before sensor nodes are deployed .
+4-33:For example, sensor nodes are usually deployed in a random manner and the location of each in network sensor node is determined only after a node is deployed .
+4-34:The solution of sensor grouping problem should only base on locally obtainable information of a sensor node .
+4-35:That is to say, nodes should determine which group they should join in a fully distributed way .
+4-36:Here locally obtainable information refers to a node"s local information and the information that can be directly obtained from its adjacent nodes, i.e., nodes within its communication range .
+4-37:In Subsection 3.1, we provide a general problem formulation of the sensor grouping problem .
+4-38:Distributed solution requirement is formulated in this problem .
+4-39:It is followed by discussion in Subsection 3.2 on a general sensing model, which serves as a given condition of the sensor grouping problem formulation .
+4-40:To facilitate our discussions, the notations in our following discussions are described as follows .
+4-41:• n: The number in network sensor nodes .
+4-42:• S(j) (j = 1, 2, ..., m): The jth set of sensor nodes where m is the number of sets .
+4-43:• L(i) (i = 1, 2, ..., n): The physical location of node i .
+4-44:• φ: The area monitored by the network: i.e., the sensing area of the network .
+4-45:• R: The sensing radius of a sensor node .
+4-46:We assume that a sensor node can only be responsible to monitor a circular area centered at the node with a radius equal to R .
+4-47:This is a usual assumption in work that addresses sensor coverage related problems .
+4-48:We call this circular area the sensing area of a node .
+4-49:3.1 Problem Formulation We assume that each sensor node can know its approximate physical location .
+4-50:The approximate location information is obtainable if each sensor node carries a GPS receiver or if some localization algorithms are employed (e.g., [3]) .
+4-51:2 Note that if some nodes die, a re grouping process might also be performed to exploit the remaining nodes in a set of sensor nodes .
+4-52:How to provide this mechanism is beyond the scope of this paper and yet to be explored .
+4-53:Problem 1 .
+4-54:Given: • The set of each sensor node i"s sensing neighbors N(i) and the location of each member in N(i); • A sensing model which quantitatively describes how a point P in area φ is covered by sensor nodes that are responsible to monitor this point .
+4-55:We call this quantity the coverage quality of P .
+4-56:• The coverage quality requirement in φ, denoted by s .
+4-57:When the coverage of a point is larger than this threshold, we say this point is covered .
+4-58:For each sensor node i, make a decision on which group S(j) it should join so that: • Area φ can be covered by sensor nodes in each set S(j) • m, the number of sets S(j) is maximized .
+4-59:In this formulation, we call sensor nodes within a circular area centered at a sensor node i with a radius equal to 2 · R the sensing neighbors of node i .
+4-60:This is because sensors nodes in this area, together with node i, may be cooperative to ensure the coverage of a point inside node i"s sensing area .
+4-61:We assume that the communication range of a sensor node is larger than 2 · R, which is also a general assumption in work that addresses sensor coverage related problems .
+4-62:That is to say, the first given condition in Problem 1 is the information that can be obtained directly from a node"s adjacent nodes .
+4-63:It is therefore locally obtainable information .
+4-64:The last two given conditions in this problem formulation can be programmed into a node before it is deployed or by a node programming protocol (e.g., [9]) during network runtime .
+4-65:Therefore, the given conditions can all be easily obtained by a sensor grouping scheme with fully distributed implementation .
+4-66:We reify this problem with a realistic sensing model in next subsection .
+4-67:3.2 A General Sensing Model As WSNs are usually employed to monitor possible events in a given area, it is therefore a design requirement that an event occurring in the network area must may be successfully detected by sensors .
+4-68:This issue is usually formulated as how to ensure that an event signal omitted in an arbitrary point in the network area can be detected by sensor nodes .
+4-69:Obviously, a sensing model is required to address this problem so that how a point in the network area is covered can be modeled and quantified .
+4-70:Thus the coverage quality of a WSN can be evaluated .
+4-71:Different applications of WSNs employ different types of sensors, which surely have widely different theoretical and physical characteristics .
+4-72:Therefore, to fulfill different application requirements, different sensing models should be constructed based on the characteristics of the sensors employed .
+4-73:A simple theoretical sensing model is the Boolean sensing model [15][18][17][14] .
+4-74:Boolean sensing model assumes that a sensor node can always detect an event occurring in its responsible sensing area .
+4-75:But most sensors detect events according to the signal strength sensed .
+4-76:Event signals usually fade in relation to the physical distance between an event and the sensor .
+4-77:The larger the distance, the weaker the event signals that can be sensed by the sensor, which results in a reduction of the probability that the event can be successfully detected by the sensor .
+4-78:As in WSNs, event signals are usually electromagnetic, acoustic, or photic signals, they fade exponentially with the increasing of 1173 their transmit distance .
+4-79:Specifically, the signal strength E(d) of an event that is received by a sensor node satisfies: E(d) = α dβ (3) where d is the physical distance from the event to the sensor node; α is related to the signal strength omitted by the event; and β is signal fading factor which is typically a positive number larger than or equal to 2 .
+4-80:Usually, α and β are considered as constants .
+4-81:Based on this notion, to be more reasonable, researchers propose collaborative sensing model to capture application requirements: Area coverage can be maintained by a set of collaborative sensor nodes: For a point with physical location L, the point is considered covered by the collaboration of i sensors (denoted by k1, ..., ki) if and only if the following two equations holds [7][10][12] .
+4-82:∀j = 1, ..., i; L(kj) − L < R .
+4-83:(4) C(L) = iX j=1 (E( L(kj) − L ) > s .
+4-84:(5) C(L) is regarded as the coverage quality of location L in the network area [7][10][12] .
+4-85:However, we notice that defining the sensibility as the sum of the sensed signal strength by each collaborative sensor implies a very special application: Applications must employ the sum of the signal strength to achieve decision making .
+4-86:To capture generally realistic application requirement, we modify the definition described in Equation (5) .
+4-87:The model we adopt in this paper is described in details as follows .
+4-88:We consider the probability P(L, kj ) that an event located at L can be detected by sensor kj is related to the signal strength sensed by kj .
+4-89:Formally, P(L, kj) = γE(d) = δ ( L(kj) − L + 1)β , (6) where γ is a constant and δ = γα is a constant too .
+4-90:normalizes the distance to a proper scale and the +1 item is to avoid infinite value of P(L, kj) .
+4-91:The probability that an event located at L can be detected by any collaborative sensors that satisfied Equation (4) is: P = 1 − iY j=1 (1 − P(L, kj )) .
+4-92:(7) As the detection probability P reasonably determines how an event occurring at location L can be detected by the networks, it is a good measure of the coverage quality of location L in a WSN .
+4-93:Specifically, Equation (5) is modified to: C(L) = P = 1 − iY j=1 [1 − δ ( L(kj) − L + 1)β ] > s .
+4-94:(8) To sum it up, we consider a point at location L is covered if Equation (4) and (8) hold. .
+5 MAXIMIZING ι NODE DEDUCTION ALGORITHM FOR SENSOR GROUPING :
+5-1:ALGORITHM FOR SENSOR GROUPING PROBLEM Before we process to introduce algorithms to solve the sensor grouping problem, let us define the margin (denoted by θ) of an area φ monitored by the network as the band like marginal area of φ and all the points on the outer perimeter of θ is ρ distance away from all the points on the inner perimeter of θ .
+5-2:ρ is called the margin length .
+5-3:In a practical network, sensor nodes are usually evenly deployed in the network area .
+5-4:Obviously, the number of sensor nodes that can sense an event occurring in the margin of the network is smaller than the number of sensor nodes that can sense an event occurring in other area of the network .
+5-5:Based on this consideration, in our algorithm design, we ensure the coverage quality of the network area except the margin .
+5-6:The information on φ and ρ is networkbased .
+5-7:Each in network sensor node can be pre programmed or on line informed about φ and ρ, and thus calculate whether a point in its sensing area is in the margin or not .
+5-8:4.1 Maximizing ι Node Deduction Algorithm The node deduction process of our Maximizing ι Node Deduction Algorithm is simple .
+5-9:A node i greedily maximizes ι of the sub network composed by itself, its ungrouped sensing neighbors, and the neighbors that are in the same group of itself .
+5-10:Under the constraint that the coverage quality of its sensing area should be ensured, node i deletes nodes in this sub network one by one .
+5-11:The candidate to be pruned satisfies that: • It is an ungrouped node .
+5-12:• The deletion of the node will not result in uncovered points inside the sensing area of i .
+5-13:A candidate is deleted if the deletion of the candidate results in largest ι of the sub network compared to the deletion of other candidates .
+5-14:This node deduction process continues until no candidate can be found .
+5-15:Then all the ungrouped sensing neighbors that are not deleted are grouped into the same group of node i .
+5-16:We call the sensing neighbors that are in the same group of node i the group sensing neighbors of node i .
+5-17:We then call node i a finished node, meaning that it has finished the above procedure and the sensing area of the node is covered .
+5-18:Those nodes that have not yet finished this procedure are called unfinished nodes .
+5-19:The above procedure initiates at a random selected node that is not in the margin .
+5-20:The node is grouped to the first group .
+5-21:It calculates the resulting group sensing neighbors of it based on the above procedure .
+5-22:It informs these group sensing neighbors that they are selected in the group .
+5-23:Then it hands over the above procedure to an unfinished group sensing neighbors that is the farthest from itself .
+5-24:This group sensing neighbor continues this procedure until no unfinished neighbor can be found .
+5-25:Then the first group is formed (Algorithmic description of this procedure can be found at [19]) .
+5-26:After a group is formed, another random selected ungrouped node begins to group itself to the second group and initiates the above procedure .
+5-27:In this way, groups are formed one by one .
+5-28:When a node that involves in this algorithm found out that the coverage quality if its sensing area, except what overlaps the network margin, cannot be ensured even if all its ungrouped sensing neighbors are grouped into the same group as itself, the algorithm stops .
+5-29:MIND is based on locally obtainable information of sensor nodes .
+5-30:It is a distributed algorithm that serves as an approximate solution of Problem 1 .
+5-31:4.2 Incremental Coverage Quality Algorithm: A Benchmark for MIND To evaluate the effectiveness of introducing ι in the sensor group problem, another algorithm for sensor group problem called Incremental Coverage Quality Algorithm is designed .
+5-32:Our aim 1174 is to evaluate how an idea, i.e., MIND, based on locally maximize ι performs .
+5-33:In ICQA, a node selecting process is as follows .
+5-34:A node i greedily selects an ungrouped sensing neighbor in the same group as itself one by one, and informs the neighbor it is selected in the group .
+5-35:The criterion is: • The selected neighbor is responsible to provide surveillance work for some uncovered parts of node i"s sensing area .
+5-36:(i.e., the coverage quality requirement of the parts is not fulfilled if this neighbor is not selected.) • The selected neighbor results in highest improvement of the coverage quality of the neighbor"s sensing area .
+5-37:The improvement of the coverage quality, mathematically, should be the integral of the the improvements of all points inside the neighbor"s sensing area .
+5-38:A numerical approximation is employed to calculate this improvement .
+5-39:Details are presented in our simulation study .
+5-40:This node selecting process continues until the sensing area of node i is entirely covered .
+5-41:In this way, node i"s group sensing neighbors are found .
+5-42:The above procedure is handed over as what MIND does and new groups are thus formed one by one .
+5-43:And the condition that ICQA stops is the same as MIND .
+5-44:ICQA is also based on locally obtainable information of sensor nodes .
+5-45:ICQA is also a distributed algorithm that serves as an approximate solution of Problem 1. .
+6 SIMULATION RESULTS :
+6-1:To evaluate the effectiveness of employing ι in sensor grouping problem, we build simulation surveillance networks .
+6-2:We employ MIND and ICQA to group the in network sensor nodes .
+6-3:We compare the grouping results with respect to how many groups both algorithms find and how the performance of the resulting groups are .
+6-4:Detailed settings of the simulation networks are shown in Table a uniform manner in the network area .
+6-5:Table 1: The settings of the simulation networks Area of sensor field 400m*400m ρ 20m R 80m α, β, γ and 1.0, 2.0, 1.0 and 100.0 s 0.6 For evaluating the coverage quality of the sensing area of a node, we divide the sensing area of a node into several regions and regard the coverage quality of the central point in each region as a representative of the coverage quality of the region .
+6-6:This is a numerical approximation .
+6-7:Larger number of such regions results in better approximation .
+6-8:As sensor nodes are with low computational capacity, there is a tradeoff between the number of such regions and the precision of the resulting coverage quality of the sensing area of a node .
+6-9:In our simulation study, we set this number 12 .
+6-10:For evaluating the improvement of coverage quality in ICQA, we sum up all the improvements at each region center as the total improvement .
+6-11:5.1 Number of Groups Formed by MIND and ICQA We set the total in network node number to different values and let the networks perform MIND and ICQA .
+6-12:For each n, simulations run with several random seeds to generate different networks .
+6-13:Results are averaged .
+6-14:Figure 2 shows the group numbers found in networks with different n"s .
+6-15:500 1000 1500 2000 0 5 10 15 20 25 30 35 40 45 50 Total in−network node number Totalnumberofgroupsfound ICQA MMNP Figure 2: The number of groups found by MIND and ICQA We can see that MIND always outperforms ICQA in terms of the number of groups formed .
+6-16:Obviously, the larger the number of groups can be formed, the more the redundancy of each group is exploited .
+6-17:This output shows that an approach like MIND that aim to maximize ι of the resulting topology can exploits redundancy well .
+6-18:As an example, in case that n = 1500, the results of five networks are listed in Table 2 .
+6-19:Table 2: The grouping results of five networks with n = 1500 Net MIND ICQA MIND ICQA Group Number Group Number Average ι Average ι 1 34 31 0.145514 0.031702 2 33 30 0.145036 0.036649 3 33 31 0.156483 0.033578 4 32 31 0.152671 0.029030 5 33 32 0.146560 0.033109 The difference between the average ι of the groups in each network shows that groups formed by MIND result in topologies with larger ι"s .
+6-20:It demonstrates that ι is good indicator of redundancy in different networks .
+6-21:5.2 The Performance of the Resulting Groups Although MIND forms more groups than ICQA does, which implies longer lifetime of the networks, another importance consideration is how these groups formed by MIND and ICQA perform .
+6-22:We let 10000 events randomly occur in the network area except the margin .
+6-23:We compare how many events happen at the locations where the quality is less than the requirement s = 0.6 when each resulting group is conducting surveillance work (We call the number of such events the failure number of group) .
+6-24:Figure 3 shows the average failure numbers of the resulting groups when different node numbers are set .
+6-25:We can see that the groups formed by MIND outperform those formed by ICQA because the groups formed by MIND result in lower failure numbers .
+6-26:This further demonstrates that MIND is a good approach for sensor grouping problem .
+6-27:1175 500 1000 1500 2000 0 10 20 30 40 50 60 Total in−network node number averagefailurenumbers ICQA MMNP Figure 3: The failure numbers of MIND and ICQA .
+7 CONCLUSION :
+7-1:This paper proposes ι, a novel index for evaluation of pointdistribution .
+7-2:ι is the minimum distance between each pair of points normalized by the average distance between each pair of points .
+7-3:We find that a set of points that achieve a maximum value of ι result in a honeycomb structure .
+7-4:We propose that ι can serve as a good index to evaluate the distribution of the points, which can be employed in coverage related problems in wireless sensor networks (WSNs) .
+7-5:We set out to validate this idea by employing ι to a sensorgrouping problem .
+7-6:We formulate a general sensor grouping problem for WSNs and provide a general sensing model .
+7-7:With an algorithm called Maximizing ι Node Deduction (MIND), we show that maximizing ι at sensor nodes is a good approach to solve this problem .
+7-8:Simulation results verify that MIND outperforms a greedy algorithm that exploits sensor redundancy we design in terms of the number and the performance of the groups formed .
+7-9:This demonstrates a good application of employing ι in coverage related problems. .
+8-1:The work described in this paper was substantially supported by two grants, RGC Project No
+8-2:CUHK4205 04E and UGC Project No
+8-3:AoE E 01 99, of the Hong Kong Special Administrative Region, China.
+9-1:I
+9-2:Akyildiz, W
+9-3:Su, Y
+9-4:Sankarasubramaniam, and E
+9-5:Cayirci
+9-6:A survey on wireless sensor networks
+9-7:IEEE Communications Magazine, 40(8):102 114, 2002
+9-8:F
+9-9:Aurenhammer
+9-10:Vononoi diagram  a survey of a fundamental geometric data structure
+9-11:ACM Computing Surveys, 23(2):345 405, September 1991
+9-12:N
+9-13:Bulusu, J
+9-14:Heidemann, and D
+9-15:Estrin
+9-16:GPS less low cost outdoor localization for very small devices
+9-17:IEEE Personal Communication, October 2000
+9-18:M
+9-19:Cardei and D. Z
+9-20:Du
+9-21:Improving wireless sensor network lifetime through power aware organization
+9-22:ACM Wireless Networks, 11(3), May 2005
+9-23:M
+9-24:Cardei, D
+9-25:MacCallum, X
+9-26:Cheng, M
+9-27:Min, X
+9-28:Jia, D
+9-29:Li, and D. Z
+9-30:Du
+9-31:Wireless sensor networks with energy efficient organization
+9-32:Journal of Interconnection Networks, 3(3 4), December 2002
+9-33:M
+9-34:Cardei and J
+9-35:Wu
+9-36:Coverage in wireless sensor networks
+9-37:In Handbook of Sensor Networks, (eds
+9-38:M
+9-39:Ilyas and I
+9-40:Magboub), CRC Press, 2004
+9-41:X
+9-42:Chen and M
+9-43:R
+9-44:Lyu
+9-45:A sensibility based sleeping configuration protocol for dependable wireless sensor networks
+9-46:CSE Technical Report, The Chinese University of Hong Kong, 2005
+9-47:R
+9-48:Jain, W
+9-49:Hawe, and D
+9-50:Chiu
+9-51:A quantitative measure of fairness and discrimination for resource allocation in shared computer systems
+9-52:Technical Report DEC TR 301, September 1984
+9-53:S
+9-54:S
+9-55:Kulkarni and L
+9-56:Wang
+9-57:MNP: Multihop network reprogramming service for sensor networks
+9-58:In Proc
+9-59:of the 25th International Conference on Distributed Computing Systems (ICDCS), June 2005
+9-60:B
+9-61:Liu and D
+9-62:Towsley
+9-63:A study on the coverage of large scale sensor networks
+9-64:In Proc
+9-65:of the 1st IEEE International Conference on Mobile ad hoc and Sensor Systems, Fort Lauderdale, FL, October 2004
+9-66:A
+9-67:Mainwaring, J
+9-68:Polastre, R
+9-69:Szewczyk, D
+9-70:Culler, and J
+9-71:Anderson
+9-72:Wireless sensor networks for habitat monitoring
+9-73:In Proc
+9-74:of the ACM International Workshop on Wireless Sensor Networks and Applications, 2002
+9-75:S
+9-76:Megerian, F
+9-77:Koushanfar, G
+9-78:Qu, G
+9-79:Veltri, and M
+9-80:Potkonjak
+9-81:Explosure in wirless sensor networks: Theory and pratical solutions
+9-82:Wireless Networks, 8, 2002
+9-83:S
+9-84:Slijepcevic and M
+9-85:Potkonjak
+9-86:Power efficient organization of wireless sensor networks
+9-87:In Proc
+9-88:of the IEEE International Conference on Communications (ICC), volume 2, Helsinki, Finland, June 2001
+9-89:D
+9-90:Tian and N
+9-91:D
+9-92:Georganas
+9-93:A node scheduling scheme for energy conservation in large wireless sensor networks
+9-94:Wireless Communications and Mobile Computing, 3:272 290, May 2003
+9-95:X
+9-96:Wang, G
+9-97:Xing, Y
+9-98:Zhang, C
+9-99:Lu, R
+9-100:Pless, and C
+9-101:Gill
+9-102:Integrated coverage and connectivity configuration in wireless sensor networks
+9-103:In Proc
+9-104:of the 1st ACM International Conference on Embedded Networked Sensor Systems (SenSys), Los Angeles, CA, November 2003
+9-105:G
+9-106:Xing, C
+9-107:Lu, R
+9-108:Pless, and J
+9-109:A
+9-110:O´ Sullivan
+9-111:Co Grid: an efficient converage maintenance protocol for distributed sensor networks
+9-112:In Proc
+9-113:of the 3rd International Symposium on Information Processing in Sensor Networks (IPSN), Berkeley, CA, April 2004
+9-114:T
+9-115:Yan, T
+9-116:He, and J
+9-117:A
+9-118:Stankovic
+9-119:Differentiated surveillance for sensor networks
+9-120:In Proc
+9-121:of the 1st ACM International Conference on Embedded Networked Sensor Systems (SenSys), Los Angeles, CA, November 2003
+9-122:F
+9-123:Ye, G
+9-124:Zhong, J
+9-125:Cheng, S
+9-126:Lu, and L
+9-127:Zhang
+9-128:PEAS: A robust energy conserving protocol for long lived sensor networks
+9-129:In Proc
+9-130:of the 23rd International Conference on Distributed Computing Systems (ICDCS), Providence, Rhode Island, May 2003
+9-131:Y
+9-132:Zhou, H
+9-133:Yang, and M
+9-134:R
+9-135:Lyu
+9-136:A point distribution index and its application in coverage related problems
+9-137:CSE Technical Report, The Chinese University of Hong Kong, 2006
+9-138:1176
+picture:

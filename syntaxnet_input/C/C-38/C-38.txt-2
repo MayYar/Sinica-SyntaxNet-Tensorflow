@@ -1,0 +1,42 @@
+Constructing a peer to peer overlay for streaming applications should not only accommodate global design goals such as scalability and resilience but also satisfy the local design goal of maximizing delivered quality to individual peers 1 .
+More specifically, delivered quality of streaming content to each peer should be proportional to its incoming access link bandwidth .
+Achieving these goals is particularly challenging because participating peers often exhibit heterogeneity and asymmetry in their bandwidth connectivity .
+Solutions for constructing peer to peer overlays often require two key mechanisms to be implemented at each peer
+The PD mechanism enables each peer to learn about other participating peers in the overlay .
+Information about other peers are used by the PS mechanism at each peer to determine proper parent peers through which it should connect to the overlay .
+The collective behavior of PD and PS mechanisms at all participating peers leads to an overlay structure that achieves the above design goals .
+There has been a wealth of previous research that explored design space of the PD and PS mechanisms as follows
+However, structured peer to peer networks may not be robust against high churn rate [5] .
+In contrast, unstructured peer to peer networks can gracefully accommodate high churn rate [5] but require a separate peer discovery mechanism .
+Meshfirst approaches (e.g., [7, 6]) that require each peer to know about all other participating peers as well as centralized approaches (e.g., [16]) to peer discovery exhibit limited scalability .
+NICE [2] leverages a hierarchal structure to achieve 1 It is worth clarifying that our design goal is different from common goals in building application level multicast trees [7] (i.e., minimizing stretch and stress) .
+scalability but each peer only knows about a group of closeby peers who may not be good parents (i.e., may not provide sufficient bandwidth) .
+Parent Selection
+Relative delay between any two peers can be estimated in a scalable fashion with one of the existing landmark based solutions such as Global Network Positioning [15] .
+However, estimating available bandwidth between two peers requires end to end measurement .
+Using available bandwidth as criteria for parent selection does not scale for two reasons
+Second, the probability of interference among different measurements grows with the number of peers in an overlay (similar to joint experiment in RLM [13]) .
+Most of the previous solutions adopted the idea of application level multicast and used delay as the main selection criteria .
+Participating peers cooperatively run a distributed algorithm to organize themselves into a source rooted tree structure in order to minimize either overall delay across all branches of the tree (e.g., [7]), or delay between source and each receiver peer (e.g., [20]) .
+While these parent selection strategies minimize associated network load, they may not provide sufficient bandwidth to individual peers because delay is often not a good indicator for available bandwidth between two peers [12, 14] .
+The key issue is that minimizing overall delay (global design goal) and maximizing delivered bandwidth to each peer (local design goal) could easily be in conflict .
+More specifically, parent peers with longer relative distance may provide higher bandwidth than close by parents .
+This suggests that there might exist a tradeoff between maximizing provided bandwidth to each peer and minimizing overall delay across the overlay .
+(ii) Single vs Multiple Parents
+A common approach to accommodating bandwidth heterogeneity is to use layer structured content (either layered or multiple description encodings) and allow each receiver to have multiple parents .
+This approach could accommodate heterogeneity but it introduces several new challenges .
+First, parent selection strategy should be determined based on location of a bottleneck .
+If the bottleneck is at the (outgoing) access links of parent peers 2 , then a receiver should simply look for more parents .
+However, when the bottleneck is else where in the network, a receiver should select parents with a diverse set of paths (i.e., utilize different network paths) .
+In practice, a combination of these cases might simultaneously exist among participating peers [1] .
+Second, streaming a single content from multiple senders is challenging for two reasons
+2) Delivered segments from different senders should arrive before their playout times despite uncorrelated vari2 if bottleneck is at the receiver"s access link, then provided bandwidth to the receiver is already maximized .
+43 ations in (congestion controlled) bandwidth from different senders .
+This also implies that those solutions that build multi parent overlay structure but do not explicitly ensure in time delivery of individual segments (e.g., [3, 11]) may not be able to support streaming applications .
+One approach to build a multi parent overlay is to organize participating peers into different trees where each layer of the stream is sent to a separate tree (e.g., [4, 16]) .
+Each peer can maximize its quality by participating in a proper number of trees .
+This approach raises several issues
+In the presence of bandwidth asymmetry, this could easily limit delivered bandwidth on each tree below the required bandwidth for a single layer, 2) it is not feasible to build separate trees that are all optimal for a single selection criteria (e.g., overall delay), .
+3) connections across different trees are likely to compete for available bandwidth on a single bottleneck3 .
+We conclude that a practical solution for peer topeer streaming applications should incorporate the following design properties
+In the next section, we explain how PRO incorporates all the above design properties. .

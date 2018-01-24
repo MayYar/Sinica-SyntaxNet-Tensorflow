@@ -1,0 +1,25 @@
+RESEARCH In multiagent systems, strategic settings are often analyzed under the assumption that the players choose their strategies simultaneously
+This requires some equilibrium notion (Nash equilibrium and its refinements), and often leads to the equilibrium selection problem
+However, this model is not always realistic
+In many settings, one player is able to commit to a strategy before the other player makes a decision
+For example, one agent may arrive at the (real or virtual) site of the game before the other, or, in the specific case of software agents, the code for one agent may be completed and committed before that of another agent
+Such models are synonymously referred to as leadership, commitment, or Stackelberg models, and optimal play in such models is often significantly different from optimal play in the model where strategies are selected simultaneously
+Specifically, if commitment to mixed strategies is possible, then (optimal) commitment never hurts the leader, and often helps
+The recent surge in interest in computing game theoretic solutions has so far ignored leadership models (with the exception of the interest in mechanism design, where the designer is implicitly in a leadership position)
+In this paper, we studied how to compute optimal strategies to commit to under both commitment to pure strategies and commitment to mixed strategies, in both normal form and Bayesian games
+For normal form games, we showed that the optimal pure strategy to commit to can be found efficiently for any number of players
+An optimal mixed strategy to commit to in a normal form game can be found efficiently for two players using linear programming (and no more efficiently than that, in the sense that any linear program with a probability constraint can be encoded as such a problem)
+(This is a generalization of the polynomial time computability of minimax strategies in normal form games.) The problem becomes NP hard for three (or more) players
+In Bayesian games, the problem of finding an optimal pure strategy to commit to is NP hard even in two player games in which the follower has only a single type, although two player games in which the leader has only a single type can be solved efficiently
+The problem of finding an optimal mixed strategy to commit to in a Bayesian game is NP hard even in two player games in which the leader has only a single type, although two player games in which the follower has only a single type can be solved efficiently using a generalization of the linear progamming approach for normal form games
+The following two tables summarize these results
+2 players ? 3 players normal form O(#outcomes) O(#outcomes¡P #players) Bayesian, O(#outcomes¡P NP hard 1 type leader #types) Bayesian, NP hard NP hard 1 type follower Bayesian (general) NP hard NP hard Results for commitment to pure strategies
+(With more than 2 players, the follower is the last player to commit, the leader is the first.) 88 2 players ? 3 players normal form one LP solve per NP hard follower action Bayesian, NP hard NP hard 1 type leader Bayesian, one LP solve per NP hard 1 type follower follower action Bayesian (general) NP hard NP hard Results for commitment to mixed strategies
+(With more than 2 players, the follower is the last player to commit, the leader is the first.) Future research can take a number of directions
+First, we can empirically evaluate the techniques presented here on test suites such as GAMUT [19]
+We can also study the computation of optimal strategies to commit to in other1 concise representations of normal form games for example, in graphical games [10] or local effect action graph games [14, 1]
+For the cases where computing an optimal strategy to commit to is NP hard, we can also study the computation of approximately optimal strategies to commit to
+While the correct definition of an approximately optimal strategy is in this setting may appear simple at first it should be a strategy that, if the following players play optimally, performs almost as well as the optimal strategy in expectation this definition becomes problematic when we consider that the other players may also be playing only approximately optimally
+One may also study models in which multiple (but not all) players commit at the same time
+Another interesting direction to pursue is to see if computing optimal mixed strategies to commit to can help us in, or otherwise shed light on, computing Nash equilibria
+Often, optimal mixed strategies to commit to are also Nash equilibrium strategies (for example, in two player zero sum games this is always true), although this is not always the case (for example, as we already pointed out, sometimes the optimal strategy to commit to is a strictly dominated strategy, which can never be a Nash equilibrium strategy).

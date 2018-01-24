@@ -1,0 +1,402 @@
+Mechanism Design for Online Real-Time Scheduling 
+content:
+1 ABSTRACT :
+1-1:For the problem of online real time scheduling of jobs on a single processor, previous work presents matching upper and lower bounds on the competitive ratio that can be achieved by a deterministic algorithm .
+1-2:However, these results only apply to the non strategic setting in which the jobs are released directly to the algorithm .
+1-3:Motivated by emerging areas such as grid computing, we instead consider this problem in an economic setting, in which each job is released to a separate, self interested agent .
+1-4:The agent can then delay releasing the job to the algorithm, inflate its length, and declare an arbitrary value and deadline for the job, while the center determines not only the schedule, but the payment of each agent .
+1-5:For the resulting mechanism design problem (in which we also slightly strengthen an assumption from the non strategic setting), we present a mechanism that addresses each incentive issue, while only increasing the competitive ratio by one .
+1-6:We then show a matching lower bound for deterministic mechanisms that never pay the agents .
+1-7:I.2.11 [Artificial Intelligence]: Distributed Artificial .
+2 INTRODUCTION :
+2-1:We consider the problem of online scheduling of jobs on a single processor .
+2-2:Each job is characterized by a release time, a deadline, a processing time, and a value for successful completion by its deadline .
+2-3:The objective is to maximize the sum of the values of the jobs completed by their respective deadlines .
+2-4:The key challenge in this online setting is that the schedule must be constructed in real time, even though nothing is known about a job until its release time .
+2-5:Competitive analysis [6, 10], with its roots in [12], is a well studied approach for analyzing online algorithms by comparing them against the optimal oﬄine algorithm, which has full knowledge of the input at the beginning of its execution .
+2-6:One interpretation of this approach is as a game between the designer of the online algorithm and an adversary .
+2-7:First, the designer selects the online algorithm .
+2-8:Then, the adversary observes the algorithm and selects the sequence of jobs that maximizes the competitive ratio: the ratio of the value of the jobs completed by an optimal oﬄine algorithm to the value of those completed by the online algorithm .
+2-9:Two papers paint a complete picture in terms of competitive analysis for this setting, in which the algorithm is assumed to know k, the maximum ratio between the value densities (value divided by processing time) of any two jobs .
+2-10:For k = 1, [4] presents a 4 competitive algorithm, and proves that this is a lower bound on the competitive ratio for deterministic algorithms .
+2-11:The same paper also generalizes the lower bound to (1 + √ k)2 for any k ≥ 1, and [15] then presents a matching (1 + √ k)2 competitive algorithm .
+2-12:The setting addressed by these papers is completely nonstrategic, and the algorithm is assumed to always know the true characteristics of each job upon its release .
+2-13:However, in domains such as grid computing (see, for example, [7, 8]) this assumption is invalid, because buyers of processor time choose when and how to submit their jobs .
+2-14:Furthermore, sellers not only schedule jobs but also determine the amount that they charge buyers, an issue not addressed in the non strategic setting .
+2-15:Thus, we consider an extension of the setting in which each job is owned by a separate, self interested agent .
+2-16:Instead of being released to the algorithm, each job is now released only to its owning agent .
+2-17:Each agent now has four different ways in which it can manipulate the algorithm: it decides when to submit the job to the algorithm after the true release time, it can artificially inflate the length of the job, and it can declare an arbitrary value and deadline for the job .
+2-18:Because the agents are self interested, they will choose to manipulate the algorithm if doing so will cause 61 their job to be completed; and, indeed, one can find examples in which agents have incentive to manipulate the algorithms presented in [4] and [15] .
+2-19:The addition of self interested agents moves the problem from the area of algorithm design to that of mechanism design [17], the science of crafting protocols for self interested agents .
+2-20:Recent years have seen much activity at the interface of computer science and mechanism design (see, e.g., [9, 18, 19]) .
+2-21:In general, a mechanism defines a protocol for interaction between the agents and the center that culminates with the selection of an outcome .
+2-22:In our setting, a mechanism will take as input a job from each agent, and return a schedule for the jobs, and a payment to be made by each agent to the center .
+2-23:A basic solution concept of mechanism design is incentive compatibility, which, in our setting, requires that it is always in each agent"s best interests to immediately submit its job upon release, and to truthfully declare its value, length, and deadline .
+2-24:In order to evaluate a mechanism using competitive analysis, the adversary model must be updated .
+2-25:In the new model, the adversary still determines the sequence of jobs, but it is the self interested agents who determine the observed input of the mechanism .
+2-26:Thus, in order to achieve a competitive ratio of c, an online mechanism must both be incentive compatible, and always achieve at least 1 c of the value that the optimal oﬄine mechanism achieves on the same sequence of jobs .
+2-27:The rest of the paper is structured as follows .
+2-28:In Section 2, we formally define and review results from the original, non strategic setting .
+2-29:After introducing the incentive issues through an example, we formalize the mechanism design setting in Section 3 .
+2-30:In Section 4 we present our first main result, a ((1 + √ k)2 + 1) competitive mechanism, and formally prove incentive compatibility and the competitive ratio .
+2-31:We also show how we can simplify this mechanism for the special case in which k = 1 and each agent cannot alter the length of its job .
+2-32:Returning the general setting, we show in Section 5 that this competitive ratio is a lower bound for deterministic mechanisms that do not pay agents .
+2-33:Finally, in Section 6, we discuss related work other than the directly relevant [4] and [15], before concluding with Section 7. .
+3 NON STRATEGIC SETTING :
+3-1:In this section, we formally define the original, non strategic setting, and recap previous results .
+3-2:2.1 Formulation There exists a single processor on which jobs can execute, and N jobs, although this number is not known beforehand .
+3-3:Each job i is characterized by a tuple θi = (ri, di, li, vi), which denotes the release time, deadline, length of processing time required, and value, respectively .
+3-4:The space Θi of possible tuples is the same for each job and consists of all θi such that ri, di, li, vi ∈ + (thus, the model of time is continuous) .
+3-5:Each job is released at time ri, at which point its three other characteristics are known .
+3-6:Nothing is known about the job before its arrival .
+3-7:Each deadline is firm (or, hard), which means that no value is obtained for a job that is completed after its deadline .
+3-8:Preemption of jobs is allowed, and it takes no time to switch between jobs .
+3-9:Thus, job i is completed if and only if the total time it executes on the processor before di is at least li .
+3-10:Let θ = (θ1, .
+3-11:.
+3-12:.
+3-13:, θN ) denote the vector of tuples for all jobs, and let θ−i = (θ1, .
+3-14:.
+3-15:.
+3-16:, θi−1, θi+1, .
+3-17:.
+3-18:.
+3-19:, θN ) denote the same vector without the tuple for job i .
+3-20:Thus, (θi, θ−i) denotes a complete vector of tuples .
+3-21:Define the value density ρi = vi li of job i to be the ratio of its value to its length .
+3-22:For an input θ, denote the maximum and minimum value densities as ρmin = mini ρi and ρmax = maxi ρi .
+3-23:The importance ratio is then defined to be ρmax ρmin , the maximal ratio of value densities between two jobs .
+3-24:The algorithm is assumed to always know an upper bound k on the importance ratio .
+3-25:For simplicity, we normalize the range of possible value densities so that ρmin = 1 .
+3-26:An online algorithm is a function f : Θ1 × .
+3-27:.
+3-28:.
+3-29:× ΘN → O that maps the vector of tuples (for any number N) to an outcome o .
+3-30:An outcome o ∈ O is simply a schedule of jobs on the processor, recorded by the function S : + → {0, 1, .
+3-31:.
+3-32:.
+3-33:, N}, which maps each point in time to the active job, or to 0 if the processor is idle .
+3-34:To denote the total elapsed time that a job has spent on the processor at time t, we will use the function ei(t) = t 0 µ(S(x) = i)dx, where µ(·) is an indicator function that returns 1 if the argument is true, and zero otherwise .
+3-35:A job"s laxity at time t is defined to be di − t − li + ei(t) , the amount of time that it can remain inactive and still be completed by its deadline .
+3-36:A job is abandoned if it cannot be completed by its deadline (formally, if di −t+ei(t) < li) .
+3-37:Also, overload S(·) and ei(·) so that they can also take a vector θ as an argument .
+3-38:For example, S(θ, t) is shorthand for the S(t) of the outcome f(θ), and it denotes the active job at time t when the input is θ .
+3-39:Since a job cannot be executed before its release time, the space of possible outcomes is restricted in that S(θ, t) = i implies ri ≤ t .
+3-40:Also, because the online algorithm must produce the schedule over time, without knowledge of future inputs, it must make the same decision at time t for inputs that are indistinguishable at this time .
+3-41:Formally, let θ(t) denote the subset of the tuples in θ that satisfy ri ≤ t .
+3-42:The constraint is then that θ(t) = θ (t) implies S(θ, t) = S(θ , t) .
+3-43:The objective function is the sum of the values of the jobs that are completed by their respective deadlines: W(o, θ) = i vi · µ(ei(θ, di) ≥ li) .
+3-44:Let W∗ (θ) = maxo∈O W(o, θ) denote the maximum possible total value for the profile θ .
+3-45:In competitive analysis, an online algorithm is evaluated by comparing it against an optimal oﬄine algorithm .
+3-46:Because the oﬄine algorithm knows the entire input θ at time 0 (but still cannot start each job i until time ri), it always achieves W∗ (θ) .
+3-47:An online algorithm f(·) is (strictly) c competitive if there does not exist an input θ such that c · W(f(θ), θ) < W∗ (θ) .
+3-48:An algorithm that is c competitive is also said to achieve a competitive ratio of c .
+3-49:We assume that there does not exist an overload period of infinite duration .
+3-50:A period of time [ts , tf ] is overloaded if the sum of the lengths of the jobs whose release time and deadline both fall within the time period exceeds the duration of the interval (formally, if tf −ts ≤ i|(ts≤ri,di≤tf ) li) .
+3-51:Without such an assumption, it is not possible to achieve a finite competitive ratio [15] .
+3-52:2.2 Previous Results In the non strategic setting, [4] presents a 4 competitive algorithm called TD1 (version 2) for the case of k = 1, while [15] presents a (1+ √ k)2 competitive algorithm called Dover for the general case of k ≥ 1 .
+3-53:Matching lower bounds for deterministic algorithms for both of these cases were shown 62 in [4] .
+3-54:In this section we provide a high level description of TD1 (version 2) using an example .
+3-55:TD1 (version 2) divides the schedule into intervals, each of which begins when the processor transitions from idle to busy (call this time tb ), and ends with the completion of a job .
+3-56:The first active job of an interval may have laxity; however, for the remainder of the interval, preemption of the active job is only considered when some other job has zero laxity .
+3-57:For example, when the input is the set of jobs listed in Table 1, the first interval is the complete execution of job 1 over the range [0.0, 0.9] .
+3-58:No preemption is considered during this interval, because job 2 has laxity until time 1.5 .
+3-59:Then, a new interval starts at tb = 0.9 when job 2 becomes active .
+3-60:Before job 2 can finish, preemption is considered at time 4.8, when job 3 is released with zero laxity .
+3-61:In order to decide whether to preempt the active job, TD1 (version 2) uses two more variables: te and p loss .
+3-62:The former records the latest deadline of a job that would be abandoned if the active job executes to completion (or, if no such job exists, the time that the active job will finish if it is not preempted) .
+3-63:In this case, te = 17.0 .
+3-64:The value te −tb represents the an upper bound on the amount of possible execution time lost to the optimal oﬄine algorithm due to the completion of the active job .
+3-65:The other variable, p loss, is equal to the length of the first active job of the current interval .
+3-66:Because in general this job could have laxity, the oﬄine algorithm may be able to complete it outside of the range [tb , te ].1 If the algorithm completes the active job and this job"s length is at least te −tb +p loss 4 , then the algorithm is guaranteed to be 4 competitive for this interval (note that k = 1 implies that all jobs have the same value density and thus that lengths can used to compute the competitive ratio) .
+3-67:Because this is not case at time 4.8 (since te −tb +p loss 4 = 17.0−0.9+4.0 4 > 4.0 = l2), the algorithm preempts job 2 for job 3, which then executes to completion .
+3-68:Job ri di li vi 1 0.0 0.9 0.9 0.9 2 0.5 5.5 4.0 4.0 3 4.8 17.0 12.2 12.2 01 5 17 6 ? 6 ? 6 ? Table 1: Input used to recap TD1 (version 2) [4] .
+3-69:The up and down arrows represent ri and di, respectively, while the length of the box equals li. .
+4 MECHANISM DESIGN SETTING :
+4-1:However, false information about job 2 would cause TD1 (version 2) to complete this job .
+4-2:For example, if job 2"s deadline were declared as ˆd2 = 4.7, then it would have zero laxity at time 0.7 .
+4-3:At this time, the algorithm would preempt job 1 for job 2, because te −tb +p loss 4 = 4.7−0.0+1.0 4 > 0.9 = l1 .
+4-4:Job 2 would then complete before the arrival of job 3.2 1 While it would be easy to alter the algorithm to recognize that this is not possible for the jobs in Table 1, our example does not depend on the use of p loss .
+4-5:2 While we will not describe the significantly more complex In order to address incentive issues such as this one, we need to formalize the setting as a mechanism design problem .
+4-6:In this section we first present the mechanism design formulation, and then define our goals for the mechanism .
+4-7:3.1 Formulation There exists a center, who controls the processor, and N agents, where the value of N is unknown by the center beforehand .
+4-8:Each job i is owned by a separate agent i .
+4-9:The characteristics of the job define the agent"s type θi ∈ Θi .
+4-10:At time ri, agent i privately observes its type θi, and has no information about job i before ri .
+4-11:Thus, jobs are still released over time, but now each job is revealed only to the owning agent .
+4-12:Agents interact with the center through a direct mechanism Γ = (Θ1, .
+4-13:.
+4-14:.
+4-15:, ΘN , g(·)), in which each agent declares a job, denoted by ˆθi = (ˆri, ˆdi, ˆli, ˆvi), and g : Θ1× .
+4-16:.
+4-17:.×ΘN → O maps the declared types to an outcome o ∈ O .
+4-18:An outcome o = (S(·), p1, .
+4-19:.
+4-20:.
+4-21:, pN ) consists of a schedule and a payment from each agent to the mechanism .
+4-22:In a standard mechanism design setting, the outcome is enforced at the end of the mechanism .
+4-23:However, since the end is not well defined in this online setting, we choose to model returning the job if it is completed and collecting a payment from each agent i as occurring at ˆdi, which, according to the agent"s declaration, is the latest relevant point of time for that agent .
+4-24:That is, even if job i is completed before ˆdi, the center does not return the job to agent i until that time .
+4-25:This modelling decision could instead be viewed as a decision by the mechanism designer from a larger space of possible mechanisms .
+4-26:Indeed, as we will discuss later, this decision of when to return a completed job is crucial to our mechanism .
+4-27:Each agent"s utility, ui(g(ˆθ), θi) = vi · µ(ei(ˆθ, di) ≥ li) · µ( ˆdi ≤ di) − pi(ˆθ), is a quasi linear function of its value for its job (if completed and returned by its true deadline) and the payment it makes to the center .
+4-28:We assume that each agent is a rational, expected utility maximizer .
+4-29:Agent declarations are restricted in that an agent cannot declare a length shorter than the true length, since the center would be able to detect such a lie if the job were completed .
+4-30:On the other hand, in the general formulation we will allow agents to declare longer lengths, since in some settings it may be possible add unnecessary work to a job .
+4-31:However, we will also consider a restricted formulation in which this type of lie is not possible .
+4-32:The declared release time ˆri is the time that the agent chooses to submit job i to the center, and it cannot precede the time ri at which the job is revealed to the agent .
+4-33:The agent can declare an arbitrary deadline or value .
+4-34:To summarize, agent i can declare any type ˆθi = (ˆri, ˆdi, ˆli, ˆvi) such that ˆli ≥ li and ˆri ≥ ri .
+4-35:While in the non strategic setting it was sufficient for the algorithm to know the upper bound k on the ratio ρmax ρmin , in the mechanism design setting we will strengthen this assumption so that the mechanism also knows ρmin (or, equivalently, the range [ρmin, ρmax] of possible value densities).3 Dover , we note that it is similar in its use of intervals and its preference for the active job .
+4-36:Also, we note that the lower bound we will show in Section 5 implies that false information can also benefit a job in Dover .
+4-37:3 Note that we could then force agent declarations to satisfy ρmin ≤ ˆvi ˆli ≤ ρmax .
+4-38:However, this restriction would not 63 While we feel that it is unlikely that a center would know k without knowing this range, we later present a mechanism that does not depend on this extra knowledge in a restricted setting .
+4-39:The restriction on the schedule is now that S(ˆθ, t) = i implies ˆri ≤ t, to capture the fact that a job cannot be scheduled on the processor before it is declared to the mechanism .
+4-40:As before, preemption of jobs is allowed, and job switching takes no time .
+4-41:The constraints due to the online mechanism"s lack of knowledge of the future are that ˆθ(t) = ˆθ (t) implies S(ˆθ, t) = S(ˆθ , t), and ˆθ( ˆdi) = ˆθ ( ˆdi) implies pi(ˆθ) = pi(ˆθ ) for each agent i .
+4-42:The setting can then be summarized as follows .
+4-43:1Overview of the Setting: for all t do The center instantiates S(ˆθ, t) ← i, for some i s.t .
+4-44:ˆri ≤ t if ∃i, (ri = t) then θi is revealed to agent i if ∃i, (t ≥ ri) and agent i has not declared a job then Agent i can declare any job ˆθi, s.t .
+4-45:ˆri = t and ˆli ≥ li if ∃i, ( ˆdi = t) ∧ (ei(ˆθ, t) ≥ li) then Completed job i is returned to agent i if ∃i, ( ˆdi = t) then Center sets and collects payment pi(ˆθ) from agent i 3.2 Mechanism Goals Our aim as mechanism designer is to maximize the value of completed jobs, subject to the constraints of incentive compatibility and individual rationality .
+4-46:The condition for (dominant strategy) incentive compatibility is that for each agent i, regardless of its true type and of the declared types of all other agents, agent i cannot increase its utility by unilaterally changing its declaration .
+4-47:Definition 1 .
+4-48:A direct mechanism Γ satisfies incentive compatibility if ∀i, θi, θi, ˆθ−i : ui(g(θi, ˆθ−i), θi) ≥ ui(g(θi, ˆθ−i), θi) From an agent perspective, dominant strategies are desirable because the agent does not have to reason about either the strategies of the other agents or the distribution from the which other agent"s types are drawn .
+4-49:From a mechanism designer perspective, dominant strategies are important because we can reasonably assume that an agent who has a dominant strategy will play according to it .
+4-50:For these reasons, in this paper we require dominant strategies, as opposed to a weaker equilibrium concept such as Bayes Nash, under which we could improve upon our positive results.4 decrease the lower bound on the competitive ratio .
+4-51:4 A possible argument against the need for incentive compatibility is that an agent"s lie may actually improve the schedule .
+4-52:In fact, this was the case in the example we showed for the false declaration ˆd2 = 4.7 .
+4-53:However, if an agent lies due to incorrect beliefs over the future input, then the lie could instead make the schedule the worse (for example, if job 3 were never released, then job 1 would have been unnecessarily abandoned) .
+4-54:Furthermore, if we do not know the beliefs of the agents, and thus cannot predict how they will lie, then we can no longer provide a competitive guarantee for our mechanism .
+4-55:While restricting ourselves to incentive compatible direct mechanisms may seem limiting at first, the Revelation Principle for Dominant Strategies (see, e.g., [17]) tells us that if our goal is dominant strategy implementation, then we can make this restriction without loss of generality .
+4-56:The second goal for our mechanism, individual rationality, requires that agents who truthfully reveal their type never have negative utility .
+4-57:The rationale behind this goal is that participation in the mechanism is assumed to be voluntary .
+4-58:Definition 2 .
+4-59:A direct mechanism Γ satisfies individual rationality if ∀i, θi, ˆθ−i, ui(g(θi, ˆθ−i), θi) ≥ 0 .
+4-60:Finally, the social welfare function that we aim to maximize is the same as the objective function of the non strategic setting: W(o, θ) = i vi · µ(ei(θ, di) ≥ li) .
+4-61:As in the nonstrategic setting, we will evaluate an online mechanism using competitive analysis to compare it against an optimal oﬄine mechanism (which we will denote by Γoffline) .
+4-62:An oﬄine mechanism knows all of the types at time 0, and thus can always achieve W∗ (θ).5 Definition 3 .
+4-63:An online mechanism Γ is (strictly) ccompetitive if it satisfies IC and IR, and if there does not exist a profile of agent types θ such that c·W(g(θ), θ) < W∗ (θ). .
+5 RESULTS :
+5-1:In this section, we first present our main positive result: a (1+ √ k)2 +1 competitive mechanism (Γ1) .
+5-2:After providing some intuition as to why Γ1 satisfies individual rationality and incentive compatibility, we formally prove first these two properties and then the competitive ratio .
+5-3:We then consider a special case in which k = 1 and agents cannot lie about the length of their job, which allows us to alter this mechanism so that it no longer requires either knowledge of ρmin or the collection of payments from agents .
+5-4:Unlike TD1 (version 2) and Dover , Γ1 gives no preference to the active job .
+5-5:Instead, it always executes the available job with the highest priority: (ˆvi + √ k · ei(ˆθ, t) · ρmin) .
+5-6:Each agent whose job is completed is then charged the lowest value that it could have declared such that its job still would have been completed, holding constant the rest of its declaration .
+5-7:By the use of a payment rule similar to that of a secondprice auction, Γ1 satisfies both IC with respect to values and IR .
+5-8:We now argue why it satisfies IC with respect to the other three characteristics .
+5-9:Declaring an improved job (i.e., declaring an earlier release time, a shorter length, or a later deadline) could possibly decrease the payment of an agent .
+5-10:However, the first two lies are not possible in our setting, while the third would cause the job, if it is completed, to be returned to the agent after the true deadline .
+5-11:This is the reason why it is important to always return a completed job at its declared deadline, instead of at the point at which it is completed .
+5-12:5 Another possibility is to allow only the agents to know their types at time 0, and to force Γoffline to be incentive compatible so that agents will truthfully declare their types at time 0 .
+5-13:However, this would not affect our results, since executing a VCG mechanism (see, e.g., [17]) at time 0 both satisfies incentive compatibility and always maximizes social welfare .
+5-14:64 Mechanism 1 Γ1 Execute S(ˆθ, ·) according to Algorithm 1 for all i do if ei(ˆθ, ˆdi) ≥ ˆli {Agent i"s job is completed} then pi(ˆθ) ← arg minvi≥0(ei(((ˆri, ˆdi, ˆli, vi), ˆθ−i), ˆdi) ≥ ˆli) else pi(ˆθ) ← 0 Algorithm 1 for all t do Avail ← {i|(t ≥ ˆri)∧(ei(ˆθ, t) < ˆli)∧(ei(ˆθ, t)+ ˆdi−t ≥ ˆli)} {Set of all released, non completed, non abandoned jobs} if Avail = ∅ then S(ˆθ, t) ← arg maxi∈Avail(ˆvi + √ k · ei(ˆθ, t) · ρmin) {Break ties in favor of lower ˆri} else S(ˆθ, t) ← 0 It remains to argue why an agent does not have incentive to worsen its job .
+5-15:The only possible effects of an inflated length are delaying the completion of the job and causing it to be abandoned, and the only possible effects of an earlier declared deadline are causing to be abandoned and causing it to be returned earlier (which has no effect on the agent"s utility in our setting) .
+5-16:On the other hand, it is less obvious why agents do not have incentive to declare a later release time .
+5-17:Consider a mechanism Γ1 that differs from Γ1 in that it does not preempt the active job i unless there exists another job j such that (ˆvi + √ k·li(ˆθ, t)·ρmin) < ˆvj .
+5-18:Note that as an active job approaches completion in Γ1, its condition for preemption approaches that of Γ1 .
+5-19:However, the types in Table 2 for the case of k = 1 show why an agent may have incentive to delay the arrival of its job under Γ1 .
+5-20:Job 1 becomes active at time 0, and job 2 is abandoned upon its release at time 6, because 10 + 10 = v1 +l1 > v2 = 13 .
+5-21:Then, at time 8, job 1 is preempted by job 3, because 10 + 10 = v1 + l1 < v3 = 22 .
+5-22:Job 3 then executes to completion, forcing job 1 to be abandoned .
+5-23:However, job 2 had more weight than job 1, and would have prevented job 3 from being executed if it had been the active job at time 8, since 13 + 13 = v2 + l2 > v3 = 22 .
+5-24:Thus, if agent 1 had falsely declared ˆr1 = 20, then job 3 would have been abandoned at time 8, and job 1 would have completed over the range [20, 30] .
+5-25:Job ri di li vi 1 0 30 10 10 2 6 19 13 13 3 8 30 22 22 0 6 10 20 30 6 ? 6 ? 6 ? Table 2: Jobs used to show why a slightly altered version of Γ1 would not be incentive compatible with respect to release times .
+5-26:Intuitively, Γ1 avoids this problem because of two properties .
+5-27:First, when a job becomes active, it must have a greater priority than all other available jobs .
+5-28:Second, because a job"s priority can only increase through the increase of its elapsed time, ei(ˆθ, t), the rate of increase of a job"s priority is independent of its characteristics .
+5-29:These two properties together imply that, while a job is active, there cannot exist a time at which its priority is less than the priority that one of these other jobs would have achieved by executing on the processor instead .
+5-30:4.1 Proof of Individual Rationality and Incentive Compatibility After presenting the (trivial) proof of IR, we break the proof of IC into lemmas .
+5-31:Theorem 1 .
+5-32:Mechanism Γ1 satisfies individual rationality .
+5-33:Proof .
+5-34:For arbitrary i, θi, ˆθ−i, if job i is not completed, then agent i pays nothing and thus has a utility of zero; that is, pi(θi, ˆθ−i) = 0 and ui(g(θi, ˆθ−i), θi) = 0 .
+5-35:On the other hand, if job i is completed, then its value must exceed agent i"s payment .
+5-36:Formally, ui(g(θi, ˆθ−i), θi) = vi − arg minvi≥0(ei(((ri, di, li, vi), ˆθ−i), di) ≥ li) ≥ 0 must hold, since vi = vi satisfies the condition .
+5-37:To prove IC, we need to show that for an arbitrary agent i, and an arbitrary profile ˆθ−i of declarations of the other agents, agent i can never gain by making a false declaration ˆθi = θi, subject to the constraints that ˆri ≥ ri and ˆli ≥ li .
+5-38:We start by showing that, regardless of ˆvi, if truthful declarations of ri, di, and li do not cause job i to be completed, then worse declarations of these variables (that is, declarations that satisfy ˆri ≥ ri, ˆli ≥ li and ˆdi ≤ di) can never cause the job to be completed .
+5-39:We break this part of the proof into two lemmas, first showing that it holds for the release time, regardless of the declarations of the other variables, and then for length and deadline .
+5-40:Lemma 2 .
+5-41:In mechanism Γ1, the following condition holds for all i, θi, ˆθ−i: ∀ ˆvi, ˆli ≥ li, ˆdi ≤ di, ˆri ≥ ri, ei ((ˆri, ˆdi, ˆli, ˆvi), ˆθ−i), ˆdi ≥ ˆli =⇒ ei ((ri, ˆdi, ˆli, ˆvi), ˆθ−i), ˆdi ≥ ˆli Proof .
+5-42:Assume by contradiction that this condition does not hold that is, job i is not completed when ri is truthfully declared, but is completed for some false declaration ˆri ≥ ri .
+5-43:We first analyze the case in which the release time is truthfully declared, and then we show that job i cannot be completed when agent i delays submitting it to the center .
+5-44:Case I: Agent i declares ˆθi = (ri, ˆdi, ˆli, ˆvi) .
+5-45:First, define the following three points in the execution of job i .
+5-46:• Let ts = arg mint S((ˆθi, ˆθ−i), t) = i be the time that job i first starts execution .
+5-47:• Let tp = arg mint>ts S((ˆθi, ˆθ−i), t) = i be the time that job i is first preempted .
+5-48:• Let ta = arg mint ei((ˆθi, ˆθ−i), t) + ˆdi − t < ˆli be the time that job i is abandoned .
+5-49:65 If ts and tp are undefined because job i never becomes active, then let ts = tp = ta .
+5-50:Also, partition the jobs declared by other agents before ta into the following three sets .
+5-51:• X = {j|(ˆrj < tp ) ∧ (j = i)} consists of the jobs (other than i) that arrive before job i is first preempted .
+5-52:• Y = {j|(tp ≤ ˆrj ≤ ta )∧(ˆvj > ˆvi + √ k·ei((ˆθi, ˆθ−i), ˆrj)} consists of the jobs that arrive in the range [tp , ta ] and that when they arrive have higher priority than job i (note that we are make use of the normalization) .
+5-53:• Z = {j|(tp ≤ ˆrj ≤ ta )∧(ˆvj ≤ ˆvi + √ k ·ei((ˆθi, ˆθ−i), ˆrj)} consists of the jobs that arrive in the range [tp , ta ] and that when they arrive have lower priority than job i .
+5-54:We now show that all active jobs during the range (tp , ta ] must be either i or in the set Y .
+5-55:Unless tp = ta (in which case this property trivially holds), it must be the case that job i has a higher priority than an arbitrary job x ∈ X at time tp , since at the time just preceding tp job x was available and job i was active .
+5-56:Formally, ˆvx + √ k · ex((ˆθi, ˆθ−i), tp ) < ˆvi + √ k · ei((ˆθi, ˆθ−i), tp ) must hold.6 We can then show that, over the range [tp , ta ], no job x ∈ X runs on the processor .
+5-57:Assume by contradiction that this is not true .
+5-58:Let tf ∈ [tp , ta ] be the earliest time in this range that some job x ∈ X is active, which implies that ex((ˆθi, ˆθ−i), tf ) = ex((ˆθi, ˆθ−i), tp We now show that the competitive ratio of (1 + √ k)2 + 1 achieved by Γ1 is a lower bound for deterministic online mechanisms .
+5-59:To do so, we will appeal to third requirement on a mechanism, non negative payments (NNP), which requires that the center never pays an agent (formally, ∀i, ˆθ, pi(ˆθi) ≥ 0) .
+5-60:Unlike IC and IR, this requirement is not standard in mechanism design .
+5-61:We note, however, that both Γ1 and Γ2 satisfy it trivially, and that, in the following proof, zero only serves as a baseline utility for an agent, and could be replaced by any non positive function of ˆθ−i .
+5-62:The proof of the lower bound uses an adversary argument similar to that used in [4] to show a lower bound of (1 +√ k)2 in the non strategic setting, with the main novelty lying in the perturbation of the job sequence and the related incentive compatibility arguments .
+5-63:We first present a lemma relating to the recurrence used for this argument, with the proof omitted due to space constraints .
+5-64:Lemma 13 .
+5-65:For any k ≥ 1, for the recurrence defined by li+1 = λ · li − k · i h=1 lh and l1 = 1, where (1 + √ k)2 − 1 < λ < (1 + √ k)2 , there exists an integer m ≥ 1 such that lm+k· m−1 h=1 lh lm > λ .
+5-66:7 While payments are not required in this setting, Γ2 can be changed to collect a payments without affecting incentive compatibility by charging some fixed fraction of li for each job i that is completed .
+5-67:68 Theorem 14 .
+5-68:There does not exist a deterministic online mechanism that satisfies NNP and that achieves a competitive ratio less than (1 + √ k)2 + 1 .
+5-69:Proof .
+5-70:Assume by contradiction that there exists a deterministic online mechanism Γ that satisfies NNP and that achieves a competitive ratio of c = (1 + √ k)2 + 1 − for some > 0 (and, by implication, satisfies IC and IR as well) .
+5-71:Since a competitive ratio of c implies a competitive ratio of c + x, for any x > 0, we assume without loss of generality that < 1 .
+5-72:First, we will construct a profile of agent types θ using an adversary argument .
+5-73:After possibly slightly perturbing θ to assure that a strictness property is satisfied, we will then use a more significant perturbation of θ to reach a contradiction .
+5-74:We now construct the original profile θ .
+5-75:Pick an α such that 0 < α < , and define δ = α ck+3k .
+5-76:The adversary uses two sequences of jobs: minor and major .
+5-77:Minor jobs i are characterized by li = δ, vi = k · δ, and zero laxity .
+5-78:The first minor job is released at time 0, and ri = di−1 for all i > 1 .
+5-79:The sequence stops whenever Γ completes any job .
+5-80:Major jobs also have zero laxity, but they have the smallest possible value ratio (that is, vi = li) .
+5-81:The lengths of the major jobs that may be released, starting with i = 1, are determined by the following recurrence relation .
+5-82:li+1 = (c − 1 + α) · li − k · i h=1 lh l1 = 1 The bounds on α imply that (1 + √ k)2 − 1 < c − 1 + α < (1+ √ k)2 , which allows us to apply Lemma 13 .
+5-83:Let m be the smallest positive number such that lm+k· m−1 h=1 lh lm > c−1+α .
+5-84:The first major job has a release time of 0, and each major job i > 1 has a release time of ri = di−1 − δ, just before the deadline of the previous job .
+5-85:The adversary releases major job i ≤ m if and only if each major job j < i was executed continuously over the range [ri, ri+1] .
+5-86:No major job is released after job m .
+5-87:In order to achieve the desired competitive ratio, Γ must complete some major job f, because Γoffline can always at least complete major job 1 (for a value of 1), and Γ can complete at most one minor job (for a value of α c+3 < 1 c ) .
+5-88:Also, in order for this job f to be released, the processor time preceding rf can only be spent executing major jobs that are later abandoned .
+5-89:If f < m, then major job f + 1 will be released and it will be the final major job .
+5-90:Γ cannot complete job f +1, because rf +lf = df > rf+1 .
+5-91:Therefore, θ consists of major jobs 1 through f + 1 (or, f, if f = m), plus minor jobs from time 0 through time df .
+5-92:We now possibly perturb θ slightly .
+5-93:By IR, we know that vf ≥ pf (θ) .
+5-94:Since we will later need this inequality to be strict, if vf = pf (θ), then change θf to θf , where rf = rf , but vf , lf , and df are all incremented by δ over their respective values in θf .
+5-95:By IC, job f must still be completed by Γ for the profile (θf , θ−f ) .
+5-96:If not, then by IR and NNP we know that pf (θf , θ−f ) = 0, and thus that uf (g(θf , θ−f ), θf ) = 0 .
+5-97:However, agent f could then increase its utility by falsely declaring the original type of θf , receiving a utility of: uf (g(θf , θ−f ), θf ) = vf − pf (θ) = δ > 0, violating IC .
+5-98:Furthermore, agent f must be charged the same amount (that is, pf (θf , θ−f ) = pf (θ)), due to a similar incentive compatibility argument .
+5-99:Thus, for the remainder of the proof, assume that vf > pf (θ) .
+5-100:We now use a more substantial perturbation of θ to complete the proof .
+5-101:If f < m, then define θf to be identical to θf , except that df = df+1 + lf , allowing job f to be completely executed after job f + 1 is completed .
+5-102:If f = m, then instead set df = df +lf .
+5-103:IC requires that for the profile (θf , θ−f ), Γ still executes job f continuously over the range [rf , rf +lf ], thus preventing job f +1 from being completed .
+5-104:Assume by contradiction that this were not true .
+5-105:Then, at the original deadline of df , job f is not completed .
+5-106:Consider the possible profile (θf , θ−f , θx), which differs from the new profile only in the addition of a job x which has zero laxity, rx = df , and vx = lx = max(df − df , (c + 1) · (lf + lf+1)) .
+5-107:Because this new profile is indistinguishable from (θf , θ−f ) to Γ before time df , it must schedule jobs in the same way until df .
+5-108:Then, in order to achieve the desired competitive ratio, it must execute job x continuously until its deadline, which is by construction at least as late as the new deadline df of job f .
+5-109:Thus, job f will not be completed, and, by IR and NNP, it must be the case that pf (θf , θ−f , θx) = 0 and uf (g(θf , θ−f , θx), θf ) = 0 .
+5-110:Using the fact that θ is indistinguishable from (θf , θ−f , θx) up to time df , if agent f falsely declared his type to be the original θf , then its job would be completed by df and it would be charged pf (θ) .
+5-111:Its utility would then increase to uf (g(θf , θ−f , θx), θf ) = vf − pf (θ) > 0, contradicting IC .
+5-112:While Γ"s execution must be identical for both (θf , θ−f ) and (θf , θ−f ), Γoffline can take advantage of the change .
+5-113:If f < m, then Γ achieves a value of at most lf +δ (the value of job f if it were perturbed), while Γoffline achieves a value of at least k·( f h=1 lh −2δ)+lf+1 +lf by executing minor jobs until rf+1, followed by job f +1 and then job f (we subtract two δ"s instead of one because the last minor job before rf+1 may have to be abandoned) .
+5-114:Substituting in for lf+1, the competitive ratio is then at least: k·( f h=1 lh−2δ)+lf+1+lf lf +δ = k·( f h=1 lh)−2k·δ+(c−1+α)·lf −k·( f h=1 lh)+lf lf +δ = c·lf +(α·lf −2k·δ) lf +δ ≥ c·lf +((ck+3k)δ−2k·δ) lf +δ > c .
+5-115:If instead f = m, then Γ achieves a value of at most lm +δ, while Γoffline achieves a value of at least k · ( m h=1 lh − 2δ) + lm by completing minor jobs until dm = rm + lm, and then completing job m .
+5-116:The competitive ratio is then at least: k·( m h=1 lh−2δ)+lm lm+δ = k·( m−1 h=1 lh)−2k·δ+klm+lm lm+δ > (c−1+α)·lm−2k·δ+klm lm+δ = (c+k−1)·lm+(αlm−2k·δ) lm+δ > c. .
+6 RELATED WORK :
+6-1:In this section we describe related work other than the two papers ([4] and [15]) on which this paper is based .
+6-2:Recent work related to this scheduling domain has focused on competitive analysis in which the online algorithm uses a faster processor than the oﬄine algorithm (see, e.g., [13, 14]) .
+6-3:Mechanism design was also applied to a scheduling problem in [18] .
+6-4:In their model, the center owns the jobs in an oﬄine setting, and it is the agents who can execute them .
+6-5:The private information of an agent is the time it will require to execute each job .
+6-6:Several incentive compatible mechanisms are presented that are based on approximation algorithms for the computationally infeasible optimization problem .
+6-7:This paper also launched the area of algorithmic mechanism design, in which the mechanism must sat69 isfy computational requirements in addition to the standard incentive requirements .
+6-8:A growing sub field in this area is multicast cost sharing mechanism design (see, e.g., [1]), in which the mechanism must efficiently determine, for each agent in a multicast tree, whether the agent receives the transmission and the price it must pay .
+6-9:For a survey of this and other topics in distributed algorithmic mechanism design, see [9] .
+6-10:Online execution presents a different type of algorithmic challenge, and several other papers study online algorithms or mechanisms in economic settings .
+6-11:For example, [5] considers an online market clearing setting, in which the auctioneer matches buy and sells bids (which are assumed to be exogenous) that arrive and expire over time .
+6-12:In [2], a general method is presented for converting an online algorithm into an online mechanism that is incentive compatible with respect to values .
+6-13:Truthful declaration of values is also considered in [3] and [16], which both consider multi unit online auctions .
+6-14:The main difference between the two is that the former considers the case of a digital good, which thus has unlimited supply .
+6-15:It is pointed out in [16] that their results continue to hold when the setting is extended so that bidders can delay their arrival .
+6-16:The only other paper we are aware of that addresses the issue of incentive compatibility in a real time system is [11], which considers several variants of a model in which the center allocates bandwidth to agents who declare both their value and their arrival time .
+6-17:A dominant strategy IC mechanism is presented for the variant in which every point in time is essentially independent, while a Bayes Nash IC mechanism is presented for the variant in which the center"s current decision affects the cost of future actions. .
+7-1:In this paper, we considered an online scheduling domain for which algorithms with the best possible competitive ratio had been found, but for which new solutions were required when the setting is extended to include self interested agents
+7-2:We presented a mechanism that is incentive compatible with respect to release time, deadline, length and value, and that only increases the competitive ratio by one
+7-3:We also showed how this mechanism could be simplified when k = 1 and each agent cannot lie about the length of its job
+7-4:We then showed a matching lower bound on the competitive ratio that can be achieved by a deterministic mechanism that never pays the agents
+7-5:Several open problems remain in this setting
+7-6:One is to determine whether the lower bound can be strengthened by removing the restriction of non negative payments
+7-7:Also, while we feel that it is reasonable to strengthen the assumption of knowing the maximum possible ratio of value densities (k) to knowing the actual range of possible value densities, it would be interesting to determine whether there exists a ((1 + √ k)2 + 1) competitive mechanism under the original assumption
+7-8:Finally, randomized mechanisms provide an unexplored area for future work.
+8-1:A
+8-2:Archer, J
+8-3:Feigenbaum, A
+8-4:Krishnamurthy, R
+8-5:Sami, and S
+8-6:Shenker, Approximation and collusion in multicast cost sharing, Games and Economic Behavior (to appear)
+8-7:B
+8-8:Awerbuch, Y
+8-9:Azar, and A
+8-10:Meyerson, Reducing truth telling online mechanisms to online optimization, Proceedings on the 35th Symposium on the Theory of Computing, 2003
+8-11:Z
+8-12:Bar Yossef, K
+8-13:Hildrum, and F
+8-14:Wu, Incentive compatible online auctions for digital goods, Proceedings of the 13th Annual ACM SIAM Symposium on Discrete Algorithms, 2002
+8-15:S
+8-16:Baruah, G
+8-17:Koren, D
+8-18:Mao, B
+8-19:Mishra, A
+8-20:Raghunathan, L
+8-21:Rosier, D
+8-22:Shasha, and F
+8-23:Wang, On the competitiveness of on line real time task scheduling, Journal of Real Time Systems 4 (1992), no
+8-24:2, 125 144
+8-25:A
+8-26:Blum, T
+8-27:Sandholm, and M
+8-28:Zinkevich, Online algorithms for market clearing, Proceedings of the 13th Annual ACM SIAM Symposium on Discrete Algorithms, 2002
+8-29:A
+8-30:Borodin and R
+8-31:El Yaniv, Online computation and competitive analysis, Cambridge University Press, 1998
+8-32:R
+8-33:Buyya, D
+8-34:Abramson, J
+8-35:Giddy, and H
+8-36:Stockinger, Economic models for resource management and scheduling in grid computing, The Journal of Concurrency and Computation: Practice and Experience 14 (2002), 1507 1542
+8-37:N
+8-38:Camiel, S
+8-39:London, N
+8-40:Nisan, and O
+8-41:Regev, The popcorn project: Distributed computation over the internet in java, 6th International World Wide Web Conference, 1997
+8-42:J
+8-43:Feigenbaum and S
+8-44:Shenker, Distributed algorithmic mechanism design: Recent results and future directions, Proceedings of the 6th International Workshop on Discrete Algorithms and Methods for Mobile Computing and Communications, 2002, pp
+8-45:1 13
+8-46:A
+8-47:Fiat and G
+8-48:Woeginger (editors), Online algorithms: The state of the art, Springer Verlag, 1998
+8-49:E
+8-50:Friedman and D
+8-51:Parkes, Pricing wifi at starbucksissues in online mechanism design, EC"03, 2003
+8-52:R
+8-53:L
+8-54:Graham, Bounds for certain multiprocessor anomalies, Bell System Technical Journal 45 (1966), 1563 1581
+8-55:B
+8-56:Kalyanasundaram and K
+8-57:Pruhs, Speed is as powerful as clairvoyance, Journal of the ACM 47 (2000), 617 643
+8-58:C
+8-59:Koo, T
+8-60:Lam, T
+8-61:Ngan, and K
+8-62:To, On line scheduling with tight deadlines, Theoretical Computer Science 295 (2003), 251 261
+8-63:G
+8-64:Koren and D
+8-65:Shasha, D over: An optimal on line scheduling algorithm for overloaded real time systems, SIAM Journal of Computing 24 (1995), no
+8-66:2, 318 339
+8-67:R
+8-68:Lavi and N
+8-69:Nisan, Competitive analysis of online auctions, EC"00, 2000
+8-70:A
+8-71:Mas Colell, M
+8-72:Whinston, and J
+8-73:Green, Microeconomic theory, Oxford University Press, 1995
+8-74:N
+8-75:Nisan and A
+8-76:Ronen, Algorithmic mechanism design, Games and Economic Behavior 35 (2001), 166 196
+8-77:C
+8-78:Papadimitriou, Algorithms, games, and the internet, STOC, 2001, pp
+8-79:749 753
+8-80:70
+picture:

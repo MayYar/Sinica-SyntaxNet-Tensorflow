@@ -1,0 +1,417 @@
+HITS on the Web: How does it Compare? 
+content:
+1 ABSTRACT :
+1-1:This paper describes a large scale evaluation of the effectiveness of HITS in comparison with other link based ranking algorithms, when used in combination with a state ofthe art text retrieval algorithm exploiting anchor text .
+1-2:We quantified their effectiveness using three common performance measures: the mean reciprocal rank, the mean average precision, and the normalized discounted cumulative gain measurements .
+1-3:The evaluation is based on two large data sets: a breadth first search crawl of 463 million web pages containing 17.6 billion hyperlinks and referencing 2.9 billion distinct URLs; and a set of 28,043 queries sampled from a query log, each query having on average 2,383 results, about 17 of which were labeled by judges .
+1-4:We found that HITS outperforms PageRank, but is about as effective as web page in degree .
+1-5:The same holds true when any of the link based features are combined with the text retrieval algorithm .
+1-6:Finally, we studied the relationship between query specificity and the effectiveness of selected features, and found that link based features perform better for general queries, whereas BM25F performs better for specific queries .
+1-7:H.3.3 [Information Search and Retrieval]: Information .
+2 INTRODUCTION :
+2-1:Link graph features such as in degree and PageRank have been shown to significantly improve the performance of text retrieval algorithms on the web .
+2-2:The HITS algorithm is also believed to be of interest for web search; to some degree, one may expect HITS to be more informative that other link based features because it is query dependent: it tries to measure the interest of pages with respect to a given query .
+2-3:However, it remains unclear today whether there are practical benefits of HITS over other link graph measures .
+2-4:This is even more true when we consider that modern retrieval algorithms used on the web use a document representation which incorporates the document"s anchor text, i.e .
+2-5:the text of incoming links .
+2-6:This, at least to some degree, takes the link graph into account, in a query dependent manner .
+2-7:Comparing HITS to PageRank or in degree empirically is no easy task .
+2-8:There are two main difficulties: scale and relevance .
+2-9:Scale is important because link based features are known to improve in quality as the document graph grows .
+2-10:If we carry out a small experiment, our conclusions won"t carry over to large graphs such as the web .
+2-11:However, computing HITS efficiently on a graph the size of a realistic web crawl is extraordinarily difficult .
+2-12:Relevance is also crucial because we cannot measure the performance of a feature in the absence of human judgments: what is crucial is ranking at the top of the ten or so documents that a user will peruse .
+2-13:To our knowledge, this paper is the first attempt to evaluate HITS at a large scale and compare it to other link based features with respect to human evaluated judgment .
+2-14:Our results confirm many of the intuitions we have about link based features and their relationship to text retrieval methods exploiting anchor text .
+2-15:This is reassuring: in the absence of a theoretical model capable of tying these measures with relevance, the only way to validate our intuitions is to carry out realistic experiments .
+2-16:However, we were quite surprised to find that HITS, a query dependent feature, is about as effective as web page in degree, the most simpleminded query independent link based feature .
+2-17:This continues to be true when the link based features are combined with a text retrieval algorithm exploiting anchor text .
+2-18:The remainder of this paper is structured as follows: Section 2 surveys related work .
+2-19:Section 3 describes the data sets we used in our study .
+2-20:Section 4 reviews the performance measures we used .
+2-21:Sections 5 and 6 describe the PageRank and HITS algorithms in more detail, and sketch the computational infrastructure we employed to carry out large scale experiments .
+2-22:Section 7 presents the results of our evaluations, and Section 8 offers concluding remarks. .
+3 RELATED WORK :
+3-1:The idea of using hyperlink analysis for ranking web search results arose around 1997, and manifested itself in the HITS [16, 17] and PageRank [5, 21] algorithms .
+3-2:The popularity of these two algorithms and the phenomenal success of the Google search engine, which uses PageRank, have spawned a large amount of subsequent research .
+3-3:There are numerous attempts at improving the effectiveness of HITS and PageRank .
+3-4:Query dependent link based ranking algorithms inspired by HITS include SALSA [19], Randomized HITS [20], and PHITS [7], to name a few .
+3-5:Query independent link based ranking algorithms inspired by PageRank include TrafficRank [22], BlockRank [14], and TrustRank [11], and many others .
+3-6:Another line of research is concerned with analyzing the mathematical properties of HITS and PageRank .
+3-7:For example, Borodin et al .
+3-8:[3] investigated various theoretical properties of PageRank, HITS, SALSA, and PHITS, including their similarity and stability, while Bianchini et al .
+3-9:[2] studied the relationship between the structure of the web graph and the distribution of PageRank scores, and Langville and Meyer examined basic properties of PageRank such as existence and uniqueness of an eigenvector and convergence of power iteration [18] .
+3-10:Given the attention that has been paid to improving the effectiveness of PageRank and HITS, and the thorough studies of the mathematical properties of these algorithms, it is somewhat surprising that very few evaluations of their effectiveness have been published .
+3-11:We are aware of two studies that have attempted to formally evaluate the effectiveness of HITS and of PageRank .
+3-12:Amento et al .
+3-13:[1] employed quantitative measures, but based their experiments on the result sets of just 5 queries and the web graph induced by topical crawls around the result set of each query .
+3-14:A more recent study by Borodin et al .
+3-15:[4] is based on 34 queries, result sets of 200 pages per query obtained from Google, and a neighborhood graph derived by retrieving 50 in links per result from Google .
+3-16:By contrast, our study is based on over 28,000 queries and a web graph covering 2.9 billion URLs. .
+4 OUR DATA SETS :
+4-1:Our evaluation is based on two data sets: a large web graph and a substantial set of queries with associated results, some of which were labeled by human judges .
+4-2:Our web graph is based on a web crawl that was conducted in a breadth first search fashion, and successfully retrieved 463,685,607 HTML pages .
+4-3:These pages contain 17,672,011,890 hyperlinks (after eliminating duplicate hyperlinks embedded in the same web page), which refer to a total of 2,897,671,002 URLs .
+4-4:Thus, at the end of the crawl there were 2,433,985,395 URLs in the frontier set of the crawler that had been discovered, but not yet downloaded .
+4-5:The mean out degree of crawled web pages is 38.11; the mean in degree of discovered pages (whether crawled or not) is 6.10 .
+4-6:Also, it is worth pointing out that there is a lot more variance in in degrees than in out degrees; some popular pages have millions of incoming links .
+4-7:As we will see, this property affects the computational cost of HITS .
+4-8:Our query set was produced by sampling 28,043 queries from the MSN Search query log, and retrieving a total of 66,846,214 result URLs for these queries (using commercial search engine technology), or about 2,838 results per query on average .
+4-9:It is important to point out that our 2.9 billion URL web graph does not cover all these result URLs .
+4-10:In fact, only 9,525,566 of the result URLs (about 14.25%) were covered by the graph .
+4-11:485,656 of the results in the query set (about 0.73% of all results, or about 17.3 results per query) were rated by human judges as to their relevance to the given query, and labeled on a six point scale (the labels being definitive, excellent, good, fair, bad and detrimental) .
+4-12:Results were selected for judgment based on their commercial search engine placement; in other words, the subset of labeled results is not random, but biased towards documents considered relevant by pre existing ranking algorithms .
+4-13:Involving a human in the evaluation process is extremely cumbersome and expensive; however, human judgments are crucial for the evaluation of search engines .
+4-14:This is so because no document features have been found yet that can effectively estimate the relevance of a document to a user query .
+4-15:Since content match features are very unreliable (and even more so link features, as we will see) we need to ask a human to evaluate the results in order to compare the quality of features .
+4-16:Evaluating the retrieval results from document scores and human judgments is not trivial and has been the subject of many investigations in the IR community .
+4-17:A good performance measure should correlate with user satisfaction, taking into account that users will dislike having to delve deep in the results to find relevant documents .
+4-18:For this reason, standard correlation measures (such as the correlation coefficient between the score and the judgment of a document), or order correlation measures (such as Kendall tau between the score and judgment induced orders) are not adequate. .
+5 MEASURING PERFORMANCE :
+5-1:In this study, we quantify the effectiveness of various ranking algorithms using three measures: NDCG, MRR, and MAP .
+5-2:The normalized discounted cumulative gains measure [13] discounts the contribution of a document to the overall score as the document"s rank increases (assuming that the best document has the lowest rank) .
+5-3:Such a measure is particularly appropriate for search engines, as studies have shown that search engine users rarely consider anything beyond the first few results [12] .
+5-4:NDCG values are normalized to be between 0 and 1, with 1 being the NDCG of a perfect ranking scheme that completely agrees with the assessment of the human judges .
+5-5:The discounted cumulative gain at a particular rank threshold T (DCG@T) is defined to be PT j=1 1 log(1+j) 2r(j) − 1 , where r(j) is the rating (0=detrimental, 1=bad, 2=fair, 3=good, 4=excellent, and 5=definitive) at rank j .
+5-6:The NDCG is computed by dividing the DCG of a ranking by the highest possible DCG that can be obtained for that query .
+5-7:Finally, the NDGCs of all queries in the query set are averaged to produce a mean NDCG .
+5-8:The reciprocal rank of the ranked result set of a query is defined to be the reciprocal value of the rank of the highest ranking relevant document in the result set .
+5-9:The RR at rank threshold T is defined to be 0 if none of the highestranking T documents is relevant .
+5-10:The mean reciprocal rank of a query set is the average reciprocal rank of all queries in the query set .
+5-11:Given a ranked set of n results, let rel(i) be 1 if the result at rank i is relevant and 0 otherwise .
+5-12:The precision P(j) at rank j is defined to be 1 j Pj i=1 rel(i), i.e .
+5-13:the fraction of the relevant results among the j highest ranking results .
+5-14:The average precision at rank threshold k is defined to be Pk i=1 P (i)rel(i) Pn i=1 rel(i) .
+5-15:The mean average precision of a query set is the mean of the average precisions of all queries in the query set .
+5-16:The above definitions of MRR and MAP rely on the notion of a relevant result .
+5-17:We investigated two definitions of relevance: One where all documents rated fair or better were deemed relevant, and one were all documents rated good or better were deemed relevant .
+5-18:For reasons of space, we only report MAP and MRR values computed using the latter definition; using the former definition does not change the qualitative nature of our findings .
+5-19:Similarly, we computed NDCG, MAP, and MRR values for a wide range of rank thresholds; we report results here at rank 10; again, changing the rank threshold never led us to different conclusions .
+5-20:Recall that over 99% of documents are unlabeled .
+5-21:We chose to treat all these documents as irrelevant to the query .
+5-22:For some queries, however, not all relevant documents have been judged .
+5-23:This introduces a bias into our evaluation: features that bring new documents to the top of the rank may be penalized .
+5-24:This will be more acute for features less correlated to the pre existing commercial ranking algorithms used to select documents for judgment .
+5-25:On the other hand, most queries have few perfect relevant documents (i.e .
+5-26:home page or item searches) and they will most often be within the judged set. .
+6 COMPUTING PAGERANK ON A LARGE WEB GRAPH :
+6-1:WEB GRAPH PageRank is a query independent measure of the importance of web pages, based on the notion of peer endorsement: A hyperlink from page A to page B is interpreted as an endorsement of page B"s content by page A"s author .
+6-2:The following recursive definition captures this notion of endorsement: R(v) = X (u,v)∈E R(u) Out(u) where R(v) is the score (importance) of page v, (u, v) is an edge (hyperlink) from page u to page v contained in the edge set E of the web graph, and Out(u) is the out degree (number of embedded hyperlinks) of page u .
+6-3:However, this definition suffers from a severe shortcoming: In the fixedpoint of this recursive equation, only edges that are part of a strongly connected component receive a non zero score .
+6-4:In order to overcome this deficiency, Page et al .
+6-5:grant each page a guaranteed minimum score, giving rise to the definition of standard PageRank: R(v) = d |V | + (1 − d) X (u,v)∈E R(u) Out(u) where |V | is the size of the vertex set (the number of known web pages), and d is a damping factor, typically set to be between 0.1 and 0.2 .
+6-6:Assuming that scores are normalized to sum up to 1, PageRank can be viewed as the stationary probability distribution of a random walk on the web graph, where at each step of the walk, the walker with probability 1 − d moves from its current node u to a neighboring node v, and with probability d selects a node uniformly at random from all nodes in the graph and jumps to it .
+6-7:In the limit, the random walker is at node v with probability R(v) .
+6-8:One issue that has to be addressed when implementing PageRank is how to deal with sink nodes, nodes that do not have any outgoing links .
+6-9:One possibility would be to select another node uniformly at random and transition to it; this is equivalent to adding edges from each sink nodes to all other nodes in the graph .
+6-10:We chose the alternative approach of introducing a single phantom node .
+6-11:Each sink node has an edge to the phantom node, and the phantom node has an edge to itself .
+6-12:In practice, PageRank scores can be computed using power iteration .
+6-13:Since PageRank is query independent, the computation can be performed off line ahead of query time .
+6-14:This property has been key to PageRank"s success, since it is a challenging engineering problem to build a system that can perform any non trivial computation on the web graph at query time .
+6-15:In order to compute PageRank scores for all 2.9 billion nodes in our web graph, we implemented a distributed version of PageRank .
+6-16:The computation consists of two distinct phases .
+6-17:In the first phase, the link files produced by the web crawler, which contain page URLs and their associated link URLs in textual form, are partitioned among the machines in the cluster used to compute PageRank scores, and converted into a more compact format along the way .
+6-18:Specifically, URLs are partitioned across the machines in the cluster based on a hash of the URLs" host component, and each machine in the cluster maintains a table mapping the URL to a 32 bit integer .
+6-19:The integers are drawn from a densely packed space, so as to make suitable indices into the array that will later hold the PageRank scores .
+6-20:The system then translates our log of pages and their associated hyperlinks into a compact representation where both page URLs and link URLs are represented by their associated 32 bit integers .
+6-21:Hashing the host component of the URLs guarantees that all URLs from the same host are assigned to the same machine in our scoring cluster .
+6-22:Since over 80% of all hyperlinks on the web are relative (that is, are between two pages on the same host), this property greatly reduces the amount of network communication required by the second stage of the distributed scoring computation .
+6-23:The second phase performs the actual PageRank power iteration .
+6-24:Both the link data and the current PageRank vector reside on disk and are read in a streaming fashion; while the new PageRank vector is maintained in memory .
+6-25:We represent PageRank scores as 64 bit floating point numbers .
+6-26:PageRank contributions to pages assigned to remote machines are streamed to the remote machine via a TCP connection .
+6-27:We used a three machine cluster, each machine equipped with 16 GB of RAM, to compute standard PageRank scores for all 2.9 billion URLs that were contained in our web graph .
+6-28:We used a damping factor of 0.15, and performed 200 power iterations .
+6-29:Starting at iteration 165, the L∞ norm of the change in the PageRank vector from one iteration to the next had stopped decreasing, indicating that we had reached as much of a fixed point as the limitations of 64 bit floating point arithmetic would allow .
+6-30:0.07 0.08 0.09 0.10 0.11 1 10 100 Number of back links sampled per result NDCG@10 hits aut all hits aut ih hits aut id 0.01 0.02 0.03 0.04 1 10 100 Number of back links sampled per result MAP@10 hits aut all hits aut ih hits aut id 0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.14 1 10 100 Number of back links sampled per result MRR@10 hits aut all hits aut ih hits aut id Figure 1: Effectiveness of authority scores computed using different parameterizations of HITS .
+6-31:A post processing phase uses the final PageRank vectors (one per machine) and the table mapping URLs to 32 bit integers (representing indices into each PageRank vector) to score the result URL in our query log .
+6-32:As mentioned above, our web graph covered 9,525,566 of the 66,846,214 result URLs .
+6-33:These URLs were annotated with their computed PageRank score; all other URLs received a score of 0. .
+7 HITS :
+7-1:HITS, unlike PageRank, is a query dependent ranking algorithm .
+7-2:HITS (which stands for Hypertext Induced Topic Search) is based on the following two intuitions: First, hyperlinks can be viewed as topical endorsements: A hyperlink from a page u devoted to topic T to another page v is likely to endorse the authority of v with respect to topic T .
+7-3:Second, the result set of a particular query is likely to have a certain amount of topical coherence .
+7-4:Therefore, it makes sense to perform link analysis not on the entire web graph, but rather on just the neighborhood of pages contained in the result set, since this neighborhood is more likely to contain topically relevant links .
+7-5:But while the set of nodes immediately reachable from the result set is manageable (given that most pages have only a limited number of hyperlinks embedded into them), the set of pages immediately leading to the result set can be enormous .
+7-6:For this reason, Kleinberg suggests sampling a fixed size random subset of the pages linking to any high indegree page in the result set .
+7-7:Moreover, Kleinberg suggests considering only links that cross host boundaries, the rationale being that links between pages on the same host (intrinsic links) are likely to be navigational or nepotistic and not topically relevant .
+7-8:Given a web graph (V, E) with vertex set V and edge set E ⊆ V × V , and the set of result URLs to a query (called the root set R ⊆ V ) as input, HITS computes a neighborhood graph consisting of a base set B ⊆ V (the root set and some of its neighboring vertices) and some of the edges in E induced by B .
+7-9:In order to formalize the definition of the neighborhood graph, it is helpful to first introduce a sampling operator and the concept of a linkselection predicate .
+7-10:Given a set A, the notation Sn[A] draws n elements uniformly at random from A; Sn[A] = A if |A| ≤ n .
+7-11:A link section predicate P takes an edge (u, v) ∈ E .
+7-12:In this study, we use the following three link section predicates: all(u, v) ⇔ true ih(u, v) ⇔ host(u) = host(v) id(u, v) ⇔ domain(u) = domain(v) where host(u) denotes the host of URL u, and domain(u) denotes the domain of URL u .
+7-13:So, all is true for all links, whereas ih is true only for inter host links, and id is true only for inter domain links .
+7-14:The outlinked set OP of the root set R w.r.t .
+7-15:a linkselection predicate P is defined to be: OP = [ u∈R {v ∈ V : (u, v) ∈ E ∧ P(u, v)} The inlinking set IP s of the root set R w.r.t .
+7-16:a link selection predicate P and a sampling value s is defined to be: IP s = [ v∈R Ss[{u ∈ V : (u, v) ∈ E ∧ P(u, v)}] The base set BP s of the root set R w.r.t .
+7-17:P and s is defined to be: BP s = R ∪ IP s ∪ OP The neighborhood graph (BP s , NP s ) has the base set BP s as its vertex set and an edge set NP s containing those edges in E that are covered by BP s and permitted by P: NP s = {(u, v) ∈ E : u ∈ BP s ∧ v ∈ BP s ∧ P(u, v)} To simplify notation, we write B to denote BP s , and N to denote NP s .
+7-18:For each node u in the neighborhood graph, HITS computes two scores: an authority score A(u), estimating how authoritative u is on the topic induced by the query, and a hub score H(u), indicating whether u is a good reference to many authoritative pages .
+7-19:This is done using the following algorithm: .
+8 For all u ∈ B do H(u) := :
+8-1:q 1 |B| , A(u) := q 1 |B| . .
+9 Repeat until H and A converge: :
+9-1:(a) For all v ∈ B : A (v) := P (u,v)∈N H(u) (b) For all u ∈ B : H (u) := P (u,v)∈N A(v) (c) H := H 2, A := A 2 where X 2 normalizes the vector X to unit length in euclidean space, i.e .
+9-2:the squares of its elements sum up to 1 .
+9-3:In practice, implementing a system that can compute HITS within the time constraints of a major search engine (where the peak query load is in the thousands of queries per second, and the desired query response time is well below one second) is a major engineering challenge .
+9-4:Among other things, the web graph cannot reasonably be stored on disk, since .221 .106 .105 .104 .102 .095 .092 .090 .038 .036 .035 .034 .032 .032 .011 0.00 0.05 0.10 0.15 0.20 0.25 bm25f degree in id degree in ih hits aut id 25 hits aut ih 100 degree in all pagerank hits aut all 100 hits hub all 100 hits hub ih 100 hits hub id 100 degree out all degree out ih degree out id random NDCG@10 .100 .035 .033 .033 .033 .029 .027 .027 .008 .007 .007 .006 .006 .006 .002 0.00 0.02 0.04 0.06 0.08 0.10 0.12 bm25f hits aut id 9 degree in id hits aut ih 15 degree in ih degree in all pagerank hits aut all 100 hits hub all 100 hits hub ih 100 hits hub id 100 degree out all degree out ih degree out id random MAP@10 .273 .132 .126 .117 .114 .101 .101 .097 .032 .032 .030 .028 .027 .027 .007 0.00 0.05 0.10 0.15 0.20 0.25 0.30 bm25f hits aut id 9 hits aut ih 15 degree in id degree in ih degree in all hits aut all 100 pagerank hits hub all 100 hits hub ih 100 hits hub id 100 degree out all degree out ih degree out id random MRR@10 Figure 2: Effectiveness of different features .
+9-5:seek times of modern hard disks are too slow to retrieve the links within the time constraints, and the graph does not fit into the main memory of a single machine, even when using the most aggressive compression techniques .
+9-6:In order to experiment with HITS and other query dependent link based ranking algorithms that require non regular accesses to arbitrary nodes and edges in the web graph, we implemented a system called the Scalable Hyperlink Store, or SHS for short .
+9-7:SHS is a special purpose database, distributed over an arbitrary number of machines that keeps a highly compressed version of the web graph in memory and allows very fast lookup of nodes and edges .
+9-8:On our hardware, it takes an average of 2 microseconds to map a URL to a 64 bit integer handle called a UID, 15 microseconds to look up all incoming or outgoing link UIDs associated with a page UID, and 5 microseconds to map a UID back to a URL (the last functionality not being required by HITS) .
+9-9:The RPC overhead is about 100 microseconds, but the SHS API allows many lookups to be batched into a single RPC request .
+9-10:We implemented the HITS algorithm using the SHS infrastructure .
+9-11:We compiled three SHS databases, one containing all 17.6 billion links in our web graph (all), one containing only links between pages that are on different hosts (ih, for inter host), and one containing only links between pages that are on different domains (id) .
+9-12:We consider two URLs to belong to different hosts if the host portions of the URLs differ (in other words, we make no attempt to determine whether two distinct symbolic host names refer to the same computer), and we consider a domain to be the name purchased from a registrar (for example, we consider news.bbc.co.uk and www.bbc.co.uk to be different hosts belonging to the same domain) .
+9-13:Using each of these databases, we computed HITS authority and hub scores for various parameterizations of the sampling operator S, sampling between 1 and 100 back links of each page in the root set .
+9-14:Result URLs that were not covered by our web graph automatically received authority and hub scores of 0, since they were not connected to any other nodes in the neighborhood graph and therefore did not receive any endorsements .
+9-15:We performed forty five different HITS computations, each combining one of the three link selection predicates (all, ih, and id) with a sampling value .
+9-16:For each combination, we loaded one of the three databases into an SHS system running on six machines (each equipped with 16 GB of RAM), and computed HITS authority and hub scores, one query at a time .
+9-17:The longest running combination (using the all database and sampling 100 back links of each root set vertex) required 30,456 seconds to process the entire query set, or about 1.1 seconds per query on average. .
+10 EXPERIMENTAL RESULTS :
+10-1:For a given query Q, we need to rank the set of documents satisfying Q (the result set of Q) .
+10-2:Our hypothesis is that good features should be able to rank relevant documents in this set higher than non relevant ones, and this should result in an increase in each performance measure over the query set .
+10-3:We are specifically interested in evaluating the usefulness of HITS and other link based features .
+10-4:In principle, we could do this by sorting the documents in each result set by their feature value, and compare the resulting NDCGs .
+10-5:We call this ranking with isolated features .
+10-6:Let us first examine the relative performance of the different parameterizations of the HITS algorithm we examined .
+10-7:Recall that we computed HITS for each combination of three link section schemes all links (all), inter host links only (ih), and inter domain links only (id) with back link sampling values ranging from 1 to 100 .
+10-8:Figure 1 shows the impact of the number of sampled back links on the retrieval performance of HITS authority scores .
+10-9:Each graph is associated with one performance measure .
+10-10:The horizontal axis of each graph represents the number of sampled back links, the vertical axis represents performance under the appropriate measure, and each curve depicts a link selection scheme .
+10-11:The id scheme slightly outperforms ih, and both vastly outperform the all scheme eliminating nepotistic links pays off .
+10-12:The performance of the all scheme increases as more back links of each root set vertex are sampled, while the performance of the id and ih schemes peaks at between 10 and 25 samples and then plateaus or even declines, depending on the performance measure .
+10-13:Having compared different parameterizations of HITS, we will now fix the number of sampled back links at 100 and compare the three link selection schemes against other isolated features: PageRank, in degree and out degree counting links of all pages, of different hosts only and of different domains only (all, ih and id datasets respectively), and a text retrieval algorithm exploiting anchor text: BM25F[24] .
+10-14:BM25F is a state of the art ranking function solely based on textual content of the documents and their associated anchor texts .
+10-15:BM25F is a descendant of BM25 that combines the different textual fields of a document, namely title, body and anchor text .
+10-16:This model has been shown to be one of the best performing web search scoring functions over the last few years [8, 24] .
+10-17:BM25F has a number of free parameters (2 per field, 6 in our case); we used the parameter values described in [24] .
+10-18:.341 .340 .339 .337 .336 .336 .334 .311 .311 .310 .310 .310 .310 .231 0.22 0.24 0.26 0.28 0.30 0.32 0.34 0.36 degree in id degree in ih degree in all hits aut ih 100 hits aut all 100 pagerank hits aut id 10 degree out all hits hub all 100 degree out ih hits hub ih 100 degree out id hits hub id 10 bm25f NDCG@10 .152 .152 .151 .150 .150 .149 .149 .137 .136 .136 .128 .127 .127 .100 0.09 0.10 0.11 0.12 0.13 0.14 0.15 0.16 degree in ih degree in id degree in all hits aut ih 100 hits aut all 100 hits aut id 10 pagerank hits hub all 100 degree out ih hits hub id 100 degree out all degree out id hits hub ih 100 bm25f MAP@10 .398 .397 .394 .394 .392 .392 .391 .356 .356 .356 .356 .356 .355 .273 0.25 0.30 0.35 0.40 degree in id degree in ih degree in all hits aut ih 100 hits aut all 100 pagerank hits aut id 10 degree out all hits hub all 100 degree out ih hits hub ih 100 degree out id hits hub id 10 bm25f MRR@10 Figure 3: Effectiveness measures for linear combinations of link based features with BM25F .
+10-19:Figure 2 shows the NDCG, MRR, and MAP measures of these features .
+10-20:Again all performance measures (and for all rank thresholds we explored) agree .
+10-21:As expected, BM25F outperforms all link based features by a large margin .
+10-22:The link based features are divided into two groups, with a noticeable performance drop between the groups .
+10-23:The better performing group consists of the features that are based on the number and or quality of incoming links (in degree, PageRank, and HITS authority scores); and the worse performing group consists of the features that are based on the number and or quality of outgoing links (outdegree and HITS hub scores) .
+10-24:In the group of features based on incoming links, features that ignore nepotistic links perform better than their counterparts using all links .
+10-25:Moreover, using only inter domain (id) links seems to be marginally better than using inter host (ih) links .
+10-26:The fact that features based on outgoing links underperform those based on incoming links matches our expectations; if anything, it is mildly surprising that outgoing links provide a useful signal for ranking at all .
+10-27:On the other hand, the fact that in degree features outperform PageRank under all measures is quite surprising .
+10-28:A possible explanation is that link spammers have been targeting the published PageRank algorithm for many years, and that this has led to anomalies in the web graph that affect PageRank, but not other link based features that explore only a distance 1 neighborhood of the result set .
+10-29:Likewise, it is surprising that simple query independent features such as in degree, which might estimate global quality but cannot capture relevance to a query, would outperform query dependent features such as HITS authority scores .
+10-30:However, we cannot investigate the effect of these features in isolation, without regard to the overall ranking function, for several reasons .
+10-31:First, features based on the textual content of documents (as opposed to link based features) are the best predictors of relevance .
+10-32:Second, link based features can be strongly correlated with textual features for several reasons, mainly the correlation between in degree and numFeature Transform function bm25f T(s) = s pagerank T(s) = log(s + 3 · 10−12 ) degree in * T(s) = log(s + 3 · 10−2 ) degree out * T(s) = log(s + 3 · 103 ) hits aut * T(s) = log(s + 3 · 10−8 ) hits hub * T(s) = log(s + 3 · 10−1 ) Table 1: Near optimal feature transform functions .
+10-33:ber of textual anchor matches .
+10-34:Therefore, one must consider the effect of link based features in combination with textual features .
+10-35:Otherwise, we may find a link based feature that is very good in isolation but is strongly correlated with textual features and results in no overall improvement; and vice versa, we may find a link based feature that is weak in isolation but significantly improves overall performance .
+10-36:For this reason, we have studied the combination of the link based features above with BM25F .
+10-37:All feature combinations were done by considering the linear combination of two features as a document score, using the formula score(d) =Pn i=1 wiTi(Fi(d)), where d is a document (or documentquery pair, in the case of BM25F), Fi(d) (for 1 ≤ i ≤ n) is a feature extracted from d, Ti is a transform, and wi is a free scalar weight that needs to be tuned .
+10-38:We chose transform functions that we empirically determined to be well suited .
+10-39:Table 1 shows the chosen transform functions .
+10-40:This type of linear combination is appropriate if we assume features to be independent with respect to relevance and an exponential model for link features, as discussed in [8] .
+10-41:We tuned the weights by selecting a random subset of 5,000 queries from the query set, used an iterative refinement process to find weights that maximized a given performance measure on that training set, and used the remaining 23,043 queries to measure the performance of the thus derived scoring functions .
+10-42:We explored the pairwise combination of BM25F with every link based scoring function .
+10-43:Figure 3 shows the NDCG, MRR, and MAP measures of these feature combinations, together with a baseline BM25F score (the right most bar in each graph), which was computed using the same subset of 23,045 queries that were used as the test set for the feature combinations .
+10-44:Regardless of the performance measure applied, we can make the following general observations: results in a substantial performance improvement over BM25F in isolation .
+10-45:incoming links (PageRank, in degree, and HITS authority scores) performs substantially better than the combination with features based on outgoing links (HITS hub scores and out degree) .
+10-46:combinations of BM25F with features based on incoming links is comparatively small, and the relative ordering of feature combinations is fairly stable across the 0.00 0.02 0.04 0.06 0.08 0.10 0.12 0.14 0 2 4 6 8 10 12 14 16 18 20 22 24 MAP@10 26 374 1640 2751 3768 4284 3944 3001 2617 1871 1367 771 1629 bm25fnorm pagerank degree in id hits aut id 100 Figure 4: Effectiveness measures for selected isolated features, broken down by query specificity .
+10-47:ferent performance measures used .
+10-48:However, the combination of BM25F with any in degree variant, and in particular with id in degree, consistently outperforms the combination of BM25F with PageRank or HITS authority scores, and can be computed much easier and faster .
+10-49:Finally, we investigated whether certain features are better for some queries than for others .
+10-50:Particularly, we are interested in the relationship between the specificity of a query and the performance of different ranking features .
+10-51:The most straightforward measure of the specificity of a query Q would be the number of documents in a search engine"s corpus that satisfy Q .
+10-52:Unfortunately, the query set available to us did not contain this information .
+10-53:Therefore, we chose to approximate the specificity of Q by summing up the inverse document frequencies of the individual query terms comprising Q .
+10-54:The inverse document frequency of a term t with respect to a corpus C is defined to be logN doc(t), where doc(t) is the number of documents in C containing t and N is the total number of documents in C .
+10-55:By summing up the IDFs of the query terms, we make the (flawed) assumption that the individual query terms are independent of each other .
+10-56:However, while not perfect, this approximation is at least directionally correct .
+10-57:We broke down our query set into 13 buckets, each bucket associated with an interval of query IDF values, and we computed performance metrics for all ranking functions applied (in isolation) to the queries in each bucket .
+10-58:In order to keep the graphs readable, we will not show the performance of all the features, but rather restrict ourselves to the four most interesting ones: PageRank, id HITS authority scores, id in degree, and BM25F .
+10-59:Figure 4 shows the MAP@10 for all 13 query specificity buckets .
+10-60:Buckets on the far left of each graph represent very general queries; buckets on the far right represent very specific queries .
+10-61:The figures on the upper x axis of each graph show the number of queries in each bucket (e.g .
+10-62:the right most bucket contains 1,629 queries) .
+10-63:BM25F performs best for medium specific queries, peaking at the buckets representing the IDF sum interval [12,14) .
+10-64:By comparison, HITS peaks at the bucket representing the IDF sum interval [4,6), and PageRank and in degree peak at the bucket representing the interval [6,8), i.e .
+10-65:more general queries. .
+11-1:This paper describes a large scale evaluation of the effectiveness of HITS in comparison with other link based ranking algorithms, in particular PageRank and in degree, when applied in isolation or in combination with a text retrieval algorithm exploiting anchor text (BM25F)
+11-2:Evaluation is carried out with respect to a large number of human evaluated queries, using three different measures of effectiveness: NDCG, MRR, and MAP
+11-3:Evaluating link based features in isolation, we found that web page in degree outperforms PageRank, and is about as effwective as HITS authority scores
+11-4:HITS hub scores and web page out degree are much less effective ranking features, but still outperform a random ordering
+11-5:A linear combination of any link based features with BM25F produces a significant improvement in performance, and there is a clear difference between combining BM25F with a feature based on incoming links (indegree, PageRank, or HITS authority scores) and a feature based on outgoing links (HITS hub scores and out degree), but within those two groups the precise choice of link based feature matters relatively little
+11-6:We believe that the measurements presented in this paper provide a solid evaluation of the best well known link based ranking schemes
+11-7:There are many possible variants of these schemes, and many other link based ranking algorithms have been proposed in the literature, hence we do not claim this work to be the last word on this subject, but rather the first step on a long road
+11-8:Future work includes evaluation of different parameterizations of PageRank and HITS
+11-9:In particular, we would like to study the impact of changes to the PageRank damping factor on effectiveness, the impact of various schemes meant to counteract the effects of link spam, and the effect of weighing hyperlinks differently depending on whether they are nepotistic or not
+11-10:Going beyond PageRank and HITS, we would like to measure the effectiveness of other link based ranking algorithms, such as SALSA
+11-11:Finally, we are planning to experiment with more complex feature combinations.
+12-1:B
+12-2:Amento, L
+12-3:Terveen, and W
+12-4:Hill
+12-5:Does authority mean quality? Predicting expert quality ratings of web documents
+12-6:In Proc
+12-7:of the 23rd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 296 303, 2000
+12-8:M
+12-9:Bianchini, M
+12-10:Gori, and F
+12-11:Scarselli
+12-12:Inside PageRank
+12-13:ACM Transactions on Internet Technology, 5(1):92 128, 2005
+12-14:A
+12-15:Borodin, G
+12-16:O
+12-17:Roberts, and J
+12-18:S
+12-19:Rosenthal
+12-20:Finding authorities and hubs from link structures on the World Wide Web
+12-21:In Proc
+12-22:of the 10th International World Wide Web Conference, pages 415 429, 2001
+12-23:A
+12-24:Borodin, G
+12-25:O
+12-26:Roberts, J
+12-27:S
+12-28:Rosenthal, and P
+12-29:Tsaparas
+12-30:Link analysis ranking: algorithms, theory, and experiments
+12-31:ACM Transactions on Interet Technology, 5(1):231 297, 2005
+12-32:S
+12-33:Brin and L
+12-34:Page
+12-35:The anatomy of a large scale hypertextual Web search engine
+12-36:Computer Networks and ISDN Systems, 30(1 7):107 117, 1998
+12-37:C
+12-38:Burges, T
+12-39:Shaked, E
+12-40:Renshaw, A
+12-41:Lazier, M
+12-42:Deeds, N
+12-43:Hamilton, and G
+12-44:Hullender
+12-45:Learning to rank using gradient descent
+12-46:In Proc
+12-47:of the 22nd International Conference on Machine Learning, pages 89 96, New York, NY, USA, 2005
+12-48:ACM Press
+12-49:D
+12-50:Cohn and H
+12-51:Chang
+12-52:Learning to probabilistically identify authoritative documents
+12-53:In Proc
+12-54:of the 17th International Conference on Machine Learning, pages 167 174, 2000
+12-55:N
+12-56:Craswell, S
+12-57:Robertson, H
+12-58:Zaragoza, and M
+12-59:Taylor
+12-60:Relevance weighting for query independent evidence
+12-61:In Proc
+12-62:of the 28th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 416 423, 2005
+12-63:E
+12-64:Garfield
+12-65:Citation analysis as a tool in journal evaluation
+12-66:Science, 178(4060):471 479, 1972
+12-67:Z
+12-68:Gy¨ongyi and H
+12-69:Garcia Molina
+12-70:Web spam taxonomy
+12-71:In 1st International Workshop on Adversarial Information Retrieval on the Web, 2005
+12-72:Z
+12-73:Gy¨ongyi, H
+12-74:Garcia Molina, and J
+12-75:Pedersen
+12-76:Combating web spam with TrustRank
+12-77:In Proc
+12-78:of the 30th International Conference on Very Large Databases, pages 576 587, 2004
+12-79:B
+12-80:J
+12-81:Jansen, A
+12-82:Spink, J
+12-83:Bateman, and T
+12-84:Saracevic
+12-85:Real life information retrieval: a study of user queries on the web
+12-86:ACM SIGIR Forum, 32(1):5 17, 1998
+12-87:K
+12-88:J¨arvelin and J
+12-89:Kek¨al¨ainen
+12-90:Cumulated gain based evaluation of IR techniques
+12-91:ACM Transactions on Information Systems, 20(4):422 446, 2002
+12-92:S
+12-93:D
+12-94:Kamvar, T
+12-95:H
+12-96:Haveliwala, C
+12-97:D
+12-98:Manning, and G
+12-99:H
+12-100:Golub
+12-101:Extrapolation methods for accelerating PageRank computations
+12-102:In Proc
+12-103:of the 12th International World Wide Web Conference, pages 261 270, 2003
+12-104:M
+12-105:M
+12-106:Kessler
+12-107:Bibliographic coupling between scientific papers
+12-108:American Documentation, 14(1):10 25, 1963
+12-109:J
+12-110:M
+12-111:Kleinberg
+12-112:Authoritative sources in a hyperlinked environment
+12-113:In Proc
+12-114:of the 9th Annual ACM SIAM Symposium on Discrete Algorithms, pages 668 677, 1998
+12-115:J
+12-116:M
+12-117:Kleinberg
+12-118:Authoritative sources in a hyperlinked environment
+12-119:Journal of the ACM, 46(5):604 632, 1999
+12-120:A
+12-121:N
+12-122:Langville and C
+12-123:D
+12-124:Meyer
+12-125:Deeper inside PageRank
+12-126:Internet Mathematics, 1(3):2005, 335 380
+12-127:R
+12-128:Lempel and S
+12-129:Moran
+12-130:The stochastic approach for link structure analysis (SALSA) and the TKC effect
+12-131:Computer Networks and ISDN Systems, 33(1 6):387 401, 2000
+12-132:A
+12-133:Y
+12-134:Ng, A
+12-135:X
+12-136:Zheng, and M
+12-137:I
+12-138:Jordan
+12-139:Stable algorithms for link analysis
+12-140:In Proc
+12-141:of the 24th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval, pages 258 266, 2001
+12-142:L
+12-143:Page, S
+12-144:Brin, R
+12-145:Motwani, and T
+12-146:Winograd
+12-147:The PageRank citation ranking: Bringing order to the web
+12-148:Technical report, Stanford Digital Library Technologies Project, 1998
+12-149:J
+12-150:A
+12-151:Tomlin
+12-152:A new paradigm for ranking pages on the World Wide Web
+12-153:In Proc
+12-154:of the 12th International World Wide Web Conference, pages 350 355, 2003
+12-155:T
+12-156:Upstill, N
+12-157:Craswell, and D
+12-158:Hawking
+12-159:Predicting fame and fortune: Pagerank or indegree? In Proc
+12-160:of the Australasian Document Computing Symposium, pages 31 40, 2003
+12-161:H
+12-162:Zaragoza, N
+12-163:Craswell, M
+12-164:Taylor, S
+12-165:Saria, and S
+12-166:Robertson
+12-167:Microsoft Cambridge at TREC 13: Web and HARD tracks
+12-168:In Proc
+12-169:of the 13th Text Retrieval Conference, 2004
+picture:

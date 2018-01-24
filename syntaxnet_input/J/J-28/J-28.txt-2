@@ -1,0 +1,52 @@
+In this paper we present a fully polynomial time approximation scheme for the single good multi unit auction problem .
+Our scheme is both approximately efficient and approximately strategyproof .
+The auction settings considered in our paper are motivated by recent trends in electronic commerce; for instance, corporations are increasingly using auctions for their strategic sourcing .
+We consider both a reverse auction variation and a forward auction variation, and propose a compact and expressive bidding language that allows marginal decreasing piecewise constant curves .
+In the reverse auction, we consider a single buyer with a demand for M units of a good and n suppliers, each with a marginal decreasing piecewise constant cost function .
+In addition, each supplier can also express an upper bound, or capacity constraint on the number of units she can supply .
+The reverse variation models, for example, a procurement auction to obtain raw materials or other services (e.g .
+circuit boards, power suppliers, toner cartridges), with flexible sized lots .
+In the forward auction, we consider a single seller with M units of a good and n buyers, each with a marginal decreasing piecewise constant valuation function .
+A buyer can also express a lower bound, or minimum lot size, on the number of units she demands .
+The forward variation models, for example, an auction to sell excess inventory in flexible sized lots .
+We consider the computational complexity of implementing the Vickrey Clarke Groves [22, 5, 11] mechanism for the multiunit auction problem .
+The Vickrey Clarke Groves mechanism has a number of interesting economic properties in this setting, including strategyproofness, such that truthful bidding is a dominant strategy for buyers in the forward auction and sellers in the reverse auction, and allocative efficiency, such that the outcome maximizes the total surplus in the system .
+However, as we discuss in Section 2, the application of the VCG based approach is limited in the reverse direction to instances in which the total payments to the sellers are less than the value of the outcome to the buyer .
+Otherwise, either the auction must run at a loss in these instances, or the buyer cannot be expected to voluntarily choose to participate .
+This is an example of the budget deficit problem that often occurs in efficient mechanism design [17] .
+The computational problem is interesting, because even with marginal decreasing bid curves, the underlying allocation problem turns out to (weakly) intractable .
+For instance, the classic 0 1 knapsack is a special case of this problem.1 We model the 1 However, the problem can be solved easily by a greedy scheme if we remove all capacity constraints from the seller and all 166 allocation problem as a novel and interesting generalization of the classic knapsack problem, and develop a fully polynomialtime approximation scheme, computing a (1 + ) approximation in worst case time T = O(n3 £`), where each bid has a fixed number of piecewise constant pieces .
+Given this scheme, a straightforward computation of the VCG payments to all n agents requires time O(nT) .
+We compute approximate VCG payments in worst case time O(£\T log(£\n £`)), where £\ is a constant that quantifies a reasonable no monopoly assumption .
+Specifically, in the reverse auction, suppose that C(I) is the minimal cost for procuring M units with all sellers I, and C(I \ i) is the minimal cost without seller i .
+Then, the constant £\ is defined as an upper bound for the ratio C(I \i) C(I), over all sellers i .
+This upper bound tends to 1 as the number of sellers increases .
+The approximate VCG mechanism is ( £` 1+£` ) strategyproof for an approximation to within (1 + ) of the optimal allocation .
+This means that a bidder can gain at most ( £` 1+£` )V from a nontruthful bid, where V is the total surplus from the efficient allocation .
+As such, this is an example of a computationally tractable £` dominance result.2 In practice, we can have good confidence that bidders without good information about the bidding strategies of other participants will have little to gain from attempts at manipulation .
+Section 2 formally defines the forward and reverse auctions, and defines the VCG mechanisms .
+We also prove our claims about £` strategyproofness .
+Section 3 provides the generalized knapsack formulation for the multi unit allocation problems and introduces the fully polynomial time approximation scheme .
+Section 4 defines the approximation scheme for the payments in the VCG mechanism .
+Section 5 concludes .
+1.1 Related Work There has been considerable interest in recent years in characterizing polynomial time or approximable special cases of the general combinatorial allocation problem, in which there are multiple different items .
+The combinatorial allocation problem is both NP complete and inapproximable (e.g .
+[6]) .
+Although some polynomial time cases have been identified for the CAP [6, 20], introducing an expressive exclusive or bidding language quickly breaks these special cases .
+We identify a non trivial but approximable allocation problem with an expressive exclusiveor bidding language the bid taker in our setting is allowed to accept at most one point on the bid curve .
+The idea of using approximations within mechanisms, while retaining either full strategyproofness or £` dominance has received some previous attention .
+For instance, Lehmann et al .
+[15] propose a greedy and strategyproof approximation to a single minded combinatorial auction problem .
+Nisan & Ronen [18] discussed approximate VCG based mechanisms, but either appealed to particular maximal in range approximations to retain full strategyproofness, or to resource bounded agents with information or computational limitations on the ability to compute strategies .
+Feigenminimum lot size constraints from the buyers .
+2 However, this may not be an example of what Feigenbaum & Shenker refer to as a tolerably manipulable mechanism [8] because we have not tried to bound the effect of such a manipulation on the efficiency of the outcome .
+VCG mechanism do have a natural self correcting property, though, because a useful manipulation to an agent is a reported value that improves the total value of the allocation based on the reports of other agents and the agent"s own value .
+baum & Shenker [8] have defined the concept of strategically faithful approximations, and proposed the study of approximations as an important direction for algorithmic mechanism design .
+Schummer [21] and Parkes et al [19] have previously considered £` dominance, in the context of economic impossibility results, for example in combinatorial exchanges .
+Eso et al .
+[7] have studied a similar procurement problem, but for a different volume discount model .
+This earlier work formulates the problem as a general mixed integer linear program, and gives some empirical results on simulated data .
+Kalagnanam et al .
+[12] address double auctions, where multiple buyers and sellers trade a divisible good .
+The focus of this paper is also different
+Ausubel [1] has proposed an ascending price multi unit auction for buyers with marginal decreasing values [1], with an interpretation as a primal dual algorithm [2]. .

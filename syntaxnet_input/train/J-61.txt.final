@@ -1,0 +1,545 @@
+ICE: An Iterative Combinatorial Exchange 
+content:
+1 ABSTRACT :
+1-1:We present the first design for an iterative combinatorial exchange .
+1-2:The exchange incorporates a tree based bidding language that is concise and expressive for CEs .
+1-3:Bidders specify lower and upper bounds on their value for different trades .
+1-4:These bounds allow price discovery and useful preference elicitation in early rounds, and allow termination with an efficient trade despite partial information on bidder valuations .
+1-5:All computation in the exchange is carefully optimized to exploit the structure of the bid trees and to avoid enumerating trades .
+1-6:A proxied interpretation of a revealedpreference activity rule ensures progress across rounds .
+1-7:A VCG based payment scheme that has been shown to mitigate opportunities for bargaining and strategic behavior is used to determine final payments .
+1-8:The exchange is fully implemented and in a validation phase .
+1-9:Categories and Subject Descriptors: I.2.11 [Artificial Intelligence]: Distributed Artificial Intelligence; J.4 Combinatorial exchanges combine and generalize two different mechanisms: double auctions and combinatorial auctions .
+1-10:In a double auction (DA), multiple buyers and sellers trade units of an identical good [20] .
+1-11:In a combinatorial auction (CA), a single seller has multiple heterogeneous items up for sale [11] .
+1-12:Buyers may have complementarities or substitutabilities between goods, and are provided with an expressive bidding language .
+1-13:A common goal in both market designs is to determine the efficient allocation, which is the allocation that maximizes total value .
+1-14:A combinatorial exchange [24] is a combinatorial double auction that brings together multiple buyers and sellers to trade multiple heterogeneous goods .
+1-15:For example, in an exchange for wireless spectrum, a bidder may declare that she is willing to pay $1 million for a trade where she obtains licenses for New York City, Boston, and Philadelphia, and loses her license for Washington DC .
+1-16:Thus, unlike a DA, a CE allows all participants to express complex valuations via expressive bids .
+1-17:Unlike a CA, a CE allows for fragmented ownership, with multiple buyers and sellers and agents that are both buying and selling .
+1-18:CEs have received recent attention both in the context of wireless spectrum allocation [18] and for airport takeoff and landing slot allocation [3] .
+1-19:In both of these domains there are incumbents with property rights, and it is important to facilitate a complex multi way reallocation of resources .
+1-20:Another potential application domain for CEs is to resource allocation in shared distributed systems, such as PlanetLab [13] .
+1-21:The instantiation of our general purpose design to specific domains is a compelling next step in our research .
+1-22:This paper presents the first design for an iterative combinatorial exchange .
+1-23:The genesis of this project was a class, CS 286r Topics at the Interface between Economics and Computer Science, taught at Harvard University in Spring 2004.1 The entire class was dedicated to the design and prototyping of an iterative CE .
+1-24:The ICE design problem is multi faceted and quite hard .
+1-25:The main innovation in our design is an expressive yet concise tree based bidding language (which generalizes known languages such as XOR OR [23]), and the tight coupling of this language with efficient algorithms for price feedback to guide bidding, winner determination to determine trades, and revealed preference activity rules to ensure progress across rounds .
+1-26:The exchange is iterative: bidders express upper and lower valuations on trades by annotating their bid tree, and then tighten these bounds in response to price feedback in each round .
+1-27:The Threshold payment rule, introduced by Parkes et al .
+1-28:[24], is used to determine final payments .
+1-29:The exchange has a number of interesting theoretical properties .
+1-30:For instance, when there exist linear prices we establish soundness and completeness: for straightforward bidders that adjust their bounds to meet activity rules while keeping their true value within the bounds, the exchange will terminate with the efficient allocation .
+1-31:In addition, the 1 http: www.eecs.harvard.edu ∼parkes cs286r ice.html 249 Truth Agent Act Rule WD ACC FAIR BALClosing RuleVickreyThreshold DONE ! DONE 2,2 +A +10 +B +10 BUYER 2,2 A 5 B 5 SELLER 2,2 +A +15 +8 +B +15 +8 BUYER 2,2 A 2 6 B 2 6 SELLER BUYER, buy AB SELLER, sell AB 12 < PA+PB < 16 PA+PB=14 PA=PB=7 PBUYER = 16 (4 0) = 12 PSELLER = 12 (4 0) = 16 PBUYER = 14 PSELLER = 14 Pessim istic O ptim istic = 1 Figure 1: ICE System Flow of Control efficient allocation can often be determined without bidders revealing, or even knowing, their exact value for all trades .
+1-32:This is essential in complex domains where the valuation problem can itself be very challenging for a participant [28] .
+1-33:While we cannot claim that straightforward bidding is an equilibrium of the exchange (and indeed, should not expect to by the Myerson Satterthwaite impossibility theorem [22]), the Threshold payment rule minimizes the ex post incentive to manipulate across all budget balanced payment rules .
+1-34:The exchange is implemented in Java and is currently in validation .
+1-35:In describing the exchange we will first provide an overview of the main components and introduce several working examples .
+1-36:Then, we introduce the basic components for a simple one shot variation in which bidders state their exact values for trades in a single round .
+1-37:We then describe the full iterative exchange, with upper and lower values, price feedback, activity rules, and termination conditions .
+1-38:We state some theoretical properties of the exchange, and end with a discussion to motivate our main design decisions, and suggest some next steps. .
+2 AN OVERVIEW OF THE ICE DESIGN :
+2-1:The design has four main components, which we will introduce in order through the rest of the paper: • Expressive and concise tree based bidding language .
+2-2:The language describes values for trades, such as my value for selling AB and buying C is $100, or my value for selling ABC is $50, with negative values indicating that a bidder must receive a payment for the trade to be acceptable .
+2-3:The language allows bidders to express upper and lower bounds on value, which can be tightened across rounds .
+2-4:• Winner Determination .
+2-5:Winner determination is formulated as a mixed integer program (MIP), with the structure of the bid trees captured explicitly in the formulation .
+2-6:Comparing the solution at upper and lower values allows for a determination to be made about termination, with progress in intermediate rounds driven by an intermediate valuation and the lower values adopted on termination .
+2-7:• Payments .
+2-8:Payments are computed using the Threshold payment rule [24], with the intermediate valuations adopted in early rounds and lower values adopted on termination .
+2-9:• Price feedback .
+2-10:An approximate price is computed for each item in the exchange in each round, in terms of the intermediate valuations and the provisional trade .
+2-11:The prices are optimized to approximate competitive equilibrium prices, and further optimized to best approximate the current Threshold payments with remaining ties broken to favor prices that are balanced across different items .
+2-12:In computing the prices, we adopt the methods of constraint generation to exploit the structure of the bidding language and avoid enumerating all feasible trades .
+2-13:The subproblem to generate new constraints is a variation of the WD problem .
+2-14:• Activity rule .
+2-15:A revealed preference activity rule [1] ensures progress across rounds .
+2-16:In order to remain active, a bidder must tighten bounds so that there is enough information to define a trade that maximizes surplus at the current prices .
+2-17:Another variation on the WD problem is formulated, both to verify that the activity rule is met and also to provide feedback to a bidder to explain how to meet the rule .
+2-18:An outline of the ICE system flow of control is provided in Figure 1 .
+2-19:We will return to this example later in the paper .
+2-20:For now, just observe in this two agent example that the agents state lower and upper bounds that are checked in the activity rule, and then passed to winner determination (WD), and then through three stages of pricing (accuracy, fairness, balance) .
+2-21:On passing the closing rule (in which parameters αeff and αthresh are checked for convergence of the trade and payments), the exchange goes to a last and final round .
+2-22:At the end of this round, the trade and payments are finally determined, based on the lower valuations .
+2-23:2.1 Related Work Many ascending price one sided CAs are known in the literature [10, 25, 29] .
+2-24:Direct elicitation approaches have also been proposed for one sided CAs in which agents respond to explicit queries about their valuations [8, 14, 19] .
+2-25:A number of ascending CAs are designed to work with simple prices on items [12, 17] .
+2-26:The price generation methods that we use in ICE generalize the methods in these earlier papers .
+2-27:Parkes et al .
+2-28:[24] studied sealed bid combinatorial exchanges and introduced the Threshold payment rule .
+2-29:Subsequently, Krych [16] demonstrated experimentally that the Threshold rule promotes efficient allocations .
+2-30:We are not aware of any previous studies of iterative CEs .
+2-31:Dominant strategy DAs are known for unit demand [20] and also for single minded agents [2] .
+2-32:No dominant strategy mechanisms are known for the general CE problem .
+2-33:ICE is a hybrid auction design, in that it couples simple item prices to drive bidding in early rounds with combinatorial WD and payments, a feature it shares with the clock proxy design of Ausubel et al .
+2-34:[1] for one sided CAs .
+2-35:We adopt a variation on the clock proxy auctions"s revealedpreference activity rule .
+2-36:The bidding language shares some structural elements with the LGB language of Boutilier and Hoos [7], but has very different semantics .
+2-37:Rothkopf et al .
+2-38:[27] also describe a restricted tree based bidding language .
+2-39:In LGB, the semantics are those of propositional logic, with the same items in an allocation able to satisfy a tree in multiple places .
+2-40:Although this can make LGB especially concise in some settings, the semantics that we propose appear to provide useful locality, so that the value of one component in a tree can be understood independently from the rest of the tree .
+2-41:The idea of capturing the structure of our bidding language explicitly within a mixed integer programming formulation follows the developments in Boutilier [6]. .
+3 PRELIMINARIES :
+3-1:In our model, we consider a set of goods, indexed {1, .
+3-2:.
+3-3:.
+3-4:, m} and a set of bidders, indexed {1, .
+3-5:.
+3-6:.
+3-7:, n} .
+3-8:The initial allocation of goods is denoted x0 = (x0 1, .
+3-9:.
+3-10:.
+3-11:, x0 n), with x0 i = (x0 i1, .
+3-12:.
+3-13:.
+3-14:, x0 im) and x0 ij ≥ 0 for good j indicating the number 250 of units of good j held by bidder i .
+3-15:A trade λ = (λ1, .
+3-16:.
+3-17:.
+3-18:, λn) denotes the change in allocation, with λi = (λi1, .
+3-19:.
+3-20:.
+3-21:, λim) where λij ∈   is the change in the number of units of item j to bidder i .
+3-22:So, the final allocation is x1 = x0 + λ .
+3-23:Each bidder has a value vi(λi) ∈ ¡ for a trade λi .
+3-24:This value can be positive or negative, and represents the change in value between the final allocation x0 i +λi and the initial allocation x0 i .
+3-25:Utility is quasi linear, with ui(λi, p) = vi(λi)−p for trade λi and payment p ∈ ¡ .
+3-26:Price p can be negative, indicating the bidder receives a payment for the trade .
+3-27:We use the term payoff interchangeably with utility .
+3-28:Our goal in the ICE design is to implement the efficient trade .
+3-29:The efficient trade, λ∗ , maximizes the total increase in value across bidders .
+3-30:Definition 1 (Efficient trade) .
+3-31:The efficient trade λ∗ solves max (λ1,...,λn) ¢ i vi(λi) s.t .
+3-32:λij + x0 ij ≥ 0, ∀i, ∀j (1) ¢ i λij ≤ 0, ∀j (2) λij ∈   (3) Constraints (1) ensure that no agent sells more items than it has in its initial allocation .
+3-33:Constraints (2) provide free disposal, and allows feasible trades to sell more items than are purchased (but not vice versa) .
+3-34:Later, we adopt Feas(x0 ) to denote the set of feasible trades, given these constraints and given an initial allocation x0 = (x0 1, .
+3-35:.
+3-36:.
+3-37:, x0 n) .
+3-38:3.1 Working Examples In this section, we provide three simple examples of instances that we will use to illustrate various components of the exchange .
+3-39:All three examples have only one seller, but this is purely illustrative .
+3-40:Example 1 .
+3-41:One seller and one buyer, two goods {A, B}, with the seller having an initial allocation of AB .
+3-42:Changes in values for trades: seller buyer AND(−A, −B) AND(+A, +B) 10 +20 The AND indicates that both the buyer and the seller are only interested in trading both goods as a bundle .
+3-43:Here, the efficient (value maximizing) trade is for the seller to sell AB to the buyer, denoted λ∗ = ([−1, −1], [+1, +1]) .
+3-44:Example 2 .
+3-45:One seller and four buyers, four goods {A, B, C, D}, with the seller having an initial allocation of ABCD .
+3-46:Changes in values for trades: seller buyer1 buyer 2 buyer 3 buyer 4 OR(−A, −B, AND(+A, XOR(+A, AND(+C, XOR(+C, −C, −D) +B) +B) +D) +D) 0 +6 +4 +3 +2 The OR indicates that the seller is willing to sell any number of goods .
+3-47:The XOR indicates that buyers 2 and 4 are willing to buy at most one of the two goods in which they are interested .
+3-48:The efficient trade is for bundle AB to go to buyer 1 and bundle CD to buyer 3, denoted λ∗ = ([−1, −1, −1, −1], [+1, +1, 0, 0], [0, 0, 0, 0], [0, 0, +1, +1], [0, 0, 0, 0]) .
+3-49:2,2 +A +10 +B +10 BUYER 2,2 A 5 B 5 SELLER Example 1: Example 3: 2,2 +C +D BUYER 2 2,2 +A +B BUYER 1 +11 +84,4 B SELLER A C D Example 2: 1,1 +A +B BUYER 2 2,2 +A +B BUYER 1 +6 +40,4 B SELLER C D A 1,1 +C +D BUYER 4 2,2 +C +D +3 +2 BUYER 3 18 Figure 2: Example Bid Trees .
+3-50:Example 3 .
+3-51:One seller and two buyers, four goods {A, B, C, D}, with the seller having an initial allocation of ABCD .
+3-52:Changes in values for trades: seller buyer1 buyer 2 AND(−A, −B, −C, −D) AND(+A, +B) AND(+C, +D) 18 +11 +8 The efficient trade is for bundle AB to go to buyer 1 and bundle CD to go to buyer 2, denoted λ∗ = ([−1, −1, −1, −1], [+1, +1, 0, 0], [0, 0, +1, +1]). .
+4 A ONE SHOT EXCHANGE DESIGN :
+4-1:The description of ICE is broken down into two sections: one shot (sealed bid) and iterative .
+4-2:In this section we abstract away the iterative aspect and introduce a specialization of the tree based language that supports only exact values on nodes .
+4-3:4.1 Tree Based Bidding Language The bidding language is designed to be expressive and concise, entirely symmetric with respect to buyers and sellers, and to extend to capture bids from mixed buyers and sellers, ranging from simple swaps to highly complex trades .
+4-4:Bids are expressed as annotated bid trees, and define a bidder"s value for all possible trades .
+4-5:The language defines changes in values on trades, with leaves annotated with traded items and nodes annotated with changes in values (either positive or negative) .
+4-6:The main feature is that it has a general interval choose logical operator on internal nodes, and that it defines careful semantics for propagating values within the tree .
+4-7:We illustrate the language on each of Examples 1 3 in Figure 2 .
+4-8:The language has a tree structure, with trades on items defined on leaves and values annotated on nodes and leaves .
+4-9:The nodes have zero values where no value is indicated .
+4-10:Internal nodes are also labeled with interval choose ranges .
+4-11:Given a trade, the semantics of the language define which nodes in the tree can be satisfied, or switched on .
+4-12:First, if a child is on then its parent must be on .
+4-13:Second, if a parent node is on, then the number of children that are on must be within the IC range on the parent node .
+4-14:Finally, leaves in which the bidder is buying items can only be on if the items are provided in the trade .
+4-15:For instance, in Example 2 we can consider the efficient trade, and observe that in this trade all nodes in the trees of buyers 1 and 3 (and also the seller), but none of the nodes in the trees of buyers 2 and 4, can be on .
+4-16:On the other hand, in 251 the trade in which A goes to buyer 2 and D to buyer 4, then the root and appropriate leaf nodes can be on for buyers 2 and 4, but no nodes can be on for buyers 1 and 3 .
+4-17:Given a trade there is often a number of ways to choose the set of satisfied nodes .
+4-18:The semantics of the language require that the nodes that maximize the summed value across satisfied nodes be activated .
+4-19:Consider bid tree Ti from bidder i .
+4-20:This defines nodes β ∈ Ti, of which some are leaves, Leaf (i) ⊆ Ti .
+4-21:Let Child(β) ⊆ Ti denote the children of a node β (that is not itself a leaf) .
+4-22:All nodes except leaves are labeled with the interval choose operator [IC x i (β), ICy i (β)] .
+4-23:Every node is also labeled with a value, viβ ∈ ¡ .
+4-24:Each leaf β is labeled with a trade, qiβ ∈   m (i.e., leaves can define a bundled trade on more than one type of item.) Given a trade λi to bidder i, the interval choose operators and trades on leaves define which nodes can be satisfied .
+4-25:There will often be a choice .
+4-26:Ties are broken to maximize value .
+4-27:Let satiβ ∈ {0, 1} denote whether node β is satisfied .
+4-28:Solution sati is valid given tree Ti and trade λi, written sati ∈ valid(Ti, λi), if and only if: ¢ β∈Leaf (i) qiβj · satiβ ≤ λij , ∀i, ∀j (4) ICx i (β)satiβ ≤ ¢ β ∈Child(β) satiβ ≤ ICy i (β)satiβ, ∀β ∈ Leaf (i) (5) In words, a set of leaves can only be considered satisfied given trade λi if the total increase in quantity summed across all such leaves is covered by the trade, for all goods (Eq .
+4-29:4) .
+4-30:This works for sellers as well as buyers: for sellers a trade is negative and this requires that the total number of items indicated sold in the tree is at least the total number sold as defined in the trade .
+4-31:We also need upwards propagation: any time a node other than the root is satisfied then its parent must be satisfied (by   β ∈Child(β) satiβ ≤ ICy i (β)satiβ in Eq .
+4-32:5) .
+4-33:Finally, we need downwards propagation: any time an internal node is satisfied then the appropriate number of children must also be satisfied (Eq .
+4-34:5) .
+4-35:The total value of trade λi, given bid tree Ti, is defined as: vi(Ti, λi) = max sat∈valid(Ti,λi) ¢ β∈T vβ · satβ (6) The tree based language generalizes existing languages .
+4-36:For instance: IC(2, 2) on a node with 2 children is equivalent to an AND operator; IC(1, 3) on a node with 3 children is equivalent to an OR operator; and IC(1, 1) on a node with 2 children is equivalent to an XOR operator .
+4-37:Similarly, the XOR OR bidding languages can be directly expressed as a bid tree in our language.2 4.2 Winner Determination This section defines the winner determination problem, which is formulated as a MIP and solved in our implementation with a commercial solver.3 The solver uses branchand bound search with dynamic cut generation and branching heuristics to solve large MIPs in economically feasible run times .
+4-38:2 The OR* language is the OR language with dummy items to provide additional structure .
+4-39:OR* is known to be expressive and concise .
+4-40:However, it is not known whether OR* dominates XOR OR in terms of conciseness [23] .
+4-41:3 CPLEX, www.ilog.com In defining the MIP representation we are careful to avoid an XOR based enumeration of all bundles .
+4-42:A variation on the WD problem is reused many times within the exchange, e.g .
+4-43:for column generation in pricing and for checking revealed preference .
+4-44:Given bid trees T = (T1, .
+4-45:.
+4-46:.
+4-47:, Tn) and initial allocation x0 , the mixed integer formulation for WD is: WD(T, x0 ) : max λ,sat ¢ i ¢ β∈Ti viβ · satiβ s.t .
+4-48:(1), (2), satiβ ∈ {0, 1}, λij ∈   sati ∈ valid(Ti, λi), ∀i Some goods may go unassigned because free disposal is allowed within the clearing rules of winner determination .
+4-49:These items can be allocated back to agents that sold the items, i.e .
+4-50:for which λij < 0 .
+4-51:4.3 Computing Threshold Payments The Threshold payment rule is based on the payments in the Vickrey Clarke Groves mechanism [15], which itself is truthful and efficient but does not satisfy budget balance .
+4-52:Budget balance requires that the total payments to the exchange are equal to the total payments made by the exchange .
+4-53:In VCG, the payment paid by agent i is pvcg,i = ˆv(λ∗ i ) − (V ∗ − V−i) (7) where λ∗ is the efficient trade, V ∗ is the reported value of this trade, and V−i is the reported value of the efficient trade that would be implemented without bidder i .
+4-54:We call ∆vcg,i = V ∗ − V−i the VCG discount .
+4-55:For instance, in Example 1 pvcg,seller = −10 − (+10 − 0) = −20 and pvcg,buyer = +20 − (+10 − 0) = 10, and the exchange would run at a budget deficit of −20 + 10 = −10 .
+4-56:The Threshold payment rule [24] determines budgetbalanced payments to minimize the maximal error across all agents to the VCG outcome .
+4-57:Definition 2 .
+4-58:The Threshold payment scheme implements the efficient trade λ∗ given bids, and sets payments pthresh,i = ˆvi(λ∗ i ) − ∆i, where ∆ = (∆1, .
+4-59:.
+4-60:.
+4-61:, ∆n) is set to minimize maxi(∆vcg,i − ∆i) subject to ∆i ≤ ∆vcg,i and   i ∆i ≤ V ∗ (this gives budget balance) .
+4-62:Example 4 .
+4-63:In Example 2, the VCG discounts are (9, 2, 0, 1, 0) to the seller and four buyers respectively, VCG payments are (−9, 4, 0, 2, 0) and the exchange runs at a deficit of 3 .
+4-64:In Threshold, the discounts are (8, 1, 0, 0, 0) and the payments are (−8, 5, 0, 3, 0) .
+4-65:This minimizes the worst case error to VCG discounts across all budget balanced payment schemes .
+4-66:Threshold payments are designed to minimize the maximal ex post incentive to manipulate .
+4-67:Krych [16] confirmed that Threshold promotes allocative efficiency in restricted and approximate Bayes Nash equilibrium. .
+5 THE ICE DESIGN :
+5-1:We are now ready to introduce the iterative combinatorial exchange design .
+5-2:Several new components are introduced, relative to the design for the one shot exchange .
+5-3:Rather than provide precise valuations, bidders can provide lower and upper valuations and revise this bid information across rounds .
+5-4:The exchange provides price based feedback 252 to guide bidders in this process, and terminates with an efficient (or approximately efficient) trade with respect to reported valuations .
+5-5:In each round t ∈ {0, 1, .
+5-6:.
+5-7:.} the current lower and upper bounds, vt and vt , are used to define a provisional valuation profile vα (the α valuation), together with a provisional trade λt and provisional prices pt = (pt 1, .
+5-8:.
+5-9:.
+5-10:, pt m) on items .
+5-11:The α valuation is a linear combination of the current upper and lower valuations, with αEFF ∈ [0, 1] chosen endogenously based on the closeness of the optimistic trade (at v) and the pessimistic trade (at v) .
+5-12:Prices pt are used to inform an activity rule, and drive progress towards an efficient trade .
+5-13:5.1 Upper and Lower Valuations The bidding language is extended to allow a bidder i to report a lower and upper value (viβ, viβ) on each node .
+5-14:These take the place of the exact value viβ defined in Section 4.1 .
+5-15:Based on these labels, we can define the valuation functions vi(Ti, λi) and vi(Ti, λi), using the exact same semantics as in Eq .
+5-16:(6) .
+5-17:We say that such a bid tree is well formed if viβ ≤ viβ for all nodes .
+5-18:The following lemma is useful: Lemma 1 .
+5-19:Given a well formed tree, T, then vi(Ti, λi) ≤ vi(Ti, λi) for all trades .
+5-20:Proof .
+5-21:Suppose there is some λi for which vi(Ti, λi) > vi(Ti, λi) .
+5-22:Then, maxsat∈valid(Ti,λi)   β∈Ti viβ · satβ > maxsat∈valid(Ti,λi)   β∈Ti viβ · satβ .
+5-23:But, this is a contradiction because the trade λ that defines vi(Ti, λi) is still feasible with upper bounds vi, and viβ ≥ viβ for all nodes β in a well formed tree .
+5-24:5.2 Price Feedback In each round, approximate competitive equilibrium prices, pt = (pt 1, .
+5-25:.
+5-26:.
+5-27:, pt m), are determined .
+5-28:Given these provisional prices, the price on trade λi for bidder i is pt (λi) =   j≤m pt j · λij .
+5-29:Definition 3 (CE prices) .
+5-30:Prices p∗ are competitive equilibrium prices if the efficient trade λ∗ is supported at prices p∗ , so that for each bidder: λ∗ i ∈ arg max λ∈Feas(x0) {vi(λi) − p∗ (λi)} (8) CE prices will not always exist and we will often need to compute approximate prices [5] .
+5-31:We extend ideas due to Rassenti et al .
+5-32:[26], Kwasnica et al .
+5-33:[17] and Dunford et al .
+5-34:[12], and select approximate prices as follows: I: Accuracy .
+5-35:First, we compute prices that minimize the maximal error in the best response constraints across all bidders .
+5-36:II: Fairness .
+5-37:Second, we break ties to prefer prices that minimize the maximal deviation from Threshold payments across all bidders .
+5-38:III: Balance .
+5-39:Third, we break ties to prefer prices that minimize the maximal price across all items .
+5-40:Taken together, these steps are designed to promote the informativeness of the prices in driving progress across rounds .
+5-41:In computing prices, we explain how to compute approximate (or otherwise) prices for structured bidding languages, and without enumerating all possible trades .
+5-42:For this, we adopt constraint generation to efficient handle an exponential number of constraints .
+5-43:Each step is described in detail below .
+5-44:I: Accuracy .
+5-45:We adopt a definition of price accuracy that generalizes the notions adopted in previous papers for unstructured bidding languages .
+5-46:Let λt denote the current provisional trade and suppose the provisional valuation is vα .
+5-47:To compute accurate CE prices, we consider: min p,δ δ (9) s.t .
+5-48:vα i (λ) − p(λ) ≤ vα i (λt i) − p(λt i) + δ, ∀i, ∀λ (10) δ ≥ 0,pj ≥ 0, ∀j .
+5-49:This linear program is designed to find prices that minimize the worst case error across all agents .
+5-50:From the definition of CE prices, it follows that CE prices would have δ = 0 as a solution to (9), at which point trade λt i would be in the best response set of every agent (with λt i = ∅, i.e .
+5-51:no trade, for all agents with no surplus for trade at the prices.) Example 5 .
+5-52:We can illustrate the formulation (9) on Example 2, assuming for simplicity that vα = v (i.e .
+5-53:truth) .
+5-54:The efficient trade allocates AB to buyer 1 and CD to buyer minimize the δ ≥ 0 required to satisfy constraints: p(A) + p(B) + p(C) + p(D) ≥ 0 (seller) p(A) + p(B) ≤ 6 + δ (buyer 1) p(A) + δ ≥ 4, p(B) + δ ≥ 4 (buyer 2) p(C) + p(D) ≤ 3 (buyer 3) p(C) + δ ≥ 2, p(D) + δ ≥ 2 (buyer 4) An optimal solution requires p(A) = p(B) = 10 3, with δ = 2 3, with p(C) and p(D) taking values such as p(C) = p(D) = 3 2 .
+5-55:But, (9) has an exponential number of constraints (Eq .
+5-56:10) .
+5-57:Rather than solve it explicitly we use constraint generation [4] and dynamically generate a sufficient subset of constraints .
+5-58:Let   i denote a manageable subset of all possible feasible trades to bidder i .
+5-59:Then, a relaxed version of (9) (written ACC) is formulated by substituting (10) with vα i (λ) − p(λ) ≤ vα i (λt i) − p(λt i) + δ, ∀i, ∀λ ∈   i , (11) where   i is a set of trades that are feasible for bidder i given the other bids .
+5-60:Fixing the prices p∗ , we then solve n subproblems (one for each bidder), max λ vα i (λi) − p∗ (λi) [R WD(i)] s.t .
+5-61:λ ∈ Feas(x0 ), (12) to check whether solution (p∗ , δ∗ ) to ACC is feasible in problem (9) .
+5-62:In R WD(i) the objective is to determine a most preferred trade for each bidder at these prices .
+5-63:Let ˆλi denote the solution to R WD(i) .
+5-64:Check condition: vα i (ˆλi) − p∗ (ˆλ) ≤ vα i (λt i) − p∗ (λt i) + δ∗ , (13) and if this condition holds for all bidders i, then solution (p∗ , δ∗ ) is optimal for problem (9) .
+5-65:Otherwise, trade ˆλi is added to   i for all bidders i for which this constraint is 253 violated and we re solve the LP with the new set of constraints.4 II: Fairness .
+5-66:Second, we break remaining ties to prefer fair prices: choosing prices that minimize the worst case error with respect to Threshold payoffs (i.e .
+5-67:utility to bidders with Threshold payments), but without choosing prices that are less accurate.5 Example 6 .
+5-68:For example, accuracy in Example 1 (depicted in Figure 1) requires 12 ≤ pA +pB ≤ 16 (for vα = v) .
+5-69:At these valuations the Threshold payoffs would be 2 to both the seller and the buyer .
+5-70:This can be exactly achieved in pricing with pA + pB = 14 .
+5-71:The fairness tie breaking method is formulated as the following LP: min p,π π [FAIR] s.t .
+5-72:vα i (λ) − p(λ) ≤ vα i (λt i) − p(λt i) + δ∗ i , ∀i, ∀λ ∈   i (14) π ≥ πvcg,i − (vα i (λt i) − p(λt i)), ∀i (15) π ≥ 0,pj ≥ 0, ∀j, where δ∗ represents the error in the optimal solution, from ACC .
+5-73:The objective here is the same as in the Threshold payment rule (see Section 4.3): minimize the maximal error between bidder payoff (at vα ) for the provisional trade and the VCG payoff (at vα ≥ CUTOFFeff and αthresh ≥ CUTOFFthresh, where CUTOFFeff , CUTOFFthresh ∈ (0, 1] determine the accuracy required for termination .
+5-74:At the end of the last and final round vα = v is used to define the final trade and the final Threshold payments .
+5-75:Example 9 .
+5-76:Consider again Example 1, and consider the upper and lower bounds as depicted in Figure 1 .
+5-77:First, if the seller"s bounds were [−20, −4] then there is an optimistic trade but no pessimistic trade, and PO = −4 and PP = 0, and αeff = 0 .
+5-78:At the bounds depicted, both the optimistic and the pessimistic trades occur and PO = PP = 4 and αeff = 1 .
+5-79:However, we can see the Threshold payments are (17, −17) at v but (14, −14) at v .
+5-80:Evaluating γthresh , we have γthresh = 1 + √ 1 2(32+32) (4 2) = 5 2, and αthresh = 2 5 .
+5-81:For CUTOFFthresh < 2 5 the exchange would remain open .
+5-82:On the other hand, if the buyer"s value for +AB was between [18, 24] and the seller"s value for −AB was between [−12, −6], the Threshold payments are (15, −15) at both upper and lower bounds, and αthresh = 1 .
+5-83:256 Component Purpose Lines Agent .
+5-84:Captures strategic behavior and information revelation decisions 762 Model Support Provides XML support to load goods and valuations into world 200 World Keeps track of all agent, good, and valuation details 998 Exchange Driver & Communication Controls exchange, and coordinates remote agent behavior 585 Bidding Language Implements the tree based bidding language 1119 Activity Rule Engine Implements the revealed preference rule with range support 203 Closing Rule Engine Checks if auction termination condition reached 137 WD Engine Provides WD related logic 377 Pricing Engine Provides Pricing related logic 460 MIP Builders Translates logic used by engines into our general optimizer formulation 346 Pricing Builders Used by three pricing stages 256 Winner Determination Builders Used by WD, activity rule, closing rule, and pricing constraint generation 365 Framework Support code; eases modular replacement of above components 510 Table 1: Exchange Component and Code Breakdown. .
+6 SYSTEMS INFRASTRUCTURE :
+6-1:ICE is approximately 6502 lines of Java code, broken up into the functional packages described in Table 1.10 The prototype is modular so that researchers may easily replace components for experimentation .
+6-2:In addition to the core exchange discussed in this paper, we have developed an agent component that allows a user to simulate the behavior and knowledge of other players in the system, better allowing a user to formulate their strategy in advance of actual play .
+6-3:A user specifies a valuation model in an XMLinterpretation of our bidding language, which is revealed to the exchange via the agent"s strategy .
+6-4:Major exchange tasks are handled by engines that dictate the non optimizer specific logic .
+6-5:These engines drive the appropriate MIP LP builders .
+6-6:We realized that all of our optimization formulations boil down to two classes of optimization problem .
+6-7:The first, used by winner determination, activity rule, closing rule, and constraint generation in pricing, is a MIP that finds trades that maximize value, holding prices and slacks constant .
+6-8:The second, used by the three pricing stages, is an LP that holds trades constant, seeking to minimize slack, profit, or prices .
+6-9:We take advantage of the commonality of these problems by using common LP MIP builders that differ only by a few functional hooks to provide the correct variables for optimization .
+6-10:We have generalized our back end optimization solver interface11 (we currently support CPLEX and the LGPL licensed LPSolve), and can take advantage of the load balancing and parallel MIP LP solving capability that this library provides. .
+7 DISCUSSION :
+7-1:The bidding language was defined to allow for perfect symmetry between buyers and sellers and provide expressiveness in an exchange domain, for instance for mixed bidders interested in executing trades such as swaps .
+7-2:This proved especially challenging .
+7-3:The breakthrough came when we focused on changes in value for trades rather than providing absolute values for allocations .
+7-4:For simplicity, we require the same tree structure for both the upper and lower valuations .
+7-5:10 Code size is measured in physical source line of code (SLOC), as generated using David A .
+7-6:Wheeler"s SLOC Count .
+7-7:The total of 6502 includes 184 for instrumentation (not shown in the table) .
+7-8:The JOpt solver interface is another 1964 lines, and Castor automatically generates around 5200 lines of code for XML file manipulation .
+7-9:11 http: econcs.eecs.harvard.edu jopt This allows the language itself to ensure consistency (with the upper value at least the lower value on all trades) and enforce monotonic tightening of these bounds for all trades across rounds .
+7-10:It also provides for an efficient method to check the RP activity rule, because it makes it simple to reason about shared uncertainty between trades .
+7-11:The decision to adopt a direct and proxied approach in which bidders express their upper and lower values to a trusted proxy agent that interacts with the exchange was made early in the design process .
+7-12:In many ways this is the clearest and most immediate way to generalize the design in Parkes et al .
+7-13:[24] and make it iterative .
+7-14:In addition, this removes much opportunity for strategic manipulation: bidders are restricted to making (incremental) statements about their valuations .
+7-15:Another advantage is that it makes the activity rule easy to explain: bidders can always meet the activity rule by tightening bounds such that their true value remains in the support.12 Perhaps most importantly, having explicit information on upper and lower values permits progress in early rounds, even while there is no efficient trade at pessimistic values .
+7-16:Upper and lower bound information also provides guidance about when to terminate .
+7-17:Note that taken by itself, PP = PO does not imply that the current provisional trade is efficient with respect to all values consistent with current value information .
+7-18:The difference in values between different trades, aggregated across all bidders, could be similar at lower and upper bounds but quite different at intermediate values (including truth) .
+7-19:Nevertheless, we conjecture that PP = PO will prove an excellent indicator of efficiency in practical settings where the shape of the upper and lower valuations does convey useful information .
+7-20:This is worthy of experimental investigation .
+7-21:Moreover, the use of price and RP activity provides additional guarantees .
+7-22:We adopted linear prices (prices on individual items) rather than non linear prices (with prices on a trade not equal to the sum of the prices on the component items) early in the design process .
+7-23:The conciseness of this price representation is very important for computational tractability within the exchange and also to promote simplicity and transparency for bidders .
+7-24:The RP activity rule was adopted later, and is a good choice because of its excellent theoretical properties when coupled with CE prices .
+7-25:The following can be easily established: given exact CE prices pt−1 for provisional trade 12 This is in contrast to indirect price based approaches, such as clock proxy [1], in which bidders must be able to reason about the RP constraints implied by bids in each round .
+7-26:257 λt−1 at valuations vα , then if the upper and lower values at the start of round t already satisfy the RP rule (and without the need for any tie breaking), the provisional trade is efficient for all valuations consistent with the current bid trees .
+7-27:When linear CE prices exist, this provides for a soundness and completeness statement: if PP = PO, linear CE prices exist, and the RP rule is satisfied, the provisional trade is efficient (soundness); if prices are exact CE prices for the provisional trade at vα , but the trade is inefficient with respect to some valuation profile consistent with the current bid trees, then at least one bidder must fail RP with her current bid tree and progress will be made (completeness) .
+7-28:Future work must study convergence experimentally, and extend this theory to allow for approximate prices .
+7-29:Some strategic aspects of our ICE design deserve comment, and further study .
+7-30:First, we do not claim that truthfully responding to the RP rule is an ex post equilibrium.13 However, the exchange is designed to mimic the Threshold rule in its payment scheme, which is known to have useful incentive properties [16] .
+7-31:We must be careful, though .
+7-32:For instance we do not suggest to provide αeff to bidders, because as αeff approaches 1 it would inform bidders that bid values are becoming irrelevant to determining the trade but merely used to determine payments (and bidders would become increasingly reluctant to increase their lower valuations) .
+7-33:Also, no consideration has been given in this work to collusion by bidders .
+7-34:This is an issue that deserves some attention in future work. .
+8-1:In this work we designed and prototyped a scalable and highly expressive iterative combinatorial exchange
+8-2:The design includes many interesting features, including: a new bid tree language for exchanges, a new method to construct approximate linear prices from expressive languages, and a proxied elicitation method with optimistic and pessimistic valuations with a new method to evaluate a revealed  preference activity rule
+8-3:The exchange is fully implemented in Java and is in a validation phase
+8-4:The next steps for our work are to allow bidders to refine the structure of the bid tree in addition to values on the tree
+8-5:We intend to study the elicitation properties of the exchange and we have put together a test suite of exchange problem instances
+8-6:In addition, we are beginning to engage in collaborations to apply the design to airline takeoff and landing slot scheduling and to resource allocation in widearea network distributed computational systems
+8-7:Acknowledgments We would like to dedicate this paper to all of the participants in CS 286r at Harvard University in Spring 2004
+8-8:This work is supported in part by NSF grant IIS 0238147.
+9-1:L
+9-2:Ausubel, P
+9-3:Cramton, and P
+9-4:Milgrom
+9-5:The clock proxy auction: A practical combinatorial auction design
+9-6:In Cramton , chapter 5
+9-7:M
+9-8:Babaioff, N
+9-9:Nisan, and E
+9-10:Pavlov
+9-11:Mechanisms for a spatially distributed market
+9-12:In Proc
+9-13:5th ACM Conf
+9-14:on Electronic Commerce, pages 9 20
+9-15:ACM Press, 2001
+9-16:13 Given the Myerson Satterthwaite impossibility  and the method by which we determine the trade we should not expect this
+9-17:M
+9-18:Ball, G
+9-19:Donohue, and K
+9-20:Hoffman
+9-21:Auctions for the safe, efficient, and equitable allocation of airspace system resources
+9-22:In S
+9-23:Cramton, Shoham, editor, Combinatorial Auctions
+9-24:2004
+9-25:Forthcoming
+9-26:D
+9-27:Bertsimas and J
+9-28:Tsitsiklis
+9-29:Introduction to Linear Optimization
+9-30:Athena Scientific, 1997
+9-31:S
+9-32:Bikhchandani and J
+9-33:M
+9-34:Ostroy
+9-35:The package assignment model
+9-36:Journal of Economic Theory, 107(2):377 406, 2002
+9-37:C
+9-38:Boutilier
+9-39:A pomdp formulation of preference elicitation problems
+9-40:In Proc
+9-41:18th National Conference on Artificial Intelligence (AAAI 02), 2002
+9-42:C
+9-43:Boutilier and H
+9-44:Hoos
+9-45:Bidding languages for combinatorial auctions
+9-46:In Proc
+9-47:17th International Joint Conference on Artificial Intelligence (IJCAI 01), 2001
+9-48:W
+9-49:Conen and T
+9-50:Sandholm
+9-51:Preference elicitation in combinatorial auctions
+9-52:In Proc
+9-53:3rd ACM Conf
+9-54:on Electronic Commerce (EC 01), pages 256 259
+9-55:ACM Press, New York, 2001
+9-56:P
+9-57:Cramton, Y
+9-58:Shoham, and R
+9-59:Steinberg, editors
+9-60:Combinatorial Auctions
+9-61:MIT Press, 2004
+9-62:S
+9-63:de Vries, J
+9-64:Schummer, and R
+9-65:V
+9-66:Vohra
+9-67:On ascending Vickrey auctions for heterogeneous objects
+9-68:Technical report, MEDS, Kellogg School, Northwestern University, 2003
+9-69:S
+9-70:de Vries and R
+9-71:V
+9-72:Vohra
+9-73:Combinatorial auctions: A survey
+9-74:Informs Journal on Computing, 15(3):284 309, 2003
+9-75:M
+9-76:Dunford, K
+9-77:Hoffman, D
+9-78:Menon, R
+9-79:Sultana, and T
+9-80:Wilson
+9-81:Testing linear pricing algorithms for use in ascending combinatorial auctions
+9-82:Technical report, SEOR, George Mason University, 2003
+9-83:Y
+9-84:Fu, J
+9-85:Chase, B
+9-86:Chun, S
+9-87:Schwab, and A
+9-88:Vahdat
+9-89:Sharp: an architecture for secure resource peering
+9-90:In Proceedings of the nineteenth ACM symposium on Operating systems principles, pages 133 148
+9-91:ACM Press, 2003
+9-92:B
+9-93:Hudson and T
+9-94:Sandholm
+9-95:Effectiveness of query types and policies for preference elicitation in combinatorial auctions
+9-96:In Proc
+9-97:3rd Int
+9-98:Joint
+9-99:Conf
+9-100:on Autonomous Agents and Multi Agent Systems, pages 386 393, 2004
+9-101:V
+9-102:Krishna
+9-103:Auction Theory
+9-104:Academic Press, 2002
+9-105:D
+9-106:Krych
+9-107:Calculation and analysis of Nash equilibria of Vickrey based payment rules for combinatorial exchanges, Harvard College, April 2003
+9-108:A
+9-109:M
+9-110:Kwasnica, J
+9-111:O
+9-112:Ledyard, D
+9-113:Porter, and C
+9-114:DeMartini
+9-115:A new and improved design for multi object iterative auctions
+9-116:Management Science, 2004
+9-117:To appear
+9-118:E
+9-119:Kwerel and J
+9-120:Williams
+9-121:A proposal for a rapid transition to market allocation of spectrum
+9-122:Technical report, FCC Office of Plans and Policy, Nov 2002
+9-123:S
+9-124:M
+9-125:Lahaie and D
+9-126:C
+9-127:Parkes
+9-128:Applying learning algorithms to preference elicitation
+9-129:In Proc
+9-130:ACM Conf
+9-131:on Electronic Commerce, pages 180 188, 2004
+9-132:R
+9-133:P
+9-134:McAfee
+9-135:A dominant strategy double auction
+9-136:J
+9-137:of Economic Theory, 56:434 450, 1992
+9-138:P
+9-139:Milgrom
+9-140:Putting auction theory to work: The simultaneous ascending auction
+9-141:J.Pol
+9-142:Econ., 108:245 272, 2000
+9-143:R
+9-144:B
+9-145:Myerson and M
+9-146:A
+9-147:Satterthwaite
+9-148:Efficient mechanisms for bilateral trading
+9-149:Journal of Economic Theory, 28:265 281, 1983
+9-150:N
+9-151:Nisan
+9-152:Bidding and allocation in combinatorial auctions
+9-153:In Proc
+9-154:2nd ACM Conf
+9-155:on Electronic Commerce (EC 00), pages 1 12, 2000
+9-156:D
+9-157:C
+9-158:Parkes, J
+9-159:R
+9-160:Kalagnanam, and M
+9-161:Eso
+9-162:Achieving budget balance with Vickrey based payment schemes in exchanges
+9-163:In Proc
+9-164:17th International Joint Conference on Artificial Intelligence (IJCAI 01), pages 1161 1168, 2001
+9-165:D
+9-166:C
+9-167:Parkes and L
+9-168:H
+9-169:Ungar
+9-170:Iterative combinatorial auctions: Theory and practice
+9-171:In Proc
+9-172:17th National Conference on Artificial Intelligence (AAAI 00), pages 74 81, July 2000
+9-173:S
+9-174:J
+9-175:Rassenti, V
+9-176:L
+9-177:Smith, and R
+9-178:L
+9-179:Bulfin
+9-180:A combinatorial mechanism for airport time slot allocation
+9-181:Bell Journal of Economics, 13:402 417, 1982
+9-182:M
+9-183:H
+9-184:Rothkopf, A
+9-185:Pekeˇc, and R
+9-186:M
+9-187:Harstad
+9-188:Computationally manageable combinatorial auctions
+9-189:Management Science, 44(8):1131 1147, 1998
+9-190:T
+9-191:Sandholm and C
+9-192:Boutilier
+9-193:Preference elicitation in , chapter 10
+9-194:P
+9-195:R
+9-196:Wurman and M
+9-197:P
+9-198:Wellman
+9-199:AkBA: A progressive, anonymous price combinatorial auction
+9-200:In Second ACM Conference on Electronic Commerce, pages 21 29, 2000
+9-201:258
+picture:

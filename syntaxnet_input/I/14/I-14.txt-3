@@ -1,0 +1,23 @@
+P2P IR SYSTEMS This section briefly reviews our basic approaches to hierarchical P2P IR systems .
+In a hierarchical P2P IR system illustrated in Fig.1, agents are connected to each other through three types of links
+In the following sections, we denote the set of agents that are directly connected to agent Ai as DirectConn(Ai), which is defined as DirectConn(Ai) = NEI(Ai) ¡å PAR(Ai) ¡å CHL(Ai) , where NEI(Ai) is the set of neighboring agents connected to Ai through lateral links; PAR(Ai) is the set of agents whom agent Ai is connected to through upward links and CHL(Ai) is the set of agents that agent Ai connects to through downward links .
+These links are established through a bottom up content similarity based distributed clustering process[15] .
+These links are then used by agents to locate other agents that contain documents relevant to the given queries .
+A typical agent Ai in our system uses two queues
+The states of the two queues constitute the internal states of an agent .
+The local search queue LSi stores search sessions that are scheduled for local processing .
+It is a priority queue and agent Ai always selects the most promising queries to process in order to maximize the global utility .
+MFi consists of a set of queries to forward on and is processed in a FIFO (first in first out) fashion .
+For the first query in MFi, agent Ai determines which subset of its neighboring agents to forward it to based on the agent"s routing policy £ki .
+These routing decisions determine how the search process is conducted in the network .
+In this paper, we call Ai as Aj"s upstream agent and Aj as Ai"s downstream agent if A4 A5 A6 A7 A2 A3 A9 NEI(A2)={A3} PAR(A2)={A1} CHL(A2)={A4,A5} A1 A8 Figure 1
+The distributed search protocol of our hierarchical agent organization is composed of two steps .
+In the first step, upon receipt of a query qk at time tl from a user, agent Ai initiates a search session si by probing its neighboring agents Aj ? NEI(Ai) with the message PROBE for the similarity value Sim(qk, Aj) between qk and Aj .
+Here, Ai is defined as the query initiator of search session si .
+In the second step, Ai selects a group of the most promising agents to start the actual search process with the message SEARCH .
+These SEARCH messages contain a TTL (Time To Live) parameter in addition to the query .
+The TTL value decreases by 1 after each hop .
+In the search process, agents discard those queries that either have been previously processed or whose TTL drops to 0, which prevents queries from looping in the system forever .
+The search session ends when all the agents that receive the query drop it or TTL decreases to 0 .
+Upon receipt of SEARCH messages for qk, agents schedule local activities including local searching, forwarding qk to their neighbors, and returning search results to the query initiator .
+This process and related algorithms are detailed in [15, 14]. .

@@ -1,0 +1,70 @@
+In order to evaluate the performance of event content encryption we have implemented both encryption approaches running over our implementation of the Hermes publish subscribe middleware .
+The implementation supports three modes
+We ran three performance tests in a discrete event simulator .
+The simulator was run on an Intel P4 3.2GHz workstation with 1GB of main memory .
+We decided to run the tests on an event simulator instead of an actual deployed system in order to be able to measure to aggregate time it takes to handle all messages in the system .
+The following sections describe the specific test setups and the results in more detail .
+5.1 End to End Overhead The end to end overhead test shows how much the overall message throughput of the simulator was affected by event content encryption .
+We formed a broker network with two brokers, attached a publisher to one of them and a subscriber to the other one .
+The subscriber subscribed to the advertised event type without any filters, i.e .
+each publication matched the subscriber"s publication and thus was delivered to the subscriber .
+The test measures the combined time it takes to publish and deliver 100,000 events .
+If the content is encrypted this includes both encrypting the content at the PHB and decrypting it at the SHB .
+In the test the number of attributes in the event type is increased from 1 to 25 (the x axis) .
+Each attribute is set to a 30 character string .
+For each number of attributes in the event type the publisher publishes 100,000 events, and the elapsed time is measured to derive the message throughput .
+The test was repeated five times for each number of attributes and we use the average of all iterations in the graph, but the results were highly consistent so the standard deviation is not shown .
+The same tests were run with no content encryption, event encryption, and attribute encryption .
+As can be seen in Fig .
+6, event content encryption introduces a large overhead compared to not using encryption .
+The throughput when using attribute encryption with an event type with one attribute is 46% of the throughput achieved when events are sent in plaintext .
+When the number of attributes increases the performance gap increases as well
+Event encryption fares better, because of fewer encryption operations .
+The increase in the amount of encrypted data does not affect the performance as much as the number of individual encryption operations does .
+The difference in performance with event encryption and attribute encryption with only one attribute is caused by the Java object serialisation mechanism
+A more efficient implementation would provide its own marshalling mechanism .
+Note that the EAX implementation we use runs the nonce (i.e .
+initialisation vector) through an OMAC construct to increase its randomness .
+Since the nonce is not required to be kept secret (just unique), there is a potential time space trade off we have not yet investigated in attaching extra nonce attributes that have already had this OMAC construct applied to them .
+5.2 Domain Internal Events We explained in Sect .
+3.4 that event content decryption and encryption can be avoided if both brokers are authorised to access the event content .
+This test was designed to show that the use of the encrypted event content mechanism between two authorised brokers incurs only a small performance overhead .
+In this test we again form a broker network with two brokers .
+111 Key refresh schedule Broker 1 joining and leaving the key group Broker 2 joining and leaving the key group Actual key refresh times Time One day Broker"s key group credentials are valid Actual join time Actual leave time One day One day Figure 5
+The publisher is attached to one of the brokers and the subscriber to the other, and again the subscriber does not specify any filters in its subscription .
+The publisher publishes 100,000 events and the test measures the elapsed time in order to derive the system"s message throughput .
+The event content is encrypted outside the timing measurement, i.e .
+the encryption cost is not included in the measurements .
+The goal is to model an environment where a broker has received a message from another authorised broker, and it routes the event to a third authorised broker .
+In this scenario the middle broker does not need to decrypt nor encrypt the event content .
+As shown in Fig .
+2, the elapsed time was measured as the number of attributes in the published event was increased from 1 to 25 .
+The attribute values in each case are 30 character strings .
+Each test is repeated five times, and we use the average of all iterations in the graph .
+The same test was then repeated with no encryption, event encryption and attribute encryption turned on .
+The encrypted modes follow each other very closely .
+Predictably, the plaintext mode performs a little better for all attribute counts .
+The difference can be explained partially by the encrypted events being larger in size, because they include both the plaintext and the encrypted content in this test .
+The difference in performance is 3.7% with one attribute and 2.5% with 25 attributes .
+We believe that the roughness of the graphs can be explained by the Java garbage collector interfering with the simulation .
+The fact that all three graphs show the same irregularities supports this theory .
+112 50000 55000 60000 65000 70000 75000 80000 85000 90000 95000 100000 0 5 10 15 20 25 MessagesperSecond Number of Attributes No Encryption Attribute Encryption Whole content Encryption Figure 7
+The last test we ran was to show the communication overhead caused by this emulation technique, compared to using real attribute encryption .
+In the test we form a broker network of 2000 brokers .
+We attach one publisher to one of the brokers, and an increasing number of subscribers to the remaining brokers .
+Each subscriber simulates a group of subscribers that all have the same access rights to the published event .
+Each subscriber group has its own event type in the test .
+The outcome of this test is shown in Fig .
+8 .
+The number of subscriber groups is increased from 1 to 50 (the x axis) .
+For each n subscriber groups the publisher publishes one event to represent the use of attribute encryption and n events representing the events for each subscriber group .
+We count the number of hops each publication makes through the broker network (y axis) .
+Note that Fig .
+8 shows workloads beyond what we would expect in common usage, in which many event types are likely to contain fewer than ten attributes .
+The subscriber groups used in this test represent disjoint permission sets over such event attributes .
+The number of these sets can be determined from the particular access control policy in use, but will be a value less than or equal to the factorial of the number of attributes in a given event type .
+The graphs indicate that attribute encryption performs better than event encryption even for small numbers of subscriber groups .
+Indeed, with only two subscriber groups (e.g .
+the case with Numberplate events) the hop count increases from 7.2 hops for attribute encryption to 16.6 hops for event encryption .
+With 10 subscriber groups the corresponding numbers are 24.2 and 251.0, i.e .
+an order of magnitude difference. .

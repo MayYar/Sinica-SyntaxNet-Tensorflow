@@ -1,0 +1,35 @@
+PackageBLAST was evaluated in a 16 node grid testbed, composed by two laboratories, interconnected by a localarea network .
+Eleven desktops (P01 11) and a notebook were used in LABPOS and four desktops (L01 04) were used in LAICO (table 2) .
+All grid nodes used Linux with Globus 3.2.1, NCBI BLAST 2.2.10 and Java VM 1.4.2 .
+Table 2
+Node Names CPU Main Memory HD NB 3200 MHz 512 MB 80 GB L01 L03 1700 MHz 256 MB 30 GB L04 350 MHz 160 MB 6 GB P01 P10 1000 MHz 256 MB 20 GB P11 900 MHz 128 MB 20 GB To investigate the performance gains of PackageBLAST, we executed BLASTX in 2, 4, 8 and 16 grid nodes .
+Each BLAST search compared a 10KBP real DNA sequence against the 1.2GB nr genetic database segmented in 167 parts of 5MB each .
+Fixed, SS, TSS, GSS and FAC2 allocation strategies were employed in the tests .
+Execution times for all allocation strategies are presented in table 3 .
+Table 3
+Strategy 2 nodes 4 nodes 8 nodes 16 nodes FIXED 2037 999 491 252 SS 1112 514 246 134 TSS 1296 570 259 143 GSS 1115 535 250 127 FAC2 1187 514 266 142 Table 4 presents execution times in a single machine and absolute speedups for 2, 4, 8 and 16 nodes, considering the best execution time for a given number of nodes .
+To calculate the absolute speedups, the BLAST sequential version was executed with the nr unsegmented database .
+Table 4
+Node SeqTime 2 nodes 4 nodes 8 nodes 16 nodes NB 1432 1.29 2.79 5.82 11.28 L01 1585 1.43 3.08 6.44 12.48 P01 1853 1.67 3.61 7.53 14.59 P11 2004 1.80 3.90 8.15 15.78 L04 3810 3.43 7.41 15.49 30.00 PackageBLAST achieved very good speedups .
+Considering the worst (L04), average (P01) and best node in the grid, the speedups obtained were superlinear, close to linear and sublinear, respectively .
+In table 3, it can also be noticed that there is no allocation strategy that always reaches the best execution time .
+This variation justifies the allocation framework provided .
+To evaluate PSS, we executed PackageBLAST with 16 grid nodes, introducing local workload in nodes L01, L02, P01 and P02 .
+The load was started simultaneously 30 seconds after the beginning of BLAST and consisted of the 159 execution of formatdb on the nr database .
+Three scenarios were simulated (table 5)
+Table 5
+Gain is the comparison of without PSS with PSS 2x Strategy with PSS PSS 2x without PSS Gain Fixed 316 184 393 113.59% SS 186 177 179 1.13% TSS 160 162 171 5.56% GSS 149 159 339 113.21% FAC2 156 165 153 7.27% As expected, the allocation strategies that assign a large amount of work to the nodes (fixed and GSS) obtained great benefit from using PSS .
+This is due to the fact that a slow node can easily become a bottleneck in these strategies .
+TSS also obtained a reduction of 5.56% in its execution time .
+PSS uses two parameters
+We varied these parameters in order to evaluate the PSS behavior in two scenarios .
+In both cases, we used a four node (NB, L01, P01, L04) grid .
+In the first experiment, a local workload (formatdb) was introduced when the last task of the first TSS allocation starts and was stopped immediately after the processing of one segment .
+The goal was to evaluate the impact of short lived local tasks in PSS .
+In the second case, local workload was introduced at the same time of the previous case, but continued until the end .
+The goal was to evaluate long lived local tasks .
+Figure 4 presents the gains .
+Figure 4
+In scenario 1, when a very recent history is considered (£n=1 and ?=1), PSS tries to adapt to a situation that will shortly disappear .
+For £n=5 and ?=4, PSS takes longer to notice modification and short lived tasks have low impact .
+On the other hand, in scenario 2, £n=1,?=1 presents better results than £n=5, ?=4, because it changes weights faster. .

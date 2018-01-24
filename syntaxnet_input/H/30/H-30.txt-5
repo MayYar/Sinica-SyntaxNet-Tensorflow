@@ -1,0 +1,110 @@
+In order to better understand the strengths and weaknesses of our technique, we evaluate it on a wide range of data sets .
+Table 2 provides a summary of the TREC data sets considered .
+The WSJ, AP, and ROBUST collections are smaller and consist entirely of newswire articles, whereas WT10g and GOV2 are large web collections .
+For each data set, we split the available topics into a training and test set, where the training set is used solely for parameter estimation and the test set is used for evaluation purposes .
+All experiments were carried out using a modified version of Indri, which is part of the Lemur Toolkit [18, 23] .
+All collections were stopped using a standard list of 418 common terms and stemmed using a Porter stemmer .
+In all cases, only the title portion of the TREC topics are used to construct queries .
+We construct G using the sequential dependence assumption for all data sets [14] .
+4.1 ad hoc Retrieval Results We now investigate how well our model performs in practice in a pseudo relevance feedback setting .
+We compare unigram language modeling (with Dirichlet smoothing), the MRF model (without expansion), relevance models, and LCE to better understand how each model performs across the various data sets .
+For the unigram language model, the smoothing parameter was trained .
+For the MRF model, we train the model parameters (i.e .
+£N) and model hyperparameters (i.e .
+£\, £]) .
+For RM3 and LCE, we also train the number of pseudoName Description # Docs Train Topics Test Topics WSJ Wall St .
+Journal 87 92 173,252 51 150 151 200 AP Assoc .
+Press 88 90 242,918 51 150 151 200 ROBUST Robust 2004 data 528,155 301 450 601 700 WT10g TREC Web collection 1,692,096 451 500 501 550 GOV2 2004 crawl of .gov domain 25,205,179 701 750 751 800 Table 2
+relevant feedback documents used and the number of expansion terms .
+4.1.1 Expansion with Single Term Concepts We begin by evaluating how well our model performs when expanding using only single terms .
+Before we describe and analyze the results, we explicitly state how expansion term likelihoods are computed under this setup (i.e .
+using the sequential dependence assumption, expanding with single term concepts, and using our feature set) .
+The expansion term likelihoods are computed as follows
+This equation clearly shows how LCE differs from relevance models .
+When we set £fTD = £fT,D = 1 and all other parameters to 0, we obtain the exact formula that is used to compute term likelihoods in the relevance modeling framework .
+Therefore, LCE adds two very important factors to the equation .
+First, it adds the ordered and unordered window features that are applied to the original query .
+Second, it applies an intuitive tf.idf like form to the candidate expansion term w .
+The idf factor, which is not present in relevance models, plays an important role in expansion term selection .
+<= ?100% (?100%, ?75%] (?75%, ?50%] (?50%, ?25%] (?25%, 0%] (0%, 25%] (25%, 50%] (50%, 75%] (75%, 100%] > 100% RM3 LCE 05101520 AP <= ?100% (?100%, ?75%] (?75%, ?50%] (?50%, ?25%] (?25%, 0%] (0%, 25%] (25%, 50%] (50%, 75%] (75%, 100%] > 100% RM3 LCE 05101520253035 ROBUST <= ?100% (?100%, ?75%] (?75%, ?50%] (?50%, ?25%] (?25%, 0%] (0%, 25%] (25%, 50%] (50%, 75%] (75%, 100%] > 100% RM3 LCE 0510152025 WT10G Figure 2
+The results, evaluated using mean average precision, are given in Table 3 .
+As we see, the MRF model, relevance models, and LCE always significantly outperform the unigram language model .
+In addition, LCE shows significant improvements over relevance models across all data sets .
+The relative improvements over relevance models is 6.9% for AP, 12.9% for WSJ, 6.5% for ROBUST, 16.7% for WT10G, and 7.3% for GOV2 .
+Furthermore, LCE shows small, but not significant, improvements over relevance modeling for metrics such as precision at 5, 10, and 20 .
+However, both relevance modeling and LCE show statistically significant improvements in such metrics over the unigram language model .
+Another interesting result is that the MRF model is statistically equivalent to relevance models on the two web data sets .
+In fact, the MRF model outperforms relevance models on the WT10g data set .
+This reiterates the importance of non unigram, proximity based features for content based web search observed previously [14, 16] .
+Although our model has more free parameters than relevance models, there is surprisingly little overfitting .
+Instead, the model exhibits good generalization properties .
+4.1.2 Expansion with Multi Term Concepts We also investigated expanding using both single and two word concepts .
+For each query, we expanded using a set of single term concepts and a set of two term concepts .
+The sets were chosen independently .
+Unfortunately, only negligible increases in mean average precision were observed .
+This result may be due to the fact that strong correlations exist between the single term expansion concepts .
+We found that the two word concepts chosen often consisted of two highly correlated terms that are also chosen as single term concepts .
+For example, the two term concept stock market was chosen while the single term concepts stock and market were also chosen .
+Therefore, many two word concepts are unlikely to increase the discriminative power of the expanded query .
+This result suggests that concepts should be chosen according to some criteria that also takes novelty, diversity, or term correlations into account .
+Another potential issue is the feature set used .
+Other feature sets may ultimately yield different results, especially if they reduce the correlation among the expansion concepts .
+Therefore, our experiments yield no conclusive results with regard to expansion using multi term concepts .
+Instead, the results introduce interesting open questions and directions for future exploration .
+LM MRF RM3 LCE WSJ .3258 .3425£\ .3493£\ .3943£\£]£^ AP .2077 .2147£\ .2518£\£] .2692£\£]£^ ROBUST .2920 .3096£\ .3382£\£] .3601£\£]£^ WT10g .1861 .2053£\ .1944£\ .2269£\£]£^ GOV2 .3234 .3520£\ .3656£\ .3924£\£]£^ Table 3
+The superscripts £\, £], and £^ indicate statistically significant improvements (p < 0.05) over LM, MRF, and RM3, respectively .
+4.2 Robustness As we have shown, relevance models and latent concept expansion can significantly improve retrieval effectiveness over the baseline query likelihood model .
+In this section we analyze the robustness of these two methods .
+Here, we define robustness as the number queries whose effectiveness are improved hurt (and by how much) as the result of applying these methods .
+A highly robust expansion technique will significantly improve many queries and only minimally hurt a few .
+Figure 2 provides an analysis of the robustness of relevance modeling and latent concept expansion for the AP, ROBUST, and WT10G data sets .
+The analysis for the two data sets not shown is similar .
+The histograms provide, for various ranges of relative decreases increases in mean average precision, the number of queries that were hurt improved with respect to the query likelihood baseline .
+As the results show, LCE exhibits strong robustness for each data set .
+For AP, relevance models improve 38 queries and hurt 11, whereas LCE improves 35 and hurts 14 .
+Although relevance models improve the effectiveness of 3 more queries than LCE, the relative improvement exhibited by LCE is significantly larger .
+For the ROBUST data set, relevance models improve 67 queries and hurt 32, and LCE improves 77 and hurts 22 .
+Finally, for the WT10G collection, relevance models improve 32 queries and hurt 16, and LCE improves 35 and hurts 14 .
+As with AP, the amount of improvement exhibited by the LCE versus relevance models is significantly larger for both the ROBUST and WT10G data sets .
+In addition, when LCE does hurt performance, it is less likely to hurt as much as relevance modeling, which is a desirable property .
+1 word concepts 2 word concepts 3 word concepts telescope hubble telescope hubble space telescope hubble space telescope hubble telescope space space hubble space space telescope hubble mirror telescope mirror space telescope NASA NASA telescope hubble hubble telescope astronomy launch mirror telescope NASA hubble space astronomy telescope NASA space telescope mirror shuttle telescope space telescope space NASA test hubble mirror hubble telescope mission new NASA hubble mirror mirror mirror discovery telescope astronomy space telescope launch time telescope optical space telescope discovery universe hubble optical shuttle space telescope optical telescope discovery hubble telescope flaw light telescope shuttle two hubble space Table 4
+Overall, LCE improves effectiveness for 65% 80% of queries, depending on the data set .
+When used in combination with a highly accurate query performance prediction system, it may be possible to selectively expand queries and minimize the loss associated with sub baseline performance .
+4.3 Multi Term Concept Generation Although we found that expansion using multi term concepts failed to produce conclusive improvements in effectiveness, there are other potential tasks that these concepts may be useful for, such as query suggestion reformulation, summarization, and concept mining .
+For example, for a query suggestion task, the original query could be used to generate a set of latent concepts which correspond to alternative query formulations .
+Although evaluating our model on these tasks is beyond the scope of this work, we wish to show an illustrative example of the types of concepts generated using our model .
+In Table 4, we present the most likely one, two, and three term concepts generated using LCE for the query hubble telescope achievements using the top 25 ranked documents from the ROBUST collection .
+It is well known that generating multi term concepts using a unigram based model produces unsatisfactory results, since it fails to consider term dependencies .
+This is not the case when generating multi term concepts using our model .
+Instead, a majority of the concepts generated are well formed and meaningful .
+There are several cases where the concepts are less coherent, such as mirror mirror mirror .
+In this case, the likelihood of the term mirror appearing in a pseudo relevant document outweighs the language modeling features (e.g .
+fOQ ), which causes this non coherent concept to have a high likelihood .
+Such examples are in the minority, however .
+Not only are the concepts generated well formed and meaningful, but they are also topically relevant to the original query .
+As we see, all of the concepts generated are on topic and in some way related to the Hubble telescope .
+It is interesting to see that the concept hubble telescope flaw is one of the most likely three term concepts, given that it is somewhat contradictory to the original query .
+Despite this contradiction, documents that discuss the telescope flaws are also likely to describe the successes, as well, and therefore this is likely to be a meaningful concept .
+One important thing to note is that the concepts LCE generates are of a different nature than those that would be generated using a bigram relevance model .
+For example, a bigram model would be unlikely to generate the concept telescope space NASA, since none of the bigrams that make up the concept have high likelihood .
+However, since our model is based on a number of different features over various types of cliques, it is more general and robust than a bigram model .
+Although we only provided the concepts generated for a single query, we note that the same analysis and conclusions generalize across other data sets, with coherent, topically related concepts being consistently generated using LCE .
+4.4 Discussion Our latent concept expansion technique captures two semiorthogonal types of dependence .
+In information retrieval, there has been a long term interest in understanding the role of term dependence .
+Out of this research, two broad types of dependencies have been identified .
+The first type of dependence is syntactic dependence .
+This type of dependence covers phrases, term proximity, and term co occurrence [2, 4, 5, 7, 26] .
+These methods capture the fact that queries implicitly or explicitly impose a certain set of positional dependencies .
+The second type is semantic dependence .
+Examples of semantic dependence are relevance feedback, pseudo relevance feedback, synonyms, and to some extent stemming [3] .
+These techniques have been explored on both the query and document side .
+On the query side, this is typically done using some form of query expansion, such as relevance models or LCE .
+On the document side, this is done as document expansion or document smoothing [11, 13, 24] .
+Although there may be some overlap between syntactic and semantic dependencies, they are mostly orthogonal .
+Our model uses both types of dependencies .
+The use of phrase and proximity features within the model captures syntactic dependencies, whereas LCE captures query side semantic dependence .
+This explains why the initial improvement in effectiveness achieved by using the MRF model is not lost after query expansion .
+If the same types of dependencies were capture by both syntactic and semantic dependencies, LCE would be expected to perform about equally as well as relevance models .
+Therefore, by modeling both types of dependencies we see an additive effect, rather than an absorbing effect .
+An interesting area of future work is to determine whether or not modeling document side semantic dependencies can add anything to the model .
+Previous results that have combined query and document side semantic dependencies have shown mixed results [13, 27]. .
